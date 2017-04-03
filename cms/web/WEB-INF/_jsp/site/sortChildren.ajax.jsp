@@ -10,10 +10,11 @@
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.tree.TreeNodeSortData" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.application.AdminAction" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     TreeNodeSortData data = (TreeNodeSortData) SessionReader.getSessionObject(request, "sortData");
-    int nChildren = data.getChildren().size();%>
+    int nChildren = data.getChildren().size();
+%>
 <script type="text/javascript">
     function setRanking(idx) {
         var sel = document.getElementById('select' + idx);
@@ -26,7 +27,8 @@
     }
 </script>
 <form action="/site.srv" method="post" name="form" accept-charset="UTF-8">
-    <input type="hidden" name="act" value="saveSortChildren"/> <input type="hidden" name="childIdx" value="0"/> <input type="hidden" name="childRanking" value="0"/> <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
+    <input type="hidden" name="act" value="saveSortChildren"/> <input type="hidden" name="childIdx" value="0"/>
+    <input type="hidden" name="childRanking" value="0"/> <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
     
     <div class="well">
         <legend><%=StringUtil.getHtml("_sortChildPages", locale)%>
@@ -38,8 +40,10 @@
                 <th><%=StringUtil.getHtml("_name", locale)%>
                 </th>
             </tr>
-            <%int idx = 0;
-                for (TreeNodeSortData child : data.getChildren()) {%>
+            <%
+                int idx = 0;
+                for (TreeNodeSortData child : data.getChildren()) {
+            %>
             <tr>
                 <td><select id="select<%=idx%>" onchange="setRanking(<%=idx%>);">
                     <%for (int i = 0; i < nChildren; i++) {%>
@@ -50,8 +54,10 @@
                 <td><%=StringUtil.toHtml(child.getName())%>
                 </td>
             </tr>
-            <%idx++;
-            }%>
+            <%
+                    idx++;
+                }
+            %>
         </table>
     </div>
     <div class="buttonset topspace">

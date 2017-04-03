@@ -1,17 +1,17 @@
 
-.bandika-light{
+.bandika-light {
     color: #00EAF7
 }
 
-.bandika-mid-light{
+.bandika-mid-light {
     color: #00D7F7
 }
 
-.bandika-mid{
+.bandika-mid {
     color: #00BBEF
 }
 
-.bandika-dark{
+.bandika-dark {
     color: #0F96E8
 }
 
@@ -226,13 +226,13 @@ section.searchResults {
     min-height: 300px;
 }
 
-h1{
+h1 {
     margin: 0 0 10px 0;
 }
 
 h1.topCenter {
-    margin:10px;
-    text-align:center;
+    margin: 10px;
+    text-align: center;
 }
 
 .contentSection {
@@ -289,96 +289,109 @@ h1.topCenter {
     padding: 40px;
 }
 
-.pagePart{
+.pagePart {
 
 }
 
-.pagePart img{
-     width: 100%;
+.pagePart img {
+    width: 100%;
 }
 
-.pagePart .textBox{
+.pagePart .textBox {
     padding: 0;
 }
 
-.pagePart .imageBox{
+.pagePart .imageBox {
     padding: 0;
 }
 
-.pagePart .imageBox img{
+.pagePart .imageBox img {
     width: 100%;
 }
 
 /* template styles */
 
-.banner{
+.banner {
     padding: 0;
 }
-.banner .imageBox{
-    padding:0;
+
+.banner .imageBox {
+    padding: 0;
 }
-.banner .textBox{
-    padding:0 10px;
+
+.banner .textBox {
+    padding: 0 10px;
 }
-.banner .textBox h3{
+
+.banner .textBox h3 {
     padding: 10px 0;
 }
 
-.teaser{
+.teaser {
     padding: 10px;
 }
-.teaser .teaserLeft{
 
- }
-.teaser .teaserRight{
+.teaser .teaserLeft {
 
 }
 
-.flexRow.twoCol .pagePart{
+.teaser .teaserRight {
+
+}
+
+.flexRow.twoCol .pagePart {
     flex: 1 1;
     min-width: 50%;
 }
 
-.flexRow.threeCol .pagePart{
+.flexRow.threeCol .pagePart {
     flex: 1 1;
     min-width: 33%;
 }
 
-.flexRow.fourCol .pagePart{
+.flexRow.fourCol .pagePart {
     flex: 1 1;
     min-width: 25%;
 }
 
-.aside{
+.aside {
     border: 1px solid #c8c8c8;
     margin-bottom: 10px;
 }
-.aside h3{
+
+.aside h3 {
     background: #d8d8d8;
-    padding:5px;
-}
-.aside .imageBox{
-    padding:0;
-}
-.aside .textBox{
     padding: 5px;
 }
 
-.article{
-    padding:0;
+.aside .imageBox {
+    padding: 0;
 }
-.article h1{
-    padding:0;
+
+.aside .textBox {
+    padding: 5px;
 }
-.article h2{
-    padding:0;
+
+.article {
+    padding: 0;
 }
-.article .summary{
-    padding:0;
+
+.article h1 {
+    padding: 0;
 }
-.article .textBox{
-    padding:0;
+
+.article h2 {
+    padding: 0;
 }
-.article .textBox a{
-    padding:0;
+
+.article .summary {
+    padding: 0;
+}
+
+.article .textBox {
+    padding: 0;
+}
+
+.article .textBox a {
+    padding: 0;
 }

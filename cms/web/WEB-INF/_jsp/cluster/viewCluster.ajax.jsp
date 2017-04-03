@@ -6,16 +6,16 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
+<%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.cluster.ClusterManager" %>
+<%@ page import="de.bandika.cluster.ServerData" %>
+<%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cluster.ServerData" %>
-<%@ page import="de.bandika.cluster.ClusterManager" %>
-<%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
 <%
     //todo
-    Locale locale= SessionReader.getSessionLocale(request);
+    Locale locale = SessionReader.getSessionLocale(request);
     ServerData self = ClusterManager.getInstance().getSelf();
     String masterAddress = ClusterManager.getInstance().getMasterAddress();
     List<ServerData> otherServers = ClusterManager.getInstance().getOtherServers();
@@ -23,13 +23,14 @@
     servers.add(self);
     if (otherServers != null)
         servers.addAll(otherServers);
-    String headerText = self.getAddress() + " (" + (ClusterManager.getInstance().isInCluster() ? StringUtil.getHtml("_inCluster",locale) : StringUtil.getHtml("_notInCluster",locale)) + ")";
+    String headerText = self.getAddress() + " (" + (ClusterManager.getInstance().isInCluster() ? StringUtil.getHtml("_inCluster", locale) : StringUtil.getHtml("_notInCluster", locale)) + ")";
 %>
 <fieldset>
     <table class="padded form">
         <tr>
             <td>
-                <label><%=StringUtil.getHtml("_ipaddress", locale)%></label></td>
+                <label><%=StringUtil.getHtml("_ipaddress", locale)%>
+                </label></td>
             <td>
                 <%=headerText%>
             </td>
@@ -37,16 +38,20 @@
     </table>
     <table class="padded form topspace">
         <tr>
-            <th><%=StringUtil.getHtml("_ipaddress", locale)%></th>
-            <th><%=StringUtil.getHtml("_port", locale)%></th>
-            <th><%=StringUtil.getHtml("_master", locale)%></th>
-            <th><%=StringUtil.getHtml("_active", locale)%></th>
+            <th><%=StringUtil.getHtml("_ipaddress", locale)%>
+            </th>
+            <th><%=StringUtil.getHtml("_port", locale)%>
+            </th>
+            <th><%=StringUtil.getHtml("_master", locale)%>
+            </th>
+            <th><%=StringUtil.getHtml("_active", locale)%>
+            </th>
         </tr>
         <%
             for (int i = 0; i < servers.size(); i++) {
                 ServerData serverData = servers.get(i); %>
         <tr>
-            <td><%=StringUtil.toHtml(serverData.getAddress())%><%= i == 0 ? " (" + StringUtil.getHtml("_self",locale) + ")" : ""%>
+            <td><%=StringUtil.toHtml(serverData.getAddress())%><%= i == 0 ? " (" + StringUtil.getHtml("_self", locale) + ")" : ""%>
             </td>
             <td><%=self.getPort()%>
             </td>
@@ -63,12 +68,12 @@
             onclick="closeLayerDialog();"><%=StringUtil.getHtml("_close", locale)%>
     </button>
     <button class=primary"
-            onclick="return post2ModalDialog('/cluster.ajx',{act:'reloadCluster'});"><%=StringUtil.getHtml("_refresh",locale)%>
+            onclick="return post2ModalDialog('/cluster.ajx',{act:'reloadCluster'});"><%=StringUtil.getHtml("_refresh", locale)%>
     </button>
     <button class="primary"
-            onclick="return post2ModalDialog('/cluster.ajx',{act:'activateSelf'});"><%=StringUtil.getHtml("_activateServer",locale)%>
+            onclick="return post2ModalDialog('/cluster.ajx',{act:'activateSelf'});"><%=StringUtil.getHtml("_activateServer", locale)%>
     </button>
     <button class="primary"
-            onclick="return post2ModalDialog('/cluster.ajx',{act:'deactivateSelf'});"><%=StringUtil.getHtml("_deactivateServer",locale)%>
+            onclick="return post2ModalDialog('/cluster.ajx',{act:'deactivateSelf'});"><%=StringUtil.getHtml("_deactivateServer", locale)%>
     </button>
 </div>

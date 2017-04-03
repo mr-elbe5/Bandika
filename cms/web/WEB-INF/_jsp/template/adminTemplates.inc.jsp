@@ -6,21 +6,23 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%><!DOCTYPE html><%response.setContentType("text/html;charset=UTF-8");%>
+<%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.rights.Right" %>
+<%@ page import="de.bandika.rights.SystemZone" %>
+<%@ page import="de.bandika.servlet.RequestReader" %>
+<%@ page import="de.bandika.servlet.RightsReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
+<%@ page import="de.bandika.template.TemplateBean" %>
+<%@ page import="de.bandika.template.TemplateData" %>
+<%@ page import="de.bandika.template.TemplateType" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.template.*" %>
-<%@ page import="de.bandika.servlet.RequestReader" %>
-<%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.template.TemplateData" %>
-<%@ page import="de.bandika.rights.SystemZone" %>
-<%@ page import="de.bandika.rights.Right" %>
 <%@ page import="java.util.Map" %>
 <%
-    if (SessionReader.hasSystemRight(request, SystemZone.CONTENT, Right.EDIT)) {
+    if (RightsReader.hasSystemRight(request, SystemZone.CONTENT, Right.EDIT)) {
         Locale locale = SessionReader.getSessionLocale(request);
-        Map<TemplateType,List<TemplateData>> templates = TemplateBean.getInstance().getAllTemplates();
-        assert(templates!=null);
+        Map<TemplateType, List<TemplateData>> templates = TemplateBean.getInstance().getAllTemplates();
+        assert (templates != null);
         String templateName = RequestReader.getString(request, "templateName");
 %>
 <li<%=!templateName.isEmpty() ? " class=\"open\"" : ""%>>

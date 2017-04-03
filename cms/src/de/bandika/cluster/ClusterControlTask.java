@@ -8,7 +8,6 @@
  */
 package de.bandika.cluster;
 
-
 import de.bandika.timer.TimerTask;
 
 import java.util.Date;

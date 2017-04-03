@@ -13,7 +13,7 @@
 <div class="userForm">
     <form action="/registration.srv" method="post" name="form" accept-charset="UTF-8">
         <input type="hidden" name="act" value="approveRegistration"/>
-
+        
         <div class="formText"><%=StringUtil.getHtml("_approvalInfo", locale)%>
         </div>
         <table class="padded form">

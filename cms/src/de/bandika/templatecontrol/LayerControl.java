@@ -9,7 +9,9 @@
 package de.bandika.templatecontrol;
 
 import de.bandika.page.PageData;
-import de.bandika.template.*;
+import de.bandika.template.TemplateAttributes;
+import de.bandika.template.TemplateCache;
+import de.bandika.template.TemplateType;
 
 import javax.servlet.http.HttpServletRequest;
 

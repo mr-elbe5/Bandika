@@ -12,8 +12,13 @@ import de.bandika.base.log.Log;
 import de.bandika.pagepart.PagePartBean;
 import de.bandika.tree.ResourceBean;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * Class PageBean is the persistence class for any page. <br>

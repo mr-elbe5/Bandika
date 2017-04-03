@@ -11,9 +11,6 @@ package de.bandika.group;
 import de.bandika.base.data.BaseIdData;
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
-
-import java.util.*;
-
 import de.bandika.rights.Right;
 import de.bandika.rights.RightBean;
 import de.bandika.rights.RightsCache;
@@ -24,6 +21,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * Class GroupData is the data class for user groups. <br>
@@ -99,7 +97,7 @@ public class GroupData extends BaseIdData {
         setNotes(RequestReader.getString(request, "notes"));
         getRights().getSystemRights().clear();
         for (SystemZone zone : SystemZone.values()) {
-            String key=RequestReader.getString(request, "zoneright_" + zone.name());
+            String key = RequestReader.getString(request, "zoneright_" + zone.name());
             if (!key.isEmpty())
                 getRights().addSystemRight(zone, Right.valueOf(key));
         }

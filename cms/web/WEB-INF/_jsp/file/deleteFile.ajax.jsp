@@ -10,12 +10,14 @@
 <%@ page import="de.bandika.file.FileData" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.tree.TreeCache" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%@ page import="java.util.Locale" %>
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     int fileId = RequestReader.getInt(request, "fileId");
     TreeCache tc = TreeCache.getInstance();
-    FileData data = tc.getFile(fileId);%>
+    FileData data = tc.getFile(fileId);
+%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <div class="info">
     <div class="formText"><%=StringUtil.getHtml("_reallyDeleteFile", locale)%>

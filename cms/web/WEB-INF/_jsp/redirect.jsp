@@ -7,8 +7,10 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.servlet.RequestReader" %>
-<%String redirectUrl = RequestReader.getString(request, "redirectUrl");
-    if (redirectUrl.length() > 0) {%>
+<%
+    String redirectUrl = RequestReader.getString(request, "redirectUrl");
+    if (redirectUrl.length() > 0) {
+%>
 <html>
 <head></head>
 <body style="background: #333 url(/_statics/css/img/carbon.png);">

@@ -19,7 +19,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * Class Field is the base class for all Field classes used for editing

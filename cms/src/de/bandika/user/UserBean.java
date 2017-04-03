@@ -8,20 +8,20 @@
  */
 package de.bandika.user;
 
-import java.sql.*;
+import de.bandika.base.log.Log;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import de.bandika.base.crypto.PBKDF2Encryption;
-import de.bandika.base.log.Log;
-import de.bandika.base.database.DbBean;
-import de.bandika.base.util.StringUtil;
 
 /**
  * Class UserBean is the persistence class for users and groups. <br>
  * Usage:
  */
-public class UserBean extends DbBean {
+public class UserBean extends LoginBean {
 
     private static UserBean instance = null;
 
@@ -33,26 +33,7 @@ public class UserBean extends DbBean {
     }
 
     protected boolean unchangedUser(Connection con, UserData data) {
-        if (data.isNew()) {
-            return true;
-        }
-        PreparedStatement pst = null;
-        ResultSet rs;
-        boolean result = false;
-        try {
-            pst = con.prepareStatement("SELECT change_date FROM t_user WHERE id=?");
-            pst.setInt(1, data.getId());
-            rs = pst.executeQuery();
-            if (rs.next()) {
-                Timestamp date = rs.getTimestamp(1);
-                rs.close();
-                result = date.getTime() == data.getChangeDate().getTime();
-            }
-        } catch (Exception ignored) {
-        } finally {
-            closeStatement(pst);
-        }
-        return result;
+        return unchangedLogin(con, data);
     }
 
     public List<UserData> getAllUsers() {
@@ -62,7 +43,7 @@ public class UserBean extends DbBean {
         UserData data;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT id,change_date,first_name,middle_name,last_name,street,zipCode,city,country,locale,email,phone,mobile,notes,login,approval_code,approved,failed_login_count,locked FROM t_user WHERE deleted=FALSE");
+            pst = con.prepareStatement("SELECT id,change_date,first_name,last_name,street,zipCode,city,country,locale,email,phone,mobile,notes,login,approval_code,approved,failed_login_count,locked FROM t_user WHERE deleted=FALSE");
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     int i = 1;
@@ -70,7 +51,6 @@ public class UserBean extends DbBean {
                     data.setId(rs.getInt(i++));
                     data.setChangeDate(rs.getTimestamp(i++));
                     data.setFirstName(rs.getString(i++));
-                    data.setMiddleName(rs.getString(i++));
                     data.setLastName(rs.getString(i++));
                     data.setStreet(rs.getString(i++));
                     data.setZipCode(rs.getString(i++));
@@ -107,7 +87,7 @@ public class UserBean extends DbBean {
         UserData data = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT change_date,first_name,middle_name,last_name,street,zipCode,city,country,locale,email,phone,mobile,notes,login,approval_code,approved,failed_login_count,locked,deleted FROM t_user WHERE id=?");
+            pst = con.prepareStatement("SELECT change_date,first_name,last_name,street,zipCode,city,country,locale,email,phone,mobile,notes,login,approval_code,approved,failed_login_count,locked,deleted FROM t_user WHERE id=?");
             pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
@@ -116,7 +96,6 @@ public class UserBean extends DbBean {
                 data.setId(id);
                 data.setChangeDate(rs.getTimestamp(i++));
                 data.setFirstName(rs.getString(i++));
-                data.setMiddleName(rs.getString(i++));
                 data.setLastName(rs.getString(i++));
                 data.setStreet(rs.getString(i++));
                 data.setZipCode(rs.getString(i++));
@@ -135,155 +114,6 @@ public class UserBean extends DbBean {
                 data.setLocked(rs.getBoolean(i++));
                 data.setDeleted(rs.getBoolean(i));
                 readUserGroups(con, data);
-            }
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-        return data;
-    }
-
-    public UserData getUser(String login, String approvalCode, String pwd) {
-        Connection con = null;
-        PreparedStatement pst = null;
-        UserData data = null;
-        boolean passed = false;
-        try {
-            con = getConnection();
-            pst = con.prepareStatement("SELECT id,change_date,pwd,pkey,first_name,middle_name,last_name,email FROM t_user WHERE login=? AND approval_code=?");
-            pst.setString(1, login);
-            pst.setString(2, approvalCode);
-            try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    int i = 1;
-                    data = new UserData();
-                    data.setId(rs.getInt(i++));
-                    data.setChangeDate(rs.getTimestamp(i++));
-                    data.setLogin(login);
-                    String encypted = rs.getString(i++);
-                    String key = rs.getString(i++);
-                    passed = (encryptPassword(pwd, key).equals(encypted));
-                    data.setPassword("");
-                    data.setFirstName(rs.getString(i++));
-                    data.setMiddleName(rs.getString(i++));
-                    data.setLastName(rs.getString(i++));
-                    data.setEmail(rs.getString(i));
-                }
-            }
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-        return passed ? data : null;
-    }
-
-    public boolean isSystemPasswordEmpty() {
-        Connection con = null;
-        PreparedStatement pst = null;
-        boolean empty = true;
-        try {
-            con = getConnection();
-            pst = con.prepareStatement("SELECT pwd FROM t_user WHERE id=?");
-            pst.setInt(1, UserData.ID_SYSTEM);
-            try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    String pwd = rs.getString(1);
-                    empty = StringUtil.isNullOrEmpty(pwd);
-                }
-            }
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-        return empty;
-    }
-
-    public boolean doesLoginExist(String login) {
-        Connection con = null;
-        PreparedStatement pst = null;
-        boolean exists = false;
-        try {
-            con = getConnection();
-            pst = con.prepareStatement("SELECT 'x' FROM t_user WHERE login=?");
-            pst.setString(1, login);
-            try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    exists = true;
-                }
-            }
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-        return exists;
-    }
-
-    public UserData loginUser(String login, String pwd) {
-        Connection con = null;
-        PreparedStatement pst = null;
-        UserData data = null;
-        try {
-            con = getConnection();
-            pst = con.prepareStatement("SELECT id,pwd,pkey,change_date,first_name,middle_name,last_name,street,zipCode,city,country,locale,email,phone,mobile,notes,failed_login_count FROM t_user WHERE login=? AND approved=TRUE AND locked=FALSE AND deleted=FALSE");
-            pst.setString(1, login);
-            boolean passed;
-            try (ResultSet rs = pst.executeQuery()) {
-                passed = false;
-                if (rs.next()) {
-                    int i = 1;
-                    data = new UserData();
-                    data.setId(rs.getInt(i++));
-                    data.setLogin(login);
-                    String encrypted = rs.getString(i++);
-                    String key = rs.getString(i++);
-                    passed = (encryptPassword(pwd, key).equals(encrypted));
-                    data.setPassword("");
-                    data.setChangeDate(rs.getTimestamp(i++));
-                    data.setFirstName(rs.getString(i++));
-                    data.setMiddleName(rs.getString(i++));
-                    data.setLastName(rs.getString(i++));
-                    data.setStreet(rs.getString(i++));
-                    data.setZipCode(rs.getString(i++));
-                    data.setCity(rs.getString(i++));
-                    data.setCountry(rs.getString(i++));
-                    data.setLocale(rs.getString(i++));
-                    data.setEmail(rs.getString(i++));
-                    data.setPhone(rs.getString(i++));
-                    data.setMobile(rs.getString(i++));
-                    data.setNotes(rs.getString(i++));
-                    data.setFailedLoginCount(rs.getInt(i));
-                    data.setApproved(true);
-                    data.setLocked(false);
-                    data.setDeleted(false);
-                    readUserGroups(con, data);
-                }
-            }
-            if (data != null) {
-                int count = data.getFailedLoginCount();
-                if (!passed) {
-                    count++;
-                    pst.close();
-                    pst = con.prepareStatement("UPDATE t_user SET failed_login_count=? WHERE id=?");
-                    pst.setInt(1, count);
-                    pst.setInt(2, data.getId());
-                    pst.executeUpdate();
-                    data = null;
-                } else if (count > 0) {
-                    data.setFailedLoginCount(0);
-                    pst.close();
-                    pst = con.prepareStatement("UPDATE t_user SET failed_login_count=? WHERE id=?");
-                    pst.setInt(1, 0);
-                    pst.setInt(2, data.getId());
-                    pst.executeUpdate();
-                }
             }
         } catch (SQLException se) {
             Log.error("sql error", se);
@@ -329,11 +159,10 @@ public class UserBean extends DbBean {
     protected void writeUser(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(data.isNew() ? "insert into t_user (change_date,first_name,middle_name,last_name,street,zipCode,city,country,locale,email,phone,mobile,notes,login,pwd,pkey,approval_code,approved,failed_login_count,locked,deleted,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" : data.getPassword().length() == 0 ? "update t_user set change_date=?,first_name=?,middle_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,mobile=?,notes=?,login=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?" : "update t_user set change_date=?,first_name=?,middle_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,mobile=?,notes=?,login=?,pwd=?,pkey=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?");
+            pst = con.prepareStatement(data.isNew() ? "insert into t_user (change_date,first_name,last_name,street,zipCode,city,country,locale,email,phone,mobile,notes,login,pwd,pkey,approval_code,approved,failed_login_count,locked,deleted,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" : data.getPassword().length() == 0 ? "update t_user set change_date=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,mobile=?,notes=?,login=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?" : "update t_user set change_date=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,mobile=?,notes=?,login=?,pwd=?,pkey=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?");
             int i = 1;
             pst.setTimestamp(i++, data.getSqlChangeDate());
             pst.setString(i++, data.getFirstName());
-            pst.setString(i++, data.getMiddleName());
             pst.setString(i++, data.getLastName());
             pst.setString(i++, data.getStreet());
             pst.setString(i++, data.getZipCode());
@@ -364,59 +193,6 @@ public class UserBean extends DbBean {
         }
     }
 
-    public boolean changePassword(int id, String pwd) {
-        Connection con = startTransaction();
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement("UPDATE t_user SET pwd=?,pkey=? WHERE id=?");
-            int i = 1;
-            String key = generateKey();
-            pst.setString(i++, encryptPassword(pwd, key));
-            pst.setString(i++, key);
-            pst.setInt(i, id);
-            pst.executeUpdate();
-            pst.close();
-            return commitTransaction(con);
-        } catch (Exception se) {
-            return rollbackTransaction(con, se);
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-    }
-
-    public boolean saveUserPassword(UserData data) {
-        Connection con = startTransaction();
-        try {
-            if (!unchangedUser(con, data)) {
-                rollbackTransaction(con);
-                return false;
-            }
-            data.setChangeDate(getServerTime(con));
-            writeUserPassword(con, data);
-            return commitTransaction(con);
-        } catch (Exception se) {
-            return rollbackTransaction(con, se);
-        }
-    }
-
-    protected void writeUserPassword(Connection con, UserData data) throws SQLException {
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement("update t_user set change_date=?, pwd=?, pkey=? where id=?");
-            int i = 1;
-            pst.setTimestamp(i++, data.getSqlChangeDate());
-            String key = generateKey();
-            pst.setString(i++, encryptPassword(data.getPassword(), key));
-            pst.setString(i++, key);
-            pst.setInt(i, data.getId());
-            pst.executeUpdate();
-            pst.close();
-        } finally {
-            closeStatement(pst);
-        }
-    }
-
     public boolean saveUserProfile(UserData data) {
         Connection con = startTransaction();
         try {
@@ -435,11 +211,10 @@ public class UserBean extends DbBean {
     protected void writeUserProfile(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("update t_user set change_date=?,first_name=?,middle_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,mobile=?,notes=? where id=?");
+            pst = con.prepareStatement("UPDATE t_user SET change_date=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,mobile=?,notes=? WHERE id=?");
             int i = 1;
             pst.setTimestamp(i++, data.getSqlChangeDate());
             pst.setString(i++, data.getFirstName());
-            pst.setString(i++, data.getMiddleName());
             pst.setString(i++, data.getLastName());
             pst.setString(i++, data.getStreet());
             pst.setString(i++, data.getZipCode());
@@ -461,7 +236,7 @@ public class UserBean extends DbBean {
     protected void writeUserGroups(Connection con, UserData data, User2GroupRelation relation) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("DELETE FROM t_user2group WHERE user_id=? and relation=?");
+            pst = con.prepareStatement("DELETE FROM t_user2group WHERE user_id=? AND relation=?");
             pst.setInt(1, data.getId());
             pst.setString(2, relation.name());
             pst.execute();
@@ -497,24 +272,6 @@ public class UserBean extends DbBean {
         } finally {
             closeStatement(pst);
             closeConnection(con);
-        }
-    }
-
-    public String generateKey() {
-        try {
-            return PBKDF2Encryption.generateSaltBase64();
-        } catch (Exception e) {
-            Log.error("failed to create password key", e);
-            return null;
-        }
-    }
-
-    public String encryptPassword(String pwd, String key) {
-        try {
-            return PBKDF2Encryption.getEncryptedPasswordBase64(pwd, key);
-        } catch (Exception e) {
-            Log.error("failed to encrypt password", e);
-            return null;
         }
     }
 

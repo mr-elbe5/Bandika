@@ -7,21 +7,24 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.page.PageAction" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.template.TemplateCache" %>
 <%@ page import="de.bandika.template.TemplateData" %>
+<%@ page import="de.bandika.template.TemplateType" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.page.PageAction" %>
-<%@ page import="de.bandika.template.TemplateType" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     List<TemplateData> pageTemplates = TemplateCache.getInstance().getTemplates(TemplateType.PAGE);
-    int siteId = RequestReader.getInt(request, "siteId");%>
+    int siteId = RequestReader.getInt(request, "siteId");
+%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/page.srv" method="post" id="layoutform" name="layoutform" accept-charset="UTF-8">
     <fieldset>
-        <input type="hidden" name="siteId" value="<%=siteId%>"/> <input type="hidden" name="act" value="<%=PageAction.createPage.name()%>"/>
+        <input type="hidden" name="siteId" value="<%=siteId%>"/>
+        <input type="hidden" name="act" value="<%=PageAction.createPage.name()%>"/>
         <table class="padded form">
             <tr>
                 <td>
@@ -32,7 +35,8 @@
             </tr>
             <tr>
                 <td>
-                    <label for="name"><%=StringUtil.getHtml("_name", locale)%></label></td>
+                    <label for="name"><%=StringUtil.getHtml("_name", locale)%>
+                    </label></td>
                 <td>
                     <input type="text" id="name" name="name" value="" maxlength="60"/>
                 </td>
@@ -41,13 +45,17 @@
                 <td><label><%=StringUtil.getHtml("_template", locale)%>
                 </label></td>
                 <td>
-                    <%boolean first = true;
-                        for (TemplateData tdata : pageTemplates) {%>
+                    <%
+                        boolean first = true;
+                        for (TemplateData tdata : pageTemplates) {
+                    %>
                     <div>
                         <input type="radio" name="templateName" value="<%=tdata.getName()%>" <%=first ? "checked=\"checked\"" : ""%>/><%=StringUtil.toHtml(tdata.getName())%>
                     </div>
-                    <%first = false;
-                    }%>
+                    <%
+                            first = false;
+                        }
+                    %>
                 </td>
             </tr>
         </table>

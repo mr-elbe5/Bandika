@@ -10,12 +10,15 @@ package de.bandika.timer;
 
 import de.bandika.rights.Right;
 import de.bandika.rights.SystemZone;
-import de.bandika.servlet.*;
+import de.bandika.servlet.ActionDispatcher;
+import de.bandika.servlet.ICmsAction;
+import de.bandika.servlet.RequestReader;
+import de.bandika.servlet.SessionWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public enum TimerAction implements IAction {
+public enum TimerAction implements ICmsAction {
     /**
      * no action
      */
@@ -24,64 +27,66 @@ public enum TimerAction implements IAction {
         public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
             return forbidden();
         }
-    },
-    /**
+    }, /**
      * show timer task settings
      */
     showTimerTaskDetails {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                return false;
-            return showTimerTaskDetails(request, response);
-        }
-    },
-    /**
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                        return false;
+                    return showTimerTaskDetails(request, response);
+                }
+            }, /**
      * opens dialog for editing timer task settings
      */
     openEditTimerTask {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                return false;
-            int timerId = RequestReader.getInt(request, "timerId");
-            TimerTaskData data = TimerCache.getInstance().getTaskCopy(timerId);
-            SessionWriter.setSessionObject(request, "timerTaskData", data);
-            return showEditTimerTask(request, response);
-        }
-    },
-    /**
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                        return false;
+                    int timerId = RequestReader.getInt(request, "timerId");
+                    TimerTaskData data = TimerCache.getInstance().getTaskCopy(timerId);
+                    SessionWriter.setSessionObject(request, "timerTaskData", data);
+                    return showEditTimerTask(request, response);
+                }
+            }, /**
      * saves timer task settings to database
      */
     saveTimerTask {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                return false;
-            TimerTaskData data = (TimerTaskData) getSessionObject(request, "timerTaskData");
-            data.readTimerTaskRequestData(request);
-            if (!isDataComplete(data, request)) {
-                return showEditTimerTask(request, response);
-            }
-            TimerBean ts = TimerBean.getInstance();
-            ts.updateTaskData(data);
-            TimerCache.getInstance().updateTask(data);
-            return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&timerId=" + data.getId(), "_taskSaved");
-        }
-    };
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                        return false;
+                    TimerTaskData data = (TimerTaskData) getSessionObject(request, "timerTaskData");
+                    data.readTimerTaskRequestData(request);
+                    if (!isDataComplete(data, request)) {
+                        return showEditTimerTask(request, response);
+                    }
+                    TimerBean ts = TimerBean.getInstance();
+                    ts.updateTaskData(data);
+                    TimerCache.getInstance().updateTask(data);
+                    return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&timerId=" + data.getId(), "_taskSaved");
+                }
+            };
 
     public static final String KEY = "timer";
-    public static void initialize(){
+
+    public static void initialize() {
         ActionDispatcher.addClass(KEY, TimerAction.class);
     }
+
     @Override
-    public String getKey(){return KEY;}
+    public String getKey() {
+        return KEY;
+    }
 
     public boolean showEditTimerTask(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/timer/editTimerTask.ajax.jsp");
     }
 
-    protected boolean showTimerTaskDetails(HttpServletRequest request, HttpServletResponse response) {return sendForwardResponse(request, response, "/WEB-INF/_jsp/timer/timerTaskDetails.ajax.jsp");}
-
+    protected boolean showTimerTaskDetails(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/timer/timerTaskDetails.ajax.jsp");
+    }
 
 }

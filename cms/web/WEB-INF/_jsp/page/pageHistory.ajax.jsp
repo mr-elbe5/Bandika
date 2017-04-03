@@ -13,9 +13,11 @@
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     PageData data = (PageData) request.getAttribute("pageData");
-    List<PageData> pageVersions = PageBean.getInstance().getPageHistory(data.getId());%>
+    List<PageData> pageVersions = PageBean.getInstance().getPageHistory(data.getId());
+%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <fieldset>
     <input type="hidden" name="act" value=""/>

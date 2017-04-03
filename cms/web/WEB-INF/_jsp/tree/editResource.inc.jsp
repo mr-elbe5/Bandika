@@ -11,8 +11,10 @@
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.tree.ResourceNode" %>
 <%@ page import="java.util.Locale" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
-    ResourceNode data = (ResourceNode) request.getAttribute("treeNode");%>
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
+    ResourceNode data = (ResourceNode) request.getAttribute("treeNode");
+%>
 <tr>
     <td>
         <label for="keywords"><%=StringUtil.getHtml("_keywords", locale)%>

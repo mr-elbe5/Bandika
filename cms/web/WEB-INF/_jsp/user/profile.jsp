@@ -13,7 +13,7 @@
 <%@ page import="java.util.Locale" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
-    UserData user = UserBean.getInstance().getUser(SessionReader.getSessionUserData(request).getId());
+    UserData user = UserBean.getInstance().getUser(SessionReader.getSessionLoginData(request).getId());
 %>
 <section class="mainSection">
     <h1 class="topCenter"><%=StringUtil.getHtml("_profile", locale)%>
@@ -58,13 +58,15 @@
                     </tr>
                     <tr>
                         <td>
-                            <label><%=StringUtil.getHtml("_locale", locale)%></label></td>
+                            <label><%=StringUtil.getHtml("_locale", locale)%>
+                            </label></td>
                         <td><%=StringUtil.toHtml(user.getLocale().getLanguage())%>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <label><%=StringUtil.getHtml("_email", locale)%></label></td>
+                            <label><%=StringUtil.getHtml("_email", locale)%>
+                            </label></td>
                         <td><%=StringUtil.toHtml(user.getEmail())%>
                         </td>
                     </tr>

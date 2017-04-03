@@ -14,13 +14,13 @@ import de.bandika.rights.Right;
 import de.bandika.rights.RightsCache;
 import de.bandika.rights.SystemZone;
 import de.bandika.servlet.*;
-import de.bandika.user.UserBean;
+import de.bandika.user.UserRightsData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-public enum GroupAction implements IAction {
+public enum GroupAction implements ICmsAction {
     /**
      * no action
      */
@@ -29,179 +29,176 @@ public enum GroupAction implements IAction {
         public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
             return forbidden();
         }
-    },
-    /**
+    }, /**
      * opens dialog for adding a user to the group
      */
     openAddGroupUser {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
-                return false;
-            int groupId = RequestReader.getInt(request, "groupId");
-            GroupData data = GroupBean.getInstance().getGroup(groupId);
-            SessionWriter.setSessionObject(request, "groupData", data);
-            return showAddGroupUser(request, response);
-        }
-    },
-    /**
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                        return false;
+                    int groupId = RequestReader.getInt(request, "groupId");
+                    GroupData data = GroupBean.getInstance().getGroup(groupId);
+                    SessionWriter.setSessionObject(request, "groupData", data);
+                    return showAddGroupUser(request, response);
+                }
+            }, /**
      * adds user to the group
      */
     addGroupUser {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
-                return false;
-            GroupData data = (GroupData) getSessionObject(request, "groupData");
-            data.readGroupRequestData(request);
-            if (!isDataComplete(data,request)) {
-                return showAddGroupUser(request,response);
-            }
-            int userId = RequestReader.getInt(request, "userAddId");
-            if (userId != 0) {
-                data.getUserIds().add(userId);
-                RequestWriter.setMessageKey(request, "_userAdded");
-            }
-            GroupBean.getInstance().saveGroupUsers(data);
-            RightsCache.getInstance().setDirty();
-            return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&groupId=" + data.getId(), "_userAdded");
-        }
-    },
-    /**
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                        return false;
+                    GroupData data = (GroupData) getSessionObject(request, "groupData");
+                    data.readGroupRequestData(request);
+                    if (!isDataComplete(data, request)) {
+                        return showAddGroupUser(request, response);
+                    }
+                    int userId = RequestReader.getInt(request, "userAddId");
+                    if (userId != 0) {
+                        data.getUserIds().add(userId);
+                        RequestWriter.setMessageKey(request, "_userAdded");
+                    }
+                    GroupBean.getInstance().saveGroupUsers(data);
+                    RightsCache.getInstance().setDirty();
+                    return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&groupId=" + data.getId(), "_userAdded");
+                }
+            }, /**
      * opens dialog for removing users from the group
      */
     openRemoveGroupUsers {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
-                return false;
-            int groupId = RequestReader.getInt(request, "groupId");
-            GroupData data = GroupBean.getInstance().getGroup(groupId);
-            SessionWriter.setSessionObject(request, "groupData", data);
-            return showRemoveGroupUsers(request, response);
-        }
-    },
-    /**
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                        return false;
+                    int groupId = RequestReader.getInt(request, "groupId");
+                    GroupData data = GroupBean.getInstance().getGroup(groupId);
+                    SessionWriter.setSessionObject(request, "groupData", data);
+                    return showRemoveGroupUsers(request, response);
+                }
+            }, /**
      * removes users from the group
      */
     removeGroupUsers {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
-                return false;
-            GroupData data = (GroupData) getSessionObject(request, "groupData");
-            data.readGroupRequestData(request);
-            List<Integer> ids = RequestReader.getIntegerList(request, "userRemoveId");
-            for (int userId : ids) {
-                data.getUserIds().remove(userId);
-            }
-            GroupBean.getInstance().saveGroupUsers(data);
-            RightsCache.getInstance().setDirty();
-            return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&groupId=" + data.getId(), "_usersRemoved");
-        }
-    },
-    /**
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                        return false;
+                    GroupData data = (GroupData) getSessionObject(request, "groupData");
+                    data.readGroupRequestData(request);
+                    List<Integer> ids = RequestReader.getIntegerList(request, "userRemoveId");
+                    for (int userId : ids) {
+                        data.getUserIds().remove(userId);
+                    }
+                    GroupBean.getInstance().saveGroupUsers(data);
+                    RightsCache.getInstance().setDirty();
+                    return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&groupId=" + data.getId(), "_usersRemoved");
+                }
+            }, /**
      * show group properties
      */
     showGroupDetails {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
-                return false;
-            return showGroupDetails(request, response);
-        }
-    },
-    /**
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                        return false;
+                    return showGroupDetails(request, response);
+                }
+            }, /**
      * opens dialog for editing group settings
      */
     openEditGroup {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
-                return false;
-            int groupId = RequestReader.getInt(request, "groupId");
-            GroupData data = GroupBean.getInstance().getGroup(groupId);
-            data.checkRights();
-            data.prepareEditing();
-            SessionWriter.setSessionObject(request, "groupData", data);
-            return showEditGroup(request, response);
-        }
-    },
-    /**
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                        return false;
+                    int groupId = RequestReader.getInt(request, "groupId");
+                    GroupData data = GroupBean.getInstance().getGroup(groupId);
+                    data.checkRights();
+                    data.prepareEditing();
+                    SessionWriter.setSessionObject(request, "groupData", data);
+                    return showEditGroup(request, response);
+                }
+            }, /**
      * open dialog for creating a new group
      */
     openCreateGroup {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
-                return false;
-            GroupData data = new GroupData();
-            data.setNew(true);
-            data.setId(GroupBean.getInstance().getNextId());
-            data.prepareEditing();
-            SessionWriter.setSessionObject(request, "groupData", data);
-            return showEditGroup(request, response);
-        }
-    },
-    /**
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                        return false;
+                    GroupData data = new GroupData();
+                    data.setNew(true);
+                    data.setId(GroupBean.getInstance().getNextId());
+                    data.prepareEditing();
+                    SessionWriter.setSessionObject(request, "groupData", data);
+                    return showEditGroup(request, response);
+                }
+            }, /**
      * saves group (new or edited)
      */
     saveGroup {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
-                return false;
-            GroupData data = (GroupData) getSessionObject(request, "groupData");
-            data.readGroupRequestData(request);
-            if (!isDataComplete(data, request)) {
-                return showEditGroup(request, response);
-            }
-            GroupBean.getInstance().saveGroup(data);
-            SessionWriter.setSessionUserData(request, UserBean.getInstance().getUser(SessionReader.getSessionUserData(request).getId()));
-            RightsCache.getInstance().setDirty();
-            return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&groupId=" + data.getId(), "_groupSaved");
-        }
-    },
-    /**
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                        return false;
+                    GroupData data = (GroupData) getSessionObject(request, "groupData");
+                    data.readGroupRequestData(request);
+                    if (!isDataComplete(data, request)) {
+                        return showEditGroup(request, response);
+                    }
+                    GroupBean.getInstance().saveGroup(data);
+                    UserRightsData rights = RightsReader.getSessionRightsData(request);
+                    if (rights != null)
+                        rights.setVersion(0);
+                    RightsWriter.setSessionRightsData(request, RightsCache.getInstance().checkRights(rights));
+                    RightsCache.getInstance().setDirty();
+                    return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&groupId=" + data.getId(), "_groupSaved");
+                }
+            }, /**
      * opens dialog for deleting a group
      */
     openDeleteGroup {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
-                return false;
-            int id = RequestReader.getInt(request, "groupId");
-            if (id < BaseIdData.ID_MIN) {
-                addError(request, StringUtil.getString("_notDeletable", SessionReader.getSessionLocale(request)));
-            }
-            return showDeleteGroup(request, response);
-        }
-    },
-    /**
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                        return false;
+                    int id = RequestReader.getInt(request, "groupId");
+                    if (id < BaseIdData.ID_MIN) {
+                        addError(request, StringUtil.getString("_notDeletable", SessionReader.getSessionLocale(request)));
+                    }
+                    return showDeleteGroup(request, response);
+                }
+            }, /**
      * deletes a group
      */
     deleteGroup {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
-                return false;
-            int id = RequestReader.getInt(request, "groupId");
-            if (id < BaseIdData.ID_MIN) {
-                addError(request, StringUtil.getString("_notDeletable", SessionReader.getSessionLocale(request)));
-            } else {
-                GroupBean.getInstance().deleteGroup(id);
-                RightsCache.getInstance().setDirty();
-            }
-            return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_groupDeleted");
-        }
-    };
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                        return false;
+                    int id = RequestReader.getInt(request, "groupId");
+                    if (id < BaseIdData.ID_MIN) {
+                        addError(request, StringUtil.getString("_notDeletable", SessionReader.getSessionLocale(request)));
+                    } else {
+                        GroupBean.getInstance().deleteGroup(id);
+                        RightsCache.getInstance().setDirty();
+                    }
+                    return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_groupDeleted");
+                }
+            };
 
     public static final String KEY = "group";
-    public static void initialize(){
+
+    public static void initialize() {
         ActionDispatcher.addClass(KEY, GroupAction.class);
     }
+
     @Override
-    public String getKey(){return KEY;}
+    public String getKey() {
+        return KEY;
+    }
 
     protected boolean showEditGroup(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/group/editGroup.ajax.jsp");
@@ -219,6 +216,8 @@ public enum GroupAction implements IAction {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/group/removeGroupUsers.ajax.jsp");
     }
 
-    protected boolean showGroupDetails(HttpServletRequest request, HttpServletResponse response) {return sendForwardResponse(request, response, "/WEB-INF/_jsp/group/groupDetails.ajax.jsp");}
+    protected boolean showGroupDetails(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/group/groupDetails.ajax.jsp");
+    }
 
 }

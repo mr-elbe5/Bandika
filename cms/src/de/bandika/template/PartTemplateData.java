@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 
 public class PartTemplateData extends TemplateData {
 
-    public PartTemplateData(){
-        type=TemplateType.PART;
+    public PartTemplateData() {
+        type = TemplateType.PART;
     }
 
     protected boolean appendTagReplacement(StringBuilder sb, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) {
@@ -28,7 +28,7 @@ public class PartTemplateData extends TemplateData {
                 appendField(sb, attributes, content, pageData, partData, request);
                 return true;
             case PARTID:
-                if (partData!=null)
+                if (partData != null)
                     sb.append(partData.getHtmlId());
                 return true;
         }

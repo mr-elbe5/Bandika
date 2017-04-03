@@ -44,13 +44,13 @@ public class ClusterManager {
     PortListener listener = null;
     int senderTimeout = 1000;
 
-    public String getKey(){
+    public String getKey() {
         return "cluster";
     }
 
     public void initialize() {
         Log.log("initializing cluster...");
-        senderTimeout = Configuration.getInstance().getInt("clusterTimeout");
+        senderTimeout = Configuration.getInstance().getClusterTimeout();
         loadSelf();
         loadOtherServers();
         setBeingCluster();
@@ -81,7 +81,7 @@ public class ClusterManager {
             ownAddress = InetAddress.getLocalHost();
             Log.log("registering self - own IP address is : " + ownAddress.getHostAddress());
         } catch (UnknownHostException e) {
-            Log.error( "error finding own IP address", e);
+            Log.error("error finding own IP address", e);
         }
         self = ClusterBean.getInstance().assertSelf(ownAddress.getHostAddress());
     }
@@ -101,12 +101,12 @@ public class ClusterManager {
         }
         try {
             listener = new PortListener("bandikaClusterListener", self.getPort(), ClusterMessageProcessor.getInstance());
-            self.setPort(Configuration.getInstance().getInt("clusterPort"));
+            self.setPort(Configuration.getInstance().getClusterPort());
             listener.startRunning();
             setPortFromListener();
             AppContextListener.registerThread(listener);
         } catch (Exception e) {
-            Log.error( "could not start listener", e);
+            Log.error("could not start listener", e);
         }
     }
 
@@ -177,7 +177,7 @@ public class ClusterManager {
                     masterAddress = answer.getResponder();
                 }
                 server.setTimeouts(0);
-                Log.log(String.format("server %s is alive ",server.getAddress()));
+                Log.log(String.format("server %s is alive ", server.getAddress()));
             } else {
                 server.setTimeouts(server.getTimeouts() + 1);
                 Log.warn(String.format("server %s is not alive (%s)", server.getAddress(), server.getTimeouts()));
@@ -185,7 +185,7 @@ public class ClusterManager {
                     masterAddress = null;
                     Log.warn("master is not reachable");
                 }
-                int maxTimeouts = Configuration.getInstance().getInt("maxClusterTimeouts");
+                int maxTimeouts = Configuration.getInstance().getMaxClusterTimeouts();
                 if (server.getTimeouts() > maxTimeouts) {
                     Log.warn(String.format("Server %s had more than %s connection failures - declaring as inactive", server.getAddress(), maxTimeouts));
                     server.setActive(false);

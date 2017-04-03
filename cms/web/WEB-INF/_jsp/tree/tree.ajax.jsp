@@ -7,12 +7,14 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.servlet.RightsReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="de.bandika.tree.*" %>
-<%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.tree.TreeCache" %>
+<%@ page import="de.bandika.tree.TreeHelper" %>
 <%@ page import="de.bandika.tree.TreeNode" %>
-<%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Locale" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     TreeNode node = TreeHelper.getRequestedNode(request, locale);
@@ -22,27 +24,29 @@
 %>
 
 <section class="mainSection ">
-    <table><tr>
-        <td class="contentSection">
-            <div class="siteTree topSpace">
-                <% if (SessionReader.hasAnyContentRight(request)) { %>
-                <h3 class="treeHeader">
-                    <%=StringUtil.getString("_structure", SessionReader.getSessionLocale(request))%>
-                </h3>
-                <ul id="structure" class="treeRoot">
-                    <%TreeHelper.addAdminSiteNode(tc.getRootSite(), nodeId, parentIds, request, locale, out);%>
-                </ul>
-                <%}%>
-            </div>
-        </td>
-        <td class="asideSection">
-            <div id="details">
-        
-            </div>
-        </td>
-    </tr></table>
+    <table>
+        <tr>
+            <td class="contentSection">
+                <div class="siteTree topSpace">
+                    <% if (RightsReader.hasAnyContentRight(request)) { %>
+                    <h3 class="treeHeader">
+                        <%=StringUtil.getString("_structure", SessionReader.getSessionLocale(request))%>
+                    </h3>
+                    <ul id="structure" class="treeRoot">
+                        <%TreeHelper.addAdminSiteNode(tc.getRootSite(), nodeId, parentIds, request, locale, out);%>
+                    </ul>
+                    <%}%>
+                </div>
+            </td>
+            <td class="asideSection">
+                <div id="details">
+                
+                </div>
+            </td>
+        </tr>
+    </table>
 </section>
-        
+
 <script type="text/javascript">
     $("#structure").treeview({
         persist: "location", collapsed: true, unique: false

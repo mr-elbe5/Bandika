@@ -12,9 +12,11 @@
 <%@ page import="de.bandika.user.UserData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     UserBean ubean = UserBean.getInstance();
-    List<UserData> users = ubean.getAllUsers();%>
+    List<UserData> users = ubean.getAllUsers();
+%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <fieldset>
     <table class="padded listTable">

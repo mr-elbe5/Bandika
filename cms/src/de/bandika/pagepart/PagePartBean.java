@@ -9,8 +9,8 @@
 package de.bandika.pagepart;
 
 import de.bandika.base.log.Log;
-import de.bandika.page.SectionData;
 import de.bandika.page.PageData;
+import de.bandika.page.SectionData;
 import de.bandika.tree.TreeBean;
 
 import java.sql.*;

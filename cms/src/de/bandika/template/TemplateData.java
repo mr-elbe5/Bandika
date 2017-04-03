@@ -28,15 +28,7 @@ public class TemplateData extends BaseData implements Serializable {
     public static final String USAGE_ALL = "all";
 
     public enum TagType {
-        CONTENT("<cms-content", "</cms-content>"),
-        PART("<cms-part", "</cms-part>"),
-        FIELD("<cms-field", "</cms-field>"),
-        CONTROL("<cms-control", "</cms-control>"),
-        SECTION("<cms-section", "</cms-section>"),
-        SNIPPET("<cms-snippet", "</cms-snippet>"),
-        RESOURCE("<cms-res", "</cms-res>"),
-        PARTID("<cms-pid", "</cms-pid>"),
-        CONTAINERID("<cms-cid", "</cms-cid>");
+        CONTENT("<cms-content", "</cms-content>"), PART("<cms-part", "</cms-part>"), FIELD("<cms-field", "</cms-field>"), CONTROL("<cms-control", "</cms-control>"), SECTION("<cms-section", "</cms-section>"), SNIPPET("<cms-snippet", "</cms-snippet>"), RESOURCE("<cms-res", "</cms-res>"), PARTID("<cms-pid", "</cms-pid>"), CONTAINERID("<cms-cid", "</cms-cid>");
 
         private String startTag;
         private String endTag;
@@ -127,20 +119,28 @@ public class TemplateData extends BaseData implements Serializable {
     /****** parser part ****/
 
     protected TagType getTagType(String src) throws ParseException {
-        int blankPos=src.indexOf(" ");
-        if (blankPos!=-1)
-            src=src.substring(0,blankPos);
+        int blankPos = src.indexOf(" ");
+        if (blankPos != -1)
+            src = src.substring(0, blankPos);
         switch (src) {
-            case "content":return TagType.CONTENT;
-            case "part":return TagType.PART;
-            case "field":return TagType.FIELD;
-            case "control":return TagType.CONTROL;
-            case "section":return TagType.SECTION;
-            case "snippet":return TagType.SNIPPET;
-            case "res":return TagType.RESOURCE;
-            case "pid":return TagType.PARTID;
+            case "content":
+                return TagType.CONTENT;
+            case "part":
+                return TagType.PART;
+            case "field":
+                return TagType.FIELD;
+            case "control":
+                return TagType.CONTROL;
+            case "section":
+                return TagType.SECTION;
+            case "snippet":
+                return TagType.SNIPPET;
+            case "res":
+                return TagType.RESOURCE;
+            case "pid":
+                return TagType.PARTID;
         }
-        throw new ParseException("bad cms tag: "+src, 0);
+        throw new ParseException("bad cms tag: " + src, 0);
     }
 
     public void fillTemplate(StringBuilder sb, PageData pageData, PagePartData partData, HttpServletRequest request) throws ParseException {
@@ -162,11 +162,11 @@ public class TemplateData extends BaseData implements Serializable {
             pos2 = src.indexOf('>', pos1 + 5);
             if (pos2 == -1)
                 throw new ParseException("no cms tag end", pos1);
-            String startTag=src.substring(pos1,pos2);
-            shortTag=false;
+            String startTag = src.substring(pos1, pos2);
+            shortTag = false;
             if (startTag.endsWith("/")) {
                 startTag = startTag.substring(0, startTag.length() - 1);
-                shortTag=true;
+                shortTag = true;
             }
             TagType tagType = getTagType(startTag.substring(5));
             TemplateAttributes attributes = new TemplateAttributes(startTag.substring(tagType.getStartTag().length()).trim());
@@ -186,7 +186,6 @@ public class TemplateData extends BaseData implements Serializable {
         }
     }
 
-
     protected boolean appendTagReplacement(StringBuilder sb, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) {
         switch (tagType) {
             case CONTROL:
@@ -196,7 +195,7 @@ public class TemplateData extends BaseData implements Serializable {
                 return true;
             case SNIPPET:
                 TemplateData snippet = TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, attributes.getString("name"));
-                if (snippet != null){
+                if (snippet != null) {
                     try {
                         snippet.fillTemplate(sb, pageData, null, request);
                     } catch (Exception e) {

@@ -9,10 +9,10 @@
 package de.bandika.templatecontrol;
 
 import de.bandika.page.PageData;
+import de.bandika.servlet.SessionReader;
 import de.bandika.site.SiteData;
 import de.bandika.template.TemplateAttributes;
 import de.bandika.tree.TreeCache;
-import de.bandika.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

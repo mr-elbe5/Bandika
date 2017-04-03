@@ -9,33 +9,28 @@
 package de.bandika.template;
 
 public enum TemplateType {
-    NONE{
-        public TemplateData getNewTemplateData(){
+    NONE {
+        public TemplateData getNewTemplateData() {
             return null;
         }
-    },
-    MASTER{
-        public TemplateData getNewTemplateData(){
+    }, MASTER {
+        public TemplateData getNewTemplateData() {
             return new MasterTemplateData();
         }
-    },
-    PAGE{
-        public TemplateData getNewTemplateData(){
+    }, PAGE {
+        public TemplateData getNewTemplateData() {
             return new PageTemplateData();
         }
-    },
-    PART{
-        public TemplateData getNewTemplateData(){
+    }, PART {
+        public TemplateData getNewTemplateData() {
             return new PartTemplateData();
         }
-    },
-    SNIPPET{
-        public TemplateData getNewTemplateData(){
+    }, SNIPPET {
+        public TemplateData getNewTemplateData() {
             return new SnippetTemplateData();
         }
-    },
-    PARTCONTAINER{
-        public TemplateData getNewTemplateData(){
+    }, PARTCONTAINER {
+        public TemplateData getNewTemplateData() {
             return new PartContainerTemplateData();
         }
     };

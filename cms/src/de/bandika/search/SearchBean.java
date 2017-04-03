@@ -8,31 +8,30 @@
  */
 package de.bandika.search;
 
+import de.bandika.base.log.Log;
+import de.bandika.database.DbBean;
+import de.bandika.util.ApplicationPath;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+
 import java.io.File;
 import java.nio.file.Paths;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
-import de.bandika.base.database.DbBean;
-import de.bandika.base.log.Log;
-import de.bandika.base.util.ApplicationPath;
-import de.bandika.file.FileData;
-import de.bandika.page.PageData;
-import de.bandika.tree.TreeCache;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.search.*;
-
-import org.apache.lucene.document.Document;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
+import java.sql.SQLException;
 
 public class SearchBean extends DbBean {
 
@@ -291,9 +290,9 @@ public class SearchBean extends DbBean {
         SearchData data = new SearchData();
         data.setType(SearchData.DataType.user);
         data.setId(rs.getInt(i++));
-        String firstName=rs.getString(i++);
-        String lastName=rs.getString(i);
-        data.setName(firstName+" "+lastName);
+        String firstName = rs.getString(i++);
+        String lastName = rs.getString(i);
+        data.setName(firstName + " " + lastName);
         data.setDoc();
         return data;
     }

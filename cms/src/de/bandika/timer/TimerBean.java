@@ -8,8 +8,8 @@
  */
 package de.bandika.timer;
 
-import de.bandika.base.database.DbBean;
 import de.bandika.base.log.Log;
+import de.bandika.database.DbBean;
 
 import java.sql.*;
 import java.util.ArrayList;

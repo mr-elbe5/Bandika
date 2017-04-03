@@ -6,14 +6,18 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
+<%@ page import="de.bandika.base.data.Locales" %>
+<%@ page import="de.bandika.base.mail.Mailer" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.configuration.ConfigAction" %>
+<%@ page import="de.bandika.configuration.Configuration" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="de.bandika.configuration.ConfigAction" %>
-<%@ page import="de.bandika.base.data.Locales" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
-    @SuppressWarnings("unchecked") Map<String, String> configs = (Map<String, String>) SessionReader.getSessionObject(request, "configs");
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
+    Configuration configuration = (Configuration) SessionReader.getSessionObject(request, "config");
+    assert (configuration != null);
+    Mailer.SmtpConnectionType[] connectionTypes = Mailer.SmtpConnectionType.values();
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="config.ajx" method="post" id="configform" name="configform" accept-charset="UTF-8">
@@ -22,34 +26,98 @@
         <table class="padded form">
             <tr>
                 <td>
-                    <label for="defaultLocale"><%=StringUtil.getHtml("_defaultLocale", locale)%></label></td>
+                    <label for="defaultLocale"><%=StringUtil.getHtml("_defaultLocale", locale)%>&nbsp;*</label></td>
                 <td>
                     <select id="defaultLocale" name="defaultLocale">
-                        <% for (Locale loc: Locales.getInstance().getLocales().keySet()){%>
-                            <option value="<%=loc.getLanguage()%>" <%=loc.equals(Locales.getInstance().getDefaultLocale()) ? "selected" : ""%>><%=loc.getDisplayName(locale)%></option>
+                        <% for (Locale loc : Locales.getInstance().getLocales().keySet()) {%>
+                        <option value="<%=loc.getLanguage()%>" <%=loc.equals(configuration.getDefaultLocale()) ? "selected" : ""%>><%=loc.getDisplayName(locale)%>
+                        </option>
                         <%}%>
                     </select>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="mailHost"><%=StringUtil.getHtml("_emailHost", locale)%>&nbsp;*</label></td>
+                    <label for="smtpHost"><%=StringUtil.getHtml("_smtpHost", locale)%>&nbsp;*</label></td>
                 <td>
-                    <input type="text" id="mailHost" name="mailHost" value="<%=StringUtil.toHtml(configs.get("mailHost"))%>" maxlength="255"/>
+                    <input type="text" id="smtpHost" name="smtpHost" value="<%=StringUtil.toHtml(configuration.getSmtpHost())%>" maxlength="255"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="smtpPort"><%=StringUtil.getHtml("_smtpPort", locale)%>&nbsp;*</label></td>
+                <td>
+                    <input type="text" id="smtpPort" name="smtpPort" value="<%=configuration.getSmtpPort()%>" maxlength="10"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="smtpConnectionType"><%=StringUtil.getHtml("_smtpConnectionType", locale)%>&nbsp;*</label>
+                </td>
+                <td>
+                    <select id="smtpConnectionType" name="smtpConnectionType">
+                        <% for (Mailer.SmtpConnectionType ctype : connectionTypes) {%>
+                        <option value="<%=ctype.name()%>" <%=ctype.equals(configuration.getSmtpConnectionType()) ? "selected" : ""%>><%=ctype.name()%>
+                        </option>
+                        <%}%>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="smtpUser"><%=StringUtil.getHtml("_smtpUser", locale)%>&nbsp;*</label></td>
+                <td>
+                    <input type="text" id="smtpUser" name="smtpUser" value="<%=StringUtil.toHtml(configuration.getSmtpUser())%>" maxlength="255"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="smtpPassword"><%=StringUtil.getHtml("_smtpPassword", locale)%>&nbsp;*</label></td>
+                <td>
+                    <input type="password" id="smtpPassword" name="smtpPassword" value="<%=StringUtil.toHtml(configuration.getSmtpPassword())%>" maxlength="255"/>
                 </td>
             </tr>
             <tr>
                 <td>
                     <label for="mailSender"><%=StringUtil.getHtml("_emailSender", locale)%>&nbsp;*</label></td>
                 <td>
-                    <input type="text" id="mailSender" name="mailSender" value="<%=StringUtil.toHtml(configs.get("mailSender"))%>" maxlength="255"/>
+                    <input type="text" id="mailSender" name="mailSender" value="<%=StringUtil.toHtml(configuration.getMailSender())%>" maxlength="255"/>
                 </td>
             </tr>
             <tr>
                 <td>
                     <label for="timerInterval"><%=StringUtil.getHtml("_timerInterval", locale)%>&nbsp;*</label></td>
                 <td>
-                    <input type="text" id="timerInterval" name="timerInterval" value="<%=StringUtil.toHtml(configs.get("timerInterval"))%>" maxlength="10"/>
+                    <input type="text" id="timerInterval" name="timerInterval" value="<%=configuration.getTimerInterval()%>" maxlength="10"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="clusterPort"><%=StringUtil.getHtml("_clusterPort", locale)%>&nbsp;*</label></td>
+                <td>
+                    <input type="text" id="clusterPort" name="clusterPort" value="<%=configuration.getClusterPort()%>" maxlength="10"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="clusterTimeout"><%=StringUtil.getHtml("_clusterTimeout", locale)%>&nbsp;*</label></td>
+                <td>
+                    <input type="text" id="clusterTimeout" name="clusterTimeout" value="<%=configuration.getClusterTimeout()%>" maxlength="10"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="clusterMaxTimeouts"><%=StringUtil.getHtml("_clusterMaxTimeouts", locale)%>&nbsp;*</label>
+                </td>
+                <td>
+                    <input type="text" id="clusterMaxTimeouts" name="clusterMaxTimeouts" value="<%=configuration.getMaxClusterTimeouts()%>" maxlength="10"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="maxVersions"><%=StringUtil.getHtml("_maxVersions", locale)%>&nbsp;*</label></td>
+                <td>
+                    <input type="text" id="maxVersions" name="maxVersions" value="<%=configuration.getMaxVersions()%>" maxlength="10"/>
                 </td>
             </tr>
         </table>

@@ -7,13 +7,13 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.servlet.RequestReader" %>
-<%@ page import="de.bandika.group.GroupData" %>
 <%@ page import="de.bandika.group.GroupBean" %>
+<%@ page import="de.bandika.group.GroupData" %>
+<%@ page import="de.bandika.servlet.RequestReader" %>
+<%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.user.UserBean" %>
 <%@ page import="de.bandika.user.UserData" %>
+<%@ page import="java.util.Locale" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     int groupId = RequestReader.getInt(request, "groupId");
@@ -23,23 +23,30 @@
 </h3>
 <table class="padded details">
     <tr>
-        <td><label><%=StringUtil.getHtml("_id", locale)%></label></td>
-        <td><%=data.getId()%></td>
+        <td><label><%=StringUtil.getHtml("_id", locale)%>
+        </label></td>
+        <td><%=data.getId()%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_name", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getName())%></td>
+        <td><label><%=StringUtil.getHtml("_name", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getName())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_notes", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getNotes())%></td>
+        <td><label><%=StringUtil.getHtml("_notes", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getNotes())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_users", locale)%></label></td>
+        <td><label><%=StringUtil.getHtml("_users", locale)%>
+        </label></td>
         <td><% for (int userId : data.getUserIds()) {
-            UserData user=UserBean.getInstance().getUser(userId);%>
+            UserData user = UserBean.getInstance().getUser(userId);%>
             <%=user.getName()%><br>
-        <%}%></td>
+            <%}%></td>
     </tr>
 </table>
 

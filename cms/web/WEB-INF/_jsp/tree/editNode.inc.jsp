@@ -10,16 +10,18 @@
 <%@ page import="de.bandika.configuration.Configuration" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.site.SiteData" %>
+<%@ page import="de.bandika.tree.TreeCache" %>
 <%@ page import="de.bandika.tree.TreeNode" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.tree.TreeCache" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     TreeNode data = (TreeNode) request.getAttribute("treeNode");
     SiteData parentSite = null;
     if (data.getParentId() != 0) {
         TreeCache tc = TreeCache.getInstance();
         parentSite = tc.getSite(data.getParentId());
-    }%>
+    }
+%>
 <tr>
     <td><label><%=StringUtil.getHtml("_id", locale)%>
     </label></td>

@@ -9,6 +9,7 @@
 package de.bandika.base.util;
 
 import de.bandika.base.log.Log;
+import org.apache.commons.codec.binary.Base64;
 import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -22,9 +23,6 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import org.apache.commons.codec.binary.Base64;
-import org.w3c.dom.Element;
 
 public class XmlUtil {
 

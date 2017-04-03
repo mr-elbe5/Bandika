@@ -10,9 +10,11 @@
 <%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     String templateType = RequestReader.getString(request, "templateType");
-    String templateName = RequestReader.getString(request, "templateName");%>
+    String templateName = RequestReader.getString(request, "templateName");
+%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <div class="info">
     <div class="formText"><%=StringUtil.getHtml("_reallyDeleteTemplate", locale)%>

@@ -11,17 +11,20 @@
 <%@ page import="de.bandika.site.SiteData" %>
 <%@ page import="de.bandika.template.TemplateCache" %>
 <%@ page import="de.bandika.template.TemplateData" %>
+<%@ page import="de.bandika.template.TemplateType" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.template.TemplateType" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     SiteData data = (SiteData) SessionReader.getSessionObject(request, "siteData");
     List<TemplateData> masterTemplates = TemplateCache.getInstance().getTemplates(TemplateType.MASTER);
-    request.setAttribute("treeNode", data);%>
+    request.setAttribute("treeNode", data);
+%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/site.srv" method="post" id="sitesettingsform" name="sitesettingsform" accept-charset="UTF-8">
     <fieldset>
-        <input type="hidden" name="siteId" value="<%=data.getId()%>"/> <input type="hidden" name="act" value="saveSiteSettings"/>
+        <input type="hidden" name="siteId" value="<%=data.getId()%>"/>
+        <input type="hidden" name="act" value="saveSiteSettings"/>
         <table class="padded form">
             <jsp:include page="../tree/editNode.inc.jsp" flush="true"/>
             <tr>

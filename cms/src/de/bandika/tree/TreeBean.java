@@ -8,13 +8,15 @@
  */
 package de.bandika.tree;
 
-import de.bandika.base.database.DbBean;
 import de.bandika.base.log.Log;
+import de.bandika.database.DbBean;
 import de.bandika.rights.Right;
 import de.bandika.rights.RightBean;
 
 import java.sql.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Class TreeBean is the class for reading the tree for caching. <br>

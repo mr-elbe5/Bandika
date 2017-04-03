@@ -8,8 +8,8 @@
  */
 package de.bandika.file;
 
-import de.bandika.base.data.BinaryFileData;
 import de.bandika.base.cache.DataCache;
+import de.bandika.base.data.BinaryFileData;
 
 public class PreviewCache extends DataCache<BinaryFileData> {
 

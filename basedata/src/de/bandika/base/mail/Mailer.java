@@ -11,6 +11,7 @@ package de.bandika.base.mail;
 import de.bandika.base.data.BinaryFileData;
 
 import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.*;
@@ -20,6 +21,10 @@ import java.util.List;
 import java.util.Properties;
 
 public class Mailer {
+
+    public enum SmtpConnectionType {
+        plain, tls, ssl
+    }
 
     protected String from = null;
     protected String to = null;
@@ -31,6 +36,10 @@ public class Mailer {
     protected List<BinaryFileData> files = null;
     protected String replyTo = null;
     protected String smtpHost = null;
+    protected int smtpPort = 25;
+    protected SmtpConnectionType smtpConnectionType = SmtpConnectionType.plain;
+    protected String smtpUser = "";
+    protected String smtpPassword = "";
 
     public void setFrom(String from) {
         this.from = from;
@@ -75,6 +84,22 @@ public class Mailer {
             files = new ArrayList<>();
         }
         files.add(data);
+    }
+
+    public void setSmtpPort(int smtpPort) {
+        this.smtpPort = smtpPort;
+    }
+
+    public void setSmtpConnectionType(SmtpConnectionType smtpConnectionType) {
+        this.smtpConnectionType = smtpConnectionType;
+    }
+
+    public void setSmtpUser(String smtpUser) {
+        this.smtpUser = smtpUser;
+    }
+
+    public void setSmtpPassword(String smtpPassword) {
+        this.smtpPassword = smtpPassword;
     }
 
     public MimeMessage createMessage(Session session) throws Exception {
@@ -123,33 +148,65 @@ public class Mailer {
     }
 
     public boolean sendMail() throws Exception {
-        if (to == null) {
+        if (to == null || smtpHost == null) {
             return false;
         }
         Properties props = System.getProperties();
-        if (smtpHost != null) {
-            props.setProperty("mail.smtp.host", smtpHost);
+        switch (smtpConnectionType) {
+            case tls:
+                return sendTLSMail(props);
+            case ssl:
+                return sendSSLMail(props);
+            default:
+                return sendPlainMail(props);
         }
-        Session session = Session.getInstance(props, null);
+
+    }
+
+    public boolean sendTLSMail(Properties props) throws Exception {
+        props.setProperty("mail.smtp.host", smtpHost);
+        props.put("mail.smtp.port", Integer.toString(smtpPort));
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.auth", "true");
+        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(smtpUser, smtpPassword);
+            }
+        });
         MimeMessage msg = createMessage(session);
-        Transport.send(msg);
+        Transport transport = session.getTransport("smtp");
+        transport.connect(smtpHost, smtpUser, smtpPassword);
+        transport.sendMessage(msg, msg.getAllRecipients());
+        transport.close();
         return true;
     }
 
-    public boolean sendMail(String username, String password) throws Exception {
-        if (to == null) {
-            return false;
-        }
-        Properties props = System.getProperties();
-        if (smtpHost != null) {
-            props.setProperty("mail.smtp.host", smtpHost);
-        }
-        Session session = Session.getInstance(props, null);
+    public boolean sendSSLMail(Properties props) throws Exception {
+        props.setProperty("mail.smtps.host", smtpHost);
+        props.put("mail.smtps.ssl.enable", "true");
+        props.put("mail.smtps.port", Integer.toString(smtpPort));
+        props.put("mail.smtps.auth", "true");
+        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(smtpUser, smtpPassword);
+            }
+        });
         MimeMessage msg = createMessage(session);
-        Transport transport = session.getTransport("smtp");
-        transport.connect(smtpHost, username, password);
+        Transport transport = session.getTransport("smtps");
+        transport.connect(smtpHost, smtpUser, smtpPassword);
         transport.sendMessage(msg, msg.getAllRecipients());
         transport.close();
+        return true;
+    }
+
+    public boolean sendPlainMail(Properties props) throws Exception {
+        props.put("mail.smtp.host", smtpHost);
+        props.put("mail.smtp.port", Integer.toString(smtpPort));
+        Session session = Session.getInstance(props, null);
+        MimeMessage msg = createMessage(session);
+        Transport.send(msg);
         return true;
     }
 }

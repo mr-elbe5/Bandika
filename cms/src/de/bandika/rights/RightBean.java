@@ -8,15 +8,20 @@
  */
 package de.bandika.rights;
 
-import de.bandika.base.database.DbBean;
 import de.bandika.base.log.Log;
+import de.bandika.database.DbBean;
 import de.bandika.group.GroupData;
 import de.bandika.group.GroupRightsData;
 import de.bandika.tree.TreeNode;
+import de.bandika.user.User2GroupRelation;
 import de.bandika.user.UserRightsData;
 
-import java.sql.*;
-import java.util.Set;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RightBean extends DbBean {
 
@@ -29,13 +34,23 @@ public class RightBean extends DbBean {
         return instance;
     }
 
-    public UserRightsData getUserRights(Set<Integer> groupIds) {
+    public UserRightsData getUserRights(int userId) {
         Connection con = null;
         PreparedStatement pst = null;
         try {
             con = getConnection();
+            List<Integer> groupIds = new ArrayList<>();
+            pst = con.prepareStatement("SELECT group_id FROM t_user2group WHERE user_id=? AND relation=?");
+            pst.setInt(1, userId);
+            pst.setString(2, User2GroupRelation.RIGHTS.name());
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    groupIds.add(rs.getInt(1));
+                }
+            }
+            closeStatement(pst);
             UserRightsData data = new UserRightsData();
-            if (groupIds == null || groupIds.isEmpty()) {
+            if (groupIds.isEmpty()) {
                 return data;
             }
             StringBuilder buffer = new StringBuilder();

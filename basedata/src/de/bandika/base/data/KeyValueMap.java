@@ -8,7 +8,7 @@
  */
 package de.bandika.base.data;
 
-import java.util.*;
+import java.util.HashMap;
 
 public class KeyValueMap extends HashMap<String, Object> {
 

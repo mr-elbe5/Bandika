@@ -6,13 +6,16 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
+<%@ page import="de.bandika.base.data.Locales" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.user.UserData" %>
 <%@ page import="java.util.Locale" %>
-<%UserData user = (UserData) SessionReader.getSessionObject(request, "userData");
+<%
+    UserData user = (UserData) SessionReader.getSessionObject(request, "userData");
+    assert (user != null);
     Locale locale = SessionReader.getSessionLocale(request);%>
-<form action="/login.srv" method="post" name="form" accept-charset="UTF-8">
+<form action="/user.srv" method="post" name="form" accept-charset="UTF-8">
     <input type="hidden" name="act" value="registerUser"/>
     <fieldset>
         <table class="padded form">
@@ -42,6 +45,19 @@
                     <label for="email"><%=StringUtil.getHtml("_email", locale)%>&nbsp;*</label></td>
                 <td>
                     <input type="text" id="email" name="email" value="<%=StringUtil.toHtml(user.getEmail())%>" maxlength="200"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="locale"><%=StringUtil.getHtml("_locale", locale)%>
+                    </label></td>
+                <td>
+                    <select id="locale" name="locale">
+                        <% for (Locale loc : Locales.getInstance().getLocales().keySet()) {%>
+                        <option value="<%=loc.getLanguage()%>" <%=loc.equals(user.getLocale()) ? "selected" : ""%>><%=loc.getDisplayName(locale)%>
+                        </option>
+                        <%}%>
+                    </select>
                 </td>
             </tr>
             <tr>

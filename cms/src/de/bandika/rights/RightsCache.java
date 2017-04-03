@@ -9,6 +9,7 @@
 package de.bandika.rights;
 
 import de.bandika.base.cache.BaseCache;
+import de.bandika.user.UserRightsData;
 
 public class RightsCache extends BaseCache {
 
@@ -31,6 +32,15 @@ public class RightsCache extends BaseCache {
     public int getVersion() {
         checkDirty();
         return version;
+    }
+
+    public UserRightsData checkRights(UserRightsData rights) {
+        int ver = RightsCache.getInstance().getVersion();
+        if (ver == rights.getVersion())
+            return null;
+        rights = RightBean.getInstance().getUserRights(rights.getUserId());
+        rights.setVersion(ver);
+        return rights;
     }
 
 }

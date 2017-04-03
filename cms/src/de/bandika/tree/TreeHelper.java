@@ -13,9 +13,10 @@ import de.bandika.file.FileData;
 import de.bandika.page.PageData;
 import de.bandika.rights.Right;
 import de.bandika.rights.SystemZone;
-import de.bandika.site.SiteData;
 import de.bandika.servlet.RequestReader;
+import de.bandika.servlet.RightsReader;
 import de.bandika.servlet.SessionReader;
+import de.bandika.site.SiteData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -44,7 +45,7 @@ public class TreeHelper {
     public static void addAdminSiteNode(SiteData data, int currentId, List<Integer> activeIds, HttpServletRequest request, Locale locale, JspWriter writer) throws IOException {
         if (data == null)
             return;
-        boolean isOpen=data.getId() == TreeNode.ID_ROOT || activeIds.contains(data.getId()) || currentId == data.getId();
+        boolean isOpen = data.getId() == TreeNode.ID_ROOT || activeIds.contains(data.getId()) || currentId == data.getId();
         writer.write("<li");
         if (isOpen) {
             writer.write(" class=\"open\"");
@@ -61,7 +62,7 @@ public class TreeHelper {
         writer.write("')\">");
         writer.write(data.getDisplayName());
         writer.write("</div>");
-        if (SessionReader.hasContentRight(request,data.getId(),Right.EDIT)) {
+        if (RightsReader.hasContentRight(request, data.getId(), Right.EDIT)) {
             writer.write("<div class=\"contextMenu\">");
             writer.write("<div class=\"icn iweb\" onclick=\"return linkTo('");
             writer.write(StringUtil.toJs("/site.srv?act=show&siteId=" + data.getId()));
@@ -78,7 +79,7 @@ public class TreeHelper {
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_rights", locale));
             writer.write("</div>");
-            if (SessionReader.hasSystemRight(request, SystemZone.CONTENT,Right.EDIT)) {
+            if (RightsReader.hasSystemRight(request, SystemZone.CONTENT, Right.EDIT)) {
                 writer.write("<div class=\"icn iinherit\" onclick=\"return linkToTree('");
                 writer.write(StringUtil.toJs("/site.srv?act=inheritAll&siteId=" + data.getId()));
                 writer.write("');\">");
@@ -90,7 +91,7 @@ public class TreeHelper {
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_newSite", locale));
             writer.write("</div>");
-            if (SessionReader.hasSystemRight(request, SystemZone.CONTENT,Right.APPROVE)) {
+            if (RightsReader.hasSystemRight(request, SystemZone.CONTENT, Right.APPROVE)) {
                 writer.write("<div class=\"icn ipublish\" onclick=\"return linkToTree('");
                 writer.write(StringUtil.toJs("/site.srv?act=publishAll&siteId=" + data.getId()));
                 writer.write("');\">");
@@ -138,7 +139,7 @@ public class TreeHelper {
             writer.write("\" >");
             writer.write(StringUtil.getHtml("_pages"));
             writer.write("</div>");
-            if (SessionReader.hasContentRight(request,data.getId(),Right.EDIT)) {
+            if (RightsReader.hasContentRight(request, data.getId(), Right.EDIT)) {
                 writer.write("<div class=\"contextMenu\">");
                 writer.write("<div class=\"icn inew\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_createPage", locale) + "', '");
                 writer.write(StringUtil.toJs("/page.ajx?act=openCreatePage&siteId=" + data.getId()));
@@ -156,7 +157,7 @@ public class TreeHelper {
             }
             writer.write("<ul>");
             for (PageData child : data.getPages()) {
-                if (SessionReader.hasContentRight(request,child.getId(),Right.READ)) {
+                if (RightsReader.hasContentRight(request, child.getId(), Right.READ)) {
                     addAdminPageNode(child, currentId, request, locale, writer);
                 }
             }
@@ -171,7 +172,7 @@ public class TreeHelper {
             writer.write("\" >");
             writer.write(StringUtil.getHtml("_files"));
             writer.write("</div>");
-            if (SessionReader.hasContentRight(request,data.getId(),Right.EDIT)) {
+            if (RightsReader.hasContentRight(request, data.getId(), Right.EDIT)) {
                 writer.write("<div class=\"contextMenu\">");
                 writer.write("<div class=\"icn inew\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_createFile", locale) + "', '");
                 writer.write(StringUtil.toJs("/file.ajx?act=openCreateFile&siteId=" + data.getId()));
@@ -189,13 +190,13 @@ public class TreeHelper {
             }
             writer.write("<ul>");
             for (FileData child : data.getFiles()) {
-                if (SessionReader.hasContentRight(request,child.getId(),Right.READ)) {
+                if (RightsReader.hasContentRight(request, child.getId(), Right.READ)) {
                     addAdminFileNode(child, currentId, request, locale, writer);
                 }
             }
             writer.write("</ul></li>");
             for (SiteData child : data.getSites()) {
-                if (SessionReader.hasContentRight(request,child.getId(),Right.READ)) {
+                if (RightsReader.hasContentRight(request, child.getId(), Right.READ)) {
                     addAdminSiteNode(child, currentId, activeIds, request, locale, writer);
                 }
             }
@@ -222,7 +223,7 @@ public class TreeHelper {
             writer.write(")");
         }
         writer.write("</div>");
-        if (SessionReader.hasContentRight(request,data.getId(),Right.EDIT)) {
+        if (RightsReader.hasContentRight(request, data.getId(), Right.EDIT)) {
             writer.write("<div class=\"contextMenu\">");
             writer.write("<div class=\"icn iweb\" onclick=\"return linkTo('");
             writer.write(StringUtil.toJs("/page.srv?act=show&pageId=" + data.getId()));
@@ -234,7 +235,7 @@ public class TreeHelper {
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_settings", locale));
             writer.write("</div>");
-            if (data.getDraftVersion() != 0 && SessionReader.hasContentRight(request,data.getId(),Right.APPROVE)) {
+            if (data.getDraftVersion() != 0 && RightsReader.hasContentRight(request, data.getId(), Right.APPROVE)) {
                 writer.write("<div class=\"icn ipublish\" onclick=\"return linkToTree('");
                 writer.write(StringUtil.toJs("/page.srv?act=publishPage&fromAdmin=true&pageId=" + data.getId()));
                 writer.write("');\">");
@@ -289,7 +290,7 @@ public class TreeHelper {
         writer.write("')\">");
         writer.write(data.getDisplayName());
         writer.write("</div>");
-        if (SessionReader.hasContentRight(request,data.getId(),Right.EDIT)) {
+        if (RightsReader.hasContentRight(request, data.getId(), Right.EDIT)) {
             writer.write("<div class=\"contextMenu\">");
             writer.write("<div class=\"icn iweb\" onclick=\"return openTo('");
             writer.write(StringUtil.toJs(data.getUrl()));
@@ -309,7 +310,7 @@ public class TreeHelper {
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_replace", locale));
             writer.write("</div>");
-            if (data.getDraftVersion() != 0 && SessionReader.hasContentRight(request,data.getId(),Right.APPROVE)) {
+            if (data.getDraftVersion() != 0 && RightsReader.hasContentRight(request, data.getId(), Right.APPROVE)) {
                 writer.write("<div class=\"icn ipublish\" onclick=\"return linkToTree('");
                 writer.write(StringUtil.toJs("/file.srv?act=publishFile&fromAdmin=true&fileId=" + data.getId()));
                 writer.write("');\">");
@@ -361,7 +362,7 @@ public class TreeHelper {
         writer.write("')\">");
         writer.write(data.getDisplayName());
         writer.write("</div>");
-        if (SessionReader.hasContentRight(request,data.getId(),Right.EDIT)) {
+        if (RightsReader.hasContentRight(request, data.getId(), Right.EDIT)) {
             writer.write("<div class=\"contextMenu\">");
             writer.write("<div class=\"icn ifile\" onclick=\"return openBrowserLayerDialog('" + StringUtil.getHtml("_createFile", locale) + "', '");
             writer.write(StringUtil.toJs("/field.ajx?act=openCreateImageInBrowser&siteId=" + data.getId()));
@@ -373,7 +374,7 @@ public class TreeHelper {
         if (data.getSites().size() + data.getPages().size() + data.getFiles().size() > 0) {
             writer.write("<ul>");
             for (SiteData child : data.getSites()) {
-                if (SessionReader.hasContentRight(request,child.getId(),Right.READ)) {
+                if (RightsReader.hasContentRight(request, child.getId(), Right.READ)) {
                     addBrowserSiteNode(child, currentId, activeIds, functionName, request, locale, writer);
                 }
             }

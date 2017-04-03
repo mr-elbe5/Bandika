@@ -25,12 +25,15 @@ public enum BlogAction implements IAction {
         }
     };
 
-
     public static final String KEY = "blog";
-    public static void initialize(){
+
+    public static void initialize() {
         ActionDispatcher.addClass(KEY, BlogAction.class);
     }
+
     @Override
-    public String getKey(){return KEY;}
+    public String getKey() {
+        return KEY;
+    }
 
 }

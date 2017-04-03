@@ -3,9 +3,9 @@ package de.bandika.tree;
 import de.bandika.base.data.BaseIdData;
 import de.bandika.base.data.Locales;
 import de.bandika.base.data.XmlData;
-import de.bandika.base.util.XmlUtil;
 import de.bandika.base.log.Log;
 import de.bandika.base.util.StringUtil;
+import de.bandika.base.util.XmlUtil;
 import de.bandika.group.GroupBean;
 import de.bandika.group.GroupData;
 import de.bandika.rights.Right;
@@ -38,7 +38,6 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
     protected Locale locale = null;
     protected Map<Integer, Right> rights = new HashMap<>();
     protected List<Integer> parentIds = new ArrayList<>();
-    protected List<TreeNode> children = new ArrayList<>();
 
     public TreeNode() {
     }
@@ -71,10 +70,10 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
         setId(TreeBean.getInstance().getNextId());
         setParentId(data.getParentId());
         setParent(data.getParent());
-        setRanking(data.getRanking()+1);
-        setName(data.getName()+"_clone");
+        setRanking(data.getRanking() + 1);
+        setName(data.getName() + "_clone");
         inheritPathFromParent();
-        setDisplayName(data.getDisplayName()+"_Clone");
+        setDisplayName(data.getDisplayName() + "_Clone");
         setDescription(data.getDescription());
         setAnonymous(data.isAnonymous());
         setInheritsRights(data.inheritsRights());
@@ -160,7 +159,7 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
     }
 
     public void setName(String name) {
-        this.name=StringUtil.toSafeWebName(name);
+        this.name = StringUtil.toSafeWebName(name);
     }
 
     public String getPath() {
@@ -267,7 +266,7 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
     }
 
     public boolean isGroupRight(int id, Right right) {
-        return rights.containsKey(id) && rights.get(id)==right;
+        return rights.containsKey(id) && rights.get(id) == right;
     }
 
     public boolean hasAnyGroupRight(int id) {
@@ -280,16 +279,6 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
 
     public List<Integer> getParentIds() {
         return parentIds;
-    }
-
-    public void inheritToChildren() {
-        for (TreeNode child : children) {
-            inheritToChild(child);
-            child.inheritToChildren();
-        }
-    }
-
-    public void inheritToChild(TreeNode child) {
     }
 
     public void setCreateValues(TreeNode parent) {
@@ -306,10 +295,10 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
     }
 
     public void readTreeNodeRequestData(HttpServletRequest request) {
-        String name= RequestReader.getString(request, "displayName").trim();
+        String name = RequestReader.getString(request, "displayName").trim();
         setDisplayName(name.isEmpty() ? getName() : name);
-        name=RequestReader.getString(request, "name").trim();
-        setName(name.isEmpty() ? getDisplayName(): name);
+        name = RequestReader.getString(request, "name").trim();
+        setName(name.isEmpty() ? getDisplayName() : name);
         setDescription(RequestReader.getString(request, "description"));
         setInNavigation(RequestReader.getBoolean(request, "inNavigation"));
         setAnonymous(RequestReader.getBoolean(request, "anonymous"));
@@ -323,7 +312,7 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
             for (GroupData group : groups) {
                 if (group.getId() <= GroupData.ID_MAX_FINAL)
                     continue;
-                String value= RequestReader.getString(request, "groupright_" + group.getId());
+                String value = RequestReader.getString(request, "groupright_" + group.getId());
                 if (!value.isEmpty())
                     getRights().put(group.getId(), Right.valueOf(value));
             }
@@ -395,6 +384,5 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
                 break;
         }
     }
-
 
 }

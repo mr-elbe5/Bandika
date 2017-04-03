@@ -8,16 +8,19 @@
  */
 package de.bandika.configuration;
 
+import de.bandika.application.AdminAction;
 import de.bandika.base.cache.DataCache;
+import de.bandika.base.mail.Mailer;
 import de.bandika.rights.Right;
 import de.bandika.rights.SystemZone;
 import de.bandika.servlet.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
-public enum ConfigAction implements IAction {
+public enum ConfigAction implements ICmsAction {
     /**
      * no action
      */
@@ -26,104 +29,122 @@ public enum ConfigAction implements IAction {
         public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
             return forbidden();
         }
-    },
-    /**
+    }, /**
      * shows configuration details
      */
     showConfigurationDetails {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                return false;
-            return showConfigurationDetails(request, response);
-        }
-    },
-    /**
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                        return false;
+                    return showConfigurationDetails(request, response);
+                }
+            }, /**
      * opens configuration for editing
      */
     openEditConfiguration {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                return false;
-            Map<String, String> configs = ConfigurationBean.getInstance().getConfiguration();
-            SessionWriter.setSessionObject(request, "configs", configs);
-            return showEditConfiguration(request, response);
-        }
-    }
-    ,
-    /**
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                        return false;
+                    Configuration config = null;
+                    try {
+                        config = (Configuration) Configuration.getInstance().clone();
+                    } catch (CloneNotSupportedException ignore) {
+                        config = new Configuration();
+                    }
+                    SessionWriter.setSessionObject(request, "config", config);
+                    return showEditConfiguration(request, response);
+                }
+            }, /**
      * saves configuration and reloads it
      */
     saveConfiguration {
-        @Override
-        @SuppressWarnings("unchecked")
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                return false;
+                @Override
+                @SuppressWarnings("unchecked")
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                        return false;
+                    Configuration config = (Configuration) SessionReader.getSessionObject(request, "config");
+                    if (!readConfigRequestData(config, request)) {
+                        return showEditConfiguration(request, response);
+                    }
+                    ConfigurationBean ts = ConfigurationBean.getInstance();
+                    if (!ts.saveConfiguration(config)) {
+                        return showEditConfiguration(request, response);
+                    }
+                    SessionWriter.removeSessionObject(request, "config");
+                    Configuration.getInstance().loadAppConfiguration(config);
+                    return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_configurationSaved");
+                }
 
-            Map<String, String> configs = (Map<String, String>) getSessionObject(request, "configs");
-            if (!readConfigRequestData(configs, request)) {
-                return showEditConfiguration(request, response);
-            }
-            ConfigurationBean ts = ConfigurationBean.getInstance();
-            ts.saveConfiguration(configs);
-            SessionWriter.removeSessionObject(request, "configs");
-            Configuration.getInstance().loadAppConfiguration();
-            return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_configurationSaved");
-        }
-
-        public boolean readConfigRequestData(Map<String, String> configs, HttpServletRequest request) {
-            configs.put("defaultLocale", RequestReader.getString(request, "defaultLocale"));
-            configs.put("mailHost", RequestReader.getString(request, "mailHost"));
-            configs.put("mailSender", RequestReader.getString(request, "mailSender"));
-            configs.put("timerInterval", RequestReader.getString(request, "timerInterval"));
-            return true;
-        }
-    },
-    /**
+                public boolean readConfigRequestData(Configuration config, HttpServletRequest request) {
+                    config.setDefaultLocale(new Locale(RequestReader.getString(request, "defaultLocale")));
+                    config.setSmtpHost(RequestReader.getString(request, "smtpHost"));
+                    config.setSmtpPort(RequestReader.getInt(request, "smtpPort"));
+                    config.setSmtpConnectionType(Mailer.SmtpConnectionType.valueOf(RequestReader.getString(request, "smtpConnectionType")));
+                    config.setSmtpUser(RequestReader.getString(request, "smtpUser"));
+                    config.setSmtpPassword(RequestReader.getString(request, "smtpPassword"));
+                    config.setMailSender(RequestReader.getString(request, "mailSender"));
+                    config.setTimerInterval(RequestReader.getInt(request, "timerInterval"));
+                    config.setClusterPort(RequestReader.getInt(request, "clusterPort"));
+                    config.setClusterTimeout(RequestReader.getInt(request, "clusterTimeout"));
+                    config.setMaxClusterTimeouts(RequestReader.getInt(request, "clusterMaxTimeouts"));
+                    config.setMaxVersions(RequestReader.getInt(request, "maxVersions"));
+                    return config.isComplete();
+                }
+            }, /**
      * shows cache properties
      */
     showCacheDetails {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                return false;
-            return showCacheDetails(request, response);
-        }
-    },
-    /**
-     empties a cache
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                        return false;
+                    return showCacheDetails(request, response);
+                }
+            }, /**
+     * empties a cache
      */
     clearCache {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                return false;
-            List<String> names = RequestReader.getStringList(request, "cacheName");
-            for (String name : names) {
-                DataCache cache = DataCache.getCache(name);
-                if (cache != null) {
-                    cache.setDirty();
-                    cache.checkDirty();
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                        return false;
+                    List<String> names = RequestReader.getStringList(request, "cacheName");
+                    for (String name : names) {
+                        DataCache cache = DataCache.getCache(name);
+                        if (cache != null) {
+                            cache.setDirty();
+                            cache.checkDirty();
+                        }
+                    }
+                    RequestWriter.setMessageKey(request, "_cacheCleared");
+                    return AdminAction.openAdministration.execute(request, response);
                 }
-            }
-            RequestWriter.setMessageKey(request, "_cacheCleared");
-            return showAdministration(request, response);
-        }
-    };
+            };
 
     public static final String KEY = "config";
-    public static void initialize(){
+
+    public static void initialize() {
         ActionDispatcher.addClass(KEY, ConfigAction.class);
     }
+
     @Override
-    public String getKey(){return KEY;}
+    public String getKey() {
+        return KEY;
+    }
 
     public boolean showEditConfiguration(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/configuration/editConfiguration.ajax.jsp");
     }
-    protected boolean showConfigurationDetails(HttpServletRequest request, HttpServletResponse response) {return sendForwardResponse(request, response, "/WEB-INF/_jsp/configuration/configurationDetails.ajax.jsp");}
-    protected boolean showCacheDetails(HttpServletRequest request, HttpServletResponse response) {return sendForwardResponse(request, response, "/WEB-INF/_jsp/configuration/cacheDetails.ajax.jsp");}
+
+    protected boolean showConfigurationDetails(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/configuration/configurationDetails.ajax.jsp");
+    }
+
+    protected boolean showCacheDetails(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/configuration/cacheDetails.ajax.jsp");
+    }
 
 }

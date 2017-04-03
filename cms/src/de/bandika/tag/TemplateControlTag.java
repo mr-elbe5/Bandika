@@ -39,7 +39,7 @@ public class TemplateControlTag extends BaseTag {
 
     public int doStartTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
-        PageData pageData=null;
+        PageData pageData = null;
         try {
             if (!pageKey.isEmpty())
                 pageData = (PageData) request.getAttribute(pageKey);
@@ -49,8 +49,7 @@ public class TemplateControlTag extends BaseTag {
                 control.appendHtml(sb, null, content, pageData, request);
                 getWriter().print(sb.toString());
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Log.error("could not write control tag", e);
         }
         return SKIP_BODY;

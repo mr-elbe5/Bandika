@@ -26,5 +26,4 @@ public class BlogPartData extends PagePartData {
         this.title = title;
     }
 
-
 }

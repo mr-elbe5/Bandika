@@ -6,34 +6,41 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
+<%@ page import="de.bandika.base.data.Locales" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.configuration.Configuration" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="de.bandika.configuration.ConfigurationBean" %>
-<%@ page import="de.bandika.base.data.Locales" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
-    Map<String, String> configs = ConfigurationBean.getInstance().getConfiguration();
+    Configuration configuration = Configuration.getInstance();
 %>
 <h3><%=StringUtil.getString("_configuration", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
 </h3>
 <table class="padded details">
     <tr>
-        <td><label><%=StringUtil.getHtml("_defaultLocale", locale)%></label></td>
-        <td><%=Locales.getInstance().getDefaultLocale().getDisplayLanguage(locale)%></td>
+        <td><label><%=StringUtil.getHtml("_defaultLocale", locale)%>
+        </label></td>
+        <td><%=Locales.getInstance().getDefaultLocale().getDisplayLanguage(locale)%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_emailHost", locale)%></label></td>
-        <td><%=StringUtil.toHtml(configs.get("mailHost"))%></td>
+        <td><label><%=StringUtil.getHtml("_smtpHost", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(configuration.getSmtpHost())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_emailSender", locale)%></label></td>
-        <td><%=StringUtil.toHtml(configs.get("mailSender"))%></td>
+        <td><label><%=StringUtil.getHtml("_emailSender", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(configuration.getMailSender())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_timerInterval", locale)%></label></td>
-        <td><%=configs.get("timerInterval")%></td>
+        <td><label><%=StringUtil.getHtml("_timerInterval", locale)%>
+        </label></td>
+        <td><%=configuration.getTimerInterval()%>
+        </td>
     </tr>
 </table>
 

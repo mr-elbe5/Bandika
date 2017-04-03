@@ -18,7 +18,7 @@ public class GroupRightsData {
 
     protected Map<SystemZone, Right> systemRights = new HashMap<>();
 
-    protected int version=-1;
+    protected int version = -1;
 
     public Map<SystemZone, Right> getSystemRights() {
         return systemRights;
@@ -39,7 +39,7 @@ public class GroupRightsData {
     }
 
     public boolean isSystemRight(SystemZone zone, Right right) {
-        return hasAnySystemRight(zone) && systemRights.get(zone)==right;
+        return hasAnySystemRight(zone) && systemRights.get(zone) == right;
     }
 
     public int getVersion() {

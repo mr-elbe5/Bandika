@@ -11,7 +11,7 @@
 <%@ page import="java.util.Locale" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
-    int userId=SessionReader.getUserId(request);
+    int userId = SessionReader.getLoginId(request);
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/user.ajx" method="post" id="userform" name="userform" accept-charset="UTF-8">

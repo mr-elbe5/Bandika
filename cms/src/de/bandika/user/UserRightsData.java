@@ -16,10 +16,19 @@ import java.util.Map;
 
 public class UserRightsData {
 
+    protected int userId;
     protected Map<Integer, Right> treeRights = new HashMap<>();
     protected Map<SystemZone, Right> systemRights = new HashMap<>();
 
-    protected int version=-1;
+    protected int version = -1;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public void addTreeRight(int id, Right right) {
         if (!treeRights.containsKey(id) || !treeRights.get(id).includesRight(right)) {
@@ -52,11 +61,11 @@ public class UserRightsData {
     }
 
     public boolean hasAnyContentRight() {
-       return hasSystemRight(SystemZone.CONTENT,Right.READ) || hasAnyTreeRight();
+        return hasSystemRight(SystemZone.CONTENT, Right.READ) || hasAnyTreeRight();
     }
 
     public boolean hasContentRight(int id, Right right) {
-        return hasSystemRight(SystemZone.CONTENT,right) || hasTreeRight(id, right);
+        return hasSystemRight(SystemZone.CONTENT, right) || hasTreeRight(id, right);
     }
 
     public int getVersion() {

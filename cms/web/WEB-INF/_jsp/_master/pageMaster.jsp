@@ -8,9 +8,9 @@
 --%><!DOCTYPE html><%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.templatecontrol.BreadcrumbControl" %>
-<%@ page import="de.bandika.templatecontrol.TopNavControl" %>
-<%@ page import="de.bandika.templatecontrol.TopAdminNavControl" %>
 <%@ page import="de.bandika.templatecontrol.MainMenuControl" %>
+<%@ page import="de.bandika.templatecontrol.TopAdminNavControl" %>
+<%@ page import="de.bandika.templatecontrol.TopNavControl" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%String title = StringUtil.getString("appTitle");%>
 <html>
@@ -19,12 +19,15 @@
     <title><%=title%>
     </title>
     <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/_statics/css/base.css">
+    <link rel="stylesheet" href="/_statics/css/fonts.css">
     <link rel="stylesheet" href="/_statics/css/cms.css">
     <link rel="stylesheet" href="/_statics/css/layout.css">
     <script type="text/javascript" src="/_statics/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="/_statics/js/jquery.treeview.js"></script>
     <script type="text/javascript" src="/_statics/ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="/_statics/ckeditor/adapters/jquery.js"></script>
+    <script type="text/javascript" src="/_statics/js/base.js"></script>
     <script type="text/javascript" src="/_statics/js/cms.js"></script>
 </head>
 <body class="carbon">

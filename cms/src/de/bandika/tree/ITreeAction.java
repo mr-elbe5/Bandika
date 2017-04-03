@@ -8,20 +8,20 @@
  */
 package de.bandika.tree;
 
-import de.bandika.servlet.IAction;
+import de.bandika.servlet.ICmsAction;
 import de.bandika.servlet.RequestStatics;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public interface ITreeAction extends IAction {
+public interface ITreeAction extends ICmsAction {
 
     default boolean showTree(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/tree/tree.ajax.jsp");
     }
 
     default boolean closeLayerToTree(HttpServletRequest request, HttpServletResponse response, String url) {
-        return closeLayer(request, response, "closeLayerToTree('" +url +"')");
+        return closeLayer(request, response, "closeLayerToTree('" + url + "')");
     }
 
     default boolean closeLayerToTree(HttpServletRequest request, HttpServletResponse response, String url, String messageKey) {

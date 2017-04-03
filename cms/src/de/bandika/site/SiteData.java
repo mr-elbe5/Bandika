@@ -69,8 +69,8 @@ public class SiteData extends TreeNode {
         return sites;
     }
 
-    public void getAllSites(List<SiteData> list){
-        for (SiteData site : getSites()){
+    public void getAllSites(List<SiteData> list) {
+        for (SiteData site : getSites()) {
             list.add(site);
             site.getAllSites(list);
         }
@@ -112,7 +112,6 @@ public class SiteData extends TreeNode {
         return page == null ? 0 : page.getId();
     }
 
-    @Override
     public void inheritToChildren() {
         for (SiteData child : sites) {
             inheritToChild(child);
@@ -135,7 +134,6 @@ public class SiteData extends TreeNode {
         Collections.sort(files);
     }
 
-    @Override
     public void inheritToChild(TreeNode child) {
         child.setPathFromParentPath(path);
         if (child.inheritsRights()) {
@@ -149,8 +147,8 @@ public class SiteData extends TreeNode {
 
     public void readSiteCreateRequestData(HttpServletRequest request) {
         setDisplayName(RequestReader.getString(request, "displayName").trim());
-        String name=RequestReader.getString(request, "name").trim();
-        setName(name.isEmpty() ? getDisplayName(): name);
+        String name = RequestReader.getString(request, "name").trim();
+        setName(name.isEmpty() ? getDisplayName() : name);
     }
 
     public void readSiteRequestData(HttpServletRequest request) {

@@ -31,10 +31,10 @@ public class SectionData implements XmlData {
     public SectionData() {
     }
 
-    public void cloneData(SectionData data){
+    public void cloneData(SectionData data) {
         setName(data.getName());
-        for (PagePartData srcPart : data.parts){
-            PagePartData part=new PagePartData();
+        for (PagePartData srcPart : data.parts) {
+            PagePartData part = new PagePartData();
             part.setPageId(getPageId());
             part.setSection(getName());
             part.cloneData(srcPart);
@@ -176,7 +176,7 @@ public class SectionData implements XmlData {
     public void appendSectionHtml(StringBuilder sb, TemplateAttributes attributes, PageData pageData, HttpServletRequest request) {
         boolean editMode = pageData.isEditMode();
         Locale locale = SessionReader.getSessionLocale(request);
-        String cls=attributes.getString("class");
+        String cls = attributes.getString("class");
         boolean hasParts = getParts().size() > 0;
         if (editMode) {
             sb.append("<div class = \"editSection\">");

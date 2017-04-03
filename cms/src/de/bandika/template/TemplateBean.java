@@ -8,7 +8,7 @@
  */
 package de.bandika.template;
 
-import de.bandika.base.database.DbBean;
+import de.bandika.database.DbBean;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -50,8 +50,8 @@ public class TemplateBean extends DbBean {
         return result;
     }
 
-    public Map<TemplateType,List<TemplateData>> getAllTemplates() {
-        Map<TemplateType,List<TemplateData>> templates = new HashMap<>();
+    public Map<TemplateType, List<TemplateData>> getAllTemplates() {
+        Map<TemplateType, List<TemplateData>> templates = new HashMap<>();
         Connection con = null;
         try {
             con = getConnection();
@@ -69,7 +69,7 @@ public class TemplateBean extends DbBean {
         return templates;
     }
 
-    protected List<TemplateData> getAllTemplates(Connection con, TemplateType type) throws SQLException{
+    protected List<TemplateData> getAllTemplates(Connection con, TemplateType type) throws SQLException {
         List<TemplateData> list = new ArrayList<>();
         PreparedStatement pst = null;
         TemplateData data;

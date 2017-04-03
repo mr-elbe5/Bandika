@@ -8,17 +8,18 @@
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.page.PageData" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.pagepart.PagePartData" %>
-<%@ page import="de.bandika.template.TemplateData" %>
+<%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.template.TemplateCache" %>
+<%@ page import="de.bandika.template.TemplateData" %>
 <%@ page import="de.bandika.template.TemplateType" %>
 <%@ page import="java.util.List" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%@ page import="java.util.Locale" %>
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     PageData data = (PageData) SessionReader.getSessionObject(request, "pageData");
     PagePartData part = data.getEditPagePart();
-    int contentCount=part.getContentCount();
+    int contentCount = part.getContentCount();
     List<TemplateData> partContainers = TemplateCache.getInstance().getTemplates(TemplateType.PARTCONTAINER);
     request.setAttribute("treeNode", data);
 %>
@@ -46,8 +47,9 @@
                 <td>
                     <div>
                         <select id="contentCount" name="contentCount">
-                            <% for (int i=1;i<9;i++){%>
-                            <option value="<%=i%>" <%=contentCount==i ? "selected" : ""%>><%=i%></option>
+                            <% for (int i = 1; i < 9; i++) {%>
+                            <option value="<%=i%>" <%=contentCount == i ? "selected" : ""%>><%=i%>
+                            </option>
                             <%}%>
                         </select>
                     </div>
@@ -59,15 +61,17 @@
                 <td>
                     <select id="containerName" name="containerName">
                         <option value="" <%=part.getContainerName().isEmpty() ? "selected" : ""%>>&nbsp;</option>
-                        <% for (TemplateData tdata : partContainers){%>
-                        <option value="<%=tdata.getName()%>" <%=part.getContainerName().equals(tdata.getName()) ? "selected" : ""%>><%=StringUtil.toHtml(tdata.getName())%></option>
+                        <% for (TemplateData tdata : partContainers) {%>
+                        <option value="<%=tdata.getName()%>" <%=part.getContainerName().equals(tdata.getName()) ? "selected" : ""%>><%=StringUtil.toHtml(tdata.getName())%>
+                        </option>
                         <%}%>
                     </select>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="script"><%=StringUtil.getHtml("_script", locale)%></label></td>
+                    <label for="script"><%=StringUtil.getHtml("_script", locale)%>
+                    </label></td>
                 <td>
                     <textarea id="script" name="script" rows="20" cols=""><%=StringUtil.toHtmlInput(part.getScript())%></textarea>
                 </td>

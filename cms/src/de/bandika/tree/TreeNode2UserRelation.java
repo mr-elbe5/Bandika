@@ -10,7 +10,6 @@ package de.bandika.tree;
 
 public enum TreeNode2UserRelation {
 
-    PRIVATE,
-    FOLLOW
+    PRIVATE, FOLLOW
 
 }

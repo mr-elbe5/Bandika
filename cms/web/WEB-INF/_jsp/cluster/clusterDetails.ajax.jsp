@@ -7,9 +7,9 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.cluster.ClusterManager" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cluster.ClusterManager" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
 %>
@@ -17,12 +17,16 @@
 </h3>
 <table class="padded details">
     <tr>
-        <td><label><%=StringUtil.getHtml("_self", locale)%></label></td>
-        <td><%=ClusterManager.getInstance().getSelf().getAddress()%></td>
+        <td><label><%=StringUtil.getHtml("_self", locale)%>
+        </label></td>
+        <td><%=ClusterManager.getInstance().getSelf().getAddress()%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_clusterState", locale)%></label></td>
-        <td><%=StringUtil.getHtml(ClusterManager.getInstance().isInCluster() ? "_clusterJoined" : "_clusterNotJoined")%></td>
+        <td><label><%=StringUtil.getHtml("_clusterState", locale)%>
+        </label></td>
+        <td><%=StringUtil.getHtml(ClusterManager.getInstance().isInCluster() ? "_clusterJoined" : "_clusterNotJoined")%>
+        </td>
     </tr>
 </table>
 

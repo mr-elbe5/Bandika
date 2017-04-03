@@ -23,32 +23,35 @@ public enum TreeAction implements IAction {
         public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
             return TreeAction.openTree.execute(request, response);
         }
-    },
-    /**
+    }, /**
      * show content tree in tree layer
      */
     openTree {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!SessionReader.isLoggedIn(request)) {
-                if (!isAjaxRequest(request)) {
-                    return LoginAction.openLogin.execute(request, response);
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!SessionReader.isLoggedIn(request)) {
+                        if (!isAjaxRequest(request)) {
+                            return LoginAction.openLogin.execute(request, response);
+                        }
+                        return forbidden();
+                    }
+                    if (RightsReader.hasAnySystemRight(request)) {
+                        return showTree(request, response, "");
+                    }
+                    return forbidden();
                 }
-                return forbidden();
-            }
-            if (SessionReader.hasAnySystemRight(request)) {
-                return showTree(request, response, "");
-            }
-            return forbidden();
-        }
-    };
+            };
 
     public static final String KEY = "tree";
-    public static void initialize(){
+
+    public static void initialize() {
         ActionDispatcher.addClass(KEY, TreeAction.class);
     }
+
     @Override
-    public String getKey(){return KEY;}
+    public String getKey() {
+        return KEY;
+    }
 
     public boolean showTree(HttpServletRequest request, HttpServletResponse response, String messageKey) throws Exception {
         request.setAttribute(RequestStatics.KEY_MESSAGEKEY, messageKey);

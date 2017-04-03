@@ -26,7 +26,7 @@ public class KeywordsControl extends TemplateControl {
         return instance;
     }
 
-    public void appendHtml(StringBuilder sb, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request){
+    public void appendHtml(StringBuilder sb, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) {
         sb.append("<meta name=\"keywords\" content=\"").append(StringUtil.toHtml(pageData.getKeywords())).append("\">");
     }
 

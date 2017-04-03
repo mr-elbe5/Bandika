@@ -10,8 +10,10 @@
 <%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
-    int siteId = RequestReader.getInt(request, "siteId");%>
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
+    int siteId = RequestReader.getInt(request, "siteId");
+%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/file.srv" method="post" id="uploadform" name="uploadform" accept-charset="UTF-8" enctype="multipart/form-data">
     <fieldset>
@@ -33,7 +35,8 @@
             </tr>
             <tr>
                 <td>
-                    <label for="name"><%=StringUtil.getHtml("_name", locale)%></label></td>
+                    <label for="name"><%=StringUtil.getHtml("_name", locale)%>
+                    </label></td>
                 <td>
                     <input type="text" id="name" name="name" value="" maxlength="60"/>
                 </td>

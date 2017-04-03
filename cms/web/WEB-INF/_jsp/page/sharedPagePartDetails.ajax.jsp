@@ -7,27 +7,31 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.pagepart.PagePartBean" %>
+<%@ page import="de.bandika.pagepart.PagePartData" %>
+<%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.servlet.RequestReader" %>
-<%@ page import="de.bandika.pagepart.PagePartData" %>
-<%@ page import="de.bandika.pagepart.PagePartBean" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     int partId = RequestReader.getInt(request, "partId");
     PagePartData pdata = PagePartBean.getInstance().getSharedPagePart(partId);
-    if (pdata!=null){
+    if (pdata != null) {
 %>
 <h3><%=StringUtil.getString("_pagePart", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
 </h3>
 <table class="padded details">
     <tr>
-        <td><label><%=StringUtil.getHtml("_name", locale)%></label></td>
-        <td><%=StringUtil.toHtml(pdata.getShareName())%></td>
+        <td><label><%=StringUtil.getHtml("_name", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(pdata.getShareName())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_template", locale)%></label></td>
-        <td><%=StringUtil.toHtml(pdata.getTemplateName())%></td>
+        <td><label><%=StringUtil.getHtml("_template", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(pdata.getTemplateName())%>
+        </td>
     </tr>
 </table>
 <%}%>

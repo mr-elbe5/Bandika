@@ -8,10 +8,13 @@
  */
 package de.bandika.search;
 
-import de.bandika.base.thread.BaseThread;
 import de.bandika.application.AppContextListener;
+import de.bandika.base.thread.BaseThread;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class SearchQueue {
 

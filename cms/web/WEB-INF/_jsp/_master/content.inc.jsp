@@ -8,8 +8,10 @@
 --%>
 <%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.RequestStatics" %>
-<%String jsp = RequestReader.getString(request, RequestStatics.KEY_JSP);%><%if (jsp != null) {
-    try {%>
+<%String jsp = RequestReader.getString(request, RequestStatics.KEY_JSP);%><%
+    if (jsp != null) {
+        try {
+%>
 <jsp:include page="<%=jsp%>"/>
 <% } catch (Exception e) { %>Jsp error:&nbsp;<%=e.getMessage()%><% }
 }%>

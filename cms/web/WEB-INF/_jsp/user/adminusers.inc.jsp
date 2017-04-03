@@ -7,16 +7,17 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%><%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.rights.Right" %>
+<%@ page import="de.bandika.rights.SystemZone" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
+<%@ page import="de.bandika.servlet.RightsReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.user.UserBean" %>
 <%@ page import="de.bandika.user.UserData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.rights.SystemZone" %>
-<%@ page import="de.bandika.rights.Right" %>
 <%
-    if (SessionReader.hasSystemRight(request, SystemZone.USER, Right.EDIT)) {
+    if (RightsReader.hasSystemRight(request, SystemZone.USER, Right.EDIT)) {
         Locale locale = SessionReader.getSessionLocale(request);
         List<UserData> users = null;
         try {
@@ -25,7 +26,7 @@
         } catch (Exception ignore) {
         }
         int userId = RequestReader.getInt(request, "userId");
-        if (SessionReader.hasAnySystemRight(request)) {
+        if (RightsReader.hasAnySystemRight(request)) {
 %>
 <li<%=userId != 0 ? " class=\"open\"" : ""%>>
     <div class="contextSource icn iuser"><%=StringUtil.getHtml("_users", locale)%>
@@ -35,8 +36,10 @@
         </div>
     </div>
     <ul>
-        <%if (users != null) {
-            for (UserData user : users) {%>
+        <%
+            if (users != null) {
+                for (UserData user : users) {
+        %>
         <li>
             <div class="contextSource icn iuser <%=userId==user.getId() ? "selected" : ""%>" onclick="$('#details').load('/user.ajx?act=showUserDetails&userId=<%=user.getId()%>')"><%=StringUtil.toHtml(user.getName())%>
             </div>
@@ -49,9 +52,13 @@
                 <%}%>
             </div>
         </li>
-        <%}
-        }%>
+        <%
+                }
+            }
+        %>
     </ul>
 </li>
-<%}
-}%>
+<%
+        }
+    }
+%>

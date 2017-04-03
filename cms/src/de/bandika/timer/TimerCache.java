@@ -8,10 +8,10 @@
  */
 package de.bandika.timer;
 
-import de.bandika.configuration.Configuration;
+import de.bandika.application.AppContextListener;
 import de.bandika.base.cache.BaseCache;
 import de.bandika.base.log.Log;
-import de.bandika.application.AppContextListener;
+import de.bandika.configuration.Configuration;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,7 +37,7 @@ public class TimerCache extends BaseCache {
     }
 
     public void startThread() {
-        int interval = Configuration.getInstance().getInt("timerInterval");
+        int interval = Configuration.getInstance().getTimerInterval();
         Log.log("setting timer interval to " + interval + " sec");
         timerThread = new TimerThread(interval);
         Log.log("timer thread state = " + (timerThread.isAlive() ? "alive" : "down"));
@@ -56,7 +56,7 @@ public class TimerCache extends BaseCache {
             timerThread.stopRunning();
         }
         timerThread = null;
-        int interval = Configuration.getInstance().getInt("timerInterval");
+        int interval = Configuration.getInstance().getTimerInterval();
         timerThread = new TimerThread(interval);
         timerThread.startRunning();
         AppContextListener.registerThread(timerThread);

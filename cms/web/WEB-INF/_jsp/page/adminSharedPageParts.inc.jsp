@@ -7,16 +7,17 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.pagepart.PagePartBean" %>
 <%@ page import="de.bandika.pagepart.PagePartData" %>
+<%@ page import="de.bandika.rights.Right" %>
+<%@ page import="de.bandika.rights.SystemZone" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
+<%@ page import="de.bandika.servlet.RightsReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.pagepart.PagePartBean" %>
-<%@ page import="de.bandika.rights.SystemZone" %>
-<%@ page import="de.bandika.rights.Right" %>
 <%
-    if (SessionReader.hasSystemRight(request, SystemZone.CONTENT, Right.EDIT)) {
+    if (RightsReader.hasSystemRight(request, SystemZone.CONTENT, Right.EDIT)) {
         Locale locale = SessionReader.getSessionLocale(request);
         List<PagePartData> parts = PagePartBean.getInstance().getAllSharedPagePartsWithUsages();
         int partId = RequestReader.getInt(request, "partId");
@@ -25,8 +26,10 @@
     <div class="icn ipart"><%=StringUtil.getHtml("_sharedParts", locale)%>
     </div>
     <ul>
-        <%if (parts != null) {
-            for (PagePartData part : parts) {%>
+        <%
+            if (parts != null) {
+                for (PagePartData part : parts) {
+        %>
         <li>
             <div class="contextSource icn ipart <%=partId==part.getId() ? "selected" : ""%>" onclick="$('#details').load('/pagepart.ajx?act=showSharedPartDetails&partId=<%=part.getId()%>')"><%=StringUtil.toHtml(part.getShareName())%>
             </div>
@@ -35,8 +38,10 @@
                 </div>
             </div>
         </li>
-        <%}
-        }%>
+        <%
+                }
+            }
+        %>
     </ul>
 </li>
 <%}%>

@@ -9,11 +9,11 @@
 package de.bandika.field;
 
 import de.bandika.base.util.StringUtil;
+import de.bandika.base.util.XmlUtil;
 import de.bandika.page.PageData;
 import de.bandika.pagepart.PagePartData;
-import de.bandika.template.TemplateAttributes;
 import de.bandika.servlet.RequestReader;
-import de.bandika.base.util.XmlUtil;
+import de.bandika.template.TemplateAttributes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -51,10 +51,10 @@ public class TextField extends Field {
         boolean partEditMode = pageData.isEditMode() && partData == pageData.getEditPagePart();
         int rows = attributes.getInt("rows");
         if (partEditMode) {
-            String content=getText();
+            String content = getText();
             if (content.isEmpty())
-                content=defaultContent;
-            if (rows>1)
+                content = defaultContent;
+            if (rows > 1)
                 sb.append("<textarea class=\"editField\" name=\"").append(getIdentifier()).append("\" rows=\"").append(rows).append("\" >").append(StringUtil.toHtmlInput(content)).append("</textarea>");
             else
                 sb.append("<input type=\"text\" class=\"editField\" name=\"").append(getIdentifier()).append("\" value=\"").append(StringUtil.toHtmlInput(content)).append("\" />");

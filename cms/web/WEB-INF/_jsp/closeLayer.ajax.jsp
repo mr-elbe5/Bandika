@@ -7,8 +7,10 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.servlet.RequestReader" %>
-<%String layerScript = RequestReader.getString(request, "closeLayerFunction");
-    if (layerScript.length() > 0) {%>
+<%
+    String layerScript = RequestReader.getString(request, "closeLayerFunction");
+    if (layerScript.length() > 0) {
+%>
 <script type="text/javascript">
     try {
         <%=layerScript%>

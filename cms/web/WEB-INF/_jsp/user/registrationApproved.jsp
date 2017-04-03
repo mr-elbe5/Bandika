@@ -9,8 +9,10 @@
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
-    String msg = StringUtil.getString("_approvedMessage", locale);%>
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
+    String msg = StringUtil.getString("_approvedMessage", locale);
+%>
 <div class="userForm">
     <%=StringUtil.toHtml(msg)%>
 </div>

@@ -10,21 +10,24 @@ package de.bandika.page;
 
 import de.bandika.base.log.Log;
 import de.bandika.base.search.ISearchTextProvider;
+import de.bandika.base.util.StringUtil;
+import de.bandika.base.util.XmlUtil;
 import de.bandika.pagepart.PagePartData;
 import de.bandika.servlet.RequestReader;
 import de.bandika.template.TemplateCache;
 import de.bandika.template.TemplateData;
 import de.bandika.template.TemplateType;
-import de.bandika.tree.TreeCache;
-import de.bandika.base.util.StringUtil;
-import de.bandika.base.util.XmlUtil;
 import de.bandika.tree.ResourceNode;
+import de.bandika.tree.TreeCache;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 public class PageData extends ResourceNode implements ISearchTextProvider {
 
@@ -53,11 +56,11 @@ public class PageData extends ResourceNode implements ISearchTextProvider {
         super.cloneData(data);
         setTemplateName(data.getTemplateName());
         setDefaultPage(false);
-        for (String sectionName : data.sections.keySet()){
-            SectionData section=new SectionData();
+        for (String sectionName : data.sections.keySet()) {
+            SectionData section = new SectionData();
             section.setPageId(getId());
             section.cloneData(data.sections.get(sectionName));
-            sections.put(sectionName,section);
+            sections.put(sectionName, section);
         }
     }
 
@@ -142,17 +145,16 @@ public class PageData extends ResourceNode implements ISearchTextProvider {
 
     public void readPageCreateRequestData(HttpServletRequest request) {
         setDisplayName(RequestReader.getString(request, "displayName").trim());
-        String name=RequestReader.getString(request, "name").trim();
-        if (name.isEmpty()){
-            name=getDisplayName();
-        }
-        else {
+        String name = RequestReader.getString(request, "name").trim();
+        if (name.isEmpty()) {
+            name = getDisplayName();
+        } else {
             int pos = name.lastIndexOf('.');
             if (pos != -1 && name.substring(pos).toLowerCase().startsWith(".htm")) {
                 name = name.substring(0, pos);
             }
         }
-        setName(name.isEmpty() ? getDisplayName(): name);
+        setName(name.isEmpty() ? getDisplayName() : name);
     }
 
     public void readPageSettingsRequestData(HttpServletRequest request) {
@@ -244,7 +246,7 @@ public class PageData extends ResourceNode implements ISearchTextProvider {
     }
 
     public String getPartContentHtml(HttpServletRequest request) {
-        if (editPagePart!=null)
+        if (editPagePart != null)
             return editPagePart.getContentHtml(this, request);
         return "";
     }

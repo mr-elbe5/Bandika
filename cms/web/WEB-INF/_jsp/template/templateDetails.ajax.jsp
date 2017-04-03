@@ -7,37 +7,45 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
-<%@ page import="de.bandika.template.TemplateData" %>
+<%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.template.TemplateCache" %>
+<%@ page import="de.bandika.template.TemplateData" %>
 <%@ page import="de.bandika.template.TemplateType" %>
+<%@ page import="java.util.Locale" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     TemplateType templateType = TemplateType.valueOf(RequestReader.getString(request, "templateType"));
     String templateName = RequestReader.getString(request, "templateName");
-    TemplateData data = TemplateCache.getInstance().getTemplate(templateType,templateName);
+    TemplateData data = TemplateCache.getInstance().getTemplate(templateType, templateName);
     if (data != null) {
 %>
 <h3><%=StringUtil.getString("_template", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
 </h3>
 <table class="padded details">
     <tr>
-        <td><label><%=StringUtil.getHtml("_name", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getName())%></td>
+        <td><label><%=StringUtil.getHtml("_name", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getName())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_displayName", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getDisplayName())%></td>
+        <td><label><%=StringUtil.getHtml("_displayName", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getDisplayName())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_description", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getDescription())%></td>
+        <td><label><%=StringUtil.getHtml("_description", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getDescription())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_usage", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getUsage())%></td>
+        <td><label><%=StringUtil.getHtml("_usage", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getUsage())%>
+        </td>
     </tr>
 </table>
 <%}%>

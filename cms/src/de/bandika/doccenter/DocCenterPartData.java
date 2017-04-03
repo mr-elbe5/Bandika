@@ -8,7 +8,6 @@
  */
 package de.bandika.doccenter;
 
-
 import de.bandika.pagepart.PagePartData;
 
 public class DocCenterPartData extends PagePartData {

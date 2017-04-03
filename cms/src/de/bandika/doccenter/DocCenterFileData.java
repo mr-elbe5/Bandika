@@ -8,7 +8,6 @@
  */
 package de.bandika.doccenter;
 
-
 import de.bandika.file.FileData;
 
 import java.util.Date;

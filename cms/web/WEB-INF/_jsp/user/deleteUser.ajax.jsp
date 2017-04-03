@@ -13,9 +13,11 @@
 <%@ page import="de.bandika.user.UserData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     List<Integer> ids = RequestReader.getIntegerList(request, "userId");
-    UserBean bean = UserBean.getInstance();%>
+    UserBean bean = UserBean.getInstance();
+%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <div class="info">
     <div class="formText"><%=StringUtil.getHtml("_reallyDeleteUser", locale)%>

@@ -12,13 +12,13 @@ import de.bandika.base.data.BinaryFileData;
 import de.bandika.base.log.Log;
 import de.bandika.base.search.ISearchTextProvider;
 import de.bandika.base.util.FileUtil;
+import de.bandika.base.util.ImageUtil;
+import de.bandika.base.util.StringUtil;
+import de.bandika.base.util.XmlUtil;
 import de.bandika.search.SearchHelper;
 import de.bandika.servlet.RequestError;
 import de.bandika.servlet.RequestReader;
 import de.bandika.servlet.SessionReader;
-import de.bandika.base.util.ImageUtil;
-import de.bandika.base.util.StringUtil;
-import de.bandika.base.util.XmlUtil;
 import de.bandika.tree.ResourceNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -31,7 +31,10 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Iterator;
+import java.util.List;
 
 public class FileData extends ResourceNode implements ISearchTextProvider {
 
@@ -102,8 +105,8 @@ public class FileData extends ResourceNode implements ISearchTextProvider {
     @Override
     public void setName(String name) {
         if (!name.contains(".") && this.name.contains("."))
-            name=name+FileUtil.getExtension(this.name);
-        this.name=StringUtil.toSafeWebName(name);
+            name = name + FileUtil.getExtension(this.name);
+        this.name = StringUtil.toSafeWebName(name);
     }
 
     @Override
@@ -230,12 +233,13 @@ public class FileData extends ResourceNode implements ISearchTextProvider {
             setName(file.getFileName());
             setContentType(file.getContentType());
             setContentChanged(true);
-            String name=RequestReader.getString(request, "displayName").trim();
+            String name = RequestReader.getString(request, "displayName").trim();
             setDisplayName(name.isEmpty() ? getName() : name);
-            name=RequestReader.getString(request, "name").trim();
-            setName(name.isEmpty() ? getDisplayName(): name);
+            name = RequestReader.getString(request, "name").trim();
+            setName(name.isEmpty() ? getDisplayName() : name);
         }
     }
+
     protected void readFileEditRequestData(HttpServletRequest request) {
         BinaryFileData file = RequestReader.getFile(request, "file");
         if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringUtil.isNullOrEmpty(file.getContentType())) {
@@ -381,12 +385,8 @@ public class FileData extends ResourceNode implements ISearchTextProvider {
     public String getSearchText() {
         StringBuilder sb;
         sb = new StringBuilder();
-        sb.append(name).append(" ").append(getDisplayName()).append(" ")
-                .append(getDescription()).append(" ")
-                .append(getMediaType()).append(" ")
-                .append(SearchHelper.getSearchContent(bytes, name, contentType));
+        sb.append(name).append(" ").append(getDisplayName()).append(" ").append(getDescription()).append(" ").append(getMediaType()).append(" ").append(SearchHelper.getSearchContent(bytes, name, contentType));
         return sb.toString();
     }
-
 
 }

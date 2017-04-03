@@ -26,10 +26,14 @@ public enum DocCenterAction implements IAction {
     };
 
     public static final String KEY = "doccenter";
-    public static void initialize(){
+
+    public static void initialize() {
         ActionDispatcher.addClass(KEY, DocCenterAction.class);
     }
+
     @Override
-    public String getKey(){return KEY;}
+    public String getKey() {
+        return KEY;
+    }
 
 }

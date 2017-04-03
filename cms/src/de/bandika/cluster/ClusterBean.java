@@ -8,7 +8,7 @@
  */
 package de.bandika.cluster;
 
-import de.bandika.base.database.DbBean;
+import de.bandika.database.DbBean;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -37,7 +37,7 @@ public class ClusterBean extends DbBean {
         ServerData data = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("select port,active,change_date from t_cluster where ipaddress=?");
+            pst = con.prepareStatement("SELECT port,active,change_date FROM t_cluster WHERE ipaddress=?");
             pst.setString(1, ownAddress);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
@@ -53,7 +53,7 @@ public class ClusterBean extends DbBean {
                 pst.close();
                 data = new ServerData();
                 data.setAddress(ownAddress);
-                pst = con.prepareStatement("insert into t_cluster (ipaddress,port,active) values(?,?,?)");
+                pst = con.prepareStatement("INSERT INTO t_cluster (ipaddress,port,active) VALUES(?,?,?)");
                 pst.setString(1, data.getAddress());
                 pst.setInt(2, data.getPort());
                 pst.setBoolean(3, data.isActive());
@@ -75,7 +75,7 @@ public class ClusterBean extends DbBean {
         ServerData data;
         try {
             con = getConnection();
-            pst = con.prepareStatement("select ipaddress,port,change_date from t_cluster");
+            pst = con.prepareStatement("SELECT ipaddress,port,change_date FROM t_cluster");
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 int i = 1;
@@ -103,7 +103,7 @@ public class ClusterBean extends DbBean {
         int count = 0;
         try {
             con = getConnection();
-            pst = con.prepareStatement("update t_cluster set port=?, change_date=now() where ipaddress=?");
+            pst = con.prepareStatement("UPDATE t_cluster SET port=?, change_date=now() WHERE ipaddress=?");
             pst.setInt(1, data.getPort());
             pst.setString(2, data.getAddress());
             count = pst.executeUpdate();
@@ -122,7 +122,7 @@ public class ClusterBean extends DbBean {
         int count = 0;
         try {
             con = getConnection();
-            pst = con.prepareStatement("update t_cluster set active=?, change_date=now() where ipaddress=?");
+            pst = con.prepareStatement("UPDATE t_cluster SET active=?, change_date=now() WHERE ipaddress=?");
             pst.setBoolean(1, flag);
             pst.setString(2, address);
             count = pst.executeUpdate();

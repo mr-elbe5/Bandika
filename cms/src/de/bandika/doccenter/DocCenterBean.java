@@ -9,7 +9,7 @@
 package de.bandika.doccenter;
 
 import de.bandika.base.data.BinaryFileData;
-import de.bandika.base.database.DbBean;
+import de.bandika.database.DbBean;
 
 import java.sql.*;
 import java.util.ArrayList;

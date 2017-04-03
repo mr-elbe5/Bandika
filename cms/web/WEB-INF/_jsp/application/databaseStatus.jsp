@@ -6,13 +6,15 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="de.bandika.base.database.DbConnector" %>
-<%@ page import="de.bandika.base.database.DbCreator" %>
-<%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.application.Installer" %>
-<%boolean connectorInitialized = DbConnector.getInstance().isInitialized();
+<%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.database.DbConnector" %>
+<%@ page import="de.bandika.database.DbCreator" %>
+<%
+    boolean connectorInitialized = DbConnector.getInstance().isInitialized();
     boolean databaseCreated = connectorInitialized && DbCreator.getInstance().isDatabaseCreated();
-    boolean hasSystemPassword = databaseCreated && Installer.getInstance().hasSystemPassword();%>
+    boolean hasSystemPassword = databaseCreated && Installer.getInstance().hasSystemPassword();
+%>
 <fieldset>
     <legend><%=StringUtil.getHtml("_status")%>
     </legend>

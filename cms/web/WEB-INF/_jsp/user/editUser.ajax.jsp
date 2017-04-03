@@ -7,12 +7,12 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
+<%@ page import="de.bandika.group.GroupBean" %>
 <%@ page import="de.bandika.group.GroupData" %>
+<%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.user.UserData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.group.GroupBean" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     UserData user = (UserData) SessionReader.getSessionObject(request, "userData");
@@ -34,87 +34,92 @@
             <tr>
                 <td>
                     <label for="login"><%=StringUtil.getHtml("_loginName", locale)%>&nbsp;*</label></td>
-                <td><input type="text" id="login" name="login" value="<%=StringUtil.toHtml(user.getLogin())%>" maxlength="30"/>
+                <td>
+                    <input type="text" id="login" name="login" value="<%=StringUtil.toHtml(user.getLogin())%>" maxlength="30"/>
                 </td>
             </tr>
             <tr>
                 <td>
                     <label for="password"><%=StringUtil.getHtml("_password", locale)%>&nbsp;*</label></td>
-                <td><input type="password" id="password" name="password" value="<%=StringUtil.toHtml(user.getPassword())%>" maxlength="16"/>
+                <td>
+                    <input type="password" id="password" name="password" value="<%=StringUtil.toHtml(user.getPassword())%>" maxlength="16"/>
                 </td>
             </tr>
             <tr>
                 <td>
                     <label for="firstName"><%=StringUtil.getHtml("_firstName", locale)%>
                     </label></td>
-                <td><input type="text" id="firstName" name="firstName" value="<%=StringUtil.toHtml(user.getFirstName())%>" maxlength="100"/>
-                </td>
-            </tr>
-            <tr>
                 <td>
-                    <label for="middleName"><%=StringUtil.getHtml("_middleName", locale)%>
-                    </label></td>
-                <td><input type="text" id="middleName" name="middleName" value="<%=StringUtil.toHtml(user.getMiddleName())%>" maxlength="100"/>
+                    <input type="text" id="firstName" name="firstName" value="<%=StringUtil.toHtml(user.getFirstName())%>" maxlength="100"/>
                 </td>
             </tr>
             <tr>
                 <td>
                     <label for="lastName"><%=StringUtil.getHtml("_lastName", locale)%>&nbsp;*</label></td>
-                <td><input type="text" id="lastName" name="lastName" value="<%=StringUtil.toHtml(user.getLastName())%>" maxlength="100"/>
+                <td>
+                    <input type="text" id="lastName" name="lastName" value="<%=StringUtil.toHtml(user.getLastName())%>" maxlength="100"/>
                 </td>
             </tr>
             <tr>
                 <td>
                     <label for="street"><%=StringUtil.getHtml("_street", locale)%>
                     </label></td>
-                <td><input type="text" id="street" name="street" value="<%=StringUtil.toHtml(user.getStreet())%>" maxlength="100"/>
+                <td>
+                    <input type="text" id="street" name="street" value="<%=StringUtil.toHtml(user.getStreet())%>" maxlength="100"/>
                 </td>
             </tr>
             <tr>
                 <td>
                     <label for="zipCode"><%=StringUtil.getHtml("_zipCode", locale)%>
                     </label></td>
-                <td><input type="text" id="zipCode" name="zipCode" value="<%=StringUtil.toHtml(user.getZipCode())%>" maxlength="30"/>
+                <td>
+                    <input type="text" id="zipCode" name="zipCode" value="<%=StringUtil.toHtml(user.getZipCode())%>" maxlength="30"/>
                 </td>
             </tr>
             <tr>
                 <td>
                     <label for="city"><%=StringUtil.getHtml("_city", locale)%>&nbsp</label></td>
-                <td><input type="text" id="city" name="city" value="<%=StringUtil.toHtml(user.getCity())%>" maxlength="100"/>
+                <td>
+                    <input type="text" id="city" name="city" value="<%=StringUtil.toHtml(user.getCity())%>" maxlength="100"/>
                 </td>
             </tr>
             <tr>
                 <td>
                     <label for="country"><%=StringUtil.getHtml("_country", locale)%>
                     </label></td>
-                <td><input type="text" id="country" name="country" value="<%=StringUtil.toHtml(user.getCountry())%>" maxlength="100"/>
+                <td>
+                    <input type="text" id="country" name="country" value="<%=StringUtil.toHtml(user.getCountry())%>" maxlength="100"/>
                 </td>
             </tr>
             <tr>
                 <td>
                     <label for="locale"><%=StringUtil.getHtml("_locale", locale)%>
                     </label></td>
-                <td><input type="text" id="locale" name="locale" value="<%=StringUtil.toHtml(user.getLocale().getLanguage())%>" maxlength="20"/>
+                <td>
+                    <input type="text" id="locale" name="locale" value="<%=StringUtil.toHtml(user.getLocale().getLanguage())%>" maxlength="20"/>
                 </td>
             </tr>
             <tr>
                 <td>
                     <label for="email"><%=StringUtil.getHtml("_email", locale)%>&nbsp;*</label></td>
-                <td><input type="text" id="email" name="email" value="<%=StringUtil.toHtml(user.getEmail())%>" maxlength="100"/>
+                <td>
+                    <input type="text" id="email" name="email" value="<%=StringUtil.toHtml(user.getEmail())%>" maxlength="100"/>
                 </td>
             </tr>
             <tr>
                 <td>
                     <label for="phone"><%=StringUtil.getHtml("_phone", locale)%>
                     </label></td>
-                <td><input type="text" id="phone" name="phone" value="<%=StringUtil.toHtml(user.getPhone())%>" maxlength="100"/>
+                <td>
+                    <input type="text" id="phone" name="phone" value="<%=StringUtil.toHtml(user.getPhone())%>" maxlength="100"/>
                 </td>
             </tr>
             <tr>
                 <td>
                     <label for="mobile"><%=StringUtil.getHtml("_mobile", locale)%>
                     </label></td>
-                <td><input type="text" id="mobile" name="mobile" value="<%=StringUtil.toHtml(user.getMobile())%>" maxlength="100"/>
+                <td>
+                    <input type="text" id="mobile" name="mobile" value="<%=StringUtil.toHtml(user.getMobile())%>" maxlength="100"/>
                 </td>
             </tr>
             <tr>
@@ -128,7 +133,8 @@
                 <td>
                     <label for="approved"><%=StringUtil.getHtml("_approved", locale)%>
                     </label></td>
-                <td><input type="checkbox" id="approved" name="approved" value="true" <%=user.isApproved() ? "checked" : ""%>/>
+                <td>
+                    <input type="checkbox" id="approved" name="approved" value="true" <%=user.isApproved() ? "checked" : ""%>/>
                 </td>
             </tr>
             <tr>
@@ -141,7 +147,8 @@
                     <div><input type="checkbox" checked disabled/>&nbsp;<%=StringUtil.toHtml(group.getName())%>
                     </div>
                     <%} else {%>
-                    <div><input type="checkbox" name="groupIds" value="<%=group.getId()%>" <%=user.getGroupIds().contains(group.getId()) ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.toHtml(group.getName())%><%}%>
+                    <div>
+                        <input type="checkbox" name="groupIds" value="<%=group.getId()%>" <%=user.getGroupIds().contains(group.getId()) ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.toHtml(group.getName())%><%}%>
                     </div>
                     <%}%>
                 </td>

@@ -8,49 +8,49 @@ body.mobile {
     height: auto;
 }
 
-.mobile .topNavSection div:first-child{
+.mobile .topNavSection div:first-child {
     display: none;
 }
 
-.mobile .logoSection{
+.mobile .logoSection {
     position: inherit;
 }
 
-.mobile .logoSection .title{
+.mobile .logoSection .title {
     display: inline-block;
     padding-top: 8px;
     top: auto;
 }
 
-.mobile div.navBtn{
+.mobile div.navBtn {
     display: block;
 }
 
-.mobile nav.mainNav{
+.mobile nav.mainNav {
     position: inherit;
     border: none;
     display: none;
 }
 
-.mobile nav.mainNav ul li{
+.mobile nav.mainNav ul li {
     display: block;
     border-top: none;
     border-left: none;
     border-right: none;
-    border-bottom:1px dotted #c8c8c8;
+    border-bottom: 1px dotted #c8c8c8;
 }
 
-.mobile nav.mainNav ul li ul{
+.mobile nav.mainNav ul li ul {
     position: inherit;
     display: block;
     border: none;
 }
 
-.mobile nav.mainNav ul li ul li{
+.mobile nav.mainNav ul li ul li {
     padding-left: 20px;
 }
 
-.mobile .breadcrumb{
+.mobile .breadcrumb {
     height: auto;
 }
 
@@ -62,7 +62,7 @@ body.mobile {
     overflow: inherit;
 }
 
-.mobile .footer{
+.mobile .footer {
     position: inherit;
     width: auto;
 }

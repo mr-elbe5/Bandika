@@ -7,16 +7,17 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.servlet.RequestReader" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
+<%@ page import="de.bandika.group.GroupBean" %>
 <%@ page import="de.bandika.group.GroupData" %>
+<%@ page import="de.bandika.rights.Right" %>
+<%@ page import="de.bandika.rights.SystemZone" %>
+<%@ page import="de.bandika.servlet.RequestReader" %>
+<%@ page import="de.bandika.servlet.RightsReader" %>
+<%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.group.GroupBean" %>
-<%@ page import="de.bandika.rights.SystemZone" %>
-<%@ page import="de.bandika.rights.Right" %>
 <%
-    if (SessionReader.hasSystemRight(request, SystemZone.USER, Right.EDIT)) {
+    if (RightsReader.hasSystemRight(request, SystemZone.USER, Right.EDIT)) {
         Locale locale = SessionReader.getSessionLocale(request);
         List<GroupData> groups = null;
         try {
@@ -24,7 +25,7 @@
         } catch (Exception ignore) {
         }
         int groupId = RequestReader.getInt(request, "groupId");
-        if (SessionReader.hasAnySystemRight(request)) {
+        if (RightsReader.hasAnySystemRight(request)) {
 %><!--groups-->
 <li<%=groupId != 0 ? " class=\"open\"" : ""%>>
     <div class="contextSource icn igroup"><%=StringUtil.getHtml("_groups", locale)%>
@@ -34,8 +35,10 @@
         </div>
     </div>
     <ul>
-        <%if (groups != null) {
-            for (GroupData group : groups) {%>
+        <%
+            if (groups != null) {
+                for (GroupData group : groups) {
+        %>
         <li>
             <div class="contextSource icn igroup <%=groupId==group.getId() ? "selected" : ""%>" onclick="$('#details').load('/group.ajx?act=showGroupDetails&groupId=<%=group.getId()%>')"><%=StringUtil.toHtml(group.getName())%>
             </div>
@@ -50,13 +53,19 @@
                 <% if (group.getId() >= GroupData.ID_MAX_FINAL) {%>
                 <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteGroup",locale)%>', '/group.ajx?act=openDeleteGroup&groupId=<%=group.getId()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                 </div>
-                <%}
-                }%>
+                <%
+                        }
+                    }
+                %>
             </div>
         </li>
-        <%}
-        }%>
+        <%
+                }
+            }
+        %>
     </ul>
 </li>
-<%}
-}%>
+<%
+        }
+    }
+%>

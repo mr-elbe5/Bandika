@@ -1,14 +1,15 @@
 <%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.field.FieldAction" %>
 <%@ page import="de.bandika.pagepart.CkCallbackData" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.site.SiteData" %>
+<%@ page import="de.bandika.tree.TreeCache" %>
+<%@ page import="de.bandika.tree.TreeHelper" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.tree.TreeCache" %>
-<%@ page import="de.bandika.tree.TreeHelper" %>
-<%@ page import="de.bandika.field.FieldAction" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     CkCallbackData browseData = (CkCallbackData) SessionReader.getSessionObject(request, "browseData");
     int siteId = browseData.getSiteId();
     TreeCache tc = TreeCache.getInstance();
@@ -18,14 +19,16 @@
     List<Integer> activeIds = new ArrayList<>();
     if (site != null)
         activeIds.addAll(site.getParentIds());
-    activeIds.add(siteId);%>
+    activeIds.add(siteId);
+%>
 <script type="text/javascript">
     $("#browserLayer").setLayerHeader("<%=StringUtil.getHtml("_selectImage",locale)%>&nbsp;<span style=\"font-size:80%;\">(<%=StringUtil.getHtml("_selectImageHint",locale)%>)</span>");
 </script>
 <section class="mainSection flexRow">
     <section class="contentSection flexItemOne">
         <div class="sectionInner">
-            <div class="icn iimage clickable" onclick="$('#browserView').load('/field.srv?act=showSelectableBrowserImages')"><%=StringUtil.getHtml("_all", locale)%><br>
+            <div class="icn iimage clickable" onclick="$('#browserView').load('/field.srv?act=showSelectableBrowserImages')"><%=StringUtil.getHtml("_all", locale)%>
+                <br>
             </div>
             <h3 class="treeHeader">
                 <%=StringUtil.getHtml("_structure", locale)%>

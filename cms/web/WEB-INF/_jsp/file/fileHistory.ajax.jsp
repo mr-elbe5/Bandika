@@ -8,16 +8,16 @@
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.configuration.Configuration" %>
-<%@ page import="de.bandika.page.PageBean" %>
-<%@ page import="de.bandika.page.PageData" %>
+<%@ page import="de.bandika.file.FileBean" %>
+<%@ page import="de.bandika.file.FileData" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.file.FileData" %>
-<%@ page import="de.bandika.file.FileBean" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     FileData data = (FileData) request.getAttribute("fileData");
-    List<FileData> fileVersions = FileBean.getInstance().getFileHistory(data.getId());%>
+    List<FileData> fileVersions = FileBean.getInstance().getFileHistory(data.getId());
+%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <fieldset>
     <input type="hidden" name="act" value=""/>

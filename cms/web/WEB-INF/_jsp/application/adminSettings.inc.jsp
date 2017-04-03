@@ -8,17 +8,18 @@
 --%>
 <%@ page import="de.bandika.base.cache.DataCache" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.rights.Right" %>
+<%@ page import="de.bandika.rights.SystemZone" %>
+<%@ page import="de.bandika.servlet.RequestReader" %>
+<%@ page import="de.bandika.servlet.RightsReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.timer.TimerCache" %>
 <%@ page import="de.bandika.timer.TimerTaskData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.servlet.RequestReader" %>
-<%@ page import="de.bandika.rights.Right" %>
-<%@ page import="de.bandika.rights.SystemZone" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
-    if (SessionReader.hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT)) {
+    if (RightsReader.hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT)) {
         List<DataCache> caches = null;
         try {
             caches = DataCache.getAllCaches();

@@ -11,9 +11,10 @@ package de.bandika.templatecontrol;
 import de.bandika.base.util.StringUtil;
 import de.bandika.page.PageData;
 import de.bandika.rights.Right;
-import de.bandika.tree.TreeNode;
-import de.bandika.template.TemplateAttributes;
+import de.bandika.servlet.RightsReader;
 import de.bandika.servlet.SessionReader;
+import de.bandika.template.TemplateAttributes;
+import de.bandika.tree.TreeNode;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
@@ -32,13 +33,13 @@ public class TopAdminNavControl extends TemplateControl {
 
     public void appendHtml(StringBuilder sb, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) {
         Locale locale = SessionReader.getSessionLocale(request);
-        int siteId = pageData==null ? 0 : pageData.getParentId();
-        int pageId = pageData==null ? 0 : pageData.getId();
+        int siteId = pageData == null ? 0 : pageData.getParentId();
+        int pageId = pageData == null ? 0 : pageData.getId();
         boolean editMode = pageData != null && pageData.isEditMode();
-        boolean hasAnyEditRight = SessionReader.hasAnyContentRight(request);
-        boolean hasEditRight = SessionReader.hasContentRight(request, pageId, Right.EDIT);
-        boolean hasAdminRight = SessionReader.hasAnySystemRight(request) || SessionReader.hasContentRight(request, TreeNode.ID_ALL, Right.EDIT);
-        boolean hasApproveRight = SessionReader.hasContentRight(request, pageId, Right.APPROVE);
+        boolean hasAnyEditRight = RightsReader.hasAnyContentRight(request);
+        boolean hasEditRight = RightsReader.hasContentRight(request, pageId, Right.EDIT);
+        boolean hasAdminRight = RightsReader.hasAnySystemRight(request) || RightsReader.hasContentRight(request, TreeNode.ID_ALL, Right.EDIT);
+        boolean hasApproveRight = RightsReader.hasContentRight(request, pageId, Right.APPROVE);
         sb.append("<ul>");
         if (editMode & hasEditRight) {
             sb.append("<li class=\"edit\"><a href=\"/page.srv?act=savePageContent&pageId=").append(pageId).append("\">").append(getHtml("_save", locale)).append("</a></li>");
@@ -48,17 +49,16 @@ public class TopAdminNavControl extends TemplateControl {
             }
             sb.append("<li class=\"edit\"><a href=\"/page.srv?act=stopEditing&pageId=").append(pageId).append("\">").append(getHtml("_cancel", locale)).append("</a></li>");
         } else {
-            if (pageId!=0 && hasEditRight) {
+            if (pageId != 0 && hasEditRight) {
                 sb.append("<li class=\"admin\"><a href=\"/page.srv?act=openEditPageContent&pageId=").append(pageId).append("\" title=\"").append(getHtml("_editPage", locale)).append("\"><span class=\"icn iedit\"></span></a></li>");
             }
-            if (pageId!=0 && hasApproveRight) {
+            if (pageId != 0 && hasApproveRight) {
                 if (pageData.getDraftVersion() != 0) {
                     sb.append("<li class=\"admin\"><a href=\"/page.srv?act=publishPage&pageId=").append(pageId).append("\" title=\"").append(getHtml("_publish", locale)).append("\"><span class=\"icn ipublish\"></span></a></li>");
                 }
             }
             if (hasAnyEditRight) {
-                sb.append("<li class=\"admin\"><a href=\"#\" onclick=\"return openTreeLayer('").append(StringUtil.getHtml("_tree")).append("', '").append("/tree.ajx?act=openTree&siteId=").append(siteId)
-                        .append("&pageId=").append(pageId).append("');\" title=\"").append(getHtml("_tree", locale)).append("\"><span class=\"icn isite\"></span></a></li>");
+                sb.append("<li class=\"admin\"><a href=\"#\" onclick=\"return openTreeLayer('").append(StringUtil.getHtml("_tree")).append("', '").append("/tree.ajx?act=openTree&siteId=").append(siteId).append("&pageId=").append(pageId).append("');\" title=\"").append(getHtml("_tree", locale)).append("\"><span class=\"icn isite\"></span></a></li>");
             }
             if (hasAdminRight) {
                 sb.append("<li class=\"admin\"><a href=\"/admin.srv?act=openAdministration&siteId=").append(siteId).append("&pageId=").append(pageId).append("\" title=\"").append(getHtml("_administration", locale)).append("\"><span class=\"icn isetting\"></span></a></li>");

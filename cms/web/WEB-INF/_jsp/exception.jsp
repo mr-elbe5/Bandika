@@ -7,10 +7,11 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.RequestError" %>
-<%RequestError re = RequestError.getError(request);
-    if (re != null) {%>
+<%
+    RequestError re = RequestError.getError(request);
+    if (re != null) {
+%>
 <div style="color:red;">
     <%=StringUtil.toHtml(re.getErrorString())%>
 </div>

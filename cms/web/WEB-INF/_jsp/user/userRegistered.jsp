@@ -10,9 +10,11 @@
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.user.UserData" %>
 <%@ page import="java.util.Locale" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     UserData user = (UserData) request.getAttribute("userData");
-    String msg = String.format(StringUtil.getString("_registeredMessage", locale), user.getLogin(), user.getEmail());%>
-<div class="userForm">
+    String msg = String.format(StringUtil.getString("_registeredMessage", locale), user.getLogin(), user.getEmail());
+%>
+<div class="padded">
     <%=StringUtil.toHtml(msg)%>
 </div>

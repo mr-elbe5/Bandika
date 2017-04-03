@@ -10,14 +10,17 @@
 <%@ page import="de.bandika.file.FileData" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     FileData data = (FileData) SessionReader.getSessionObject(request, "fileData");
     boolean inherited = data.inheritsRights();
-    request.setAttribute("treeNode", data);%>
+    request.setAttribute("treeNode", data);
+%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/file.srv" method="post" id="filerightsform" name="filerightsform" accept-charset="UTF-8">
     <fieldset>
-        <input type="hidden" name="fileId" value="<%=data.getId()%>"/> <input type="hidden" name="act" value="saveFileRights"/>
+        <input type="hidden" name="fileId" value="<%=data.getId()%>"/>
+        <input type="hidden" name="act" value="saveFileRights"/>
         <table class="padded form">
             <jsp:include page="../tree/editRights.inc.jsp" flush="true"/>
         </table>

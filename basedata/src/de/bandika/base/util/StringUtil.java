@@ -19,16 +19,9 @@ import static org.apache.commons.lang3.StringEscapeUtils.*;
 
 public class StringUtil {
 
-    private static final String[][] MATCHES=new String[][]{
-            {"ä","ae"},
-            {"ö","oe"},
-            {"ü","ue"},
-            {"Ä","Ae"},
-            {"Ö","Oe"},
-            {"Ü","Ue"},
-            {"ß","ss"}};
+    private static final String[][] MATCHES = new String[][]{{"ä", "ae"}, {"ö", "oe"}, {"ü", "ue"}, {"Ä", "Ae"}, {"Ö", "Oe"}, {"Ü", "Ue"}, {"ß", "ss"}};
 
-    static String bundleName="";
+    static String bundleName = "";
 
     public static String getBundleName() {
         return bundleName;
@@ -49,16 +42,16 @@ public class StringUtil {
         if (src == null) {
             return "";
         }
-        if (src.indexOf('\n')==-1)
+        if (src.indexOf('\n') == -1)
             return escapeHtml4(src);
 
-        StringTokenizer stk=new StringTokenizer(src,"\n", true);
-        if (stk.countTokens()==0)
+        StringTokenizer stk = new StringTokenizer(src, "\n", true);
+        if (stk.countTokens() == 0)
             return "";
-        StringBuilder sb=new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         String token;
-        while (stk.hasMoreTokens()){
-            token=stk.nextToken();
+        while (stk.hasMoreTokens()) {
+            token = stk.nextToken();
             if (token.equals("\n"))
                 sb.append("\n<br/>\n");
             else
@@ -126,11 +119,11 @@ public class StringUtil {
         }
     }
 
-    public static String toSafeWebName(String src){
-        for (String[] match : MATCHES){
-            src=src.replace(match[0],match[1]);
+    public static String toSafeWebName(String src) {
+        for (String[] match : MATCHES) {
+            src = src.replace(match[0], match[1]);
         }
-        return src.replaceAll("[\\s&]+","-").replaceAll("['\"><]+","");
+        return src.replaceAll("[\\s&]+", "-").replaceAll("['\"><]+", "");
     }
 
     public static String getIntString(List<Integer> ints) {
@@ -156,7 +149,7 @@ public class StringUtil {
         String s = "";
         try {
             ResourceBundle bundle = ResourceBundle.getBundle(bundleName, locale);
-            if (bundle==null || key==null || !bundle.containsKey(key)){
+            if (bundle == null || key == null || !bundle.containsKey(key)) {
                 Log.warn("resource string not found for key " + key + " of locale " + locale);
                 return "...";
             }

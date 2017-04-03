@@ -2,10 +2,13 @@
 <%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
-    int siteId = RequestReader.getInt(request, "siteId", 0);%>
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
+    int siteId = RequestReader.getInt(request, "siteId", 0);
+%>
 <form action="/field.srv" method="post" id="createform" name="createform" accept-charset="UTF-8" enctype="multipart/form-data">
-    <input type="hidden" name="act" value="saveImageInBrowser"/> <input type="hidden" name="siteId" value="<%=siteId%>"/>
+    <input type="hidden" name="act" value="saveImageInBrowser"/>
+    <input type="hidden" name="siteId" value="<%=siteId%>"/>
     <fieldset>
         <table class="padded form">
             <tr>

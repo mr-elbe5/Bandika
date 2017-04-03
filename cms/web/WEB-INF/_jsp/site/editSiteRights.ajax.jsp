@@ -10,14 +10,17 @@
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.site.SiteData" %>
 <%@ page import="java.util.Locale" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     SiteData data = (SiteData) SessionReader.getSessionObject(request, "siteData");
     boolean inherited = data.inheritsRights();
-    request.setAttribute("treeNode", data);%>
+    request.setAttribute("treeNode", data);
+%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/site.srv" method="post" id="siterightsform" name="siterightsform" accept-charset="UTF-8">
     <fieldset>
-        <input type="hidden" name="siteId" value="<%=data.getId()%>"/> <input type="hidden" name="act" value="saveSiteRights"/>
+        <input type="hidden" name="siteId" value="<%=data.getId()%>"/>
+        <input type="hidden" name="act" value="saveSiteRights"/>
         <table class="padded form">
             <jsp:include page="../tree/editRights.inc.jsp" flush="true"/>
         </table>

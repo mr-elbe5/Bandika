@@ -23,7 +23,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 public class PagePartData extends BaseIdData implements Comparable<PagePartData>, XmlData {
 
@@ -36,10 +38,10 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
     protected String templateName;
     protected String cssClass = "";
     protected String content = "";
-    protected PagePartContent[] contents=new PagePartContent[0];
+    protected PagePartContent[] contents = new PagePartContent[0];
     protected String containerName = "";
-    protected String script="";
-    protected int currentContentIdx=0;
+    protected String script = "";
+    protected int currentContentIdx = 0;
     protected Set<Integer> pageIds = null;
 
     public PagePartData() {
@@ -59,7 +61,7 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         setId(PageBean.getInstance().getNextId());
         setTemplateName(data.getTemplateName());
         setCssClass(data.getCssClass());
-        content=data.content;
+        content = data.content;
         copyContent(data);
         setContainerName(data.getContainerName());
         setScript(data.getScript());
@@ -67,17 +69,17 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
 
     public void copyContent(PagePartData part) {
         setContentCount(part.getContentCount());
-        for (int i=0; i<contents.length; i++) {
+        for (int i = 0; i < contents.length; i++) {
             contents[i].copyContent(part.getPartContent(i));
         }
     }
 
-    public String getHtmlId(){
-        return getSection()+"-part-" + getId()+"."+getCurrentContentIdx();
+    public String getHtmlId() {
+        return getSection() + "-part-" + getId() + "." + getCurrentContentIdx();
     }
 
-    public String getContainerId(){
-        return getSection()+"-cntr-" + getId();
+    public String getContainerId() {
+        return getSection() + "-cntr-" + getId();
     }
 
     public int getVersion() {
@@ -153,37 +155,37 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
     }
 
     public void changeCurrentContentIdx(int dir) {
-        currentContentIdx = currentContentIdx+dir;
-        if (currentContentIdx<0)
-            currentContentIdx=contents.length-1;
-        else if (currentContentIdx>=contents.length)
-            currentContentIdx=0;
+        currentContentIdx = currentContentIdx + dir;
+        if (currentContentIdx < 0)
+            currentContentIdx = contents.length - 1;
+        else if (currentContentIdx >= contents.length)
+            currentContentIdx = 0;
     }
 
     public int getContentCount() {
         return contents.length;
     }
 
-    public void setContentCount(int count){
-        if (contents.length==count || count<1)
+    public void setContentCount(int count) {
+        if (contents.length == count || count < 1)
             return;
-        PagePartContent[] arr=new PagePartContent[count];
-        for (int i=0; i<contents.length && i<count;i++){
-            arr[i]=contents[i];
+        PagePartContent[] arr = new PagePartContent[count];
+        for (int i = 0; i < contents.length && i < count; i++) {
+            arr[i] = contents[i];
         }
-        for (int i=contents.length; i<count;i++){
-            arr[i]=new PagePartContent();
+        for (int i = contents.length; i < count; i++) {
+            arr[i] = new PagePartContent();
         }
-        contents=arr;
+        contents = arr;
     }
 
     public void setPartContent(int idx, PagePartContent content) {
-        if (contents.length>idx)
-            contents[idx]=content;
+        if (contents.length > idx)
+            contents[idx] = content;
     }
 
     public PagePartContent getPartContent(int idx) {
-        return contents.length>idx ? contents[idx] : null;
+        return contents.length > idx ? contents[idx] : null;
     }
 
     public PagePartContent getCurrentPartContent() {
@@ -207,12 +209,12 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         this.script = script;
     }
 
-    public void setXmlContent(String content){
+    public void setXmlContent(String content) {
         this.content = content == null ? "" : content;
         evaluateXmlContent();
     }
 
-    public String getXmlContent(){
+    public String getXmlContent() {
         return content;
     }
 
@@ -275,25 +277,24 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
 
     public void appendLivePartHtml(StringBuilder sb, PageData pageData, HttpServletRequest request) {
         TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PART, getTemplateName());
-        TemplateData partContainer=null;
+        TemplateData partContainer = null;
         if (!containerName.isEmpty())
-            partContainer=TemplateCache.getInstance().getTemplate(TemplateType.PARTCONTAINER, getContainerName());
+            partContainer = TemplateCache.getInstance().getTemplate(TemplateType.PARTCONTAINER, getContainerName());
         try {
             sb.append("<div class=\"pagePart\" id=\"").append(getHtmlId()).append("\" >");
-            if (partContainer!=null){
-                String containerCode=partContainer.getCode().replaceAll(TemplateData.PLACEHOLDER_CONTAINERID, getContainerId());
-                int pos=containerCode.indexOf(TemplateData.PLACEHOLDER_PARTS);
-                if (pos!=-1){
-                    sb.append(containerCode.substring(0,pos));
-                    for (int i=0;i<getContentCount();i++){
+            if (partContainer != null) {
+                String containerCode = partContainer.getCode().replaceAll(TemplateData.PLACEHOLDER_CONTAINERID, getContainerId());
+                int pos = containerCode.indexOf(TemplateData.PLACEHOLDER_PARTS);
+                if (pos != -1) {
+                    sb.append(containerCode.substring(0, pos));
+                    for (int i = 0; i < getContentCount(); i++) {
                         setCurrentContentIdx(i);
                         partTemplate.fillTemplate(sb, pageData, this, request);
                     }
                     setCurrentContentIdx(0);
-                    sb.append(containerCode.substring(pos+TemplateData.PLACEHOLDER_PARTS.length()));
+                    sb.append(containerCode.substring(pos + TemplateData.PLACEHOLDER_PARTS.length()));
                 }
-            }
-            else
+            } else
                 partTemplate.fillTemplate(sb, pageData, this, request);
             sb.append("</div>");
         } catch (Exception e) {
@@ -301,45 +302,19 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         }
     }
 
-    private static String EDITSTARTCODE=
-            "<div id=\"part_%s\" class = \"pagePart editPagePart\">\n"+
-            "<form action = \"/pagepart.srv\" method = \"post\" id = \"partform\" name = \"partform\" accept-charset = \"UTF-8\">" +
-            "<input type = \"hidden\" name = \"act\" value = \"savePagePart\"/>" +
-            "<input type = \"hidden\" name = \"pageId\" value = \"%s\"/>" +
-            "<input type = \"hidden\" name = \"sectionName\" value = \"%s\"/>" +
-            "<input type = \"hidden\" name = \"partId\" value = \"%s\"/>\n"+
-            "<div class = \"buttonset editSection\">" +
-            "<button class = \"primary icn iok\" onclick = \"evaluateEditFields();return post2EditPageContent('/pagepart.srv',$('#partform').serialize());\">%s</button>" +
-            "<button class=\"icn icancel\" onclick = \"return post2EditPageContent('/pagepart.srv',{act:'cancelEditPagePart',pageId:'%s'});\">%s</button>" +
-            "</div>";
+    private static String EDITSTARTCODE = "<div id=\"part_%s\" class = \"pagePart editPagePart\">\n" + "<form action = \"/pagepart.srv\" method = \"post\" id = \"partform\" name = \"partform\" accept-charset = \"UTF-8\">" + "<input type = \"hidden\" name = \"act\" value = \"savePagePart\"/>" + "<input type = \"hidden\" name = \"pageId\" value = \"%s\"/>" + "<input type = \"hidden\" name = \"sectionName\" value = \"%s\"/>" + "<input type = \"hidden\" name = \"partId\" value = \"%s\"/>\n" + "<div class = \"buttonset editSection\">" + "<button class = \"primary icn iok\" onclick = \"evaluateEditFields();return post2EditPageContent('/pagepart.srv',$('#partform').serialize());\">%s</button>" + "<button class=\"icn icancel\" onclick = \"return post2EditPageContent('/pagepart.srv',{act:'cancelEditPagePart',pageId:'%s'});\">%s</button>" + "</div>";
 
     protected void writeEditPartStart(PagePartData editPagePart, String sectionName, int pageId, StringBuilder sb, Locale locale) {
         if (editPagePart == null) {
             sb.append("<div title=\"").append(StringUtil.toHtml(getTemplateName())).append("(ID=").append(getId()).append(") - ").append(StringUtil.getHtml("_rightClickEditHint")).append("\" id=\"part_").append(getId()).append("\" class = \"pagePart viewPagePart contextSource\">\n");
         } else if (this == editPagePart) {
-            sb.append(String.format(EDITSTARTCODE,
-                    getId(),
-                    pageId,
-                    sectionName,
-                    getId(),
-                    getHtml("_ok", locale),
-                    pageId, getHtml("_cancel", locale)
-            ));
+            sb.append(String.format(EDITSTARTCODE, getId(), pageId, sectionName, getId(), getHtml("_ok", locale), pageId, getHtml("_cancel", locale)));
         } else {
             sb.append("<div class = \"pagePart viewPagePart\">\n");
         }
     }
 
-    private static String CONTEXTCODE=
-                "<div class=\"icn isetting\" onclick = \"return openLayerDialog('%s', '/pagepart.ajx?act=openEditPagePartSettings&pageId=%s&sectionName=%s&partId=%s');\">%s</div>\n" +
-                "<div class=\"icn iup\" onclick = \"return linkTo('/pagepart.srv?act=setVisibleContentIdx&pageId=%s&sectionName=%s&partId=%s&dir=-1');\">%s</div>\n"+
-                "<div class=\"icn idown\" onclick = \"return linkTo('/pagepart.srv?act=setVisibleContentIdx&pageId=%s&sectionName=%s&partId=%s&dir=1');\">%s</div>\n"+
-                "<div class=\"icn inew\" onclick = \"return openLayerDialog('%s', '/pagepart.ajx?act=openAddPagePart&pageId=%s&sectionName=%s&sectionType=%s&partId=%s');\">%s</div>\n"+
-                "<div class=\"icn inew\" onclick = \"return openLayerDialog('%s', '/pagepart.ajx?act=openAddPagePart&pageId=%s&sectionName=%s&sectionType=%s&partId=%s&below=true');\">%s</div>\n"+
-                "<div class=\"icn ishare\" onclick = \"return openLayerDialog('%s', '/pagepart.ajx?act=openSharePagePart&pageId=%s&sectionName=%s&partId=%s');\">%s</div>\n"+
-                "<div class=\"icn iup\" onclick = \"return linkTo('/pagepart.srv?act=movePagePart&pageId=%s&sectionName=%s&partId=%s&dir=-1');\">%s</div>\n"+
-                "<div class=\"icn idown\" onclick = \"return linkTo('/pagepart.srv?act=movePagePart&pageId=%s&sectionName=%s&partId=%s&dir=1');\">%s</div>\n"+
-                "<div class=\"icn idelete\" onclick = \"return post2EditPageContent('/pagepart.srv?',{act:'deletePagePart',pageId:'%s',sectionName:'%s',partId:'%s'});\">%s</div>\n";
+    private static String CONTEXTCODE = "<div class=\"icn isetting\" onclick = \"return openLayerDialog('%s', '/pagepart.ajx?act=openEditPagePartSettings&pageId=%s&sectionName=%s&partId=%s');\">%s</div>\n" + "<div class=\"icn iup\" onclick = \"return linkTo('/pagepart.srv?act=setVisibleContentIdx&pageId=%s&sectionName=%s&partId=%s&dir=-1');\">%s</div>\n" + "<div class=\"icn idown\" onclick = \"return linkTo('/pagepart.srv?act=setVisibleContentIdx&pageId=%s&sectionName=%s&partId=%s&dir=1');\">%s</div>\n" + "<div class=\"icn inew\" onclick = \"return openLayerDialog('%s', '/pagepart.ajx?act=openAddPagePart&pageId=%s&sectionName=%s&sectionType=%s&partId=%s');\">%s</div>\n" + "<div class=\"icn inew\" onclick = \"return openLayerDialog('%s', '/pagepart.ajx?act=openAddPagePart&pageId=%s&sectionName=%s&sectionType=%s&partId=%s&below=true');\">%s</div>\n" + "<div class=\"icn ishare\" onclick = \"return openLayerDialog('%s', '/pagepart.ajx?act=openSharePagePart&pageId=%s&sectionName=%s&partId=%s');\">%s</div>\n" + "<div class=\"icn iup\" onclick = \"return linkTo('/pagepart.srv?act=movePagePart&pageId=%s&sectionName=%s&partId=%s&dir=-1');\">%s</div>\n" + "<div class=\"icn idown\" onclick = \"return linkTo('/pagepart.srv?act=movePagePart&pageId=%s&sectionName=%s&partId=%s&dir=1');\">%s</div>\n" + "<div class=\"icn idelete\" onclick = \"return post2EditPageContent('/pagepart.srv?',{act:'deletePagePart',pageId:'%s',sectionName:'%s',partId:'%s'});\">%s</div>\n";
 
     public void writeEditPartEnd(PagePartData editPagePart, String sectionName, String sectionType, int pageId, StringBuilder sb, Locale locale) {
         boolean staticSection = sectionName.equals(PageData.STATIC_SECTION_NAME);
@@ -348,17 +323,7 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
             sb.append("<div class = \"contextMenu\">");
             sb.append("<div class=\"icn iedit\" onclick = \"return post2EditPageContent('/pagepart.ajx?',{act:'editPagePart',pageId:'").append(pageId).append("',sectionName:'").append(sectionName).append("',partId:'").append(getId()).append("'})\">").append(getHtml("_edit", locale)).append("</div>\n");
             if (!staticSection) {
-                sb.append(String.format(CONTEXTCODE,
-                        getHtml("_settings", locale), pageId, sectionName, getId(), getHtml("_settings", locale),
-                        pageId, sectionName, getId(), getHtml("_previousContent", locale),
-                        pageId, sectionName, getId(), getHtml("_nextContent", locale),
-                        getHtml("_addPart", locale), pageId, sectionName, sectionType, getId(), getHtml("_newAbove", locale),
-                        getHtml("_addPart", locale), pageId, sectionName, sectionType, getId(), getHtml("_newBelow", locale),
-                        getHtml("_share", locale), pageId, sectionName, getId(), getHtml("_share", locale),
-                        pageId, sectionName, getId(), getHtml("_up", locale),
-                        pageId, sectionName, getId(), getHtml("_down", locale),
-                        pageId, sectionName, getId(), getHtml("_delete", locale)
-                        ));
+                sb.append(String.format(CONTEXTCODE, getHtml("_settings", locale), pageId, sectionName, getId(), getHtml("_settings", locale), pageId, sectionName, getId(), getHtml("_previousContent", locale), pageId, sectionName, getId(), getHtml("_nextContent", locale), getHtml("_addPart", locale), pageId, sectionName, sectionType, getId(), getHtml("_newAbove", locale), getHtml("_addPart", locale), pageId, sectionName, sectionType, getId(), getHtml("_newBelow", locale), getHtml("_share", locale), pageId, sectionName, getId(), getHtml("_share", locale), pageId, sectionName, getId(), getHtml("_up", locale), pageId, sectionName, getId(), getHtml("_down", locale), pageId, sectionName, getId(), getHtml("_delete", locale)));
             }
             sb.append("</div>\n");
         } else if (this == editPagePart) {
@@ -397,31 +362,31 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
     }
 
     public Element toXml(Document xmlDoc, Element parentNode) {
-        Element node = parentNode==null? XmlUtil.getRootNode(xmlDoc) : XmlUtil.addNode(xmlDoc, parentNode, "part");
+        Element node = parentNode == null ? XmlUtil.getRootNode(xmlDoc) : XmlUtil.addNode(xmlDoc, parentNode, "part");
         addXmlAttributes(xmlDoc, node);
-        for (int idx=0; idx<getContentCount();idx++) {
-            PagePartContent partContent=contents[idx];
+        for (int idx = 0; idx < getContentCount(); idx++) {
+            PagePartContent partContent = contents[idx];
             partContent.setIdx(idx);
-            partContent.toXml(xmlDoc,node);
+            partContent.toXml(xmlDoc, node);
         }
         Element scriptNode = XmlUtil.addNode(xmlDoc, node, "script");
         XmlUtil.addCDATA(xmlDoc, scriptNode, getScript());
         return node;
     }
 
-    public void fromXml(Element node){
-        if (node==null)
+    public void fromXml(Element node) {
+        if (node == null)
             return;
         getXmlAttributes(node);
-        setContentCount(XmlUtil.getIntAttribute(node,"count"));
+        setContentCount(XmlUtil.getIntAttribute(node, "count"));
         List<Element> children = XmlUtil.getChildElements(node);
         for (Element child : children) {
             if (child.getTagName().equals("partContent")) {
-                int idx=XmlUtil.getIntAttribute(child,"idx");
-                PagePartContent content=new PagePartContent();
+                int idx = XmlUtil.getIntAttribute(child, "idx");
+                PagePartContent content = new PagePartContent();
                 content.setPagePartId(getId());
                 content.fromXml(child);
-                contents[idx]=content;
+                contents[idx] = content;
             }
             if (child.getTagName().equals("script")) {
                 setScript(XmlUtil.getCData(child));

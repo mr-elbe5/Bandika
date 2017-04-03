@@ -7,23 +7,25 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.pagepart.PagePartBean" %>
 <%@ page import="de.bandika.pagepart.PagePartData" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.template.TemplateCache" %>
 <%@ page import="de.bandika.template.TemplateData" %>
+<%@ page import="de.bandika.template.TemplateType" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.pagepart.PagePartBean" %>
-<%@ page import="de.bandika.template.TemplateType" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     int pageId = RequestReader.getInt(request, "pageId");
     String sectionName = RequestReader.getString(request, "sectionName");
     String sectionType = RequestReader.getString(request, "sectionType");
     int partId = RequestReader.getInt(request, "partId");
     boolean below = RequestReader.getBoolean(request, "below");
     List<TemplateData> templates = TemplateCache.getInstance().getTemplates(TemplateType.PART, sectionType);
-    List<PagePartData> parts = PagePartBean.getInstance().getAllSharedPageParts();%>
+    List<PagePartData> parts = PagePartBean.getInstance().getAllSharedPageParts();
+%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <section class="flexRow">
     <section class="flexItemOne">

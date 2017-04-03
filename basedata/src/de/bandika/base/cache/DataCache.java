@@ -8,7 +8,10 @@
  */
 package de.bandika.base.cache;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class DataCache<ISizedData> extends BaseCache {
 

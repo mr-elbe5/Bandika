@@ -8,16 +8,17 @@
  */
 package de.bandika.configuration;
 
+import de.bandika.base.log.Log;
+import de.bandika.base.mail.Mailer;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Base64;
+import java.util.Locale;
 
-import de.bandika.base.log.Log;
-import de.bandika.base.database.DbBean;
-
-public class ConfigurationBean extends DbBean {
+public class ConfigurationBean extends WebConfigurationBean {
 
     private static ConfigurationBean instance = null;
 
@@ -28,66 +29,39 @@ public class ConfigurationBean extends DbBean {
         return instance;
     }
 
-    public void setLocales(Map<Locale, String> locales) {
+    public Configuration getConfiguration() {
         Connection con = null;
+        Configuration config = new Configuration();
         try {
             con = getConnection();
-            readLocales(con, locales);
+            readConfiguration(con, config);
         } catch (SQLException se) {
             Log.error("sql error", se);
         } finally {
             closeConnection(con);
         }
+        return config;
     }
 
-    public void readLocales(Connection con, Map<Locale, String> locales) throws SQLException {
-        locales.clear();
+    public void readConfiguration(Connection con, Configuration config) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT locale,home FROM t_locale");
+            pst = con.prepareStatement("SELECT defaultLocale, mailHost, mailPort, mailConnectionType, mailUser, mailPassword, mailSender, timerInterval, clusterPort, clusterTimeout, maxClusterTimeouts, maxVersions FROM t_configuration");
             try (ResultSet rs = pst.executeQuery()) {
-                while (rs.next()) {
-                    try {
-                        locales.put(new Locale(rs.getString(1)),rs.getString(2));
-                    } catch (Exception e) {
-                        Log.error("no appropriate locale", e);
-                    }
-                }
-            }
-        } finally {
-            try {
-                if (pst != null) {
-                    pst.close();
-                }
-            } catch (SQLException ignored) {
-            }
-        }
-    }
-
-    public Map<String, String> getConfiguration() {
-        Connection con = null;
-        Map<String, String> map = new HashMap<>();
-        try {
-            con = getConnection();
-            readConfiguration(con, map);
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeConnection(con);
-        }
-        return map;
-    }
-
-    public void readConfiguration(Connection con, Map<String, String> map) throws SQLException {
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement("SELECT config_key,config_value FROM t_configuration");
-            try (ResultSet rs = pst.executeQuery()) {
-                while (rs.next()) {
+                if (rs.next()) {
                     int i = 1;
-                    String key = rs.getString(i++);
-                    String value = rs.getString(i);
-                    map.put(key, value);
+                    config.setDefaultLocale(new Locale(rs.getString(i++)));
+                    config.setSmtpHost(rs.getString(i++));
+                    config.setSmtpPort(rs.getInt(i++));
+                    config.setSmtpConnectionType(Mailer.SmtpConnectionType.valueOf(rs.getString(i++)));
+                    config.setSmtpUser(rs.getString(i++));
+                    config.setSmtpPassword(new String(Base64.getEncoder().encode(rs.getString(i++).getBytes())));
+                    config.setMailSender(rs.getString(i++));
+                    config.setTimerInterval(rs.getInt(i++));
+                    config.setClusterPort(rs.getInt(i++));
+                    config.setClusterTimeout(rs.getInt(i++));
+                    config.setMaxClusterTimeouts(rs.getInt(i++));
+                    config.setMaxVersions(rs.getInt(i));
                 }
             }
         } finally {
@@ -100,61 +74,36 @@ public class ConfigurationBean extends DbBean {
         }
     }
 
-    public Collection<String> getConfigurationKeys(Connection con) throws SQLException {
-        PreparedStatement pst = null;
-        HashSet<String> set = new HashSet<>();
-        try {
-            pst = con.prepareStatement("SELECT config_key FROM t_configuration");
-            try (ResultSet rs = pst.executeQuery()) {
-                while (rs.next()) {
-                    String key = rs.getString(1);
-                    set.add(key);
-                }
-            }
-        } finally {
-            closeStatement(pst);
-        }
-        return set;
-    }
-
-    public boolean saveConfiguration(Map<String, String> map) {
+    public boolean saveConfiguration(Configuration config) {
         Connection con = startTransaction();
         try {
-            Collection<String> oldKeys = getConfigurationKeys(con);
-            writeConfiguration(con, map, oldKeys);
+            writeConfiguration(con, config);
             return commitTransaction(con);
         } catch (Exception se) {
             return rollbackTransaction(con, se);
         }
     }
 
-    protected void writeConfiguration(Connection con, Map<String, String> map, Collection<String> oldKeys) throws SQLException {
-        PreparedStatement pst1 = null;
-        PreparedStatement pst2 = null;
+    protected void writeConfiguration(Connection con, Configuration config) throws SQLException {
+        PreparedStatement pst = null;
         try {
-            pst1 = con.prepareStatement("INSERT INTO t_configuration (config_value,config_key) VALUES(?,?)");
-            pst2 = con.prepareStatement("UPDATE t_configuration SET config_value=? WHERE config_key=?");
-            for (String key : map.keySet()) {
-                if (oldKeys.contains(key)) {
-                    pst2.setString(1, map.get(key));
-                    pst2.setString(2, key);
-                    pst2.executeUpdate();
-                    oldKeys.remove(key);
-                } else {
-                    pst1.setString(1, map.get(key));
-                    pst1.setString(2, key);
-                    pst1.executeUpdate();
-                }
-            }
-            pst1.close();
-            pst1 = con.prepareStatement("DELETE FROM t_configuration WHERE config_key=?");
-            for (String key : oldKeys) {
-                pst1.setString(1, key);
-                pst1.executeUpdate();
-            }
+            pst = con.prepareStatement("UPDATE t_configuration SET defaultLocale=?, mailHost=?, mailPort=?, mailConnectionType=?, mailUser=?, mailPassword=?, mailSender=?, timerInterval=?, clusterPort=?, clusterTimeout=?, maxClusterTimeouts=?, maxVersions=? ");
+            int i = 1;
+            pst.setString(i++, config.getDefaultLocale().getLanguage());
+            pst.setString(i++, config.getSmtpHost());
+            pst.setInt(i++, config.getSmtpPort());
+            pst.setString(i++, config.getSmtpConnectionType().name());
+            pst.setString(i++, config.getSmtpUser());
+            pst.setString(i++, new String(Base64.getDecoder().decode(config.getSmtpPassword().getBytes())));
+            pst.setString(i++, config.getMailSender());
+            pst.setInt(i++, config.getTimerInterval());
+            pst.setInt(i++, config.getClusterPort());
+            pst.setInt(i++, config.getClusterTimeout());
+            pst.setInt(i++, config.getMaxClusterTimeouts());
+            pst.setInt(i, config.getMaxVersions());
+            pst.executeUpdate();
         } finally {
-            closeStatement(pst1);
-            closeStatement(pst2);
+            closeStatement(pst);
         }
     }
 }

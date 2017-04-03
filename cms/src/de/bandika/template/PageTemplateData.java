@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 
 public class PageTemplateData extends TemplateData {
 
-    public PageTemplateData(){
-        type=TemplateType.PAGE;
+    public PageTemplateData() {
+        type = TemplateType.PAGE;
     }
 
     protected boolean appendTagReplacement(StringBuilder sb, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) {

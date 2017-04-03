@@ -7,13 +7,14 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.rights.Right" %>
+<%@ page import="de.bandika.rights.SystemZone" %>
+<%@ page import="de.bandika.servlet.RightsReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.rights.SystemZone" %>
-<%@ page import="de.bandika.rights.Right" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
-    if (SessionReader.hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT)) {
+    if (RightsReader.hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT)) {
 %><!--search-->
 <li>
     <div class="contextSource icn isearch" onclick="$('#details').load('/search.ajx?act=showSearchDetails')"><%=StringUtil.getHtml("_search", locale)%>

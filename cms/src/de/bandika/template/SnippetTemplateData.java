@@ -10,8 +10,8 @@ package de.bandika.template;
 
 public class SnippetTemplateData extends TemplateData {
 
-    public SnippetTemplateData(){
-        type=TemplateType.SNIPPET;
+    public SnippetTemplateData() {
+        type = TemplateType.SNIPPET;
     }
 
 }

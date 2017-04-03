@@ -8,13 +8,16 @@
  */
 package de.bandika.application;
 
-import de.bandika.base.util.ApplicationPath;
 import de.bandika.base.log.Log;
 import de.bandika.base.util.StringUtil;
 import de.bandika.file.FileAction;
 import de.bandika.page.PageAction;
-import de.bandika.servlet.*;
+import de.bandika.servlet.RequestReader;
+import de.bandika.servlet.RequestStatics;
+import de.bandika.servlet.SessionWriter;
+import de.bandika.servlet.WebServlet;
 import de.bandika.site.SiteAction;
+import de.bandika.util.ApplicationPath;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -23,8 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 5, maxFileSize = 1024 * 1024 * 20, maxRequestSize = 1024 * 1024 * 20 * 5)
-public class ApplicationServlet extends CmsServlet {
-
+public class ApplicationServlet extends WebServlet {
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
@@ -33,7 +35,7 @@ public class ApplicationServlet extends CmsServlet {
         StringUtil.setBundleName("cms");
         ApplicationPath.initializePath(ApplicationPath.getCatalinaAppDir(getServletContext()), ApplicationPath.getCatalinaAppROOTDir(getServletContext()));
         if (Initializer.getInstance() == null) {
-            Initializer.setInstance(new Initializer());
+            Initializer.setInstance(new CmsInitializer());
         }
         if (!Installer.getInstance().isAllInstalled()) {
             Log.log("not yet fully installed");

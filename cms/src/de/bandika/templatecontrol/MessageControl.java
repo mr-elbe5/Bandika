@@ -9,9 +9,9 @@
 package de.bandika.templatecontrol;
 
 import de.bandika.page.PageData;
-import de.bandika.template.TemplateAttributes;
 import de.bandika.servlet.RequestError;
 import de.bandika.servlet.RequestReader;
+import de.bandika.template.TemplateAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 

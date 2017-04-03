@@ -11,7 +11,10 @@ package de.bandika.template;
 import de.bandika.base.cache.BaseCache;
 import de.bandika.base.log.Log;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TemplateCache extends BaseCache {
 
@@ -25,7 +28,7 @@ public class TemplateCache extends BaseCache {
         return instance;
     }
 
-    protected Map<TemplateType,List<TemplateData>> templates = new HashMap<>();
+    protected Map<TemplateType, List<TemplateData>> templates = new HashMap<>();
 
     public String getCacheKey() {
         return CACHEKEY;
@@ -38,7 +41,7 @@ public class TemplateCache extends BaseCache {
     @Override
     public void load() {
         Log.log("loading templates...");
-        templates=TemplateBean.getInstance().getAllTemplates();
+        templates = TemplateBean.getInstance().getAllTemplates();
     }
 
     public List<TemplateData> getTemplates(TemplateType type) {
@@ -46,8 +49,8 @@ public class TemplateCache extends BaseCache {
         return templates.get(type);
     }
 
-    public TemplateData getTemplate(TemplateType type, String name){
-        for (TemplateData data : getTemplates(type)){
+    public TemplateData getTemplate(TemplateType type, String name) {
+        for (TemplateData data : getTemplates(type)) {
             if (data.getName().equals(name))
                 return data;
         }
@@ -64,6 +67,5 @@ public class TemplateCache extends BaseCache {
         }
         return templates;
     }
-
 
 }

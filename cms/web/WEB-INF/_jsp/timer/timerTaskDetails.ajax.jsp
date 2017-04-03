@@ -7,11 +7,11 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
-<%@ page import="de.bandika.timer.TimerTaskData" %>
+<%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.timer.TimerCache" %>
+<%@ page import="de.bandika.timer.TimerTaskData" %>
+<%@ page import="java.util.Locale" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     int timerId = RequestReader.getInt(request, "timerId");
@@ -21,24 +21,34 @@
 </h3>
 <table class="padded details">
     <tr>
-        <td><label><%=StringUtil.getHtml("_id", locale)%></label></td>
-        <td><%=data.getId()%></td>
+        <td><label><%=StringUtil.getHtml("_id", locale)%>
+        </label></td>
+        <td><%=data.getId()%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_name", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getName())%></td>
+        <td><label><%=StringUtil.getHtml("_name", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getName())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_active", locale)%></label></td>
-        <td><%=data.isActive() ? "X" : "-"%></td>
+        <td><label><%=StringUtil.getHtml("_active", locale)%>
+        </label></td>
+        <td><%=data.isActive() ? "X" : "-"%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_noteExecution", locale)%></label></td>
-        <td><%=data.noteExecution() ? "X" : "-"%></td>
+        <td><label><%=StringUtil.getHtml("_noteExecution", locale)%>
+        </label></td>
+        <td><%=data.noteExecution() ? "X" : "-"%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_intervalType", locale)%></label></td>
-        <td><%=data.getIntervalType()%></td>
+        <td><label><%=StringUtil.getHtml("_intervalType", locale)%>
+        </label></td>
+        <td><%=data.getIntervalType()%>
+        </td>
     </tr>
 </table>
 

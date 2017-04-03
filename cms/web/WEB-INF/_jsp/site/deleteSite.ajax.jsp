@@ -10,8 +10,10 @@
 <%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
-    int siteId = RequestReader.getInt(request, "siteId");%>
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
+    int siteId = RequestReader.getInt(request, "siteId");
+%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <div class="info">
     <div class="formText"><%=StringUtil.getHtml("_reallyDeleteSite", locale)%>

@@ -20,12 +20,12 @@ public class Locales extends KeyValueMap {
         return instance;
     }
 
-    private Map<Locale,String> locales = new HashMap<>();
+    private Map<Locale, String> locales = new HashMap<>();
 
     private Locale defaultLocale = Locale.ENGLISH;
 
-    public Locales(){
-        locales.put(defaultLocale,"/blank.jsp");
+    public Locales() {
+        locales.put(defaultLocale, "/blank.jsp");
     }
 
     public boolean hasLocale(Locale locale) {
@@ -34,7 +34,7 @@ public class Locales extends KeyValueMap {
 
     public String getLocaleRoot(Locale locale) {
         if (!hasLocale(locale))
-            locale=defaultLocale;
+            locale = defaultLocale;
         return locales.get(locale);
     }
 

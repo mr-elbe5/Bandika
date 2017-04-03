@@ -7,16 +7,18 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.group.GroupData" %>
+<%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.user.UserBean" %>
 <%@ page import="de.bandika.user.UserData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     GroupData group = (GroupData) SessionReader.getSessionObject(request, "groupData");
     UserBean ubean = UserBean.getInstance();
-    List<UserData> users = ubean.getAllUsers();%>
+    List<UserData> users = ubean.getAllUsers();
+%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/group.ajx" method="post" id="groupform" name="groupform" accept-charset="UTF-8">
     <input type="hidden" name="act" value="removeGroupUsers"/>

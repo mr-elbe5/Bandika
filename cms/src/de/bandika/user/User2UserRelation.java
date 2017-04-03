@@ -10,7 +10,6 @@ package de.bandika.user;
 
 public enum User2UserRelation {
 
-    HEADOF,
-    FOLLOW
+    HEADOF, FOLLOW
 
 }

@@ -77,9 +77,18 @@ CREATE TABLE IF NOT EXISTS t_system_right (
 );
 --
 CREATE TABLE IF NOT EXISTS t_configuration (
-  config_key   VARCHAR(30)  NOT NULL,
-  config_value VARCHAR(255) NOT NULL,
-  CONSTRAINT t_configuration_pk PRIMARY KEY (config_key)
+  defaultLocale   VARCHAR(30)  NOT NULL,
+  mailHost        VARCHAR(255)  NOT NULL,
+  mailPort        INTEGER  NOT NULL,
+  mailConnectionType   VARCHAR(30)  NOT NULL,
+  mailUser        VARCHAR(255)  NOT NULL,
+  mailPassword    VARCHAR(255)  NOT NULL,
+  mailSender      VARCHAR(255)  NOT NULL,
+  timerInterval   INTEGER  NOT NULL,
+  clusterPort     INTEGER  NOT NULL,
+  clusterTimeout  INTEGER  NOT NULL,
+  maxClusterTimeouts INTEGER  NOT NULL,
+  maxVersions     INTEGER  NOT NULL
 );
 --
 CREATE TABLE t_cluster (
@@ -344,29 +353,8 @@ VALUES (1, 'Sys', 'Admin', 'sysadmin@localhost', 'sysadmin', '', '', '', TRUE);
 -- sysadmin is Global Administrator
 INSERT INTO t_user2group (user_id, group_id, relation) VALUES (1, 1, 'RIGHTS');
 -- configuration
-INSERT INTO t_configuration (config_key, config_value)
-VALUES ('defaultLocale', 'en');
---
-INSERT INTO t_configuration (config_key, config_value)
-VALUES ('mailHost', 'localhost');
---
-INSERT INTO t_configuration (config_key, config_value)
-VALUES ('mailSender', 'me@myhost.tld');
---
-INSERT INTO t_configuration (config_key, config_value)
-VALUES ('timerInterval', '30');
---
-INSERT INTO t_configuration (config_key, config_value)
-VALUES ('clusterPort', '2555');
---
-INSERT INTO t_configuration (config_key, config_value)
-VALUES ('clusterTimeout', '60');
---
-INSERT INTO t_configuration (config_key, config_value)
-VALUES ('maxClusterTimeouts', '5');
---
-INSERT INTO t_configuration (config_key, config_value)
-VALUES ('maxVersions', '5');
+INSERT INTO t_configuration (defaultLocale, mailHost, mailPort, mailConnectionType, mailUser, mailPassword, mailSender, timerInterval, clusterPort, clusterTimeout, maxClusterTimeouts, maxVersions)
+VALUES ('en', 'localhost', 25, 'plain', '', '', 'me@myhost.tld', 30, 2555, 60, 5, 5);
 --
 INSERT INTO t_timer_task (id, name, class_name, interval_type, execution_minute, active, note_execution)
 VALUES (500, 'Heartbeat Task', 'de.bandika.timer.HeartbeatTask', 0, 5, TRUE, FALSE);

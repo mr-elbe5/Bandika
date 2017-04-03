@@ -19,7 +19,6 @@ public class SearchQueueAction {
     protected int id = 0;
     protected SearchData.DataType dataType = SearchData.DataType.undefined;
 
-
     public SearchQueueAction(int actionId, int id, SearchData.DataType type) {
         this.actionId = actionId;
         this.id = id;

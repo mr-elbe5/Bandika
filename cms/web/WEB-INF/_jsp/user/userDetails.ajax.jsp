@@ -7,13 +7,13 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="de.bandika.servlet.RequestReader" %>
-<%@ page import="de.bandika.user.UserData" %>
-<%@ page import="de.bandika.user.UserBean" %>
 <%@ page import="de.bandika.group.GroupBean" %>
 <%@ page import="de.bandika.group.GroupData" %>
+<%@ page import="de.bandika.servlet.RequestReader" %>
+<%@ page import="de.bandika.servlet.SessionReader" %>
+<%@ page import="de.bandika.user.UserBean" %>
+<%@ page import="de.bandika.user.UserData" %>
+<%@ page import="java.util.Locale" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     int userId = RequestReader.getInt(request, "userId");
@@ -23,85 +23,115 @@
 </h3>
 <table class="padded details">
     <tr>
-        <td><label><%=StringUtil.getHtml("_id", locale)%></label></td>
-        <td><%=data.getId()%></td>
+        <td><label><%=StringUtil.getHtml("_id", locale)%>
+        </label></td>
+        <td><%=data.getId()%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_firstName", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getFirstName())%></td>
+        <td><label><%=StringUtil.getHtml("_firstName", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getFirstName())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_middleName", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getMiddleName())%></td>
+        <td><label><%=StringUtil.getHtml("_lastName", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getLastName())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_lastName", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getLastName())%></td>
+        <td><label><%=StringUtil.getHtml("_street", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getStreet())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_street", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getStreet())%></td>
+        <td><label><%=StringUtil.getHtml("_zipCode", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getZipCode())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_zipCode", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getZipCode())%></td>
+        <td><label><%=StringUtil.getHtml("_city", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getCity())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_city", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getCity())%></td>
+        <td><label><%=StringUtil.getHtml("_country", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getCountry())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_country", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getCountry())%></td>
+        <td><label><%=StringUtil.getHtml("_locale", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getLocale().getDisplayName(locale))%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_locale", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getLocale().getDisplayName(locale))%></td>
+        <td><label><%=StringUtil.getHtml("_email", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getEmail())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_email", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getEmail())%></td>
+        <td><label><%=StringUtil.getHtml("_phone", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getPhone())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_phone", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getPhone())%></td>
+        <td><label><%=StringUtil.getHtml("_mobile", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getMobile())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_mobile", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getMobile())%></td>
+        <td><label><%=StringUtil.getHtml("_notes", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getNotes())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_notes", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getNotes())%></td>
+        <td><label><%=StringUtil.getHtml("_login", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getLogin())%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_login", locale)%></label></td>
-        <td><%=StringUtil.toHtml(data.getLogin())%></td>
+        <td><label><%=StringUtil.getHtml("_approved", locale)%>
+        </label></td>
+        <td><%=data.isApproved() ? "X" : "-"%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_approved", locale)%></label></td>
-        <td><%=data.isApproved() ? "X" : "-"%></td>
+        <td><label><%=StringUtil.getHtml("_failedLogins", locale)%>
+        </label></td>
+        <td><%=data.getFailedLoginCount()%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_failedLogins", locale)%></label></td>
-        <td><%=data.getFailedLoginCount()%></td>
+        <td><label><%=StringUtil.getHtml("_locked", locale)%>
+        </label></td>
+        <td><%=data.isLocked() ? "X" : "-"%>
+        </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_locked", locale)%></label></td>
-        <td><%=data.isLocked() ? "X" : "-"%></td>
-    </tr>
-    <tr>
-        <td><label><%=StringUtil.getHtml("_groups", locale)%></label></td>
+        <td><label><%=StringUtil.getHtml("_groups", locale)%>
+        </label></td>
         <td>
             <%
                 for (int groupId : data.getGroupIds()) {
-                    GroupData group=GroupBean.getInstance().getGroup(groupId);%>
-                    <%=StringUtil.toHtml(group.getName())%><br>
-                <%}
+                    GroupData group = GroupBean.getInstance().getGroup(groupId);%>
+            <%=StringUtil.toHtml(group.getName())%><br>
+            <%
+                }
             %>
         </td>
     </tr>
-    
+
 </table>
 
 

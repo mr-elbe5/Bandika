@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 
 public class MasterTemplateData extends TemplateData {
 
-    public MasterTemplateData(){
-        type=TemplateType.MASTER;
+    public MasterTemplateData() {
+        type = TemplateType.MASTER;
     }
 
     protected boolean appendTagReplacement(StringBuilder sb, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) {

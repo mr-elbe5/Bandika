@@ -11,9 +11,11 @@
 <%@ page import="de.bandika.pagepart.PagePartData" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     PageData data = (PageData) SessionReader.getSessionObject(request, "pageData");
-    PagePartData part = data.getEditPagePart();%>
+    PagePartData part = data.getEditPagePart();
+%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/pagepart.srv" method="post" id="shareform" name="shareform" accept-charset="UTF-8">
     <fieldset>

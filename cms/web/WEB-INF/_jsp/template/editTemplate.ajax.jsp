@@ -8,11 +8,12 @@
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.template.TemplateData" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%@ page import="java.util.Locale" %>
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     TemplateData data = (TemplateData) SessionReader.getSessionObject(request, "templateData");
-    assert(data!=null);
+    assert (data != null);
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/template.srv" method="post" id="templateform" name="templateform" accept-charset="UTF-8">

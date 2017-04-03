@@ -10,13 +10,16 @@
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.timer.TimerTaskData" %>
 <%@ page import="java.util.Locale" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     TimerTaskData data = (TimerTaskData) SessionReader.getSessionObject(request, "timerTaskData");
     if ((data == null))
-        throw new AssertionError();%>
+        throw new AssertionError();
+%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/timer.ajx" method="post" id="taskform" name="taskform" accept-charset="UTF-8">
-    <input type="hidden" name="act" value="saveTimerTask"/> <input type="hidden" name="timerId" value="<%=data.getId()%>"/>
+    <input type="hidden" name="act" value="saveTimerTask"/>
+    <input type="hidden" name="timerId" value="<%=data.getId()%>"/>
     <fieldset>
         <table class="padded form">
             <tr>
@@ -41,15 +44,20 @@
                     <div>
                         <input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_CONTINOUS%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_CONTINOUS ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_continous", locale)%>
                     </div>
-                    <div><input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_MONTH%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_MONTH ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_monthly", locale)%>
+                    <div>
+                        <input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_MONTH%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_MONTH ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_monthly", locale)%>
                     </div>
-                    <div><input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_WEEK%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_WEEK ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_weekly", locale)%>
+                    <div>
+                        <input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_WEEK%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_WEEK ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_weekly", locale)%>
                     </div>
-                    <div><input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_DAY%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_DAY ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_daily", locale)%>
+                    <div>
+                        <input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_DAY%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_DAY ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_daily", locale)%>
                     </div>
-                    <div><input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_HOUR%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_HOUR ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_everyHour", locale)%>
+                    <div>
+                        <input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_HOUR%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_HOUR ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_everyHour", locale)%>
                     </div>
-                    <div><input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_MINUTE%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_MINUTE ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_everyMinute", locale)%>
+                    <div>
+                        <input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_MINUTE%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_MINUTE ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_everyMinute", locale)%>
                     </div>
                 </td>
             </tr>

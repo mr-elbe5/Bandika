@@ -7,22 +7,26 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.group.GroupBean" %>
+<%@ page import="de.bandika.group.GroupData" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="de.bandika.group.GroupData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.group.GroupBean" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
     List<Integer> ids = RequestReader.getIntegerList(request, "groupId");
-    GroupBean bean = GroupBean.getInstance();%>
+    GroupBean bean = GroupBean.getInstance();
+%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <div class="info">
     <div class="formText"><%=StringUtil.getHtml("_reallyDeleteGroup", locale)%>
     </div>
     <table class="padded listTable">
-        <%for (Integer id : ids) {
-            GroupData group = bean.getGroup(id);%>
+        <%
+            for (Integer id : ids) {
+                GroupData group = bean.getGroup(id);
+        %>
         <tr>
             <td><%=group.getName()%>
             </td>

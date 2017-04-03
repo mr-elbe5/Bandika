@@ -108,7 +108,7 @@ public class FileBean extends ResourceBean {
         try {
             con = getConnection();
             readFileContent(con, data, version);
-            readFileBytes(con,data,version);
+            readFileBytes(con, data, version);
             data.setLoadedVersion(version);
         } catch (SQLException se) {
             Log.error("sql error", se);

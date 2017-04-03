@@ -7,13 +7,13 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.group.GroupBean" %>
+<%@ page import="de.bandika.group.GroupData" %>
+<%@ page import="de.bandika.rights.Right" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.tree.TreeNode" %>
-<%@ page import="de.bandika.group.GroupData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.rights.Right" %>
-<%@ page import="de.bandika.group.GroupBean" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     TreeNode data = (TreeNode) request.getAttribute("treeNode");
@@ -39,11 +39,15 @@
             </label>
         </td>
         <td>
-            <select class="fullWidth" id ="groupright_<%=group.getId()%>" name="groupright_<%=group.getId()%>" <%=disabled ? "disabled=\"disabled\"" : ""%>>
-                <option value="" <%=!data.hasAnyGroupRight(group.getId()) ? "selected" : ""%>><%=StringUtil.getHtml("_rightnone", locale)%></option>
-                <option value="<%=Right.READ.name()%>" <%=data.isGroupRight(group.getId(), Right.READ) ? "selected" : ""%>><%=StringUtil.getHtml("_rightread", locale)%></option>
-                <option value="<%=Right.EDIT.name()%>" <%=data.isGroupRight(group.getId(), Right.EDIT) ? "selected" : ""%>><%=StringUtil.getHtml("_rightedit", locale)%></option>
-                <option value="<%=Right.APPROVE.name()%>" <%=data.isGroupRight(group.getId(), Right.APPROVE) ? "selected" : ""%>><%=StringUtil.getHtml("_rightapprove", locale)%></option>
+            <select class="fullWidth" id="groupright_<%=group.getId()%>" name="groupright_<%=group.getId()%>" <%=disabled ? "disabled=\"disabled\"" : ""%>>
+                <option value="" <%=!data.hasAnyGroupRight(group.getId()) ? "selected" : ""%>><%=StringUtil.getHtml("_rightnone", locale)%>
+                </option>
+                <option value="<%=Right.READ.name()%>" <%=data.isGroupRight(group.getId(), Right.READ) ? "selected" : ""%>><%=StringUtil.getHtml("_rightread", locale)%>
+                </option>
+                <option value="<%=Right.EDIT.name()%>" <%=data.isGroupRight(group.getId(), Right.EDIT) ? "selected" : ""%>><%=StringUtil.getHtml("_rightedit", locale)%>
+                </option>
+                <option value="<%=Right.APPROVE.name()%>" <%=data.isGroupRight(group.getId(), Right.APPROVE) ? "selected" : ""%>><%=StringUtil.getHtml("_rightapprove", locale)%>
+                </option>
             </select>
         </td>
     </tr>

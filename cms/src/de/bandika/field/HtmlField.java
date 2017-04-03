@@ -10,12 +10,12 @@ package de.bandika.field;
 
 import de.bandika.base.search.HtmlStripper;
 import de.bandika.base.util.StringUtil;
+import de.bandika.base.util.XmlUtil;
 import de.bandika.page.PageData;
 import de.bandika.pagepart.PagePartData;
+import de.bandika.servlet.RequestReader;
 import de.bandika.template.TemplateAttributes;
 import de.bandika.tree.TreeCache;
-import de.bandika.servlet.RequestReader;
-import de.bandika.base.util.XmlUtil;
 import de.bandika.tree.TreeNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -86,30 +86,17 @@ public class HtmlField extends Field {
         }
     }
 
-    private static String CKCODE ="" +
-            "<div class=\"ckeditField\" id=\"%s\" contenteditable=\"true\">%s</div>" +
-            "<input type=\"hidden\" name=\"%s\" value=\"%s\" />" +
-            "<script type=\"text/javascript\">$('#%s').ckeditor({" +
-            "toolbar : '%s'," +
-            "filebrowserBrowseUrl : '/field.srv?act=openLinkBrowser&siteId=%s&pageId=%s'," +
-            "filebrowserImageBrowseUrl : '/field.srv?act=openImageBrowser&siteId=%s&pageId=%s'" +
-            "});" +
-            "</script>";
+    private static String CKCODE = "" + "<div class=\"ckeditField\" id=\"%s\" contenteditable=\"true\">%s</div>" + "<input type=\"hidden\" name=\"%s\" value=\"%s\" />" + "<script type=\"text/javascript\">$('#%s').ckeditor({" + "toolbar : '%s'," + "filebrowserBrowseUrl : '/field.srv?act=openLinkBrowser&siteId=%s&pageId=%s'," + "filebrowserImageBrowseUrl : '/field.srv?act=openImageBrowser&siteId=%s&pageId=%s'" + "});" + "</script>";
+
     @Override
     public void appendFieldHtml(StringBuilder sb, TemplateAttributes attributes, String defaultContent, PagePartData partData, PageData pageData, HttpServletRequest request) {
-        String toolbar=attributes.getString("toolbar");
+        String toolbar = attributes.getString("toolbar");
         boolean partEditMode = pageData.isEditMode() && partData == pageData.getEditPagePart();
         int siteId = pageData.getParentId();
         int pageId = pageData.getId();
         String html = getHtml().trim();
         if (partEditMode) {
-            sb.append(String.format(CKCODE,
-                    getIdentifier(),html.isEmpty() ? defaultContent : html,
-                    getIdentifier(), StringUtil.toHtml(html),
-                    getIdentifier(),
-                    toolbar,
-                    siteId,pageId,
-                    siteId,pageId));
+            sb.append(String.format(CKCODE, getIdentifier(), html.isEmpty() ? defaultContent : html, getIdentifier(), StringUtil.toHtml(html), getIdentifier(), toolbar, siteId, pageId, siteId, pageId));
         } else {
             try {
                 if (html.isEmpty()) {
@@ -142,8 +129,7 @@ public class HtmlField extends Field {
     public void appendSearchText(StringBuilder sb) {
         try {
             sb.append(" ").append(HtmlStripper.stripHtml(html));
-        }
-        catch (ParseException ignore){
+        } catch (ParseException ignore) {
         }
     }
 

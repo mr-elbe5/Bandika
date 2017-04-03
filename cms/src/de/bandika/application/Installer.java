@@ -8,8 +8,8 @@
  */
 package de.bandika.application;
 
-import de.bandika.base.database.DbConnector;
-import de.bandika.base.database.DbCreator;
+import de.bandika.database.DbConnector;
+import de.bandika.database.DbCreator;
 import de.bandika.user.UserBean;
 
 public class Installer {

@@ -17,12 +17,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class PagePartContent extends BaseData implements XmlData {
 
     protected int pagePartId = 0;
-    protected int idx=0;
+    protected int idx = 0;
     protected String content = "";
     protected Map<String, Field> fields = new HashMap<>();
 
@@ -111,7 +114,7 @@ public class PagePartContent extends BaseData implements XmlData {
         setIdx(XmlUtil.getIntAttribute(node, "idx"));
     }
 
-    public void fromXml(Element node){
+    public void fromXml(Element node) {
         getXmlAttributes(node);
         fields.clear();
         List<Element> children = XmlUtil.getChildElements(node);

@@ -12,6 +12,8 @@ import de.bandika.base.util.StringUtil;
 import de.bandika.file.FileData;
 import de.bandika.page.PageData;
 import de.bandika.tree.TreeCache;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
@@ -20,8 +22,6 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.highlight.Highlighter;
 import org.apache.lucene.search.highlight.QueryScorer;
 import org.apache.lucene.search.highlight.SimpleFragmenter;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.TokenStream;
 
 import java.io.StringReader;
 
@@ -35,23 +35,20 @@ public class SearchData {
 
     public enum DataType {
         undefined {
-            public String getIconSpan(){
+            public String getIconSpan() {
                 return "";
             }
-        },
-        page{
+        }, page {
             public String getIconSpan() {
-                return "<span class=\"icn ipage\" title=\""+ StringUtil.getHtml("_page")+"\"></span>";
+                return "<span class=\"icn ipage\" title=\"" + StringUtil.getHtml("_page") + "\"></span>";
             }
-        },
-        file{
+        }, file {
             public String getIconSpan() {
-                return "<span class=\"icn ifile\""+ StringUtil.getHtml("_file")+"\"></span>";
+                return "<span class=\"icn ifile\"" + StringUtil.getHtml("_file") + "\"></span>";
             }
-        },
-        user{
+        }, user {
             public String getIconSpan() {
-                return "<span class=\"icn iuser\""+ StringUtil.getHtml("_user")+"\"></span>";
+                return "<span class=\"icn iuser\"" + StringUtil.getHtml("_user") + "\"></span>";
             }
         };
 
@@ -85,7 +82,7 @@ public class SearchData {
         this.type = type;
     }
 
-    public String getIconSpan(){
+    public String getIconSpan() {
         return getType().getIconSpan();
     }
 
@@ -125,23 +122,25 @@ public class SearchData {
         if (doc == null)
             return;
         id = Integer.parseInt(doc.get("id"));
-        type=DataType.valueOf(doc.get("type"));
+        type = DataType.valueOf(doc.get("type"));
         name = doc.get("name");
-        description=doc.get("description");
-        keywords=doc.get("keywords");
-        authorName=doc.get("authorName");
-        content=doc.get("content");
-        switch (type){
+        description = doc.get("description");
+        keywords = doc.get("keywords");
+        authorName = doc.get("authorName");
+        content = doc.get("content");
+        switch (type) {
             case page: {
                 PageData pageData = TreeCache.getInstance().getPage(getId());
                 if (pageData != null)
                     setUrl(pageData.getUrl());
-            }break;
+            }
+            break;
             case file: {
                 FileData fileData = TreeCache.getInstance().getFile(getId());
                 if (fileData != null)
                     setUrl(fileData.getUrl());
-            }break;
+            }
+            break;
         }
     }
 
@@ -274,7 +273,5 @@ public class SearchData {
         context = getContext(highlighter, analyzer, "content", CONTEXT_LENGTH_CONTENT);
         setContentContext(context);
     }
-
-
 
 }

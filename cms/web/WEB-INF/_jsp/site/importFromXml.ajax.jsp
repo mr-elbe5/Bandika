@@ -7,11 +7,13 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.servlet.RequestReader" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
-    int siteId = RequestReader.getInt(request, "siteId");%>
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
+    int siteId = RequestReader.getInt(request, "siteId");
+%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/site.srv" method="post" id="uploadform" name="uploadform" accept-charset="UTF-8" enctype="multipart/form-data">
     <input type="hidden" name="siteId" value="<%=siteId%>"/> <input type="hidden" name="act" value="importFromXml"/>

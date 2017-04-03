@@ -9,8 +9,8 @@
 package de.bandika.timer;
 
 import de.bandika.base.data.Locales;
-import de.bandika.configuration.Configuration;
 import de.bandika.base.log.Log;
+import de.bandika.configuration.Configuration;
 
 import java.util.Date;
 
