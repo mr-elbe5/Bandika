@@ -19,11 +19,13 @@
 package de.elbe5.base.crypto.shiro;
 
 /**
- * Base Shiro exception for problems encountered during cryptographic operations.
+ * Base Shiro exception for problems encountered during cryptographic
+ * operations.
  *
  * @since 1.0
  */
 public class CryptoException extends ShiroException {
+
     public CryptoException(String message) {
         super(message);
     }

@@ -1,10 +1,10 @@
 /*
-  Elbe 5 CMS  - A Java based modular Content Management System
-  Copyright (C) 2009-2015 Michael Roennau
+ Elbe 5 CMS  - A Java based modular Content Management System
+ Copyright (C) 2009-2017 Michael Roennau
 
-  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
-  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 package de.elbe5.base.database;
 
@@ -13,6 +13,7 @@ import de.elbe5.base.log.Log;
 import java.sql.*;
 
 public abstract class DbBean {
+
     public DbBean() {
     }
 
@@ -62,13 +63,13 @@ public abstract class DbBean {
         int id = 0;
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("select id from t_id");
-            ResultSet rs = pst.executeQuery();
-            rs.next();
-            id = rs.getInt(1);
-            rs.close();
+            pst = con.prepareStatement("SELECT id FROM t_id");
+            try (ResultSet rs = pst.executeQuery()) {
+                rs.next();
+                id = rs.getInt(1);
+            }
             pst.close();
-            pst = con.prepareStatement("update t_id set id=?");
+            pst = con.prepareStatement("UPDATE t_id SET id=?");
             pst.setInt(1, id + 1);
             pst.executeUpdate();
         } finally {
@@ -94,11 +95,11 @@ public abstract class DbBean {
         Timestamp now = null;
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("select now()");
-            ResultSet rs = pst.executeQuery();
-            rs.next();
-            now = rs.getTimestamp(1);
-            rs.close();
+            pst = con.prepareStatement("SELECT now()");
+            try (ResultSet rs = pst.executeQuery()) {
+                rs.next();
+                now = rs.getTimestamp(1);
+            }
         } finally {
             closeStatement(pst);
         }

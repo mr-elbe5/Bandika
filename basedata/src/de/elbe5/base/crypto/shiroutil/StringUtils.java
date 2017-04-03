@@ -19,18 +19,22 @@
 package de.elbe5.base.crypto.shiroutil;
 
 /**
- * <p>Simple utility class for String operations useful across the framework.
  * <p/>
- * <p>Some methods in this class were copied from the Spring Framework so we didn't have to re-invent the wheel,
- * and in these cases, we have retained all license, copyright and author information.
+ * Simple utility class for String operations useful across the framework.
+ * <p/>
+ * <p/>
+ * Some methods in this class were copied from the Spring Framework so we didn't
+ * have to re-invent the wheel, and in these cases, we have retained all
+ * license, copyright and author information.
  *
  * @since 0.9
  */
 public class StringUtils {
+
     /**
-     * Check whether the given String has actual text.
-     * More specifically, returns <code>true</code> if the string not <code>null</code>,
-     * its length is greater than 0, and it contains at least one non-whitespace character.
+     * Check whether the given String has actual text. More specifically, returns
+     * <code>true</code> if the string not <code>null</code>, its length is
+     * greater than 0, and it contains at least one non-whitespace character.
      * <p/>
      * <code>StringUtils.hasText(null) == false<br/>
      * StringUtils.hasText("") == false<br/>
@@ -38,11 +42,13 @@ public class StringUtils {
      * StringUtils.hasText("12345") == true<br/>
      * StringUtils.hasText(" 12345 ") == true</code>
      * <p/>
-     * <p>Copied from the Spring Framework while retaining all license, copyright and author information.
+     * <p/>
+     * Copied from the Spring Framework while retaining all license, copyright and
+     * author information.
      *
      * @param str the String to check (may be <code>null</code>)
-     * @return <code>true</code> if the String is not <code>null</code>, its length is
-     * greater than 0, and it does not contain whitespace only
+     * @return <code>true</code> if the String is not <code>null</code>, its
+     * length is greater than 0, and it does not contain whitespace only
      * @see Character#isWhitespace
      */
     public static boolean hasText(String str) {
@@ -60,14 +66,16 @@ public class StringUtils {
 
     /**
      * Check that the given String is neither <code>null</code> nor of length 0.
-     * Note: Will return <code>true</code> for a String that purely consists of whitespace.
+     * Note: Will return <code>true</code> for a String that purely consists of
+     * whitespace.
      * <p/>
      * <code>StringUtils.hasLength(null) == false<br/>
      * StringUtils.hasLength("") == false<br/>
      * StringUtils.hasLength(" ") == true<br/>
      * StringUtils.hasLength("Hello") == true</code>
      * <p/>
-     * Copied from the Spring Framework while retaining all license, copyright and author information.
+     * Copied from the Spring Framework while retaining all license, copyright and
+     * author information.
      *
      * @param str the String to check (may be <code>null</code>)
      * @return <code>true</code> if the String is not null and has length

@@ -1,14 +1,15 @@
 /*
-  Elbe 5 CMS  - A Java based modular Content Management System
-  Copyright (C) 2009-2015 Michael Roennau
+ Elbe 5 CMS  - A Java based modular Content Management System
+ Copyright (C) 2009-2017 Michael Roennau
 
-  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
-  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 package de.elbe5.base.data;
 
 public class BinaryFileBaseData {
+
     protected String fileName = null;
     protected String contentType = null;
     protected int size = 0;
@@ -21,16 +22,24 @@ public class BinaryFileBaseData {
     }
 
     public String getExtension() {
-        if (fileName == null) return null;
+        if (fileName == null) {
+            return null;
+        }
         int pos = fileName.lastIndexOf('.');
-        if (pos == -1) return null;
+        if (pos == -1) {
+            return null;
+        }
         return fileName.substring(pos + 1).toLowerCase();
     }
 
     public String getFileNameWithoutExtension() {
-        if (fileName == null) return null;
+        if (fileName == null) {
+            return null;
+        }
         int pos = fileName.lastIndexOf('.');
-        if (pos == -1) return fileName;
+        if (pos == -1) {
+            return fileName;
+        }
         return fileName.substring(0, pos);
     }
 

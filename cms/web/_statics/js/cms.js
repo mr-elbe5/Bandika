@@ -1,8 +1,610 @@
+/* general part */
+
+var contextEvent = 'contextmenu';
+
+var isMobile = {
+    Android: function () {
+        return navigator.userAgent.match(/Android/i);
+    },
+    BlackBerry: function () {
+        return navigator.userAgent.match(/BlackBerry/i);
+    },
+    iOS: function () {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    },
+    Opera: function () {
+        return navigator.userAgent.match(/Opera Mini/i);
+    },
+    Windows: function () {
+        return navigator.userAgent.match(/IEMobile/i);
+    },
+    any: function () {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+    }
+};
+
+/* short cuts */
+
+function submitAction(method) {
+    document.form.act.value = method;
+    document.form.submit();
+    return false;
+}
+
+function linkTo(url) {
+    window.location.href = url;
+    return false;
+}
+
+function openTo(url) {
+    window.open(url, '_blank');
+    return false;
+}
+
+function scrollToMainTop(id) {
+    var $elem = jQuery(id);
+    if ($elem) {
+        $('#main').scrollTop($elem.offset().top);
+    }
+}
+
+/* form extensions */
+
+$.fn.extend({
+    activateToggleCheckbox: function () {
+        var $toggleCheckbox = $(this).find('.toggler').eq(0);
+        if (!$toggleCheckbox)
+            return;
+        $toggleCheckbox.on('click.checkboxToggleEvent', {table: $(this)}, function (event) {
+            var checked = this.checked;
+            var table = event.data.table;
+            $(table).find('.toggle').each(function () {
+                this.checked = checked;
+            });
+        });
+    }, deactivateToggleCheckbox: function () {
+        var $toggleCheckbox = $(this).find('.toggler').eq(0);
+        if (!$toggleCheckbox)
+            return;
+        $toggleCheckbox.off('click.checkboxToggleEvent');
+    }, getSelectedCheckboxes: function () {
+        var result = '';
+        var count = 0;
+        $(this).find('.toggle').each(function () {
+            if (this.checked) {
+                if (count > 0)
+                    result += ',';
+                result += this.value;
+                count++;
+            }
+        });
+        return result;
+    }, getSelectedCheckbox: function () {
+        var result;
+        var count = 0;
+        $(this).find('.toggle').each(function () {
+            if (this.checked) {
+                count++;
+                result = this.value;
+            }
+        });
+        return count == 1 ? result : '';
+    }, serializeFiles: function () {
+        var formData = new FormData();
+        $.each($(this).find("input[type='file']"), function (i, tag) {
+            $.each($(tag)[0].files, function (i, file) {
+                formData.append(tag.name, file);
+            });
+        });
+        var params = $(this).serializeArray();
+        $.each(params, function (i, val) {
+            formData.append(val.name, val.value);
+        });
+        return formData;
+    }
+});
+
+/* context menu */
+
+function callFromContext(source, url) {
+    var $contextMenu = $(source).closest(".contextMenu");
+    if ($contextMenu) {
+        $contextMenu.hide();
+    }
+    if (url && url.length > 0)
+        linkTo(url);
+    return false;
+}
+
+/* list form */
+
+$.fn.extend({
+    initListForm: function () {
+        var $form = $(this);
+        var $multiSelector = $form.find("input[type='checkbox'].multiSelector");
+        $form.find('.selectable').each(function () {
+            this.addEventListener('click', function (e) {
+                var $selectable = $(this);
+                var sel = $selectable.hasClass("selected");
+                var multiSelect = $multiSelector.is(":checked");
+                if (!multiSelect) {
+                    $form.find(".selectable").each(function () {
+                        $(this).removeClass("selected");
+                    });
+                }
+                if (!sel) {
+                    $selectable.addClass("selected");
+                } else {
+                    $selectable.removeClass("selected");
+                }
+                e.preventDefault();
+            }, false);
+
+        });
+        $form.find('.contextSource').each(function () {
+            this.addEventListener('click', function (e) {
+                $multiSelector.attr('checked', false);
+                if (!e.ctrlKey) {
+                    $form.find(".selectable").each(function () {
+                        $(this).removeClass("selected");
+                    });
+                }
+                var $contextMenu = $(this).next();
+                if (!$contextMenu || !$contextMenu.hasClass("contextMenu"))
+                    return;
+                $contextMenu.show();
+                var $pos = $contextMenu.offset();
+                $pos.left = (e.pageX - 5);
+                $pos.top = (e.pageY - 5);
+                $contextMenu.offset($pos);
+                $contextMenu.mouseleave(function () {
+                    $(this).hide();
+                });
+                e.preventDefault();
+            }, false);
+        });
+        $multiSelector.click(function (e) {
+            $form.find(".selectable").each(function () {
+                $(this).removeClass("selected");
+            });
+
+        });
+    }
+});
+
+/* tree form */
+
+$.fn.extend({
+    initContextMenus: function ($container) {
+        var $form = $(this);
+        $form.find('.contextSource').each(function () {
+            this.addEventListener(contextEvent, function (e) {
+                var $selectable = $(this);
+                $form.find(".contextSource").each(function () {
+                    $(this).removeClass("selected");
+                });
+                $selectable.addClass("selected");
+                var $contextMenu = $selectable.next();
+                if (!$contextMenu || !$contextMenu.hasClass("contextMenu"))
+                    return;
+                $contextMenu.show();
+                var $pos = $contextMenu.offset();
+                $pos.left = (e.pageX - 5);
+                $pos.top = (e.pageY - 5);
+                $contextMenu.offset($pos);
+                if ($container) {
+                    var overflow = $contextMenu.position().top + $contextMenu.height() + 5 - $container.position().top - $container.height();
+                    if (overflow > 0) {
+                        $pos = $contextMenu.offset();
+                        $pos.top -= overflow;
+                        $contextMenu.offset($pos);
+                    }
+                }
+                $contextMenu.mouseleave(function () {
+                    $(this).hide();
+                });
+                e.preventDefault();
+            }, false);
+            this.addEventListener('click', function (e) {
+                var $selectable = $(this);
+                if (!e.ctrlKey) {
+                    $form.find(".contextSource").each(function () {
+                        $(this).removeClass("selected");
+                    });
+                }
+                $selectable.addClass("selected");
+                e.preventDefault();
+            }, false);
+        });
+    }, initSelectables: function () {
+        var $form = $(this);
+        $form.find('.selectable').each(function () {
+            this.addEventListener('click', function (e) {
+                var $selectable = $(this);
+                if (!e.ctrlKey) {
+                    $form.find(".selectable").each(function () {
+                        $(this).removeClass("selected");
+                    });
+                }
+                $selectable.addClass("selected");
+                e.preventDefault();
+            }, false);
+        });
+    }
+});
+
+/* layer extensions */
+
+$.fn.extend({
+    makeDraggable: function (dragHandle, dragArea) {
+        $(this).click(function (event) {
+            event.stopPropagation();
+        });
+        var dragDataName = 'dragData';
+        if (!dragArea)
+            dragArea = $('body');
+        if (!dragHandle)
+            dragHandle = $(this);
+        $(this).data(dragDataName, {
+            dragHandle: dragHandle, dragArea: dragArea, mouseDown: false, mouseOffset: {}
+        });
+        dragHandle.on('mousedown.dragEvent', {draggable: $(this)}, function (event) {
+            var draggable = event.data.draggable;
+            draggable.data(dragDataName).mouseDown = true;
+            var dragOffset = draggable.offset();
+            draggable.data('dragData').mouseOffset = {
+                top: event.clientY - dragOffset.top, left: event.clientX - dragOffset.left
+            };
+        });
+        dragArea.on('mouseup.dragEvent mouseleave.dragEvent', {draggable: $(this)}, function (event) {
+            event.data.draggable.data(dragDataName).mouseDown = false;
+        });
+        dragArea.on('mousemove.dragEvent', {draggable: $(this)}, function (event) {
+            var draggable = event.data.draggable;
+            if (!draggable.data(dragDataName).mouseDown) {
+                return;
+            }
+            draggable.offset({
+                top: event.clientY - draggable.data(dragDataName).mouseOffset.top,
+                left: event.clientX - draggable.data(dragDataName).mouseOffset.left
+            });
+        });
+    }, unmakeDraggable: function () {
+        var dragDataName = 'dragData';
+        var dragData = $(this).data(dragDataName);
+        if (!dragData)
+            return;
+        if (dragData.dragHandle)
+            dragData.dragHandle.off('mousedown.dragEvent');
+        if (dragData.dragArea)
+            dragData.dragArea.off('mousemove.dragEvent mouseup.dragEvent mouseleave.dragEvent');
+        $(this).removeData(dragDataName);
+    }, openLayer: function () {
+        var $layer = $(this);
+        if ($layer.is(':hidden')) {
+            $layer.show();
+        }
+        return false;
+    }, closeLayer: function () {
+        var $layer = $(this);
+        if (!$layer.is(':hidden')) {
+            $layer.hide();
+        }
+        return false;
+    }, toggleLayer: function () {
+        var $layer = $(this);
+        if ($layer.is(':hidden')) {
+            $layer.show();
+        } else {
+            $layer.hide();
+        }
+        return false;
+    },
+    setLayerHeader: function(headerContent){
+        $(this).find(".layerheadbox").find("span").html(headerContent);
+    }
+});
+
+/* tree layer */
+
+$.fn.extend({
+    openTreeLayer: function (headerContent,url) {
+        var $layer = $(this);
+        var $dialog = $layer.find('.layercontent');
+        var $header = $layer.find('.layerheadbox');
+        var $main = $layer.find('.layermainbox');
+        $(window).bind("resize", function () {
+            var layerHeight = Math.max(document.body.scrollHeight, window.innerHeight);
+            var layerWidth = Math.max(document.body.scrollWidth, window.innerWidth);
+            $layer.css({'height': layerHeight});
+            $layer.css({'width': layerWidth});
+        });
+        $header.find('span').html(function () {
+            return headerContent;
+        });
+        $main.load(url);
+        $dialog.makeDraggable($header, $layer);
+        $layer.attr('data-hidden', 'false');
+        return false;
+    }, closeTreeLayer: function () {
+        var $layer = $(this);
+        var $dialog = $layer.find('.layercontent');
+        var $header = $layer.find('.layerheadbox');
+        var $main = $layer.find('.layermainbox');
+        $layer.attr('data-hidden', 'true');
+        $header.find('span').html('&nbsp;');
+        $main.html('');
+        $dialog.css({top: '', left: ''});
+        $(window).unbind("resize");
+        return false;
+    }
+});
+
+function openTreeLayer(header,url) {
+    return $('#treeLayer').openTreeLayer(header, url);
+}
+function closeTreeLayer() {
+    return $('#treeLayer').closeTreeLayer();
+}
+
+function linkToTree(url) {
+    $.ajax({
+        url: url, type: 'POST', cache: false, dataType: 'html'
+    }).success(function (html, textStatus) {
+        $('#treeLayer').find('.layermainbox').html(html);
+    });
+    return false;
+}
+
+function closeLayerToTree(url) {
+    linkToTree(url);
+    closeLayerDialog();
+    return false;
+}
+
+$.fn.extend({
+    makeDropArea: function () {
+        $(this).bind('dragenter', function (e) {
+            e.preventDefault();
+            if (isFileDrag(e)) {
+                $(this).addClass('dropTarget');
+                console.log('dragenter');
+            }
+        });
+        $(this).bind('dragover', function (e) {
+            e.preventDefault();
+        });
+        $(this).bind('dragleave', function (e) {
+            e.preventDefault();
+            if (isFileDrag(e)) {
+                $(this).removeClass('dropTarget');
+                console.log('dragleave');
+            }
+        });
+        $(this).bind('drop', function (e) {
+            e.preventDefault();
+            if (isFileDrop(e)) {
+                console.log('drop');
+                var files = e.originalEvent.dataTransfer.files;
+                uploadFiles(files, e.originalEvent.currentTarget.dataset.siteid);
+                $(this).removeClass('dropTarget');
+            }
+            else if (isNodeDrop(e)) {
+                var nodeType = e.originalEvent.dataTransfer.getData('nodeType');
+                var nodeid = e.originalEvent.dataTransfer.getData('nodeId');
+                moveNode(nodeType, nodeid, e.originalEvent.currentTarget.dataset.siteid);
+            }
+        });
+    }
+});
+
+function isFileDrag(e) {
+    return e.originalEvent && e.originalEvent.dataTransfer && e.originalEvent.dataTransfer.types && e.originalEvent.dataTransfer.types[2] == 'Files';
+}
+
+function isFileDrop(e) {
+    return e.originalEvent && e.originalEvent.dataTransfer && e.originalEvent.dataTransfer.files && e.originalEvent.dataTransfer.files.length > 0;
+}
+
+function uploadFiles(files, siteid) {
+    var fd = new FormData();
+    for (var i = 0; i < files.length; i++) {
+        fd.append('file_' + i, files[i]);
+    }
+    fd.append('numFiles', i);
+    fd.append('act', 'createFiles');
+    fd.append('siteId', siteid);
+    $.ajax({
+        type: 'POST',
+        url: '/file.srv?',
+        data: fd,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            linkToTree('tree.srv?act=openTree&siteId=' + siteid);
+        }
+    });
+}
+
+function isNodeDrop(e) {
+    return e.originalEvent && e.originalEvent.dataTransfer && e.originalEvent.dataTransfer.getData('nodeType');
+}
+
+function startSiteDrag(ev) {
+    ev.dataTransfer.setData("nodeType", "site");
+    ev.dataTransfer.setData("nodeId", ev.target.dataset.siteid);
+}
+
+function startPageDrag(ev) {
+    ev.dataTransfer.setData("nodeType", "page");
+    ev.dataTransfer.setData("nodeId", ev.target.dataset.pageid);
+}
+
+function startFileDrag(ev) {
+    ev.dataTransfer.setData("nodeType", "file");
+    ev.dataTransfer.setData("nodeId", ev.target.dataset.fileid);
+}
+
+function moveNode(nodeType, nodeid, siteid) {
+    if (nodeType === 'site')
+        moveSite(nodeid, siteid);
+    else if (nodeType === 'page')
+        movePage(nodeid, siteid);
+    else if (nodeType === 'file')
+        moveFile(nodeid, siteid);
+}
+
+function moveSite(siteid, parentid) {
+    var fd = new FormData();
+    fd.append('act', 'moveSite');
+    fd.append('siteId', siteid);
+    fd.append('parentId', parentid);
+    $.ajax({
+        type: 'POST',
+        url: '/site.srv?',
+        data: fd,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            linkToTree('tree.srv?act=openTree&siteId=' + parentid);
+        }
+    });
+}
+
+function movePage(pageid, parentid) {
+    var fd = new FormData();
+    fd.append('act', 'movePage');
+    fd.append('pageId', pageid);
+    fd.append('parentId', parentid);
+    $.ajax({
+        type: 'POST',
+        url: '/page.srv?',
+        data: fd,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            linkToTree('tree.srv?act=openTree&siteId=' + parentid);
+        }
+    });
+}
+
+function moveFile(fileid, parentid) {
+    var fd = new FormData();
+    fd.append('act', 'moveFile');
+    fd.append('fileId', fileid);
+    fd.append('parentId', parentid);
+    $.ajax({
+        type: 'POST',
+        url: '/file.srv?',
+        data: fd,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            linkToTree('tree.srv?act=openTree&siteId=' + parentid);
+        }
+    });
+}
+
+/* ajax dialog layer */
+
+$.fn.extend({
+    openAjaxDialog: function (headerContent, url) {
+        var $layer = $(this);
+        var $dialog = $layer.find('.layercontent');
+        var $header = $layer.find('.layerheadbox');
+        var $main = $layer.find('.layermainbox');
+        $(window).bind("resize", function () {
+            var layerHeight = Math.max(document.body.scrollHeight, window.innerHeight);
+            var layerWidth = Math.max(document.body.scrollWidth, window.innerWidth);
+            $layer.css({'height': layerHeight});
+            $layer.css({'width': layerWidth});
+        });
+        $header.find('span').html(function () {
+            return headerContent;
+        });
+        $main.load(url);
+        $dialog.makeDraggable($header, $layer);
+        $layer.attr('data-hidden', 'false');
+        return false;
+    }, openAjaxDialogInplace: function ($refObj, headerContent, url) {
+        var $layer = $(this);
+        var $dialog = $layer.find('.layercontent');
+        var $header = $layer.find('.layerheadbox');
+        var $main = $layer.find('.layermainbox');
+        $(window).bind("resize", function () {
+            var layerHeight = Math.max(document.body.scrollHeight, window.innerHeight);
+            var layerWidth = Math.max(document.body.scrollWidth, window.innerWidth);
+            $layer.css({'height': layerHeight});
+            $layer.css({'width': layerWidth});
+        });
+        $header.find('span').html(function () {
+            return headerContent;
+        });
+        $main.load(url, function () {
+            $dialog.offset(function () {
+                var pos = $refObj.position();
+                var layerHeight = $layer.height();
+                var layerWidth = $layer.width();
+                var dialogHeight = $dialog.height();
+                var dialogWidth = $dialog.width();
+                if (pos.top + dialogHeight > layerHeight - 2) {
+                    pos.top = layerHeight - 2 - dialogHeight;
+                }
+                if (pos.left + dialogWidth > layerWidth - 2) {
+                    pos.left = layerWidth - 2 - dialogWidth;
+                }
+                return pos;
+            });
+        });
+        $dialog.makeDraggable($header, $layer);
+        $layer.attr('data-hidden', 'false');
+        return false;
+    }, closeAjaxDialog: function () {
+        var $layer = $(this);
+        var $dialog = $layer.find('.layercontent');
+        var $header = $layer.find('.layerheadbox');
+        var $main = $layer.find('.layermainbox');
+        $layer.attr('data-hidden', 'true');
+        $header.find('span').html('&nbsp;');
+        $main.html('');
+        $dialog.css({top: '', left: ''});
+        $(window).unbind("resize");
+        return false;
+    }
+});
+
+function openLayerDialog(header, url) {
+    return $('#dialogLayer').openAjaxDialog(header, url);
+}
+function closeLayerDialog() {
+    return $('#dialogLayer').closeAjaxDialog();
+}
+
+function post2ModalDialog(url, params) {
+    $.ajax({
+        url: url, type: 'POST', data: params, cache: false, dataType: 'html'
+    }).success(function (html, textStatus) {
+        $('#dialogLayer').find('.layermainbox').html(html);
+    });
+    return false;
+}
+
+function postMulti2ModalDialog(url, params) {
+    $.ajax({
+        url: url, type: 'POST', data: params, cache: false, dataType: 'html', contentType: false, processData: false
+    }).success(function (html, textStatus) {
+        $('#dialogLayer').find('.layermainbox').html(html);
+    });
+    return false;
+}
+
+/* content editing part */
+
 $.fn.extend({
     initEditArea: function () {
         var $area = $(this);
         $area.find('.contextSource').each(function () {
-            this.addEventListener('contextmenu', function (e) {
+            this.addEventListener(contextEvent, function (e) {
                 var $selectable = $(this);
                 $area.find(".contextSource").each(function () {
                     $(this).removeClass("selected");
@@ -16,14 +618,20 @@ $.fn.extend({
                 $pos.left = (e.pageX - 5);
                 $pos.top = (e.pageY - 5);
                 $contextMenu.offset($pos);
+                var overflow = $contextMenu.position().top + $contextMenu.height() + 5 - $('#main').height();
+                if (overflow>0){
+                    $pos=$contextMenu.offset();
+                    $pos.top-=overflow;
+                    $contextMenu.offset($pos);
+                }
                 $contextMenu.mouseleave(function () {
                     $(this).hide();
                 });
                 e.preventDefault();
             }, false);
             this.addEventListener('click', function (e) {
-                var $selectable=$(this);
-                if (!e.ctrlKey){
+                var $selectable = $(this);
+                if (!e.ctrlKey) {
                     $area.find(".contextSource").each(function () {
                         $(this).removeClass("selected");
                     });
@@ -35,126 +643,80 @@ $.fn.extend({
     }
 });
 
-function callCkBrowserCallback(fileBrowserCallbackId, fileLink) {
-    if (opener && CKEDITOR)
-        opener.CKEDITOR.tools.callFunction(fileBrowserCallbackId, fileLink);
-    window.close();
+/*
+ * call from ckeditor with url like
+ * /field.srv?act=openImageBrowser&siteId=100&pageId=110&CKEditor=0_html1&CKEditorFuncNum=0&langCode=de
+ */
+function openBrowserLayer(url){
+    return $('#browserLayer').openAjaxDialog('&nbsp;', url);
+}
+
+function closeBrowserLayer() {
+    return $('#browserLayer').closeAjaxDialog();
+}
+
+function openBrowserLayerDialog(header, url) {
+    return $('#browserDialogLayer').openAjaxDialog(header, url);
+}
+function closeBrowserDialogLayer() {
+    return $('#browserDialogLayer').closeAjaxDialog();
+}
+
+function linkToBrowserLayer(url) {
+    $.ajax({
+        url: url, type: 'POST', cache: false, dataType: 'html'
+    }).success(function (html, textStatus) {
+        $('#browserLayer').find('.layermainbox').html(html);
+    });
     return false;
 }
 
-function openSetImage(ident, siteId, pageId) {
-    var width = 1020;
-    var height = 700;
-    var left = parseInt((screen.availWidth / 2) - (width / 2));
-    var top = parseInt((screen.availHeight / 2) - (height / 2));
-    var uri = "/field.srv?act=openImageBrowser&siteId="+siteId+"&pageId=" + pageId + "&CallbackId=" + ident;
-    var winFeatures = "toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable,width=" + width + ",height=" + height + ",left=" + left + ",top=" + top + ",screenX=" + left + ",screenY=" + top;
-    window.open(uri, null, winFeatures);
+function closeLayerToBrowserLayer(url) {
+    linkToBrowserLayer(url);
+    closeBrowserDialogLayer();
     return false;
 }
 
-function callBrowserImageCallback(callbackId, imgId) {
-    var elemId = callbackId + "ImgId";
-    var elem = opener.document.getElementById(elemId);
-    elem.value = imgId;
-    var img = opener.document.getElementById(callbackId);
-    if (img) {
-        img.src = "/file.srv?act=showPreview&fileId=" + imgId;
-    }
-    window.close();
-}
-
-function setImage(ident) {
-    var img = document.getElementById(ident);
-    var sourceId = ident + "SelImgId";
-    var targetId = ident + "ImgId";
-    var source = document.getElementById(sourceId);
-    var target = document.getElementById(targetId);
-    target.value = source.value;
-    if (img) {
-        img.src = "/file.srv?act=show&fileId=" + source.value;
-    }
-    sourceId = ident + "SelAlt";
-    targetId = ident + "Alt";
-    source = document.getElementById(sourceId);
-    target = document.getElementById(targetId);
-    target.value = source.value;
-    if (img) {
-        img.alt = source.value;
-        img.title = source.value;
-    }
-}
-
-function setImageLink(ident) {
-    setImage(ident);
-    var sourceId = ident + "SelLink";
-    var targetId = ident + "Link";
-    var source = document.getElementById(sourceId);
-    var target = document.getElementById(targetId);
-    target.value = source.value;
-    sourceId = ident + "SelTarget";
-    targetId = ident + "Target";
-    source = document.getElementById(sourceId);
-    target = document.getElementById(targetId);
-    target.value = source.value;
-}
-
-function openSetLink(ident, pageId) {
-    var width = 1020;
-    var height = 700;
-    var left = parseInt((screen.availWidth / 2) - (width / 2));
-    var top = parseInt((screen.availHeight / 2) - (height / 2));
-    var uri = "/field.srv?act=openLinkBrowser&pageId=" + pageId + "&CallbackId=" + ident;
-    var winFeatures = "toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable,width=" + width + ",height=" + height + ",left=" + left + ",top=" + top + ",screenX=" + left + ",screenY=" + top;
-    window.open(uri, null, winFeatures);
+function post2ModalBrowserDialog(url, params) {
+    $.ajax({
+        url: url, type: 'POST', data: params, cache: false, dataType: 'html'
+    }).success(function (html, textStatus) {
+        $('#browserDialogLayer').find('.layermainbox').html(html);
+    });
     return false;
 }
 
-function callBrowserCallback(callbackId, link) {
-    var elem = opener.document.getElementById(callbackId + "Link");
-    elem.value = link;
-    window.close();
+function postMulti2ModalBrowserDialog(url, params) {
+    $.ajax({
+        url: url, type: 'POST', data: params, cache: false, dataType: 'html', contentType: false, processData: false
+    }).success(function (html, textStatus) {
+        $('#browserDialogLayer').find('.layermainbox').html(html);
+    });
     return false;
 }
 
-function setTextLink(ident) {
-    var a = document.getElementById(ident);
-    var sourceId = ident + "SelText";
-    var targetId = ident + "Text";
-    var source = document.getElementById(sourceId);
-    var target = document.getElementById(targetId);
-    target.value = source.value;
-    if (a)
-        a.innerText = source.value;
-    sourceId = ident + "SelLink";
-    targetId = ident + "Link";
-    source = document.getElementById(sourceId);
-    target = document.getElementById(targetId);
-    target.value = source.value;
-    sourceId = ident + "SelTarget";
-    targetId = ident + "Target";
-    source = document.getElementById(sourceId);
-    target = document.getElementById(targetId);
-    target.value = source.value;
+function replacePageContent() {
+    $.ajax({
+        url: '/pagepart.ajx?', type: 'POST', data: {act: 'showPageContent'}, cache: false, dataType: 'html'
+    }).success(function (html, textStatus) {
+        closeLayerDialog();
+        var $pageContent = $('#pageContent');
+        $pageContent.html(html);
+        $pageContent.initEditArea();
+        scrollToMainTop('.editPagePart');
+    });
+    return false;
 }
 
-function setLink(ident) {
-    var sourceId = ident + "SelLink";
-    var targetId = ident + "Link";
-    var source = document.getElementById(sourceId);
-    var target = document.getElementById(targetId);
-    target.value = source.value;
-    sourceId = ident + "SelTarget";
-    targetId = ident + "Target";
-    source = document.getElementById(sourceId);
-    target = document.getElementById(targetId);
-    target.value = source.value;
-}
-
-function savePagePart(id, areaName) {
-    document.form.partId.value = id;
-    document.form.areaName.value = areaName;
-    return submitAction('savePagePart');
+function post2EditPageContent(url, params) {
+    $.ajax({
+        url: url, type: 'POST', data: params, cache: false, dataType: 'html'
+    }).success(function (html, textStatus) {
+        var $pageContent = $('#pageContent');
+        $pageContent.html(html);
+        $pageContent.initEditArea();
+    });
+    return false;
 }
 
 function evaluateEditFields() {
@@ -165,6 +727,59 @@ function evaluateEditFields() {
         });
     }
 }
+
+/* main navigation */
+
+var mainNav;
+var mainNavLis;
+var mainNavTimer = 0;
+
+$(document).ready(function () {
+
+    mainNav = $("nav.mainNav");
+    mainNavLis = mainNav.children("ul").children("li");
+
+    if (isMobile.any()) {
+        mainNavLis.click(function () {
+            openMenu($(this));
+        });
+    }
+    else {
+        mainNavLis.mouseenter(function () {
+            openMenu($(this));
+        });
+    }
+
+    function openMenu(li) {
+        var subMenu = li.children("ul");
+        if (subMenu.length == 0 || li.hasClass("open")) {
+            return true;
+        } else {
+            mainNavLis.removeClass("open");
+            li.addClass("open");
+            return false;
+        }
+    }
+
+    mainNavTimer = 0;
+    mainNav.mouseleave(function () {
+        window.clearTimeout(mainNavTimer);
+        mainNavTimer = window.setTimeout(function () {
+            mainNavLis.removeClass("open");
+        }, 500);
+    });
+
+    // Mainnavi offen lassen (bei mouseenter, bevor der timer das flyout schliesst)
+    mainNav.mouseenter(function () {
+        if (mainNavLis.find(".open").length > 0) {
+            window.clearTimeout(mainNavTimer);
+        }
+    });
+
+});
+
+
+
 
 
 

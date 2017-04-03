@@ -1,10 +1,10 @@
 /*
-  Elbe 5 CMS  - A Java based modular Content Management System
-  Copyright (C) 2009-2015 Michael Roennau
+ Elbe 5 CMS  - A Java based modular Content Management System
+ Copyright (C) 2009-2017 Michael Roennau
 
-  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
-  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 package de.elbe5.base.mail;
 
@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class Mailer {
+
     protected String from = null;
     protected String to = null;
     protected String cc = null;
@@ -70,23 +71,37 @@ public class Mailer {
     }
 
     public void addFile(BinaryFileData data) {
-        if (files == null) files = new ArrayList<>();
+        if (files == null) {
+            files = new ArrayList<>();
+        }
         files.add(data);
     }
 
     public MimeMessage createMessage(Session session) throws Exception {
         MimeMessage msg = new MimeMessage(session);
-        if (from != null) msg.setFrom(new InternetAddress(from));
-        else msg.setFrom();
-        if (replyTo == null) replyTo = from;
+        if (from != null) {
+            msg.setFrom(new InternetAddress(from));
+        } else {
+            msg.setFrom();
+        }
+        if (replyTo == null) {
+            replyTo = from;
+        }
         if (replyTo != null) {
             msg.setReplyTo(InternetAddress.parse(replyTo, false));
         }
         msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
-        if (cc != null) msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(cc, false));
-        if (bcc != null) msg.setRecipients(Message.RecipientType.BCC, InternetAddress.parse(bcc, false));
-        if (subject != null) msg.setSubject(subject);
-        else msg.setSubject("");
+        if (cc != null) {
+            msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(cc, false));
+        }
+        if (bcc != null) {
+            msg.setRecipients(Message.RecipientType.BCC, InternetAddress.parse(bcc, false));
+        }
+        if (subject != null) {
+            msg.setSubject(subject);
+        } else {
+            msg.setSubject("");
+        }
         if (files != null) {
             MimeMultipart mp = new MimeMultipart();
             MimeBodyPart mbpText = new MimeBodyPart();
@@ -108,9 +123,13 @@ public class Mailer {
     }
 
     public boolean sendMail() throws Exception {
-        if (to == null) return false;
+        if (to == null) {
+            return false;
+        }
         Properties props = System.getProperties();
-        if (smtpHost != null) props.setProperty("mail.smtp.host", smtpHost);
+        if (smtpHost != null) {
+            props.setProperty("mail.smtp.host", smtpHost);
+        }
         Session session = Session.getInstance(props, null);
         MimeMessage msg = createMessage(session);
         Transport.send(msg);
@@ -118,9 +137,13 @@ public class Mailer {
     }
 
     public boolean sendMail(String username, String password) throws Exception {
-        if (to == null) return false;
+        if (to == null) {
+            return false;
+        }
         Properties props = System.getProperties();
-        if (smtpHost != null) props.setProperty("mail.smtp.host", smtpHost);
+        if (smtpHost != null) {
+            props.setProperty("mail.smtp.host", smtpHost);
+        }
         Session session = Session.getInstance(props, null);
         MimeMessage msg = createMessage(session);
         Transport transport = session.getTransport("smtp");

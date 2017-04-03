@@ -1,0 +1,350 @@
+
+
+/* main navigation */
+
+nav.mainNav {
+    border-bottom: 1px solid #e7e7e7;
+    position: absolute;
+    left: 250px;
+    right: 0;
+    top: 20px;
+    min-height: 30px;
+}
+
+nav.mainNav a {
+    text-decoration: none;
+    color: #e7e7e7;
+}
+
+nav.mainNav a:hover {
+    color: #ffffff;
+}
+
+nav.mainNav a.active {
+    color: #8bbdd7;
+}
+
+nav.mainNav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+/* level 1 */
+nav.mainNav ul li {
+    display: inline-block;
+    position: relative;
+    margin-right: 1px;
+}
+
+nav.mainNav ul li a {
+    padding: 7px 15px 6px;
+    display: block;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+/* layer */
+nav.mainNav ul li ul {
+    display: none;
+    background: #333 url(img/carbon.png);
+    border: 1px solid #c8c8c8;
+    position: absolute;
+    left: 0;
+    min-width: 120px;
+    z-index: 9999;
+}
+
+nav.mainNav ul li.open ul {
+    display: block;
+}
+
+/* level 2 */
+nav.mainNav ul li ul li {
+    display: block;
+    left: 0;
+    margin: 0;
+    border-bottom: 1px dotted #c8c8c8;
+}
+
+nav.mainNav ul li ul li:last-child {
+    border-bottom: none;
+}
+
+nav.mainNav ul li ul li a {
+    padding: 7px 14px 6px;
+    font-size: 13px;
+    font-weight: normal;
+}
+
+nav.mainNav ul li ul li:last-child {
+    border-bottom: none;
+}
+
+/* level 3 */
+nav.mainNav ul li ul li ul {
+    position: relative;
+    padding: 0;
+    border: none;
+    left: 0;
+}
+
+nav.mainNav ul li ul li ul li {
+    border-bottom: none;
+}
+
+nav.mainNav ul li ul li ul li a {
+    padding-left: 28px;
+    font-size: 11px;
+}
+
+nav.mainNav ul li ul li ul li a li a {
+    padding-left: 42px;
+}
+
+.searchSection {
+    overflow: hidden;
+}
+
+.breadcrumb {
+    font-size: 11px;
+    padding: 0 10px;
+    height: 21px;
+}
+
+.breadcrumb ul {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.breadcrumb li {
+    display: inline-block;
+    vertical-align: top;
+    padding: 0 2px;
+}
+
+.breadcrumb li a {
+    color: #eeeeee;
+}
+
+.breadcrumb li:last-child a {
+    color: #8bbdd7;
+}
+
+.breadcrumb li a:before {
+    content: "\2192\00A0";
+    font-size: 14px;
+}
+
+.searchBox {
+    min-width: 200px;
+    text-align: right;
+}
+
+.searchBox input[type="text"] {
+    color: #327598;
+    border: none;
+    margin-right: 5px;
+}
+
+.searchBox button[type="submit"] {
+    border: none;
+    background: transparent;
+}
+
+.searchBox button[type="submit"] span.icn::before {
+    color: #8bbdd7;
+}
+
+section.searchResults {
+    padding: 20px;
+}
+
+.searchResults h1 {
+    margin-bottom: 20px;
+}
+
+.searchResultsTable {
+    width: 100%;
+}
+
+.searchResultsTable tr td {
+    padding: 5px 3px 3px;
+}
+
+.searchResultsTable tr:first-child {
+    border-bottom: 1px solid #888;
+}
+
+.searchResultsTable tr:first-child th {
+    padding-bottom: 5px;
+}
+
+.searchResultsTable .col1 {
+    width: 10%;
+}
+
+.searchResultsTable .col2 {
+    width: 20%;
+}
+
+.searchResultsTable .col3 {
+    width: 20%;
+}
+
+.searchResultsTable .col4 {
+    width: 40%;
+}
+
+.searchResultsTable .col5 {
+    width: 10%;
+}
+
+.searchHighlight {
+    background: yellow;
+}
+
+/* app layout */
+
+.mainSection {
+    min-height: 300px;
+}
+
+h1{
+    margin: 0 0 10px 0;
+}
+
+h1.topCenter {
+    margin:10px;
+    text-align:center;
+}
+
+.contentSection {
+    min-width: 300px;
+    padding: 10px;
+}
+
+.asideSection {
+    padding: 10px;
+}
+
+.asideSection.content {
+}
+
+.asideSection.content img {
+    width: 100%;
+}
+
+/* special pages */
+
+.stageSection {
+    margin: 4px 0;
+    padding: 4px;
+    height: 200px;
+}
+
+.stageSection div.stagenote {
+    z-index: 200;
+    background: rgba(255, 255, 255, 0.7) none repeat scroll 0 0;
+    border-radius: 5px;
+    display: inline-block;
+    height: 40px;
+    padding: 10px;
+    position: relative;
+    left: 10px;
+    top: 10px;
+}
+
+.stageSection div.stageimage {
+    height: 200px;
+    position: relative;
+    top: -40px;
+}
+
+.stageSection div.stageimage img {
+    border-radius: 5px;
+    width: 100%;
+    height: 100%;
+}
+
+.mainSection.login form {
+    max-width: 100%;
+    width: 500px;
+    margin: 20px auto;
+}
+
+.mainSection.login fieldset {
+    padding: 40px;
+}
+
+/* template styles */
+
+.banner{
+    padding: 0;
+}
+.banner .imageBox{
+    padding:0;
+}
+.banner .imageBox img{
+    max-width: 100%;
+}
+.banner .textBox{
+    padding:0 10px;
+}
+.banner .textBox h3{
+    padding: 10px 0;
+}
+
+.teaser{
+    padding:0;
+}
+.teaser .teaserLeft{
+    padding:0;
+}
+.teaser .teaserRight{
+    padding:0;
+}
+
+.aside{
+    border: 1px solid #c8c8c8;
+    margin-bottom: 10px;
+}
+.aside h3{
+    background: #d8d8d8;
+    padding:5px;
+}
+.aside .imageBox{
+    padding:0;
+}
+.aside .imageBox img{
+    padding:0;
+}
+.aside .textBox{
+    padding:0;
+}
+
+.article{
+    padding:0;
+}
+.article h1{
+    padding:0;
+}
+.article h2{
+    padding:0;
+}
+.article .summary{
+    padding:0;
+}
+.article .imageBox{
+    padding:0;
+}
+.article .imageBox img{
+    padding:0;
+}
+.article .textBox{
+    padding:0;
+}
+.article .textBox a{
+    padding:0;
+}

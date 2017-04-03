@@ -1,59 +1,50 @@
 <%--
   Elbe 5 CMS  - A Java based modular Content Management System
-  Copyright (C) 2009-2015 Michael Roennau
+  Copyright (C) 2009-2017 Michael Roennau
 
   This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import = "de.elbe5.base.util.StringUtil" %>
-<%@ page import = "de.elbe5.webserver.servlet.SessionHelper" %>
-<%@ page import = "de.elbe5.webserver.tree.TreeNode" %>
-<%@ page import = "de.elbe5.webserver.tree.TreeNodeRightsData" %>
-<%@ page import = "de.elbe5.base.user.GroupData" %>
-<%@ page import = "de.elbe5.webserver.user.UserBean" %>
-<%@ page import = "java.util.List" %>
-<%@ page import = "java.util.Locale" %>
+<%@ page import="de.elbe5.base.util.StringUtil" %>
+<%@ page import="de.elbe5.servlet.SessionReader" %>
+<%@ page import="de.elbe5.tree.TreeNode" %>
+<%@ page import="de.elbe5.group.GroupData" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="de.elbe5.rights.Right" %>
+<%@ page import="de.elbe5.group.GroupBean" %>
 <%
-    Locale locale = SessionHelper.getSessionLocale(request);
+    Locale locale = SessionReader.getSessionLocale(request);
     TreeNode data = (TreeNode) request.getAttribute("treeNode");
-    List<GroupData> groups = UserBean.getInstance().getAllGroups();
+    boolean disabled = data.inheritsRights();
+    List<GroupData> groups = GroupBean.getInstance().getAllGroups();
 %>
-<table class = "listTable">
-    <tr class = "formTableHeader">
+<table class="listTable">
+    <tr class="formTableHeader">
         <th><%=StringUtil.getHtml("_group", locale)%>
         </th>
-        <th><%=StringUtil.getHtml("_rightnone", locale)%>
-        </th>
-        <th><%=StringUtil.getHtml("_rightread", locale)%>
-        </th>
-        <th><%=StringUtil.getHtml("_rightedit", locale)%>
-        </th>
-        <th><%=StringUtil.getHtml("_rightapprove", locale)%>
+        <th><%=StringUtil.getHtml("_rights", locale)%>
         </th>
     </tr>
     <%
         if (groups != null) {
             for (GroupData group : groups) {
+                if (group.getId() <= GroupData.ID_MAX_FINAL)
+                    continue;
     %>
     <tr>
-        <td><%=StringUtil.toHtml(group.getName())%>
+        <td>
+            <label for="groupright_<%=group.getId()%>"><%=StringUtil.toHtml(group.getName())%>
+            </label>
         </td>
         <td>
-            <input type = "radio" name = "groupright_<%=group.getId()%>"
-                    value = "<%=TreeNodeRightsData.RIGHT_NONE%>"<%=!data.hasAnyGroupRight(group.getId()) ? "checked=\"checked\"" : ""%> />
-        </td>
-        <td>
-            <input type = "radio" name = "groupright_<%=group.getId()%>"
-                    value = "<%=TreeNodeRightsData.RIGHTS_READER%>"<%=data.hasGroupRight(group.getId(), TreeNodeRightsData.RIGHTS_READER) ? "checked=\"checked\"" : ""%> />
-        </td>
-        <td>
-            <input type = "radio" name = "groupright_<%=group.getId()%>"
-                    value = "<%=TreeNodeRightsData.RIGHTS_EDITOR%>"<%=data.hasGroupRight(group.getId(), TreeNodeRightsData.RIGHTS_EDITOR) ? "checked=\"checked\"" : ""%> />
-        </td>
-        <td>
-            <input type = "radio" name = "groupright_<%=group.getId()%>"
-                    value = "<%=TreeNodeRightsData.RIGHTS_APPROVER%>"<%=data.hasGroupRight(group.getId(), TreeNodeRightsData.RIGHTS_APPROVER) ? "checked=\"checked\"" : ""%> />
+            <select class="fullWidth" id ="groupright_<%=group.getId()%>" name="groupright_<%=group.getId()%>" <%=disabled ? "disabled=\"disabled\"" : ""%>>
+                <option value="" <%=!data.hasAnyGroupRight(group.getId()) ? "selected" : ""%>><%=StringUtil.getHtml("_rightnone", locale)%></option>
+                <option value="<%=Right.READ.name()%>" <%=data.isGroupRight(group.getId(), Right.READ) ? "selected" : ""%>><%=StringUtil.getHtml("_rightread", locale)%></option>
+                <option value="<%=Right.EDIT.name()%>" <%=data.isGroupRight(group.getId(), Right.EDIT) ? "selected" : ""%>><%=StringUtil.getHtml("_rightedit", locale)%></option>
+                <option value="<%=Right.APPROVE.name()%>" <%=data.isGroupRight(group.getId(), Right.APPROVE) ? "selected" : ""%>><%=StringUtil.getHtml("_rightapprove", locale)%></option>
+            </select>
         </td>
     </tr>
     <%

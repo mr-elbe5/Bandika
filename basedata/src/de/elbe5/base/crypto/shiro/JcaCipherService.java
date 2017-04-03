@@ -35,33 +35,44 @@ import java.security.spec.AlgorithmParameterSpec;
 /**
  * Abstract {@code CipherService} implementation utilizing Java's JCA APIs.
  * <h2>Auto-generated Initialization Vectors</h2>
- * Shiro does something by default for all of its {@code CipherService} implementations that the JCA
- * {@link javax.crypto.Cipher Cipher} does not do:  by default,
- * <a href="http://en.wikipedia.org/wiki/Initialization_vector">initialization vector</a>s are automatically randomly
- * generated and prepended to encrypted data before returning from the {@code encrypt} methods.  That is, the returned
- * byte array or {@code OutputStream} is actually a concatenation of an initialization vector byte array plus the actual
- * encrypted data byte array.  The {@code decrypt} methods in turn know to read this prepended initialization vector
- * before decrypting the real data that follows.
+ * Shiro does something by default for all of its {@code CipherService}
+ * implementations that the JCA {@link javax.crypto.Cipher Cipher} does not do:
+ * by default,
+ * <a href="http://en.wikipedia.org/wiki/Initialization_vector">initialization
+ * vector</a>s are automatically randomly generated and prepended to encrypted
+ * data before returning from the {@code encrypt} methods. That is, the returned
+ * byte array or {@code OutputStream} is actually a concatenation of an
+ * initialization vector byte array plus the actual encrypted data byte array.
+ * The {@code decrypt} methods in turn know to read this prepended
+ * initialization vector before decrypting the real data that follows.
  * <p/>
- * This is highly desirable because initialization vectors guarantee that, for a key and any plaintext, the encrypted
- * output will always be different <em>even if you call {@code encrypt} multiple times with the exact same arguments</em>.
- * This is essential in cryptography to ensure that data patterns cannot be identified across multiple input sources
- * that are the same or similar.
+ * This is highly desirable because initialization vectors guarantee that, for a
+ * key and any plaintext, the encrypted output will always be different <em>even
+ * if you call {@code encrypt} multiple times with the exact same
+ * arguments</em>. This is essential in cryptography to ensure that data
+ * patterns cannot be identified across multiple input sources that are the same
+ * or similar.
  * <p/>
  * You can turn off this behavior by setting the
- * {@link #setGenerateInitializationVectors(boolean) generateInitializationVectors} property to {@code false}, but it
- * is highly recommended that you do not do this unless you have a very good reason to do so, since you would be losing
- * a critical security feature.
+ * {@link #setGenerateInitializationVectors(boolean) generateInitializationVectors}
+ * property to {@code false}, but it is highly recommended that you do not do
+ * this unless you have a very good reason to do so, since you would be losing a
+ * critical security feature.
  * <h3>Initialization Vector Size</h3>
- * This implementation defaults the {@link #setInitializationVectorSize(int) initializationVectorSize} attribute to
- * {@code 128} bits, a fairly common size.  Initialization vector sizes are very algorithm specific however, so subclass
- * implementations will often override this value in their constructor if necessary.
+ * This implementation defaults the
+ * {@link #setInitializationVectorSize(int) initializationVectorSize} attribute
+ * to {@code 128} bits, a fairly common size. Initialization vector sizes are
+ * very algorithm specific however, so subclass implementations will often
+ * override this value in their constructor if necessary.
  * <p/>
- * Also note that {@code initializationVectorSize} values are specified in the number of
- * bits (not bytes!) to match common references in most cryptography documentation.  In practice though, initialization
- * vectors are always specified as a byte array, so ensure that if you set this property, that the value is a multiple
- * of {@code 8} to ensure that the IV can be correctly represented as a byte array (the
- * {@link #setInitializationVectorSize(int) setInitializationVectorSize} mutator method enforces this).
+ * Also note that {@code initializationVectorSize} values are specified in the
+ * number of bits (not bytes!) to match common references in most cryptography
+ * documentation. In practice though, initialization vectors are always
+ * specified as a byte array, so ensure that if you set this property, that the
+ * value is a multiple of {@code 8} to ensure that the IV can be correctly
+ * represented as a byte array (the
+ * {@link #setInitializationVectorSize(int) setInitializationVectorSize} mutator
+ * method enforces this).
  *
  * @since 1.0
  * <p/>
@@ -69,21 +80,25 @@ import java.security.spec.AlgorithmParameterSpec;
  * Elbe 5 CMS!: changed logging
  */
 public abstract class JcaCipherService implements CipherService {
+
     /**
      * Default key size (in bits) for generated keys.
      */
     private static final int DEFAULT_KEY_SIZE = 128;
     /**
-     * Default size of the internal buffer (in bytes) used to transfer data between streams during stream operations
+     * Default size of the internal buffer (in bytes) used to transfer data
+     * between streams during stream operations
      */
     private static final int DEFAULT_STREAMING_BUFFER_SIZE = 512;
     private static final int BITS_PER_BYTE = 8;
     /**
-     * Default SecureRandom algorithm name to use when acquiring the SecureRandom instance.
+     * Default SecureRandom algorithm name to use when acquiring the SecureRandom
+     * instance.
      */
     private static final String RANDOM_NUM_GENERATOR_ALGORITHM_NAME = "SHA1PRNG";
     /**
-     * The name of the cipher algorithm to use for all encryption, decryption, and key operations
+     * The name of the cipher algorithm to use for all encryption, decryption, and
+     * key operations
      */
     private String algorithmName;
     /**
@@ -91,7 +106,8 @@ public abstract class JcaCipherService implements CipherService {
      */
     private int keySize;
     /**
-     * The size of the internal buffer (in bytes) used to transfer data from one stream to another during stream operations
+     * The size of the internal buffer (in bytes) used to transfer data from one
+     * stream to another during stream operations
      */
     private int streamingBufferSize;
     private boolean generateInitializationVectors;
@@ -99,15 +115,19 @@ public abstract class JcaCipherService implements CipherService {
     private SecureRandom secureRandom;
 
     /**
-     * Creates a new {@code JcaCipherService} instance which will use the specified cipher {@code algorithmName}
-     * for all encryption, decryption, and key operations.  Also, the following defaults are set:
+     * Creates a new {@code JcaCipherService} instance which will use the
+     * specified cipher {@code algorithmName} for all encryption, decryption, and
+     * key operations. Also, the following defaults are set:
      * <ul>
      * <li>{@link #setKeySize keySize} = 128 bits</li>
-     * <li>{@link #setInitializationVectorSize(int) initializationVectorSize} = 128 bits</li>
-     * <li>{@link #setStreamingBufferSize(int) streamingBufferSize} = 512 bytes</li>
+     * <li>{@link #setInitializationVectorSize(int) initializationVectorSize} =
+     * 128 bits</li>
+     * <li>{@link #setStreamingBufferSize(int) streamingBufferSize} = 512
+     * bytes</li>
      * </ul>
      *
-     * @param algorithmName the name of the cipher algorithm to use for all encryption, decryption, and key operations
+     * @param algorithmName the name of the cipher algorithm to use for all
+     *                      encryption, decryption, and key operations
      */
     protected JcaCipherService(String algorithmName) {
         if (!StringUtils.hasText(algorithmName)) {
@@ -121,10 +141,12 @@ public abstract class JcaCipherService implements CipherService {
     }
 
     /**
-     * Returns the cipher algorithm name that will be used for all encryption, decryption, and key operations (for
-     * example, 'AES', 'Blowfish', 'RSA', 'DSA', 'TripleDES', etc).
+     * Returns the cipher algorithm name that will be used for all encryption,
+     * decryption, and key operations (for example, 'AES', 'Blowfish', 'RSA',
+     * 'DSA', 'TripleDES', etc).
      *
-     * @return the cipher algorithm name that will be used for all encryption, decryption, and key operations
+     * @return the cipher algorithm name that will be used for all encryption,
+     * decryption, and key operations
      */
     public String getAlgorithmName() {
         return algorithmName;
@@ -157,21 +179,26 @@ public abstract class JcaCipherService implements CipherService {
     }
 
     /**
-     * Returns the algorithm-specific size in bits of generated initialization vectors.
+     * Returns the algorithm-specific size in bits of generated initialization
+     * vectors.
      *
-     * @return the algorithm-specific size in bits of generated initialization vectors.
+     * @return the algorithm-specific size in bits of generated initialization
+     * vectors.
      */
     public int getInitializationVectorSize() {
         return initializationVectorSize;
     }
 
     /**
-     * Sets the algorithm-specific initialization vector size in bits (not bytes!) to be used when generating
-     * initialization vectors.  The  value must be a multiple of {@code 8} to ensure that the IV can be represented
-     * as a byte array.
+     * Sets the algorithm-specific initialization vector size in bits (not bytes!)
+     * to be used when generating initialization vectors. The value must be a
+     * multiple of {@code 8} to ensure that the IV can be represented as a byte
+     * array.
      *
-     * @param initializationVectorSize the size in bits (not bytes) of generated initialization vectors.
-     * @throws IllegalArgumentException if the size is not a multiple of {@code 8}.
+     * @param initializationVectorSize the size in bits (not bytes) of generated
+     *                                 initialization vectors.
+     * @throws IllegalArgumentException if the size is not a multiple of
+     *                                  {@code 8}.
      */
     public void setInitializationVectorSize(int initializationVectorSize) throws IllegalArgumentException {
         if (initializationVectorSize % BITS_PER_BYTE != 0) {
@@ -186,50 +213,56 @@ public abstract class JcaCipherService implements CipherService {
     }
 
     /**
-     * Returns the size in bytes of the internal buffer used to transfer data from one stream to another during stream
-     * operations ({@link #encrypt(InputStream, OutputStream, byte[])} and
+     * Returns the size in bytes of the internal buffer used to transfer data from
+     * one stream to another during stream operations
+     * ({@link #encrypt(InputStream, OutputStream, byte[])} and
      * {@link #decrypt(InputStream, OutputStream, byte[])}).
      * <p/>
      * Default size is {@code 512} bytes.
      *
-     * @return the size of the internal buffer used to transfer data from one stream to another during stream
-     * operations
+     * @return the size of the internal buffer used to transfer data from one
+     * stream to another during stream operations
      */
     public int getStreamingBufferSize() {
         return streamingBufferSize;
     }
 
     /**
-     * Sets the size in bytes of the internal buffer used to transfer data from one stream to another during stream
-     * operations ({@link #encrypt(InputStream, OutputStream, byte[])} and
+     * Sets the size in bytes of the internal buffer used to transfer data from
+     * one stream to another during stream operations
+     * ({@link #encrypt(InputStream, OutputStream, byte[])} and
      * {@link #decrypt(InputStream, OutputStream, byte[])}).
      * <p/>
      * Default size is {@code 512} bytes.
      *
-     * @param streamingBufferSize the size of the internal buffer used to transfer data from one stream to another
-     *                            during stream operations
+     * @param streamingBufferSize the size of the internal buffer used to transfer
+     *                            data from one stream to another during stream operations
      */
     public void setStreamingBufferSize(int streamingBufferSize) {
         this.streamingBufferSize = streamingBufferSize;
     }
 
     /**
-     * Returns a source of randomness for encryption operations.  If one is not configured, and the underlying
-     * algorithm needs one, the JDK {@code SHA1PRNG} instance will be used by default.
+     * Returns a source of randomness for encryption operations. If one is not
+     * configured, and the underlying algorithm needs one, the JDK
+     * {@code SHA1PRNG} instance will be used by default.
      *
-     * @return a source of randomness for encryption operations.  If one is not configured, and the underlying
-     * algorithm needs one, the JDK {@code SHA1PRNG} instance will be used by default.
+     * @return a source of randomness for encryption operations. If one is not
+     * configured, and the underlying algorithm needs one, the JDK
+     * {@code SHA1PRNG} instance will be used by default.
      */
     public SecureRandom getSecureRandom() {
         return secureRandom;
     }
 
     /**
-     * Sets a source of randomness for encryption operations.  If one is not configured, and the underlying
-     * algorithm needs one, the JDK {@code SHA1PRNG} instance will be used by default.
+     * Sets a source of randomness for encryption operations. If one is not
+     * configured, and the underlying algorithm needs one, the JDK
+     * {@code SHA1PRNG} instance will be used by default.
      *
-     * @param secureRandom a source of randomness for encryption operations.  If one is not configured, and the
-     *                     underlying algorithm needs one, the JDK {@code SHA1PRNG} instance will be used by default.
+     * @param secureRandom a source of randomness for encryption operations. If
+     *                     one is not configured, and the underlying algorithm needs one, the JDK
+     *                     {@code SHA1PRNG} instance will be used by default.
      */
     public void setSecureRandom(SecureRandom secureRandom) {
         this.secureRandom = secureRandom;
@@ -253,14 +286,18 @@ public abstract class JcaCipherService implements CipherService {
     }
 
     /**
-     * Returns the transformation string to use with the {@link javax.crypto.Cipher#getInstance} invocation when
-     * creating a new {@code Cipher} instance.  This default implementation always returns
-     * {@link #getAlgorithmName() getAlgorithmName()}.  Block cipher implementations will want to override this method
-     * to support appending cipher operation modes and padding schemes.
+     * Returns the transformation string to use with the
+     * {@link javax.crypto.Cipher#getInstance} invocation when creating a new
+     * {@code Cipher} instance. This default implementation always returns
+     * {@link #getAlgorithmName() getAlgorithmName()}. Block cipher
+     * implementations will want to override this method to support appending
+     * cipher operation modes and padding schemes.
      *
-     * @param streaming if the transformation string is going to be used for a Cipher for stream-based encryption or not.
-     * @return the transformation string to use with the {@link javax.crypto.Cipher#getInstance} invocation when
-     * creating a new {@code Cipher} instance.
+     * @param streaming if the transformation string is going to be used for a
+     *                  Cipher for stream-based encryption or not.
+     * @return the transformation string to use with the
+     * {@link javax.crypto.Cipher#getInstance} invocation when creating a new
+     * {@code Cipher} instance.
      */
     protected String getTransformationString(boolean streaming) {
         return getAlgorithmName();
@@ -269,9 +306,7 @@ public abstract class JcaCipherService implements CipherService {
     protected byte[] generateInitializationVector(boolean streaming) {
         int size = getInitializationVectorSize();
         if (size <= 0) {
-            String msg = "initializationVectorSize property must be greater than zero.  This number is " +
-                    "typically set in the CipherService subclass constructor.  " +
-                    "Also check your configuration to ensure that if you are setting a value, it is positive.";
+            String msg = "initializationVectorSize property must be greater than zero.  This number is " + "typically set in the CipherService subclass constructor.  " + "Also check your configuration to ensure that if you are setting a value, it is positive.";
             throw new IllegalStateException(msg);
         }
         if (size % BITS_PER_BYTE != 0) {
@@ -285,6 +320,7 @@ public abstract class JcaCipherService implements CipherService {
         return ivBytes;
     }
 
+    @Override
     public ByteSource encrypt(byte[] plaintext, byte[] key) {
         byte[] ivBytes = null;
         boolean generate = isGenerateInitializationVectors(false);
@@ -315,6 +351,7 @@ public abstract class JcaCipherService implements CipherService {
         return ByteSource.Util.bytes(output);
     }
 
+    @Override
     public ByteSource decrypt(byte[] ciphertext, byte[] key) throws CryptoException {
         byte[] encrypted = ciphertext;
         //No IV, check if we need to read the IV from the stream:
@@ -351,14 +388,17 @@ public abstract class JcaCipherService implements CipherService {
     }
 
     /**
-     * Returns a new {@link javax.crypto.Cipher Cipher} instance to use for encryption/decryption operations.  The
-     * Cipher's {@code transformationString} for the {@code Cipher}.{@link javax.crypto.Cipher#getInstance getInstance}
-     * call is obtaind via the {@link #getTransformationString(boolean) getTransformationString} method.
+     * Returns a new {@link javax.crypto.Cipher Cipher} instance to use for
+     * encryption/decryption operations. The Cipher's {@code transformationString}
+     * for the {@code Cipher}.{@link javax.crypto.Cipher#getInstance getInstance}
+     * call is obtaind via the
+     * {@link #getTransformationString(boolean) getTransformationString} method.
      *
-     * @param streaming {@code true} if the cipher instance will be used as a stream cipher, {@code false} if it will be
-     *                  used as a block cipher.
+     * @param streaming {@code true} if the cipher instance will be used as a
+     *                  stream cipher, {@code false} if it will be used as a block cipher.
      * @return a new JDK {@code Cipher} instance.
-     * @throws CryptoException if a new Cipher instance cannot be constructed based on the
+     * @throws CryptoException if a new Cipher instance cannot be constructed
+     *                         based on the
      *                         {@link #getTransformationString(boolean) getTransformationString} value.
      */
     private javax.crypto.Cipher newCipherInstance(boolean streaming) throws CryptoException {
@@ -366,10 +406,7 @@ public abstract class JcaCipherService implements CipherService {
         try {
             return javax.crypto.Cipher.getInstance(transformationString);
         } catch (Exception e) {
-            String msg = "Unable to acquire a Java JCA Cipher instance using " +
-                    javax.crypto.Cipher.class.getName() + ".getInstance( \"" + transformationString + "\" ). " +
-                    getAlgorithmName() + " under this configuration is required for the " +
-                    getClass().getName() + " instance to function.";
+            String msg = "Unable to acquire a Java JCA Cipher instance using " + javax.crypto.Cipher.class.getName() + ".getInstance( \"" + transformationString + "\" ). " + getAlgorithmName() + " under this configuration is required for the " + getClass().getName() + " instance to function.";
             throw new CryptoException(msg, e);
         }
     }
@@ -377,24 +414,30 @@ public abstract class JcaCipherService implements CipherService {
     /**
      * Functions as follows:
      * <ol>
-     * <li>Creates a {@link #newCipherInstance(boolean) new JDK cipher instance}</li>
-     * <li>Converts the specified key bytes into an {@link #getAlgorithmName() algorithm}-compatible JDK
-     * {@link Key key} instance</li>
+     * <li>Creates a
+     * {@link #newCipherInstance(boolean) new JDK cipher instance}</li>
+     * <li>Converts the specified key bytes into an
+     * {@link #getAlgorithmName() algorithm}-compatible JDK {@link Key key}
+     * instance</li>
      * <li>{@link #init(javax.crypto.Cipher, int, Key, AlgorithmParameterSpec, SecureRandom) Initializes}
      * the JDK cipher instance with the JDK key</li>
-     * <li>Calls the {@link #crypt(javax.crypto.Cipher, byte[]) crypt(cipher,bytes)} method to either encrypt or
-     * decrypt the data based on the specified Cipher behavior mode
-     * ({@link javax.crypto.Cipher#ENCRYPT_MODE Cipher.ENCRYPT_MODE} or
+     * <li>Calls the
+     * {@link #crypt(javax.crypto.Cipher, byte[]) crypt(cipher,bytes)} method to
+     * either encrypt or decrypt the data based on the specified Cipher behavior
+     * mode ({@link javax.crypto.Cipher#ENCRYPT_MODE Cipher.ENCRYPT_MODE} or
      * {@link javax.crypto.Cipher#DECRYPT_MODE Cipher.DECRYPT_MODE})</li>
      * </ol>
      *
      * @param bytes the bytes to crypt
      * @param key   the key to use to perform the encryption or decryption.
-     * @param iv    the initialization vector to use for the crypt operation (optional, may be {@code null}).
-     * @param mode  the JDK Cipher behavior mode (Cipher.ENCRYPT_MODE or Cipher.DECRYPT_MODE).
+     * @param iv    the initialization vector to use for the crypt operation
+     *              (optional, may be {@code null}).
+     * @param mode  the JDK Cipher behavior mode (Cipher.ENCRYPT_MODE or
+     *              Cipher.DECRYPT_MODE).
      * @return the resulting crypted byte array
      * @throws IllegalArgumentException if {@code bytes} are null or empty.
-     * @throws CryptoException          if Cipher initialization or the crypt operation fails
+     * @throws CryptoException          if Cipher initialization or the crypt operation
+     *                                  fails
      */
     private byte[] crypt(byte[] bytes, byte[] key, byte[] iv, int mode) throws IllegalArgumentException, CryptoException {
         if (key == null || key.length == 0) {
@@ -405,8 +448,9 @@ public abstract class JcaCipherService implements CipherService {
     }
 
     /**
-     * Calls the {@link javax.crypto.Cipher#doFinal(byte[]) doFinal(bytes)} method, propagating any exception that
-     * might arise in an {@link CryptoException}
+     * Calls the {@link javax.crypto.Cipher#doFinal(byte[]) doFinal(bytes)}
+     * method, propagating any exception that might arise in an
+     * {@link CryptoException}
      *
      * @param cipher the JDK Cipher to finalize (perform the actual cryption)
      * @param bytes  the bytes to crypt
@@ -423,14 +467,19 @@ public abstract class JcaCipherService implements CipherService {
     }
 
     /**
-     * Initializes the JDK Cipher with the specified mode and key.  This is primarily a utility method to catch any
-     * potential {@link java.security.InvalidKeyException InvalidKeyException} that might arise.
+     * Initializes the JDK Cipher with the specified mode and key. This is
+     * primarily a utility method to catch any potential
+     * {@link java.security.InvalidKeyException InvalidKeyException} that might
+     * arise.
      *
-     * @param cipher the JDK Cipher to {@link javax.crypto.Cipher#init(int, Key) init}.
+     * @param cipher the JDK Cipher to
+     *               {@link javax.crypto.Cipher#init(int, Key) init}.
      * @param mode   the Cipher mode
      * @param key    the Cipher's Key
-     * @param spec   the JDK AlgorithmParameterSpec for cipher initialization (optional, may be null).
-     * @param random the SecureRandom to use for cipher initialization (optional, may be null).
+     * @param spec   the JDK AlgorithmParameterSpec for cipher initialization
+     *               (optional, may be null).
+     * @param random the SecureRandom to use for cipher initialization (optional,
+     *               may be null).
      * @throws CryptoException if the key is invalid
      */
     private void init(javax.crypto.Cipher cipher, int mode, Key key, AlgorithmParameterSpec spec, SecureRandom random) throws CryptoException {
@@ -454,6 +503,7 @@ public abstract class JcaCipherService implements CipherService {
         }
     }
 
+    @Override
     public void encrypt(InputStream in, OutputStream out, byte[] key) throws CryptoException {
         byte[] iv = null;
         boolean generate = isGenerateInitializationVectors(true);
@@ -478,6 +528,7 @@ public abstract class JcaCipherService implements CipherService {
         crypt(in, out, key, iv, javax.crypto.Cipher.ENCRYPT_MODE);
     }
 
+    @Override
     public void decrypt(InputStream in, OutputStream out, byte[] key) throws CryptoException {
         decrypt(in, out, key, isGenerateInitializationVectors(true));
     }
@@ -499,9 +550,7 @@ public abstract class JcaCipherService implements CipherService {
                 throw new CryptoException(msg, e);
             }
             if (read != ivByteSize) {
-                throw new CryptoException("Unable to read initialization vector bytes from the InputStream.  " +
-                        "This is required when initialization vectors are autogenerated during an encryption " +
-                        "operation.");
+                throw new CryptoException("Unable to read initialization vector bytes from the InputStream.  " + "This is required when initialization vectors are autogenerated during an encryption " + "operation.");
             }
         }
         decrypt(in, out, key, iv);

@@ -1,16 +1,18 @@
 /*
-  Elbe 5 CMS  - A Java based modular Content Management System
-  Copyright (C) 2009-2015 Michael Roennau
+ Elbe 5 CMS  - A Java based modular Content Management System
+ Copyright (C) 2009-2017 Michael Roennau
 
-  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
-  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 package de.elbe5.base.util;
 
+import de.elbe5.base.log.Log;
 import org.w3c.dom.*;
-import sun.misc.BASE64Encoder;
 
+import javax.security.auth.login.Configuration;
+import javax.xml.bind.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.*;
@@ -23,9 +25,12 @@ import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import org.apache.commons.codec.binary.Base64;
+import org.w3c.dom.Element;
+
 public class XmlUtil {
 
-    public static SimpleDateFormat dateFormat=new SimpleDateFormat("dd-MM-yyyy HH:mm");
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
     public static Document createXmlDocument() {
         try {
@@ -34,7 +39,7 @@ public class XmlUtil {
             Document doc = builder.newDocument();
             doc.setXmlVersion("1.0");
             return doc;
-        } catch (Exception e) {
+        } catch (Exception ignore) {
             return null;
         }
     }
@@ -51,8 +56,8 @@ public class XmlUtil {
         return childNode;
     }
 
-    public static void addTextNode(Document doc, Element parentNode, String name, String text) {
-        Element childNode= addNode(doc, parentNode, name);
+    public static void addText(Document doc, Element parentNode, String name, String text) {
+        Element childNode = addNode(doc, parentNode, name);
         childNode.appendChild(doc.createTextNode(StringUtil.toXml(text)));
     }
 
@@ -62,7 +67,7 @@ public class XmlUtil {
     }
 
     public static void addCDATA(Document doc, Element node, byte[] bytes) {
-        CDATASection cds = doc.createCDATASection(bytes == null ? "" : new BASE64Encoder().encode(bytes));
+        CDATASection cds = doc.createCDATASection(bytes == null ? "" : Base64.encodeBase64String(bytes));
         node.appendChild(cds);
     }
 
@@ -73,29 +78,36 @@ public class XmlUtil {
     }
 
     public static void addIntAttribute(Document doc, Element node, String key, int value) {
+
         addAttribute(doc, node, key, Integer.toString(value));
     }
 
     public static void addLongAttribute(Document doc, Element node, String key, long value) {
+
         addAttribute(doc, node, key, Long.toString(value));
     }
 
     public static void addBooleanAttribute(Document doc, Element node, String key, boolean value) {
-            addAttribute(doc, node, key, Boolean.toString(value));
+
+        addAttribute(doc, node, key, Boolean.toString(value));
     }
 
     public static void addDateAttribute(Document doc, Element node, String key, Date date) {
-        if (date!=null)
+        if (date != null) {
             addAttribute(doc, node, key, dateFormat.format(date));
+        }
     }
 
     public static void addLocaleAttribute(Document doc, Element node, String key, Locale locale) {
-        if (locale!=null)
+        if (locale != null) {
             addAttribute(doc, node, key, locale.getLanguage());
+        }
     }
 
     public static Document getXmlDocument(String str, String encoding) {
-        if (str == null || !str.startsWith("<?xml")) return null;
+        if (str == null || !str.startsWith("<?xml")) {
+            return null;
+        }
         Document doc = null;
         try {
             DocumentBuilderFactory fact = DocumentBuilderFactory.newInstance();
@@ -110,7 +122,9 @@ public class XmlUtil {
     public static Document getXmlDocumentFromFile(String path) {
         try {
             File xmlFile = new File(path);
-            if (!xmlFile.exists()) return null;
+            if (!xmlFile.exists()) {
+                return null;
+            }
             DocumentBuilderFactory fact = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = fact.newDocumentBuilder();
             return builder.parse(xmlFile);
@@ -129,7 +143,7 @@ public class XmlUtil {
             transformer.transform(source, result);
             return stringWriter.getBuffer().toString();
         } catch (TransformerException e) {
-            e.printStackTrace();
+            Log.error("xml error", e);
         }
         return null;
     }
@@ -140,6 +154,19 @@ public class XmlUtil {
 
     public static NodeList getChildNodes(Element parent, String tagName) {
         return parent.getElementsByTagName(tagName);
+    }
+
+    public static List<Element> getChildElements(Element parent) {
+        ArrayList<Element> list = new ArrayList<>();
+        if (parent.hasChildNodes()) {
+            NodeList childNodes = parent.getChildNodes();
+            for (int i = 0; i < childNodes.getLength(); i++) {
+                Node node = childNodes.item(i);
+                if (node instanceof Element)
+                    list.add((Element) node);
+            }
+        }
+        return list;
     }
 
     public static Map<String, String> getAttributes(Node node) {
@@ -158,9 +185,11 @@ public class XmlUtil {
         if (node.hasAttributes()) {
             NamedNodeMap attrMap = node.getAttributes();
             Node attr = attrMap.getNamedItem(key);
-            if (attr != null) return attr.getNodeValue();
+            if (attr != null) {
+                return attr.getNodeValue();
+            }
         }
-        return null;
+        return "";
     }
 
     public static int getIntAttribute(Node node, String key) {
@@ -191,6 +220,64 @@ public class XmlUtil {
             }
         }
         return result;
+    }
+
+    public static boolean getBooleanAttribute(Node node, String key) {
+        boolean result = false;
+        if (node.hasAttributes()) {
+            NamedNodeMap attrMap = node.getAttributes();
+            Node attr = attrMap.getNamedItem(key);
+            if (attr != null) {
+                try {
+                    result = Boolean.parseBoolean(attr.getNodeValue());
+                } catch (Exception ignored) {
+                }
+            }
+        }
+        return result;
+    }
+
+    public static Date getDateAttribute(Node node, String key) {
+        Date result = null;
+        if (node.hasAttributes()) {
+            NamedNodeMap attrMap = node.getAttributes();
+            Node attr = attrMap.getNamedItem(key);
+            if (attr != null) {
+                try {
+                    result = dateFormat.parse(attr.getNodeValue());
+                } catch (Exception ignored) {
+                }
+            }
+        }
+        return result;
+    }
+
+    public static Locale getLocaleAttribute(Node node, String key) {
+        Locale result = Locale.getDefault();
+        if (node.hasAttributes()) {
+            NamedNodeMap attrMap = node.getAttributes();
+            Node attr = attrMap.getNamedItem(key);
+            if (attr != null) {
+                try {
+                    result = new Locale(attr.getNodeValue());
+                } catch (Exception ignored) {
+                }
+            }
+        }
+        return result;
+    }
+
+    public static String getText(Element node) {
+        if (node.hasChildNodes()) {
+            Node child = node.getFirstChild();
+            while (child != null) {
+                if (child.getNodeType() == Node.TEXT_NODE) {
+                    return child.getNodeValue();
+                }
+                child = child.getNextSibling();
+            }
+        }
+        return "";
     }
 
     public static String getCData(Node node) {
