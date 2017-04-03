@@ -1,0 +1,128 @@
+/*
+  Elbe 5 CMS  - A Java based modular Content Management System
+  Copyright (C) 2009-2015 Michael Roennau
+
+  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+ */
+package de.elbe5.base.util;
+
+import de.elbe5.base.log.Log;
+
+import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.util.*;
+
+import static org.apache.commons.lang3.StringEscapeUtils.*;
+
+public class StringUtil {
+
+    public static String bundleName="";
+
+    public static String toHtml(String src) {
+        if (src == null) return "";
+        return escapeHtml4(src);
+    }
+
+    public static String toHtmlInput(String src) {
+        if (src == null) return "";
+        return escapeHtml4(src);
+    }
+
+    public static String toHtml(String[] strings) {
+        if (strings == null) return "";
+        StringBuilder sb = new StringBuilder(toHtml(strings[0]));
+        for (int i = 1; i < strings.length; i++)
+            sb.append("<br>").append(toHtml(strings[i]));
+        return sb.toString();
+    }
+
+    public static String toHtmlDate(Date date, DateFormat formatter) {
+        return formatter == null ? "..." : formatter.format(date.getTime());
+    }
+
+    public static String toHtmlTime(Date date, DateFormat formatter) {
+        return formatter == null ? "..." : formatter.format(date.getTime());
+    }
+
+    public static String toHtmlDateTime(Date date, DateFormat formatter) {
+        return formatter == null ? "..." : formatter.format(date.getTime());
+    }
+
+    public static String toXml(String src) {
+        if (src == null) return "";
+        return escapeXml(src);
+    }
+
+    public static String toJs(String src) {
+        if (src == null) return "";
+        return escapeEcmaScript(src);
+    }
+
+    public static String toUrl(String src) {
+        if (src == null) return "";
+        return encodeUTF8(src);
+    }
+
+    public static String encodeUTF8(String src) {
+        try {
+            return URLEncoder.encode(src, "UTF-8");
+        } catch (Exception e) {
+            return src;
+        }
+    }
+
+    public static String getIntString(List<Integer> ints) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < ints.size(); i++) {
+            if (i > 0) sb.append(',');
+            sb.append(ints.get(i));
+        }
+        return sb.toString();
+    }
+
+    public static boolean isNullOrEmtpy(String s) {
+        return s == null || s.length() == 0;
+    }
+
+    public static String getString( String key) {
+        return getString(key, Locale.ENGLISH);
+    }
+
+    public static String getString(String key, Locale locale) {
+        String value;
+        try {
+            ResourceBundle bundle = locale == null ? ResourceBundle.getBundle(bundleName) : ResourceBundle.getBundle(bundleName, locale);
+            value = bundle.getString(key);
+        } catch (MissingResourceException mre) {
+            Log.warn("message resource missing: " + key + "(locale is " + (locale == null ? "" : locale.getLanguage()) + ')');
+            value = "..";
+        }
+        return value;
+    }
+
+    public static String getHtml(String key) {
+        return toHtml(getString(key));
+    }
+
+    public static String getHtml(String key, Locale locale) {
+        return toHtml(getString( key, locale));
+    }
+
+    public static String getXml(String key) {
+        return toXml(getString(key));
+    }
+
+    public static String getXml(String key, Locale locale) {
+        return toXml(getString(key, locale));
+    }
+
+    public static String getJS(String key) {
+        return toJs(getString(key));
+    }
+
+    public static String getJS(String key, Locale locale) {
+        return toJs(getString(key, locale));
+    }
+}
