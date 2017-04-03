@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="de">
+<head>
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="language" content="de">
+  <title>Net25CMS - Home</title>
+  <meta name="keywords" content="">
+  <meta name="robots" content="index,follow"/>
+  <link rel="stylesheet" href="css/std.css">
+  <script src="jscript/std.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="wrapper">
+  <table class="maintable" cellspacing="0" cellpadding="0" border="0">
+    <tr>
+      <td class="leftmaintd">&nbsp;</td>
+      <td class="centralmaintd">
+        <div class="logoheader"><img src="img/header.jpg" alt=""></div>
+        <table cellpadding="0" cellspacing="0" border="0" class="systemmenutable">
+          <tr>
+            <td class="usermenutd">
+              <% if (sdata.isLoggedIn()) {%>
+              <div class="usermenu">
+                <a href="#" onmouseover="showLayer('userlayer')"
+                   onmouseout="hideLayerWait('userlayer',50)">N. User
+                </a>
+
+                <div class="userlayer" id="userlayer" onmouseover="showLayer('userlayer')"
+                     onmouseout="hideLayerWait('userlayer',50)">
+                  <div class="userlayerlinks">
+                    <div>
+                      <a href="#">Change Password
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="systemmenutd">
+              <div class="systemmenu">
+                <a href="srv25?ctrl=<%=Statics.KEY_CONTENT%>">Home
+                </a>&nbsp;|&nbsp;
+                <a href="#">German
+                </a>&nbsp;|&nbsp;
+                <a href="#">Login
+                </a>
+              </div>
+            </td>
+            <td class="adminmenutd">
+              <div class="adminmenu"><a href="#" onmouseover="showLayer('adminlayer')"
+                                        onmouseout="hideLayerWait('adminlayer',50)">Administration
+              </a>
+
+                <div class="adminlayer" id="adminlayer" onmouseover="showLayer('adminlayer')"
+                     onmouseout="hideLayerWait('adminlayer',50)">
+                  <div class="adminlayerlinks">
+                    <div>
+                      <a href="#">New Page
+                      </a></div>
+                    <div>
+                      <a href="#">Change Page
+                      </a></div>
+                    <div>
+                      <a href="#">Sort Child Pages
+                      </a></div>
+                    <div>
+                      <a href="#">Delete Page
+                      </a></div>
+                    <div>
+                      <a href="#">Image Administration
+                      </a></div>
+                    <div>
+                      <a href="#">Document Administration
+                      </a></div>
+                    <div>
+                      <a href="#">User Administration
+                      </a></div>
+                    <div>
+                      <a href="#">Group Administration
+                      </a></div>
+                    <div><a
+                        href="#">Template Administration
+                    </a></div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <div class="centralmainhline">&nbsp;</div>
+        <div class="mainmenu">
+          <table cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td class="borderright">
+                <a href="#"
+                   onmouseover="showLayer('menulayer1')"
+                   onmouseout="hideLayerWait('menulayer1',50)">Lorem Ipsum 1
+                </a>
+
+                <div class="menulayer" id="menulayer1" onmouseover="showLayer('menulayer1')"
+                     onmouseout="hideLayerWait('menulayer1',50)">
+                  <div class="menulayerlinks">
+                    <div class="menulink1"><a
+                        href="#">Dolor Enum 1
+                    </a></div>
+                    <div class="menulink2"><a
+                        href="#">Test Page 1
+                    </a></div>
+                  </div>
+                </div>
+              </td>
+              <td class="borderright">
+                <a href="#"
+                   onmouseover="showLayer('menulayer2')"
+                   onmouseout="hideLayerWait('menulayer2',50)">Lorem Ipsum 2
+                </a>
+
+                <div class="menulayer" id="menulayer2" onmouseover="showLayer('menulayer2')"
+                     onmouseout="hideLayerWait('menulayer2',50)">
+                  <div class="menulayerlinks">
+                    <div class="menulink1"><a
+                        href="#">Dolor Enum 2
+                    </a></div>
+                    <div class="menulink2"><a
+                        href="#">Test Page 2
+                    </a></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <a href="#"
+                   onmouseover="showLayer('menulayer3')"
+                   onmouseout="hideLayerWait('menulayer3',50)">Lorem Ipsum 3
+                </a>
+
+                <div class="menulayer" id="menulayer3" onmouseover="showLayer('menulayer3')"
+                     onmouseout="hideLayerWait('menulayer3',50)">
+                  <div class="menulayerlinks">
+                    <div class="menulink1"><a
+                        href="#">Dolor Enum 3
+                    </a></div>
+                    <div class="menulink2"><a
+                        href="#">Test Page 3
+                    </a></div>
+                    <div class="menulink3"><a
+                        href="#">Test Page 3.1
+                    </a></div>
+                    <div class="menulink4"><a
+                        href="#">Test Page 3.1.1
+                    </a></div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="centralmainhline">&nbsp;</div>
+        <div class="breadcrumb">
+          <a href="#">Lorem Ipsum 2</a>&nbsp;&gt;&nbsp;<a href="#">Dolor Enum 2</a>&nbsp;&gt;&nbsp;<a href="#">Test Page
+          2</a>
+        </div>
+        <h1 class="topHeader">
+          Test Page 2
+        </h1>
+
+        <div class="content">
+          <table width="100%">
+            <tr>
+              <td class="c_1column"><img src="img/dummy.gif" alt=""/>
+              </td>
+              <td colspan="3" class="c_3column">
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
+                ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+                clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
+                amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita
+                kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum
+                dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent
+                luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet,
+                consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam
+                erat volutpat.
+                Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip
+                ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie
+                consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim
+                qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.
+                Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat
+                facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+                euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
+                nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
+                Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum
+                dolore eu feugiat nulla facilisis.
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="spacer20">&nbsp;</div>
+        <div class="centralmainhline">&nbsp;</div>
+        <div class="footer">&copy; Bandika <a
+            href="#">Imprint
+        </a> <a
+            href="#">Contact
+        </a>
+        </div>
+      </td>
+      <td class="rightmaintd">&nbsp;</td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>
