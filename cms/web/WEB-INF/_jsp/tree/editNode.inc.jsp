@@ -1,18 +1,18 @@
 <%--
-  Elbe 5 CMS  - A Java based modular Content Management System
+  Bandika  - A Java based modular Content Management System
   Copyright (C) 2009-2017 Michael Roennau
 
   This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="de.elbe5.base.util.StringUtil" %>
-<%@ page import="de.elbe5.configuration.Configuration" %>
-<%@ page import="de.elbe5.servlet.SessionReader" %>
-<%@ page import="de.elbe5.site.SiteData" %>
-<%@ page import="de.elbe5.tree.TreeNode" %>
+<%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.configuration.Configuration" %>
+<%@ page import="de.bandika.servlet.SessionReader" %>
+<%@ page import="de.bandika.site.SiteData" %>
+<%@ page import="de.bandika.tree.TreeNode" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.tree.TreeCache" %>
+<%@ page import="de.bandika.tree.TreeCache" %>
 <%Locale locale = SessionReader.getSessionLocale(request);
     TreeNode data = (TreeNode) request.getAttribute("treeNode");
     SiteData parentSite = null;
@@ -101,11 +101,11 @@
 </tr>
 <tr>
     <td>
-        <label for="visible"><%=StringUtil.getHtml("_visible", locale)%>
+        <label for="inNavigation"><%=StringUtil.getHtml("_inNavigation", locale)%>
         </label></td>
     <td>
         <div>
-            <input type="checkbox" id="visible" name="visible" value="true" <%=data.isVisible() ? "checked" : ""%>/>
+            <input type="checkbox" id="inNavigation" name="inNavigation" value="true" <%=data.isInNavigation() ? "checked" : ""%>/>
         </div>
     </td>
 </tr>

@@ -1,12 +1,16 @@
 <%--
-  Elbe 5 CMS  - A Java based modular Content Management System
+  Bandika  - A Java based modular Content Management System
   Copyright (C) 2009-2017 Michael Roennau
 
   This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%><!DOCTYPE html><%response.setContentType("text/html;charset=UTF-8");%>
-<%@ page import="de.elbe5.base.util.StringUtil" %>
+<%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.templatecontrol.BreadcrumbControl" %>
+<%@ page import="de.bandika.templatecontrol.TopNavControl" %>
+<%@ page import="de.bandika.templatecontrol.TopAdminNavControl" %>
+<%@ page import="de.bandika.templatecontrol.MainMenuControl" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%String title = StringUtil.getString("appTitle");%>
 <html>
@@ -27,24 +31,26 @@
 <div class="viewport">
     <section class="topNavSection flexRow">
         <div class="flexItem left">
-            <cms:control name="topAdminNav"/>
+            <cms:control name="<%=TopAdminNavControl.KEY%>"/>
         </div>
         <div class="flexItem right">
-            <cms:control name="topNav"/>
+            <cms:control name="<%=TopNavControl.KEY%>"/>
         </div>
     </section>
     <section class="headerSection">
-        <section class="logoSection">
-            <a class="logo"><img src="/_statics/img/logo.png" alt="<%=StringUtil.toHtml(title)%>"/></a>
-            <div class="title"><%=StringUtil.toHtml(title)%>
+        <section class="titleSection">
+            <div class="title">
+                <a class="logo" href="/"><img src="/_statics/img/logo.png" alt="<%=StringUtil.toHtml(title)%>"/></a>
+                <div class="titleText"><%=StringUtil.toHtml(title)%>
+                </div>
             </div>
-            <cms:control name="mainMenu"/>
+            <cms:control name="<%=MainMenuControl.KEY%>"/>
         </section>
         <section class="searchSection flexRow">
-            <cms:control name="breadcrumb"/> <cms:snippet name="searchBox"/>
+            <cms:control name="<%=BreadcrumbControl.KEY%>"/> <cms:snippet name="searchBox"/>
         </section>
     </section>
-    <div id="main" class="main elbe5">
+    <div id="main" class="main carbon-light">
         <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
         <jsp:include page="/WEB-INF/_jsp/_master/content.inc.jsp"/>
     </div>

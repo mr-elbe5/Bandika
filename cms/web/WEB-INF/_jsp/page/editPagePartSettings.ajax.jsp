@@ -1,20 +1,25 @@
 <%--
-  Elbe 5 CMS  - A Java based modular Content Management System
+  Bandika  - A Java based modular Content Management System
   Copyright (C) 2009-2017 Michael Roennau
 
   This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="de.elbe5.base.util.StringUtil" %>
-<%@ page import="de.elbe5.page.PageData" %>
-<%@ page import="de.elbe5.servlet.SessionReader" %>
+<%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.page.PageData" %>
+<%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.pagepart.PagePartData" %>
+<%@ page import="de.bandika.pagepart.PagePartData" %>
+<%@ page import="de.bandika.template.TemplateData" %>
+<%@ page import="de.bandika.template.TemplateCache" %>
+<%@ page import="de.bandika.template.TemplateType" %>
+<%@ page import="java.util.List" %>
 <%Locale locale = SessionReader.getSessionLocale(request);
     PageData data = (PageData) SessionReader.getSessionObject(request, "pageData");
     PagePartData part = data.getEditPagePart();
     int contentCount=part.getContentCount();
+    List<TemplateData> partContainers = TemplateCache.getInstance().getTemplates(TemplateType.PARTCONTAINER);
     request.setAttribute("treeNode", data);
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
@@ -46,6 +51,18 @@
                             <%}%>
                         </select>
                     </div>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="containerName"><%=StringUtil.getHtml("_partContainer", locale)%>
+                </label></td>
+                <td>
+                    <select id="containerName" name="containerName">
+                        <option value="" <%=part.getContainerName().isEmpty() ? "selected" : ""%>>&nbsp;</option>
+                        <% for (TemplateData tdata : partContainers){%>
+                        <option value="<%=tdata.getName()%>" <%=part.getContainerName().equals(tdata.getName()) ? "selected" : ""%>><%=StringUtil.toHtml(tdata.getName())%></option>
+                        <%}%>
+                    </select>
                 </td>
             </tr>
             <tr>

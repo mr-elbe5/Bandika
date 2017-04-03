@@ -1,6 +1,6 @@
-<%@ page import="de.elbe5.base.util.StringUtil" %>
-<%@ page import="de.elbe5.servlet.RequestReader" %>
-<%@ page import="de.elbe5.servlet.SessionReader" %>
+<%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.servlet.RequestReader" %>
+<%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
 <%Locale locale = SessionReader.getSessionLocale(request);
     int siteId = RequestReader.getInt(request, "siteId", 0);%>

@@ -1,4 +1,19 @@
 
+.bandika-light{
+    color: #00EAF7
+}
+
+.bandika-mid-light{
+    color: #00D7F7
+}
+
+.bandika-mid{
+    color: #00BBEF
+}
+
+.bandika-dark{
+    color: #0F96E8
+}
 
 /* main navigation */
 
@@ -232,10 +247,6 @@ h1.topCenter {
 .asideSection.content {
 }
 
-.asideSection.content img {
-    width: 100%;
-}
-
 /* special pages */
 
 .stageSection {
@@ -278,6 +289,26 @@ h1.topCenter {
     padding: 40px;
 }
 
+.pagePart{
+
+}
+
+.pagePart img{
+     width: 100%;
+}
+
+.pagePart .textBox{
+    padding: 0;
+}
+
+.pagePart .imageBox{
+    padding: 0;
+}
+
+.pagePart .imageBox img{
+    width: 100%;
+}
+
 /* template styles */
 
 .banner{
@@ -285,9 +316,6 @@ h1.topCenter {
 }
 .banner .imageBox{
     padding:0;
-}
-.banner .imageBox img{
-    max-width: 100%;
 }
 .banner .textBox{
     padding:0 10px;
@@ -297,13 +325,28 @@ h1.topCenter {
 }
 
 .teaser{
-    padding:0;
+    padding: 10px;
 }
 .teaser .teaserLeft{
-    padding:0;
-}
+
+ }
 .teaser .teaserRight{
-    padding:0;
+
+}
+
+.flexRow.twoCol .pagePart{
+    flex: 1 1;
+    min-width: 50%;
+}
+
+.flexRow.threeCol .pagePart{
+    flex: 1 1;
+    min-width: 33%;
+}
+
+.flexRow.fourCol .pagePart{
+    flex: 1 1;
+    min-width: 25%;
 }
 
 .aside{
@@ -317,11 +360,8 @@ h1.topCenter {
 .aside .imageBox{
     padding:0;
 }
-.aside .imageBox img{
-    padding:0;
-}
 .aside .textBox{
-    padding:0;
+    padding: 5px;
 }
 
 .article{
@@ -334,12 +374,6 @@ h1.topCenter {
     padding:0;
 }
 .article .summary{
-    padding:0;
-}
-.article .imageBox{
-    padding:0;
-}
-.article .imageBox img{
     padding:0;
 }
 .article .textBox{

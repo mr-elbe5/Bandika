@@ -1,5 +1,5 @@
 <%--
-  Elbe 5 CMS  - A Java based modular Content Management System
+  Bandika  - A Java based modular Content Management System
   Copyright (C) 2009-2017 Michael Roennau
 
   This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
@@ -9,10 +9,10 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cluster.ServerData" %>
-<%@ page import="de.elbe5.cluster.ClusterManager" %>
-<%@ page import="de.elbe5.base.util.StringUtil" %>
-<%@ page import="de.elbe5.servlet.SessionReader" %>
+<%@ page import="de.bandika.cluster.ServerData" %>
+<%@ page import="de.bandika.cluster.ClusterManager" %>
+<%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.servlet.SessionReader" %>
 <%
     //todo
     Locale locale= SessionReader.getSessionLocale(request);
