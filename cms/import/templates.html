@@ -5,9 +5,9 @@
     <head>
         <meta charset="utf-8"/>
         <title>
-            <cms-res>appTitle</cms-res>
+            <cms-res key="appTitle" />
         </title>
-        <meta name="keywords" content="<cms-control>keywords</cms-control>">
+        <cms-control type="keywords" />
         <link rel="shortcut icon" href="/favicon.ico">
         <link rel="stylesheet" href="/_statics/css/cms.css">
         <link rel="stylesheet" href="/_statics/css/layout.css">
@@ -21,34 +21,39 @@
     <div class="viewport">
         <section class="topNavSection flexRow">
             <div class="flexItem left">
-                <cms-control>topAdminNav</cms-control>
+                <cms-control type="topAdminNav" />
             </div>
             <div class="flexItem right">
-                <cms-control>topNav</cms-control>
+                <cms-control type="topNav"/>
             </div>
         </section>
         <section class="headerSection">
-            <section class="logoSection">
-                <a class="logo"><img src="/_statics/img/logo.png" alt="<cms-res>appTitle</cms-res>"/></a>
+            <section class="titleSection">
                 <div class="title">
-                    <cms-res>appTitle</cms-res>
+                    <a class="logo" href="/"><img src="/_statics/img/logo.png" alt=""/></a>
+                    <div class="titleText">
+                        <cms-res key="appTitle"/>
+                    </div>
                 </div>
-                <cms-control>mainMenu</cms-control>
+                <div class="navBtn">
+                    &nbsp;
+                </div>
+                <cms-control type="mainMenu"/>
             </section>
             <section class="searchSection flexRow">
-                <cms-control>breadcrumb</cms-control>
-                <cms-snippet>searchBox</cms-snippet>
+                <cms-control type="breadcrumb" />
+                <cms-snippet name="searchBox"/>
             </section>
         </section>
         <div id="main" class="main">
-            <cms-control>message</cms-control>
+            <cms-control type="message" />
             <cms-content>content</cms-content>
         </div>
         <div class="footer">
-            <cms-snippet>footer</cms-snippet>
+            <cms-snippet name="footer" />
         </div>
     </div>
-    <cms-control>layer</cms-control>
+    <cms-control type="layer" />
     </body>
     </html>
 </cms-template>
@@ -56,7 +61,7 @@
     <section class="mainSection flexRow">
         <section class="contentSection flexItemThree">
             <cms-section name="banner" type="banner"/>
-            <cms-section name="teasers" type="teaser"/>
+            <cms-section class="flexRow twoCol" name="teasers" type="teaser"/>
         </section>
         <aside class="asideSection flexItemOne">
             <cms-section name="aside" type="aside"/>
@@ -67,7 +72,7 @@
     <section class="mainSection flexRow">
         <section class="contentSection flexItemThree">
             <cms-section name="banner" type="banner"/>
-            <cms-section name="teasers" type="teaser"/>
+            <cms-section class="flexRow threeCol" name="teasers" type="teaser"/>
         </section>
         <aside class="asideSection flexItemOne">
             <cms-section name="aside" type="aside"/>
@@ -86,43 +91,41 @@
 </cms-template>
 
 <cms-template type="PART" name="html" displayName="Html Paragraph" usage="all">
-    <div id="partId-<cms-pid/>">
-        <cms-field type="html" name="html" toolbar="Full">Lorem ipsum</cms-field>
-    </div>
+    <cms-field type="html" name="html" toolbar="Full">Lorem ipsum</cms-field>
 </cms-template>
 <cms-template type="PART" name="bannerImg" displayName="Banner Image" usage="banner">
-    <div id="partId-<cms-pid/>" class="banner imageBox">
+    <div class="banner imageBox">
         <cms-field type="html" name="image"><img src="/_statics/img/dummy.gif" alt="" /></cms-field>
     </div>
 </cms-template>
 <cms-template type="PART" name="bannerImgTxt" displayName="Banner Image+Text" usage="banner">
-    <div id="partId-<cms-pid/>" class="banner flexRow">
+    <div class="banner flexRow">
         <div class="imageBox flexItemTwo">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt="" /></cms-field>
         </div>
         <div class="textBox flexItemOne">
             <h3>
-                <cms-field type="textLine" name="header">Lorem ipsum</cms-field>
+                <cms-field type="text" name="header">Lorem ipsum</cms-field>
             </h3>
             <cms-field type="html" toolbar="Text" name="text">Lorem ipsum</cms-field>
         </div>
     </div>
 </cms-template>
 <cms-template type="PART" name="bannerImgHtml" displayName="Banner Image+Html" usage="banner">
-    <div id="partId-<cms-pid/>" class="banner flexRow">
+    <div class="banner flexRow">
         <div class="imageBox flexItemTwo">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt="" /></cms-field>
         </div>
         <div class="textBox flexItemOne">
             <h3>
-                <cms-field type="textLine" name="header">Lorem ipsum</cms-field>
+                <cms-field type="text" name="header">Lorem ipsum</cms-field>
             </h3>
             <cms-field type="html" name="html">Lorem ipsum</cms-field>
         </div>
     </div>
 </cms-template>
 <cms-template type="PART" name="teaserImgTxtH" displayName="Teaser Image+Text Horz" usage="teaser">
-    <div id="partId-<cms-pid/>" class="teaser flexItem">
+    <div class="teaser">
         <div class="teaserLeft imageBox">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt="" /></cms-field>
         </div>
@@ -132,7 +135,7 @@
     </div>
 </cms-template>
 <cms-template type="PART" name="teaserImgTxtV" displayName="Teaser Image+Text Vert" usage="teaser">
-    <div id="partId-<cms-pid/>" class="teaser flexItem">
+    <div class="teaser">
         <div class="imageBox">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt="" /></cms-field>
         </div>
@@ -142,16 +145,16 @@
     </div>
 </cms-template>
 <cms-template type="PART" name="asideImagePure" displayName="Side Image Pure" usage="aside">
-    <div id="partId-<cms-pid/>" class="aside">
+    <div class="aside">
         <div class="imageBox">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt="" /></cms-field>
         </div>
     </div>
 </cms-template>
 <cms-template type="PART" name="asideImage" displayName="Side Image" usage="aside">
-    <div id="partId-<cms-pid/>" class="aside">
+    <div class="aside">
         <h3>
-            <cms-field type="textLine" name="header">Lorem ipsum</cms-field>
+            <cms-field type="text" name="header">Lorem ipsum</cms-field>
         </h3>
         <div class="imageBox">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt="" /></cms-field>
@@ -159,9 +162,9 @@
     </div>
 </cms-template>
 <cms-template type="PART" name="asideText" displayName="Side Text" usage="aside">
-    <div id="partId-<cms-pid/>" class="aside">
+    <div class="aside">
         <h3>
-            <cms-field type="textLine" name="header">Lorem ipsum</cms-field>
+            <cms-field type="text" name="header">Lorem ipsum</cms-field>
         </h3>
         <div class="textBox">
             <cms-field type="html" toolbar="Text" name="text">Lorem ipsum</cms-field>
@@ -169,9 +172,9 @@
     </div>
 </cms-template>
 <cms-template type="PART" name="asideHtml" displayName="Side Html" usage="aside">
-    <div id="partId-<cms-pid/>" class="aside">
+    <div class="aside">
         <h3>
-            <cms-field type="textLine" name="header">Lorem ipsum</cms-field>
+            <cms-field type="text" name="header">Lorem ipsum</cms-field>
         </h3>
         <div class="textBox">
             <cms-field type="html" name="text" toolbar="Full">Lorem ipsum</cms-field>
@@ -179,52 +182,52 @@
     </div>
 </cms-template>
 <cms-template type="PART" name="asideLink" displayName="Side Line (Link)" usage="aside">
-    <div id="partId-<cms-pid/>" class="aside">
+    <div class="aside">
         <cms-field type="html" toolbar="Text" name="textlink"><a href="#">Lorem ipsum</a></cms-field>
     </div>
 </cms-template>
 <cms-template type="PART" name="articleHeader" displayName="Article Header" usage="article">
-    <div id="partId-<cms-pid/>" class="article">
+    <div class="article">
         <h1>
-            <cms-field type="textLine" name="text">Lorem ipsum</cms-field>
+            <cms-field type="text" name="text">Lorem ipsum</cms-field>
         </h1>
     </div>
 </cms-template>
 <cms-template type="PART" name="articleSubHeader" displayName="Article Sub-Header" usage="article">
-    <div id="partId-<cms-pid/>" class="article">
+    <div class="article">
         <h2>
-            <cms-field type="textLine" name="text">Lorem ipsum</cms-field>
+            <cms-field type="text" name="text">Lorem ipsum</cms-field>
         </h2>
     </div>
 </cms-template>
 <cms-template type="PART" name="articleSummary" displayName="Article Summary" usage="article">
-    <div id="partId-<cms-pid/>" class="article">
+    <div class="article">
         <cms-field type="html" toolbar="Text" name="text">Lorem ipsum</cms-field>
     </div>
 </cms-template>
 <cms-template type="PART" name="articleText" displayName="Article Text" usage="article">
-    <div id="partId-<cms-pid/>" class="article">
+    <div class="article">
         <cms-field type="html" toolbar="Text" name="text">Lorem ipsum</cms-field>
     </div>
 </cms-template>
 <cms-template type="PART" name="articleImgTxt" displayName="Article Image+Text" usage="article">
-    <div id="partId-<cms-pid/>" class="article flexRow">
+    <div class="article flexRow">
         <div class="imageBox flexItemOne">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt="" /></cms-field>
         </div>
         <div class="textBox flexItemTwo">
-            <cms-field type="textLine" name="header">Lorem ipsum</cms-field>
+            <cms-field type="text" name="header">Lorem ipsum</cms-field>
             <cms-field type="html" toolbar="Text" name="text">Lorem ipsum</cms-field>
         </div>
     </div>
 </cms-template>
 <cms-template type="PART" name="articleHtml" displayName="Article Html" usage="article">
-    <div id="partId-<cms-pid/>" class="article">
+    <div class="article">
         <cms-field type="html" toolbar="Full" name="html" >Lorem ipsum</cms-field>
     </div>
 </cms-template>
 <cms-template type="PART" name="articleImgHtml" displayName="Article Image+Html" usage="article">
-    <div id="partId-<cms-pid/>" class="article flexRow">
+    <div class="article flexRow">
         <div class="imageBox flexItemOne">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt="" /></cms-field>
         </div>
@@ -237,21 +240,30 @@
     <cms-field type="script" name="script"/>
 </cms-template>
 <cms-template type="PART" name="articleLink" displayName="Article Line (Link)" usage="article">
-    <div id="partId-<cms-pid/>" class="article">
+    <div class="article">
         <cms-field type="html" toolbar="Text" name="textlink"><a href="#">Lorem ipsum</a></cms-field>
     </div>
+</cms-template>
+<cms-template type="PARTCONTAINER" name="horizontalMove" displayName="Horizontal Move" usage="">
+    <div id="<cms-cid/>">
+        <cms-parts/>
+    </div>
+    <script type="text/javascript">
+        var $cont=$("#<cms-cid/>");
+        $cont.alternateLoop(10000, 1000);
+    </script>
 </cms-template>
 <cms-template type="SNIPPET" name="searchBox" displayName="Search Box" usage="SearchBoxModule">
     <div class="searchBox flexItemOne">
         <form action="/search.srv" method="post" id="searchboxform" name="searchboxform" accept-charset="UTF-8">
             <input type="hidden" name="act" value="search"/>
-            <input type="text" id="searchPattern" name="searchPattern" value="" maxlength="60"/>
+            <input type="text" id="searchPattern" name="searchPattern" title="" value="" maxlength="60"/>
             <button type="submit"><span class="icn isearch"></span></button>
         </form>
     </div>
 </cms-template>
 <cms-template type="SNIPPET" name="footer" displayName="Footer" usage="Page">
-    &copy; 2017 Elbe 5
+    <a href="/imprint.html"><cms-res key="_imprint"/></a>
 </cms-template>
 <cms-template type="SNIPPET" name="dialogLayer" displayName="Dialog Layer" usage="Page">
     <div id="dialogLayer" class="layeroverlay dialog" data-hidden="true">
@@ -266,10 +278,16 @@
 <cms-template type="SNIPPET" name="treeLayer" displayName="Tree Layer" usage="Page">
     <div id="treeLayer" class="layeroverlay tree" data-hidden="true">
         <div class="layercontent">
-            <div class="layerheadbox"><span>&nbsp;</span>
-                <div class="closeLayer" onclick="closeTreeLayer();">&times;</div>
+            <div class="treeContainer">
+                <div class="treeMainCell">
+                    <div class="layerheadbox"><span>&nbsp;</span>
+                        <div class="closeLayer" onclick="closeTreeLayer();">&times;</div>
+                    </div>
+                    <div class="layermainbox"></div>
+                </div>
+                <div class="treeResizeCell">
+                </div>
             </div>
-            <div class="layermainbox"></div>
         </div>
     </div>
 </cms-template>

@@ -279,7 +279,39 @@ $.fn.extend({
         if (dragData.dragArea)
             dragData.dragArea.off('mousemove.dragEvent mouseup.dragEvent mouseleave.dragEvent');
         $(this).removeData(dragDataName);
-    }, openLayer: function () {
+    },
+    makeResizable: function (resizeHandle, resizeArea) {
+        $(this).click(function (event) {
+            event.stopPropagation();
+        });
+        var resizeDataName = 'resizeData';
+        if (!resizeArea)
+            resizeArea = $('body');
+        if (!resizeHandle)
+            return;
+        $(this).data(resizeDataName, {
+            resizeHandle: resizeHandle, resizeArea: resizeArea, startWidth: 0, mouseDown: false, mouseOffset: 0
+        });
+        resizeHandle.on('mousedown.dragEvent', {draggable: $(this)}, function (event) {
+            var draggable = event.data.draggable;
+            var dragData=draggable.data(resizeDataName);
+            dragData.mouseDown = true;
+            dragData.startWidth= draggable.width();
+            dragData.mouseOffset = event.clientX;
+        });
+        resizeArea.on('mouseup.dragEvent mouseleave.dragEvent', {draggable: $(this)}, function (event) {
+            event.data.draggable.data(resizeDataName).mouseDown = false;
+        });
+        resizeArea.on('mousemove.dragEvent', {draggable: $(this)}, function (event) {
+            var draggable = event.data.draggable;
+            var dragData=draggable.data(resizeDataName);
+            if (!dragData.mouseDown) {
+                return;
+            }
+            draggable.width(dragData.startWidth+event.clientX - dragData.mouseOffset);
+        });
+    },
+    openLayer: function () {
         var $layer = $(this);
         if ($layer.is(':hidden')) {
             $layer.show();
@@ -313,6 +345,7 @@ $.fn.extend({
         var $dialog = $layer.find('.layercontent');
         var $header = $layer.find('.layerheadbox');
         var $main = $layer.find('.layermainbox');
+        var $resizeHandle = $layer.find('.treeResizeCell');
         $(window).bind("resize", function () {
             var layerHeight = Math.max(document.body.scrollHeight, window.innerHeight);
             var layerWidth = Math.max(document.body.scrollWidth, window.innerWidth);
@@ -324,6 +357,7 @@ $.fn.extend({
         });
         $main.load(url);
         $dialog.makeDraggable($header, $layer);
+        $dialog.makeResizable($resizeHandle, $layer);
         $layer.attr('data-hidden', 'false');
         return false;
     }, closeTreeLayer: function () {
@@ -363,12 +397,11 @@ function closeLayerToTree(url) {
 }
 
 $.fn.extend({
-    makeDropArea: function () {
+    makeSiteDropArea: function(){
         $(this).bind('dragenter', function (e) {
             e.preventDefault();
-            if (isFileDrag(e)) {
+            if (isSiteNodeDrag(e)) {
                 $(this).addClass('dropTarget');
-                console.log('dragenter');
             }
         });
         $(this).bind('dragover', function (e) {
@@ -376,23 +409,69 @@ $.fn.extend({
         });
         $(this).bind('dragleave', function (e) {
             e.preventDefault();
-            if (isFileDrag(e)) {
+            if (isSiteNodeDrag(e)) {
                 $(this).removeClass('dropTarget');
-                console.log('dragleave');
+            }
+        });
+        $(this).bind('drop', function (e) {
+            e.preventDefault();
+            if (isSiteNodeDrag(e)) {
+                var nodeType = e.originalEvent.dataTransfer.getData('nodeType');
+                var nodeid = e.originalEvent.dataTransfer.getData('nodeId');
+                moveSite(nodeid, e.originalEvent.currentTarget.dataset.siteid);
+            }
+        });
+    },
+    makePageDropArea: function(){
+        $(this).bind('dragenter', function (e) {
+            e.preventDefault();
+            if (isPageNodeDrag(e)) {
+                $(this).addClass('dropTarget');
+            }
+        });
+        $(this).bind('dragover', function (e) {
+            e.preventDefault();
+        });
+        $(this).bind('dragleave', function (e) {
+            e.preventDefault();
+            if (isPageNodeDrag(e)) {
+                $(this).removeClass('dropTarget');
+            }
+        });
+        $(this).bind('drop', function (e) {
+            e.preventDefault();
+            if (isPageNodeDrag(e)) {
+                var nodeid = e.originalEvent.dataTransfer.getData('nodeId');
+                movePage(nodeid, e.originalEvent.currentTarget.dataset.siteid);
+            }
+        });
+    },
+    makeFileDropArea: function(){
+        $(this).bind('dragenter', function (e) {
+            e.preventDefault();
+            if (isFileDrag(e) || isFileNodeDrag(e)) {
+                $(this).addClass('dropTarget');
+            }
+        });
+        $(this).bind('dragover', function (e) {
+            e.preventDefault();
+        });
+        $(this).bind('dragleave', function (e) {
+            e.preventDefault();
+            if (isFileDrag(e) || isFileNodeDrag(e)) {
+                $(this).removeClass('dropTarget');
             }
         });
         $(this).bind('drop', function (e) {
             e.preventDefault();
             if (isFileDrop(e)) {
-                console.log('drop');
                 var files = e.originalEvent.dataTransfer.files;
                 uploadFiles(files, e.originalEvent.currentTarget.dataset.siteid);
                 $(this).removeClass('dropTarget');
             }
-            else if (isNodeDrop(e)) {
-                var nodeType = e.originalEvent.dataTransfer.getData('nodeType');
+            else if (isFileNodeDrag(e)) {
                 var nodeid = e.originalEvent.dataTransfer.getData('nodeId');
-                moveNode(nodeType, nodeid, e.originalEvent.currentTarget.dataset.siteid);
+                moveFile(nodeid, e.originalEvent.currentTarget.dataset.siteid);
             }
         });
     }
@@ -426,8 +505,16 @@ function uploadFiles(files, siteid) {
     });
 }
 
-function isNodeDrop(e) {
-    return e.originalEvent && e.originalEvent.dataTransfer && e.originalEvent.dataTransfer.getData('nodeType');
+function isSiteNodeDrag(e) {
+    return e.originalEvent && e.originalEvent.dataTransfer && (e.originalEvent.dataTransfer.getData('nodeType')=='site');
+}
+
+function isPageNodeDrag(e) {
+    return e.originalEvent && e.originalEvent.dataTransfer && (e.originalEvent.dataTransfer.getData('nodeType')=='page');
+}
+
+function isFileNodeDrag(e) {
+    return e.originalEvent && e.originalEvent.dataTransfer && (e.originalEvent.dataTransfer.getData('nodeType')=='file');
 }
 
 function startSiteDrag(ev) {
@@ -443,15 +530,6 @@ function startPageDrag(ev) {
 function startFileDrag(ev) {
     ev.dataTransfer.setData("nodeType", "file");
     ev.dataTransfer.setData("nodeId", ev.target.dataset.fileid);
-}
-
-function moveNode(nodeType, nodeid, siteid) {
-    if (nodeType === 'site')
-        moveSite(nodeid, siteid);
-    else if (nodeType === 'page')
-        movePage(nodeid, siteid);
-    else if (nodeType === 'file')
-        moveFile(nodeid, siteid);
 }
 
 function moveSite(siteid, parentid) {
@@ -735,13 +813,13 @@ var mainNavLis;
 var mainNavTimer = 0;
 
 $(document).ready(function () {
-
     mainNav = $("nav.mainNav");
     mainNavLis = mainNav.children("ul").children("li");
-
     if (isMobile.any()) {
-        mainNavLis.click(function () {
-            openMenu($(this));
+        $('body').addClass('mobile');
+        var mainNavBtn = $(".navBtn");
+        mainNavBtn.click(function () {
+            toggleMenu();
         });
     }
     else {
@@ -761,6 +839,16 @@ $(document).ready(function () {
         }
     }
 
+    function toggleMenu() {
+        var $menu = $('nav');
+        if ($menu.css('display')=='none'){
+            $menu.show();
+        }
+        else{
+            $menu.hide();
+        }
+    }
+
     mainNavTimer = 0;
     mainNav.mouseleave(function () {
         window.clearTimeout(mainNavTimer);
@@ -776,6 +864,28 @@ $(document).ready(function () {
         }
     });
 
+});
+
+/* part container / transitions */
+
+$.fn.extend({
+    alternateLoop: function (timeout, fading) {
+        var $container = $(this);
+        var $parts=$container.children();
+        var partCnt=$parts.size();
+        var current=0;
+        for (var i=1;i<partCnt;i++){
+            $parts.eq(i).hide();
+        }
+        setInterval(function(){
+            $parts.eq(current).fadeOut(fading);
+            $parts.eq(current).hide();
+            current=current+1;
+            if (current>=partCnt)
+                current=0;
+            $parts.eq(current).fadeIn(fading);
+        },timeout);
+    }
 });
 
 

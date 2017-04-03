@@ -50,11 +50,6 @@ summary {
     display: block;
 }
 
-div,
-section {
-    width: 100%;
-}
-
 audio,
 canvas,
 progress,
@@ -378,6 +373,10 @@ li {
     content: '\E048';
 }
 
+.icn.ifiles:before {
+    content: '\E04c';
+}
+
 .icn.ifolder:before {
     content: '\E04c';
 }
@@ -410,6 +409,10 @@ li {
     content: '\E075';
 }
 
+.icn.iinherit:before {
+    content: '\E07c';
+}
+
 .icn.ilogin:before {
     content: '\E087';
 }
@@ -436,6 +439,10 @@ li {
 
 .icn.ipage:before {
     content: '\E08d';
+}
+
+.icn.ipages:before {
+    content: '\E04c';
 }
 
 .icn.ipart:before {
@@ -582,16 +589,22 @@ body {
     font-size: 13px;
     color: #442E2E;
     height: 100%;
-    overflow: hidden;
+    overflow-y: hidden;
+    overflow-x: auto;
 }
 
 .carbon {
     background: #333 url(img/carbon.png);
 }
 
+.carbon-light {
+    background: #333 url(img/carbon_light.png);
+}
+
 .viewport {
     position: relative;
     max-width: 1280px;
+    min-width: 480px;
     height: 100%;
     margin: 0 auto 0 auto;
     background: transparent;
@@ -608,6 +621,7 @@ body {
 
 .topNavSection div.left {
     text-align: left;
+    padding-left: 5px;
 }
 
 .topNavSection div.right {
@@ -642,22 +656,26 @@ body {
 .headerSection {
 }
 
-.logoSection {
+.titleSection {
     position: relative;
-    padding: 10px;
+    padding: 10px 10px 0 10px;
 }
 
-.logoSection .logo {
+.titleSection .title{
     display: inline-block;
-    margin-right: 20px;
 }
 
-.logoSection div.title {
+.titleSection .logo {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.titleSection div.titleText {
     color: #e7e7e7;
     font-size: 28px;
-    position: absolute;
-    top: 17px;
-    left: 70px;
+    position: relative;
+    top: -10px;
+    display: inline-block;
 }
 
 /* main navigation and breadcrumb*/
@@ -668,6 +686,16 @@ nav {
 /* main navigation */
 
 nav.mainNav {
+}
+
+div.navBtn{
+    float:right;
+    width: 33px;
+    height: 24px;
+    margin-top: 20px;
+    background: url('img/navbtn.png') no-repeat;
+    cursor: pointer;
+    display: none;
 }
 
 .breadcrumb {
@@ -681,11 +709,7 @@ nav.mainNav {
     position: absolute;
     top: 120px;
     width: 100%;
-    overflow-y: scroll;
-}
-
-.main.elbe5 {
-    background: #FEFEFE url("img/elbe5bg.jpg") no-repeat scroll 0 0 / 100% auto;
+    overflow-y: auto;
 }
 
 .footer {
@@ -696,7 +720,12 @@ nav.mainNav {
     bottom: 0;
     background: transparent;
     color: #aaaaaa;
-    padding: 5px 10px;
+    padding: 5px 0;
+}
+
+.footer a, .footer a:active, .footer a:hover, .footer a:focus
+{
+    color: #c8c8c8;
 }
 
 /* forms and tables */
@@ -931,9 +960,37 @@ table.versions td:last-child a {
 
 .layeroverlay.tree .layercontent{
     margin: 10px;
-    max-width: 800px;
-    min-width: 400px;
+    min-width: 600px;
     width: 50%;
+    height: calc(100% - 20px);
+}
+
+.layeroverlay.tree .treeContainer{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.layeroverlay.tree .treeMainCell{
+    float: left;
+    width: calc(100% - 5px);
+    height: 100%;
+}
+
+.layeroverlay.tree .treeResizeCell{
+    float:right;
+    width: 5px;
+    height: 100%;
+    background: #e8e8e8;
+    cursor: ew-resize;
+}
+
+.layeroverlay.tree .contentSection{
+    width:60%;
+}
+
+.layeroverlay.tree .asideSection{
+    width:40%;
 }
 
 .layeroverlay.browser .layercontent{
@@ -969,7 +1026,12 @@ table.versions td:last-child a {
     overflow-y: auto;
 }
 
+.layeroverlay.tree .treeContainer .layermainbox {
+    height: 100%;
+}
+
 .layermainbox fieldset {
+    margin: 5px;
     max-height: 500px;
     overflow-y: auto;
 }
@@ -1058,8 +1120,7 @@ h3.treeHeader {
 }
 
 .dropTarget {
-    background: #d8e8ff;
-    cursor: move;
+    background: lightgreen;
 }
 
 /* cms part */
@@ -1154,6 +1215,7 @@ h3.treeHeader {
 
 }
 
+.editArea input.editField, .editArea textarea.editField,
 .editArea .textBox input[type="text"], .editArea .textBox textarea{
     width: 100%;
 }
@@ -1162,3 +1224,72 @@ h3.treeHeader {
     cursor: crosshair;
 }
 
+/************ mobile part ***********/
+
+body.mobile {
+    height: auto;
+    overflow: auto;
+}
+
+.mobile .viewport {
+    height: auto;
+}
+
+.mobile .topNavSection div:first-child{
+    display: none;
+}
+
+.mobile .logoSection{
+    position: inherit;
+}
+
+.mobile .logoSection .title{
+    display: inline-block;
+    padding-top: 8px;
+    top: auto;
+}
+
+.mobile div.navBtn{
+    display: block;
+}
+
+.mobile nav.mainNav{
+    position: inherit;
+    border: none;
+    display: none;
+}
+
+.mobile nav.mainNav ul li{
+    display: block;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom:1px dotted #c8c8c8;
+}
+
+.mobile nav.mainNav ul li ul{
+    position: inherit;
+    display: block;
+    border: none;
+}
+
+.mobile nav.mainNav ul li ul li{
+    padding-left: 20px;
+}
+
+.mobile .breadcrumb{
+    height: auto;
+}
+
+.mobile .main {
+    bottom: auto;
+    position: inherit;
+    width: auto;
+    top: auto;
+    overflow: inherit;
+}
+
+.mobile .footer{
+    position: inherit;
+    width: auto;
+}

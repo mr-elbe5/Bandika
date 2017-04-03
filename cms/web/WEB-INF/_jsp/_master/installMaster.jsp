@@ -1,12 +1,12 @@
 <%--
-  Elbe 5 CMS  - A Java based modular Content Management System
+  Bandika  - A Java based modular Content Management System
   Copyright (C) 2009-2017 Michael Roennau
 
   This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%><!DOCTYPE html><%response.setContentType("text/html;charset=UTF-8");%>
-<%@ page import="de.elbe5.base.util.StringUtil" %>
+<%@ page import="de.bandika.base.util.StringUtil" %>
 <%
     String title = StringUtil.getString("appTitle");
 %>
@@ -25,13 +25,15 @@
 <div class="viewport">
     <section class="topNavSection"></section>
     <section class="headerSection">
-        <section class="logoSection">
-            <a class="logo"><img src="/_statics/img/logo.png" alt="<%=StringUtil.toHtml(title)%>"/></a>
-            <div class="title"><%=StringUtil.toHtml(title)%>
+        <section class="titleSection">
+            <div class="title">
+                <a class="logo"><img src="/_statics/img/logo.png" alt="<%=StringUtil.toHtml(title)%>"/></a>
+                <div class="titleText"><%=StringUtil.toHtml(title)%>
+                </div>
             </div>
         </section>
     </section>
-    <div id="main" class="main elbe5">
+    <div id="main" class="main carbon-light">
         <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
         <section class="mainSection flexRow">
             <section class="contentSection flexItemTwo padded">
@@ -43,7 +45,7 @@
         </section>
     </div>
     <div class="footer">
-        &copy; 2017 Elbe 5
+        &copy; 2017 Bandika
     </div>
 </div>
 </body>

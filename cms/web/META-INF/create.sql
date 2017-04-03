@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS t_treenode (
   description     VARCHAR(200) NOT NULL DEFAULT '',
   owner_id        INTEGER      NOT NULL DEFAULT 1,
   author_name     VARCHAR(255) NOT NULL,
-  visible         BOOLEAN      NOT NULL DEFAULT TRUE,
+  in_navigation   BOOLEAN      NOT NULL DEFAULT TRUE,
   anonymous       BOOLEAN      NOT NULL DEFAULT TRUE,
   inherits_rights BOOLEAN      NOT NULL DEFAULT TRUE,
   CONSTRAINT t_treenode_pk PRIMARY KEY (id),
@@ -338,10 +338,10 @@ VALUES (4, 'Global Readers');
 --
 INSERT INTO t_system_right (name, group_id, value)
 VALUES ('CONTENT', 4, 'READ');
--- system user
-INSERT INTO t_user (id, last_name, email, login, pwd, pkey, approval_code, approved)
-VALUES (1, 'System', 'system@localhost', 'system', '', '', '', TRUE);
--- system is Global Administrator
+-- sysadmin user
+INSERT INTO t_user (id, first_name, last_name, email, login, pwd, pkey, approval_code, approved)
+VALUES (1, 'Sys', 'Admin', 'sysadmin@localhost', 'sysadmin', '', '', '', TRUE);
+-- sysadmin is Global Administrator
 INSERT INTO t_user2group (user_id, group_id, relation) VALUES (1, 1, 'RIGHTS');
 -- configuration
 INSERT INTO t_configuration (config_key, config_value)
@@ -369,12 +369,12 @@ INSERT INTO t_configuration (config_key, config_value)
 VALUES ('maxVersions', '5');
 --
 INSERT INTO t_timer_task (id, name, class_name, interval_type, execution_minute, active, note_execution)
-VALUES (500, 'Heartbeat Task', 'de.elbe5.timer.HeartbeatTask', 0, 5, TRUE, FALSE);
+VALUES (500, 'Heartbeat Task', 'de.bandika.timer.HeartbeatTask', 0, 5, TRUE, FALSE);
 --
 INSERT INTO t_timer_task (id, name, class_name, interval_type, execution_minute, active, note_execution)
-VALUES (501, 'Search Index Task', 'de.elbe5.search.SearchIndexTask', 0, 15, FALSE, FALSE);
+VALUES (501, 'Search Index Task', 'de.bandika.search.SearchIndexTask', 0, 15, FALSE, FALSE);
 -- virtual all ids node
-INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, visible, anonymous, inherits_rights)
+INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, in_navigation, anonymous, inherits_rights)
 VALUES (0, NULL, 0, '', 'ALL-NODE', 'Virtual Node for all IDs', 1, 'System', FALSE, FALSE, FALSE);
 --
 INSERT INTO t_template (name, type, display_name, code)
@@ -388,7 +388,7 @@ VALUES ('pageMaster', 'MASTER', 'Default Page Master',
   </body>
 </html>');
 -- root node
-INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, visible, anonymous, inherits_rights)
+INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, in_navigation, anonymous, inherits_rights)
 VALUES (1, NULL, 0, '', 'Root', 'Root node as parent for all languages branches', 1, 'System', FALSE, TRUE, FALSE);
 --
 INSERT INTO t_site (id, inherits_master, template)
@@ -398,14 +398,14 @@ VALUES (1, FALSE, 'pageMaster');
 -- conveniance methods
 CREATE OR REPLACE FUNCTION addPage (parentId INTEGER,pageId INTEGER, rank INTEGER, nodeName VARCHAR(100), displayName VARCHAR(100), pageTemplate VARCHAR(255)) RETURNS INTEGER AS $$
 BEGIN
-  INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, visible, anonymous, inherits_rights)
+  INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, in_navigation, anonymous, inherits_rights)
   VALUES (pageId, parentId, rank, nodeName, displayName, '', 1, 'System', TRUE, TRUE, TRUE);
   INSERT INTO t_resource (id, published_version, draft_version)
   VALUES (pageId, 1, 0);
   INSERT INTO t_page (id, template)
   VALUES (pageId, pageTemplate);
   INSERT INTO t_page_content (id, version, author_name)
-  VALUES (pageId, 1, 'System');
+  VALUES (pageId, 1, 'Sytem');
   RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
@@ -415,12 +415,12 @@ CREATE OR REPLACE FUNCTION addSite (parentId INTEGER, siteId INTEGER, rank INTEG
 DECLARE
   pageId INTEGER = siteId+1;
 BEGIN
-  INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, visible, anonymous, inherits_rights)
+  INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, in_navigation, anonymous, inherits_rights)
   VALUES (siteId, parentId, rank, nodeName, displayName, '', 1, 'System', TRUE, TRUE, TRUE);
   INSERT INTO t_site (id, inherits_master)
   VALUES (siteId, TRUE);
-  INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, visible, anonymous, inherits_rights)
-  VALUES (pageId, siteId, 0, 'index', 'Index', '', 1, 'System', TRUE, TRUE, TRUE);
+  INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, in_navigation, anonymous, inherits_rights)
+  VALUES (pageId, siteId, 0, 'default', displayName, '', 1, 'System', TRUE, TRUE, TRUE);
   INSERT INTO t_resource (id, published_version, draft_version)
   VALUES (pageId, 1, 0);
   INSERT INTO t_page (id, template)
