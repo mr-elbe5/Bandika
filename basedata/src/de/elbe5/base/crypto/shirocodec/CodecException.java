@@ -26,6 +26,7 @@ import de.elbe5.base.crypto.shiro.ShiroException;
  * @since 0.9
  */
 public class CodecException extends ShiroException {
+
     /**
      * Creates a new <code>CodecException</code>.
      */

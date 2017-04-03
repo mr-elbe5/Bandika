@@ -1,48 +1,47 @@
 <%--
   Elbe 5 CMS  - A Java based modular Content Management System
-  Copyright (C) 2009-2015 Michael Roennau
+  Copyright (C) 2009-2017 Michael Roennau
 
   This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import = "de.elbe5.base.util.StringUtil" %>
-<%@ page import = "de.elbe5.webserver.servlet.SessionHelper" %>
-<%@ page import = "de.elbe5.cms.site.SiteData" %>
-<%@ page import = "de.elbe5.cms.template.TemplateCache" %>
-<%@ page import = "de.elbe5.cms.template.TemplateData" %>
-<%@ page import = "java.util.List" %>
-<%@ page import = "java.util.Locale" %>
-<%
-    Locale locale = SessionHelper.getSessionLocale(request);
-    SiteData data = (SiteData) SessionHelper.getSessionObject(request, "siteData");
-    List<TemplateData> masterTemplates = TemplateCache.getInstance().getMasterTemplates();
-    request.setAttribute("treeNode", data);
-%>
-<jsp:include page = "/WEB-INF/_jsp/_masterinclude/error.inc.jsp"/>
-<form action = "/site.srv" method = "post" id = "sitesettingsform" name = "sitesettingsform" accept-charset = "UTF-8">
+<%@ page import="de.elbe5.base.util.StringUtil" %>
+<%@ page import="de.elbe5.servlet.SessionReader" %>
+<%@ page import="de.elbe5.site.SiteData" %>
+<%@ page import="de.elbe5.template.TemplateCache" %>
+<%@ page import="de.elbe5.template.TemplateData" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="de.elbe5.template.TemplateType" %>
+<%Locale locale = SessionReader.getSessionLocale(request);
+    SiteData data = (SiteData) SessionReader.getSessionObject(request, "siteData");
+    List<TemplateData> masterTemplates = TemplateCache.getInstance().getTemplates(TemplateType.MASTER);
+    request.setAttribute("treeNode", data);%>
+<jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
+<form action="/site.srv" method="post" id="sitesettingsform" name="sitesettingsform" accept-charset="UTF-8">
     <fieldset>
-        <input type = "hidden" name = "siteId" value = "<%=data.getId()%>"/> <input type = "hidden" name = "act" value = "saveSiteSettings"/>
-        <table class = "form">
-            <jsp:include page = "../tree/editNode.inc.jsp" flush = "true"/>
+        <input type="hidden" name="siteId" value="<%=data.getId()%>"/> <input type="hidden" name="act" value="saveSiteSettings"/>
+        <table class="padded form">
+            <jsp:include page="../tree/editNode.inc.jsp" flush="true"/>
             <tr>
                 <td>
-                    <label for = "inheritsMaster"><%=StringUtil.getHtml("_inheritsMaster", locale)%>
+                    <label for="inheritsMaster"><%=StringUtil.getHtml("_inheritsMaster", locale)%>
                     </label></td>
                 <td>
-                    <input type = "checkbox" id = "inheritsMaster" name = "inheritsMaster" value = "true" <%=data.inheritsMaster() ? "checked" : ""%>/>
+                    <input type="checkbox" id="inheritsMaster" name="inheritsMaster" value="true" <%=data.inheritsMaster() ? "checked" : ""%>/>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for = "templates"><%=StringUtil.getHtml("_masterTemplate", locale)%>
+                    <label for="templateName"><%=StringUtil.getHtml("_masterTemplate", locale)%>
                     </label></td>
                 <td>
-                    <select id = "templates">
-                        <option value = "" <%=data.getTemplateName().isEmpty() ? "selected" : ""%>><%=StringUtil.getHtml("_pleaseSelect", locale)%>
+                    <select id="templateName" name="templateName">
+                        <option value="" <%=data.getTemplateName().isEmpty() ? "selected" : ""%>><%=StringUtil.getHtml("_pleaseSelect", locale)%>
                         </option>
                         <% for (TemplateData tdata : masterTemplates) {%>
-                        <option value = "<%=StringUtil.toHtml(tdata.getFileName())%>" <%=tdata.getFileName().equals(data.getTemplateName()) ? "selected" : ""%>><%=StringUtil.toHtml(tdata.getFileName())%>
+                        <option value="<%=StringUtil.toHtml(tdata.getName())%>" <%=tdata.getName().equals(data.getTemplateName()) ? "selected" : ""%>><%=StringUtil.toHtml(tdata.getName())%>
                         </option>
                         <%}%>
                     </select>
@@ -50,14 +49,14 @@
             </tr>
         </table>
     </fieldset>
-    <div class = "buttonset topspace">
-        <button onclick = "closeModalLayerDialog();"><%=StringUtil.getHtml("_close", locale)%>
+    <div class="buttonset topspace">
+        <button onclick="closeLayerDialog();"><%=StringUtil.getHtml("_close", locale)%>
         </button>
-        <button type = "submit" class = "primary"><%=StringUtil.getHtml("_save", locale)%>
+        <button type="submit" class="primary"><%=StringUtil.getHtml("_save", locale)%>
         </button>
     </div>
 </form>
-<script type = "text/javascript">
+<script type="text/javascript">
     $('#sitesettingsform').submit(function (event) {
         var $this = $(this);
         event.preventDefault();

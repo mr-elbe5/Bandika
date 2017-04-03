@@ -27,12 +27,13 @@ import java.io.InputStream;
 import java.util.Arrays;
 
 /**
- * Very simple {@link ByteSource ByteSource} implementation that maintains an internal {@code byte[]} array and uses the
- * {@link Hex Hex} and {@link Base64 Base64} codec classes to support the
- * {@link #toHex() toHex()} and {@link #toBase64() toBase64()} implementations.
+ * Very simple {@link ByteSource ByteSource} implementation that maintains an
+ * internal {@code byte[]} array and uses the {@link Hex Hex} and
+ * {@link Base64 Base64} codec classes to support the {@link #toHex() toHex()}
+ * and {@link #toBase64() toBase64()} implementations.
  * <p/>
- * The constructors on this class accept the following implicit byte-backed data types and will convert them to
- * a byte-array automatically:
+ * The constructors on this class accept the following implicit byte-backed data
+ * types and will convert them to a byte-array automatically:
  * <ul>
  * <li>byte[]</li>
  * <li>char[]</li>
@@ -45,6 +46,7 @@ import java.util.Arrays;
  * @since 1.0
  */
 public class SimpleByteSource implements ByteSource {
+
     private final byte[] bytes;
     private String cachedHex;
     private String cachedBase64;
@@ -54,9 +56,11 @@ public class SimpleByteSource implements ByteSource {
     }
 
     /**
-     * Creates an instance by converting the characters to a byte array (assumes UTF-8 encoding).
+     * Creates an instance by converting the characters to a byte array (assumes
+     * UTF-8 encoding).
      *
-     * @param chars the source characters to use to create the underlying byte array.
+     * @param chars the source characters to use to create the underlying byte
+     *              array.
      * @since 1.1
      */
     public SimpleByteSource(char[] chars) {
@@ -64,9 +68,11 @@ public class SimpleByteSource implements ByteSource {
     }
 
     /**
-     * Creates an instance by converting the String to a byte array (assumes UTF-8 encoding).
+     * Creates an instance by converting the String to a byte array (assumes UTF-8
+     * encoding).
      *
-     * @param string the source string to convert to a byte array (assumes UTF-8 encoding).
+     * @param string the source string to convert to a byte array (assumes UTF-8
+     *               encoding).
      * @since 1.1
      */
     public SimpleByteSource(String string) {
@@ -74,8 +80,8 @@ public class SimpleByteSource implements ByteSource {
     }
 
     /**
-     * Creates an instance using the sources bytes directly - it does not create a copy of the
-     * argument's byte array.
+     * Creates an instance using the sources bytes directly - it does not create a
+     * copy of the argument's byte array.
      *
      * @param source the source to use to populate the underlying byte array.
      * @since 1.1
@@ -105,11 +111,12 @@ public class SimpleByteSource implements ByteSource {
     }
 
     /**
-     * Returns {@code true} if the specified object is a recognized data type that can be easily converted to
-     * bytes by instances of this class, {@code false} otherwise.
+     * Returns {@code true} if the specified object is a recognized data type that
+     * can be easily converted to bytes by instances of this class, {@code false}
+     * otherwise.
      * <p/>
-     * This implementation returns {@code true} IFF the specified object is an instance of one of the following
-     * types:
+     * This implementation returns {@code true} IFF the specified object is an
+     * instance of one of the following types:
      * <ul>
      * <li>{@code byte[]}</li>
      * <li>{@code char[]}</li>
@@ -119,24 +126,27 @@ public class SimpleByteSource implements ByteSource {
      * </li>{@link InputStream}</li>
      * </ul>
      *
-     * @param o the object to test to see if it can be easily converted to bytes by instances of this class.
-     * @return {@code true} if the specified object can be easily converted to bytes by instances of this class,
-     * {@code false} otherwise.
+     * @param o the object to test to see if it can be easily converted to bytes
+     *          by instances of this class.
+     * @return {@code true} if the specified object can be easily converted to
+     * bytes by instances of this class, {@code false} otherwise.
      * @since 1.2
      */
     public static boolean isCompatible(Object o) {
-        return o instanceof byte[] || o instanceof char[] || o instanceof String ||
-                o instanceof ByteSource || o instanceof File || o instanceof InputStream;
+        return o instanceof byte[] || o instanceof char[] || o instanceof String || o instanceof ByteSource || o instanceof File || o instanceof InputStream;
     }
 
+    @Override
     public byte[] getBytes() {
         return this.bytes;
     }
 
+    @Override
     public boolean isEmpty() {
         return this.bytes == null || this.bytes.length == 0;
     }
 
+    @Override
     public String toHex() {
         if (this.cachedHex == null) {
             this.cachedHex = Hex.encodeToString(getBytes());
@@ -144,6 +154,7 @@ public class SimpleByteSource implements ByteSource {
         return this.cachedHex;
     }
 
+    @Override
     public String toBase64() {
         if (this.cachedBase64 == null) {
             this.cachedBase64 = Base64.encodeToString(getBytes());
@@ -151,10 +162,12 @@ public class SimpleByteSource implements ByteSource {
         return this.cachedBase64;
     }
 
+    @Override
     public String toString() {
         return toBase64();
     }
 
+    @Override
     public int hashCode() {
         if (this.bytes == null || this.bytes.length == 0) {
             return 0;
@@ -162,6 +175,7 @@ public class SimpleByteSource implements ByteSource {
         return Arrays.hashCode(this.bytes);
     }
 
+    @Override
     public boolean equals(Object o) {
         if (o == this) {
             return true;
@@ -176,6 +190,7 @@ public class SimpleByteSource implements ByteSource {
     //will probably be removed in Shiro 2.0.  See SHIRO-203:
     //https://issues.apache.org/jira/browse/SHIRO-203
     private static final class BytesHelper extends CodecSupport {
+
         public byte[] getBytes(File file) {
             return toBytes(file);
         }

@@ -6,61 +6,12 @@
     <description>Elbe5 CMS Tag Library</description>
     <display-name>Elbe5 CMS Tags</display-name>
     <tlib-version>1.1</tlib-version>
-    <short-name>e5cmstags</short-name>
+    <short-name>cmstags</short-name>
     <uri>http://java.sun.com/jsp/jstl/core</uri>
 
     <tag>
-        <name>layout</name>
-        <tag-class>de.elbe5.cms.tags.LayoutTag</tag-class>
-        <body-content>JSP</body-content>
-    </tag>
-
-    <tag>
-        <name>part</name>
-        <tag-class>de.elbe5.cms.tags.PartTag</tag-class>
-        <body-content>JSP</body-content>
-        <attribute>
-            <name>templateName</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>ranking</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-
-    <tag>
-        <name>area</name>
-        <tag-class>de.elbe5.cms.tags.AreaTag</tag-class>
-        <body-content>JSP</body-content>
-        <attribute>
-            <name>areaName</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>areaType</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-
-    <tag>
-        <name>textLine</name>
-        <tag-class>de.elbe5.cms.tags.CmsTextLineTag</tag-class>
-        <body-content>JSP</body-content>
-        <attribute>
-            <name>name</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-
-    <tag>
-        <name>textArea</name>
-        <tag-class>de.elbe5.cms.tags.CmsTextAreaTag</tag-class>
+        <name>control</name>
+        <tag-class>de.elbe5.tag.TemplateControlTag</tag-class>
         <body-content>JSP</body-content>
         <attribute>
             <name>name</name>
@@ -68,91 +19,26 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>height</name>
+            <name>content</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>pageKey</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
 
     <tag>
-        <name>html</name>
-        <tag-class>de.elbe5.cms.tags.CmsHtmlTag</tag-class>
+        <name>snippet</name>
+        <tag-class>de.elbe5.tag.SnippetTag</tag-class>
         <body-content>JSP</body-content>
         <attribute>
             <name>name</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-        <attribute>
-            <name>toolbar</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
     </tag>
-
-    <tag>
-        <name>image</name>
-        <tag-class>de.elbe5.cms.tags.CmsImageTag</tag-class>
-        <body-content>JSP</body-content>
-        <attribute>
-            <name>name</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>className</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-
-    <tag>
-        <name>link</name>
-        <tag-class>de.elbe5.cms.tags.CmsLinkTag</tag-class>
-        <body-content>JSP</body-content>
-        <attribute>
-            <name>name</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>className</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-
-    <tag>
-        <name>textlink</name>
-        <tag-class>de.elbe5.cms.tags.CmsTextLinkTag</tag-class>
-        <body-content>JSP</body-content>
-        <attribute>
-            <name>name</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>className</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-
-    <tag>
-        <name>imagelink</name>
-        <tag-class>de.elbe5.cms.tags.CmsImageLinkTag</tag-class>
-        <body-content>JSP</body-content>
-        <attribute>
-            <name>name</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>className</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-
 
 </taglib>

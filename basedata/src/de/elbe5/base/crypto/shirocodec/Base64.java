@@ -19,29 +19,35 @@
 package de.elbe5.base.crypto.shirocodec;
 
 /**
- * Provides <a href="http://en.wikipedia.org/wiki/Base64">Base 64</a> encoding and decoding as defined by
+ * Provides <a href="http://en.wikipedia.org/wiki/Base64">Base 64</a> encoding
+ * and decoding as defined by
  * <a href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a>.
  * <p/>
- * This class implements section <cite>6.8. Base64 Content-Transfer-Encoding</cite> from RFC 2045 <cite>Multipurpose
- * Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies</cite> by Freed and Borenstein.
+ * This class implements section <cite>6.8. Base64
+ * Content-Transfer-Encoding</cite> from RFC 2045 <cite>Multipurpose Internet
+ * Mail Extensions (MIME) Part One: Format of Internet Message Bodies</cite> by
+ * Freed and Borenstein.
  * <p/>
- * This class was borrowed from Apache Commons Codec SVN repository (rev. 618419) with modifications
- * to enable Base64 conversion without a full dependecny on Commons Codec.  We didn't want to reinvent the wheel of
- * great work they've done, but also didn't want to force every Shiro user to depend on the commons-codec.jar
+ * This class was borrowed from Apache Commons Codec SVN repository (rev.
+ * 618419) with modifications to enable Base64 conversion without a full
+ * dependecny on Commons Codec. We didn't want to reinvent the wheel of great
+ * work they've done, but also didn't want to force every Shiro user to depend
+ * on the commons-codec.jar
  * <p/>
- * As per the Apache 2.0 license, the original copyright notice and all author and copyright information have
- * remained in tact.
+ * As per the Apache 2.0 license, the original copyright notice and all author
+ * and copyright information have remained in tact.
  *
  * @see <a href="http://en.wikipedia.org/wiki/Base64">Wikipedia: Base 64</a>
  * @see <a href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a>
  * @since 0.9
  */
 public class Base64 {
+
     /**
      * Chunk size per RFC 2045 section 6.8.
      * <p/>
-     * The character limit does not count the trailing CRLF, but counts all other characters, including any
-     * equal signs.
+     * The character limit does not count the trailing CRLF, but counts all other
+     * characters, including any equal signs.
      *
      * @see <a href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045 section 6.8</a>
      */
@@ -85,22 +91,29 @@ public class Base64 {
      */
     private static final byte PAD = (byte) '=';
     /**
-     * Contains the Base64 values <code>0</code> through <code>63</code> accessed by using character encodings as
-     * indices.
+     * Contains the Base64 values <code>0</code> through <code>63</code> accessed
+     * by using character encodings as indices.
      * <p/>
-     * <p>For example, <code>base64Alphabet['+']</code> returns <code>62</code>.</p>
+     * <p>
+     * For example, <code>base64Alphabet['+']</code> returns <code>62</code>.</p>
      * <p/>
-     * <p>The value of undefined encodings is <code>-1</code>.</p>
+     * <p>
+     * The value of undefined encodings is <code>-1</code>.</p>
      */
     private static final byte[] base64Alphabet = new byte[BASELENGTH];
     /**
-     * <p>Contains the Base64 encodings <code>A</code> through <code>Z</code>, followed by <code>a</code> through
-     * <code>z</code>, followed by <code>0</code> through <code>9</code>, followed by <code>+</code>, and
+     * <p>
+     * Contains the Base64 encodings <code>A</code> through <code>Z</code>,
+     * followed by <code>a</code> through <code>z</code>, followed by
+     * <code>0</code> through <code>9</code>, followed by <code>+</code>, and
      * <code>/</code>.</p>
      * <p/>
-     * <p>This array is accessed by using character values as indices.</p>
+     * <p>
+     * This array is accessed by using character values as indices.</p>
      * <p/>
-     * <p>For example, <code>lookUpBase64Alphabet[62] </code> returns <code>'+'</code>.</p>
+     * <p>
+     * For example, <code>lookUpBase64Alphabet[62] </code> returns
+     * <code>'+'</code>.</p>
      */
     private static final byte[] lookUpBase64Alphabet = new byte[LOOKUPLENGTH];
     // Populating the lookup and character arrays
@@ -137,7 +150,8 @@ public class Base64 {
      * Returns whether or not the <code>octect</code> is in the base 64 alphabet.
      *
      * @param octect The value to test
-     * @return <code>true</code> if the value is defined in the the base 64 alphabet, <code>false</code> otherwise.
+     * @return <code>true</code> if the value is defined in the the base 64
+     * alphabet, <code>false</code> otherwise.
      */
     private static boolean isBase64(byte octect) {
         if (octect == PAD) {
@@ -151,11 +165,12 @@ public class Base64 {
     }
 
     /**
-     * Tests a given byte array to see if it contains only valid characters within the Base64 alphabet.
+     * Tests a given byte array to see if it contains only valid characters within
+     * the Base64 alphabet.
      *
      * @param arrayOctect byte array to test
-     * @return <code>true</code> if all bytes are valid characters in the Base64 alphabet or if the byte array is
-     * empty; false, otherwise
+     * @return <code>true</code> if all bytes are valid characters in the Base64
+     * alphabet or if the byte array is empty; false, otherwise
      */
     public static boolean isBase64(byte[] arrayOctect) {
         arrayOctect = discardWhitespace(arrayOctect);
@@ -199,8 +214,8 @@ public class Base64 {
     }
 
     /**
-     * Base64 encodes the specified byte array and then encodes it as a String using Shiro's preferred character
-     * encoding (UTF-8).
+     * Base64 encodes the specified byte array and then encodes it as a String
+     * using Shiro's preferred character encoding (UTF-8).
      *
      * @param bytes the byte array to Base64 encode.
      * @return a UTF-8 encoded String of the resulting Base64 encoded byte array.
@@ -211,7 +226,8 @@ public class Base64 {
     }
 
     /**
-     * Encodes binary data using the base64 algorithm and chunks the encoded output into 76 character blocks
+     * Encodes binary data using the base64 algorithm and chunks the encoded
+     * output into 76 character blocks
      *
      * @param binaryData binary data to encodeToChars
      * @return Base64 characters chunked in 76 character blocks
@@ -221,7 +237,8 @@ public class Base64 {
     }
 
     /**
-     * Encodes a byte[] containing binary data, into a byte[] containing characters in the Base64 alphabet.
+     * Encodes a byte[] containing binary data, into a byte[] containing
+     * characters in the Base64 alphabet.
      *
      * @param pArray a byte array containing binary data
      * @return A byte array containing only Base64 character data
@@ -231,12 +248,15 @@ public class Base64 {
     }
 
     /**
-     * Encodes binary data using the base64 algorithm, optionally chunking the output into 76 character blocks.
+     * Encodes binary data using the base64 algorithm, optionally chunking the
+     * output into 76 character blocks.
      *
      * @param binaryData Array containing binary data to encodeToChars.
-     * @param isChunked  if <code>true</code> this encoder will chunk the base64 output into 76 character blocks
+     * @param isChunked  if <code>true</code> this encoder will chunk the base64
+     *                   output into 76 character blocks
      * @return Base64-encoded data.
-     * @throws IllegalArgumentException Thrown when the input array needs an output array bigger than {@link Integer#MAX_VALUE}
+     * @throws IllegalArgumentException Thrown when the input array needs an
+     *                                  output array bigger than {@link Integer#MAX_VALUE}
      */
     public static byte[] encode(byte[] binaryData, boolean isChunked) {
         long binaryDataLength = binaryData.length;
@@ -335,7 +355,8 @@ public class Base64 {
     }
 
     /**
-     * Converts the specified UTF-8 Base64 encoded String and decodes it to a resultant UTF-8 encoded string.
+     * Converts the specified UTF-8 Base64 encoded String and decodes it to a
+     * resultant UTF-8 encoded string.
      *
      * @param base64Encoded a UTF-8 Base64 encoded String
      * @return the decoded String, UTF-8 encoded.
@@ -346,7 +367,8 @@ public class Base64 {
     }
 
     /**
-     * Decodes the specified Base64 encoded byte array and returns the decoded result as a UTF-8 encoded.
+     * Decodes the specified Base64 encoded byte array and returns the decoded
+     * result as a UTF-8 encoded.
      *
      * @param base64Encoded a Base64 encoded byte array
      * @return the decoded String, UTF-8 encoded.
@@ -357,7 +379,8 @@ public class Base64 {
     }
 
     /**
-     * Converts the specified UTF-8 Base64 encoded String and decodes it to a raw Base64 decoded byte array.
+     * Converts the specified UTF-8 Base64 encoded String and decodes it to a raw
+     * Base64 decoded byte array.
      *
      * @param base64Encoded a UTF-8 Base64 encoded String
      * @return the raw Base64 decoded byte array.
@@ -425,8 +448,9 @@ public class Base64 {
     }
 
     /**
-     * Discards any characters outside of the base64 alphabet, per the requirements on page 25 of RFC 2045 - "Any
-     * characters outside of the base64 alphabet are to be ignored in base64 encoded data."
+     * Discards any characters outside of the base64 alphabet, per the
+     * requirements on page 25 of RFC 2045 - "Any characters outside of the base64
+     * alphabet are to be ignored in base64 encoded data."
      *
      * @param data The base-64 encoded data to groom
      * @return The data, less non-base64 characters (see RFC 2045).

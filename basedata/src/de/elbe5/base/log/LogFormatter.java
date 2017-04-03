@@ -8,16 +8,21 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 public class LogFormatter extends Formatter {
-    private DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+    private final DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
     @Override
     public String format(LogRecord record) {
         StringBuilder sb = new StringBuilder();
         String srcClass = record.getSourceClassName();
         String srcMethod = record.getSourceMethodName();
-        if (record.getLevel() == Level.INFO) sb.append("INFO    ");
-        else if (record.getLevel() == Level.WARNING) sb.append("WARNING ");
-        else if (record.getLevel() == Level.SEVERE) sb.append("ERROR   ");
+        if (record.getLevel() == Level.INFO) {
+            sb.append("INFO    ");
+        } else if (record.getLevel() == Level.WARNING) {
+            sb.append("WARNING ");
+        } else if (record.getLevel() == Level.SEVERE) {
+            sb.append("ERROR   ");
+        }
         sb.append(formatter.format(new Date(record.getMillis())));
         if (srcClass.length() > 0) {
             sb.append('\n');
@@ -42,4 +47,3 @@ public class LogFormatter extends Formatter {
         return sb.toString();
     }
 }
-

@@ -1,69 +1,71 @@
 <%--
   Elbe 5 CMS  - A Java based modular Content Management System
-  Copyright (C) 2009-2015 Michael Roennau
+  Copyright (C) 2009-2017 Michael Roennau
 
   This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import = "de.elbe5.base.util.StringUtil" %>
-<%@ page import = "de.elbe5.webserver.configuration.Configuration" %>
-<%@ page import = "de.elbe5.cms.page.PageBean" %>
-<%@ page import = "de.elbe5.cms.page.PageData" %>
-<%@ page import = "de.elbe5.webserver.servlet.SessionHelper" %>
-<%@ page import = "java.util.List" %>
-<%@ page import = "java.util.Locale" %>
-<%Locale locale = SessionHelper.getSessionLocale(request);
+<%@ page import="de.elbe5.base.util.StringUtil" %>
+<%@ page import="de.elbe5.configuration.Configuration" %>
+<%@ page import="de.elbe5.page.PageBean" %>
+<%@ page import="de.elbe5.page.PageData" %>
+<%@ page import="de.elbe5.servlet.SessionReader" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Locale" %>
+<%Locale locale = SessionReader.getSessionLocale(request);
     PageData data = (PageData) request.getAttribute("pageData");
     List<PageData> pageVersions = PageBean.getInstance().getPageHistory(data.getId());%>
-<jsp:include page = "/WEB-INF/_jsp/_masterinclude/error.inc.jsp"/>
-    <fieldset>
-        <input type = "hidden" name = "act" value = ""/>
-        <table class = "versions">
-            <thead>
-            <tr>
-                <th style="width:20%"><%=StringUtil.getHtml("_version", locale)%>
-                </th>
-                <th style="width:20%"><%=StringUtil.getHtml("_changeDate", locale)%>
-                </th>
-                <th style="width:30%"><%=StringUtil.getHtml("_author", locale)%>
-                </th>
-                <th style="width:30%">
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td><%=data.getLoadedVersion()%> (<%=StringUtil.getHtml("_current", locale)%>)</td>
-                <td><%=Configuration.getInstance().getDateFormat(locale).format(data.getChangeDate())%>
-                </td>
-                <td><%=StringUtil.toHtml(data.getAuthorName())%>
-                </td>
-                <td>
-                    <a href = "/page.srv?act=show&pageId=<%=data.getId()%>&version=<%=data.getLoadedVersion()%>" target = "_blank"><%=StringUtil.getHtml("_view", locale)%></a>
-                </td>
-            </tr>
-            <% for (PageData versionData : pageVersions) {%>
-            <tr>
-                <td><%=versionData.getLoadedVersion()%></td>
-                <td><%=Configuration.getInstance().getDateFormat(locale).format(versionData.getChangeDate())%>
-                </td>
-                <td><%=StringUtil.toHtml(versionData.getAuthorName())%>
-                </td>
-                <td>
-                    <a href = "/page.srv?act=show&pageId=<%=versionData.getId()%>&version=<%=versionData.getLoadedVersion()%>" target = "_blank"><%=StringUtil.getHtml("_view", locale)%></a>
-                    <button class = "primary" onclick = "linkTo('/page.srv?act=restoreHistoryPage&pageId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_restore", locale)%>
-                    </button>
-                    <button class = "primary" onclick = "linkTo('/page.srv?act=deleteHistoryPage&pageId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_delete", locale)%>
-                    </button>
-                </td>
-            </tr>
-            <%}%>
-            </tbody>
-        </table>
-    </fieldset>
-    <div class = "buttonset topspace">
-        <button onclick = "closeModalLayerDialog();"><%=StringUtil.getHtml("_close", locale)%>
-        </button>
-    </div>
+<jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
+<fieldset>
+    <input type="hidden" name="act" value=""/>
+    <table class="padded versions">
+        <thead>
+        <tr>
+            <th style="width:20%"><%=StringUtil.getHtml("_version", locale)%>
+            </th>
+            <th style="width:20%"><%=StringUtil.getHtml("_changeDate", locale)%>
+            </th>
+            <th style="width:30%"><%=StringUtil.getHtml("_author", locale)%>
+            </th>
+            <th style="width:30%"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><%=data.getLoadedVersion()%> (<%=StringUtil.getHtml("_current", locale)%>)</td>
+            <td><%=Configuration.getInstance().getDateFormat(locale).format(data.getChangeDate())%>
+            </td>
+            <td><%=StringUtil.toHtml(data.getAuthorName())%>
+            </td>
+            <td>
+                <a href="/page.srv?act=show&pageId=<%=data.getId()%>&version=<%=data.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
+                </a>
+            </td>
+        </tr>
+        <% for (PageData versionData : pageVersions) {%>
+        <tr>
+            <td><%=versionData.getLoadedVersion()%>
+            </td>
+            <td><%=Configuration.getInstance().getDateFormat(locale).format(versionData.getChangeDate())%>
+            </td>
+            <td><%=StringUtil.toHtml(versionData.getAuthorName())%>
+            </td>
+            <td>
+                <a href="/page.srv?act=show&pageId=<%=versionData.getId()%>&version=<%=versionData.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
+                </a>
+                <button class="primary" onclick="linkTo('/page.srv?act=restoreHistoryPage&pageId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_restore", locale)%>
+                </button>
+                <button class="primary" onclick="linkTo('/page.srv?act=deleteHistoryPage&pageId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                </button>
+            </td>
+        </tr>
+        <%}%>
+        </tbody>
+    </table>
+</fieldset>
+<div class="buttonset topspace">
+    <button onclick="closeLayerDialog();"><%=StringUtil.getHtml("_close", locale)%>
+    </button>
+</div>
 

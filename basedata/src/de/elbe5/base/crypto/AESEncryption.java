@@ -1,10 +1,10 @@
 /*
-  Elbe 5 CMS  - A Java based modular Content Management System
-  Copyright (C) 2009-2015 Michael Roennau
+ Elbe 5 CMS  - A Java based modular Content Management System
+ Copyright (C) 2009-2017 Michael Roennau
 
-  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
-  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 package de.elbe5.base.crypto;
 
@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class AESEncryption {
+
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private static final byte[] NULLBYTES = CodecSupport.toBytes("NULL.0000.NULL");
 
@@ -36,8 +37,9 @@ public class AESEncryption {
     public static String adjustKey(String key) {
         char[] chars = new char[24];
         System.arraycopy(key.toCharArray(), 0, chars, 0, key.length());
-        for (int i = key.length(); i < 24; i++)
+        for (int i = key.length(); i < 24; i++) {
             chars[i] = '=';
+        }
         return new String(chars);
     }
 

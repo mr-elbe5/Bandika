@@ -3,12 +3,13 @@ package de.elbe5.base.log;
 import java.util.logging.*;
 
 public class Log {
+
     public static final int LOG = 0;
     public static final int INFO = 1;
     public static final int WARN = 2;
     public static final int ERROR = 3;
-    private static Logger julog = Logger.getLogger("Elbe5CMS");
-    private static LogFormatter logFormatter = new LogFormatter();
+    private static final Logger julog = Logger.getLogger("Elbe5CMS");
+    private static final LogFormatter logFormatter = new LogFormatter();
 
     static {
         initLog();
