@@ -1,0 +1,55 @@
+<!-- The contents of this file will be loaded for each web application -->
+<Context privileged="true" antiResourceLocking="false" antiJARLocking="false" reloadable="true">
+
+  <!-- Default set of monitored resources -->
+  <WatchedResource>WEB-INF/web.xml</WatchedResource>
+
+  <Manager pathname="" />
+  <Manager className="org.apache.catalina.session.PersistentManager" saveOnRestart="false"/> 
+
+  <Resource
+		name="config_bandika_bandika.local"
+		type="de.bandika.base.ContextConfig"
+		factory="org.apache.naming.factory.BeanFactory"
+		fbaDataSource="jdbc_bandikafba"
+		cmsDataSource="jdbc_bandikacms"
+		basePath="/tomcat/webapps/ROOT"
+		locale="en"
+	/>
+
+	<Resource
+		name="config_bandika_localhost"
+		type="de.bandika.base.ContextConfig"
+		factory="org.apache.naming.factory.BeanFactory"
+		fbaDataSource="jdbc_bandikafba"
+		cmsDataSource="jdbc_bandikacms"
+		basePath="/tomcat/webapps/ROOT"
+		locale="en"
+	/>
+
+	<Resource
+      name="jdbc_bandikafba"
+      type="javax.sql.DataSource"
+      password=""
+      driverClassName="com.mysql.jdbc.Driver"
+      maxIdle="2"
+      maxWait="5000"
+      validationQuery="select id from t_id"
+      username=""
+      url="jdbc:mysql://localhost/bandikafba"
+      maxActive="4"/>
+
+  <Resource
+      name="jdbc_bandikacms"
+      type="javax.sql.DataSource"
+      password=""
+      driverClassName="com.mysql.jdbc.Driver"
+      maxIdle="2"
+      maxWait="5000"
+      validationQuery="select id from t_id"
+      username=""
+      url="jdbc:mysql://localhost/bandikacms"
+      maxActive="4"/>
+
+
+</Context>

@@ -1,0 +1,202 @@
+/*
+  Bandika! - A Java based Content Management System
+  Copyright (C) 2009-2011 Michael Roennau
+
+  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+  Code format: This code uses 2 blanks per indent!
+*/
+
+/* html styles */
+
+body {
+  background-color: #ccc;
+  color: #333;
+  font-family: verdana, tahoma, arial, sans-serif;
+  font-size: 13px;
+  padding: 0;
+  margin: 0;
+}
+
+ol, ul, li {
+  list-style: none none;
+  padding-left: 0;
+}
+
+a img {
+  border: none;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+td {
+  vertical-align: top;
+}
+
+a, a:active, a:link, a:visited {
+  color: #333;
+  text-decoration: none;
+}
+
+/***************************************** general styles **************************************/
+
+/* used in many jsps as dark line */
+.hline {
+  line-height: 1px;
+  font-size: 1px;
+  background-color: #333;
+}
+
+/* used in frontend jsps */
+.spacer10 {
+  line-height: 10px;
+}
+
+/* used in frontend jsps */
+.spacer20 {
+  line-height: 20px;
+}
+
+/* used in std.js */
+.hideOverflow{
+  overflow:hidden;
+}
+
+/***************************************** page styles **************************************/
+
+/* used in master.jsp */
+.wrapper {
+  margin: 0 auto 0 auto;
+  padding: 0;
+  width: 940px;
+  background-color: #eee;
+  color: #333;
+  overflow:hidden;
+}
+
+.page {
+  width: 735px;
+  float:right;
+  text-align: left;
+  background: url( ../images/bgmid.gif ) repeat-y;
+}
+.pageHeader {
+  height: 30px;
+  background: url( ../images/bgtop.gif ) no-repeat;
+}
+.pageContent {
+  width: 700px;
+  margin: 0 10px 0 20px;
+  min-height: 400px;
+}
+.pageContent a, .pageContent a:active, .pageContent a:link, .pageContent a:visited {
+  color: #00f;
+  text-decoration: none;
+}
+.pageContent a:hover, .pageContent a:focus {
+  text-decoration: underline;
+}
+.pageFooter {
+  padding: 15px 26px 25px 21px;
+  margin: 0;
+  font-size: 11px;
+  background: url( ../images/bgbtm.gif ) no-repeat bottom;
+}
+
+
+/***************************************** menu styles **************************************/
+
+/* used in header.jsp */
+.header{
+  background: url(../images/bghead.gif) no-repeat;
+  height:100px;
+  overflow:hidden;
+}
+.header_logo{
+  float:left;
+  width:190px;
+  padding-top:27px;
+  padding-left:15px;
+  font-family:Verdana,Arial,Sans-Serif;
+  font-size:38px;
+}
+.header_content{
+  float:left;
+}
+.header_edge{
+  float:right;
+  padding-right:9px;
+  padding-top:9px;
+}
+
+/* used in breadcrumb.jsp */
+.breadcrumb{
+  margin: 3px 10px 0 210px;
+  font-size: 11px;
+  color: #777;
+}
+
+/***************************************** content area styles **************************************/
+
+/* used in master.jsp */
+.toperror {
+  margin: 3px 10px 0 210px;
+  color: red;
+}
+
+/* used in master.jsp */
+.content {
+  margin: 20px;
+}
+
+/* used in footer.jsp */
+.footer {
+  margin: 20px;
+  font-size: 13px;
+}
+
+/***************************************** user form styles **************************************/
+
+/* used in frontend jsps */
+.userTopHeader {
+  margin-left:10px;
+  height: 27px;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+}
+
+/* used in UserTableTag */
+.userArea {
+  color: #333;
+  text-align: left;
+}
+
+/* used in UserTableTag */
+.userTable {
+  width: 100%;
+}
+
+/* used in UserTableTag */
+.userTable td {
+  padding: 2px 10px;
+  vertical-align: top;
+}
+
+/* used in UserXXXTag */
+.userInput {
+  width: 100%;
+}
+
+/* used in frontend jsps */
+.userTableButtonArea {
+  margin-top:20px;
+  padding-left:10px;
+  overflow: hidden;
+}
+
