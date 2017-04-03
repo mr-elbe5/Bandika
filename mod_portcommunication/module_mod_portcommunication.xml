@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_mod_portcommunication" default="compile.module.mod_portcommunication">
+  <dirname property="module.mod_portcommunication.basedir" file="${ant.file.module_mod_portcommunication}"/>
+  
+  <property name="module.jdk.home.mod_portcommunication" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.mod_portcommunication" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.mod_portcommunication" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.mod_portcommunication" value="${compiler.args}"/>
+  
+  <property name="mod_portcommunication.output.dir" value="${module.mod_portcommunication.basedir}/../out/production/mod_portcommunication"/>
+  <property name="mod_portcommunication.testoutput.dir" value="${module.mod_portcommunication.basedir}/../out/test/mod_portcommunication"/>
+  
+  <path id="mod_portcommunication.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="mod_portcommunication.module.production.classpath">
+    <path refid="${module.jdk.classpath.mod_portcommunication}"/>
+    <pathelement location="${mod_thread.output.dir}"/>
+    <pathelement location="${base_app.output.dir}"/>
+  </path>
+  
+  <path id="mod_portcommunication.runtime.production.module.classpath">
+    <pathelement location="${mod_portcommunication.output.dir}"/>
+    <path refid="mod_thread.runtime.production.module.classpath"/>
+    <path refid="base_app.runtime.production.module.classpath"/>
+  </path>
+  
+  <path id="mod_portcommunication.module.classpath">
+    <path refid="${module.jdk.classpath.mod_portcommunication}"/>
+    <pathelement location="${mod_portcommunication.output.dir}"/>
+    <pathelement location="${mod_thread.testoutput.dir}"/>
+    <pathelement location="${mod_thread.output.dir}"/>
+    <pathelement location="${base_app.testoutput.dir}"/>
+    <pathelement location="${base_app.output.dir}"/>
+  </path>
+  
+  <path id="mod_portcommunication.runtime.module.classpath">
+    <pathelement location="${mod_portcommunication.testoutput.dir}"/>
+    <pathelement location="${mod_portcommunication.output.dir}"/>
+    <path refid="mod_thread.runtime.module.classpath"/>
+    <path refid="base_app.runtime.module.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.mod_portcommunication">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.mod_portcommunication">
+    <patternset refid="excluded.from.module.mod_portcommunication"/>
+  </patternset>
+  
+  <path id="mod_portcommunication.module.sourcepath">
+    <dirset dir="${module.mod_portcommunication.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.mod_portcommunication" depends="compile.module.mod_portcommunication.production,compile.module.mod_portcommunication.tests" description="Compile module mod_portcommunication"/>
+  
+  <target name="compile.module.mod_portcommunication.production" depends="compile.module.mod_thread,compile.module.base_app" description="Compile module mod_portcommunication; production classes">
+    <mkdir dir="${mod_portcommunication.output.dir}"/>
+    <javac destdir="${mod_portcommunication.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.mod_portcommunication}/javac">
+      <compilerarg line="${compiler.args.mod_portcommunication}"/>
+      <bootclasspath refid="mod_portcommunication.module.bootclasspath"/>
+      <classpath refid="mod_portcommunication.module.production.classpath"/>
+      <src refid="mod_portcommunication.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.mod_portcommunication"/>
+    </javac>
+    
+    <copy todir="${mod_portcommunication.output.dir}">
+      <fileset dir="${module.mod_portcommunication.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.mod_portcommunication.tests" depends="compile.module.mod_portcommunication.production" description="compile module mod_portcommunication; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.mod_portcommunication" description="cleanup module">
+    <delete dir="${mod_portcommunication.output.dir}"/>
+    <delete dir="${mod_portcommunication.testoutput.dir}"/>
+  </target>
+</project>

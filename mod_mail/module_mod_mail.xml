@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_mod_mail" default="compile.module.mod_mail">
+  <dirname property="module.mod_mail.basedir" file="${ant.file.module_mod_mail}"/>
+  
+  <property name="module.jdk.home.mod_mail" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.mod_mail" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.mod_mail" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.mod_mail" value="${compiler.args}"/>
+  
+  <property name="mod_mail.output.dir" value="${module.mod_mail.basedir}/../out/production/mod_mail"/>
+  <property name="mod_mail.testoutput.dir" value="${module.mod_mail.basedir}/../out/test/mod_mail"/>
+  
+  <path id="mod_mail.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="mod_mail.module.production.classpath">
+    <path refid="${module.jdk.classpath.mod_mail}"/>
+    <pathelement location="${base_app.output.dir}"/>
+    <path refid="library.mail.classpath"/>
+  </path>
+  
+  <path id="mod_mail.runtime.production.module.classpath">
+    <pathelement location="${mod_mail.output.dir}"/>
+    <path refid="base_app.runtime.production.module.classpath"/>
+    <path refid="library.mail.classpath"/>
+  </path>
+  
+  <path id="mod_mail.module.classpath">
+    <path refid="${module.jdk.classpath.mod_mail}"/>
+    <pathelement location="${mod_mail.output.dir}"/>
+    <pathelement location="${base_app.testoutput.dir}"/>
+    <pathelement location="${base_app.output.dir}"/>
+    <path refid="library.mail.classpath"/>
+  </path>
+  
+  <path id="mod_mail.runtime.module.classpath">
+    <pathelement location="${mod_mail.testoutput.dir}"/>
+    <pathelement location="${mod_mail.output.dir}"/>
+    <path refid="base_app.runtime.module.classpath"/>
+    <path refid="library.mail.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.mod_mail">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.mod_mail">
+    <patternset refid="excluded.from.module.mod_mail"/>
+  </patternset>
+  
+  <path id="mod_mail.module.sourcepath">
+    <dirset dir="${module.mod_mail.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.mod_mail" depends="compile.module.mod_mail.production,compile.module.mod_mail.tests" description="Compile module mod_mail"/>
+  
+  <target name="compile.module.mod_mail.production" depends="compile.module.base_app" description="Compile module mod_mail; production classes">
+    <mkdir dir="${mod_mail.output.dir}"/>
+    <javac destdir="${mod_mail.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.mod_mail}/javac">
+      <compilerarg line="${compiler.args.mod_mail}"/>
+      <bootclasspath refid="mod_mail.module.bootclasspath"/>
+      <classpath refid="mod_mail.module.production.classpath"/>
+      <src refid="mod_mail.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.mod_mail"/>
+    </javac>
+    
+    <copy todir="${mod_mail.output.dir}">
+      <fileset dir="${module.mod_mail.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.mod_mail.tests" depends="compile.module.mod_mail.production" description="compile module mod_mail; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.mod_mail" description="cleanup module">
+    <delete dir="${mod_mail.output.dir}"/>
+    <delete dir="${mod_mail.testoutput.dir}"/>
+  </target>
+</project>

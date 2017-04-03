@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_mod_cluster" default="compile.module.mod_cluster">
+  <dirname property="module.mod_cluster.basedir" file="${ant.file.module_mod_cluster}"/>
+  
+  <property name="module.jdk.home.mod_cluster" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.mod_cluster" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.mod_cluster" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.mod_cluster" value="${compiler.args}"/>
+  
+  <property name="mod_cluster.output.dir" value="${module.mod_cluster.basedir}/../out/production/mod_cluster"/>
+  <property name="mod_cluster.testoutput.dir" value="${module.mod_cluster.basedir}/../out/test/mod_cluster"/>
+  
+  <path id="mod_cluster.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="mod_cluster.module.production.classpath">
+    <path refid="${module.jdk.classpath.mod_cluster}"/>
+    <pathelement location="${base_app.output.dir}"/>
+    <pathelement location="${mod_portcommunication.output.dir}"/>
+    <pathelement location="${mod_webapp.output.dir}"/>
+    <pathelement location="${mod_thread.output.dir}"/>
+    <path refid="library.tomcatlib.classpath"/>
+  </path>
+  
+  <path id="mod_cluster.runtime.production.module.classpath">
+    <pathelement location="${mod_cluster.output.dir}"/>
+    <path refid="base_app.runtime.production.module.classpath"/>
+    <path refid="mod_portcommunication.runtime.production.module.classpath"/>
+    <path refid="mod_webapp.runtime.production.module.classpath"/>
+    <path refid="mod_thread.runtime.production.module.classpath"/>
+  </path>
+  
+  <path id="mod_cluster.module.classpath">
+    <path refid="${module.jdk.classpath.mod_cluster}"/>
+    <pathelement location="${mod_cluster.output.dir}"/>
+    <pathelement location="${base_app.testoutput.dir}"/>
+    <pathelement location="${base_app.output.dir}"/>
+    <pathelement location="${mod_portcommunication.testoutput.dir}"/>
+    <pathelement location="${mod_portcommunication.output.dir}"/>
+    <pathelement location="${mod_webapp.testoutput.dir}"/>
+    <pathelement location="${mod_webapp.output.dir}"/>
+    <pathelement location="${mod_thread.testoutput.dir}"/>
+    <pathelement location="${mod_thread.output.dir}"/>
+    <path refid="library.tomcatlib.classpath"/>
+  </path>
+  
+  <path id="mod_cluster.runtime.module.classpath">
+    <pathelement location="${mod_cluster.testoutput.dir}"/>
+    <pathelement location="${mod_cluster.output.dir}"/>
+    <path refid="base_app.runtime.module.classpath"/>
+    <path refid="mod_portcommunication.runtime.module.classpath"/>
+    <path refid="mod_webapp.runtime.module.classpath"/>
+    <path refid="mod_thread.runtime.module.classpath"/>
+    <path refid="library.tomcatlib.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.mod_cluster">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.mod_cluster">
+    <patternset refid="excluded.from.module.mod_cluster"/>
+  </patternset>
+  
+  <path id="mod_cluster.module.sourcepath">
+    <dirset dir="${module.mod_cluster.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.mod_cluster" depends="compile.module.mod_cluster.production,compile.module.mod_cluster.tests" description="Compile module mod_cluster"/>
+  
+  <target name="compile.module.mod_cluster.production" depends="compile.module.base_app,compile.module.mod_portcommunication,compile.module.mod_webapp,compile.module.mod_thread" description="Compile module mod_cluster; production classes">
+    <mkdir dir="${mod_cluster.output.dir}"/>
+    <javac destdir="${mod_cluster.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.mod_cluster}/javac">
+      <compilerarg line="${compiler.args.mod_cluster}"/>
+      <bootclasspath refid="mod_cluster.module.bootclasspath"/>
+      <classpath refid="mod_cluster.module.production.classpath"/>
+      <src refid="mod_cluster.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.mod_cluster"/>
+    </javac>
+    
+    <copy todir="${mod_cluster.output.dir}">
+      <fileset dir="${module.mod_cluster.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.mod_cluster.tests" depends="compile.module.mod_cluster.production" description="compile module mod_cluster; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.mod_cluster" description="cleanup module">
+    <delete dir="${mod_cluster.output.dir}"/>
+    <delete dir="${mod_cluster.testoutput.dir}"/>
+  </target>
+</project>

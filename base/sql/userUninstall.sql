@@ -1,5 +1,0 @@
-﻿
-DROP TABLE IF EXISTS t_user2group;
-DROP TABLE IF EXISTS t_user;
-DROP TABLE IF EXISTS t_group;
-DROP TABLE IF EXISTS t_id;

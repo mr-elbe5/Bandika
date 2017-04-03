@@ -1,0 +1,161 @@
+
+/* menu */
+
+.mini-pills {
+  margin: 0;
+  font-size: 12px;
+}
+
+.mini-pills > li > a {
+  padding: 5px 8px;
+}
+
+.container {
+  margin-bottom: 20px;
+}
+
+.well {
+  border-color: #B1C6EB;
+}
+
+.controls .control-pad {
+  padding-top: 5px;
+}
+
+div.dataTables_paginate {
+  float: none;
+}
+
+.editArea .area {
+  margin-bottom: 10px;
+}
+
+.editArea .areaHeader {
+  background: #aaa;
+  font-size: 9px;
+  line-height: 11px;
+  text-align: center;
+  padding: 2px;
+  margin-bottom: 2px;
+}
+
+.areatools{
+  background: #eee;
+  padding: 2px;
+}
+
+.areatools .btn-icon{
+  color: #333333;
+  background-color: #f5f5f5;
+  background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+  background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe6e6e6', GradientType=0);
+  border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #e6e6e6;
+}
+
+/* form */
+
+.form-horizontal {
+  margin: 0;
+}
+
+.form-horizontal .control-group {
+  margin-bottom: 4px;
+}
+
+.form-horizontal .control-label {
+  text-align: left;
+}
+
+.editTagFields {
+  margin: 5px 0;
+}
+
+.editTagFields label {
+  margin-bottom: 0;
+}
+
+.editTagFields input {
+  padding: 2px 6px;
+}
+
+.editTagFields button {
+  padding: 2px 14px;
+}
+
+.imageSelDiv{
+  margin-bottom:10px;
+}
+
+.nav-list {
+  padding-left: 0;
+}
+
+.nav-list .nav-header {
+  font-size: 14px;
+}
+
+input[disabled] {
+  background-color: transparent;
+}
+
+/* data table */
+
+.table thead th {
+  vertical-align: top;
+}
+
+/* modal layer */
+
+.form-horizontal input[type="radio"], .form-horizontal input[type="checkbox"] {
+  vertical-align: top;
+  margin-right: 5px;
+  margin-top: 1px;
+}
+
+.modal-body {
+  padding: 0;
+  margin-bottom: 5px;
+}
+
+.modal-backdrop, .modal-backdrop.fade.in {
+  opacity: 0.4;
+}
+
+.layerContent {
+  padding: 9px 15px;
+}
+
+.iframeLayer {
+  width: 720px;
+}
+
+.iframeLayer legend {
+  border: 0 transparent;
+  margin-bottom: 0;
+}
+
+.iframeLayer .modal-body {
+  max-height: 600px;
+}
+
+iframe.layerIframe {
+  width: 720px;
+  height: 390px;
+  border: 0 none;
+}
+
+body.frameBody {
+  width: 720px;
+  padding: 0;
+}
+
+body.frameBody .container {
+  margin: 10px;
+}
+

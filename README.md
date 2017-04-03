@@ -1,3 +1,3 @@
 # Bandika
 A Java CMS and framework
-Version 4 of 2012
+Version 5 of 2015

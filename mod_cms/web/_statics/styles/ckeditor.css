@@ -1,0 +1,16 @@
+/* ckeditor styles */
+.cke_skin_kama  SPAN.cke_dialog_ui_button_ok SPAN {
+  background-position: 0 -881px !important;
+}
+
+.cke_skin_kama  A.cke_dialog_ui_button {
+  background-position: 0 -881px !important;
+}
+
+.cke_skin_kama A.cke_dialog_close_button {
+  background-position: 0 -1246px !important;
+}
+
+.ckeditField{
+  outline: #888 auto 1px;
+}

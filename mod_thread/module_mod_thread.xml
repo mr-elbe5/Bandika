@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_mod_thread" default="compile.module.mod_thread">
+  <dirname property="module.mod_thread.basedir" file="${ant.file.module_mod_thread}"/>
+  
+  <property name="module.jdk.home.mod_thread" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.mod_thread" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.mod_thread" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.mod_thread" value="${compiler.args}"/>
+  
+  <property name="mod_thread.output.dir" value="${module.mod_thread.basedir}/../out/production/mod_thread"/>
+  <property name="mod_thread.testoutput.dir" value="${module.mod_thread.basedir}/../out/test/mod_thread"/>
+  
+  <path id="mod_thread.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="mod_thread.module.production.classpath">
+    <path refid="${module.jdk.classpath.mod_thread}"/>
+  </path>
+  
+  <path id="mod_thread.runtime.production.module.classpath">
+    <pathelement location="${mod_thread.output.dir}"/>
+  </path>
+  
+  <path id="mod_thread.module.classpath">
+    <path refid="${module.jdk.classpath.mod_thread}"/>
+    <pathelement location="${mod_thread.output.dir}"/>
+  </path>
+  
+  <path id="mod_thread.runtime.module.classpath">
+    <pathelement location="${mod_thread.testoutput.dir}"/>
+    <pathelement location="${mod_thread.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.mod_thread">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.mod_thread">
+    <patternset refid="excluded.from.module.mod_thread"/>
+  </patternset>
+  
+  <path id="mod_thread.module.sourcepath">
+    <dirset dir="${module.mod_thread.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.mod_thread" depends="compile.module.mod_thread.production,compile.module.mod_thread.tests" description="Compile module mod_thread"/>
+  
+  <target name="compile.module.mod_thread.production" description="Compile module mod_thread; production classes">
+    <mkdir dir="${mod_thread.output.dir}"/>
+    <javac destdir="${mod_thread.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.mod_thread}/javac">
+      <compilerarg line="${compiler.args.mod_thread}"/>
+      <bootclasspath refid="mod_thread.module.bootclasspath"/>
+      <classpath refid="mod_thread.module.production.classpath"/>
+      <src refid="mod_thread.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.mod_thread"/>
+    </javac>
+    
+    <copy todir="${mod_thread.output.dir}">
+      <fileset dir="${module.mod_thread.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.mod_thread.tests" depends="compile.module.mod_thread.production" description="compile module mod_thread; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.mod_thread" description="cleanup module">
+    <delete dir="${mod_thread.output.dir}"/>
+    <delete dir="${mod_thread.testoutput.dir}"/>
+  </target>
+</project>

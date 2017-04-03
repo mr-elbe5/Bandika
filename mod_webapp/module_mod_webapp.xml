@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_mod_webapp" default="compile.module.mod_webapp">
+  <dirname property="module.mod_webapp.basedir" file="${ant.file.module_mod_webapp}"/>
+  
+  <property name="module.jdk.home.mod_webapp" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.mod_webapp" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.mod_webapp" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.mod_webapp" value="${compiler.args}"/>
+  
+  <property name="mod_webapp.output.dir" value="${module.mod_webapp.basedir}/../out/production/mod_webapp"/>
+  <property name="mod_webapp.testoutput.dir" value="${module.mod_webapp.basedir}/../out/test/mod_webapp"/>
+  
+  <path id="mod_webapp.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="mod_webapp.module.production.classpath">
+    <path refid="${module.jdk.classpath.mod_webapp}"/>
+    <path refid="library.tomcatlib.classpath"/>
+    <pathelement location="${base_app.output.dir}"/>
+    <pathelement location="${mod_thread.output.dir}"/>
+    <pathelement location="${mod_crypto.output.dir}"/>
+  </path>
+  
+  <path id="mod_webapp.runtime.production.module.classpath">
+    <pathelement location="${mod_webapp.output.dir}"/>
+    <path refid="base_app.runtime.production.module.classpath"/>
+    <path refid="mod_thread.runtime.production.module.classpath"/>
+    <path refid="mod_crypto.runtime.production.module.classpath"/>
+  </path>
+  
+  <path id="mod_webapp.module.classpath">
+    <path refid="${module.jdk.classpath.mod_webapp}"/>
+    <pathelement location="${mod_webapp.output.dir}"/>
+    <path refid="library.tomcatlib.classpath"/>
+    <pathelement location="${base_app.testoutput.dir}"/>
+    <pathelement location="${base_app.output.dir}"/>
+    <pathelement location="${mod_thread.testoutput.dir}"/>
+    <pathelement location="${mod_thread.output.dir}"/>
+    <pathelement location="${mod_crypto.testoutput.dir}"/>
+    <pathelement location="${mod_crypto.output.dir}"/>
+  </path>
+  
+  <path id="mod_webapp.runtime.module.classpath">
+    <pathelement location="${mod_webapp.testoutput.dir}"/>
+    <pathelement location="${mod_webapp.output.dir}"/>
+    <path refid="library.tomcatlib.classpath"/>
+    <path refid="base_app.runtime.module.classpath"/>
+    <path refid="mod_thread.runtime.module.classpath"/>
+    <path refid="mod_crypto.runtime.module.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.mod_webapp">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.mod_webapp">
+    <patternset refid="excluded.from.module.mod_webapp"/>
+  </patternset>
+  
+  <path id="mod_webapp.module.sourcepath">
+    <dirset dir="${module.mod_webapp.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.mod_webapp" depends="compile.module.mod_webapp.production,compile.module.mod_webapp.tests" description="Compile module mod_webapp"/>
+  
+  <target name="compile.module.mod_webapp.production" depends="compile.module.base_app,compile.module.mod_thread,compile.module.mod_crypto" description="Compile module mod_webapp; production classes">
+    <mkdir dir="${mod_webapp.output.dir}"/>
+    <javac destdir="${mod_webapp.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.mod_webapp}/javac">
+      <compilerarg line="${compiler.args.mod_webapp}"/>
+      <bootclasspath refid="mod_webapp.module.bootclasspath"/>
+      <classpath refid="mod_webapp.module.production.classpath"/>
+      <src refid="mod_webapp.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.mod_webapp"/>
+    </javac>
+    
+    <copy todir="${mod_webapp.output.dir}">
+      <fileset dir="${module.mod_webapp.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.mod_webapp.tests" depends="compile.module.mod_webapp.production" description="compile module mod_webapp; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.mod_webapp" description="cleanup module">
+    <delete dir="${mod_webapp.output.dir}"/>
+    <delete dir="${mod_webapp.testoutput.dir}"/>
+  </target>
+</project>

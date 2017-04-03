@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_bandika" default="compile.module.bandika">
+  <dirname property="module.bandika.basedir" file="${ant.file.module_bandika}"/>
+  
+  <property name="module.jdk.home.bandika" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.bandika" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.bandika" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.bandika" value="${compiler.args}"/>
+  
+  <property name="bandika.output.dir" value="${module.bandika.basedir}/../out/production/bandika"/>
+  <property name="bandika.testoutput.dir" value="${module.bandika.basedir}/../out/test/bandika"/>
+  
+  <path id="bandika.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="bandika.module.production.classpath">
+    <path refid="${module.jdk.classpath.bandika}"/>
+    <path refid="library.tomcatlib.classpath"/>
+    <path refid="library.commons.classpath"/>
+    <pathelement location="${base_app.output.dir}"/>
+    <pathelement location="${mod_portal.output.dir}"/>
+    <pathelement location="${mod_cluster.output.dir}"/>
+    <pathelement location="${mod_search.output.dir}"/>
+    <pathelement location="${mod_team.output.dir}"/>
+    <pathelement location="${mod_webuser.output.dir}"/>
+    <pathelement location="${mod_webapp.output.dir}"/>
+    <pathelement location="${mod_cms.output.dir}"/>
+  </path>
+  
+  <path id="bandika.runtime.production.module.classpath">
+    <pathelement location="${bandika.output.dir}"/>
+    <path refid="library.commons.classpath"/>
+    <path refid="base_app.runtime.production.module.classpath"/>
+    <path refid="mod_portal.runtime.production.module.classpath"/>
+    <path refid="mod_cluster.runtime.production.module.classpath"/>
+    <path refid="mod_search.runtime.production.module.classpath"/>
+    <path refid="mod_team.runtime.production.module.classpath"/>
+    <path refid="mod_webuser.runtime.production.module.classpath"/>
+    <path refid="mod_webapp.runtime.production.module.classpath"/>
+    <path refid="mod_cms.runtime.production.module.classpath"/>
+  </path>
+  
+  <path id="bandika.module.classpath">
+    <path refid="${module.jdk.classpath.bandika}"/>
+    <pathelement location="${bandika.output.dir}"/>
+    <path refid="library.tomcatlib.classpath"/>
+    <path refid="library.commons.classpath"/>
+    <pathelement location="${base_app.testoutput.dir}"/>
+    <pathelement location="${base_app.output.dir}"/>
+    <pathelement location="${mod_portal.testoutput.dir}"/>
+    <pathelement location="${mod_portal.output.dir}"/>
+    <pathelement location="${mod_cluster.testoutput.dir}"/>
+    <pathelement location="${mod_cluster.output.dir}"/>
+    <pathelement location="${mod_search.testoutput.dir}"/>
+    <pathelement location="${mod_search.output.dir}"/>
+    <pathelement location="${mod_team.testoutput.dir}"/>
+    <pathelement location="${mod_team.output.dir}"/>
+    <pathelement location="${mod_webuser.testoutput.dir}"/>
+    <pathelement location="${mod_webuser.output.dir}"/>
+    <pathelement location="${mod_webapp.testoutput.dir}"/>
+    <pathelement location="${mod_webapp.output.dir}"/>
+    <pathelement location="${mod_cms.testoutput.dir}"/>
+    <pathelement location="${mod_cms.output.dir}"/>
+  </path>
+  
+  <path id="bandika.runtime.module.classpath">
+    <pathelement location="${bandika.testoutput.dir}"/>
+    <pathelement location="${bandika.output.dir}"/>
+    <path refid="library.tomcatlib.classpath"/>
+    <path refid="library.commons.classpath"/>
+    <path refid="base_app.runtime.module.classpath"/>
+    <path refid="mod_portal.runtime.module.classpath"/>
+    <path refid="mod_cluster.runtime.module.classpath"/>
+    <path refid="mod_search.runtime.module.classpath"/>
+    <path refid="mod_team.runtime.module.classpath"/>
+    <path refid="mod_webuser.runtime.module.classpath"/>
+    <path refid="mod_webapp.runtime.module.classpath"/>
+    <path refid="mod_cms.runtime.module.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.bandika">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.bandika">
+    <patternset refid="excluded.from.module.bandika"/>
+  </patternset>
+  
+  <path id="bandika.module.sourcepath">
+    <dirset dir="${module.bandika.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.bandika" depends="compile.module.bandika.production,compile.module.bandika.tests" description="Compile module bandika"/>
+  
+  <target name="compile.module.bandika.production" depends="compile.module.base_app,compile.module.mod_portal,compile.module.mod_cluster,compile.module.mod_search,compile.module.mod_team,compile.module.mod_webuser,compile.module.mod_webapp,compile.module.mod_cms" description="Compile module bandika; production classes">
+    <mkdir dir="${bandika.output.dir}"/>
+    <javac destdir="${bandika.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.bandika}/javac">
+      <compilerarg line="${compiler.args.bandika}"/>
+      <bootclasspath refid="bandika.module.bootclasspath"/>
+      <classpath refid="bandika.module.production.classpath"/>
+      <src refid="bandika.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.bandika"/>
+    </javac>
+    
+    <copy todir="${bandika.output.dir}">
+      <fileset dir="${module.bandika.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.bandika.tests" depends="compile.module.bandika.production" description="compile module bandika; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.bandika" description="cleanup module">
+    <delete dir="${bandika.output.dir}"/>
+    <delete dir="${bandika.testoutput.dir}"/>
+  </target>
+</project>
