@@ -1,0 +1,109 @@
+<project name="bandika" default="make_base" basedir=".">
+
+  <include file="./build.inc.xml" />
+
+  <target name="clean" depends="bandika.inc.init">
+    <delete dir="${buildbase.dir}"/>
+  </target>
+
+  <target name="war_base" depends="bandika.inc.prepare">
+    <antcall target="bandika.inc.makewar">
+      <param name="module_name" value="base"/>
+    </antcall>
+  </target>
+
+  <target name="deploy_base" depends="bandika.inc.prepare">
+    <antcall target="bandika.inc.deploy">
+      <param name="module_name" value="base"/>
+    </antcall>
+  </target>
+
+  <!-- module zip targets -->
+
+  <target name="make_base" depends="bandika.inc.prepare">
+    <antcall target="bandika.inc.makezip">
+      <param name="module_name" value="base"/>
+    </antcall>
+  </target>
+
+  <target name="make_cms" depends="bandika.inc.prepare">
+    <antcall target="bandika.inc.makezip">
+      <param name="module_name" value="cms"/>
+    </antcall>
+  </target>
+
+  <target name="make_lucene" depends="bandika.inc.prepare">
+    <antcall target="bandika.inc.makezip">
+      <param name="module_name" value="lucene"/>
+    </antcall>
+  </target>
+
+  <target name="make_registration" depends="bandika.inc.prepare">
+    <antcall target="bandika.inc.makezip">
+      <param name="module_name" value="registration"/>
+    </antcall>
+  </target>
+
+  <target name="make_reusable" depends="bandika.inc.prepare">
+    <antcall target="bandika.inc.makezip">
+      <param name="module_name" value="reusable"/>
+    </antcall>
+  </target>
+
+  <target name="make_team" depends="bandika.inc.prepare">
+    <antcall target="bandika.inc.makezip">
+      <param name="module_name" value="team"/>
+    </antcall>
+  </target>
+
+  <target name="make_btfrontend" depends="bandika.inc.prepare">
+    <antcall target="bandika.inc.makezip">
+      <param name="module_name" value="btfrontend"/>
+    </antcall>
+  </target>
+
+  <!-- module update targets -->
+
+  <target name="update_base" depends="bandika.inc.prepare">
+    <antcall target="bandika.inc.update">
+      <param name="module_name" value="base"/>
+    </antcall>
+  </target>
+
+  <target name="update_cms" depends="bandika.inc.prepare">
+    <antcall target="bandika.inc.update">
+      <param name="module_name" value="cms"/>
+    </antcall>
+  </target>
+
+  <target name="update_lucene" depends="bandika.inc.prepare">
+    <antcall target="bandika.inc.update">
+      <param name="module_name" value="lucene"/>
+    </antcall>
+  </target>
+
+  <target name="update_registration" depends="bandika.inc.prepare">
+    <antcall target="bandika.inc.update">
+      <param name="module_name" value="registration"/>
+    </antcall>
+  </target>
+
+  <target name="update_reusable" depends="bandika.inc.prepare">
+    <antcall target="bandika.inc.update">
+      <param name="module_name" value="reusable"/>
+    </antcall>
+  </target>
+
+  <target name="update_team" depends="bandika.inc.prepare">
+    <antcall target="bandika.inc.update">
+      <param name="module_name" value="team"/>
+    </antcall>
+  </target>
+
+  <target name="update_btfrontend" depends="bandika.inc.prepare">
+    <antcall target="bandika.inc.update">
+      <param name="module_name" value="btfrontend"/>
+    </antcall>
+  </target>
+
+</project>

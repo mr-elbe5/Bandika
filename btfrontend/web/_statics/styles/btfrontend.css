@@ -1,0 +1,29 @@
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown .caret {
+  margin-left: 10px;
+}
+
+.nav-tabs .dropdown-menu, .nav-pills .dropdown-menu, .navbar .dropdown-menu {
+  margin-top: 0;
+}
+
+.navbar {
+  margin-bottom: 5px;
+}
+
+.dropdown-menu li > a:hover,
+.dropdown-menu li > a:focus,
+.dropdown-submenu:hover > a {
+  color: #0088cc;
+  background: transparent;
+}
+
+.breadcrumb {
+  background-color: transparent;
+  padding: 2px 20px;
+}
+
+

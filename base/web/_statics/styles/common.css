@@ -1,0 +1,212 @@
+/* general */
+
+h1 {
+  font-size: 28px;
+}
+
+h2 {
+  font-size: 20px;
+}
+
+h3 {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+a {
+  color: #1562FF;
+}
+
+a:hover, a:focus {
+  color: #003DB9;
+}
+
+/* menu */
+
+.mini-pills {
+  margin: 0;
+  font-size: 12px;
+}
+
+.mini-pills > li > a {
+  padding: 5px 8px;
+}
+
+.btn {
+  padding: 4px 10px;
+}
+
+.btn-micro {
+  font-size: 11px;
+  line-height: 14px;
+  padding: 1px 2px;
+}
+
+.btn-micro i {
+  height: 13px;
+  line-height: 11px;
+  margin-bottom: 2px;
+  margin-top: 0;
+  width: 13px;
+}
+
+button.btn.btn-micro,
+input[type="submit"].btn.btn-micro {
+  *padding-top: 1px;
+  *padding-bottom: 1px;
+}
+
+.btn-group > .btn-micro {
+  font-size: 9px;
+}
+
+.container {
+  margin-bottom: 20px;
+}
+
+.well {
+  border-color: #B1C6EB;
+}
+
+.controls .control-pad {
+  padding-top: 5px;
+}
+
+div.dataTables_paginate {
+  float: none;
+}
+
+.editArea .area {
+  margin-bottom: 10px;
+}
+
+.editArea .areaHeader {
+  background: #ddd;
+  font-size: 9px;
+  line-height: 11px;
+  text-align: center;
+  padding: 2px;
+  margin-bottom: 2px;
+}
+
+.areatools a, .areatools button {
+  margin-right: 2px;
+}
+
+.areatools .btn-mini {
+  font-size: 11px;
+}
+
+.areatools .btn-tool {
+  background-image: -moz-linear-gradient(center top, #BBBBBB, #999999);
+}
+
+.areatools .btn-tool:hover {
+  background-color: #999999;
+}
+
+/* form */
+
+.form-horizontal {
+  margin: 0;
+}
+
+.form-horizontal .control-group {
+  margin-bottom: 4px;
+}
+
+.form-horizontal .control-label {
+  text-align: left;
+}
+
+.editTagFields {
+  margin: 5px 0;
+}
+
+.editTagFields label {
+  margin-bottom: 0;
+}
+
+.editTagFields input {
+  padding: 2px 6px;
+}
+
+.editTagFields button {
+  padding: 2px 14px;
+}
+
+fieldset.condensed label {
+  margin-bottom: 0;
+}
+
+fieldset.condensed input[type="text"] {
+  padding: 0;
+}
+
+.nav-list {
+  padding-left: 0;
+}
+
+.nav-list .nav-header {
+  font-size: 14px;
+}
+
+input[disabled] {
+  background-color: transparent;
+}
+
+/* data table */
+
+.table thead th {
+  vertical-align: top;
+}
+
+/* modal layer */
+
+.form-horizontal input[type="radio"], .form-horizontal input[type="checkbox"] {
+  vertical-align: top;
+  margin-right: 5px;
+  margin-top: 1px;
+}
+
+.modal-body {
+  padding: 0;
+  margin-bottom: 5px;
+}
+
+.modal-backdrop, .modal-backdrop.fade.in {
+  opacity: 0.4;
+}
+
+.layerContent {
+  padding: 9px 15px;
+}
+
+.iframeLayer {
+  width: 720px;
+}
+
+.iframeLayer legend {
+  border: 0 transparent;
+  margin-bottom: 0;
+}
+
+.iframeLayer .modal-body {
+  max-height: 600px;
+}
+
+iframe.layerIframe {
+  width: 720px;
+  height: 390px;
+  border: 0 none;
+}
+
+body.frameBody {
+  width: 720px;
+  padding: 0;
+}
+
+body.frameBody .container {
+  margin: 10px;
+}
+
