@@ -1,0 +1,95 @@
+.menu {
+  width: 205px;
+  float:left;
+  text-align: left;
+  background: url( ../images/bgmenumid.gif ) repeat-y;
+}
+.menuHeader {
+  height: 30px;
+  background: url( ../images/bgmenutop.gif ) no-repeat;
+}
+.menuContent {
+  width: 175px;
+  margin: 0 16px;
+  min-height: 50px;
+}
+.menuFooter {
+  height:15px;
+  line-height:15px;
+  background: url( ../images/bgmenubtm.gif ) no-repeat bottom;
+}
+.m_header {
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom:5px;
+}
+.imprint{
+  font-size: 11px;
+  color: #777;
+  background:#eee !important;
+  padding:3px 5px 3px 10px;
+}
+.imprint a,.imprint a:active,.imprint a:link,.imprint a:visited{
+  color: #777;
+}
+
+
+.treeview, .treeview ul {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.treeview ul {
+	background-color: white;
+	margin-top: 4px;
+}
+
+.treeview .hitarea {
+	background: url(/_statics/images/treeview-default.gif) -64px -25px no-repeat;
+	height: 16px;
+	width: 16px;
+	margin-left: -16px;
+	float: left;
+	cursor: pointer;
+}
+/* fix for IE6 */
+* html .hitarea {
+	display: inline;
+	float:none;
+}
+
+.treeview li {
+	margin: 0;
+	padding: 3px 0pt 3px 16px;
+}
+
+.treeview a.selected {
+	background-color: #eee;
+}
+
+#treecontrol { margin: 1em 0; display: none; }
+
+.treeview .hover { color: red; cursor: pointer; }
+
+.treeview li { background: url(/_statics/images/treeview-default-line.gif) 0 0 no-repeat; }
+.treeview li.collapsable, .treeview li.expandable { background-position: 0 -176px; }
+
+.treeview .expandable-hitarea { background-position: -80px -3px; }
+
+.treeview li.last { background-position: 0 -1766px }
+.treeview li.lastCollapsable, .treeview li.lastExpandable { background-image: url(/_statics/images/treeview-default.gif); }
+.treeview li.lastCollapsable { background-position: 0 -111px }
+.treeview li.lastExpandable { background-position: -32px -67px }
+
+.treeview div.lastCollapsable-hitarea, .treeview div.lastExpandable-hitarea { background-position: 0; }
+
+.treeview-black li { background-image: url(/_statics/images/treeview-black-line.gif); }
+.treeview-black .hitarea, .treeview-black li.lastCollapsable, .treeview-black li.lastExpandable { background-image: url(/_statics/images/treeview-black.gif); }
+
+.treeview .placeholder {
+	background: url(/_statics/images/ajax-loader.gif) 0 0 no-repeat;
+	height: 16px;
+	width: 16px;
+	display: block;
+}

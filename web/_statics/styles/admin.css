@@ -1,0 +1,230 @@
+/*
+  Bandika! - A Java based Content Management System
+  Copyright (C) 2009-2011 Michael Roennau
+
+  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+  Code format: This code uses 2 blanks per indent!
+*/
+
+/***************************************** admin form styles **************************************/
+/* used in admin jsps */
+.adminTopHeader {
+  margin-left:10px;
+  height: 27px;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+}
+
+/* used in AdminTableTag */
+.adminArea {
+  color: #333;
+  text-align: left;
+}
+
+/* used in AdminTableTag */
+.adminTable {
+  width: 100%;
+}
+
+/* used in AdminTableTag */
+.adminTable td {
+  padding: 2px 10px;
+  vertical-align: top;
+}
+
+/* used in admin jsps */
+.adminHeader {
+  background-color: #ddd;
+}
+
+/* used in admin jsps */
+.adminSmallCol{
+  width:30px;
+}
+
+/* used in admin jsps */
+.adminMostCol{
+  width:90%;
+}
+
+/* used in admin jsps */
+.adminInput {
+  width: 100%;
+}
+
+/* used in admin jsps */
+.adminWhiteLine {
+  background-color: #fff;
+}
+
+/* used in admin jsps */
+.adminGreyLine {
+  background-color: #eee;
+}
+
+/* used in admin jsps */
+.adminTableButtonArea {
+  margin-top:20px;
+  overflow: hidden;
+}
+
+/* used in pageEditContent.jsp */
+.editTable {
+  position: relative;
+  width: 100%;
+}
+
+/* used in EditToolsTag */
+.editTools {
+  vertical-align: top;
+  height: 17px;
+}
+
+/* used in EditToolsTag */
+.editTools a{
+  margin-right:2px;
+}
+
+/* used in EditToolsTag */
+.editTools a img {
+  border: 0;
+}
+
+/* used in pageEditContent.jsp */
+.editSelectTable {
+  width: 688px;
+  background: #fff;
+  border: 1px #888 solid;
+}
+
+/* used in pageEditContent.jsp */
+.editTemplateSelect {
+  padding: 1px 10px;
+  border: 1px #eee solid;
+  width: 229px;
+}
+
+/* used in pageEditContent.jsp */
+.editTemplateSelect a, .editTemplateSelect a:active, .editTemplateSelect a:link, .editTemplateSelect a:visited {
+  color: #4a4a4a;
+}
+
+/* used in pageEditContent.jsp */
+.editToolsAccept {
+  background: #eee;
+  height: 17px;
+  color: #4a4a4a;
+}
+
+/* used in pageEditContent.jsp */
+.editToolsAccept a, .editToolsAccept a:active, .editToolsAccept a:link, .editToolsAccept a:visited {
+  color: #4a4a4a;
+}
+
+/* used in pageEditContent.jsp */
+.editline {
+  line-height: 1px;
+  background-color: #4a4a4a;
+}
+
+/********** layer styles */
+
+/* used in master.jsp and std.js */
+div.fullPageLayerBackground {
+  display:none;
+  position:fixed;
+  left:0;
+  top:0;
+  background:black;
+  opacity:.5;
+  filter:alpha(opacity=50);
+  z-index:5000;
+  width:100% !important;
+  height:100% !important;
+}
+
+/* used in master.jsp and std.js */
+div.fullPageLayer {
+  background:transparent;
+  position:absolute;
+  display:none;
+  left:0;
+  z-index:10000;
+  width:100%;
+  height:100%;
+}
+
+/* used in templateSelect.jsp and std.js */
+div.fullPageLayerContent{
+  display:none;
+  position:relative;
+  margin:0 auto;
+  background:#fff;
+  z-index:10000;
+  width:504px;
+  border:2px solid #fff;
+}
+
+/* used in templateSelect.jsp */
+div.innerLayer{
+  position:relative;
+  width:504px;
+}
+
+/* used in templateSelect.jsp */
+div.layerHeader{
+  height:22px;
+  position:relative;
+  overflow:hidden;
+  background:#eee;
+  clear:both;
+  padding:0 4px 0 7px;
+}
+
+/* used in templateSelect.jsp */
+div.layerHeadertext{
+  float:left;
+  color:#333;
+  padding:4px 0 0;
+}
+
+/* used in templateSelect.jsp */
+img.layerCloseImg{
+  float:right;
+  position:relative;
+  top:2px;
+  cursor:pointer;
+}
+
+/* used in templateSelect.jsp and std.js*/
+div.layerContent{
+  position:relative;
+  width:475px;
+  height:500px;
+  overflow:scroll !important;
+  margin:14px 0 7px;
+  padding:0 30px 7px 5px;
+  text-align:left;
+}
+
+.pager{
+  padding-left:10px;
+  margin-bottom:2px;
+}
+
+.pager a{
+  margin-right:3px;
+  color:blue;
+}
+
+.pagerCurrentPage{
+  margin-right:3px;
+  color:gray;
+}
+
+
+

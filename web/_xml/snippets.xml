@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<snippet name="templateStart"><![CDATA[
+<%@ taglib uri="/WEB-INF/btags.tld" prefix="bnd" %>
+			]]>
+	</snippet>
+	<snippet name="templateEnd"><![CDATA[
+			]]>
+	</snippet>
+	<snippet name="mailEditTag"><![CDATA[
+<tr>
+	<td class="c_1column">&nbsp;</td>
+	<td>&nbsp;</td>
+	<td colspan="5" class="c_3column">[<%=UserStrings.mailform%>]</td>
+</tr>
+<tr>
+	<td class="c_1column"><%=UserStrings.receiver%>
+	</td>
+	<td>&nbsp;</td>
+	<td colspan="5" class="c_3column"><%=pdata.getFieldHtml("receiver", editMode)%>
+	</td>
+</tr>
+			]]>
+	</snippet>
+	<snippet name="mailRuntimeTag"><![CDATA[
+<%ParagraphData pdata = (ParagraphData) rdata.getParam("pdata");%>
+<form action="/index.jsp" method="post" name="mailform<%=pdata.getId()%>" accept-charset="<%=HttpHelper.ISOCODE%>">
+	<input type="hidden" name="ctrl" value="comm"/>
+	<input type="hidden" name="method" value="sendMail"/>
+	<input type="hidden" name="mailform_receiver" value="<%=Formatter.toHtml(BaseConfig.getConfig(CommunicationData.MAIL_RECEIVER))%>"/>
+	<input type="hidden" name="id" value="<%=data.getId()%>"/>
+	<tr>
+		<td class="c_1column"><%=UserStrings.youremail%>*</td>
+		<td>&nbsp;</td>
+		<td colspan="5" class="c_3column"><input type="text" name="mailform_email"/></td>
+	</tr>
+	<tr>
+		<td class="c_1column"><%=UserStrings.subject%>*</td>
+		<td>&nbsp;</td>
+		<td colspan="5" class="c_3column"><input type="text" name="mailform_subject"/></td>
+	</tr>
+	<tr>
+		<td class="c_1column"><%=UserStrings.yourtext%>*</td>
+		<td>&nbsp;</td>
+		<td colspan="5" class="c_3column"><textarea name="mailform_text" rows="5" cols="60"></textarea></td>
+	</tr>
+	<tr>
+		<td class="c_1column">&nbsp;</td>
+		<td>&nbsp;</td>
+		<td colspan="5" class="c_3column">
+			<ul class="pageFormButtonList">
+				<li class="userFormButton"><a href="mailForm.jsp#" onClick="document.mailform<%=pdata.getId()%>.submit();"><%=UserStrings.send%></a></li>
+			</ul>
+		</td>
+	</tr>
+</form>
+			]]>
+	</snippet>
+</root>

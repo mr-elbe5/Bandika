@@ -6,34 +6,26 @@
 
   <Manager pathname=""/>
 
+	<Resource
+		name="config_..."
+		type="de.bandika.base.BaseConfig"
+		factory="org.apache.naming.factory.BeanFactory"
+		dataSource="jdbc_bandika"
+		path=".../webapps/ROOT"
+	/>
+
   <Resource
       name="jdbc_bandika"
       type="javax.sql.DataSource"
-      password="xxx"
+      password="..."
       driverClassName="com.mysql.jdbc.Driver"
       maxIdle="2"
       maxWait="5000"
       validationQuery="select id from t_id"
-      username="xxx"
-      url="jdbc:mysql://localhost/bandika"
+      username="..."
+      url="jdbc:mysql://localhost/..."
       maxActive="4"/>
 
-  <Resource
-    	name="config_bandika"
-    	type="de.net25.resources.statics.StaticResources"
-    	factory="org.apache.naming.factory.BeanFactory"
-    	dataSource="jdbc_bandika"
-			languages="en,de"
-			basePath="/opt/tomcat/webapps/bandika"
-			imagePath="/opt/tomcat/files/bandika/img"
-			documentPath="/opt/tomcat/files/bandika/doc"
-			staticBase="/"
-			dynamicBase="/bandika/"
-			pageCacheSize="1000"
-			docCacheSize="1000"
-			imgCacheSize="1000"
-			mailServer="mail.myhost.tld"
-			mailSender="me@myhost.tld"
-			mailAddress="me@myhost.tld"/>
+
 
 </Context>

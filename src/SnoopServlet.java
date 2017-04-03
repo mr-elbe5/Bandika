@@ -1,6 +1,6 @@
 /*
   Bandika! - A Java based Content Management System
-  Copyright (C) 2009 Michael Roennau
+  Copyright (C) 2009-2011 Michael Roennau
 
   This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -21,14 +21,6 @@ import java.io.OutputStream;
  */
 public class SnoopServlet extends HttpServlet {
 
-  /**
-   * Method doGet
-   *
-   * @param request  of type HttpServletRequest
-   * @param response of type HttpServletResponse
-   * @throws javax.servlet.ServletException when data processing is not successful
-   * @throws java.io.IOException            when data processing is not successful
-   */
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     OutputStream out = response.getOutputStream();

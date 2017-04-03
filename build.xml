@@ -16,17 +16,14 @@
   <property environment="env"/>
   <property name="srcdir" value="${basedir}/src"/>
   <property name="classdir" value="${basedir}/classes"/>
-  <property name="resourcedir" value="${basedir}/resources"/>
-  <property name="fckdir" value="${basedir}/../../fckeditor-2.5.1"/>
+  <property name="webdir" value="${basedir}/web"/>
+  <property name="ckdir" value="${basedir}/../../ckeditor"/>
   <property name="libdir" value="${basedir}/lib"/>
   <property name="configdir" value="${basedir}/config"/>
-  <property name="webinfdir" value="${basedir}/WEB-INF"/>
+  <property name="webinfdir" value="${basedir}/web/WEB-INF"/>
   <property name="builddir" value="${basedir}/build"/>
   <property name="tomcat.dir" value="${env.TOMCAT_HOME}"/>
-  <property name="rootfiles.dir" value="${basedir}/../../bandikaroot"/>
   <property name="javadocdir" value="${basedir}/../../javadoc"/>
-
-  <property name="appname" value="bandika"/>
 
   <!-- Build classpath -->
   <path id="classpath">
@@ -49,7 +46,7 @@
   <target name="clean">
     <delete dir="${builddir}"/>
     <delete dir="${classdir}"/>
-    <delete file="${basedir}/${appname}.jar"/>
+    <delete file="${basedir}/bandika.jar"/>
   </target>
 
   <target name="compile" depends="prepare">
@@ -67,6 +64,7 @@
     <mkdir dir="${builddir}/WEB-INF"/>
     <mkdir dir="${builddir}/WEB-INF/classes"/>
     <mkdir dir="${builddir}/WEB-INF/lib"/>
+		<mkdir dir="${builddir}/fckeditor"/>
     <copy todir="${builddir}/WEB-INF/classes">
       <fileset dir="${classdir}"/>
     </copy>
@@ -81,46 +79,28 @@
       </fileset>
     </copy>
     <copy todir="${builddir}">
-      <fileset dir="${resourcedir}">
-        <include name="jsps/**/*.*"/>
-        <include name="templates/**/*.*"/>
-        <include name="index.html"/>
-      </fileset>
-    </copy>
-  </target>
-
-  <target name="copyrootfiles" depends="compile">
-    <mkdir dir="${builddir}/fckeditor"/>
-    <copy todir="${builddir}">
-      <fileset dir="${resourcedir}">
-        <include name="img/*.*"/>
-        <include name="css/*.*"/>
-        <include name="jscript/*.*"/>
+      <fileset dir="${webdir}">
+        <include name="_jsp/*.*"/>
+        <include name="_templates/**/*.*"/>
+        <include name="_img/*.*"/>
+        <include name="_css/*.*"/>
+        <include name="_js/*.*"/>
         <include name="index.html"/>
       </fileset>
     </copy>
     <copy todir="${builddir}/fckeditor">
-      <fileset dir="${fckdir}">
-        <exclude name="**/fckconfig.js"/>
+      <fileset dir="${ckdir}">
+        <exclude name="**/ckconfig.js"/>
       </fileset>
       <fileset dir="${configdir}">
-        <include name="fckconfig.js"/>
+        <include name="ckconfig.js"/>
       </fileset>
     </copy>
   </target>
 
   <target name="makeapp" depends="copyfiles">
-    <delete file="${basedir}/${appname}.war"/>
-    <war warfile="${basedir}/${appname}.war" webxml="${webinfdir}/web.xml">
-      <fileset dir="${builddir}">
-        <include name="**/*.*"/>
-      </fileset>
-    </war>
-  </target>
-
-  <target name="makefullapp" depends="copyfiles,copyrootfiles">
-    <delete file="${basedir}/${appname}.war"/>
-    <war warfile="${basedir}/${appname}.war" webxml="${webinfdir}/web.xml">
+    <delete file="${basedir}/ROOT.war"/>
+    <war warfile="${basedir}/ROOT.war" webxml="${webinfdir}/web.xml">
       <fileset dir="${builddir}">
         <include name="**/*.*"/>
       </fileset>
@@ -128,36 +108,7 @@
   </target>
 
   <target name="deploy" depends="makeapp">
-    <copy file="${basedir}/${appname}.war" todir="${tomcat.dir}/webapps"/>
-  </target>
-
-  <target name="deployfull" depends="makefullapp">
-    <copy file="${basedir}/${appname}.war" todir="${tomcat.dir}/webapps"/>
-  </target>
-
-  <target name="cleanroot">
-    <delete dir="${rootfiles.dir}"/>
-  </target>
-
-  <target name="deployroot" depends="compile">
-    <mkdir dir="${rootfiles.dir}"/>
-    <mkdir dir="${rootfiles.dir}/fckeditor"/>
-    <copy todir="${rootfiles.dir}">
-      <fileset dir="${resourcedir}">
-        <include name="img/*.*"/>
-        <include name="css/*.*"/>
-        <include name="jscript/*.*"/>
-        <include name="index.html"/>
-      </fileset>
-    </copy>
-    <copy todir="${rootfiles.dir}/fckeditor">
-      <fileset dir="${fckdir}">
-        <exclude name="**/fckconfig.js"/>
-      </fileset>
-      <fileset dir="${configdir}">
-        <include name="fckconfig.js"/>
-      </fileset>
-    </copy>
+    <copy file="${basedir}/ROOT.war" todir="${tomcat.dir}/webapps"/>
   </target>
 
   <target name="javadoc">
@@ -177,11 +128,11 @@
       <doctitle><![CDATA[<h1>Bandika!</h1>]]></doctitle>
       <bottom><![CDATA[<i>Copyright &#169; 2009 Michael Roennau All Rights Reserved.</i>]]></bottom>
       <tag name="todo" scope="all" description="To do:"/>
-      <group title="Base" packages="de.net25.base.*"/>
-      <group title="Content" packages="de.net25.content.*"/>
-      <group title="Servlets and related data" packages="de.net25.http.*"/>
-      <group title="Resources and Statics" packages="de.net25.resources.*"/>
-      <group title="User and Groups" packages="de.net25.user.*"/>
+      <group title="Base" packages="de.bandika.base.*"/>
+      <group title="Pages" packages="de.bandika.page.*"/>
+      <group title="Servlets and related data" packages="de.bandika.http.*"/>
+      <group title="Resources and Statics" packages="de.bandika.resources.*"/>
+      <group title="User and Groups" packages="de.bandika.user.*"/>
       <link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="C:\tmp"/>
     </javadoc>
   </target>
