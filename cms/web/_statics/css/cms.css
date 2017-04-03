@@ -1,0 +1,333 @@
+
+.pageEditButtons {
+    border-radius: 5px;
+    box-shadow: 1px 1px 1px #00a inset, 1px 1px 1px #00a;
+    padding: 7px 5px 5px 12px;
+    font-size: 11px;
+}
+.pageEditButtons span{
+    display:inline-block;
+    font-weight: bold;
+    margin-right:10px;
+}
+
+.pageAdminLinks {
+}
+.pageAdminLinks a{
+    color: #333;
+}
+.pageAdminLinks a:hover{
+    color: #338;
+}
+
+.editArea{
+    box-shadow: 1px 1px 1px #00a inset, 1px 1px 1px #00a;
+    border-radius: 5px;
+}
+
+.editArea div.contextSource:hover {
+    box-shadow: 1px 1px 1px #00c inset, 1px 1px 1px #00c;
+}
+
+.editArea div.contextSource.selected {
+    background: inherit;
+    box-shadow: 1px 1px 1px #00c inset, 1px 1px 1px #00c;
+}
+
+.editArea .area.contextSource {
+    min-height:20px;
+    border:1px dotted #ccc;
+}
+
+.editArea .area .contextSource {
+    min-height:20px;
+}
+
+.editArea .buttonset.area {
+    padding: 1px 0 3px;
+    display: block;
+}
+.editArea .buttonset.area > button {
+    font-size: 9px;
+}
+
+#partform .editField{
+    width:100%;
+}
+
+/* sections and singletons including navigation*/
+
+.headerSection {
+    margin: 4px;
+    padding: 4px;
+    border-bottom: 1px solid #333;
+}
+
+.headerSection .sectionInner {
+    padding: 2px 12px 2px 8px;
+}
+
+.headerSection .sectionInner .headerleft {
+
+}
+
+.headerSection .sectionInner .logo {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.headerSection .sectionInner h1 {
+    color: #059;
+    display: inline-block;
+    font-family: Courier,serif;
+    font-size: 24px;
+    position: relative;
+    top: -3px;
+}
+
+.headerSection .sectionInner .headermid {
+    padding-top: 2px;
+    text-align: left;
+    color: #333;
+}
+
+
+.headerSection .sectionInner .headerright {
+    text-align: right;
+    padding-top: 2px;
+}
+
+.headerSection nav {
+    border-radius: 5px;
+    position: relative;
+}
+
+.navTop {
+    background: #333;
+    border-radius: 5px;
+    padding: 0;
+    font-weight: bold;
+}
+
+.navTop span.navToggle {
+    display: inline-block;
+}
+
+.navTop span.navToggle input {
+    width: 44px;
+    height: 42px;
+    background: url(../img/navbtn.png) no-repeat transparent;
+    border: none;
+    margin-left: 5px;
+}
+
+.navTop ul {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 6px;
+}
+
+.navTop li {
+    border-radius: 3px;
+    display: inline-block;
+    vertical-align: top;
+    font-size: 13px;
+    margin: 3px;
+    padding: 2px 10px 3px;
+}
+
+.navTop li a {
+    color: #fff;
+}
+
+.navLayer {
+    color: #fff;
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(40, 40, 40, 0.95);
+    border-radius: 5px;
+    margin-top: 1px;
+    overflow: hidden;
+}
+
+.navLayer ul {
+    margin: 8px;
+}
+
+.navLayer ul ul {
+    margin: 5px 0 0 0;
+}
+
+.navLayer li {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 16px;
+    padding: 4px 0;
+}
+
+.navLayer li a {
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.navLayer li li {
+    display: block;
+    margin: 0;
+}
+
+.navLayer li li a {
+    color: #333;
+    font-size: 11px;
+    font-weight: normal;
+}
+
+.navLayer li li a:before {
+    content: "\2192\00A0";
+    font-size: 14px;
+}
+
+.breadcrumb ul {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.breadcrumb li {
+    display: inline-block;
+    vertical-align: top;
+    margin: 2px;
+    padding: 1px 2px;
+}
+
+.breadcrumb li a {
+    color: #333;
+}
+
+.breadcrumb li a:before {
+    content: "\2192\00A0";
+    font-size: 14px;
+}
+
+.stageSection {
+    margin: 4px 0;
+    padding: 4px;
+}
+
+.stageSection .sectionInner {
+    padding:0;
+    height: 200px;
+}
+.stageSection .sectionInner div.stagenote{
+    z-index: 200;
+    background: rgba(255, 255, 255, 0.7) none repeat scroll 0 0;
+    border-radius: 5px;
+    display: inline-block;
+    height: 40px;
+    padding: 10px;
+    position: relative;
+    left: 10px;
+    top: 10px;
+}
+.stageSection .sectionInner div.stageimage{
+    height: 200px;
+    position:relative;
+    top: -40px;
+}
+.stageSection .sectionInner div.stageimage img{
+    border-radius:5px;
+    width:100%;
+    height: 100%;
+}
+
+.mainSection {
+    margin: 4px 0;
+    padding: 4px;
+    min-height: 300px;
+}
+
+.mainSection.popup {
+    min-height: 0;
+}
+
+.mainSection .sectionInner.loginSection{
+    width:50%;
+    margin: 50px auto;
+}
+
+.mainSection .sectionInner.loginSection fieldset{
+    padding: 40px;
+}
+
+.contentSection {
+    min-width: 300px;
+}
+
+.contentSection .sectionInner {
+    background: #fff;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.contentSection.content{
+}
+
+.asideSection {
+    min-width:200px;
+}
+
+.asideSection.content{
+}
+
+.asideSection.popup{
+    min-width:100px;
+}
+
+.asideSection .sectionInner {
+    background: #f7f7f7;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.asideSection.content img {
+    width:100%;
+}
+
+.footerSection {
+    margin-bottom: 4px;
+    padding: 4px;
+    border-top: 1px solid #333;
+}
+
+.footerSection .sectionInner {
+    color: #666;
+}
+
+.footerSection.popup {
+    border-top: none;
+}
+.footerSection.popup .sectionInner {
+    background: #f7f7f7;
+    border-radius:5px;
+    margin-bottom: 4px;
+    padding: 4px 8px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
