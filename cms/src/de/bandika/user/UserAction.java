@@ -216,7 +216,23 @@ public enum UserAction implements ICmsAction {
                     }
                     return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_usersDeleted");
                 }
-            }, /**
+            },
+    /**
+     * open dialog for editing users
+     */
+    openEditUsers {
+        @Override
+        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                return false;
+            UserData data = new UserData();
+            data.setNew(true);
+            data.setId(UserBean.getInstance().getNextId());
+            data.prepareEditing();
+            SessionWriter.setSessionObject(request, "userData", data);
+            return showEditUsers(request, response);
+        }
+    },  /**
      * opens user page for a registration request
      */
     openRegisterUser {
@@ -370,6 +386,10 @@ public enum UserAction implements ICmsAction {
 
     protected boolean showUserDetails(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/user/userDetails.ajax.jsp");
+    }
+
+    protected boolean showEditUsers(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/user/editUsers.ajax.jsp");
     }
 
     protected boolean showRegisterUser(HttpServletRequest request, HttpServletResponse response) {

@@ -55,6 +55,11 @@ public class UserRightsData {
         return !systemRights.isEmpty();
     }
 
+    public boolean hasAnyElevatedSystemRight() {
+        //not only content read right;
+        return !(systemRights.size() == 1 && hasSystemRight(SystemZone.CONTENT, Right.READ));
+    }
+
     public boolean hasSystemRight(SystemZone zone, Right right) {
         Right rgt = systemRights.get(zone);
         return rgt != null && rgt.includesRight(right);

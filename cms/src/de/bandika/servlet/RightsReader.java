@@ -41,6 +41,11 @@ public class RightsReader {
         return rightsData != null && rightsData.hasAnySystemRight();
     }
 
+    public static boolean hasAnyElevatedSystemRight(HttpServletRequest request) {
+        UserRightsData rightsData = getSessionRightsData(request);
+        return rightsData != null && rightsData.hasAnyElevatedSystemRight();
+    }
+
     public static boolean hasAnyContentRight(HttpServletRequest request) {
         UserRightsData rightsData = getSessionRightsData(request);
         return rightsData != null && rightsData.hasAnyContentRight();

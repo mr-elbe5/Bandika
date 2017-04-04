@@ -38,7 +38,7 @@ public class TopAdminNavControl extends TemplateControl {
         boolean editMode = pageData != null && pageData.isEditMode();
         boolean hasAnyEditRight = RightsReader.hasAnyContentRight(request);
         boolean hasEditRight = RightsReader.hasContentRight(request, pageId, Right.EDIT);
-        boolean hasAdminRight = RightsReader.hasAnySystemRight(request) || RightsReader.hasContentRight(request, TreeNode.ID_ALL, Right.EDIT);
+        boolean hasAdminRight = RightsReader.hasAnyElevatedSystemRight(request) || RightsReader.hasContentRight(request, TreeNode.ID_ALL, Right.EDIT);
         boolean hasApproveRight = RightsReader.hasContentRight(request, pageId, Right.APPROVE);
         sb.append("<ul>");
         if (editMode & hasEditRight) {
