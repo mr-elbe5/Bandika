@@ -7,14 +7,14 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="de.bandika.user.UserData" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.user.UserBean" %>
 <%@ page import="de.bandika.rights.Right" %>
 <%@ page import="de.bandika.rights.SystemZone" %>
 <%@ page import="de.bandika.servlet.RightsReader" %>
+<%@ page import="de.bandika.servlet.SessionReader" %>
+<%@ page import="de.bandika.user.UserBean" %>
+<%@ page import="de.bandika.user.UserData" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Locale" %>
 <%
     if (RightsReader.hasSystemRight(request, SystemZone.USER, Right.EDIT)) {
         Locale locale = SessionReader.getSessionLocale(request);
@@ -24,6 +24,7 @@
             users = ts.getAllUsers();
         } catch (Exception ignore) {
         }
+        assert(users!=null);
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/user.ajx" method="post" id="usersform" name="usersform" accept-charset="UTF-8">
@@ -31,17 +32,24 @@
         <table id="usersTable" class="padded form">
             <thead>
             <tr>
-                <th><%=StringUtil.getHtml("_id", locale)%></th>
+                <td><label for="userFilter"><%=StringUtil.getHtml("_filter")%>
+                </td>
+                <td><input type="text" id="userFilter"/></td>
+            </tr>
+            <tr>
+                <th><%=StringUtil.getHtml("_id", locale)%>
+                </th>
                 <th><%=StringUtil.getHtml("_name", locale)%>
                 </th>
             </tr>
             </thead>
             <tbody>
             <% for (UserData user : users) {%>
-            <tr>
-                <td><%=user.getId()%></td>
+            <tr class="userLine" data-search="<%=user.getName().toLowerCase()%>">
+                <td><%=user.getId()%>
+                </td>
                 <td>
-                    <div class="contextSource icn iuser" ><%=StringUtil.toHtml(user.getName())%>
+                    <div class="contextSource icn iuser"><%=StringUtil.toHtml(user.getName())%>
                     </div>
                     <div class="contextMenu">
                         <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editUser",locale)%>', '/user.ajx?act=openEditUser&userId=<%=user.getId()%>');"><%=StringUtil.getHtml("_edit", locale)%>
@@ -64,5 +72,17 @@
 </form>
 <script type="text/javascript">
     $("#usersTable").initContextMenus();
+    $('#userFilter').keyup(function (evt) {
+        var text = $(this).val().toLowerCase();
+        $.each($('.userLine'), function () {
+            var lineText = this.dataset.search;
+            if (lineText.indexOf(text) !== -1) {
+                $(this).show();
+            }
+            else {
+                $(this).hide();
+            }
+        })
+    });
 </script>
 <%}%>
