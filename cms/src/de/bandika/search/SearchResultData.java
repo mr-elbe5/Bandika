@@ -8,14 +8,10 @@
  */
 package de.bandika.search;
 
-import java.util.ArrayList;
-
-public class SearchResultData {
+public abstract class SearchResultData {
 
     protected String pattern = "";
     protected int maxSearchResults = 100;
-    protected String[] fieldNames = {"name", "authorName", "description", "keywords", "content"};
-    protected ArrayList<SearchData> results = new ArrayList<>();
 
     public SearchResultData() {
     }
@@ -36,15 +32,4 @@ public class SearchResultData {
         this.maxSearchResults = maxSearchResults;
     }
 
-    public String[] getFieldNames() {
-        return fieldNames;
-    }
-
-    public void setFieldNames(String[] fieldNames) {
-        this.fieldNames = fieldNames;
-    }
-
-    public ArrayList<SearchData> getResults() {
-        return results;
-    }
 }

@@ -43,10 +43,15 @@ public enum SearchAction implements ICmsAction {
     search {
                 @Override
                 public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    SearchResultData result = new SearchResultData();
-                    result.setPattern(RequestReader.getString(request, "searchPattern"));
-                    SearchBean.getInstance().search(result);
-                    request.setAttribute("searchResultData", result);
+                    ContentSearchResultData contentResult = new ContentSearchResultData();
+                    String pattern=RequestReader.getString(request, "searchPattern");
+                    contentResult.setPattern(pattern);
+                    SearchBean.getInstance().searchContent(contentResult);
+                    request.setAttribute("contentSearchResultData", contentResult);
+                    UserSearchResultData userResult = new UserSearchResultData();
+                    userResult.setPattern(pattern);
+                    SearchBean.getInstance().searchUsers(userResult);
+                    request.setAttribute("userSearchResultData", userResult);
                     return showSearch(request, response);
                 }
             }, /**
@@ -60,18 +65,31 @@ public enum SearchAction implements ICmsAction {
                     return showSearchDetails(request, response);
                 }
             }, /**
-     * reindexes all elements
+     * reindexes all content elements
      */
-    indexAll {
+    indexAllContent {
                 @Override
                 public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
                     if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                         return false;
-                    SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL, 0, null));
-                    RequestWriter.setMessageKey(request, "_indexingQueued");
+                    SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_CONTENT, 0, null));
+                    RequestWriter.setMessageKey(request, "_indexingContentQueued");
                     return AdminAction.openAdministration.execute(request, response);
                 }
-            };
+            },
+    /**
+     * reindexes all users
+     */
+    indexAllUsers {
+        @Override
+        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
+                return false;
+            SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_USERS, 0, null));
+            RequestWriter.setMessageKey(request, "_indexingUsersQueued");
+            return AdminAction.openAdministration.execute(request, response);
+        }
+    };
 
     public static final String KEY = "search";
 

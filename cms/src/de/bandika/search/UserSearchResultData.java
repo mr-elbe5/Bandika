@@ -8,21 +8,26 @@
  */
 package de.bandika.search;
 
-import de.bandika.base.log.Log;
-import de.bandika.configuration.Configuration;
-import de.bandika.timer.TimerBean;
-import de.bandika.timer.TimerTask;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.Date;
-import java.util.Locale;
+public class UserSearchResultData extends SearchResultData{
 
-public class SearchIndexTask implements TimerTask {
+    protected String[] fieldNames = {"name"};
+    protected List<UserSearchData> results = new ArrayList<>();
 
-    public boolean execute(Date executionTime, Date checkTime) {
-        Log.log("indexing content for search at " + Configuration.getInstance().getDateTimeFormat(Locale.ENGLISH).format(TimerBean.getInstance().getServerTime()));
-        SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_CONTENT, 0, null));
-        SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_USERS, 0, null));
-        return true;
+    public UserSearchResultData() {
     }
 
+    public String[] getFieldNames() {
+        return fieldNames;
+    }
+
+    public void setFieldNames(String[] fieldNames) {
+        this.fieldNames = fieldNames;
+    }
+
+    public List<UserSearchData> getResults() {
+        return results;
+    }
 }

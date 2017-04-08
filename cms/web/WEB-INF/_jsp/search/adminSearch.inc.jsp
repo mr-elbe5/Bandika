@@ -20,7 +20,9 @@
     <div class="contextSource icn isearch" onclick="$('#details').load('/search.ajx?act=showSearchDetails')"><%=StringUtil.getHtml("_search", locale)%>
     </div>
     <div class="contextMenu">
-        <div class="icn isync" onclick="linkTo('/search.srv?act=indexAll');"><%=StringUtil.getHtml("_indexAll", locale)%>
+        <div class="icn isync" onclick="linkTo('/search.srv?act=indexAllContent');"><%=StringUtil.getHtml("_indexAllContent", locale)%>
+        </div>
+        <div class="icn isync" onclick="linkTo('/search.srv?act=indexAllUsers');"><%=StringUtil.getHtml("_indexAllUsers", locale)%>
         </div>
     </div>
 </li>
