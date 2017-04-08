@@ -17,6 +17,7 @@ import org.apache.lucene.search.highlight.Highlighter;
 import org.apache.lucene.search.highlight.SimpleFragmenter;
 
 import java.io.StringReader;
+import java.util.Locale;
 
 public abstract class SearchData {
 
@@ -33,9 +34,9 @@ public abstract class SearchData {
 
     public abstract String getType();
 
-    public String getIconSpan() {
-        return "";
-    }
+    public abstract String getIconSpan(Locale locale);
+
+    public abstract String getInfoSpan(Locale locale);
 
     public static Term getTerm(int id) {
         return new Term("key", getKey(id));
@@ -85,9 +86,7 @@ public abstract class SearchData {
         this.nameContext = nameContext;
     }
 
-    public String getNameSpan() {
-        return "<span>" + getNameContext() + "</span>";
-    }
+    public abstract String getNameSpan(Locale locale);
 
     public int getScore() {
         return score;

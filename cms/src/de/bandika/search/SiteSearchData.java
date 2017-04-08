@@ -9,27 +9,21 @@
 package de.bandika.search;
 
 import de.bandika.base.util.StringUtil;
-import de.bandika.file.FileData;
+import de.bandika.site.SiteData;
 import de.bandika.tree.TreeCache;
 
 import java.util.Locale;
 
-public class FileSearchData extends ContentSearchData {
+public class SiteSearchData extends ContentSearchData {
 
-    public static final String TYPE="file";
+    public static final String TYPE="site";
 
     public String getIconSpan(Locale locale) {
-        return "<span class=\"icn ifile\" title=\"" + StringUtil.getHtml("_file", locale) + "\"></span>";
+        return "<span class=\"searchInfo\"><a class=\"icn isite\" title=\"" + StringUtil.getHtml("_site", locale) + "\"></a></span>";
     }
 
     public String getInfoSpan(Locale locale){
-        return "<span class=\"searchInfo\"><a class=\"icn iinfo\" href=\"\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_file",locale) + "', '/search.ajx?act=showFileSearchDetails&fileId=" + getId() + "');\">&nbsp;</a></span>";
-    }
-
-    public String getNameSpan(Locale locale) {
-        if (getUrl().isEmpty())
-            return "<span>" + getNameContext() + "</span>";
-        return "<span><a href=\"" + getUrl() + "\" target=\"_blank\" title=\""+StringUtil.getHtml("_show",locale) + "\">" + getNameContext() + "</a></span>";
+        return "<span class=\"icn iinfo searchInfo\" href=\"\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_site",locale) + "', '/search.ajx?act=showSiteSearchDetails&siteId=" + getId() + "');\">&nbsp;</a></span>";
     }
 
     public String getType(){
@@ -42,11 +36,11 @@ public class FileSearchData extends ContentSearchData {
         id = Integer.parseInt(doc.get("id"));
         name = doc.get("name");
         description = doc.get("description");
-        keywords = doc.get("keywords");
         authorName = doc.get("authorName");
-        content = doc.get("content");
-        FileData fileData = TreeCache.getInstance().getFile(getId());
-        if (fileData != null)
-            setUrl(fileData.getUrl());
+        SiteData siteData = TreeCache.getInstance().getSite(getId());
+        if (siteData != null)
+            setUrl(siteData.getUrl());
     }
+
 }
+

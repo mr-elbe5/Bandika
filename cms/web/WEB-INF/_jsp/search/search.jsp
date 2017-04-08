@@ -38,9 +38,9 @@
             </td>
                 <%for (UserSearchData data : userResult.getResults()) {%>
         <tr>
-            <td><%=data.getIconSpan()%>
+            <td><%=data.getIconSpan(locale)%>
             </td>
-            <td><%=data.getNameSpan()%>
+            <td><%=data.getNameSpan(locale)%><%=data.getInfoSpan(locale)%>
             </td>
             <td>
             </td>
@@ -56,9 +56,9 @@
             </td>
         <% for (ContentSearchData data : contentResult.getResults()) {%>
         <tr>
-            <td><%=data.getIconSpan()%>
+            <td><%=data.getIconSpan(locale)%>
             </td>
-            <td><%=data.getNameSpan()%>
+            <td><%=data.getNameSpan(locale)%><%=data.getInfoSpan(locale)%>
             </td>
             <td><%=data.getDescriptionContext()%>
             </td>

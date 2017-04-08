@@ -17,7 +17,7 @@
     if (RightsReader.hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT)) {
 %><!--search-->
 <li>
-    <div class="contextSource icn isearch" onclick="$('#details').load('/search.ajx?act=showSearchDetails')"><%=StringUtil.getHtml("_search", locale)%>
+    <div class="contextSource icn isearch" onclick="$('#details').load('/search.ajx?act=showAdminSearchDetails')"><%=StringUtil.getHtml("_search", locale)%>
     </div>
     <div class="contextMenu">
         <div class="icn isync" onclick="linkTo('/search.srv?act=indexAllContent');"><%=StringUtil.getHtml("_indexAllContent", locale)%>

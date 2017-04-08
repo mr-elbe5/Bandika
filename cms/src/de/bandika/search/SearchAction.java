@@ -57,12 +57,44 @@ public enum SearchAction implements ICmsAction {
             }, /**
      * shows search settings and properties
      */
-    showSearchDetails {
+    showAdminSearchDetails {
                 @Override
                 public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
                     if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                         return false;
-                    return showSearchDetails(request, response);
+                    return showAdminSearchDetails(request, response);
+                }
+            },/**
+     * shows site search result details
+     */
+    showSiteSearchDetails {
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    return showSiteSearchDetails(request, response);
+                }
+            },/**
+     * shows page search result details
+     */
+    showPageSearchDetails {
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    return showPageSearchDetails(request, response);
+                }
+            },/**
+     * shows file search result details
+     */
+    showFileSearchDetails {
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    return showFileSearchDetails(request, response);
+                }
+            },/**
+     * shows user search result details
+     */
+    showUserSearchDetails {
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    return showUserSearchDetails(request, response);
                 }
             }, /**
      * reindexes all content elements
@@ -106,8 +138,24 @@ public enum SearchAction implements ICmsAction {
         return sendJspResponse(request, response, "/WEB-INF/_jsp/search/search.jsp", MasterStatics.PAGE_MASTER);
     }
 
-    protected boolean showSearchDetails(HttpServletRequest request, HttpServletResponse response) {
+    protected boolean showAdminSearchDetails(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/search/searchDetails.ajax.jsp");
+    }
+
+    protected boolean showSiteSearchDetails(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/search/siteSearchDetails.ajax.jsp");
+    }
+
+    protected boolean showPageSearchDetails(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/search/pageSearchDetails.ajax.jsp");
+    }
+
+    protected boolean showFileSearchDetails(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/search/fileSearchDetails.ajax.jsp");
+    }
+
+    protected boolean showUserSearchDetails(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/search/userSearchDetails.ajax.jsp");
     }
 
 }

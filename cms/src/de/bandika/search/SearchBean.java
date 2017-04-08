@@ -45,6 +45,7 @@ public class SearchBean extends DbBean {
 
     public void indexAllContent() {
         try (IndexWriter writer = openContentIndexWriter(true)){
+            indexSites(writer);
             indexPages(writer);
             indexFiles(writer);
         } catch (Exception e) {
@@ -63,12 +64,17 @@ public class SearchBean extends DbBean {
     public void addItem(int id, String dataType) {
         try {
             switch (dataType) {
-                case PageSearchData.TYPE: {
+                case SiteSearchData.TYPE:{
+                    IndexWriter writer = openContentIndexWriter(false);
+                    indexSite(writer, id);
+                }
+                break;
+                case PageSearchData.TYPE:{
                     IndexWriter writer = openContentIndexWriter(false);
                     indexPage(writer, id);
                 }
                 break;
-                case FileSearchData.TYPE: {
+                case FileSearchData.TYPE:{
                     IndexWriter writer = openContentIndexWriter(false);
                     indexFile(writer, id);
                 }
@@ -93,8 +99,9 @@ public class SearchBean extends DbBean {
         IndexWriter writer=null;
         try {
             switch (dataType) {
+                case SiteSearchData.TYPE:
                 case PageSearchData.TYPE:
-                case FileSearchData.TYPE: {
+                case FileSearchData.TYPE:{
                     writer = openContentIndexWriter(false);
                 }
                 break;
@@ -138,6 +145,69 @@ public class SearchBean extends DbBean {
             iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
         }
         return new IndexWriter(dir, iwc);
+    }
+
+    protected void indexSites(IndexWriter writer) throws Exception {
+        Connection con = null;
+        PreparedStatement pst = null;
+        try {
+            con = getConnection();
+            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name FROM t_treenode t1, t_site t2 WHERE t1.id=t2.id");
+            ResultSet rs = pst.executeQuery();
+            int count = 0;
+            while (rs.next()) {
+                SiteSearchData data = new SiteSearchData();
+                getSiteSearchData(data, rs);
+                data.setDoc();
+                writer.addDocument(data.getDoc());
+                count++;
+                if ((count % 100) == 0) {
+                    writer.commit();
+                }
+            }
+            rs.close();
+            writer.commit();
+            Log.log("finished indexing " + count + " sites");
+        } catch (SQLException se) {
+            se.printStackTrace();
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+    }
+
+    protected void indexSite(IndexWriter writer, int id) throws Exception {
+        Connection con = null;
+        PreparedStatement pst = null;
+        try {
+            con = getConnection();
+            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name FROM t_treenode t1, t_site t2 WHERE t1.id=? AND t2.id=?");
+            pst.setInt(1, id);
+            pst.setInt(2, id);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                SiteSearchData data = new SiteSearchData();
+                getSiteSearchData(data, rs);
+                data.setDoc();
+                writer.addDocument(data.getDoc());
+            }
+            rs.close();
+            writer.commit();
+            Log.log("finished indexing site");
+        } catch (SQLException se) {
+            se.printStackTrace();
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+    }
+
+    private void getSiteSearchData(ContentSearchData data, ResultSet rs) throws SQLException {
+        int i = 1;
+        data.setId(rs.getInt(i++));
+        data.setName(rs.getString(i++));
+        data.setDescription(rs.getString(i++));
+        data.setAuthorName(rs.getString(i++));
     }
 
     protected void indexPages(IndexWriter writer) throws Exception {
@@ -349,6 +419,9 @@ public class SearchBean extends DbBean {
                     ContentSearchData data = null;
                     String type=doc.get("type");
                     switch (type){
+                        case SiteSearchData.TYPE:
+                            data=new SiteSearchData();
+                            break;
                         case PageSearchData.TYPE:
                             data=new PageSearchData();
                             break;

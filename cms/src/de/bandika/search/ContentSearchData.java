@@ -8,6 +8,7 @@
  */
 package de.bandika.search;
 
+import de.bandika.base.util.StringUtil;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -15,6 +16,8 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.highlight.Highlighter;
 import org.apache.lucene.search.highlight.QueryScorer;
+
+import java.util.Locale;
 
 public abstract class ContentSearchData extends SearchData{
 
@@ -55,10 +58,10 @@ public abstract class ContentSearchData extends SearchData{
         this.url = url;
     }
 
-    public String getNameSpan() {
+    public String getNameSpan(Locale locale) {
         if (getUrl().isEmpty())
             return "<span>" + getNameContext() + "</span>";
-        return "<span><a href=\"" + getUrl() + "\">" + getNameContext() + "</a></span>";
+        return "<span><a href=\"" + getUrl() + "\" title=\"" + StringUtil.getHtml("_show", locale) + "\">" + getNameContext() + "</a></span>";
     }
 
     public String getDescription() {

@@ -102,8 +102,6 @@ public enum FileAction implements ITreeAction {
                 @Override
                 public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
                     int fileId = RequestReader.getInt(request, "fileId");
-                    if (!hasContentRight(request, fileId, Right.EDIT))
-                        return false;
                     TreeCache tc = TreeCache.getInstance();
                     FileData data = tc.getFile(fileId);
                     if (data == null) {

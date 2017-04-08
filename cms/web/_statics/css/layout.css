@@ -180,6 +180,14 @@ section.searchResults {
     margin-bottom: 20px;
 }
 
+.searchResults span.searchInfo{
+    margin-left:10px;
+}
+
+.searchResults span.searchInfo a{
+    cursor: pointer;
+}
+
 .searchResultsTable {
     width: 100%;
 }
