@@ -47,6 +47,14 @@
             </tr>
             <tr>
                 <td>
+                    <label for="title"><%=StringUtil.getHtml("_title", locale)%>
+                    </label></td>
+                <td>
+                    <input type="text" id="title" name="title" value="<%=StringUtil.toHtml(user.getTitle())%>" maxlength="30"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <label for="firstName"><%=StringUtil.getHtml("_firstName", locale)%>
                     </label></td>
                 <td>
@@ -116,6 +124,14 @@
             </tr>
             <tr>
                 <td>
+                    <label for="fax"><%=StringUtil.getHtml("_fax", locale)%>
+                    </label></td>
+                <td>
+                    <input type="text" id="fax" name="fax" value="<%=StringUtil.toHtml(user.getFax())%>" maxlength="100"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <label for="mobile"><%=StringUtil.getHtml("_mobile", locale)%>
                     </label></td>
                 <td>
@@ -127,6 +143,13 @@
                     <label for="notes"><%=StringUtil.getHtml("_notes", locale)%>
                     </label></td>
                 <td><textarea id="notes" name="notes" rows="5"><%=StringUtil.toHtmlInput(user.getNotes())%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="portrait"><%=StringUtil.getHtml("_portrait", locale)%>
+                    </label></td>
+                <td><input type="file" id="portrait" name="portrait"/><% if (!user.getPortraitName().isEmpty()){%><img src="/user.srv?act=showPortrait&userId=<%=user.getId()%>" alt="<%=StringUtil.toHtml(user.getName())%>" /> <%}%>
                 </td>
             </tr>
             <tr>

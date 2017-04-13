@@ -155,7 +155,7 @@ public enum SiteAction implements ITreeAction {
                     SiteBean ts = SiteBean.getInstance();
                     SiteData data = ts.getSite(siteId);
                     if (data == null) {
-                        RequestError.setError(request, new RequestError(StringUtil.getHtml("_notComplete", SessionReader.getSessionLocale(request))));
+                        RequestError.setError(request, new RequestError(StringUtil.getString("_notComplete", SessionReader.getSessionLocale(request))));
                         return sendForwardResponse(request, response, "/WEB-INF/_jsp/error.inc.jsp");
                     }
                     data.prepareEditing();
@@ -174,7 +174,7 @@ public enum SiteAction implements ITreeAction {
                     SiteBean ts = SiteBean.getInstance();
                     SiteData data = ts.getSite(siteId);
                     if (data == null) {
-                        RequestError.setError(request, new RequestError(StringUtil.getHtml("_notComplete", SessionReader.getSessionLocale(request))));
+                        RequestError.setError(request, new RequestError(StringUtil.getString("_notComplete", SessionReader.getSessionLocale(request))));
                         return sendForwardResponse(request, response, "/WEB-INF/_jsp/error.inc.jsp");
                     }
                     data.prepareEditing();

@@ -23,6 +23,14 @@
         <table class="padded form">
             <tr>
                 <td>
+                    <label for="title"><%=StringUtil.getHtml("_title", locale)%>
+                    </label></td>
+                <td>
+                    <input type="text" id="title" name="title" value="<%=StringUtil.toHtml(user.getTitle())%>" maxlength="30"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <label for="firstName"><%=StringUtil.getHtml("_firstName", locale)%>
                     </label></td>
                 <td>
@@ -94,6 +102,14 @@
                     </label></td>
                 <td>
                     <input type="text" id="phone" name="phone" value="<%=StringUtil.toHtml(user.getPhone())%>" maxlength="100"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="fax"><%=StringUtil.getHtml("_fax", locale)%>
+                    </label></td>
+                <td>
+                    <input type="text" id="fax" name="fax" value="<%=StringUtil.toHtml(user.getFax())%>" maxlength="100"/>
                 </td>
             </tr>
             <tr>

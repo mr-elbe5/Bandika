@@ -8,6 +8,9 @@
  */
 package de.bandika.user;
 
+import de.bandika.base.data.BinaryFileData;
+import de.bandika.base.log.Log;
+import de.bandika.base.util.ImageUtil;
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
 import de.bandika.group.GroupData;
@@ -15,23 +18,35 @@ import de.bandika.servlet.RequestReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.*;
 
 public class UserData extends UserLoginData {
 
     public static final int ID_SYSTEM = 1;
+
+    public static int MAX_PORTRAIT_WIDTH = 200;
+    public static int MAX_PORTRAIT_HEIGHT = 200;
+
+    public static int MIN_PASSWORD_LENGTH = 8;
 
     protected String street = "";
     protected String zipCode = "";
     protected String city = "";
     protected String country = "";
     protected String phone = "";
+    protected String fax = "";
     protected String mobile = "";
     protected String notes = "";
+    protected String portraitName = "";
+    protected byte[] portrait = null;
+
     protected Set<Integer> groupIds = new HashSet<>();
     protected UserRightsData rights = new UserRightsData();
 
@@ -82,6 +97,14 @@ public class UserData extends UserLoginData {
         this.phone = phone;
     }
 
+    public String getFax() {
+        return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
+    }
+
     public String getMobile() {
         return mobile;
     }
@@ -97,6 +120,23 @@ public class UserData extends UserLoginData {
     public void setNotes(String notes) {
         this.notes = notes;
     }
+
+    public String getPortraitName() {
+        return portraitName;
+    }
+
+    public void setPortraitName(String portraitName) {
+        this.portraitName = portraitName;
+    }
+
+    public byte[] getPortrait() {
+        return portrait;
+    }
+
+    public void setPortrait(byte[] portrait) {
+        this.portrait = portrait;
+    }
+
 
     public Set<Integer> getGroupIds() {
         return groupIds;
@@ -129,8 +169,32 @@ public class UserData extends UserLoginData {
         setCity(RequestReader.getString(request, "city"));
         setCountry(RequestReader.getString(request, "country"));
         setPhone(RequestReader.getString(request, "phone"));
+        setFax(RequestReader.getString(request, "fax"));
         setMobile(RequestReader.getString(request, "mobile"));
         setNotes(RequestReader.getString(request, "notes"));
+        BinaryFileData file = RequestReader.getFile(request, "portrait");
+        if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringUtil.isNullOrEmpty(file.getContentType())) {
+            try{
+                BufferedImage source = ImageUtil.createImage(file.getBytes(), file.getContentType());
+                if (source != null) {
+                    float factor = ImageUtil.getResizeFactor(source, MAX_PORTRAIT_WIDTH, MAX_PORTRAIT_HEIGHT);
+                    BufferedImage image = ImageUtil.copyImage(source, factor);
+                    Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
+                    ImageWriter writer = writers.next();
+                    ByteArrayOutputStream bout = new ByteArrayOutputStream();
+                    ImageOutputStream ios = ImageIO.createImageOutputStream(bout);
+                    writer.setOutput(ios);
+                    writer.write(image);
+                    bout.flush();
+                    bout.close();
+                    setPortrait(bout.toByteArray());
+                    setPortraitName(file.getFileName());
+                }
+            }
+            catch (IOException e){
+                Log.error("could not create portrait", e);
+            }
+        }
     }
 
     public void addAtributesXml(Document xmlDoc, Element node) {
@@ -140,8 +204,10 @@ public class UserData extends UserLoginData {
         XmlUtil.addAttribute(xmlDoc, node, "city", StringUtil.toXml(getCity()));
         XmlUtil.addAttribute(xmlDoc, node, "country", StringUtil.toXml(getCountry()));
         XmlUtil.addAttribute(xmlDoc, node, "phone", StringUtil.toXml(getPhone()));
+        XmlUtil.addAttribute(xmlDoc, node, "fax", StringUtil.toXml(getFax()));
         XmlUtil.addAttribute(xmlDoc, node, "mobile", StringUtil.toXml(getMobile()));
         XmlUtil.addAttribute(xmlDoc, node, "notes", StringUtil.toXml(getNotes()));
+        XmlUtil.addAttribute(xmlDoc, node, "portraitName", StringUtil.toXml(getPortraitName()));
         Element groupsNode = XmlUtil.addNode(xmlDoc, node, "groups");
         for (Integer gid : groupIds) {
             Element groupNode = XmlUtil.addNode(xmlDoc, groupsNode, "group");

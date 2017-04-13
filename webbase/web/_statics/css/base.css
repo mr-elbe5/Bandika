@@ -175,6 +175,10 @@ th {
 }
 
 li {
+    list-style-position: inside;
+}
+
+nav li {
     list-style: none;
 }
 

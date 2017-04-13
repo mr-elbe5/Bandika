@@ -26,7 +26,7 @@
         for (FileData fileData : files) {
             if (!fileData.isImage())
                 continue;
-            String callbackLink = String.format("if (CKEDITOR) CKEDITOR.tools.callFunction(%s, '/file.srv?fileId=%s'); closeBrowserLayer();", browseData.getCkCallbackNum(), fileData.getId());
+            String callbackLink = String.format("if (CKEDITOR) CKEDITOR.tools.callFunction(%s, '%s'); closeBrowserLayer();", browseData.getCkCallbackNum(), StringUtil.toHtml(fileData.getUrl()));
     %>
     <tr>
         <td>

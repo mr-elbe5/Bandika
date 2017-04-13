@@ -29,6 +29,12 @@
         </td>
     </tr>
     <tr>
+        <td><label><%=StringUtil.getHtml("_title", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getTitle())%>
+        </td>
+    </tr>
+    <tr>
         <td><label><%=StringUtil.getHtml("_firstName", locale)%>
         </label></td>
         <td><%=StringUtil.toHtml(data.getFirstName())%>
@@ -80,6 +86,12 @@
         <td><label><%=StringUtil.getHtml("_phone", locale)%>
         </label></td>
         <td><%=StringUtil.toHtml(data.getPhone())%>
+        </td>
+    </tr>
+    <tr>
+        <td><label><%=StringUtil.getHtml("_fax", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getFax())%>
         </td>
     </tr>
     <tr>

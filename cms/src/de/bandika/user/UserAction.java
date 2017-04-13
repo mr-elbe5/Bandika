@@ -10,6 +10,7 @@ package de.bandika.user;
 
 import de.bandika.application.MasterStatics;
 import de.bandika.base.data.BaseIdData;
+import de.bandika.base.data.BinaryFileData;
 import de.bandika.base.data.Locales;
 import de.bandika.base.mail.Mailer;
 import de.bandika.base.util.StringUtil;
@@ -77,13 +78,17 @@ public enum UserAction implements ICmsAction {
                     String oldPassword = RequestReader.getString(request, "oldPassword");
                     String newPassword = RequestReader.getString(request, "newPassword1");
                     String newPassword2 = RequestReader.getString(request, "newPassword2");
+                    if (newPassword.length()<UserData.MIN_PASSWORD_LENGTH) {
+                                        RequestError.setError(request, new RequestError(StringUtil.getString("_passwordLengthError", SessionReader.getSessionLocale(request))));
+                                        return showChangePassword(request, response);
+                    }
                     if (!newPassword.equals(newPassword2)) {
-                        RequestError.setError(request, new RequestError(StringUtil.getHtml("_passwordsDontMatch", SessionReader.getSessionLocale(request))));
+                        RequestError.setError(request, new RequestError(StringUtil.getString("_passwordsDontMatch", SessionReader.getSessionLocale(request))));
                         return showChangePassword(request, response);
                     }
                     UserLoginData data = LoginBean.getInstance().loginUser(user.getLogin(), oldPassword);
                     if (data == null) {
-                        RequestError.setError(request, new RequestError(StringUtil.getHtml("_badLogin", SessionReader.getSessionLocale(request))));
+                        RequestError.setError(request, new RequestError(StringUtil.getString("_badLogin", SessionReader.getSessionLocale(request))));
                         return showChangePassword(request, response);
                     }
                     data.setPassword(newPassword);
@@ -216,23 +221,22 @@ public enum UserAction implements ICmsAction {
                     }
                     return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_usersDeleted");
                 }
-            },
-    /**
+            }, /**
      * open dialog for editing users
      */
     openEditUsers {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
-                return false;
-            UserData data = new UserData();
-            data.setNew(true);
-            data.setId(UserBean.getInstance().getNextId());
-            data.prepareEditing();
-            SessionWriter.setSessionObject(request, "userData", data);
-            return showEditUsers(request, response);
-        }
-    },  /**
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                        return false;
+                    UserData data = new UserData();
+                    data.setNew(true);
+                    data.setId(UserBean.getInstance().getNextId());
+                    data.prepareEditing();
+                    SessionWriter.setSessionObject(request, "userData", data);
+                    return showEditUsers(request, response);
+                }
+            }, /**
      * opens user page for a registration request
      */
     openRegisterUser {
@@ -258,7 +262,7 @@ public enum UserAction implements ICmsAction {
                     }
                     data.setPassword(UserSecurity.generateSimplePassword());
                     if (!captcha.equals(RequestReader.getString(request, "captcha"))) {
-                        RequestError.setError(request, new RequestError(StringUtil.getHtml("_badCaptcha", SessionReader.getSessionLocale(request))));
+                        RequestError.setError(request, new RequestError(StringUtil.getString("_badCaptcha", SessionReader.getSessionLocale(request))));
                         SessionWriter.setSessionObject(request, "captcha", UserSecurity.generateCaptchaString());
                         return showRegisterUser(request, response);
                     }
@@ -268,7 +272,7 @@ public enum UserAction implements ICmsAction {
                         return showRegisterUser(request, response);
                     }
                     if (LoginBean.getInstance().doesLoginExist(data.getLogin())) {
-                        RequestError.setError(request, new RequestError(StringUtil.getHtml("_loginExists", SessionReader.getSessionLocale(request))));
+                        RequestError.setError(request, new RequestError(StringUtil.getString("_loginExists", SessionReader.getSessionLocale(request))));
                         SessionWriter.setSessionObject(request, "captcha", UserSecurity.generateCaptchaString());
                         return showRegisterUser(request, response);
                     }
@@ -286,7 +290,7 @@ public enum UserAction implements ICmsAction {
                     } catch (Exception ignore) {
                     }
                     if (!emailSent) {
-                        RequestError.setError(request, new RequestError(StringUtil.getHtml("_emailSendError", SessionReader.getSessionLocale(request))));
+                        RequestError.setError(request, new RequestError(StringUtil.getString("_emailSendError", SessionReader.getSessionLocale(request))));
                         SessionWriter.setSessionObject(request, "captcha", UserSecurity.generateCaptchaString());
                         return showRegisterUser(request, response);
                     }
@@ -300,7 +304,7 @@ public enum UserAction implements ICmsAction {
                     } catch (Exception ignore) {
                     }
                     if (!emailSent) {
-                        RequestError.setError(request, new RequestError(StringUtil.getHtml("_emailSendError", SessionReader.getSessionLocale(request))));
+                        RequestError.setError(request, new RequestError(StringUtil.getString("_emailSendError", SessionReader.getSessionLocale(request))));
                         SessionWriter.setSessionObject(request, "captcha", UserSecurity.generateCaptchaString());
                         return showRegisterUser(request, response);
                     }
@@ -332,16 +336,16 @@ public enum UserAction implements ICmsAction {
                     String newPassword = RequestReader.getString(request, "newPassword1");
                     String newPassword2 = RequestReader.getString(request, "newPassword2");
                     if (login.length() == 0 || approvalCode.length() == 0 || oldPassword.length() == 0 || newPassword.length() == 0 || newPassword2.length() == 0) {
-                        RequestError.setError(request, new RequestError(StringUtil.getHtml("_notComplete", SessionReader.getSessionLocale(request))));
+                        RequestError.setError(request, new RequestError(StringUtil.getString("_notComplete", SessionReader.getSessionLocale(request))));
                         return showApproveRegistration(request, response);
                     }
                     UserLoginData registeredUser = LoginBean.getInstance().getLogin(login, approvalCode, oldPassword);
                     if (registeredUser == null) {
-                        RequestError.setError(request, new RequestError(StringUtil.getHtml("_badLogin", SessionReader.getSessionLocale(request))));
+                        RequestError.setError(request, new RequestError(StringUtil.getString("_badLogin", SessionReader.getSessionLocale(request))));
                         return showApproveRegistration(request, response);
                     }
                     if (!newPassword.equals(newPassword2)) {
-                        RequestError.setError(request, new RequestError(StringUtil.getHtml("_passwordsDontMatch", SessionReader.getSessionLocale(request))));
+                        RequestError.setError(request, new RequestError(StringUtil.getString("_passwordsDontMatch", SessionReader.getSessionLocale(request))));
                         return showApproveRegistration(request, response);
                     }
                     registeredUser.setPassword(newPassword);
@@ -350,6 +354,17 @@ public enum UserAction implements ICmsAction {
                     registeredUser.setFailedLoginCount(0);
                     LoginBean.getInstance().saveLogin(registeredUser);
                     return showRegistrationApproved(request, response);
+                }
+            }, /**
+     * +     * show user portrait
+     * +
+     */
+    showPortrait {
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    int userId = RequestReader.getInt(request, "userId");
+                    BinaryFileData file = UserBean.getInstance().getBinaryPortraitData(userId);
+                    return file != null && sendBinaryResponse(request, response, file.getFileName(), file.getContentType(), file.getBytes());
                 }
             };
 

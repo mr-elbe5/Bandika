@@ -79,6 +79,13 @@
                     </tr>
                     <tr>
                         <td>
+                            <label><%=StringUtil.getHtml("_fax", locale)%>
+                            </label></td>
+                        <td><%=StringUtil.toHtml(user.getFax())%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <label><%=StringUtil.getHtml("_mobile", locale)%>
                             </label></td>
                         <td><%=StringUtil.toHtml(user.getMobile())%>

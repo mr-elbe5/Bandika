@@ -24,7 +24,6 @@
     <link rel="stylesheet" href="/_statics/css/cms.css">
     <link rel="stylesheet" href="/_statics/css/layout.css">
     <script type="text/javascript" src="/_statics/js/jquery-1.12.4.min.js"></script>
-    <script type="text/javascript" src="/_statics/js/modernizr.js"></script>
     <script type="text/javascript" src="/_statics/js/jquery.treeview.js"></script>
     <script type="text/javascript" src="/_statics/ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="/_statics/js/base.js"></script>

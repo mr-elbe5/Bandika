@@ -195,7 +195,7 @@ public enum PageAction implements ITreeAction {
                     checkObject(data, pageId);
                     data.readPageSettingsRequestData(request);
                     if (!data.isComplete()) {
-                        RequestError.setError(request, new RequestError(StringUtil.getHtml("_notComplete", SessionReader.getSessionLocale(request))));
+                        RequestError.setError(request, new RequestError(StringUtil.getString("_notComplete", SessionReader.getSessionLocale(request))));
                         return showEditPageSettings(request, response);
                     }
                     data.setAuthorName(SessionReader.getLoginName(request));
@@ -222,7 +222,7 @@ public enum PageAction implements ITreeAction {
                     int pageVersion = data.getVersionForUser(request);
                     data = getPageCopy(data, pageVersion);
                     if (data == null) {
-                        RequestError.setError(request, new RequestError(StringUtil.getHtml("_notComplete", SessionReader.getSessionLocale(request))));
+                        RequestError.setError(request, new RequestError(StringUtil.getString("_notComplete", SessionReader.getSessionLocale(request))));
                         return sendForwardResponse(request, response, "/WEB-INF/_jsp/error.inc.jsp");
                     }
                     data.prepareEditing();

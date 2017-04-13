@@ -45,13 +45,13 @@ public enum LoginAction implements IAction {
                     String login = RequestReader.getString(request, "login");
                     String pwd = RequestReader.getString(request, "password");
                     if (login.length() == 0 || pwd.length() == 0) {
-                        RequestError.setError(request, new RequestError(StringUtil.getHtml("_notComplete", SessionReader.getSessionLocale(request))));
+                        RequestError.setError(request, new RequestError(StringUtil.getString("_notComplete", SessionReader.getSessionLocale(request))));
                         return LoginAction.openLogin.execute(request, response);
                     }
                     LoginBean ts = LoginBean.getInstance();
                     UserLoginData data = ts.loginUser(login, pwd);
                     if (data == null) {
-                        RequestError.setError(request, new RequestError(StringUtil.getHtml("_badLogin", SessionReader.getSessionLocale(request))));
+                        RequestError.setError(request, new RequestError(StringUtil.getString("_badLogin", SessionReader.getSessionLocale(request))));
                         return LoginAction.openLogin.execute(request, response);
                     }
                     SessionWriter.setSessionLoginData(request, data);

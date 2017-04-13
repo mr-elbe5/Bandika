@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS t_group (
 CREATE TABLE IF NOT EXISTS t_user (
   id                 INTEGER      NOT NULL,
   change_date        TIMESTAMP    NOT NULL DEFAULT now(),
+  title              VARCHAR(30)  NOT NULL DEFAULT '',
   first_name         VARCHAR(100) NOT NULL DEFAULT '',
   middle_name        VARCHAR(100) NOT NULL DEFAULT '',
   last_name          VARCHAR(100) NOT NULL,
@@ -36,8 +37,11 @@ CREATE TABLE IF NOT EXISTS t_user (
   locale             VARCHAR(10)  NOT NULL DEFAULT 'en',
   email              VARCHAR(100) NOT NULL DEFAULT '',
   phone              VARCHAR(50)  NOT NULL DEFAULT '',
+  fax                VARCHAR(50)  NOT NULL DEFAULT '',
   mobile             VARCHAR(50)  NOT NULL DEFAULT '',
   notes              VARCHAR(500) NOT NULL DEFAULT '',
+  portrait_name      VARCHAR(255) NOT NULL DEFAULT '',
+  portrait           BYTEA        NULL,
   login              VARCHAR(30)  NOT NULL,
   pwd                VARCHAR(100) NOT NULL,
   pkey               VARCHAR(50)  NOT NULL,
@@ -384,7 +388,33 @@ VALUES (1, FALSE, 'pageMaster');
 --
 --
 -- conveniance methods
-CREATE OR REPLACE FUNCTION addPage (parentId INTEGER,pageId INTEGER, rank INTEGER, nodeName VARCHAR(100), displayName VARCHAR(100), pageTemplate VARCHAR(255)) RETURNS INTEGER AS $$
+--
+-- get next Id
+--
+CREATE OR REPLACE FUNCTION getNextId () RETURNS INTEGER AS $$
+DECLARE
+  nextId INTEGER;
+    cur CURSOR FOR (select id from T_ID);
+BEGIN
+  open cur;
+  fetch cur into nextId;
+  close cur;
+  nextId:=nextId+1;
+  UPDATE T_ID SET id=nextId;
+  RETURN nextId;
+END;
+$$ LANGUAGE plpgsql;
+--
+CREATE OR REPLACE FUNCTION setNextId (_id INTEGER) RETURNS INTEGER AS $$
+BEGIN
+  UPDATE T_ID SET id=_id;
+  RETURN _id;
+END;
+$$ LANGUAGE plpgsql;
+--
+--
+-- conveniance methods
+CREATE OR REPLACE FUNCTION addPage (parentId INTEGER, pageId INTEGER, rank INTEGER, nodeName VARCHAR(100), displayName VARCHAR(100), pageTemplate VARCHAR(255)) RETURNS INTEGER AS $$
 BEGIN
   INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, in_navigation, anonymous, inherits_rights)
   VALUES (pageId, parentId, rank, nodeName, displayName, '', 1, 'System', TRUE, TRUE, TRUE);
@@ -394,15 +424,16 @@ BEGIN
   VALUES (pageId, pageTemplate);
   INSERT INTO t_page_content (id, version, author_name)
   VALUES (pageId, 1, 'Sytem');
-  RETURN 1;
+  RETURN pageId;
 END;
 $$ LANGUAGE plpgsql;
 --
 --
 CREATE OR REPLACE FUNCTION addSite (parentId INTEGER, siteId INTEGER, rank INTEGER, nodeName VARCHAR(100), displayName VARCHAR(100), pageTemplate VARCHAR(255)) RETURNS INTEGER AS $$
 DECLARE
-  pageId INTEGER = siteId+1;
+  pageId INTEGER;
 BEGIN
+  pageId := GETNEXTID();
   INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, in_navigation, anonymous, inherits_rights)
   VALUES (siteId, parentId, rank, nodeName, displayName, '', 1, 'System', TRUE, TRUE, TRUE);
   INSERT INTO t_site (id, inherits_master)
@@ -415,8 +446,7 @@ BEGIN
   VALUES (pageId, pageTemplate);
   INSERT INTO t_page_content (id, version, author_name)
   VALUES (pageId, 1, 'System');
-  RETURN 1;
+  RETURN siteId;
 END;
 $$ LANGUAGE plpgsql;
 --
-

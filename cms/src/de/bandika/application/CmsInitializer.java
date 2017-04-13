@@ -83,6 +83,8 @@ public class CmsInitializer extends Initializer {
             TemplateControls.addPageControlClass(MessageControl.KEY, MessageControl.class);
             TemplateControls.addPageControlClass(KeywordsControl.KEY, KeywordsControl.class);
             TemplateControls.addPageControlClass(LayerControl.KEY, LayerControl.class);
+            TemplateControls.addPageControlClass(DocumentListControl.KEY, DocumentListControl.class);
+            TemplateControls.addPageControlClass(SubMenuControl.KEY, SubMenuControl.class);
 
             Configuration config = ConfigurationBean.getInstance().getConfiguration();
             Configuration.getInstance().loadAppConfiguration(config);

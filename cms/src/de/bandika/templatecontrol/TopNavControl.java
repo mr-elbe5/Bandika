@@ -39,7 +39,7 @@ public class TopNavControl extends TemplateControl {
             otherLocales = TreeCache.getInstance().getOtherLocales(locale);
         } catch (Exception ignore) {
         }
-        sb.append("<ul>");
+        sb.append("<nav><ul>");
         if (homeSite != null) {
             sb.append("<li><a href=\"").append(homeSite.getUrl()).append("\">").append(getHtml("_home", locale)).append("</a></li>");
             if (otherLocales != null) {
@@ -54,7 +54,7 @@ public class TopNavControl extends TemplateControl {
         } else {
             sb.append("<li><a href=\"/login.srv?act=openLogin\">").append(getHtml("_login", locale)).append("</a></li>");
         }
-        sb.append("</ul>");
+        sb.append("</ul></nav>");
     }
 
 }

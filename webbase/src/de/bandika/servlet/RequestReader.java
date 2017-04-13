@@ -188,6 +188,7 @@ public class RequestReader {
     }
 
     public static void getMultiPartParams(HttpServletRequest request) throws ServletException {
+        Map<String,List<String>> params=new HashMap<>();
         try {
             Collection<Part> parts = request.getParts();
             for (Part part : parts) {
@@ -201,12 +202,32 @@ public class RequestReader {
                 } else {
                     String param = getMultiPartParameter(part);
                     if (param != null) {
-                        request.setAttribute(name, param);
+                        List<String> values;
+                        if (params.containsKey(name))
+                            values=params.get(name);
+                        else {
+                            values=new ArrayList<>();
+                            params.put(name,values);
+                        }
+                        values.add(param);
                     }
                 }
             }
         } catch (Exception e) {
             throw new ServletException(e);
+        }
+        for (String key : params.keySet()){
+            List<String> strings = params.get(key);
+            if (strings.size() == 1) {
+                request.setAttribute(key, strings.get(0));
+            } else {
+                StringBuilder sb = new StringBuilder(strings.get(0));
+                for (int i = 1; i < strings.size(); i++) {
+                    sb.append(',');
+                    sb.append(strings.get(i));
+                }
+                request.setAttribute(key, sb.toString());
+            }
         }
     }
 

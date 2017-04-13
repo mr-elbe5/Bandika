@@ -24,6 +24,7 @@ public class UserLoginData extends BaseIdData {
 
     public static final int ID_SYSTEM = 1;
 
+    protected String title = "";
     protected String firstName = "";
     protected String lastName = "";
     protected Locale locale = null;
@@ -35,6 +36,14 @@ public class UserLoginData extends BaseIdData {
     protected int failedLoginCount = 0;
     protected boolean locked = false;
     protected boolean deleted = false;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -146,6 +155,7 @@ public class UserLoginData extends BaseIdData {
     }
 
     public void readLoginRequestData(HttpServletRequest request) {
+        setTitle(RequestReader.getString(request, "title"));
         setFirstName(RequestReader.getString(request, "firstName"));
         setLastName(RequestReader.getString(request, "lastName"));
         setLocale(new Locale(RequestReader.getString(request, "locale")));
@@ -156,6 +166,7 @@ public class UserLoginData extends BaseIdData {
     }
 
     public boolean readUserRegistrationData(HttpServletRequest request) {
+        setTitle(RequestReader.getString(request, "title"));
         setFirstName(RequestReader.getString(request, "firstName"));
         setLastName(RequestReader.getString(request, "lastName"));
         setEmail(RequestReader.getString(request, "email"));
@@ -165,6 +176,7 @@ public class UserLoginData extends BaseIdData {
 
     public void addAttributesXml(Document xmlDoc, Element node) {
         XmlUtil.addIntAttribute(xmlDoc, node, "id", getId());
+        XmlUtil.addAttribute(xmlDoc, node, "title", StringUtil.toXml(getTitle()));
         XmlUtil.addAttribute(xmlDoc, node, "firstName", StringUtil.toXml(getFirstName()));
         XmlUtil.addAttribute(xmlDoc, node, "lastName", StringUtil.toXml(getLastName()));
         XmlUtil.addAttribute(xmlDoc, node, "locale", StringUtil.toXml(getLocale().getLanguage()));

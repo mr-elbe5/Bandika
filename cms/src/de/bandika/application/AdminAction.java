@@ -91,7 +91,7 @@ public enum AdminAction implements ICmsAction {
                     String script = "";
                     BinaryFileData file = RequestReader.getFile(request, "file");
                     if (file != null && file.getBytes() != null) {
-                        script = new String(file.getBytes());
+                        script = new String(file.getBytes(),"UTF-8");
                     }
                     request.setAttribute("script", script);
                     return showExecuteDatabaseScript(request, response);
