@@ -19,11 +19,11 @@ public class SiteSearchData extends ContentSearchData {
     public static final String TYPE="site";
 
     public String getIconSpan(Locale locale) {
-        return "<span class=\"searchInfo\"><a class=\"icn isite\" title=\"" + StringUtil.getHtml("_site", locale) + "\"></a></span>";
+        return "<span class=\"icn isite\" title=\"" + StringUtil.getHtml("_site", locale) + "\" ></span>";
     }
 
     public String getInfoSpan(Locale locale){
-        return "<span class=\"icn iinfo searchInfo\" href=\"\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_site",locale) + "', '/search.ajx?act=showSiteSearchDetails&siteId=" + getId() + "');\">&nbsp;</a></span>";
+        return "<span class=\"searchInfo\"><a class=\"icn iinfo\" href=\"\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_site",locale) + "', '/search.ajx?act=showSiteSearchDetails&siteId=" + getId() + "');\">&nbsp;</a></span>";
     }
 
     public String getType(){

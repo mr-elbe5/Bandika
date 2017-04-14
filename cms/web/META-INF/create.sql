@@ -396,6 +396,29 @@ VALUES (1, FALSE, 'pageMaster');
 --
 --
 -- conveniance methods
+-- get next Id
+--
+CREATE OR REPLACE FUNCTION getNextId () RETURNS INTEGER AS $$
+DECLARE
+  nextId INTEGER;
+    cur CURSOR FOR (select id from T_ID);
+BEGIN
+  open cur;
+  fetch cur into nextId;
+  close cur;
+  nextId:=nextId+1;
+  UPDATE T_ID SET id=nextId;
+  RETURN nextId;
+END;
+$$ LANGUAGE plpgsql;
+--
+CREATE OR REPLACE FUNCTION setNextId (_id INTEGER) RETURNS INTEGER AS $$
+BEGIN
+  UPDATE T_ID SET id=_id;
+  RETURN _id;
+END;
+$$ LANGUAGE plpgsql;
+--
 CREATE OR REPLACE FUNCTION addPage (parentId INTEGER,pageId INTEGER, rank INTEGER, nodeName VARCHAR(100), displayName VARCHAR(100), pageTemplate VARCHAR(255)) RETURNS INTEGER AS $$
 BEGIN
   INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, in_navigation, anonymous, inherits_rights)
