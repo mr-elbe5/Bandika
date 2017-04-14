@@ -10,17 +10,18 @@ package de.bandika.search;
 
 public class SearchQueueAction {
 
-    public static final int ACTION_INDEX_ALL = 1;
-    public static final int ACTION_ADD_ID = 2;
-    public static final int ACTION_UPDATE_ID = 3;
-    public static final int ACTION_DELETE_ID = 4;
+    public static final int ACTION_INDEX_ALL_CONTENT = 1;
+    public static final int ACTION_INDEX_ALL_USERS = 2;
+    public static final int ACTION_ADD_ID = 3;
+    public static final int ACTION_UPDATE_ID = 4;
+    public static final int ACTION_DELETE_ID = 5;
+
 
     protected int actionId = 0;
     protected int id = 0;
-    protected SearchData.DataType dataType = SearchData.DataType.undefined;
+    protected String dataType = "";
 
-
-    public SearchQueueAction(int actionId, int id, SearchData.DataType type) {
+    public SearchQueueAction(int actionId, int id, String type) {
         this.actionId = actionId;
         this.id = id;
         this.dataType = type;
@@ -30,24 +31,12 @@ public class SearchQueueAction {
         return actionId;
     }
 
-    public void setActionId(int actionId) {
-        this.actionId = actionId;
-    }
-
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public SearchData.DataType getDataType() {
+    public String getDataType() {
         return dataType;
-    }
-
-    public void setDataType(SearchData.DataType dataType) {
-        this.dataType = dataType;
     }
 
     public boolean isEqual(SearchQueueAction data) {

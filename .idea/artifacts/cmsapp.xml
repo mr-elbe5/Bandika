@@ -1,0 +1,22 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="cmsapp">
+    <output-path>C:/Server/tomcat8/bandika8</output-path>
+    <properties id="ant-postprocessing">
+      <options enabled="true" />
+    </properties>
+    <root id="archive" name="ROOT.war">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="basedata" />
+          <element id="module-output" name="cms" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="commons" />
+          <element id="library" level="project" name="mail" />
+          <element id="library" level="project" name="lucene" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="cms/web/Web" />
+    </root>
+  </artifact>
+</component>

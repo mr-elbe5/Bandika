@@ -6,17 +6,18 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.search.SearchResultData" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.search.SearchData" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
-    SearchResultData result = (SearchResultData) request.getAttribute("searchResultData");%>
+<%@ page import="de.bandika.servlet.SessionReader" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.search.*" %>
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
+    ContentSearchResultData contentResult = (ContentSearchResultData) request.getAttribute("contentSearchResultData");
+    UserSearchResultData userResult = (UserSearchResultData) request.getAttribute("userSearchResultData");
+%>
 <section class="mainSection searchResults">
     <h1><%=StringUtil.getHtml("_searchResults")%>
     </h1>
-    <% if (result != null && result.getResults() != null) {%>
     <table class="padded searchResultsTable">
         <tr>
             <th class="col1"><%=StringUtil.getHtml("_type", locale)%>
@@ -30,11 +31,34 @@
             <th class="col5"><%=StringUtil.getHtml("_relevance", locale)%>
             </th>
         </tr>
-        <%for (SearchData data : result.getResults()) {%>
+        <%
+            if (userResult!=null && !userResult.getResults().isEmpty()){%>
         <tr>
-            <td><%=data.getIconSpan()%>
+            <td colspan="5"><h3><%=StringUtil.getHtml("_users")%></h3>
             </td>
-            <td><%=data.getNameSpan()%>
+                <%for (UserSearchData data : userResult.getResults()) {%>
+        <tr>
+            <td><%=data.getIconSpan(locale)%>
+            </td>
+            <td><%=data.getNameSpan(locale)%><%=data.getInfoSpan(locale)%>
+            </td>
+            <td>
+            </td>
+            <td>
+            </td>
+            <td><%=data.getScore()%>
+            </td>
+        </tr>
+        <%}}
+        if (contentResult!=null && !contentResult.getResults().isEmpty()){%>
+        <tr>
+            <td colspan="5"><h3><%=StringUtil.getHtml("_content")%></h3>
+            </td>
+        <% for (ContentSearchData data : contentResult.getResults()) {%>
+        <tr>
+            <td><%=data.getIconSpan(locale)%>
+            </td>
+            <td><%=data.getNameSpan(locale)%><%=data.getInfoSpan(locale)%>
             </td>
             <td><%=data.getDescriptionContext()%>
             </td>
@@ -43,7 +67,6 @@
             <td><%=data.getScore()%>
             </td>
         </tr>
-        <%}%>
+        <%}}%>
     </table>
-    <%}%>
 </section>

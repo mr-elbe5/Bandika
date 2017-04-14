@@ -8,10 +8,13 @@
  */
 package de.bandika.search;
 
-import de.bandika.base.thread.BaseThread;
 import de.bandika.application.AppContextListener;
+import de.bandika.base.thread.BaseThread;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class SearchQueue {
 
@@ -58,8 +61,11 @@ public class SearchQueue {
         if (data == null)
             return;
         switch (data.getActionId()) {
-            case SearchQueueAction.ACTION_INDEX_ALL:
-                SearchBean.getInstance().indexAll();
+            case SearchQueueAction.ACTION_INDEX_ALL_CONTENT:
+                SearchBean.getInstance().indexAllContent();
+                break;
+            case SearchQueueAction.ACTION_INDEX_ALL_USERS:
+                SearchBean.getInstance().indexAllUsers();
                 break;
             case SearchQueueAction.ACTION_ADD_ID:
                 SearchBean.getInstance().addItem(data.getId(), data.getDataType());

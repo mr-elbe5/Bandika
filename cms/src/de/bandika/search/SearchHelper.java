@@ -8,16 +8,16 @@
  */
 package de.bandika.search;
 
+import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.parser.html.BoilerpipeContentHandler;
-import org.apache.tika.metadata.Metadata;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.ContentHandler;
 
-import java.io.InputStream;
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.StringWriter;
 
 public class SearchHelper {

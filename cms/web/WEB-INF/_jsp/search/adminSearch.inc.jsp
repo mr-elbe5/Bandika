@@ -7,19 +7,21 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.rights.Right" %>
+<%@ page import="de.bandika.rights.SystemZone" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.rights.SystemZone" %>
-<%@ page import="de.bandika.rights.Right" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     if (SessionReader.hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT)) {
 %><!--search-->
 <li>
-    <div class="contextSource icn isearch" onclick="$('#details').load('/search.ajx?act=showSearchDetails')"><%=StringUtil.getHtml("_search", locale)%>
+    <div class="contextSource icn isearch" onclick="$('#details').load('/search.ajx?act=showAdminSearchDetails')"><%=StringUtil.getHtml("_search", locale)%>
     </div>
     <div class="contextMenu">
-        <div class="icn isync" onclick="linkTo('/search.srv?act=indexAll');"><%=StringUtil.getHtml("_indexAll", locale)%>
+        <div class="icn isync" onclick="linkTo('/search.srv?act=indexAllContent');"><%=StringUtil.getHtml("_indexAllContent", locale)%>
+        </div>
+        <div class="icn isync" onclick="linkTo('/search.srv?act=indexAllUsers');"><%=StringUtil.getHtml("_indexAllUsers", locale)%>
         </div>
     </div>
 </li>

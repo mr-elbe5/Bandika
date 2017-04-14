@@ -8,31 +8,30 @@
  */
 package de.bandika.search;
 
-import java.io.File;
-import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 import de.bandika.base.database.DbBean;
 import de.bandika.base.log.Log;
 import de.bandika.base.util.ApplicationPath;
-import de.bandika.file.FileData;
-import de.bandika.page.PageData;
-import de.bandika.tree.TreeCache;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.search.*;
-
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+
+import java.io.File;
+import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class SearchBean extends DbBean {
 
@@ -44,48 +43,75 @@ public class SearchBean extends DbBean {
         return instance;
     }
 
-    public void indexAll() {
-        try {
-            try (IndexWriter writer = openIndexWriter(true)) {
-                indexPages(writer);
-                indexFiles(writer);
-                indexUsers(writer);
-            }
+    public void indexAllContent() {
+        try (IndexWriter writer = openContentIndexWriter(true)){
+            indexSites(writer);
+            indexPages(writer);
+            indexFiles(writer);
         } catch (Exception e) {
-            Log.error("error while writing index", e);
+            Log.error("error while writing content index", e);
         }
     }
 
-    public void addItem(int id, SearchData.DataType dataType) {
+    public void indexAllUsers() {
+        try (IndexWriter writer = openUserIndexWriter(true)){
+            indexUsers(writer);
+        } catch (Exception e) {
+            Log.error("error while writing user index", e);
+        }
+    }
+
+    public void addItem(int id, String dataType) {
         try {
-            try (IndexWriter writer = openIndexWriter(false)) {
-                switch (dataType) {
-                    case page:
-                        indexPage(writer, id);
-                        break;
-                    case file:
-                        indexFile(writer, id);
-                        break;
-                    case user:
-                        indexUser(writer, id);
-                        break;
+            switch (dataType) {
+                case SiteSearchData.TYPE:{
+                    IndexWriter writer = openContentIndexWriter(false);
+                    indexSite(writer, id);
                 }
+                break;
+                case PageSearchData.TYPE:{
+                    IndexWriter writer = openContentIndexWriter(false);
+                    indexPage(writer, id);
+                }
+                break;
+                case FileSearchData.TYPE:{
+                    IndexWriter writer = openContentIndexWriter(false);
+                    indexFile(writer, id);
+                }
+                break;
+                case UserSearchData.TYPE: {
+                    IndexWriter writer = openUserIndexWriter(false);
+                    indexUser(writer, id);
+                }
+                break;
             }
         } catch (Exception e) {
-            Log.error("error adding " + dataType.name() + " " + id, e);
+            Log.error("error adding " + dataType + " " + id, e);
         }
     }
 
-    public void updateItem(int id, SearchData.DataType dataType) {
+    public void updateItem(int id, String dataType) {
         deleteItem(id, dataType);
         addItem(id, dataType);
     }
 
-    public void deleteItem(int id, SearchData.DataType dataType) {
-        IndexWriter writer;
+    public void deleteItem(int id, String dataType) {
+        IndexWriter writer=null;
         try {
-            writer = openIndexWriter(false);
-            writer.deleteDocuments(SearchData.getTerm(id, dataType));
+            switch (dataType) {
+                case SiteSearchData.TYPE:
+                case PageSearchData.TYPE:
+                case FileSearchData.TYPE:{
+                    writer = openContentIndexWriter(false);
+                }
+                break;
+                case UserSearchData.TYPE: {
+                    writer = openUserIndexWriter(false);
+                }
+                break;
+            }
+            assert(writer!=null);
+            writer.deleteDocuments(SearchData.getTerm(id));
             writer.close();
         } catch (Exception e) {
             Log.error("error deleting item", e);
@@ -98,8 +124,17 @@ public class SearchBean extends DbBean {
             f.mkdir();
     }
 
-    protected IndexWriter openIndexWriter(boolean create) throws Exception {
-        String indexPath = ApplicationPath.getAppPath() + "index";
+    protected IndexWriter openContentIndexWriter(boolean create) throws Exception {
+        String indexPath = ApplicationPath.getAppPath() + "contentindex";
+        return openIndexWriter(create, indexPath);
+    }
+
+    protected IndexWriter openUserIndexWriter(boolean create) throws Exception {
+        String indexPath = ApplicationPath.getAppPath() + "userindex";
+        return openIndexWriter(create, indexPath);
+    }
+
+    protected IndexWriter openIndexWriter(boolean create, String indexPath) throws Exception {
         ensureDirectory(indexPath);
         Directory dir = FSDirectory.open(Paths.get(indexPath));
         Analyzer analyzer = new StandardAnalyzer();
@@ -112,6 +147,69 @@ public class SearchBean extends DbBean {
         return new IndexWriter(dir, iwc);
     }
 
+    protected void indexSites(IndexWriter writer) throws Exception {
+        Connection con = null;
+        PreparedStatement pst = null;
+        try {
+            con = getConnection();
+            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name FROM t_treenode t1, t_site t2 WHERE t1.id=t2.id");
+            ResultSet rs = pst.executeQuery();
+            int count = 0;
+            while (rs.next()) {
+                SiteSearchData data = new SiteSearchData();
+                getSiteSearchData(data, rs);
+                data.setDoc();
+                writer.addDocument(data.getDoc());
+                count++;
+                if ((count % 100) == 0) {
+                    writer.commit();
+                }
+            }
+            rs.close();
+            writer.commit();
+            Log.log("finished indexing " + count + " sites");
+        } catch (SQLException se) {
+            se.printStackTrace();
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+    }
+
+    protected void indexSite(IndexWriter writer, int id) throws Exception {
+        Connection con = null;
+        PreparedStatement pst = null;
+        try {
+            con = getConnection();
+            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name FROM t_treenode t1, t_site t2 WHERE t1.id=? AND t2.id=?");
+            pst.setInt(1, id);
+            pst.setInt(2, id);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                SiteSearchData data = new SiteSearchData();
+                getSiteSearchData(data, rs);
+                data.setDoc();
+                writer.addDocument(data.getDoc());
+            }
+            rs.close();
+            writer.commit();
+            Log.log("finished indexing site");
+        } catch (SQLException se) {
+            se.printStackTrace();
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+    }
+
+    private void getSiteSearchData(ContentSearchData data, ResultSet rs) throws SQLException {
+        int i = 1;
+        data.setId(rs.getInt(i++));
+        data.setName(rs.getString(i++));
+        data.setDescription(rs.getString(i++));
+        data.setAuthorName(rs.getString(i++));
+    }
+
     protected void indexPages(IndexWriter writer) throws Exception {
         Connection con = null;
         PreparedStatement pst = null;
@@ -121,9 +219,8 @@ public class SearchBean extends DbBean {
             ResultSet rs = pst.executeQuery();
             int count = 0;
             while (rs.next()) {
-                SearchData data = new SearchData();
-                data.setType(SearchData.DataType.page);
-                getResourceSearchData(data, rs);
+                PageSearchData data = new PageSearchData();
+                getContentSearchData(data, rs);
                 data.setDoc();
                 writer.addDocument(data.getDoc());
                 count++;
@@ -153,9 +250,8 @@ public class SearchBean extends DbBean {
             pst.setInt(3, id);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
-                SearchData data = new SearchData();
-                data.setType(SearchData.DataType.page);
-                getResourceSearchData(data, rs);
+                PageSearchData data = new PageSearchData();
+                getContentSearchData(data, rs);
                 data.setDoc();
                 writer.addDocument(data.getDoc());
             }
@@ -179,9 +275,8 @@ public class SearchBean extends DbBean {
             ResultSet rs = pst.executeQuery();
             int count = 0;
             while (rs.next()) {
-                SearchData data = new SearchData();
-                data.setType(SearchData.DataType.file);
-                getResourceSearchData(data, rs);
+                FileSearchData data = new FileSearchData();
+                getContentSearchData(data, rs);
                 data.setDoc();
                 writer.addDocument(data.getDoc());
                 count++;
@@ -209,9 +304,8 @@ public class SearchBean extends DbBean {
             pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
-                SearchData data = new SearchData();
-                data.setType(SearchData.DataType.file);
-                getResourceSearchData(data, rs);
+                FileSearchData data = new FileSearchData();
+                getContentSearchData(data, rs);
                 data.setDoc();
                 writer.addDocument(data.getDoc());
             }
@@ -226,7 +320,7 @@ public class SearchBean extends DbBean {
         }
     }
 
-    private void getResourceSearchData(SearchData data, ResultSet rs) throws SQLException {
+    private void getContentSearchData(ContentSearchData data, ResultSet rs) throws SQLException {
         int i = 1;
         data.setId(rs.getInt(i++));
         data.setName(rs.getString(i++));
@@ -288,23 +382,22 @@ public class SearchBean extends DbBean {
 
     private SearchData getUserSearchData(ResultSet rs) throws SQLException {
         int i = 1;
-        SearchData data = new SearchData();
-        data.setType(SearchData.DataType.user);
+        SearchData data = new UserSearchData();
         data.setId(rs.getInt(i++));
-        String firstName=rs.getString(i++);
-        String lastName=rs.getString(i);
-        data.setName(firstName+" "+lastName);
+        String firstName = rs.getString(i++);
+        String lastName = rs.getString(i);
+        data.setName(firstName + " " + lastName);
         data.setDoc();
         return data;
     }
 
-    public void search(SearchResultData result) {
+    public void searchContent(ContentSearchResultData result) {
         result.getResults().clear();
         String[] fieldNames = result.getFieldNames();
         ScoreDoc[] hits = null;
         float maxScore = 0f;
         try {
-            String indexPath = ApplicationPath.getAppPath() + "index";
+            String indexPath = ApplicationPath.getAppPath() + "contentindex";
             ensureDirectory(indexPath);
             IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(indexPath)));
             IndexSearcher searcher = new IndexSearcher(reader);
@@ -323,8 +416,58 @@ public class SearchBean extends DbBean {
             if (hits != null) {
                 for (ScoreDoc hit : hits) {
                     Document doc = searcher.doc(hit.doc);
-                    SearchData data = new SearchData();
-                    data.setType(SearchData.DataType.valueOf(doc.get("type")));
+                    ContentSearchData data = null;
+                    String type=doc.get("type");
+                    switch (type){
+                        case SiteSearchData.TYPE:
+                            data=new SiteSearchData();
+                            break;
+                        case PageSearchData.TYPE:
+                            data=new PageSearchData();
+                            break;
+                        case FileSearchData.TYPE:
+                            data=new FileSearchData();
+                            break;
+                    }
+                    assert(data!=null);
+                    data.setDoc(doc);
+                    data.setScore(maxScore <= 1f ? hit.score : hit.score / maxScore);
+                    data.evaluateDoc();
+                    data.setContexts(query, analyzer);
+                    result.getResults().add(data);
+                }
+            }
+            reader.close();
+        } catch (Exception ignore) {
+        }
+    }
+
+    public void searchUsers(UserSearchResultData result) {
+        result.getResults().clear();
+        String[] fieldNames = result.getFieldNames();
+        ScoreDoc[] hits = null;
+        float maxScore = 0f;
+        try {
+            String indexPath = ApplicationPath.getAppPath() + "userindex";
+            ensureDirectory(indexPath);
+            IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(indexPath)));
+            IndexSearcher searcher = new IndexSearcher(reader);
+            Analyzer analyzer = new StandardAnalyzer();
+            MultiFieldQueryParser parser = new MultiFieldQueryParser(fieldNames, analyzer);
+            String pattern = result.getPattern();
+            pattern = pattern.trim();
+            Query query = null;
+            if (pattern.length() != 0) {
+                query = parser.parse(pattern);
+                //Log.log("Searching for: " + query.toString());
+                TopDocs topDocs = searcher.search(query, result.getMaxSearchResults());
+                hits = topDocs.scoreDocs;
+                maxScore = topDocs.getMaxScore();
+            }
+            if (hits != null) {
+                for (ScoreDoc hit : hits) {
+                    Document doc = searcher.doc(hit.doc);
+                    UserSearchData data = new UserSearchData();
                     data.setDoc(doc);
                     data.setScore(maxScore <= 1f ? hit.score : hit.score / maxScore);
                     data.evaluateDoc();

@@ -7,9 +7,9 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.search.SearchQueue" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.search.SearchQueue" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     SearchQueue data = SearchQueue.getInstance();
@@ -18,8 +18,10 @@
 </h3>
 <table class="padded details">
     <tr>
-        <td><label><%=StringUtil.getHtml("_currentActions", locale)%></label></td>
-        <td><%=data.getActions().size()%></td>
+        <td><label><%=StringUtil.getHtml("_currentActions", locale)%>
+        </label></td>
+        <td><%=data.getActions().size()%>
+        </td>
     </tr>
 </table>
 

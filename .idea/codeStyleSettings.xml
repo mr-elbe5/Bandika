@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectCodeStyleSettingsManager">
+    <option name="PER_PROJECT_SETTINGS">
+      <value>
+        <option name="RIGHT_MARGIN" value="500" />
+        <option name="HTML_TEXT_WRAP" value="0" />
+        <option name="HTML_KEEP_LINE_BREAKS" value="false" />
+        <option name="HTML_KEEP_LINE_BREAKS_IN_TEXT" value="false" />
+        <option name="HTML_KEEP_BLANK_LINES" value="1" />
+        <option name="HTML_ALIGN_ATTRIBUTES" value="false" />
+        <codeStyleSettings language="JAVA">
+          <option name="KEEP_LINE_BREAKS" value="false" />
+          <option name="KEEP_FIRST_COLUMN_COMMENT" value="false" />
+          <option name="KEEP_CONTROL_STATEMENT_IN_ONE_LINE" value="false" />
+        </codeStyleSettings>
+        <codeStyleSettings language="JSP">
+          <option name="WRAP_ON_TYPING" value="0" />
+          <indentOptions>
+            <option name="KEEP_INDENTS_ON_EMPTY_LINES" value="true" />
+          </indentOptions>
+        </codeStyleSettings>
+      </value>
+    </option>
+    <option name="USE_PER_PROJECT_SETTINGS" value="true" />
+  </component>
+</project>
