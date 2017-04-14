@@ -4,7 +4,7 @@ import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
 import de.bandika.rights.Right;
 import de.bandika.servlet.RequestReader;
-import de.bandika.servlet.RightsReader;
+import de.bandika.servlet.SessionReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -118,7 +118,7 @@ public abstract class ResourceNode extends TreeNode {
     }
 
     public int getVersionForUser(HttpServletRequest request) {
-        if (RightsReader.hasContentRight(request, getId(), Right.EDIT)) {
+        if (SessionReader.hasContentRight(request, getId(), Right.EDIT)) {
             return Math.max(draftVersion, publishedVersion);
         }
         return publishedVersion;

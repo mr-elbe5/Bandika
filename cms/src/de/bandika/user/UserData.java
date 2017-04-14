@@ -48,14 +48,8 @@ public class UserData extends UserLoginData {
     protected byte[] portrait = null;
 
     protected Set<Integer> groupIds = new HashSet<>();
-    protected UserRightsData rights = new UserRightsData();
 
     protected List<GroupData> groups = new ArrayList<>();
-
-    public void setId(int id) {
-        super.setId(id);
-        rights.setUserId(id);
-    }
 
     public String getStreet() {
         return street;
@@ -148,10 +142,6 @@ public class UserData extends UserLoginData {
 
     public List<GroupData> getGroups() {
         return groups;
-    }
-
-    public UserRightsData getRights() {
-        return rights;
     }
 
     public void readUserRequestData(HttpServletRequest request) {

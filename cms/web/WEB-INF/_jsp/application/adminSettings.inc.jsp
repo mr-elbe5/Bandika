@@ -11,7 +11,6 @@
 <%@ page import="de.bandika.rights.Right" %>
 <%@ page import="de.bandika.rights.SystemZone" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
-<%@ page import="de.bandika.servlet.RightsReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.timer.TimerCache" %>
 <%@ page import="de.bandika.timer.TimerTaskData" %>
@@ -19,7 +18,7 @@
 <%@ page import="java.util.Locale" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
-    if (RightsReader.hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT)) {
+    if (SessionReader.hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT)) {
         List<DataCache> caches = null;
         try {
             caches = DataCache.getAllCaches();

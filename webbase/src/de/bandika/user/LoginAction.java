@@ -11,6 +11,7 @@ package de.bandika.user;
 import de.bandika.application.MasterStatics;
 import de.bandika.base.data.BinaryFileData;
 import de.bandika.base.util.StringUtil;
+import de.bandika.rights.RightsCache;
 import de.bandika.servlet.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,6 +56,7 @@ public enum LoginAction implements IAction {
                         return LoginAction.openLogin.execute(request, response);
                     }
                     SessionWriter.setSessionLoginData(request, data);
+                    data.checkRights();
                     SessionWriter.setSessionLocale(request);
                     return showHome(request, response);
                 }

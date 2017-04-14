@@ -11,7 +11,7 @@ package de.bandika.tree;
 import de.bandika.base.log.Log;
 import de.bandika.database.DbBean;
 import de.bandika.rights.Right;
-import de.bandika.rights.RightBean;
+import de.bandika.rights.CmsRightBean;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -203,7 +203,7 @@ public class TreeBean extends DbBean {
                 rollbackTransaction(con);
                 return false;
             }
-            RightBean.getInstance().saveTreeNodeRights(con, data);
+            CmsRightBean.getInstance().saveTreeNodeRights(con, data);
             return commitTransaction(con);
         } catch (Exception se) {
             return rollbackTransaction(con, se);

@@ -8,39 +8,21 @@
  */
 package de.bandika.rights;
 
-import de.bandika.base.cache.BaseCache;
+import de.bandika.database.DbBean;
 import de.bandika.user.UserRightsData;
 
-public class RightsCache extends BaseCache {
+public abstract class RightBean extends DbBean {
 
-    private static RightsCache instance = null;
+    private static RightBean instance = null;
 
-    public static RightsCache getInstance() {
-        if (instance == null) {
-            instance = new RightsCache();
-        }
+    public static RightBean getInstance() {
         return instance;
     }
 
-    protected int version = 1;
-
-    @Override
-    public void load() {
-        version++;
+    public static void setInstance(RightBean instance) {
+        RightBean.instance = instance;
     }
 
-    public int getVersion() {
-        checkDirty();
-        return version;
-    }
-
-    public UserRightsData checkRights(UserRightsData rights) {
-        int ver = RightsCache.getInstance().getVersion();
-        if (ver == rights.getVersion())
-            return null;
-        rights = RightBean.getInstance().getUserRights(rights.getUserId());
-        rights.setVersion(ver);
-        return rights;
-    }
+    public abstract UserRightsData getUserRights(int userId);
 
 }

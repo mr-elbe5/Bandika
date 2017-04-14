@@ -10,7 +10,6 @@
 <%@ page import="de.bandika.rights.Right" %>
 <%@ page import="de.bandika.rights.SystemZone" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
-<%@ page import="de.bandika.servlet.RightsReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.template.TemplateBean" %>
 <%@ page import="de.bandika.template.TemplateData" %>
@@ -19,7 +18,7 @@
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.util.Map" %>
 <%
-    if (RightsReader.hasSystemRight(request, SystemZone.CONTENT, Right.EDIT)) {
+    if (SessionReader.hasSystemRight(request, SystemZone.CONTENT, Right.EDIT)) {
         Locale locale = SessionReader.getSessionLocale(request);
         Map<TemplateType, List<TemplateData>> templates = TemplateBean.getInstance().getAllTemplates();
         assert (templates != null);

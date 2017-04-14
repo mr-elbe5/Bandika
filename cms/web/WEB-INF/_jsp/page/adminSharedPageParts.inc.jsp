@@ -12,12 +12,11 @@
 <%@ page import="de.bandika.rights.Right" %>
 <%@ page import="de.bandika.rights.SystemZone" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
-<%@ page import="de.bandika.servlet.RightsReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%
-    if (RightsReader.hasSystemRight(request, SystemZone.CONTENT, Right.EDIT)) {
+    if (SessionReader.hasSystemRight(request, SystemZone.CONTENT, Right.EDIT)) {
         Locale locale = SessionReader.getSessionLocale(request);
         List<PagePartData> parts = PagePartBean.getInstance().getAllSharedPagePartsWithUsages();
         int partId = RequestReader.getInt(request, "partId");

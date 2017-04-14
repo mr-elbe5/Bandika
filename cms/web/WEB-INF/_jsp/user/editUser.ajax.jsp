@@ -19,7 +19,7 @@
     List<GroupData> groups = GroupBean.getInstance().getAllGroups();
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
-<form action="/user.ajx" method="post" id="userform" name="userform" accept-charset="UTF-8">
+<form action="/user.ajx" method="post" id="userform" name="userform" accept-charset="UTF-8" enctype="multipart/form-data">
     <input type="hidden" name="act" value="saveUser"/>
     <fieldset>
         <table class="padded form">

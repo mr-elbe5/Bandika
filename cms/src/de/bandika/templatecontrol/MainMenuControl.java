@@ -10,7 +10,6 @@ package de.bandika.templatecontrol;
 
 import de.bandika.page.PageData;
 import de.bandika.rights.Right;
-import de.bandika.servlet.RightsReader;
 import de.bandika.servlet.SessionReader;
 import de.bandika.site.SiteData;
 import de.bandika.template.TemplateAttributes;
@@ -50,7 +49,7 @@ public class MainMenuControl extends TemplateControl {
 
     public void addNodes(SiteData parentSite, int currentId, List<Integer> activeIds, HttpServletRequest request, StringBuilder sb) {
         for (SiteData site : parentSite.getSites()) {
-            if (site.isInNavigation() && (site.isAnonymous() || RightsReader.hasContentRight(request, site.getId(), Right.READ))) {
+            if (site.isInNavigation() && (site.isAnonymous() || SessionReader.hasContentRight(request, site.getId(), Right.READ))) {
                 boolean hasSubSites = site.getSites().size() > 0;
                 boolean hasSubPages = site.getPages().size() > 1;
                 boolean active = site.getId() == currentId || activeIds.contains(site.getId());
@@ -67,7 +66,7 @@ public class MainMenuControl extends TemplateControl {
             }
         }
         for (PageData page : parentSite.getPages()) {
-            if (page.isInNavigation() && (page.isAnonymous() || RightsReader.hasContentRight(request, page.getId(), Right.READ)) && !page.isDefaultPage()) {
+            if (page.isInNavigation() && (page.isAnonymous() || SessionReader.hasContentRight(request, page.getId(), Right.READ)) && !page.isDefaultPage()) {
                 boolean active = page.getId() == currentId || activeIds.contains(page.getId());
                 sb.append("<li><a");
                 if (active)

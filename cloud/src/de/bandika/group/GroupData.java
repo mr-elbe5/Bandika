@@ -67,7 +67,7 @@ public class GroupData extends BaseIdData {
         XmlUtil.addIntAttribute(xmlDoc, node, "id", getId());
         XmlUtil.addAttribute(xmlDoc, node, "name", StringUtil.toXml(getName()));
         XmlUtil.addAttribute(xmlDoc, node, "notes", StringUtil.toXml(getNotes()));
-        Element rightsNode = XmlUtil.addNode(xmlDoc, node, "treeRights");
+        Element rightsNode = XmlUtil.addNode(xmlDoc, node, "singleContentRights");
         for (Integer treeId : groupRights.keySet()) {
             Element rightNode = XmlUtil.addNode(xmlDoc, rightsNode, "right");
             XmlUtil.addIntAttribute(xmlDoc, rightNode, "id", treeId);

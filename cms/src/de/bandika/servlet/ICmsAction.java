@@ -16,11 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 public interface ICmsAction extends IAction {
 
     default boolean hasSystemRight(HttpServletRequest request, SystemZone zone, Right right) throws Exception {
-        return RightsReader.hasSystemRight(request, zone, right) || forbidden();
+        return SessionReader.hasSystemRight(request, zone, right) || forbidden();
     }
 
     default boolean hasContentRight(HttpServletRequest request, int id, Right right) throws Exception {
-        return RightsReader.hasContentRight(request, id, right) || forbidden();
+        return SessionReader.hasContentRight(request, id, right) || forbidden();
     }
 
 }

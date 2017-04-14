@@ -6,16 +6,15 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.servlet;
+package de.bandika.rights;
 
-import de.bandika.user.UserRightsData;
+public enum Right {
+    NONE, READ, EDIT, APPROVE, FULL;
 
-import javax.servlet.http.HttpServletRequest;
-
-public final class RightsWriter {
-
-    public static void setSessionRightsData(HttpServletRequest request, UserRightsData data) {
-        SessionWriter.setSessionObject(request, RequestStatics.KEY_RIGHTS, data);
+    public boolean includesRight(Right right) {
+        return ordinal() >= right.ordinal();
     }
 
 }
+
+

@@ -9,12 +9,12 @@
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.rights.Right" %>
 <%@ page import="de.bandika.rights.SystemZone" %>
-<%@ page import="de.bandika.servlet.RightsReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.servlet.RequestReader" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
-    if (RightsReader.hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT)) {
+    if (SessionReader.hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT)) {
 %><!--search-->
 <li>
     <div class="contextSource icn isearch" onclick="$('#details').load('/search.ajx?act=showAdminSearchDetails')"><%=StringUtil.getHtml("_search", locale)%>

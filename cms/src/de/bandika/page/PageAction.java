@@ -56,7 +56,7 @@ public enum PageAction implements ITreeAction {
                     } else {
                         data = getPageCopy(data, pageVersion);
                     }
-                    if (!data.isAnonymous() && !RightsReader.hasContentRight(request, pageId, Right.READ)) {
+                    if (!data.isAnonymous() && !SessionReader.hasContentRight(request, pageId, Right.READ)) {
                         return forbidden();
                     }
                     request.setAttribute("pageData", data);

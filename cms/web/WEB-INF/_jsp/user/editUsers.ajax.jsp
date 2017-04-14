@@ -9,14 +9,14 @@
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.rights.Right" %>
 <%@ page import="de.bandika.rights.SystemZone" %>
-<%@ page import="de.bandika.servlet.RightsReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.user.UserBean" %>
 <%@ page import="de.bandika.user.UserData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.servlet.RequestReader" %>
 <%
-    if (RightsReader.hasSystemRight(request, SystemZone.USER, Right.EDIT)) {
+    if (SessionReader.hasSystemRight(request, SystemZone.USER, Right.EDIT)) {
         Locale locale = SessionReader.getSessionLocale(request);
         List<UserData> users = null;
         try {

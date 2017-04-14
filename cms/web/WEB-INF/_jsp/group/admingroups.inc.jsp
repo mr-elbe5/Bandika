@@ -12,12 +12,11 @@
 <%@ page import="de.bandika.rights.Right" %>
 <%@ page import="de.bandika.rights.SystemZone" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
-<%@ page import="de.bandika.servlet.RightsReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%
-    if (RightsReader.hasSystemRight(request, SystemZone.USER, Right.EDIT)) {
+    if (SessionReader.hasSystemRight(request, SystemZone.USER, Right.EDIT)) {
         Locale locale = SessionReader.getSessionLocale(request);
         List<GroupData> groups = null;
         try {
@@ -25,7 +24,7 @@
         } catch (Exception ignore) {
         }
         int groupId = RequestReader.getInt(request, "groupId");
-        if (RightsReader.hasAnySystemRight(request)) {
+        if (SessionReader.hasAnySystemRight(request)) {
 %><!--groups-->
 <li<%=groupId != 0 ? " class=\"open\"" : ""%>>
     <div class="contextSource icn igroup"><%=StringUtil.getHtml("_groups", locale)%>

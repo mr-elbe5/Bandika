@@ -10,7 +10,7 @@ package de.bandika.group;
 
 import de.bandika.base.log.Log;
 import de.bandika.database.DbBean;
-import de.bandika.rights.RightBean;
+import de.bandika.rights.CmsRightBean;
 import de.bandika.user.User2GroupRelation;
 
 import java.sql.*;
@@ -139,7 +139,7 @@ public class GroupBean extends DbBean {
             data.setChangeDate(getServerTime(con));
             writeGroup(con, data);
             if (!data.getRights().getSystemRights().isEmpty())
-                RightBean.getInstance().writeGroupRights(con, data);
+                CmsRightBean.getInstance().writeGroupRights(con, data);
             return commitTransaction(con);
         } catch (Exception se) {
             return rollbackTransaction(con, se);

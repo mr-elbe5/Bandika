@@ -24,6 +24,7 @@ import de.bandika.file.PreviewCache;
 import de.bandika.group.GroupAction;
 import de.bandika.page.PageAction;
 import de.bandika.pagepart.PagePartAction;
+import de.bandika.rights.CmsRightBean;
 import de.bandika.rights.RightsCache;
 import de.bandika.search.SearchAction;
 import de.bandika.site.SiteAction;
@@ -91,7 +92,8 @@ public class CmsInitializer extends Initializer {
             TemplateCache.getInstance().initialize();
             // tree
             TreeCache.getInstance().load();
-            // treeRights
+            // rights
+            CmsRightBean.getInstance();
             RightsCache.getInstance().checkDirty();
             //previews
             PreviewCache.getInstance().initialize(PreviewCache.CACHEKEY, 100);

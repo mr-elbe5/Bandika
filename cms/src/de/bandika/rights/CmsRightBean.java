@@ -9,7 +9,6 @@
 package de.bandika.rights;
 
 import de.bandika.base.log.Log;
-import de.bandika.database.DbBean;
 import de.bandika.group.GroupData;
 import de.bandika.group.GroupRightsData;
 import de.bandika.tree.TreeNode;
@@ -23,15 +22,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RightBean extends DbBean {
+public class CmsRightBean extends RightBean {
 
-    private static RightBean instance = null;
-
-    public static RightBean getInstance() {
-        if (instance == null) {
-            instance = new RightBean();
-        }
-        return instance;
+    public static CmsRightBean getInstance() {
+        if (RightBean.getInstance()==null)
+            RightBean.setInstance(new CmsRightBean());
+        return (CmsRightBean) RightBean.getInstance();
     }
 
     public UserRightsData getUserRights(int userId) {
@@ -69,7 +65,7 @@ public class RightBean extends DbBean {
             pst = con.prepareStatement("select id, value from t_treenode_right where group_id in(" + buffer.toString() + ')');
             rs = pst.executeQuery();
             while (rs.next()) {
-                data.addTreeRight(rs.getInt(1), Right.valueOf(rs.getString(2)));
+                data.addSingleContentRight(rs.getInt(1), Right.valueOf(rs.getString(2)));
             }
             rs.close();
             return data;

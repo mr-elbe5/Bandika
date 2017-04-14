@@ -58,7 +58,7 @@ public enum FileAction implements ITreeAction {
                     } else {
                         data = getFileCopy(data, fileVersion);
                     }
-                    if (!data.isAnonymous() && !RightsReader.hasContentRight(request, fileId, Right.READ)) {
+                    if (!data.isAnonymous() && !SessionReader.hasContentRight(request, fileId, Right.READ)) {
                         return false;
                     }
                     BinaryFileStreamData streamData = FileBean.getInstance().getBinaryFileStreamData(data.getId(), fileVersion);
@@ -89,7 +89,7 @@ public enum FileAction implements ITreeAction {
                     } else {
                         data = getFileCopy(data, fileVersion);
                     }
-                    if (!RightsReader.hasContentRight(request, fileId, Right.EDIT)) {
+                    if (!SessionReader.hasContentRight(request, fileId, Right.EDIT)) {
                         return false;
                     }
                     BinaryFileStreamData streamData = FileBean.getInstance().getBinaryFileStreamData(data.getId(), fileVersion);
@@ -108,7 +108,7 @@ public enum FileAction implements ITreeAction {
                         Log.error("Error delivering unknown file - id: " + fileId);
                         return false;
                     }
-                    if (!data.isAnonymous() && !RightsReader.hasContentRight(request, fileId, Right.READ)) {
+                    if (!data.isAnonymous() && !SessionReader.hasContentRight(request, fileId, Right.READ)) {
                         return false;
                     }
                     int fileVersion = data.getVersionForUser(request);

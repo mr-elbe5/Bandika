@@ -13,6 +13,8 @@ import de.bandika.base.data.Locales;
 import de.bandika.base.log.Log;
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
+import de.bandika.rights.RightBean;
+import de.bandika.rights.RightsCache;
 import de.bandika.servlet.RequestReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -36,6 +38,8 @@ public class UserLoginData extends BaseIdData {
     protected int failedLoginCount = 0;
     protected boolean locked = false;
     protected boolean deleted = false;
+
+    UserRightsData rights=new UserRightsData();
 
     public String getTitle() {
         return title;
@@ -152,6 +156,26 @@ public class UserLoginData extends BaseIdData {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public UserRightsData getRights() {
+        return rights;
+    }
+
+    public void setRights(UserRightsData rights) {
+        this.rights = rights;
+    }
+
+    public boolean checkRights() {
+        if (rights==null)
+            return false;
+        int ver = RightsCache.getInstance().getVersion();
+        if (ver == rights.getVersion())
+            return true;
+        UserRightsData newRights = RightBean.getInstance().getUserRights(getId());
+        newRights.setVersion(ver);
+        setRights(newRights);
+        return true;
     }
 
     public void readLoginRequestData(HttpServletRequest request) {

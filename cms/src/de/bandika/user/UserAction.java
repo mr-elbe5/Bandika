@@ -182,10 +182,11 @@ public enum UserAction implements ICmsAction {
                         return showEditUser(request, response);
                     }
                     UserBean.getInstance().saveUser(data);
+                    RightsCache.getInstance().setDirty();
                     if (SessionReader.getLoginId(request) == data.getId()) {
+                        data.checkRights();
                         SessionWriter.setSessionLoginData(request, data);
                     }
-                    RightsCache.getInstance().setDirty();
                     return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&userId=" + data.getId(), "_userSaved");
                 }
             }, /**

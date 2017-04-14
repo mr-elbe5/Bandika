@@ -35,7 +35,7 @@ public enum TreeAction implements IAction {
                         }
                         return forbidden();
                     }
-                    if (RightsReader.hasAnySystemRight(request)) {
+                    if (SessionReader.hasAnySystemRight(request)) {
                         return showTree(request, response, "");
                     }
                     return forbidden();

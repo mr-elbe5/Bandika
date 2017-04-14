@@ -8,13 +8,30 @@
  */
 package de.bandika.rights;
 
-public enum Right {
-    READ, EDIT, APPROVE;
+import de.bandika.base.cache.BaseCache;
+import de.bandika.user.UserRightsData;
 
-    public boolean includesRight(Right right) {
-        return ordinal() >= right.ordinal();
+public class RightsCache extends BaseCache {
+
+    private static RightsCache instance = null;
+
+    public static RightsCache getInstance() {
+        if (instance == null) {
+            instance = new RightsCache();
+        }
+        return instance;
+    }
+
+    protected int version = 1;
+
+    @Override
+    public void load() {
+        version++;
+    }
+
+    public int getVersion() {
+        checkDirty();
+        return version;
     }
 
 }
-
-

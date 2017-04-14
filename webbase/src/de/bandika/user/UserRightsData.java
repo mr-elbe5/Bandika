@@ -16,32 +16,23 @@ import java.util.Map;
 
 public class UserRightsData {
 
-    protected int userId;
-    protected Map<Integer, Right> treeRights = new HashMap<>();
+    protected Map<Integer, Right> singleContentRights = new HashMap<>();
     protected Map<SystemZone, Right> systemRights = new HashMap<>();
 
     protected int version = -1;
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public void addTreeRight(int id, Right right) {
-        if (!treeRights.containsKey(id) || !treeRights.get(id).includesRight(right)) {
-            treeRights.put(id, right);
+    public void addSingleContentRight(int id, Right right) {
+        if (!singleContentRights.containsKey(id) || !singleContentRights.get(id).includesRight(right)) {
+            singleContentRights.put(id, right);
         }
     }
 
-    public boolean hasAnyTreeRight() {
-        return !treeRights.isEmpty();
+    public boolean hasAnySingleContentRight() {
+        return !singleContentRights.isEmpty();
     }
 
-    public boolean hasTreeRight(int id, Right right) {
-        Right rgt = treeRights.get(id);
+    public boolean hasSingleContentRight(int id, Right right) {
+        Right rgt = singleContentRights.get(id);
         return rgt != null && rgt.includesRight(right);
     }
 
@@ -56,7 +47,7 @@ public class UserRightsData {
     }
 
     public boolean hasAnyElevatedSystemRight() {
-        //not only content read right;
+        //not only id read right;
         return !(systemRights.size() == 1 && hasSystemRight(SystemZone.CONTENT, Right.READ));
     }
 
@@ -66,11 +57,11 @@ public class UserRightsData {
     }
 
     public boolean hasAnyContentRight() {
-        return hasSystemRight(SystemZone.CONTENT, Right.READ) || hasAnyTreeRight();
+        return hasSystemRight(SystemZone.CONTENT, Right.READ) || hasAnySingleContentRight();
     }
 
     public boolean hasContentRight(int id, Right right) {
-        return hasSystemRight(SystemZone.CONTENT, right) || hasTreeRight(id, right);
+        return hasSystemRight(SystemZone.CONTENT, right) || hasSingleContentRight(id, right);
     }
 
     public int getVersion() {
@@ -86,8 +77,8 @@ public class UserRightsData {
         StringBuilder sb = new StringBuilder();
         sb.append("RightsData: ").append(getClass()).append('\n');
         sb.append("Tree Rights: ");
-        for (int r : treeRights.keySet()) {
-            sb.append('[').append(r).append(',').append(treeRights.get(r)).append(']');
+        for (int r : singleContentRights.keySet()) {
+            sb.append('[').append(r).append(',').append(singleContentRights.get(r)).append(']');
         }
         sb.append('\n');
         sb.append("System Rights: ");

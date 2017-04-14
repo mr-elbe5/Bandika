@@ -7,7 +7,6 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.servlet.RightsReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.tree.TreeCache" %>
 <%@ page import="de.bandika.tree.TreeHelper" %>
@@ -15,6 +14,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.servlet.RequestReader" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     TreeNode node = TreeHelper.getRequestedNode(request, locale);
@@ -28,7 +28,7 @@
         <tr>
             <td class="contentSection">
                 <div class="siteTree topSpace">
-                    <% if (RightsReader.hasAnyContentRight(request)) { %>
+                    <% if (SessionReader.hasAnyContentRight(request)) { %>
                     <h3 class="treeHeader">
                         <%=StringUtil.getString("_structure", SessionReader.getSessionLocale(request))%>
                     </h3>

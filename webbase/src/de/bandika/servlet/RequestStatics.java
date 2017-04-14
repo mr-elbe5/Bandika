@@ -33,6 +33,5 @@ public final class RequestStatics {
     public static final String KEY_MESSAGEKEY = "$MESSAGEKEY";
     public static final String KEY_LOGIN = "$LOGIN";
     public static final String KEY_LOCALE = "$LOCALE";
-    public static final String KEY_RIGHTS = "$RIGHTS";
 
 }

@@ -10,6 +10,7 @@ package de.bandika.servlet;
 
 import de.bandika.base.data.Locales;
 import de.bandika.user.UserLoginData;
+import de.bandika.user.UserRightsData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -54,4 +55,5 @@ public final class SessionWriter {
         request.getSession(true);
         setSessionLocale(request, locale);
     }
+
 }

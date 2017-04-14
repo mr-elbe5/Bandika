@@ -149,10 +149,6 @@ public enum GroupAction implements ICmsAction {
                         return showEditGroup(request, response);
                     }
                     GroupBean.getInstance().saveGroup(data);
-                    UserRightsData rights = RightsReader.getSessionRightsData(request);
-                    if (rights != null)
-                        rights.setVersion(0);
-                    RightsWriter.setSessionRightsData(request, RightsCache.getInstance().checkRights(rights));
                     RightsCache.getInstance().setDirty();
                     return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&groupId=" + data.getId(), "_groupSaved");
                 }

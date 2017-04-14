@@ -65,7 +65,7 @@ public enum AdminAction implements ICmsAction {
                         }
                         return forbidden();
                     }
-                    if (RightsReader.hasAnySystemRight(request)) {
+                    if (SessionReader.hasAnySystemRight(request)) {
                         return showAdministration(request, response);
                     }
                     return forbidden();

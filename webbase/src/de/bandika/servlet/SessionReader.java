@@ -9,6 +9,8 @@
 package de.bandika.servlet;
 
 import de.bandika.base.data.Locales;
+import de.bandika.rights.Right;
+import de.bandika.rights.SystemZone;
 import de.bandika.user.UserLoginData;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,4 +54,28 @@ public class SessionReader {
         return loginData != null;
     }
 
+    public static boolean hasAnySystemRight(HttpServletRequest request) {
+        UserLoginData data = getSessionLoginData(request);
+        return data != null && data.checkRights() && data.getRights().hasAnySystemRight();
+    }
+
+    public static boolean hasAnyElevatedSystemRight(HttpServletRequest request) {
+        UserLoginData data = getSessionLoginData(request);
+        return data != null && data.checkRights() && data.getRights().hasAnyElevatedSystemRight();
+    }
+
+    public static boolean hasAnyContentRight(HttpServletRequest request) {
+        UserLoginData data = getSessionLoginData(request);
+        return data != null && data.checkRights() && data.getRights().hasAnyContentRight();
+    }
+
+    public static boolean hasSystemRight(HttpServletRequest request, SystemZone zone, Right right) {
+        UserLoginData data = getSessionLoginData(request);
+        return data != null && data.checkRights() && data.getRights().hasSystemRight(zone, right);
+    }
+
+    public static boolean hasContentRight(HttpServletRequest request, int id, Right right) {
+        UserLoginData data = getSessionLoginData(request);
+        return data != null && data.checkRights() && data.getRights().hasContentRight(id, right);
+    }
 }

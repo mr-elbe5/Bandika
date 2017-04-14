@@ -10,7 +10,6 @@ package de.bandika.templatecontrol;
 
 import de.bandika.page.PageData;
 import de.bandika.rights.Right;
-import de.bandika.servlet.RightsReader;
 import de.bandika.servlet.SessionReader;
 import de.bandika.site.SiteData;
 import de.bandika.template.TemplateAttributes;
@@ -42,13 +41,13 @@ public class SubMenuControl extends TemplateControl {
 
     public void addNodes(SiteData parentSite, int currentId, HttpServletRequest request, StringBuilder sb) {
         for (SiteData site : parentSite.getSites()) {
-            if (site.isInNavigation() && (site.isAnonymous() || RightsReader.hasContentRight(request,site.getId(),Right.READ))) {
+            if (site.isInNavigation() && (site.isAnonymous() || SessionReader.hasContentRight(request,site.getId(),Right.READ))) {
                 sb.append("<li><a class=\"active\"");
                 sb.append(" href=\"").append(site.getUrl()).append("\">").append(toHtml(site.getDisplayName())).append("</a></li>");
             }
         }
         for (PageData page : parentSite.getPages()) {
-            if (page.isInNavigation() && (page.isAnonymous() || RightsReader.hasContentRight(request,page.getId(),Right.READ)) && !page.isDefaultPage()){
+            if (page.isInNavigation() && (page.isAnonymous() || SessionReader.hasContentRight(request,page.getId(),Right.READ)) && !page.isDefaultPage()){
                 boolean active = page.getId() == currentId;
                 sb.append("<li><a");
                 if (active)

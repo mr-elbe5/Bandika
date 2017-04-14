@@ -12,7 +12,6 @@ import de.bandika.base.util.StringUtil;
 import de.bandika.file.FileData;
 import de.bandika.page.PageData;
 import de.bandika.rights.Right;
-import de.bandika.servlet.RightsReader;
 import de.bandika.servlet.SessionReader;
 import de.bandika.site.SiteData;
 import de.bandika.template.TemplateAttributes;
@@ -40,7 +39,7 @@ public class DocumentListControl extends TemplateControl {
         Locale locale=SessionReader.getSessionLocale(request);
         List<FileData> files=site.getFiles();
         for (FileData file : files){
-            if (!file.isAnonymous() && !RightsReader.hasContentRight(request, file.getId(), Right.READ))
+            if (!file.isAnonymous() && !SessionReader.hasContentRight(request, file.getId(), Right.READ))
                 continue;
             sb.append("<div class=\"documentListLine icn ifile\"><a href=\"").append(file.getUrl()).append("\" target=\"_blank\" title=\"")
                     .append(StringUtil.getHtml("_show", locale)).append("\">").append(StringUtil.toHtml(file.getDisplayName()))
