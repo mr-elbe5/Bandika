@@ -189,7 +189,7 @@
     $('#userform').submit(function (event) {
         var $this = $(this);
         event.preventDefault();
-        var params = $this.serialize();
-        post2ModalDialog('/user.ajx', params);
+        var params = $this.serializeFiles();
+        postMulti2ModalDialog('/user.ajx', params);
     });
 </script>

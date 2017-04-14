@@ -122,25 +122,27 @@ public class RequestReader {
     public static List<Integer> getIntegerList(HttpServletRequest request, String key) {
         List<Integer> list = new ArrayList<>();
         Object obj = request.getAttribute(key);
-        if (obj != null && obj instanceof String) {
-            StringTokenizer stk = new StringTokenizer((String) obj, ",");
-            String token = null;
-            while (stk.hasMoreTokens()) {
-                try {
-                    token = stk.nextToken();
-                    list.add(Integer.parseInt(token));
-                } catch (NumberFormatException e) {
-                    Log.error("wrong number format: " + token);
-                }
-            }
-        } else {
-            String[] values = (String[]) request.getAttribute(key);
-            if (values != null) {
-                for (String value : values) {
+        if (obj != null){
+            if (obj instanceof String){
+                StringTokenizer stk = new StringTokenizer((String) obj, ",");
+                String token = null;
+                while (stk.hasMoreTokens()) {
                     try {
-                        list.add(Integer.parseInt(value));
+                        token = stk.nextToken();
+                        list.add(Integer.parseInt(token));
                     } catch (NumberFormatException e) {
-                        Log.error("wrong number format: " + value);
+                        Log.error("wrong number format: " + token);
+                    }
+                }
+            } else if (obj instanceof String[]){
+                String[] values = (String[]) request.getAttribute(key);
+                if (values != null) {
+                    for (String value : values) {
+                        try {
+                            list.add(Integer.parseInt(value));
+                        } catch (NumberFormatException e) {
+                            Log.error("wrong number format: " + value);
+                        }
                     }
                 }
             }
@@ -174,16 +176,7 @@ public class RequestReader {
         while (enm.hasMoreElements()) {
             String key = (String) enm.nextElement();
             String[] strings = request.getParameterValues(key);
-            if (strings.length == 1) {
-                request.setAttribute(key, strings[0]);
-            } else {
-                StringBuilder sb = new StringBuilder(strings[0]);
-                for (int i = 1; i < strings.length; i++) {
-                    sb.append(',');
-                    sb.append(strings[i]);
-                }
-                request.setAttribute(key, sb.toString());
-            }
+            request.setAttribute(key, strings);
         }
     }
 
@@ -217,16 +210,15 @@ public class RequestReader {
             throw new ServletException(e);
         }
         for (String key : params.keySet()){
-            List<String> strings = params.get(key);
-            if (strings.size() == 1) {
-                request.setAttribute(key, strings.get(0));
+            List<String> list = params.get(key);
+            if (list.size() == 1) {
+                request.setAttribute(key, list.get(0));
             } else {
-                StringBuilder sb = new StringBuilder(strings.get(0));
-                for (int i = 1; i < strings.size(); i++) {
-                    sb.append(',');
-                    sb.append(strings.get(i));
+                String[] strings=new String[list.size()];
+                for (int i = 0; i < list.size(); i++) {
+                    strings[i]=list.get(i);
                 }
-                request.setAttribute(key, sb.toString());
+                request.setAttribute(key, strings);
             }
         }
     }
