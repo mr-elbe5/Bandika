@@ -704,6 +704,7 @@ body.mobile {
 
 .mobile .viewport {
     height: auto;
+    margin: 0 10px;
 }
 
 .mobile .topNavSection div:first-child {
