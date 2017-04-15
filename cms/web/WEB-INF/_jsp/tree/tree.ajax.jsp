@@ -8,9 +8,9 @@
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="de.bandika.tree.TreeCache" %>
-<%@ page import="de.bandika.tree.TreeHelper" %>
-<%@ page import="de.bandika.tree.TreeNode" %>
+<%@ page import="de.bandika.cms.tree.TreeCache" %>
+<%@ page import="de.bandika.cms.tree.TreeHelper" %>
+<%@ page import="de.bandika.cms.tree.TreeNode" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>

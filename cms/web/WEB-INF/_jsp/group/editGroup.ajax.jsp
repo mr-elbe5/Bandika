@@ -7,7 +7,7 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.group.GroupData" %>
+<%@ page import="de.bandika.cms.group.GroupData" %>
 <%@ page import="de.bandika.rights.Right" %>
 <%@ page import="de.bandika.rights.SystemZone" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>

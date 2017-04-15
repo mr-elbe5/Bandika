@@ -17,7 +17,7 @@
     </servlet>
     <servlet>
         <servlet-name>applicationServlet</servlet-name>
-        <servlet-class>de.bandika.application.ApplicationServlet</servlet-class>
+        <servlet-class>de.bandika.cloud.application.ApplicationServlet</servlet-class>
         <load-on-startup>10</load-on-startup>
     </servlet>
     <servlet-mapping>

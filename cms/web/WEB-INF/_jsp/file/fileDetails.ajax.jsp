@@ -7,12 +7,12 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.file.FileAction" %>
-<%@ page import="de.bandika.file.FileBean" %>
-<%@ page import="de.bandika.file.FileData" %>
+<%@ page import="de.bandika.cms.file.FileAction" %>
+<%@ page import="de.bandika.cms.file.FileBean" %>
+<%@ page import="de.bandika.cms.file.FileData" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="de.bandika.tree.TreeCache" %>
+<%@ page import="de.bandika.cms.tree.TreeCache" %>
 <%@ page import="java.util.Locale" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);

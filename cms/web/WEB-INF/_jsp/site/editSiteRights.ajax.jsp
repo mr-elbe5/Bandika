@@ -8,7 +8,7 @@
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="de.bandika.site.SiteData" %>
+<%@ page import="de.bandika.cms.site.SiteData" %>
 <%@ page import="java.util.Locale" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);

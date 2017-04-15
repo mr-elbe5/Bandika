@@ -361,10 +361,10 @@ INSERT INTO t_configuration (defaultLocale, mailHost, mailPort, mailConnectionTy
 VALUES ('en', 'localhost', 25, 'plain', '', '', 'me@myhost.tld', 30, 2555, 60, 5, 5);
 --
 INSERT INTO t_timer_task (id, name, class_name, interval_type, execution_minute, active, note_execution)
-VALUES (500, 'Heartbeat Task', 'de.bandika.timer.HeartbeatTask', 0, 5, TRUE, FALSE);
+VALUES (500, 'Heartbeat Task', 'de.bandika.cms.timer.HeartbeatTask', 0, 5, TRUE, FALSE);
 --
 INSERT INTO t_timer_task (id, name, class_name, interval_type, execution_minute, active, note_execution)
-VALUES (501, 'Search Index Task', 'de.bandika.search.SearchIndexTask', 0, 15, FALSE, FALSE);
+VALUES (501, 'Search Index Task', 'de.bandika.cms.search.SearchIndexTask', 0, 15, FALSE, FALSE);
 -- virtual all ids node
 INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, in_navigation, anonymous, inherits_rights)
 VALUES (0, NULL, 0, '', 'ALL-NODE', 'Virtual Node for all IDs', 1, 'System', FALSE, FALSE, FALSE);

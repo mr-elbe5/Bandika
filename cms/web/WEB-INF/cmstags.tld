@@ -11,7 +11,7 @@
 
     <tag>
         <name>control</name>
-        <tag-class>de.bandika.tag.TemplateControlTag</tag-class>
+        <tag-class>de.bandika.cms.tag.TemplateControlTag</tag-class>
         <body-content>JSP</body-content>
         <attribute>
             <name>name</name>
@@ -32,7 +32,7 @@
 
     <tag>
         <name>snippet</name>
-        <tag-class>de.bandika.tag.SnippetTag</tag-class>
+        <tag-class>de.bandika.cms.tag.SnippetTag</tag-class>
         <body-content>JSP</body-content>
         <attribute>
             <name>name</name>

@@ -8,7 +8,7 @@
 --%>
 <%@ page import="de.bandika.base.data.Locales" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.configuration.Configuration" %>
+<%@ page import="de.bandika.cms.configuration.Configuration" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
 <%

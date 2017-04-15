@@ -7,8 +7,8 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.pagepart.PagePartBean" %>
-<%@ page import="de.bandika.pagepart.PagePartData" %>
+<%@ page import="de.bandika.cms.pagepart.PagePartBean" %>
+<%@ page import="de.bandika.cms.pagepart.PagePartData" %>
 <%@ page import="de.bandika.rights.Right" %>
 <%@ page import="de.bandika.rights.SystemZone" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>

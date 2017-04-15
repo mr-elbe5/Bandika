@@ -9,7 +9,7 @@
 <%@ page import="de.bandika.base.data.Locales" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="de.bandika.user.UserData" %>
+<%@ page import="de.bandika.cms.user.UserData" %>
 <%@ page import="java.util.Locale" %>
 <%
     UserData user = (UserData) SessionReader.getSessionObject(request, "userData");

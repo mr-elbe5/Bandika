@@ -31,9 +31,7 @@ SELECT ADDSITE(300, 320, 2, 'redaktion', 'Redaktion', 'areaPage');
 --
 SELECT ADDSITE(300, 330, 3, 'administration', 'Administration', 'areaPage');
 --
-UPDATE t_configuration
-SET config_value = 'de'
-WHERE config_key = 'defaultLocale';
+UPDATE t_configuration SET defaultLocale = 'de';
 
 
 

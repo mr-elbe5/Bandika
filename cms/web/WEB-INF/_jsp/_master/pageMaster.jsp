@@ -7,10 +7,10 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%><!DOCTYPE html><%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.templatecontrol.BreadcrumbControl" %>
-<%@ page import="de.bandika.templatecontrol.MainMenuControl" %>
-<%@ page import="de.bandika.templatecontrol.TopAdminNavControl" %>
-<%@ page import="de.bandika.templatecontrol.TopNavControl" %>
+<%@ page import="de.bandika.cms.templatecontrol.BreadcrumbControl" %>
+<%@ page import="de.bandika.cms.templatecontrol.MainMenuControl" %>
+<%@ page import="de.bandika.cms.templatecontrol.TopAdminNavControl" %>
+<%@ page import="de.bandika.cms.templatecontrol.TopNavControl" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%String title = StringUtil.getString("appTitle");%>
 <html>

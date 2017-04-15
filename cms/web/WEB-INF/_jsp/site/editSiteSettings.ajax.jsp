@@ -8,10 +8,10 @@
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="de.bandika.site.SiteData" %>
-<%@ page import="de.bandika.template.TemplateCache" %>
-<%@ page import="de.bandika.template.TemplateData" %>
-<%@ page import="de.bandika.template.TemplateType" %>
+<%@ page import="de.bandika.cms.site.SiteData" %>
+<%@ page import="de.bandika.cms.template.TemplateCache" %>
+<%@ page import="de.bandika.cms.template.TemplateData" %>
+<%@ page import="de.bandika.cms.template.TemplateType" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%

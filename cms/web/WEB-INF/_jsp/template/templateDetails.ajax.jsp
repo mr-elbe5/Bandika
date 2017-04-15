@@ -9,9 +9,9 @@
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="de.bandika.template.TemplateCache" %>
-<%@ page import="de.bandika.template.TemplateData" %>
-<%@ page import="de.bandika.template.TemplateType" %>
+<%@ page import="de.bandika.cms.template.TemplateCache" %>
+<%@ page import="de.bandika.cms.template.TemplateData" %>
+<%@ page import="de.bandika.cms.template.TemplateType" %>
 <%@ page import="java.util.Locale" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);

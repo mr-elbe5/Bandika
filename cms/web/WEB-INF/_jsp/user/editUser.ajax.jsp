@@ -7,10 +7,10 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.group.GroupBean" %>
-<%@ page import="de.bandika.group.GroupData" %>
+<%@ page import="de.bandika.cms.group.GroupBean" %>
+<%@ page import="de.bandika.cms.group.GroupData" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="de.bandika.user.UserData" %>
+<%@ page import="de.bandika.cms.user.UserData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%

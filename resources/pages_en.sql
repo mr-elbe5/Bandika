@@ -31,6 +31,4 @@ SELECT ADDSITE(700, 720, 2, 'editor', 'Editor', 'areaPage');
 --
 SELECT ADDSITE(700, 730, 3, 'administrator', 'Administrator', 'areaPage');
 --
-UPDATE t_configuration
-SET config_value = 'en'
-WHERE config_key = 'defaultLocale';
+UPDATE t_configuration SET defaultLocale = 'en';

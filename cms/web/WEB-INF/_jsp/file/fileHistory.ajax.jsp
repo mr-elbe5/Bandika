@@ -7,9 +7,9 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.configuration.Configuration" %>
-<%@ page import="de.bandika.file.FileBean" %>
-<%@ page import="de.bandika.file.FileData" %>
+<%@ page import="de.bandika.cms.configuration.Configuration" %>
+<%@ page import="de.bandika.cms.file.FileBean" %>
+<%@ page import="de.bandika.cms.file.FileData" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>

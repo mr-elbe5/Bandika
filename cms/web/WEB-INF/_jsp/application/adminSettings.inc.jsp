@@ -12,8 +12,8 @@
 <%@ page import="de.bandika.rights.SystemZone" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="de.bandika.timer.TimerCache" %>
-<%@ page import="de.bandika.timer.TimerTaskData" %>
+<%@ page import="de.bandika.cms.timer.TimerCache" %>
+<%@ page import="de.bandika.cms.timer.TimerTaskData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%

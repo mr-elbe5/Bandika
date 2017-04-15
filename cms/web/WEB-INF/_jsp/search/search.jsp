@@ -10,6 +10,10 @@
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.search.*" %>
+<%@ page import="de.bandika.cms.search.ContentSearchData" %>
+<%@ page import="de.bandika.cms.search.UserSearchData" %>
+<%@ page import="de.bandika.cms.search.UserSearchResultData" %>
+<%@ page import="de.bandika.cms.search.ContentSearchResultData" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     ContentSearchResultData contentResult = (ContentSearchResultData) request.getAttribute("contentSearchResultData");

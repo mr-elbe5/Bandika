@@ -1,8 +1,8 @@
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.file.FileData" %>
-<%@ page import="de.bandika.pagepart.CkCallbackData" %>
+<%@ page import="de.bandika.cms.file.FileData" %>
+<%@ page import="de.bandika.cms.pagepart.CkCallbackData" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="de.bandika.tree.TreeCache" %>
+<%@ page import="de.bandika.cms.tree.TreeCache" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%

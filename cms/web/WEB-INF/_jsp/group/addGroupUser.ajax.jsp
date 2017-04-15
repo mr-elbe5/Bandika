@@ -8,8 +8,8 @@
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="de.bandika.user.UserBean" %>
-<%@ page import="de.bandika.user.UserData" %>
+<%@ page import="de.bandika.cms.user.UserBean" %>
+<%@ page import="de.bandika.cms.user.UserData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%
