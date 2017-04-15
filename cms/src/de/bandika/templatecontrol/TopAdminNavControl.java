@@ -39,7 +39,7 @@ public class TopAdminNavControl extends TemplateControl {
         boolean hasEditRight = SessionReader.hasContentRight(request, pageId, Right.EDIT);
         boolean hasAdminRight = SessionReader.hasAnySystemRight(request) || SessionReader.hasContentRight(request, TreeNode.ID_ALL, Right.EDIT);
         boolean hasApproveRight = SessionReader.hasContentRight(request, pageId, Right.APPROVE);
-        sb.append("<ul>");
+        sb.append("<nav><ul>");
         if (editMode & hasEditRight) {
             sb.append("<li class=\"edit\"><a href=\"/page.srv?act=savePageContent&pageId=").append(pageId).append("\">").append(getHtml("_save", locale)).append("</a></li>");
 
@@ -64,7 +64,7 @@ public class TopAdminNavControl extends TemplateControl {
                 sb.append("<li class=\"admin\"><a href=\"/admin.srv?act=openAdministration&siteId=").append(siteId).append("&pageId=").append(pageId).append("\" title=\"").append(getHtml("_administration", locale)).append("\"><span class=\"icn isetting\"></span></a></li>");
             }
         }
-        sb.append("</ul>");
+        sb.append("</ul></nav>");
     }
 
 }

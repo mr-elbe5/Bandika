@@ -36,7 +36,7 @@ public class BreadcrumbControl extends TemplateControl {
             activeIds.addAll(pageData.getParentIds());
             activeIds.add(pageData.getId());
         }
-        sb.append("<div class=\"breadcrumb flexItemThree\"><ul>");
+        sb.append("<nav class=\"breadcrumb flexItemThree\"><ul>");
         for (int i = 1; i < activeIds.size(); i++) {
             TreeNode bcnode = tc.getNode(activeIds.get(i));
             if (bcnode == null || ((bcnode instanceof PageData) && ((PageData) bcnode).isDefaultPage())) {
@@ -44,7 +44,7 @@ public class BreadcrumbControl extends TemplateControl {
             }
             sb.append("<li><a href=\"").append(bcnode.getUrl()).append("\">").append(toHtml(bcnode.getDisplayName())).append("</a></li>");
         }
-        sb.append("</ul></div>");
+        sb.append("</ul></nav>");
     }
 
 }
