@@ -43,12 +43,12 @@ nav.mainNav ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    display: block;
+    display: table;
 }
 
 /* level 1 */
 nav.mainNav ul li {
-    display: inline-block;
+    display: table-cell;
     position: relative;
     margin-right: 1px;
 }
@@ -402,4 +402,49 @@ h1.topCenter {
 
 .article .textBox a {
     padding: 0;
+}
+
+@media print{
+
+    html {
+        height: auto !important;
+    }
+
+    body {
+        height: auto;
+        overflow-y: auto !important;
+    }
+
+    .viewport {
+        height: auto !important;
+    }
+
+    .navSection {
+        display: none;
+    }
+
+    .breadcrumb{
+        height: auto;
+    }
+
+    .topNavSection{
+        display: none;
+    }
+
+    .main {
+        bottom: auto;
+        position: inherit;
+        width: 100%;
+        top: auto;
+        overflow: inherit;
+    }
+
+    aside{
+        display: none;
+    }
+
+    .footer{
+        display: none;
+    }
+
 }

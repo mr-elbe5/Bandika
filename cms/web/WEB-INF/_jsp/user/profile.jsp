@@ -102,7 +102,7 @@
             </div>
         </section>
         <aside class="asideSection flexItemOne">
-            <div class="section">
+            <nav class="section">
                 <ul class="linkList">
                     <li>
                         <div class="icn ipassword" onclick="return openLayerDialog('<%=StringUtil.getHtml("_changePassword",locale)%>', '/user.ajx?act=openChangePassword');"><%=StringUtil.getHtml("_changePassword", locale)%>
@@ -113,7 +113,7 @@
                         </div>
                     </li>
                 </ul>
-            </div>
+            </nav>
         </aside>
     </div>
 </section>

@@ -48,6 +48,7 @@ public class TopAdminNavControl extends TemplateControl {
             }
             sb.append("<li class=\"edit\"><a href=\"/page.srv?act=stopEditing&pageId=").append(pageId).append("\">").append(getHtml("_cancel", locale)).append("</a></li>");
         } else {
+            sb.append("<li class=\"admin\"><a href=\"javascript:window.print();\" title=\"").append(getHtml("_print", locale)).append("\"><span class=\"icn iprint\"></span></a></li>");
             if (pageId != 0 && hasEditRight) {
                 sb.append("<li class=\"admin\"><a href=\"/page.srv?act=openEditPageContent&pageId=").append(pageId).append("\" title=\"").append(getHtml("_editPage", locale)).append("\"><span class=\"icn iedit\"></span></a></li>");
             }

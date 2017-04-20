@@ -185,6 +185,10 @@
     content: '\E095';
 }
 
+.icn.iprint:before {
+    content: '\E10a';
+}
+
 .icn.iprofile:before {
     content: '\E09c';
 }
