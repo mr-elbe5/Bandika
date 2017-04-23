@@ -22,28 +22,26 @@
     </head>
     <body class="carbon">
     <div class="viewport">
-        <section class="topNavSection flexRow">
-            <div class="flexItem left">
+        <section class="topNavSection">
+            <div class="left">
                 <cms-control type="topAdminNav"/>
             </div>
-            <div class="flexItem right">
+            <div class="right">
                 <cms-control type="topNav"/>
             </div>
         </section>
         <section class="headerSection">
-            <section class="titleSection">
+            <section class="headerMain">
                 <div class="title">
                     <a class="logo" href="/"><img src="/_statics/img/logo.png" alt=""/></a>
-                    <div class="titleText">
-                        <cms-res key="appTitle"/>
+                </div>
+                <div class="menu">
+                    <div class="navBtn">&nbsp;
                     </div>
+                    <cms-control type="mainMenu"/>
                 </div>
-                <div class="navBtn">
-                    &nbsp;
-                </div>
-                <cms-control type="mainMenu"/>
             </section>
-            <section class="searchSection flexRow">
+            <section class="searchSection">
                 <cms-control type="breadcrumb"/>
                 <cms-snippet name="searchBox"/>
             </section>

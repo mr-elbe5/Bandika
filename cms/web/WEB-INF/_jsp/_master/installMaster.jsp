@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="/_statics/css/base.css">
     <link rel="stylesheet" href="/_statics/css/fonts.css">
     <link rel="stylesheet" href="/_statics/css/cms.css">
+    <link rel="stylesheet" href="/_statics/css/layout.css">
     <script type="text/javascript" src="/_statics/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="/_statics/js/jquery.treeview.js"></script>
     <script type="text/javascript" src="/_statics/js/base.js"></script>
@@ -28,11 +29,9 @@
 <div class="viewport">
     <section class="topNavSection"></section>
     <section class="headerSection">
-        <section class="titleSection">
+        <section class="headerMain">
             <div class="title">
                 <a class="logo"><img src="/_statics/img/logo.png" alt="<%=StringUtil.toHtml(title)%>"/></a>
-                <div class="titleText"><%=StringUtil.toHtml(title)%>
-                </div>
             </div>
         </section>
     </section>

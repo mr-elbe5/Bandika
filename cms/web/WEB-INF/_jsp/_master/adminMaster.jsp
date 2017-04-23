@@ -33,7 +33,7 @@
 <body class="frontend carbon">
 <div class="viewport">
     <section class="topNavSection">
-        <div class="flexItem right">
+        <div class="right">
             <ul>
                 <li>
                     <a href="/"><%=StringUtil.getHtml("_home", locale)%>
@@ -47,11 +47,9 @@
         </div>
     </section>
     <section class="headerSection">
-        <section class="titleSection">
+        <section class="headerMain">
             <div class="title">
                 <a class="logo" href="/"><img src="/_statics/img/logo.png" alt="<%=StringUtil.toHtml(title)%>"/></a>
-                <div class="titleText"><%=StringUtil.toHtml(title)%>
-                </div>
             </div>
         </section>
     </section>

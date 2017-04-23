@@ -32,22 +32,22 @@
 </head>
 <body class="carbon">
 <div class="viewport">
-    <section class="topNavSection flexRow">
-        <div class="flexItem left">
+    <section class="topNavSection">
+        <div class="left">
             <cms:control name="<%=TopAdminNavControl.KEY%>"/>
         </div>
-        <div class="flexItem right">
+        <div class="right">
             <cms:control name="<%=TopNavControl.KEY%>"/>
         </div>
     </section>
     <section class="headerSection">
-        <section class="titleSection">
+        <section class="headerMain">
             <div class="title">
                 <a class="logo" href="/"><img src="/_statics/img/logo.png" alt="<%=StringUtil.toHtml(title)%>"/></a>
-                <div class="titleText"><%=StringUtil.toHtml(title)%>
-                </div>
             </div>
-            <cms:control name="<%=MainMenuControl.KEY%>"/>
+            <div class="menu">
+                <cms:control name="<%=MainMenuControl.KEY%>"/>
+            </div>
         </section>
         <section class="searchSection flexRow">
             <cms:control name="<%=BreadcrumbControl.KEY%>"/> <cms:snippet name="searchBox"/>

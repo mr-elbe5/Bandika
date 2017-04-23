@@ -88,15 +88,19 @@ body {
 
 /* links above mainArea */
 .topNavSection {
+    display: table;
+    width: 100%;
     height: 25px;
 }
 
 .topNavSection div.left {
+    display: table-cell;
     text-align: left;
     padding-left: 5px;
 }
 
 .topNavSection div.right {
+    display: table-cell;
     text-align: right;
 }
 
@@ -128,26 +132,23 @@ body {
 .headerSection {
 }
 
-.titleSection {
+.headerMain {
+    display: table;
+    width: 100%;
     position: relative;
     padding: 10px 10px 0 10px;
 }
 
-.titleSection .title {
-    display: inline-block;
-}
-
-.titleSection .logo {
-    display: inline-block;
+.headerMain .logo {
+    display: table-cell;
+    vertical-align: top;
     margin-right: 10px;
 }
 
-.titleSection div.titleText {
-    color: #e7e7e7;
-    font-size: 28px;
-    position: relative;
-    top: -10px;
-    display: inline-block;
+.headerMain .menu {
+    display: table-cell;
+    vertical-align: top;
+    margin-left: 10px;
 }
 
 /* main navigation and breadcrumb*/
@@ -156,9 +157,6 @@ nav {
 }
 
 /* main navigation */
-
-nav.mainNav {
-}
 
 div.navBtn {
     float: right;

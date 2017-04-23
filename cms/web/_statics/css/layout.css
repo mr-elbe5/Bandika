@@ -19,10 +19,6 @@
 
 nav.mainNav {
     border-bottom: 1px solid #e7e7e7;
-    position: absolute;
-    left: 250px;
-    right: 0;
-    top: 20px;
     min-height: 30px;
 }
 
@@ -119,10 +115,12 @@ nav.mainNav ul li ul li ul li a li a {
 }
 
 .searchSection {
-    overflow: hidden;
+    display: table;
+    width: 100%;
 }
 
 .breadcrumb {
+    display: table-cell;
     font-size: 11px;
     padding: 0 10px;
     height: 21px;
@@ -153,6 +151,7 @@ nav.mainNav ul li ul li ul li a li a {
 }
 
 .searchBox {
+    display: table-cell;
     min-width: 200px;
     text-align: right;
 }
