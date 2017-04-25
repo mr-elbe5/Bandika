@@ -15,7 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 
 public class MasterTemplateData extends TemplateData {
 
-    public MasterTemplateData() {
+    public MasterTemplateData(TemplateDataType dataType) {
+        super(dataType == TemplateDataType.NONE ? TemplateDataType.SITE : dataType);
         type = TemplateType.MASTER;
     }
 

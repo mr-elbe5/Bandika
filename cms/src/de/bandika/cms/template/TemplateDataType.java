@@ -9,7 +9,12 @@
 package de.bandika.cms.template;
 
 public enum TemplateDataType {
-    DEFAULT,
-    DOCCENTER,
-    NEWSCENTER;
+    NONE,
+    SITE,
+    PAGE,
+    PART,
+    PARTCONTAINER,
+    SNIPPET,
+    DOCCENTERPART,
+    NEWSCENTERPART;
 }

@@ -10,28 +10,28 @@ package de.bandika.cms.template;
 
 public enum TemplateType {
     NONE {
-        public TemplateData getNewTemplateData(TemplateDataType subType) {
+        public TemplateData getNewTemplateData(TemplateDataType dataType) {
             return null;
         }
     }, MASTER {
-        public TemplateData getNewTemplateData(TemplateDataType subType) {
-            return new MasterTemplateData();
+        public TemplateData getNewTemplateData(TemplateDataType dataType) {
+            return new MasterTemplateData(dataType);
         }
     }, PAGE {
-        public TemplateData getNewTemplateData(TemplateDataType subType) {
-            return new PageTemplateData();
+        public TemplateData getNewTemplateData(TemplateDataType dataType) {
+            return new PageTemplateData(dataType);
         }
     }, PART {
-        public TemplateData getNewTemplateData(TemplateDataType subType) {return new PartTemplateData(); }
+        public TemplateData getNewTemplateData(TemplateDataType dataType) {return new PartTemplateData(dataType); }
     }, SNIPPET {
-        public TemplateData getNewTemplateData(TemplateDataType subType) {
-            return new SnippetTemplateData();
+        public TemplateData getNewTemplateData(TemplateDataType dataType) {
+            return new SnippetTemplateData(dataType);
         }
     }, PARTCONTAINER {
-        public TemplateData getNewTemplateData(TemplateDataType subType) {
-            return new PartContainerTemplateData();
+        public TemplateData getNewTemplateData(TemplateDataType dataType) {
+            return new PartContainerTemplateData(dataType);
         }
     };
 
-    public abstract TemplateData getNewTemplateData(TemplateDataType subType);
+    public abstract TemplateData getNewTemplateData(TemplateDataType dataType);
 }

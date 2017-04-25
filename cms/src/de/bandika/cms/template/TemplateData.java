@@ -28,7 +28,15 @@ public class TemplateData extends BaseData implements Serializable {
     public static final String USAGE_ALL = "all";
 
     public enum TagType {
-        CONTENT("<cms-content", "</cms-content>"), PART("<cms-part", "</cms-part>"), FIELD("<cms-field", "</cms-field>"), CONTROL("<cms-control", "</cms-control>"), SECTION("<cms-section", "</cms-section>"), SNIPPET("<cms-snippet", "</cms-snippet>"), RESOURCE("<cms-res", "</cms-res>"), PARTID("<cms-pid", "</cms-pid>"), CONTAINERID("<cms-cid", "</cms-cid>");
+        CONTENT("<cms-content", "</cms-content>"),
+        PART("<cms-part", "</cms-part>"),
+        FIELD("<cms-field", "</cms-field>"),
+        CONTROL("<cms-control", "</cms-control>"),
+        SECTION("<cms-section", "</cms-section>"),
+        SNIPPET("<cms-snippet", "</cms-snippet>"),
+        RESOURCE("<cms-res", "</cms-res>"),
+        PARTID("<cms-pid", "</cms-pid>"),
+        CONTAINERID("<cms-cid", "</cms-cid>");
 
         private String startTag;
         private String endTag;
@@ -53,12 +61,16 @@ public class TemplateData extends BaseData implements Serializable {
     public static final String PLACEHOLDER_PARTS = "<cms-parts/>";
 
     protected TemplateType type = TemplateType.NONE;
-    protected TemplateDataType dataType = TemplateDataType.DEFAULT;
+    protected TemplateDataType dataType = TemplateDataType.NONE;
     protected String name = "";
     protected String displayName = "";
     protected String description = "";
     protected String usage = "";
     protected String code = "";
+
+    public TemplateData(TemplateDataType dataType){
+        this.dataType = dataType;
+    }
 
     public TemplateType getType() {
         return type;
@@ -66,10 +78,6 @@ public class TemplateData extends BaseData implements Serializable {
 
     public TemplateDataType getDataType() {
         return dataType;
-    }
-
-    public void setDataType(TemplateDataType dataType) {
-        this.dataType = dataType;
     }
 
     public String getName() {

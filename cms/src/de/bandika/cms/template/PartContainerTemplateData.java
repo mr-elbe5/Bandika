@@ -15,8 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 
 public class PartContainerTemplateData extends TemplateData {
 
-    public PartContainerTemplateData() {
-        type = TemplateType.SNIPPET;
+    public PartContainerTemplateData(TemplateDataType dataType) {
+        super(dataType == TemplateDataType.NONE ? TemplateDataType.PARTCONTAINER : dataType);
+        type = TemplateType.PARTCONTAINER;
     }
 
     protected boolean appendTagReplacement(StringBuilder sb, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) {

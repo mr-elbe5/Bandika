@@ -68,7 +68,7 @@ public enum TemplateAction implements ICmsAction {
                     if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                         return false;
                     TemplateType type = TemplateType.valueOf(RequestReader.getString(request, "templateType"));
-                    TemplateDataType dataType = TemplateDataType.DEFAULT;
+                    TemplateDataType dataType = TemplateDataType.NONE;
                     String dataTypeName=RequestReader.getString(request,"dataType");
                     if (!dataTypeName.isEmpty()){
                         try{
@@ -204,7 +204,7 @@ public enum TemplateAction implements ICmsAction {
 
     protected boolean importTemplate(TemplateAttributes attributes, String code) {
         TemplateType type = TemplateType.valueOf(attributes.getString("type"));
-        TemplateDataType dataType = TemplateDataType.DEFAULT;
+        TemplateDataType dataType = TemplateDataType.NONE;
         String dataTypeName=attributes.getString("dataType");
         if (!dataTypeName.isEmpty()){
             try{
