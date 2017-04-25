@@ -49,6 +49,13 @@
             </tr>
             <tr>
                 <td>
+                    <label for="dataType"><%=StringUtil.getHtml("_dataType", locale)%>&nbsp</label></td>
+                <td>
+                    <input type="text" id="dataType" name="dataType" value="<%=StringUtil.toHtml(data.getDataType().name())%>" maxlength="20"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <label for="description"><%=StringUtil.getHtml("_description", locale)%>&nbsp;*</label></td>
                 <td>
           <textarea id="description" name="description" rows="3" cols=""><%=StringUtil.toHtmlInput(data.getDescription())%>

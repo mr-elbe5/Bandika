@@ -53,6 +53,7 @@ public class TemplateData extends BaseData implements Serializable {
     public static final String PLACEHOLDER_PARTS = "<cms-parts/>";
 
     protected TemplateType type = TemplateType.NONE;
+    protected TemplateDataType dataType = TemplateDataType.DEFAULT;
     protected String name = "";
     protected String displayName = "";
     protected String description = "";
@@ -61,6 +62,14 @@ public class TemplateData extends BaseData implements Serializable {
 
     public TemplateType getType() {
         return type;
+    }
+
+    public TemplateDataType getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(TemplateDataType dataType) {
+        this.dataType = dataType;
     }
 
     public String getName() {

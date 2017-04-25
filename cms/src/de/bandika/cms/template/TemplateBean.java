@@ -74,12 +74,13 @@ public class TemplateBean extends DbBean {
         PreparedStatement pst = null;
         TemplateData data;
         try {
-            pst = con.prepareStatement("SELECT name,change_date,display_name,description,usage,code FROM t_template WHERE type=? ORDER BY name");
+            pst = con.prepareStatement("SELECT data_type,name,change_date,display_name,description,usage,code FROM t_template WHERE type=? ORDER BY name");
             pst.setString(1, type.name());
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 int i = 1;
-                data = type.getNewTemplateData();
+                String dataType=rs.getString(i++);
+                data = type.getNewTemplateData(TemplateDataType.valueOf(dataType));
                 data.setName(rs.getString(i++));
                 data.setChangeDate(rs.getTimestamp(i++));
                 data.setDisplayName(rs.getString(i++));
@@ -113,13 +114,14 @@ public class TemplateBean extends DbBean {
     protected void writeTemplate(Connection con, TemplateData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(data.isNew() ? "insert into t_template (change_date,description,usage,display_name,code,name,type) values(?,?,?,?,?,?,?)" : "update t_template set change_date=?, description=?, usage=?, display_name=?, code=? where name=? and type=?");
+            pst = con.prepareStatement(data.isNew() ? "insert into t_template (change_date,description,usage,display_name,code,data_type,name,type) values(?,?,?,?,?,?,?,?)" : "update t_template set change_date=?, description=?, usage=?, display_name=?, code=?, data_type=? where name=? and type=?");
             int i = 1;
             pst.setTimestamp(i++, data.getSqlChangeDate());
             pst.setString(i++, data.getDescription());
             pst.setString(i++, data.getUsage());
             pst.setString(i++, data.getDisplayName());
             pst.setString(i++, data.getCode());
+            pst.setString(i++, data.getDataType().name());
             pst.setString(i++, data.getName());
             pst.setString(i, data.getType().name());
             pst.executeUpdate();

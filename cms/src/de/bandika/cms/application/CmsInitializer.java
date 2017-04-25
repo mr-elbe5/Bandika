@@ -17,6 +17,7 @@ import de.bandika.cms.cluster.ClusterAction;
 import de.bandika.cms.cluster.ClusterManager;
 import de.bandika.cms.cluster.ClusterMessageProcessor;
 import de.bandika.cms.field.*;
+import de.bandika.cms.newscenter.NewsCenterAction;
 import de.bandika.cms.template.TemplateAction;
 import de.bandika.cms.configuration.ConfigAction;
 import de.bandika.cms.configuration.Configuration;
@@ -60,6 +61,7 @@ public class CmsInitializer extends Initializer {
             BlogAction.initialize();
             DefaultAction.initialize();
             DocCenterAction.initialize();
+            NewsCenterAction.initialize();
             InstallerAction.initialize();
             ClusterAction.initialize();
             ConfigAction.initialize();
