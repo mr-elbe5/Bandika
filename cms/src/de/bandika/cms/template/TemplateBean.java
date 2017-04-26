@@ -36,7 +36,7 @@ public class TemplateBean extends DbBean {
         try {
             pst = con.prepareStatement("SELECT change_date FROM t_template WHERE name=? AND type=?");
             pst.setString(1, data.getName());
-            pst.setString(2, data.getDataTypeName());
+            pst.setString(2, data.getType().name());
             rs = pst.executeQuery();
             if (rs.next()) {
                 Timestamp date = rs.getTimestamp(1);

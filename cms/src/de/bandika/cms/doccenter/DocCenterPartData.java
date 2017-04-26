@@ -19,6 +19,10 @@ public class DocCenterPartData extends PagePartData {
     public final static int MODE_HISTORY = 3;
     public final static int MODE_HISTORY_DELETE = 4;
 
+    public DocCenterPartData(){
+        System.out.println("doccenter part created");
+    }
+
     @Override
     public PartTemplateDataType getDataType(){
         return PartTemplateDataType.DOCCENTERPART;

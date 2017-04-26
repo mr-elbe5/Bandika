@@ -197,7 +197,8 @@ public enum TemplateAction implements ICmsAction {
     protected boolean importTemplate(TemplateAttributes attributes, String code) {
         TemplateType type = TemplateType.valueOf(attributes.getString("type"));
         TemplateData data = type.getNewTemplateData();
-        data.setDataTypeName(attributes.getString("dataType"));
+        String dataTypeName=attributes.getString("dataType");
+        data.setDataTypeName(dataTypeName.isEmpty() ? TemplateData.DEFAULT_DATA_TYPE : dataTypeName);
         data.setName(attributes.getString("name"));
         data.setDisplayName(attributes.getString("displayName"));
         data.setUsage(attributes.getString("usage"));
