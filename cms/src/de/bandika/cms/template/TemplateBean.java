@@ -79,8 +79,7 @@ public class TemplateBean extends DbBean {
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 int i = 1;
-                String dataType=rs.getString(i++);
-                data = type.getNewTemplateData(TemplateDataType.valueOf(dataType));
+                data = type.getNewTemplateData(TemplateDataType.getTemplateDataType(rs.getString(i++)));
                 data.setName(rs.getString(i++));
                 data.setChangeDate(rs.getTimestamp(i++));
                 data.setDisplayName(rs.getString(i++));
@@ -121,7 +120,10 @@ public class TemplateBean extends DbBean {
             pst.setString(i++, data.getUsage());
             pst.setString(i++, data.getDisplayName());
             pst.setString(i++, data.getCode());
-            pst.setString(i++, data.getDataType().name());
+            if (data.getDataType()==null)
+                pst.setNull(i++,Types.VARCHAR);
+            else
+                pst.setString(i++, data.getDataType().name());
             pst.setString(i++, data.getName());
             pst.setString(i, data.getType().name());
             pst.executeUpdate();

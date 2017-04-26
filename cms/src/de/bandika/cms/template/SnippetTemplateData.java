@@ -11,7 +11,7 @@ package de.bandika.cms.template;
 public class SnippetTemplateData extends TemplateData {
 
     public SnippetTemplateData(TemplateDataType dataType) {
-        super(dataType == TemplateDataType.NONE ? TemplateDataType.SNIPPET : dataType);
+        super(dataType);
         type = TemplateType.SNIPPET;
     }
 

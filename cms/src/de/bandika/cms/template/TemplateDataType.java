@@ -8,13 +8,21 @@
  */
 package de.bandika.cms.template;
 
+import de.bandika.base.log.Log;
+
 public enum TemplateDataType {
-    NONE,
-    SITE,
-    PAGE,
-    PART,
-    PARTCONTAINER,
-    SNIPPET,
     DOCCENTERPART,
     NEWSCENTERPART;
+
+    public static TemplateDataType getTemplateDataType(String s){
+        if (s==null || s.isEmpty())
+            return null;
+        try{
+            return TemplateDataType.valueOf(s);
+        }
+        catch (Exception e){
+            Log.error("bad template data type: "+s);
+            return null;
+        }
+    }
 }

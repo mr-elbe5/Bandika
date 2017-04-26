@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 public class PageTemplateData extends TemplateData {
 
     public PageTemplateData(TemplateDataType dataType) {
-        super(dataType == TemplateDataType.NONE ? TemplateDataType.PAGE : dataType);
+        super(dataType);
         type = TemplateType.PAGE;
     }
 

@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 public class PartTemplateData extends TemplateData {
 
     public PartTemplateData(TemplateDataType dataType) {
-        super(dataType == TemplateDataType.NONE ? TemplateDataType.PART : dataType);
+        super(dataType);
         type = TemplateType.PART;
     }
 

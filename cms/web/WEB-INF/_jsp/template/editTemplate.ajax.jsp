@@ -51,7 +51,7 @@
                 <td>
                     <label for="dataType"><%=StringUtil.getHtml("_dataType", locale)%>&nbsp</label></td>
                 <td>
-                    <input type="text" id="dataType" name="dataType" value="<%=StringUtil.toHtml(data.getDataType().name())%>" maxlength="20"/>
+                    <input type="text" id="dataType" name="dataType" value="<%=StringUtil.toHtml(data.getDataTypeName())%>" maxlength="20"/>
                 </td>
             </tr>
             <tr>
