@@ -12,7 +12,7 @@ import de.bandika.base.data.XmlData;
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.pagepart.PagePartData;
-import de.bandika.cms.template.TemplateAttributes;
+import de.bandika.cms.template.*;
 import de.bandika.servlet.SessionReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -34,7 +34,7 @@ public class SectionData implements XmlData {
     public void cloneData(SectionData data) {
         setName(data.getName());
         for (PagePartData srcPart : data.parts) {
-            PagePartData part = new PagePartData();
+            PagePartData part = srcPart.getDataType().getNewPagePartData();
             part.setPageId(getPageId());
             part.setSection(getName());
             part.cloneData(srcPart);
@@ -73,7 +73,8 @@ public class SectionData implements XmlData {
                 return ppd;
             }
         }
-        part = new PagePartData();
+        PartTemplateData template= (PartTemplateData)TemplateCache.getInstance().getTemplate(TemplateType.PART,templateName);
+        part = template.getDataType().getNewPagePartData();
         part.setTemplateName(templateName);
         part.setId(PageBean.getInstance().getNextId());
         part.setSection(getName());
@@ -223,7 +224,7 @@ public class SectionData implements XmlData {
         List<Element> children = XmlUtil.getChildElements(node);
         for (Element child : children) {
             if (child.getTagName().equals("part")) {
-                PagePartData part = new PagePartData();
+                PagePartData part = PartTemplateDataType.getNewPagePartData(child.getAttribute("dataType"));
                 part.setPageId(getPageId());
                 part.setSection(getName());
                 part.fromXml(child);

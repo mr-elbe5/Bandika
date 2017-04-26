@@ -121,7 +121,7 @@ CREATE TABLE t_timer_task (
 CREATE TABLE t_template (
   name         VARCHAR(60)  NOT NULL,
   type         VARCHAR(20)  NOT NULL,
-  data_type    VARCHAR(20)  NULL,
+  data_type    VARCHAR(20)  NOT NULL DEFAULT 'DEFAULT',
   change_date  TIMESTAMP    NOT NULL DEFAULT now(),
   display_name VARCHAR(100) NOT NULL DEFAULT '',
   description  VARCHAR(255) NOT NULL DEFAULT '',

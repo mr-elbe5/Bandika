@@ -15,8 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public class PartContainerTemplateData extends TemplateData {
 
-    public PartContainerTemplateData(TemplateDataType dataType) {
-        super(dataType);
+    public PartContainerTemplateData() {
         type = TemplateType.PARTCONTAINER;
     }
 

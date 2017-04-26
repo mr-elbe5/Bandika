@@ -9,6 +9,7 @@
 package de.bandika.cms.doccenter;
 
 import de.bandika.cms.pagepart.PagePartData;
+import de.bandika.cms.template.PartTemplateDataType;
 
 public class DocCenterPartData extends PagePartData {
 
@@ -17,6 +18,11 @@ public class DocCenterPartData extends PagePartData {
     public final static int MODE_DELETE = 2;
     public final static int MODE_HISTORY = 3;
     public final static int MODE_HISTORY_DELETE = 4;
+
+    @Override
+    public PartTemplateDataType getDataType(){
+        return PartTemplateDataType.DOCCENTERPART;
+    }
 
     protected String title = "";
 

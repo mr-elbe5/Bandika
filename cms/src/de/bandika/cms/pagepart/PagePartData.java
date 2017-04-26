@@ -16,6 +16,7 @@ import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.page.PageBean;
+import de.bandika.cms.template.PartTemplateDataType;
 import de.bandika.servlet.SessionReader;
 import de.bandika.cms.template.TemplateData;
 import de.bandika.cms.template.TemplateType;
@@ -46,6 +47,14 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
 
     public PagePartData() {
         setContentCount(1);
+    }
+
+    public PartTemplateDataType getDataType(){
+        return null;
+    }
+
+    public String getDataTypeName(){
+        return getDataType()==null ? "" : getDataType().name();
     }
 
     @Override
@@ -353,6 +362,7 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
 
     public void addXmlAttributes(Document xmlDoc, Element node) {
         XmlUtil.addBooleanAttribute(xmlDoc, node, "shared", isShared());
+        XmlUtil.addAttribute(xmlDoc, node, "dataType", getDataTypeName());
         XmlUtil.addAttribute(xmlDoc, node, "shareName", StringUtil.toXml(getShareName()));
         XmlUtil.addIntAttribute(xmlDoc, node, "ranking", getRanking());
         XmlUtil.addAttribute(xmlDoc, node, "templateName", StringUtil.toXml(getTemplateName()));

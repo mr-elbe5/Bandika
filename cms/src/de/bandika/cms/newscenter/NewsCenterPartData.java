@@ -9,8 +9,14 @@
 package de.bandika.cms.newscenter;
 
 import de.bandika.cms.pagepart.PagePartData;
+import de.bandika.cms.template.PartTemplateDataType;
 
 public class NewsCenterPartData extends PagePartData {
+
+    @Override
+    public PartTemplateDataType getDataType(){
+        return PartTemplateDataType.NEWSCENTERPART;
+    }
 
     protected String title = "";
 

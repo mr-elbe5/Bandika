@@ -16,9 +16,22 @@ import javax.servlet.http.HttpServletRequest;
 
 public class PartTemplateData extends TemplateData {
 
-    public PartTemplateData(TemplateDataType dataType) {
-        super(dataType);
+    PartTemplateDataType dataType=PartTemplateDataType.DEFAULT;
+
+    public PartTemplateData() {
         type = TemplateType.PART;
+    }
+
+    public PartTemplateDataType getDataType() {
+        return dataType;
+    }
+
+    public String getDataTypeName(){
+        return getDataType().name();
+    }
+
+    public void setDataTypeName(String dataTypeName){
+        dataType=PartTemplateDataType.valueOf(dataTypeName);
     }
 
     protected boolean appendTagReplacement(StringBuilder sb, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) {

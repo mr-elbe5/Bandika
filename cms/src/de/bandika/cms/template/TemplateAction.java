@@ -68,8 +68,8 @@ public enum TemplateAction implements ICmsAction {
                     if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                         return false;
                     TemplateType type = TemplateType.valueOf(RequestReader.getString(request, "templateType"));
-                    TemplateDataType dataType = TemplateDataType.getTemplateDataType(RequestReader.getString(request, "dataType"));
-                    TemplateData data = type.getNewTemplateData(dataType);
+                    TemplateData data = type.getNewTemplateData();
+                    data.setDataTypeName(RequestReader.getString(request, "dataType"));
                     data.setNew(true);
                     data.prepareEditing();
                     SessionWriter.setSessionObject(request, "templateData", data);
@@ -196,8 +196,8 @@ public enum TemplateAction implements ICmsAction {
 
     protected boolean importTemplate(TemplateAttributes attributes, String code) {
         TemplateType type = TemplateType.valueOf(attributes.getString("type"));
-        TemplateDataType dataType = TemplateDataType.getTemplateDataType(attributes.getString("dataType"));
-        TemplateData data = type.getNewTemplateData(dataType);
+        TemplateData data = type.getNewTemplateData();
+        data.setDataTypeName(attributes.getString("dataType"));
         data.setName(attributes.getString("name"));
         data.setDisplayName(attributes.getString("displayName"));
         data.setUsage(attributes.getString("usage"));

@@ -36,7 +36,7 @@ public class TemplateBean extends DbBean {
         try {
             pst = con.prepareStatement("SELECT change_date FROM t_template WHERE name=? AND type=?");
             pst.setString(1, data.getName());
-            pst.setString(2, data.getType().name());
+            pst.setString(2, data.getDataTypeName());
             rs = pst.executeQuery();
             if (rs.next()) {
                 Timestamp date = rs.getTimestamp(1);
@@ -79,7 +79,8 @@ public class TemplateBean extends DbBean {
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 int i = 1;
-                data = type.getNewTemplateData(TemplateDataType.getTemplateDataType(rs.getString(i++)));
+                data = type.getNewTemplateData();
+                data.setDataTypeName(rs.getString(i++));
                 data.setName(rs.getString(i++));
                 data.setChangeDate(rs.getTimestamp(i++));
                 data.setDisplayName(rs.getString(i++));
@@ -120,10 +121,7 @@ public class TemplateBean extends DbBean {
             pst.setString(i++, data.getUsage());
             pst.setString(i++, data.getDisplayName());
             pst.setString(i++, data.getCode());
-            if (data.getDataType()==null)
-                pst.setNull(i++,Types.VARCHAR);
-            else
-                pst.setString(i++, data.getDataType().name());
+            pst.setString(i++, data.getDataTypeName());
             pst.setString(i++, data.getName());
             pst.setString(i, data.getType().name());
             pst.executeUpdate();

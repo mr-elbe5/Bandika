@@ -11,6 +11,10 @@ package de.bandika.cms.pagepart;
 import de.bandika.base.log.Log;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.page.SectionData;
+import de.bandika.cms.template.PartTemplateData;
+import de.bandika.cms.template.TemplateCache;
+import de.bandika.cms.template.TemplateData;
+import de.bandika.cms.template.TemplateType;
 import de.bandika.cms.tree.TreeBean;
 
 import java.sql.*;
@@ -41,8 +45,10 @@ public class PagePartBean extends TreeBean {
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     int i = 1;
-                    partData = new PagePartData();
-                    partData.setTemplateName(rs.getString(i++));
+                    String templateName=rs.getString(i++);
+                    PartTemplateData template= (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART,templateName);
+                    partData = template.getDataType().getNewPagePartData();
+                    partData.setTemplateName(templateName);
                     partData.setId(rs.getInt(i++));
                     partData.setChangeDate(rs.getTimestamp(i++));
                     partData.setPageId(pageData.getId());
@@ -68,8 +74,10 @@ public class PagePartBean extends TreeBean {
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     int i = 1;
-                    partData = new PagePartData();
-                    partData.setTemplateName(rs.getString(i++));
+                    String templateName=rs.getString(i++);
+                    PartTemplateData template= (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART,templateName);
+                    partData = template.getDataType().getNewPagePartData();
+                    partData.setTemplateName(templateName);
                     partData.setId(rs.getInt(i++));
                     partData.setChangeDate(rs.getTimestamp(i++));
                     partData.setPageId(page.getId());
@@ -128,8 +136,10 @@ public class PagePartBean extends TreeBean {
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     int i = 1;
-                    partData = new PagePartData();
-                    partData.setTemplateName(rs.getString(i++));
+                    String templateName=rs.getString(i++);
+                    PartTemplateData template= (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART,templateName);
+                    partData = template.getDataType().getNewPagePartData();
+                    partData.setTemplateName(templateName);
                     partData.setId(rs.getInt(i++));
                     partData.setChangeDate(rs.getTimestamp(i++));
                     partData.setPageId(0);
@@ -157,8 +167,10 @@ public class PagePartBean extends TreeBean {
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
-                    partData = new PagePartData();
-                    partData.setTemplateName(rs.getString(i++));
+                    String templateName=rs.getString(i++);
+                    PartTemplateData template= (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART,templateName);
+                    partData = template.getDataType().getNewPagePartData();
+                    partData.setTemplateName(templateName);
                     partData.setId(partId);
                     partData.setChangeDate(rs.getTimestamp(i++));
                     partData.setPageId(0);
@@ -187,8 +199,10 @@ public class PagePartBean extends TreeBean {
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
-                    partData = new PagePartData();
-                    partData.setTemplateName(rs.getString(i++));
+                    String templateName=rs.getString(i++);
+                    PartTemplateData template= (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART,templateName);
+                    partData = template.getDataType().getNewPagePartData();
+                    partData.setTemplateName(templateName);
                     partData.setId(partId);
                     partData.setVersion(rs.getInt(i++));
                     partData.setPageId(rs.getInt(i++));

@@ -8,21 +8,31 @@
  */
 package de.bandika.cms.template;
 
-import de.bandika.base.log.Log;
+import de.bandika.cms.doccenter.DocCenterPartData;
+import de.bandika.cms.newscenter.NewsCenterPartData;
+import de.bandika.cms.pagepart.PagePartData;
 
-public enum TemplateDataType {
-    DOCCENTERPART,
-    NEWSCENTERPART;
+public enum PartTemplateDataType {
+    DEFAULT{
+    },
+    DOCCENTERPART{
+        public PagePartData getNewPagePartData(){
+            return new DocCenterPartData();
+        }
+    },
+    NEWSCENTERPART{
+        public PagePartData getNewPagePartData(){
+            return new NewsCenterPartData();
+        }
+    };
 
-    public static TemplateDataType getTemplateDataType(String s){
-        if (s==null || s.isEmpty())
-            return null;
-        try{
-            return TemplateDataType.valueOf(s);
-        }
-        catch (Exception e){
-            Log.error("bad template data type: "+s);
-            return null;
-        }
+    public PagePartData getNewPagePartData(){
+        return new PagePartData();
+    }
+
+    public static PagePartData getNewPagePartData(String templateTypeName){
+        if (templateTypeName.isEmpty())
+            new PagePartData();
+        return valueOf(templateTypeName).getNewPagePartData();
     }
 }
