@@ -8,31 +8,43 @@
  */
 package de.bandika.cms.template;
 
+import de.bandika.base.log.Log;
 import de.bandika.cms.doccenter.DocCenterPartData;
 import de.bandika.cms.newscenter.NewsCenterPartData;
 import de.bandika.cms.pagepart.PagePartData;
 
 public enum PartTemplateDataType {
-    DEFAULT{
+    DEFAULT {
+        public PagePartData getNewPagePartData(){
+            return HTML.getNewPagePartData();
+        }
     },
-    DOCCENTERPART{
+    HTML{
+        public PagePartData getNewPagePartData(){
+            return new PagePartData();
+        }
+    },
+    DOCCENTER {
         public PagePartData getNewPagePartData(){
             return new DocCenterPartData();
         }
     },
-    NEWSCENTERPART{
+    NEWSCENTER {
         public PagePartData getNewPagePartData(){
             return new NewsCenterPartData();
         }
     };
 
-    public PagePartData getNewPagePartData(){
-        return new PagePartData();
+    public abstract PagePartData getNewPagePartData();
+
+    public static PartTemplateDataType getPageTemplateDataType(String dataTypeName){
+        try {
+            return valueOf(dataTypeName);
+        }
+        catch (Exception e){
+            Log.warn("no valid page part data type: "+dataTypeName);
+            return DEFAULT;
+        }
     }
 
-    public static PagePartData getNewPagePartData(String templateTypeName){
-        if (templateTypeName.isEmpty())
-            new PagePartData();
-        return valueOf(templateTypeName).getNewPagePartData();
-    }
 }

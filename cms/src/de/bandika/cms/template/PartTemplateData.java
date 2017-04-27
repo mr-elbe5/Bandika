@@ -31,7 +31,7 @@ public class PartTemplateData extends TemplateData {
     }
 
     public void setDataTypeName(String dataTypeName){
-        dataType=PartTemplateDataType.valueOf(dataTypeName);
+        dataType=PartTemplateDataType.getPageTemplateDataType(dataTypeName);
     }
 
     protected boolean appendTagReplacement(StringBuilder sb, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) {

@@ -224,7 +224,7 @@ public class SectionData implements XmlData {
         List<Element> children = XmlUtil.getChildElements(node);
         for (Element child : children) {
             if (child.getTagName().equals("part")) {
-                PagePartData part = PartTemplateDataType.getNewPagePartData(child.getAttribute("dataType"));
+                PagePartData part = PartTemplateDataType.getPageTemplateDataType(child.getAttribute("dataType")).getNewPagePartData();
                 part.setPageId(getPageId());
                 part.setSection(getName());
                 part.fromXml(child);

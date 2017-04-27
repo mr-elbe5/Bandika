@@ -25,7 +25,7 @@ public class DocCenterPartData extends PagePartData {
 
     @Override
     public PartTemplateDataType getDataType(){
-        return PartTemplateDataType.DOCCENTERPART;
+        return PartTemplateDataType.DOCCENTER;
     }
 
     protected String title = "";

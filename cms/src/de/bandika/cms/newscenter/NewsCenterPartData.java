@@ -15,7 +15,7 @@ public class NewsCenterPartData extends PagePartData {
 
     @Override
     public PartTemplateDataType getDataType(){
-        return PartTemplateDataType.NEWSCENTERPART;
+        return PartTemplateDataType.NEWSCENTER;
     }
 
     protected String title = "";
