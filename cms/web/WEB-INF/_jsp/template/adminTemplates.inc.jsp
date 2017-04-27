@@ -111,32 +111,6 @@
             </ul>
         </li>
         <li<%=!templateName.isEmpty() ? " class=\"open\"" : ""%>>
-            <div class="contextSource"><%=StringUtil.getHtml("_partContainers", locale)%>
-            </div>
-            <div class="contextMenu">
-                <div class="icn inew" onclick="return openLayerDialog('<%=StringUtil.getHtml("_newPartContainer",locale)%>', '/template.ajx?act=openCreateTemplate&templateType=<%=TemplateType.PARTCONTAINER%>')"><%=StringUtil.getHtml("_new", locale)%>
-                </div>
-            </div>
-            <ul>
-                <%
-                    for (TemplateData template : templates.get(TemplateType.PARTCONTAINER)) {
-                %>
-                <li>
-                    <div class="contextSource icn itemplate <%=templateName.equals(template.getName()) ? "selected" : ""%>" onclick="$('#details').load('/template.ajx?act=showTemplateDetails&templateType=<%=TemplateType.PARTCONTAINER%>&templateName=<%=template.getName()%>')"><%=StringUtil.toHtml(template.getName())%>
-                    </div>
-                    <div class="contextMenu">
-                        <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editTemplate",locale)%>', '/template.ajx?act=openEditTemplate&templateType=<%=TemplateType.PARTCONTAINER%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_edit", locale)%>
-                        </div>
-                        <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteTemplate",locale)%>', '/template.ajx?act=openDeleteTemplate&templateType=<%=TemplateType.PARTCONTAINER%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_delete", locale)%>
-                        </div>
-                    </div>
-                </li>
-                <%
-                    }
-                %>
-            </ul>
-        </li>
-        <li<%=!templateName.isEmpty() ? " class=\"open\"" : ""%>>
             <div class="contextSource"><%=StringUtil.getHtml("_templateSnippets", locale)%>
             </div>
             <div class="contextMenu">

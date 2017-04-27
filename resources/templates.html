@@ -94,7 +94,12 @@
 <cms-template type="PART" dataType="HTML" name="html" displayName="Html Paragraph" usage="all">
     <cms-field type="html" name="html" toolbar="Full">Lorem ipsum</cms-field>
 </cms-template>
-<cms-template type="PART" name="bannerImg" displayName="Banner Image" usage="banner">
+<cms-template type="PART" dataType="HTML" name="bannerImg" displayName="Banner Image" usage="banner">
+    <div class="banner imageBox">
+        <cms-field type="html" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
+    </div>
+</cms-template>
+<cms-template type="PART" dataType="MULTIHTML" name="bannerImgSlider" displayName="Banner Image Slider" usage="banner">
     <div class="banner imageBox">
         <cms-field type="html" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
     </div>
@@ -249,15 +254,6 @@
     <div class="article">
         <cms-field type="html" toolbar="Text" name="textlink"><a href="#">Lorem ipsum</a></cms-field>
     </div>
-</cms-template>
-<cms-template type="PARTCONTAINER" name="horizontalMove" displayName="Horizontal Move" usage="">
-    <div id="<cms-cid/>">
-        <cms-parts/>
-    </div>
-    <script type="text/javascript">
-        var $cont = $("#<cms-cid/>");
-        $cont.alternateLoop(10000, 1000);
-    </script>
 </cms-template>
 <cms-template type="SNIPPET" name="searchBox" displayName="Search Box" usage="SearchBoxModule">
     <div class="searchBox flexItemOne">

@@ -10,17 +10,13 @@
 <%@ page import="de.bandika.cms.page.PageData" %>
 <%@ page import="de.bandika.cms.pagepart.PagePartData" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="de.bandika.cms.template.TemplateCache" %>
-<%@ page import="de.bandika.cms.template.TemplateData" %>
-<%@ page import="de.bandika.cms.template.TemplateType" %>
-<%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.pagepart.MultiHtmlPartData" %>
+<%@ page import="de.bandika.cms.pagepart.HtmlPartData" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     PageData data = (PageData) SessionReader.getSessionObject(request, "pageData");
     PagePartData part = data.getEditPagePart();
-    int contentCount = part.getContentCount();
-    List<TemplateData> partContainers = TemplateCache.getInstance().getTemplates(TemplateType.PARTCONTAINER);
     request.setAttribute("treeNode", data);
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
@@ -30,16 +26,24 @@
         <input type="hidden" name="partId" value="<%=part.getId()%>"/>
         <input type="hidden" name="act" value="savePagePartSettings"/>
         <table class="padded form">
+            <% if (part instanceof HtmlPartData){
+                HtmlPartData htmlPart=(MultiHtmlPartData)part;
+            %>
             <tr>
                 <td>
                     <label for="cssClass"><%=StringUtil.getHtml("_cssClass", locale)%>
                     </label></td>
                 <td>
                     <div>
-                        <input type="text" id="cssClass" name="cssClass" value="<%=StringUtil.toHtml(part.getCssClass())%>" maxlength="200"/>
+                        <input type="text" id="cssClass" name="cssClass" value="<%=StringUtil.toHtml(htmlPart.getCssClass())%>" maxlength="200"/>
                     </div>
                 </td>
             </tr>
+            <%}%>
+            <% if (part instanceof MultiHtmlPartData){
+                MultiHtmlPartData multiPart=(MultiHtmlPartData)part;
+                int contentCount = multiPart.getContentCount();
+            %>
             <tr>
                 <td>
                     <label for="contentCount"><%=StringUtil.getHtml("_contentCount", locale)%>
@@ -56,26 +60,14 @@
                 </td>
             </tr>
             <tr>
-                <td><label for="containerName"><%=StringUtil.getHtml("_partContainer", locale)%>
-                </label></td>
-                <td>
-                    <select id="containerName" name="containerName">
-                        <option value="" <%=part.getContainerName().isEmpty() ? "selected" : ""%>>&nbsp;</option>
-                        <% for (TemplateData tdata : partContainers) {%>
-                        <option value="<%=tdata.getName()%>" <%=part.getContainerName().equals(tdata.getName()) ? "selected" : ""%>><%=StringUtil.toHtml(tdata.getName())%>
-                        </option>
-                        <%}%>
-                    </select>
-                </td>
-            </tr>
-            <tr>
                 <td>
                     <label for="script"><%=StringUtil.getHtml("_script", locale)%>
                     </label></td>
                 <td>
-                    <textarea id="script" name="script" rows="20" cols=""><%=StringUtil.toHtmlInput(part.getScript())%></textarea>
+                    <textarea id="script" name="script" rows="20" cols=""><%=StringUtil.toHtmlInput(multiPart.getScript())%></textarea>
                 </td>
             </tr>
+            <%}%>
         </table>
     </fieldset>
     <div class="buttonset topspace">

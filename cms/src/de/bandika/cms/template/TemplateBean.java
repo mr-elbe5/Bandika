@@ -59,8 +59,6 @@ public class TemplateBean extends DbBean {
             templates.put(TemplateType.PAGE, getAllTemplates(con, TemplateType.PAGE));
             templates.put(TemplateType.PART, getAllTemplates(con, TemplateType.PART));
             templates.put(TemplateType.SNIPPET, getAllTemplates(con, TemplateType.SNIPPET));
-            templates.put(TemplateType.PARTCONTAINER, getAllTemplates(con, TemplateType.PARTCONTAINER));
-
         } catch (SQLException se) {
             se.printStackTrace();
         } finally {

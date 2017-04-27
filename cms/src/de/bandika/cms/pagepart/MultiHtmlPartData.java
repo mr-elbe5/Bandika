@@ -144,25 +144,16 @@ public class MultiHtmlPartData extends HtmlPartData {
 
     public void appendLivePartHtml(StringBuilder sb, PageData pageData, HttpServletRequest request) {
         TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PART, getTemplateName());
-        TemplateData partContainer = null;
-        if (!containerName.isEmpty())
-            partContainer = TemplateCache.getInstance().getTemplate(TemplateType.PARTCONTAINER, getContainerName());
         try {
             sb.append("<div class=\"pagePart\" id=\"").append(getHtmlId()).append("\" >");
-            if (partContainer != null) {
-                String containerCode = partContainer.getCode().replaceAll(TemplateData.PLACEHOLDER_CONTAINERID, getContainerId());
-                int pos = containerCode.indexOf(TemplateData.PLACEHOLDER_PARTS);
-                if (pos != -1) {
-                    sb.append(containerCode.substring(0, pos));
-                    for (int i = 0; i < getContentCount(); i++) {
-                        setCurrentContentIdx(i);
-                        partTemplate.fillTemplate(sb, pageData, this, request);
-                    }
-                    setCurrentContentIdx(0);
-                    sb.append(containerCode.substring(pos + TemplateData.PLACEHOLDER_PARTS.length()));
-                }
-            } else
+            sb.append("<div id=\"").append(getContainerId()).append("\">");
+            for (int i = 0; i < getContentCount(); i++) {
+                setCurrentContentIdx(i);
                 partTemplate.fillTemplate(sb, pageData, this, request);
+            }
+            setCurrentContentIdx(0);
+            sb.append("</div>");
+            sb.append("<script type=\"text/javascript\">").append(getScript().replace(TemplateData.PLACEHOLDER_CONTAINERID,getContainerId())).append(";</script>");
             sb.append("</div>");
         } catch (Exception e) {
             Log.error("error in part template", e);

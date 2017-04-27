@@ -27,8 +27,6 @@ public enum TemplateType {
         public TemplateData getNewTemplateData() {
             return new SnippetTemplateData();
         }
-    }, PARTCONTAINER {
-        public TemplateData getNewTemplateData() {return new PartContainerTemplateData();}
     };
 
     public abstract TemplateData getNewTemplateData();
