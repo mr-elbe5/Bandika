@@ -160,12 +160,6 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         return true;
     }
 
-    public void readPagePartSettingsData(HttpServletRequest request) {
-    }
-
-    public void readPagePartVisibilityData(HttpServletRequest request) {
-    }
-
     public boolean executePagePartMethod(String method, HttpServletRequest request) {
         return true;
     }

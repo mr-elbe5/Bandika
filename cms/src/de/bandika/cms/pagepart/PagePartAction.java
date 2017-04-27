@@ -46,9 +46,9 @@ public enum PagePartAction implements ICmsAction {
             return showAddPagePart(request, response);
         }
     }, /**
-     * opens dialog for editing page part settings (css class etc.)
+     * opens dialog for editing html part settings (css class etc.)
      */
-    openEditPagePartSettings {
+    openEditHtmlPartSettings {
         @Override
         public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
             int pageId = RequestReader.getInt(request, "pageId");
@@ -58,12 +58,27 @@ public enum PagePartAction implements ICmsAction {
             int partId = RequestReader.getInt(request, "partId");
             String sectionName = RequestReader.getString(request, "sectionName");
             data.setEditPagePart(sectionName, partId);
-            return showEditPagePartSettings(request, response);
+            return showEditHtmlPartSettings(request, response);
         }
     }, /**
+     * opens dialog for editing multi html part settings (css class etc.)
+     */
+    openEditMultiHtmlPartSettings {
+                @Override
+                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    int pageId = RequestReader.getInt(request, "pageId");
+                    if (!hasContentRight(request, pageId, Right.EDIT))
+                        return false;
+                    PageData data = (PageData) getSessionObject(request, "pageData");
+                    int partId = RequestReader.getInt(request, "partId");
+                    String sectionName = RequestReader.getString(request, "sectionName");
+                    data.setEditPagePart(sectionName, partId);
+                    return showEditMultiHtmlPartSettings(request, response);
+                }
+            }, /**
      * saves page part settings (css class etc.)
      */
-    savePagePartSettings {
+    saveHtmlPartSettings {
         @Override
         public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
             int pageId = RequestReader.getInt(request, "pageId");
@@ -71,7 +86,24 @@ public enum PagePartAction implements ICmsAction {
                 return false;
             PageData data = (PageData) getSessionObject(request, "pageData");
             int partId = RequestReader.getInt(request, "partId");
-            PagePartData part = data.getEditPagePart();
+            HtmlPartData part = (HtmlPartData)data.getEditPagePart();
+            checkObject(part, partId);
+            part.readPagePartSettingsData(request);
+            data.setEditPagePart(null);
+            return closeLayerToUrl(request, response, "/page.srv?act=reopenEditPageContent&pageId=" + data.getId());
+        }
+    }, /**
+     * saves page part settings (css class etc.)
+     */
+    saveMultiHtmlPartSettings {
+        @Override
+        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            int pageId = RequestReader.getInt(request, "pageId");
+            if (!hasContentRight(request, pageId, Right.EDIT))
+                return false;
+            PageData data = (PageData) getSessionObject(request, "pageData");
+            int partId = RequestReader.getInt(request, "partId");
+            MultiHtmlPartData part = (MultiHtmlPartData) data.getEditPagePart();
             checkObject(part, partId);
             part.readPagePartSettingsData(request);
             data.setEditPagePart(null);
@@ -89,7 +121,7 @@ public enum PagePartAction implements ICmsAction {
             PageData data = (PageData) getSessionObject(request, "pageData");
             int partId = RequestReader.getInt(request, "partId");
             String sectionName = RequestReader.getString(request, "sectionName");
-            PagePartData partData = data.getPagePart(sectionName, partId);
+            MultiHtmlPartData partData = (MultiHtmlPartData) data.getPagePart(sectionName, partId);
             partData.readPagePartVisibilityData(request);
             return setEditPageResponse(request, response, data);
         }
@@ -387,8 +419,12 @@ public enum PagePartAction implements ICmsAction {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/addPagePart.ajax.jsp");
     }
 
-    protected boolean showEditPagePartSettings(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/editPagePartSettings.ajax.jsp");
+    protected boolean showEditHtmlPartSettings(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/editHtmlPartSettings.ajax.jsp");
+    }
+
+    protected boolean showEditMultiHtmlPartSettings(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/editMultiHtmlPartSettings.ajax.jsp");
     }
 
     protected boolean showSharePagePart(HttpServletRequest request, HttpServletResponse response) {

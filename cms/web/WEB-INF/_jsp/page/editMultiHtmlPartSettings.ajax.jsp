@@ -8,15 +8,14 @@
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.cms.page.PageData" %>
-<%@ page import="de.bandika.cms.pagepart.PagePartData" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.cms.pagepart.MultiHtmlPartData" %>
-<%@ page import="de.bandika.cms.pagepart.HtmlPartData" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     PageData data = (PageData) SessionReader.getSessionObject(request, "pageData");
-    PagePartData part = data.getEditPagePart();
+    MultiHtmlPartData part = (MultiHtmlPartData) data.getEditPagePart();
+    int contentCount=part.getContentCount();
     request.setAttribute("treeNode", data);
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
@@ -24,26 +23,18 @@
     <fieldset>
         <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
         <input type="hidden" name="partId" value="<%=part.getId()%>"/>
-        <input type="hidden" name="act" value="savePagePartSettings"/>
+        <input type="hidden" name="act" value="saveMultiHtmlPartSettings"/>
         <table class="padded form">
-            <% if (part instanceof HtmlPartData){
-                HtmlPartData htmlPart=(MultiHtmlPartData)part;
-            %>
             <tr>
                 <td>
                     <label for="cssClass"><%=StringUtil.getHtml("_cssClass", locale)%>
                     </label></td>
                 <td>
                     <div>
-                        <input type="text" id="cssClass" name="cssClass" value="<%=StringUtil.toHtml(htmlPart.getCssClass())%>" maxlength="200"/>
+                        <input type="text" id="cssClass" name="cssClass" value="<%=StringUtil.toHtml(part.getCssClass())%>" maxlength="200"/>
                     </div>
                 </td>
             </tr>
-            <%}%>
-            <% if (part instanceof MultiHtmlPartData){
-                MultiHtmlPartData multiPart=(MultiHtmlPartData)part;
-                int contentCount = multiPart.getContentCount();
-            %>
             <tr>
                 <td>
                     <label for="contentCount"><%=StringUtil.getHtml("_contentCount", locale)%>
@@ -64,10 +55,9 @@
                     <label for="script"><%=StringUtil.getHtml("_script", locale)%>
                     </label></td>
                 <td>
-                    <textarea id="script" name="script" rows="20" cols=""><%=StringUtil.toHtmlInput(multiPart.getScript())%></textarea>
+                    <textarea id="script" name="script" rows="20" cols=""><%=StringUtil.toHtmlInput(part.getScript())%></textarea>
                 </td>
             </tr>
-            <%}%>
         </table>
     </fieldset>
     <div class="buttonset topspace">
