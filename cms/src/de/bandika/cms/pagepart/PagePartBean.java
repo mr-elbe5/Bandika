@@ -13,7 +13,6 @@ import de.bandika.cms.page.PageData;
 import de.bandika.cms.page.SectionData;
 import de.bandika.cms.template.PartTemplateData;
 import de.bandika.cms.template.TemplateCache;
-import de.bandika.cms.template.TemplateData;
 import de.bandika.cms.template.TemplateType;
 import de.bandika.cms.tree.TreeBean;
 
@@ -190,35 +189,7 @@ public class PagePartBean extends TreeBean {
         return partData;
     }
 
-    protected PagePartData readPagePart(Connection con, int partId) throws SQLException {
-        PreparedStatement pst = null;
-        PagePartData partData = null;
-        try {
-            pst = con.prepareStatement("SELECT template,version,page_id,change_date,section,ranking,content FROM t_page_part WHERE id=?");
-            pst.setInt(1, partId);
-            try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    int i = 1;
-                    String templateName=rs.getString(i++);
-                    PartTemplateData template= (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART,templateName);
-                    partData = template.getDataType().getNewPagePartData();
-                    partData.setTemplateName(templateName);
-                    partData.setId(partId);
-                    partData.setVersion(rs.getInt(i++));
-                    partData.setPageId(rs.getInt(i++));
-                    partData.setChangeDate(rs.getTimestamp(i++));
-                    partData.setSection(rs.getString(i++));
-                    partData.setRanking(rs.getInt(i++));
-                    partData.setXmlContent(rs.getString(i));
-                }
-            }
-        } finally {
-            closeStatement(pst);
-        }
-        return partData;
-    }
-
-    public boolean writeAllPageParts(Connection con, PageData page) throws Exception {
+    public void writeAllPageParts(Connection con, PageData page) throws Exception {
         for (SectionData section : page.getSections().values()) {
             for (PagePartData part : section.getParts()) {
                 if (part.isShared()) {
@@ -234,7 +205,6 @@ public class PagePartBean extends TreeBean {
                 }
             }
         }
-        return true;
     }
 
     protected void writePagePart(Connection con, PagePartData data) throws SQLException {
@@ -364,17 +334,4 @@ public class PagePartBean extends TreeBean {
         }
     }
 
-    public PagePartData getPagePart(int id) {
-        Connection con = null;
-        PagePartData data = null;
-        try {
-            con = getConnection();
-            data = readPagePart(con, id);
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeConnection(con);
-        }
-        return data;
-    }
 }

@@ -52,7 +52,7 @@ public class PartTemplateData extends TemplateData {
     protected void appendField(StringBuilder sb, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) {
         String fieldType = attributes.getString("type");
         String fieldName = attributes.getString("name");
-        Field field = partData.getCurrentPartContent().ensureField(fieldName, fieldType);
+        Field field = partData.ensureField(fieldName, fieldType);
         field.appendFieldHtml(sb, attributes, content, partData, pageData, request);
 
     }

@@ -11,6 +11,8 @@ package de.bandika.cms.newscenter;
 import de.bandika.cms.pagepart.PagePartData;
 import de.bandika.cms.template.PartTemplateDataType;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class NewsCenterPartData extends PagePartData {
 
     @Override
@@ -26,6 +28,11 @@ public class NewsCenterPartData extends PagePartData {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public boolean executePagePartMethod(String method, HttpServletRequest request) {
+        return true;
     }
 
 }

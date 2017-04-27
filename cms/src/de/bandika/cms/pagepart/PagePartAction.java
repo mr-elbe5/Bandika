@@ -8,13 +8,13 @@
  */
 package de.bandika.cms.pagepart;
 
+import de.bandika.base.log.Log;
 import de.bandika.cms.application.AdminAction;
 import de.bandika.cms.page.PageBean;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.servlet.ICmsAction;
 import de.bandika.cms.template.PartTemplateData;
 import de.bandika.cms.template.TemplateCache;
-import de.bandika.cms.template.TemplateData;
 import de.bandika.cms.template.TemplateType;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.rights.Right;
@@ -73,15 +73,12 @@ public enum PagePartAction implements ICmsAction {
                     int partId = RequestReader.getInt(request, "partId");
                     PagePartData part = data.getEditPagePart();
                     checkObject(part, partId);
-                    part.setCssClass(RequestReader.getString(request, "cssClass"));
-                    part.setContentCount(RequestReader.getInt(request, "contentCount"));
-                    part.setContainerName(RequestReader.getString(request, "containerName"));
-                    part.setScript(RequestReader.getString(request, "script"));
+                    part.readPagePartSettingsData(request);
                     data.setEditPagePart(null);
                     return closeLayerToUrl(request, response, "/page.srv?act=reopenEditPageContent&pageId=" + data.getId());
                 }
             }, /**
-     * opens dialog for setting the currently inNavigation content index
+     * opens dialog for setting the currently visible content
      */
     setVisibleContentIdx {
                 @Override
@@ -93,7 +90,7 @@ public enum PagePartAction implements ICmsAction {
                     int partId = RequestReader.getInt(request, "partId");
                     String sectionName = RequestReader.getString(request, "sectionName");
                     PagePartData partData = data.getPagePart(sectionName, partId);
-                    partData.changeCurrentContentIdx(RequestReader.getInt(request, "dir"));
+                    partData.readPagePartVisibilityData(request);
                     return setEditPageResponse(request, response, data);
                 }
             }, /**
@@ -127,7 +124,9 @@ public enum PagePartAction implements ICmsAction {
                     String partMethod = RequestReader.getString(request, "partMethod");
                     PagePartData pdata = data.getPagePart(sectionName, partId);
                     if (pdata != null) {
-                        pdata.executePagePartMethod(partMethod, request);
+                        if (!pdata.executePagePartMethod(partMethod, request)){
+                            Log.warn("bad part method");
+                        }
                     }
                     return setPageResponse(request, response, pageId);
                 }
