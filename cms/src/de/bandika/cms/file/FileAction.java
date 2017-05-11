@@ -442,43 +442,70 @@ public enum FileAction implements ITreeAction {
                     TreeCache tc = TreeCache.getInstance();
                     FileData data = tc.getFile(fileId);
                     request.setAttribute("fileData", data);
-                    return showHistoryFile(request, response);
+                    return showFileHistory(request, response);
                 }
-            }, /**
-     * restores a file mailFrom history a new draft
+            },
+    /**
+     * shows file
+     */
+    showHistoryFile {
+        @Override
+        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            FileData data;
+            int fileId = RequestReader.getInt(request, "fileId");
+            int version = RequestReader.getInt(request, "version");
+            TreeCache tc = TreeCache.getInstance();
+            if (fileId == 0) {
+                String url = request.getRequestURI();
+                data = tc.getFile(url);
+            } else {
+                data = tc.getFile(fileId);
+            }
+            checkObject(data);
+            data = getFileCopy(data, version);
+            if (!SessionReader.hasContentRight(request, fileId, Right.READ)) {
+                return false;
+            }
+            BinaryFileStreamData streamData =  FileBean.getInstance().getBinaryFileStreamData(data.getId(), version);
+            return streamData != null && sendBinaryFileResponse(request, response, streamData);
+        }
+    },
+    /**
+     * restores a file from history a new draft
      */
     restoreHistoryFile {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    int fileId = RequestReader.getInt(request, "fileId");
-                    if (!hasContentRight(request, fileId, Right.EDIT))
-                        return false;
-                    //todo
-                    TreeCache tc = TreeCache.getInstance();
-                    FileData data = tc.getFile(fileId);
-                    int version = RequestReader.getInt(request, "version");
-                    FileBean.getInstance().restoreFileVersion(fileId, version);
-                    TreeCache.getInstance().setDirty();
-                    RightsCache.getInstance().setDirty();
-                    RequestWriter.setMessageKey(request, "_fileVersionRestored");
-                    request.setAttribute("siteId", Integer.toString(data.getParentId()));
-                    return AdminAction.openAdministration.execute(request, response);
-                }
-            }, /**
+        @Override
+        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            int fileId = RequestReader.getInt(request, "fileId");
+            if (!hasContentRight(request, fileId, Right.EDIT))
+                return false;
+            TreeCache tc = TreeCache.getInstance();
+            FileData data = tc.getFile(fileId);
+            int version = RequestReader.getInt(request, "version");
+            FileBean.getInstance().restoreFileVersion(fileId, version);
+            TreeCache.getInstance().setDirty();
+            RightsCache.getInstance().setDirty();
+            return closeLayerToTree(request, response, "/tree.ajx?act=openTree&siteId="+data.getParentId()+"&fileId=" + fileId, "_fileVersionRestored");
+        }
+    },
+    /**
      * deletes an old file version
      */
     deleteHistoryFile {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    int fileId = RequestReader.getInt(request, "fileId");
-                    if (!hasContentRight(request, fileId, Right.EDIT))
-                        return false;
-                    int version = RequestReader.getInt(request, "version");
-                    FileBean.getInstance().deleteFileVersion(fileId, version);
-                    RequestWriter.setMessageKey(request, "_fileVersionDeleted");
-                    return FileAction.openFileHistory.execute(request, response);
-                }
-            };
+        @Override
+        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            int fileId = RequestReader.getInt(request, "fileId");
+            if (!hasContentRight(request, fileId, Right.EDIT))
+                return false;
+            int version = RequestReader.getInt(request, "version");
+            FileBean.getInstance().deleteFileVersion(fileId, version);
+            TreeCache tc = TreeCache.getInstance();
+            FileData data = tc.getFile(fileId);
+            request.setAttribute("fileData", data);
+            RequestWriter.setMessageKey(request, "_fileVersionDeleted");
+            return showFileHistory(request, response);
+        }
+    };
 
     public static final String KEY = "file";
 
@@ -511,7 +538,7 @@ public enum FileAction implements ITreeAction {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/file/deleteFile.ajax.jsp");
     }
 
-    protected boolean showHistoryFile(HttpServletRequest request, HttpServletResponse response) {
+    protected boolean showFileHistory(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/file/fileHistory.ajax.jsp");
     }
 

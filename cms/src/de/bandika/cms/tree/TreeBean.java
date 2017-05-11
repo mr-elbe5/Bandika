@@ -210,62 +210,6 @@ public class TreeBean extends DbBean {
         }
     }
 
-    public TreeNodeSortData getSortData(int nodeId) {
-        TreeNodeSortData sortData = new TreeNodeSortData();
-        sortData.setId(nodeId);
-        TreeNodeSortData child;
-        Connection con = null;
-        PreparedStatement pst = null;
-        try {
-            con = getConnection();
-            pst = con.prepareStatement("SELECT name FROM t_treenode WHERE id=?");
-            pst.setInt(1, nodeId);
-            ResultSet rs = pst.executeQuery();
-            rs.next();
-            sortData.setName(rs.getString(1));
-            rs.close();
-            pst.close();
-            pst = con.prepareStatement("SELECT id,name FROM t_treenode WHERE parent_id=? ORDER BY ranking");
-            pst.setInt(1, nodeId);
-            rs = pst.executeQuery();
-            while (rs.next()) {
-                int i = 1;
-                child = new TreeNodeSortData();
-                child.setId(rs.getInt(i++));
-                child.setName(rs.getString(i));
-                sortData.getChildren().add(child);
-            }
-            rs.close();
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-        return sortData;
-    }
-
-    public void saveSortData(TreeNodeSortData data) {
-        TreeNodeSortData child;
-        Connection con = null;
-        PreparedStatement pst = null;
-        try {
-            con = getConnection();
-            pst = con.prepareStatement("UPDATE t_treenode SET ranking=? WHERE id=?");
-            for (int i = 0; i < data.getChildren().size(); i++) {
-                child = data.getChildren().get(i);
-                pst.setInt(1, i + 1);
-                pst.setInt(2, child.getId());
-                pst.executeUpdate();
-            }
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-    }
-
     public boolean moveTreeNode(int nodeId, int parentId) {
         Connection con = startTransaction();
         PreparedStatement pst = null;

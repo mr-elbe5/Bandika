@@ -423,51 +423,70 @@ public enum PageAction implements ITreeAction {
                     TreeCache tc = TreeCache.getInstance();
                     PageData data = tc.getPage(pageId);
                     request.setAttribute("pageData", data);
-                    return showHistoryPage(request, response);
+                    return showPageHistory(request, response);
                 }
-            }, /**
+            },
+    /**
+     * shows a page
+     */
+    showHistoryPage {
+        @Override
+        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            PageData data;
+            int pageId = RequestReader.getInt(request, "pageId");
+            int version = RequestReader.getInt(request, "version");
+            TreeCache tc = TreeCache.getInstance();
+            if (pageId == 0) {
+                String url = request.getRequestURI();
+                data = tc.getPage(url);
+            } else {
+                data = tc.getPage(pageId);
+            }
+            checkObject(data);
+            data = getPageCopy(data, version);
+            if (!SessionReader.hasContentRight(request, pageId, Right.READ)) {
+                return forbidden();
+            }
+            request.setAttribute("pageData", data);
+            return setPageResponse(request, response, data);
+        }
+    },
+    /**
      * restores old page version as current draft
      */
     restoreHistoryPage {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    int pageId = RequestReader.getInt(request, "pageId");
-                    if (!hasContentRight(request, pageId, Right.EDIT))
-                        return false;
-                    //todo
-                    TreeCache tc = TreeCache.getInstance();
-                    PageData data = tc.getPage(pageId);
-                    List<Integer> versions = RequestReader.getIntegerList(request, "version");
-                    if (versions.isEmpty()) {
-                        addError(request, StringUtil.getString("_noSelection", SessionReader.getSessionLocale(request)));
-                        return PageAction.openPageHistory.execute(request, response);
-                    }
-                    if (versions.size() > 1) {
-                        addError(request, StringUtil.getString("_singleSelection", SessionReader.getSessionLocale(request)));
-                        return PageAction.openPageHistory.execute(request, response);
-                    }
-                    PageBean.getInstance().restorePageVersion(pageId, versions.get(0));
-                    TreeCache.getInstance().setDirty();
-                    RightsCache.getInstance().setDirty();
-                    RequestWriter.setMessageKey(request, "_pageVersionRestored");
-                    request.setAttribute("siteId", Integer.toString(data.getParentId()));
-                    return showTree(request, response);
-                }
-            }, /**
-     * deletes old version mailFrom history
+        @Override
+        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            int pageId = RequestReader.getInt(request, "pageId");
+            if (!hasContentRight(request, pageId, Right.EDIT))
+                return false;
+            TreeCache tc = TreeCache.getInstance();
+            PageData data = tc.getPage(pageId);
+            int version = RequestReader.getInt(request, "version");
+            PageBean.getInstance().restorePageVersion(pageId, version);
+            TreeCache.getInstance().setDirty();
+            RightsCache.getInstance().setDirty();
+            return closeLayerToTree(request, response, "/tree.ajx?act=openTree&siteId="+data.getParentId()+"&pageId=" + pageId, "_pageVersionRestored");
+        }
+    },
+    /**
+     * deletes old version from history
      */
     deleteHistoryPage {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    int pageId = RequestReader.getInt(request, "pageId");
-                    if (!hasContentRight(request, pageId, Right.EDIT))
-                        return false;
-                    int version = RequestReader.getInt(request, "version");
-                    PageBean.getInstance().deletePageVersion(pageId, version);
-                    RequestWriter.setMessageKey(request, "_pageVersionDeleted");
-                    return showHistoryPage(request, response);
-                }
-            };
+        @Override
+        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            int pageId = RequestReader.getInt(request, "pageId");
+            if (!hasContentRight(request, pageId, Right.EDIT))
+                return false;
+            int version = RequestReader.getInt(request, "version");
+            PageBean.getInstance().deletePageVersion(pageId, version);
+            TreeCache tc = TreeCache.getInstance();
+            PageData data = tc.getPage(pageId);
+            request.setAttribute("pageData", data);
+            RequestWriter.setMessageKey(request, "_pageVersionDeleted");
+            return showPageHistory(request, response);
+        }
+    };
 
     public static final String KEY = "page";
 
@@ -530,7 +549,7 @@ public enum PageAction implements ITreeAction {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/deletePage.ajax.jsp");
     }
 
-    protected boolean showHistoryPage(HttpServletRequest request, HttpServletResponse response) {
+    protected boolean showPageHistory(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/pageHistory.ajax.jsp");
     }
 

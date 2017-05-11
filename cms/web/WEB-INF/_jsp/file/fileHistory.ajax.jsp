@@ -8,16 +8,14 @@
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.cms.configuration.Configuration" %>
-<%@ page import="de.bandika.cms.file.FileBean" %>
-<%@ page import="de.bandika.cms.file.FileData" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%
-    Locale locale = SessionReader.getSessionLocale(request);
+<%@ page import="de.bandika.cms.file.FileData" %>
+<%@ page import="de.bandika.cms.file.FileBean" %>
+<%Locale locale = SessionReader.getSessionLocale(request);
     FileData data = (FileData) request.getAttribute("fileData");
-    List<FileData> fileVersions = FileBean.getInstance().getFileHistory(data.getId());
-%>
+    List<FileData> fileVersions = FileBean.getInstance().getFileHistory(data.getId());%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <fieldset>
     <input type="hidden" name="act" value=""/>
@@ -36,7 +34,7 @@
         <tbody>
         <tr>
             <td><%=data.getLoadedVersion()%> (<%=StringUtil.getHtml("_current", locale)%>)</td>
-            <td><%=Configuration.getInstance().getDateFormat(locale).format(data.getChangeDate())%>
+            <td><%=Configuration.getInstance().getDateFormat(locale).format(data.getContentChangeDate())%>
             </td>
             <td><%=StringUtil.toHtml(data.getAuthorName())%>
             </td>
@@ -49,17 +47,17 @@
         <tr>
             <td><%=versionData.getLoadedVersion()%>
             </td>
-            <td><%=Configuration.getInstance().getDateFormat(locale).format(versionData.getChangeDate())%>
+            <td><%=Configuration.getInstance().getDateFormat(locale).format(versionData.getContentChangeDate())%>
             </td>
             <td><%=StringUtil.toHtml(versionData.getAuthorName())%>
             </td>
             <td>
-                <a href="/file.srv?act=show&fileId=<%=versionData.getId()%>&version=<%=versionData.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
-                </a>
-                <button class="primary" onclick="linkTo('/file.srv?act=restoreHistoryFile&fileId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_restore", locale)%>
-                </button>
-                <button class="primary" onclick="linkTo('/file.srv?act=deleteHistoryFile&fileId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_delete", locale)%>
-                </button>
+                <div style="margin-bottom:5px"><a href="/file.srv?act=showHistoryFile&fileId=<%=versionData.getId()%>&version=<%=versionData.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
+                </a></div>
+                <div style="margin-bottom:5px"><button class="primary" onclick="post2ModalDialog('/file.ajx?act=restoreHistoryFile&fileId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_restore", locale)%>
+                </button></div>
+                <div><button class="primary" onclick="post2ModalDialog('/file.ajx?act=deleteHistoryFile&fileId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                </button></div>
             </td>
         </tr>
         <%}%>

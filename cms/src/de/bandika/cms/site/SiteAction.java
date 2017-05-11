@@ -426,59 +426,163 @@ public enum SiteAction implements ITreeAction {
             }, /**
      * open dialog for sorting children manually
      */
-    openSortChildren {
+    openSortSites {
                 @Override
                 public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
                     int siteId = RequestReader.getInt(request, "siteId");
                     if (!hasContentRight(request, siteId, Right.EDIT))
                         return false;
-                    PageBean ts = PageBean.getInstance();
-                    TreeNodeSortData sortData = ts.getSortData(siteId);
-                    if (sortData.getChildren().size() <= 1) {
-                        addError(request, StringUtil.getString("_nothingToSort", SessionReader.getSessionLocale(request)));
-                        return SiteAction.show.execute(request, response);
-                    }
+                    SiteBean ts = SiteBean.getInstance();
+                    TreeNodeSortData sortData = ts.getSortSites(siteId);
                     SessionWriter.setSessionObject(request, "sortData", sortData);
-                    return showSortChildren(request, response);
+                    return showSortSites(request, response);
                 }
-            }, /**
+            },
+    /**
      * changes the ranking / sort order of site children
      */
-    changeRanking {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    int siteId = RequestReader.getInt(request, "siteId");
-                    if (!hasContentRight(request, siteId, Right.EDIT))
-                        return false;
-                    TreeNodeSortData sortData = (TreeNodeSortData) getSessionObject(request, "sortData");
-                    if (siteId == 0) {
-                        addError(request, StringUtil.getString("_noData", SessionReader.getSessionLocale(request)));
-                        return showTree(request, response);
-                    }
-                    sortData.readSortRequestData(request);
-                    return showSortChildren(request, response);
-                }
-            }, /**
+    changeSiteRanking {
+        @Override
+        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            int siteId = RequestReader.getInt(request, "siteId");
+            if (!hasContentRight(request, siteId, Right.EDIT))
+                return false;
+            TreeNodeSortData sortData = (TreeNodeSortData) getSessionObject(request, "sortData");
+            if (siteId == 0) {
+                addError(request, StringUtil.getString("_noData", SessionReader.getSessionLocale(request)));
+                return showSortSites(request, response);
+            }
+            sortData.readSortRequestData(request);
+            return showSortSites(request, response);
+        }
+    },
+    /**
      * saves ranking of newly sorted children to database
      */
-    saveSortChildren {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    int siteId = RequestReader.getInt(request, "siteId");
-                    if (!hasContentRight(request, siteId, Right.EDIT))
-                        return false;
-                    TreeNodeSortData sortData = (TreeNodeSortData) getSessionObject(request, "sortData");
-                    if (siteId == 0) {
-                        addError(request, StringUtil.getString("_noData", SessionReader.getSessionLocale(request)));
-                        return SiteAction.show.execute(request, response);
-                    }
-                    PageBean ts = PageBean.getInstance();
-                    ts.saveSortData(sortData);
-                    TreeCache.getInstance().setDirty();
-                    RequestWriter.setMessageKey(request, "_pageOrderSaved");
-                    return showTree(request, response);
-                }
-            }, /**
+    saveSortSites {
+        @Override
+        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            int siteId = RequestReader.getInt(request, "siteId");
+            if (!hasContentRight(request, siteId, Right.EDIT))
+                return false;
+            TreeNodeSortData sortData = (TreeNodeSortData) getSessionObject(request, "sortData");
+            if (siteId == 0) {
+                addError(request, StringUtil.getString("_noData", SessionReader.getSessionLocale(request)));
+                return SiteAction.show.execute(request, response);
+            }
+            SiteBean ts = SiteBean.getInstance();
+            ts.saveSortData(sortData);
+            TreeCache.getInstance().setDirty();
+            return closeLayerToTree(request, response, "/tree.ajx?act=openTree", "_childOrderSaved");
+        }
+    },
+    /**
+     * open dialog for sorting children manually
+     */
+    openSortPages {
+        @Override
+        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            int siteId = RequestReader.getInt(request, "siteId");
+            if (!hasContentRight(request, siteId, Right.EDIT))
+                return false;
+            SiteBean ts = SiteBean.getInstance();
+            TreeNodeSortData sortData = ts.getSortPages(siteId);
+            SessionWriter.setSessionObject(request, "sortData", sortData);
+            return showSortPages(request, response);
+        }
+    },
+    /**
+     * changes the ranking / sort order of site children
+     */
+    changePageRanking {
+        @Override
+        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            int siteId = RequestReader.getInt(request, "siteId");
+            if (!hasContentRight(request, siteId, Right.EDIT))
+                return false;
+            TreeNodeSortData sortData = (TreeNodeSortData) getSessionObject(request, "sortData");
+            if (siteId == 0) {
+                addError(request, StringUtil.getString("_noData", SessionReader.getSessionLocale(request)));
+                return showSortPages(request, response);
+            }
+            sortData.readSortRequestData(request);
+            return showSortPages(request, response);
+        }
+    },
+    /**
+     * saves ranking of newly sorted children to database
+     */
+    saveSortPages {
+        @Override
+        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            int siteId = RequestReader.getInt(request, "siteId");
+            if (!hasContentRight(request, siteId, Right.EDIT))
+                return false;
+            TreeNodeSortData sortData = (TreeNodeSortData) getSessionObject(request, "sortData");
+            if (siteId == 0) {
+                addError(request, StringUtil.getString("_noData", SessionReader.getSessionLocale(request)));
+                closeLayerToTree(request, response, "/tree.ajx?act=openTree");
+            }
+            SiteBean ts = SiteBean.getInstance();
+            ts.saveSortData(sortData);
+            TreeCache.getInstance().setDirty();
+            return closeLayerToTree(request, response, "/tree.ajx?act=openTree", "_childOrderSaved");
+        }
+    },
+    /**
+     * open dialog for sorting children manually
+     */
+    openSortFiles {
+        @Override
+        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            int siteId = RequestReader.getInt(request, "siteId");
+            if (!hasContentRight(request, siteId, Right.EDIT))
+                return false;
+            SiteBean ts = SiteBean.getInstance();
+            TreeNodeSortData sortData = ts.getSortFiles(siteId);
+            SessionWriter.setSessionObject(request, "sortData", sortData);
+            return showSortFiles(request, response);
+        }
+    },
+    /**
+     * changes the ranking / sort order of site children
+     */
+    changeFileRanking {
+        @Override
+        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            int siteId = RequestReader.getInt(request, "siteId");
+            if (!hasContentRight(request, siteId, Right.EDIT))
+                return false;
+            TreeNodeSortData sortData = (TreeNodeSortData) getSessionObject(request, "sortData");
+            if (siteId == 0) {
+                addError(request, StringUtil.getString("_noData", SessionReader.getSessionLocale(request)));
+                return showSortFiles(request, response);
+            }
+            sortData.readSortRequestData(request);
+            return showSortFiles(request, response);
+        }
+    },
+    /**
+     * saves ranking of newly sorted children to database
+     */
+    saveSortFiles {
+        @Override
+        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            int siteId = RequestReader.getInt(request, "siteId");
+            if (!hasContentRight(request, siteId, Right.EDIT))
+                return false;
+            TreeNodeSortData sortData = (TreeNodeSortData) getSessionObject(request, "sortData");
+            if (siteId == 0) {
+                addError(request, StringUtil.getString("_noData", SessionReader.getSessionLocale(request)));
+                closeLayerToTree(request, response, "/tree.ajx?act=openTree");
+            }
+            SiteBean ts = SiteBean.getInstance();
+            ts.saveSortData(sortData);
+            TreeCache.getInstance().setDirty();
+            return closeLayerToTree(request, response, "/tree.ajx?act=openTree", "_childOrderSaved");
+        }
+    },
+    /**
      * opens dialog for deleting the site
      */
     openDeleteSite {
@@ -598,8 +702,16 @@ public enum SiteAction implements ITreeAction {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/site/editSiteRights.ajax.jsp");
     }
 
-    protected boolean showSortChildren(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/site/sortSiteChildren.ajax.jsp");
+    protected boolean showSortSites(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/site/sortSites.ajax.jsp");
+    }
+
+    protected boolean showSortPages(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/site/sortPages.ajax.jsp");
+    }
+
+    protected boolean showSortFiles(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/site/sortFiles.ajax.jsp");
     }
 
     protected boolean showDeleteSite(HttpServletRequest request, HttpServletResponse response) {

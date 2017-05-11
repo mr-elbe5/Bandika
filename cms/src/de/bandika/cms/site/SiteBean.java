@@ -12,6 +12,7 @@ import de.bandika.base.log.Log;
 import de.bandika.cms.page.PageBean;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.cms.tree.TreeBean;
+import de.bandika.cms.tree.TreeNodeSortData;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -144,6 +145,132 @@ public class SiteBean extends TreeBean {
             pst.close();
         } finally {
             closeStatement(pst);
+        }
+    }
+
+    public TreeNodeSortData getSortSites(int nodeId) {
+        TreeNodeSortData sortData = new TreeNodeSortData();
+        sortData.setId(nodeId);
+        TreeNodeSortData child;
+        Connection con = null;
+        PreparedStatement pst = null;
+        try {
+            con = getConnection();
+            pst = con.prepareStatement("SELECT name FROM t_treenode WHERE id=?");
+            pst.setInt(1, nodeId);
+            ResultSet rs = pst.executeQuery();
+            rs.next();
+            sortData.setName(rs.getString(1));
+            rs.close();
+            pst.close();
+            pst = con.prepareStatement("SELECT t1.id,t1.name FROM t_treenode t1, t_site t2 WHERE t1.parent_id=? and t2.id=t1.id ORDER BY t1.ranking");
+            pst.setInt(1, nodeId);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                int i = 1;
+                child = new TreeNodeSortData();
+                child.setId(rs.getInt(i++));
+                child.setName(rs.getString(i));
+                sortData.getChildren().add(child);
+            }
+            rs.close();
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+        return sortData;
+    }
+
+    public TreeNodeSortData getSortPages(int nodeId) {
+        TreeNodeSortData sortData = new TreeNodeSortData();
+        sortData.setId(nodeId);
+        TreeNodeSortData child;
+        Connection con = null;
+        PreparedStatement pst = null;
+        try {
+            con = getConnection();
+            pst = con.prepareStatement("SELECT name FROM t_treenode WHERE id=?");
+            pst.setInt(1, nodeId);
+            ResultSet rs = pst.executeQuery();
+            rs.next();
+            sortData.setName(rs.getString(1));
+            rs.close();
+            pst.close();
+            pst = con.prepareStatement("SELECT t1.id,t1.name FROM t_treenode t1, t_page t2 WHERE t1.parent_id=? and t2.id=t1.id ORDER BY t1.ranking");
+            pst.setInt(1, nodeId);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                int i = 1;
+                child = new TreeNodeSortData();
+                child.setId(rs.getInt(i++));
+                child.setName(rs.getString(i));
+                sortData.getChildren().add(child);
+            }
+            rs.close();
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+        return sortData;
+    }
+
+    public TreeNodeSortData getSortFiles(int nodeId) {
+        TreeNodeSortData sortData = new TreeNodeSortData();
+        sortData.setId(nodeId);
+        TreeNodeSortData child;
+        Connection con = null;
+        PreparedStatement pst = null;
+        try {
+            con = getConnection();
+            pst = con.prepareStatement("SELECT name FROM t_treenode WHERE id=?");
+            pst.setInt(1, nodeId);
+            ResultSet rs = pst.executeQuery();
+            rs.next();
+            sortData.setName(rs.getString(1));
+            rs.close();
+            pst.close();
+            pst = con.prepareStatement("SELECT t1.id,t1.name FROM t_treenode t1, t_file t2 WHERE t1.parent_id=? and t2.id=t1.id ORDER BY t1.ranking");
+            pst.setInt(1, nodeId);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                int i = 1;
+                child = new TreeNodeSortData();
+                child.setId(rs.getInt(i++));
+                child.setName(rs.getString(i));
+                sortData.getChildren().add(child);
+            }
+            rs.close();
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+        return sortData;
+    }
+
+    public void saveSortData(TreeNodeSortData data) {
+        TreeNodeSortData child;
+        Connection con = null;
+        PreparedStatement pst = null;
+        try {
+            con = getConnection();
+            pst = con.prepareStatement("UPDATE t_treenode SET ranking=? WHERE id=?");
+            for (int i = 0; i < data.getChildren().size(); i++) {
+                child = data.getChildren().get(i);
+                pst.setInt(1, i + 1);
+                pst.setInt(2, child.getId());
+                pst.executeUpdate();
+            }
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
         }
     }
 }

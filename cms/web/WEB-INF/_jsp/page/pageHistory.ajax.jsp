@@ -13,30 +13,28 @@
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%
-    Locale locale = SessionReader.getSessionLocale(request);
+<%Locale locale = SessionReader.getSessionLocale(request);
     PageData data = (PageData) request.getAttribute("pageData");
-    List<PageData> pageVersions = PageBean.getInstance().getPageHistory(data.getId());
-%>
+    List<PageData> pageVersions = PageBean.getInstance().getPageHistory(data.getId());%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <fieldset>
     <input type="hidden" name="act" value=""/>
     <table class="padded versions">
         <thead>
         <tr>
-            <th style="width:20%"><%=StringUtil.getHtml("_version", locale)%>
+            <th style="width:25%"><%=StringUtil.getHtml("_version", locale)%>
             </th>
-            <th style="width:20%"><%=StringUtil.getHtml("_changeDate", locale)%>
+            <th style="width:25%"><%=StringUtil.getHtml("_changeDate", locale)%>
             </th>
-            <th style="width:30%"><%=StringUtil.getHtml("_author", locale)%>
+            <th style="width:25%"><%=StringUtil.getHtml("_author", locale)%>
             </th>
-            <th style="width:30%"></th>
+            <th style="width:25%"></th>
         </tr>
         </thead>
         <tbody>
         <tr>
             <td><%=data.getLoadedVersion()%> (<%=StringUtil.getHtml("_current", locale)%>)</td>
-            <td><%=Configuration.getInstance().getDateFormat(locale).format(data.getChangeDate())%>
+            <td><%=Configuration.getInstance().getDateFormat(locale).format(data.getContentChangeDate())%>
             </td>
             <td><%=StringUtil.toHtml(data.getAuthorName())%>
             </td>
@@ -49,17 +47,17 @@
         <tr>
             <td><%=versionData.getLoadedVersion()%>
             </td>
-            <td><%=Configuration.getInstance().getDateFormat(locale).format(versionData.getChangeDate())%>
+            <td><%=Configuration.getInstance().getDateFormat(locale).format(versionData.getContentChangeDate())%>
             </td>
             <td><%=StringUtil.toHtml(versionData.getAuthorName())%>
             </td>
             <td>
-                <a href="/page.srv?act=show&pageId=<%=versionData.getId()%>&version=<%=versionData.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
-                </a>
-                <button class="primary" onclick="linkTo('/page.srv?act=restoreHistoryPage&pageId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_restore", locale)%>
-                </button>
-                <button class="primary" onclick="linkTo('/page.srv?act=deleteHistoryPage&pageId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_delete", locale)%>
-                </button>
+                <div style="margin-bottom:5px"><a href="/page.srv?act=showHistoryPage&pageId=<%=versionData.getId()%>&version=<%=versionData.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
+                </a></div>
+                <div style="margin-bottom:5px"><button class="primary" onclick="post2ModalDialog('/page.ajx?act=restoreHistoryPage&pageId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_restore", locale)%>
+                </button></div>
+                <div><button class="primary" onclick="post2ModalDialog('/page.ajx?act=deleteHistoryPage&pageId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                </button></div>
             </td>
         </tr>
         <%}%>
