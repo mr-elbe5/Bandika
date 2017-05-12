@@ -25,7 +25,7 @@
     <tbody>
     <tr>
         <td>
-            <a href="#" onclick="<%=String.format("if (CKEDITOR) CKEDITOR.tools.callFunction(%s, '%s'); closeBrowserLayer();", browseData.getCkCallbackNum(), StringUtil.toHtml(site.getUrl()))%>"><%=StringUtil.toHtml(site.getDisplayName())%>
+            <a href="#" onclick="<%=String.format("if (CKEDITOR) CKEDITOR.tools.callFunction(%s, '/site.srv?siteId=%s'); closeBrowserLayer();", browseData.getCkCallbackNum(), site.getId())%>"><%=StringUtil.toHtml(site.getDisplayName())%>
             </a>
         </td>
     </tr>
@@ -42,7 +42,7 @@
     <%for (PageData pageData : pages) {%>
     <tr>
         <td>
-            <a href="#" onclick="<%=String.format("if (CKEDITOR) CKEDITOR.tools.callFunction(%s, '%s'); closeBrowserLayer();", browseData.getCkCallbackNum(), StringUtil.toHtml(pageData.getUrl()))%>"><%=StringUtil.toHtml(pageData.getDisplayName())%>
+            <a href="#" onclick="<%=String.format("if (CKEDITOR) CKEDITOR.tools.callFunction(%s, '/page.srv?pageId=%s'); closeBrowserLayer();", browseData.getCkCallbackNum(), pageData.getId())%>"><%=StringUtil.toHtml(pageData.getDisplayName())%>
             </a>
         </td>
     </tr>
@@ -60,7 +60,7 @@
     <%for (FileData fileData : files) {%>
     <tr>
         <td>
-            <a href="#" onclick="<%=String.format("if (CKEDITOR) CKEDITOR.tools.callFunction(%s, '%s'); closeBrowserLayer();", browseData.getCkCallbackNum(), StringUtil.toHtml(fileData.getUrl()))%>"><%=StringUtil.toHtml(fileData.getDisplayName())%>
+            <a href="#" onclick="<%=String.format("if (CKEDITOR) CKEDITOR.tools.callFunction(%s, '/file.srv?fileId=%s'); closeBrowserLayer();", browseData.getCkCallbackNum(), fileData.getId())%>"><%=StringUtil.toHtml(fileData.getDisplayName())%>
             </a>
         </td>
     </tr>

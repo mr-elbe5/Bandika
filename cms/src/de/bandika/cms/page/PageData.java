@@ -269,6 +269,12 @@ public class PageData extends ResourceNode implements ISearchTextProvider {
         TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PAGE, getTemplateName());
         try {
             pageTemplate.fillTemplate(sb, this, null, request);
+            if (editPagePart!=null){
+                sb.append("<script>$('.editControl').hide();</script>");
+            }
+            else{
+                sb.append("<script>$('.editControl').show();</script>");
+            }
         } catch (Exception e) {
             Log.error("error in page template", e);
             sb.append("error");

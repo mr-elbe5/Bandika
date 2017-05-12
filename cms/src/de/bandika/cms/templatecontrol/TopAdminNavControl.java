@@ -41,10 +41,10 @@ public class TopAdminNavControl extends TemplateControl {
         boolean hasApproveRight = SessionReader.hasContentRight(request, pageId, Right.APPROVE);
         sb.append("<nav><ul>");
         if (editMode & hasEditRight) {
-            sb.append("<li class=\"edit\"><a href=\"/page.srv?act=savePageContent&pageId=").append(pageId).append("\">").append(getHtml("_save", locale)).append("</a></li>");
+            sb.append("<li class=\"editControl\"><a href=\"/page.srv?act=savePageContent&pageId=").append(pageId).append("\">").append(getHtml("_save", locale)).append("</a></li>");
 
             if (hasApproveRight) {
-                sb.append("<li class=\"edit\"><a href=\"/page.srv?act=savePageContentAndPublish&pageId=").append(pageId).append("\">").append(getHtml("_publish", locale)).append("</a></li>");
+                sb.append("<li class=\"editControl\"><a href=\"/page.srv?act=savePageContentAndPublish&pageId=").append(pageId).append("\">").append(getHtml("_publish", locale)).append("</a></li>");
             }
             sb.append("<li class=\"edit\"><a href=\"/page.srv?act=stopEditing&pageId=").append(pageId).append("\">").append(getHtml("_cancel", locale)).append("</a></li>");
         } else {

@@ -114,6 +114,11 @@ public class TreeHelper {
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_delete", locale));
             writer.write("</div>");
+            writer.write("<div class=\"icn isort\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_sortSites", locale) + "', '");
+            writer.write(StringUtil.toJs("/site.ajx?act=openSortSites&siteId=" + data.getId()));
+            writer.write("');\">");
+            writer.write(StringUtil.getHtml("_sortSites", locale));
+            writer.write("</div>");
             writer.write("<div class=\"icn idownload\" onclick=\"return linkToTree('");
             writer.write(StringUtil.toJs("/site.srv?act=exportToXml&siteId=" + data.getId()));
             writer.write("');\">");
@@ -126,81 +131,89 @@ public class TreeHelper {
             writer.write("</div>");
             writer.write("</div>");
         }
-        if (data.getSites().size() + data.getPages().size() + data.getFiles().size() > 0) {
-            writer.write("<ul>");
-            writer.write("<li");
-            if (isOpen) {
-                writer.write(" class=\"open\"");
-            }
-            writer.write(">");
-            writer.write("<div class=\"contextSource icn ipages\" data-siteid=\"");
-            writer.write(Integer.toString(data.getId()));
-            writer.write("\" >");
-            writer.write(StringUtil.getHtml("_pages"));
-            writer.write("</div>");
-            if (SessionReader.hasContentRight(request, data.getId(), Right.EDIT)) {
-                writer.write("<div class=\"contextMenu\">");
-                writer.write("<div class=\"icn inew\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_createPage", locale) + "', '");
-                writer.write(StringUtil.toJs("/page.ajx?act=openCreatePage&siteId=" + data.getId()));
-                writer.write("');\">");
-                writer.write(StringUtil.getHtml("_newPage", locale));
-                writer.write("</div>");
-                if (SessionReader.getSessionObject(request, "cutPageId") != null) {
-                    writer.write("<div class=\"icn ipaste\" onclick=\"linkToTree('");
-                    writer.write(StringUtil.toJs("/site.srv?act=pastePage&siteId=" + data.getId()));
-                    writer.write("');\">");
-                    writer.write(StringUtil.getHtml("_pastePage", locale));
-                    writer.write("</div>");
-                }
-                writer.write("</div>");
-            }
-            writer.write("<ul>");
-            for (PageData child : data.getPages()) {
-                if (SessionReader.hasContentRight(request, child.getId(), Right.READ)) {
-                    addAdminPageNode(child, currentId, request, locale, writer);
-                }
-            }
-            writer.write("</ul></li>");
-            writer.write("<li");
-            if (isOpen) {
-                writer.write(" class=\"open\"");
-            }
-            writer.write(">");
-            writer.write("<div class=\"contextSource icn ifiles\" data-siteid=\"");
-            writer.write(Integer.toString(data.getId()));
-            writer.write("\" >");
-            writer.write(StringUtil.getHtml("_files"));
-            writer.write("</div>");
-            if (SessionReader.hasContentRight(request, data.getId(), Right.EDIT)) {
-                writer.write("<div class=\"contextMenu\">");
-                writer.write("<div class=\"icn inew\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_createFile", locale) + "', '");
-                writer.write(StringUtil.toJs("/file.ajx?act=openCreateFile&siteId=" + data.getId()));
-                writer.write("');\">");
-                writer.write(StringUtil.getHtml("_newFile", locale));
-                writer.write("</div>");
-                if (SessionReader.getSessionObject(request, "cutFileId") != null) {
-                    writer.write("<div class=\"icn ipaste\" onclick=\"linkToTree('");
-                    writer.write(StringUtil.toJs("/site.srv?act=pasteFile&siteId=" + data.getId()));
-                    writer.write("');\">");
-                    writer.write(StringUtil.getHtml("_pasteFile", locale));
-                    writer.write("</div>");
-                }
-                writer.write("</div>");
-            }
-            writer.write("<ul>");
-            for (FileData child : data.getFiles()) {
-                if (SessionReader.hasContentRight(request, child.getId(), Right.READ)) {
-                    addAdminFileNode(child, currentId, request, locale, writer);
-                }
-            }
-            writer.write("</ul></li>");
-            for (SiteData child : data.getSites()) {
-                if (SessionReader.hasContentRight(request, child.getId(), Right.READ)) {
-                    addAdminSiteNode(child, currentId, activeIds, request, locale, writer);
-                }
-            }
-            writer.write("</ul>");
+        writer.write("<ul>");
+        writer.write("<li");
+        if (isOpen) {
+            writer.write(" class=\"open\"");
         }
+        writer.write(">");
+        writer.write("<div class=\"contextSource icn ipages\" data-siteid=\"");
+        writer.write(Integer.toString(data.getId()));
+        writer.write("\" >");
+        writer.write(StringUtil.getHtml("_pages"));
+        writer.write("</div>");
+        if (SessionReader.hasContentRight(request,data.getId(),Right.EDIT)) {
+            writer.write("<div class=\"contextMenu\">");
+            writer.write("<div class=\"icn inew\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_createPage", locale) + "', '");
+            writer.write(StringUtil.toJs("/page.ajx?act=openCreatePage&siteId=" + data.getId()));
+            writer.write("');\">");
+            writer.write(StringUtil.getHtml("_newPage", locale));
+            writer.write("</div>");
+            if (SessionReader.getSessionObject(request, "cutPageId") != null) {
+                writer.write("<div class=\"icn ipaste\" onclick=\"linkToTree('");
+                writer.write(StringUtil.toJs("/site.srv?act=pastePage&siteId=" + data.getId()));
+                writer.write("');\">");
+                writer.write(StringUtil.getHtml("_pastePage", locale));
+                writer.write("</div>");
+            }
+            writer.write("<div class=\"icn isort\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_sortPages", locale) + "', '");
+            writer.write(StringUtil.toJs("/site.ajx?act=openSortPages&siteId=" + data.getId()));
+            writer.write("');\">");
+            writer.write(StringUtil.getHtml("_sortPages", locale));
+            writer.write("</div>");
+            writer.write("</div>");
+        }
+        writer.write("<ul>");
+        for (PageData child : data.getPages()) {
+            if (SessionReader.hasContentRight(request, child.getId(), Right.READ)) {
+                addAdminPageNode(child, currentId, request, locale, writer);
+            }
+        }
+        writer.write("</ul></li>");
+        writer.write("<li");
+        if (isOpen) {
+            writer.write(" class=\"open\"");
+        }
+        writer.write(">");
+        writer.write("<div class=\"contextSource icn ifiles\" data-siteid=\"");
+        writer.write(Integer.toString(data.getId()));
+        writer.write("\" >");
+        writer.write(StringUtil.getHtml("_files"));
+        writer.write("</div>");
+        if (SessionReader.hasContentRight(request,data.getId(),Right.EDIT)) {
+            writer.write("<div class=\"contextMenu\">");
+            writer.write("<div class=\"icn inew\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_createFile", locale) + "', '");
+            writer.write(StringUtil.toJs("/file.ajx?act=openCreateFile&siteId=" + data.getId()));
+            writer.write("');\">");
+            writer.write(StringUtil.getHtml("_newFile", locale));
+            writer.write("</div>");
+            if (SessionReader.getSessionObject(request, "cutFileId") != null) {
+                writer.write("<div class=\"icn ipaste\" onclick=\"linkToTree('");
+                writer.write(StringUtil.toJs("/site.srv?act=pasteFile&siteId=" + data.getId()));
+                writer.write("');\">");
+                writer.write(StringUtil.getHtml("_pasteFile", locale));
+                writer.write("</div>");
+            }
+            writer.write("<div class=\"icn isort\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_sortFiles", locale) + "', '");
+            writer.write(StringUtil.toJs("/site.ajx?act=openSortFiles&siteId=" + data.getId()));
+            writer.write("');\">");
+            writer.write(StringUtil.getHtml("_sortFiles", locale));
+            writer.write("</div>");
+            writer.write("</div>");
+        }
+        writer.write("<ul>");
+        for (FileData child : data.getFiles()) {
+            if (SessionReader.hasContentRight(request, child.getId(), Right.READ)) {
+                addAdminFileNode(child, currentId, request, locale, writer);
+            }
+        }
+        writer.write("</ul></li>");
+        for (SiteData child : data.getSites()) {
+            if (SessionReader.hasContentRight(request, child.getId(), Right.READ)) {
+                addAdminSiteNode(child, currentId, activeIds, request, locale, writer);
+            }
+        }
+        writer.write("</ul>");
         writer.write("</li>");
     }
 

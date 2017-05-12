@@ -61,13 +61,13 @@ public abstract class WebServlet extends HttpServlet {
                 RequestError re = new RequestError();
                 switch (e.errorCode) {
                     case HttpServletResponse.SC_BAD_REQUEST:
-                        re.addErrorString("Bad Request");
+                        re.addErrorString("Bad Request - This request has no adequate response. ");
                         break;
                     case HttpServletResponse.SC_FORBIDDEN:
-                        re.addErrorString("Forbidden");
+                        re.addErrorString("Forbidden - Please log in (again) with sufficient rights.");
                         break;
                     case HttpServletResponse.SC_NO_CONTENT:
-                        re.addErrorString("Session data missing");
+                        re.addErrorString("Session data missing. Maybe your session timed out.");
                         break;
                     default:
                         throw e;

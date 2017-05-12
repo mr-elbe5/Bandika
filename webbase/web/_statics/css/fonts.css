@@ -229,6 +229,10 @@
     content: '\E16d';
 }
 
+.icn.isort:before {
+    content: '\E120';
+}
+
 .icn.isync:before {
     content: '\E125';
 }

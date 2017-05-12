@@ -115,7 +115,7 @@ public enum PageAction implements ITreeAction {
                 @Override
                 public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
                     int siteId = RequestReader.getInt(request, "siteId");
-                    if (!hasContentRight(request, siteId, Right.APPROVE))
+                    if (!hasContentRight(request, siteId, Right.EDIT))
                         return false;
                     return showCreatePage(request, response);
                 }
@@ -126,7 +126,7 @@ public enum PageAction implements ITreeAction {
                 @Override
                 public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
                     int siteId = RequestReader.getInt(request, "siteId");
-                    if (!hasContentRight(request, siteId, Right.APPROVE))
+                    if (!hasContentRight(request, siteId, Right.EDIT))
                         return false;
                     PageData data = new PageData();
                     int parentId = RequestReader.getInt(request, "siteId");

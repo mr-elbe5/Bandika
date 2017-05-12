@@ -296,11 +296,14 @@ $.fn.extend({
                 if (!$contextMenu || !$contextMenu.hasClass("contextMenu"))
                     return;
                 $contextMenu.show();
+                var $main = $('#main');
+                var $mainTop=$main.scrollTop();
+                var $mainHeight=$main.height();
                 var $pos = $contextMenu.offset();
                 $pos.left = (e.pageX - 5);
                 $pos.top = (e.pageY - 5);
                 $contextMenu.offset($pos);
-                var overflow = $contextMenu.position().top + $contextMenu.height() + 5 - $('#main').height();
+                var overflow = $contextMenu.position().top + $contextMenu.height() + 5 - $mainHeight - $mainTop;
                 if (overflow > 0) {
                     $pos = $contextMenu.offset();
                     $pos.top -= overflow;
@@ -427,7 +430,7 @@ $(document).ready(function () {
         });
     }
     else {
-        mainNavLis.mouseenter(function () {
+        mainNavLis.mousemove(function () {
             openMenu($(this));
         });
     }
@@ -454,7 +457,7 @@ $(document).ready(function () {
     }
 
     mainNavTimer = 0;
-    mainNav.mouseleave(function () {
+    mainNavLis.mouseleave(function () {
         window.clearTimeout(mainNavTimer);
         mainNavTimer = window.setTimeout(function () {
             mainNavLis.removeClass("open");
@@ -462,7 +465,7 @@ $(document).ready(function () {
     });
 
     // Mainnavi offen lassen (bei mouseenter, bevor der timer das flyout schliesst)
-    mainNav.mouseenter(function () {
+    mainNavLis.mouseenter(function () {
         if (mainNavLis.find(".open").length > 0) {
             window.clearTimeout(mainNavTimer);
         }

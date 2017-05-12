@@ -516,6 +516,7 @@ public class FileBean extends ResourceBean {
             readResourceNode(con, data);
             readFile(con, data);
             readFileContent(con, data, version);
+            readFileBytes(con, data, version);
             data.setLoadedVersion(version);
             data.setChangeDate(getServerTime(con));
             writeFile(con, data);
