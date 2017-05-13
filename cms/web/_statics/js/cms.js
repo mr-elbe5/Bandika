@@ -413,66 +413,6 @@ function evaluateEditFields() {
     }
 }
 
-/* main navigation */
-
-var mainNav;
-var mainNavLis;
-var mainNavTimer = 0;
-
-$(document).ready(function () {
-    mainNav = $("nav.mainNav");
-    mainNavLis = mainNav.children("ul").children("li");
-    if (isMobile.any()) {
-        $('body').addClass('mobile');
-        var mainNavBtn = $(".navBtn");
-        mainNavBtn.click(function () {
-            toggleMenu();
-        });
-    }
-    else {
-        mainNavLis.mousemove(function () {
-            openMenu($(this));
-        });
-    }
-
-    function openMenu(li) {
-        var subMenu = li.children("ul");
-        if (subMenu.length === 0 || li.hasClass("open")) {
-            return true;
-        } else {
-            mainNavLis.removeClass("open");
-            li.addClass("open");
-            return false;
-        }
-    }
-
-    function toggleMenu() {
-        var $menu = $('nav');
-        if ($menu.css('display') === 'none') {
-            $menu.show();
-        }
-        else {
-            $menu.hide();
-        }
-    }
-
-    mainNavTimer = 0;
-    mainNavLis.mouseleave(function () {
-        window.clearTimeout(mainNavTimer);
-        mainNavTimer = window.setTimeout(function () {
-            mainNavLis.removeClass("open");
-        }, 500);
-    });
-
-    // Mainnavi offen lassen (bei mouseenter, bevor der timer das flyout schliesst)
-    mainNavLis.mouseenter(function () {
-        if (mainNavLis.find(".open").length > 0) {
-            window.clearTimeout(mainNavTimer);
-        }
-    });
-
-});
-
 /* part container / transitions */
 
 $.fn.extend({

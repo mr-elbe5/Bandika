@@ -1,4 +1,8 @@
 
+.bandika-superlight {
+    color: #c0efff
+}
+
 .bandika-light {
     color: #00EAF7
 }
@@ -15,103 +19,97 @@
     color: #0F96E8
 }
 
-/* main navigation */
-
 nav.mainNav {
     border-bottom: 1px solid #e7e7e7;
-    min-height: 30px;
+    margin-top: 10px;
 }
 
-nav.mainNav a {
-    text-decoration: none;
-    color: #e7e7e7;
-}
-
-nav.mainNav a:hover {
-    color: #ffffff;
-}
-
-nav.mainNav a.active {
-    color: #8bbdd7;
-}
+/* main navigation */
 
 nav.mainNav ul {
-    list-style-type: none;
-    margin: 0;
+    list-style: none;
+    text-align: left;
     padding: 0;
-    display: table;
+    margin: 0;
 }
 
-/* level 1 */
-nav.mainNav ul li {
-    display: table-cell;
-    position: relative;
-    margin-right: 1px;
-}
-
-nav.mainNav ul li a {
-    padding: 7px 15px 6px;
-    display: block;
+nav.mainNav li {
+    text-align: left;
     font-size: 16px;
-    white-space: nowrap;
+    display: inline-block;
 }
 
-/* layer */
-nav.mainNav ul li ul {
+nav.mainNav li a {
+    text-decoration: none;
+    color: #e7e7e7;
+    display: block;
+    white-space: nowrap;
+    padding-left: 15px;
+    transition: .3s background-color;
+}
+
+nav.mainNav li a:hover{
+    color: #c0efff;
+}
+
+nav.mainNav li ul {
+    position: absolute;
     display: none;
+    width: inherit;
     background: #333 url(img/carbon.png);
     border: 1px solid #c8c8c8;
-    position: absolute;
-    left: 0;
-    min-width: 120px;
     z-index: 9999;
 }
 
-nav.mainNav ul li.open ul {
+nav.mainNav li:hover ul {
     display: block;
 }
 
-/* level 2 */
-nav.mainNav ul li ul li {
+nav.mainNav li li a:hover {
+    background-color: rgba(255,255,255, 0.2);
+}
+
+nav.mainNav li a.active {
+    color: #c0efff;
+    cursor: default;
+}
+
+/* Sub Menus */
+nav.mainNav li li {
     display: block;
-    left: 0;
-    margin: 0;
+    font-size: 14px;
+    font-weight: normal;
     border-bottom: 1px dotted #c8c8c8;
 }
 
-nav.mainNav ul li ul li:last-child {
+nav.mainNav li li:last-child {
     border-bottom: none;
 }
 
-nav.mainNav ul li ul li a {
-    padding: 7px 14px 6px;
-    font-size: 13px;
-    font-weight: normal;
+nav.mainNav > ul > li > a {
+    padding: 0 10px;
 }
 
-nav.mainNav ul li ul li:last-child {
-    border-bottom: none;
+nav.mainNav li li a:hover {
+    background-color: rgba(255,255,255, 0.2);
 }
 
-/* level 3 */
-nav.mainNav ul li ul li ul {
-    position: relative;
-    padding: 0;
+nav.mainNav li li a {
+    padding: 7px 14px 6px 14px;
+}
+
+nav.mainNav li ul li ul{
     border: none;
-    left: 0;
+    position: relative;
 }
 
-nav.mainNav ul li ul li ul li {
+nav.mainNav li li li{
+    font-size: 12px;
     border-bottom: none;
 }
 
-nav.mainNav ul li ul li ul li a {
-    padding-left: 28px;
-    font-size: 11px;
-}
-
-nav.mainNav ul li ul li ul li a li a {
-    padding-left: 42px;
+nav.mainNav li li li a {
+    padding: 7px 14px 6px 24px;
 }
 
 .searchSection {
