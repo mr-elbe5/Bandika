@@ -435,6 +435,23 @@ $.fn.extend({
     }
 });
 
+function checkMobile(){
+    if (window.matchMedia('screen and (max-width: 765px)').matches){
+        $('body').addClass('mobile');
+    }
+    else{
+        $('body').removeClass('mobile');
+    }
+}
+
+var mobile=false;
+
+$(document).ready(function () {
+    window.addEventListener('resize',function(e){
+        checkMobile();
+    });
+});
+
 
 
 
