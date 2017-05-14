@@ -401,6 +401,106 @@ h1.topCenter {
     padding: 0;
 }
 
+/************ mobile part ***********/
+
+body.mobile {
+    height: auto;
+    overflow: auto;
+}
+
+.mobile .viewport {
+    height: auto;
+    margin: 0 10px;
+}
+
+.mobile .topNavSection div:first-child {
+    display: none;
+}
+
+.mobile .headerMain {
+    display: block;
+}
+
+.mobile a.logo{
+    display: inline-block;
+}
+
+.mobile a.navBtn {
+    display: block;
+    float: right;
+    width: 33px;
+    height: 24px;
+    margin-top: 15px;
+    background: url('img/navbtn.png') no-repeat;
+    cursor: pointer;
+}
+
+.mobile .menu{
+    display: block;
+    margin: 10px 0 10px 0;
+    border: 1px solid #888;
+    background: rgba(255,255,255,0.1);
+}
+
+.mobile nav.mainNav {
+    position: inherit;
+    border: none;
+    display: none;
+}
+
+.mobile nav.mainNav.open{
+    display: block;
+}
+
+.mobile nav.mainNav ul li {
+    display: block;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px dotted #c8c8c8;
+}
+
+.mobile nav.mainNav ul li:last-child{
+    border-bottom:none;
+}
+
+.mobile nav.mainNav ul li ul {
+    position: inherit;
+    display: block;
+    border: none;
+    background: inherit;
+}
+
+.mobile nav.mainNav ul li ul li {
+    padding-left: 20px;
+}
+
+nav.mainNav li li a:hover{
+    background: inherit;
+}
+
+.mobile .breadcrumb {
+    height: auto;
+}
+
+.mobile .searchSection{
+    margin-bottom: 10px;
+}
+
+.mobile .main {
+    bottom: auto;
+    position: inherit;
+    width: auto;
+    top: auto;
+    overflow: inherit;
+}
+
+.mobile .footer {
+    position: inherit;
+    width: auto;
+}
+
+
 @media print{
 
     html {

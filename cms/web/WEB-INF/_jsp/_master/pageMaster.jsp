@@ -44,6 +44,8 @@
         <section class="headerMain">
             <div class="title">
                 <a class="logo" href="/"><img src="/_statics/img/logo.png" alt="<%=StringUtil.toHtml(title)%>"/></a>
+                <a class="navBtn" onclick="toggleMenu();">&nbsp;
+                </a>
             </div>
             <div class="menu">
                 <cms:control name="<%=MainMenuControl.KEY%>"/>

@@ -435,18 +435,28 @@ $.fn.extend({
     }
 });
 
+function toggleMenu(){
+    var $nav=$('nav.mainNav');
+    if ($nav.hasClass('open'))
+        $nav.removeClass('open');
+    else
+        $nav.addClass('open');
+}
+
 function checkMobile(){
     if (window.matchMedia('screen and (max-width: 765px)').matches){
         $('body').addClass('mobile');
     }
     else{
         $('body').removeClass('mobile');
+        $('nav.mainNav').removeClass('open');
     }
 }
 
 var mobile=false;
 
 $(document).ready(function () {
+    checkMobile();
     window.addEventListener('resize',function(e){
         checkMobile();
     });
