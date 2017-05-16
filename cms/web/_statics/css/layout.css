@@ -421,6 +421,11 @@ body.mobile {
     display: block;
 }
 
+.mobile .title{
+    display:block;
+    width: 100%;
+}
+
 .mobile a.logo{
     display: inline-block;
 }

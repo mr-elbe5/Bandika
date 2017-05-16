@@ -139,10 +139,11 @@ body {
     padding: 10px 10px 0 10px;
 }
 
-.headerMain .logo {
+.headerMain .title {
     display: table-cell;
     vertical-align: top;
     margin-right: 10px;
+    width: 250px;
 }
 
 .headerMain .menu {
