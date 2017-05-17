@@ -14,6 +14,8 @@ import de.bandika.cms.tree.TreeNode;
 import de.bandika.cms.tree.TreeCache;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +47,24 @@ public class BreadcrumbControl extends TemplateControl {
             sb.append("<li><a href=\"").append(bcnode.getUrl()).append("\">").append(toHtml(bcnode.getDisplayName())).append("</a></li>");
         }
         sb.append("</ul></nav>");
+    }
+
+    public void appendHtml(JspWriter writer, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) throws IOException {
+        TreeCache tc = TreeCache.getInstance();
+        List<Integer> activeIds = new ArrayList<>();
+        if (pageData != null) {
+            activeIds.addAll(pageData.getParentIds());
+            activeIds.add(pageData.getId());
+        }
+        writer.write("<nav class=\"breadcrumb\"><ul>");
+        for (int i = 1; i < activeIds.size(); i++) {
+            TreeNode bcnode = tc.getNode(activeIds.get(i));
+            if (bcnode == null || ((bcnode instanceof PageData) && ((PageData) bcnode).isDefaultPage())) {
+                continue;
+            }
+            writer.write("<li><a href=\"" + bcnode.getUrl() + "\">" + toHtml(bcnode.getDisplayName()) + "</a></li>");
+        }
+        writer.write("</ul></nav>");
     }
 
 }

@@ -21,6 +21,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -193,6 +195,48 @@ public class MultiHtmlPartData extends HtmlPartData {
             sb.append("</form>\n");
         }
     }
+
+    public void appendLivePartHtml(JspWriter writer, PageData pageData, HttpServletRequest request) throws IOException {
+        TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PART, getTemplateName());
+        try {
+            writer.write("<div class=\"pagePart\" id=\"" + getHtmlId() + "\" >");
+            writer.write("<div id=\"" + getContainerId() + "\">");
+            for (int i = 0; i < getContentCount(); i++) {
+                setCurrentContentIdx(i);
+                partTemplate.writeTemplate(writer, pageData, this, request);
+            }
+            setCurrentContentIdx(0);
+            writer.write("</div>");
+            writer.write("<script type=\"text/javascript\">" + getScript().replace(TemplateData.PLACEHOLDER_CONTAINERID,getContainerId()) + ";</script>");
+            writer.write("</div>");
+        } catch (Exception e) {
+            Log.error("error in part template", e);
+        }
+    }
+
+    public void writeEditPartEnd(PagePartData editPagePart, String sectionName, String sectionType, int pageId, JspWriter writer, Locale locale) throws IOException {
+        boolean staticSection = sectionName.equals(PageData.STATIC_SECTION_NAME);
+        writer.write("</div>");
+        if (editPagePart == null) {
+            writer.write("<div class = \"contextMenu\">");
+            writer.write("<div class=\"icn iedit\" onclick = \"return post2EditPageContent('/pagepart.ajx?',{act:'editPagePart',pageId:'" + pageId + "',sectionName:'" + sectionName + "',partId:'" + getId() + "'})\">" + getHtml("_edit", locale) + "</div>\n");
+            if (!staticSection) {
+                writer.write(String.format(MULTICONTEXTCODE, getHtml("_settings", locale), pageId, sectionName, getId(), getHtml("_settings", locale),
+                        pageId, sectionName, getId(), getHtml("_previousContent", locale),
+                        pageId, sectionName, getId(), getHtml("_nextContent", locale),
+                        getHtml("_addPart", locale), pageId, sectionName, sectionType, getId(), getHtml("_newAbove", locale),
+                        getHtml("_addPart", locale), pageId, sectionName, sectionType, getId(), getHtml("_newBelow", locale),
+                        getHtml("_share", locale), pageId, sectionName, getId(), getHtml("_share", locale),
+                        pageId, sectionName, getId(), getHtml("_up", locale),
+                        pageId, sectionName, getId(), getHtml("_down", locale),
+                        pageId, sectionName, getId(), getHtml("_delete", locale)));
+            }
+            writer.write("</div>\n");
+        } else if (this == editPagePart) {
+            writer.write("</form>\n");
+        }
+    }
+
 
     /******************* XML part *********************************/
 

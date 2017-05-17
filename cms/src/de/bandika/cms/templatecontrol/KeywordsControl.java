@@ -13,6 +13,8 @@ import de.bandika.cms.page.PageData;
 import de.bandika.cms.template.TemplateAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
 
 public class KeywordsControl extends TemplateControl {
 
@@ -28,6 +30,10 @@ public class KeywordsControl extends TemplateControl {
 
     public void appendHtml(StringBuilder sb, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) {
         sb.append("<meta name=\"keywords\" content=\"").append(StringUtil.toHtml(pageData.getKeywords())).append("\">");
+    }
+
+    public void appendHtml(JspWriter writer, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) throws IOException {
+        writer.write("<meta name=\"keywords\" content=\"" + StringUtil.toHtml(pageData.getKeywords()) + "\">");
     }
 
 }

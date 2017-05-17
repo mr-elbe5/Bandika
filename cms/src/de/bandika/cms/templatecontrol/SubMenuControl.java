@@ -16,6 +16,8 @@ import de.bandika.servlet.SessionReader;
 import de.bandika.cms.tree.TreeCache;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
 
 public class SubMenuControl extends TemplateControl {
 
@@ -53,6 +55,34 @@ public class SubMenuControl extends TemplateControl {
                 if (active)
                     sb.append(" class=\"active\"");
                 sb.append(" href=\"").append(page.getUrl()).append("\">").append(toHtml(page.getDisplayName())).append("</a></li>");
+            }
+        }
+    }
+
+    public void appendHtml(JspWriter writer, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) throws IOException {
+        if (pageData==null)
+            return;
+        TreeCache tc = TreeCache.getInstance();
+        SiteData parentSite = tc.getSite(pageData.getParentId());
+        writer.write("<nav class=\"subNav links\"><ul>");
+        addNodes(parentSite, pageData.getId(),request, writer);
+        writer.write("</ul></nav>");
+    }
+
+    public void addNodes(SiteData parentSite, int currentId, HttpServletRequest request, JspWriter writer) throws IOException {
+        for (SiteData site : parentSite.getSites()) {
+            if (site.isInNavigation() && (site.isAnonymous() || SessionReader.hasContentRight(request,site.getId(),Right.READ))) {
+                writer.write("<li><a class=\"active\"");
+                writer.write(" href=\"" + site.getUrl() + "\">" + toHtml(site.getDisplayName()) + "</a></li>");
+            }
+        }
+        for (PageData page : parentSite.getPages()) {
+            if (page.isInNavigation() && (page.isAnonymous() || SessionReader.hasContentRight(request,page.getId(),Right.READ)) && !page.isDefaultPage()){
+                boolean active = page.getId() == currentId;
+                writer.write("<li><a");
+                if (active)
+                    writer.write(" class=\"active\"");
+                writer.write(" href=\"" + page.getUrl() + "\">" + toHtml(page.getDisplayName()) + "</a></li>");
             }
         }
     }

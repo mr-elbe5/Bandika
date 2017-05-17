@@ -23,6 +23,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -278,6 +280,36 @@ public class PageData extends ResourceNode implements ISearchTextProvider {
         } catch (Exception e) {
             Log.error("error in page template", e);
             sb.append("error");
+        }
+    }
+
+    public void appendContentHtml(JspWriter writer, HttpServletRequest request) throws IOException{
+        if (isEditMode()) {
+            writer.write("<div id=\"pageContent\" class=\"editArea\">");
+        } else {
+            writer.write("<div id=\"pageContent\" class=\"viewArea\">");
+        }
+        appendInnerContentHtml(writer, request);
+        if (isEditMode()) {
+            writer.write("</div><script>$('#pageContent').initEditArea();</script>");
+        } else {
+            writer.write("</div>");
+        }
+    }
+
+    public void appendInnerContentHtml(JspWriter writer, HttpServletRequest request) throws IOException {
+        TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PAGE, getTemplateName());
+        try {
+            pageTemplate.writeTemplate(writer, this, null, request);
+            if (editPagePart!=null){
+                writer.write("<script>$('.editControl').hide();</script>");
+            }
+            else{
+                writer.write("<script>$('.editControl').show();</script>");
+            }
+        } catch (Exception e) {
+            Log.error("error in page template", e);
+            writer.write("error");
         }
     }
 

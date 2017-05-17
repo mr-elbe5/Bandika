@@ -18,6 +18,8 @@ import de.bandika.cms.templatecontrol.TemplateControl;
 import de.bandika.cms.templatecontrol.TemplateControls;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -225,6 +227,73 @@ public class TemplateData extends BaseData implements Serializable {
                 return true;
             case RESOURCE:
                 sb.append(StringUtil.getHtml(attributes.get("key"), SessionReader.getSessionLocale(request)));
+                return true;
+        }
+        return false;
+    }
+
+    public void writeTemplate(JspWriter writer, PageData pageData, PagePartData partData, HttpServletRequest request) throws ParseException, IOException {
+        String src = getCode();
+        writeTemplate(src, writer, pageData, partData, request);
+    }
+
+    public void writeTemplate(String src, JspWriter writer, PageData pageData, PagePartData partData, HttpServletRequest request) throws ParseException, IOException {
+        int pos1;
+        int pos2 = 0;
+        boolean shortTag;
+        while (true) {
+            pos1 = src.indexOf(TAG_START, pos2);
+            if (pos1 == -1) {
+                writer.write(src.substring(pos2));
+                break;
+            }
+            writer.write(src.substring(pos2, pos1));
+            pos2 = src.indexOf('>', pos1 + 5);
+            if (pos2 == -1)
+                throw new ParseException("no cms tag end", pos1);
+            String startTag = src.substring(pos1, pos2);
+            shortTag = false;
+            if (startTag.endsWith("/")) {
+                startTag = startTag.substring(0, startTag.length() - 1);
+                shortTag = true;
+            }
+            TagType tagType = getTagType(startTag.substring(5));
+            TemplateAttributes attributes = new TemplateAttributes(startTag.substring(tagType.getStartTag().length()).trim());
+            //no content
+            if (shortTag) {
+                appendTagReplacement(writer, tagType, attributes, "", pageData, partData, request);
+                pos2++;
+                continue;
+            }
+            pos2++;
+            pos1 = src.indexOf(tagType.getEndTag(), pos2);
+            if (pos1 == -1)
+                throw new ParseException("no cms end tag ", pos2);
+            String content = src.substring(pos2, pos1).trim();
+            pos2 = pos1 + tagType.getEndTag().length();
+            appendTagReplacement(writer, tagType, attributes, content, pageData, partData, request);
+        }
+    }
+
+    protected boolean appendTagReplacement(JspWriter writer, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) throws IOException{
+        switch (tagType) {
+            case CONTROL:
+                TemplateControl control = TemplateControls.getControl(attributes.get("type"));
+                if (control != null)
+                    control.appendHtml(writer, attributes, content, pageData, request);
+                return true;
+            case SNIPPET:
+                TemplateData snippet = TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, attributes.getString("name"));
+                if (snippet != null) {
+                    try {
+                        snippet.writeTemplate(writer, pageData, null, request);
+                    } catch (Exception e) {
+                        Log.error("error in snippet template", e);
+                    }
+                }
+                return true;
+            case RESOURCE:
+                writer.write(StringUtil.getHtml(attributes.get("key"), SessionReader.getSessionLocale(request)));
                 return true;
         }
         return false;

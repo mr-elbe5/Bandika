@@ -16,6 +16,8 @@ import de.bandika.rights.Right;
 import de.bandika.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,6 +74,51 @@ public class MainMenuControl extends TemplateControl {
                 if (active)
                     sb.append(" class=\"active\"");
                 sb.append(" href=\"").append(page.getUrl()).append("\">").append(toHtml(page.getDisplayName())).append("</a></li>");
+            }
+        }
+    }
+
+    public void appendHtml(JspWriter writer, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) throws IOException {
+        TreeCache tc = TreeCache.getInstance();
+        SiteData homeSite = tc.getLanguageRootSite(SessionReader.getSessionLocale(request));
+        List<Integer> activeIds = new ArrayList<>();
+        int pageId = 0;
+        if (pageData != null) {
+            pageId = pageData.getId();
+            activeIds.addAll(pageData.getParentIds());
+            activeIds.add(pageId);
+        }
+        writer.write("<nav class=\"mainNav\"><ul>");
+        if (homeSite != null)
+            addNodes(homeSite, pageId, activeIds, request, writer);
+        writer.write("</ul></nav>");
+    }
+
+    public void addNodes(SiteData parentSite, int currentId, List<Integer> activeIds, HttpServletRequest request, JspWriter writer) throws IOException {
+        for (SiteData site : parentSite.getSites()) {
+            if (site.isInNavigation() && (site.isAnonymous() || SessionReader.hasContentRight(request, site.getId(), Right.READ))) {
+                boolean hasSubSites = site.getSites().size() > 0;
+                boolean hasSubPages = site.getPages().size() > 1;
+                boolean active = site.getId() == currentId || activeIds.contains(site.getId());
+                writer.write("<li><a");
+                if (active)
+                    writer.write(" class=\"active\"");
+                writer.write(" href=\"" + site.getUrl() + "\">" + toHtml(site.getDisplayName()) + "</a>");
+                if (hasSubSites || hasSubPages) {
+                    writer.write("<ul>");
+                    addNodes(site, currentId, activeIds, request, writer);
+                    writer.write("</ul>");
+                }
+                writer.write("</li>");
+            }
+        }
+        for (PageData page : parentSite.getPages()) {
+            if (page.isInNavigation() && (page.isAnonymous() || SessionReader.hasContentRight(request, page.getId(), Right.READ)) && !page.isDefaultPage()) {
+                boolean active = page.getId() == currentId || activeIds.contains(page.getId());
+                writer.write("<li><a");
+                if (active)
+                    writer.write(" class=\"active\"");
+                writer.write(" href=\"" + page.getUrl() + "\">" + toHtml(page.getDisplayName()) + "</a></li>");
             }
         }
     }

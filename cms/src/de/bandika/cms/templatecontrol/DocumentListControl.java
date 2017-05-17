@@ -18,6 +18,8 @@ import de.bandika.rights.Right;
 import de.bandika.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,6 +46,18 @@ public class DocumentListControl extends TemplateControl {
             sb.append("<div class=\"documentListLine icn ifile\"><a href=\"").append(file.getUrl()).append("\" target=\"_blank\" title=\"")
                     .append(StringUtil.getHtml("_show", locale)).append("\">").append(StringUtil.toHtml(file.getDisplayName()))
                     .append("</a></div>");
+        }
+    }
+
+    public void appendHtml(JspWriter writer, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) throws IOException {
+        int siteId=pageData.getParentId();
+        SiteData site = TreeCache.getInstance().getSite(siteId);
+        Locale locale=SessionReader.getSessionLocale(request);
+        List<FileData> files=site.getFiles();
+        for (FileData file : files){
+            if (!file.isAnonymous() && !SessionReader.hasContentRight(request, file.getId(), Right.READ))
+                continue;
+            writer.write("<div class=\"documentListLine icn ifile\"><a href=\"" + file.getUrl() + "\" target=\"_blank\" title=\"" + StringUtil.getHtml("_show", locale) + "\">" + StringUtil.toHtml(file.getDisplayName()) + "</a></div>");
         }
     }
 

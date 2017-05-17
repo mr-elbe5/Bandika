@@ -14,6 +14,8 @@ import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateType;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
 
 public class LayerControl extends TemplateControl {
 
@@ -33,6 +35,15 @@ public class LayerControl extends TemplateControl {
         if (pageData.isEditMode()) {
             sb.append(TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, "browserLayer").getCode());
             sb.append(TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, "browserDialogLayer").getCode());
+        }
+    }
+
+    public void appendHtml(JspWriter writer, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) throws IOException {
+        writer.write(TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, "treeLayer").getCode());
+        writer.write(TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, "dialogLayer").getCode());
+        if (pageData.isEditMode()) {
+            writer.write(TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, "browserLayer").getCode());
+            writer.write(TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, "browserDialogLayer").getCode());
         }
     }
 

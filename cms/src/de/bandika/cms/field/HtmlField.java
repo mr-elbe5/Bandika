@@ -21,6 +21,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Set;
 
@@ -103,6 +105,27 @@ public class HtmlField extends Field {
                     sb.append("");
                 } else {
                     sb.append(getHtmlForOutput());
+                }
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    @Override
+    public void appendFieldHtml(JspWriter writer, TemplateAttributes attributes, String defaultContent, PagePartData partData, PageData pageData, HttpServletRequest request) throws IOException {
+        String toolbar = attributes.getString("toolbar");
+        boolean partEditMode = pageData.isEditMode() && partData == pageData.getEditPagePart();
+        int siteId = pageData.getParentId();
+        int pageId = pageData.getId();
+        String html = getHtml().trim();
+        if (partEditMode) {
+            writer.write(String.format(CKCODE, getIdentifier(), html.isEmpty() ? defaultContent : html, getIdentifier(), StringUtil.toHtml(html), getIdentifier(), toolbar, siteId, pageId, siteId, pageId));
+        } else {
+            try {
+                if (html.isEmpty()) {
+                    writer.write("");
+                } else {
+                    writer.write(getHtmlForOutput());
                 }
             } catch (Exception ignored) {
             }

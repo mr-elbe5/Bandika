@@ -15,6 +15,8 @@ import de.bandika.cms.tree.TreeCache;
 import de.bandika.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,6 +57,33 @@ public class TopNavControl extends TemplateControl {
             sb.append("<li><a href=\"/login.srv?act=openLogin\">").append(getHtml("_login", locale)).append("</a></li>");
         }
         sb.append("</ul></nav>");
+    }
+
+    public void appendHtml(JspWriter writer, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) throws IOException {
+        Locale locale = SessionReader.getSessionLocale(request);
+        List<Locale> otherLocales = null;
+        SiteData homeSite = null;
+        try {
+            homeSite = TreeCache.getInstance().getLanguageRootSite(locale);
+            otherLocales = TreeCache.getInstance().getOtherLocales(locale);
+        } catch (Exception ignore) {
+        }
+        writer.write("<nav><ul>");
+        if (homeSite != null) {
+            writer.write("<li><a href=\"" + homeSite.getUrl() + "\">" + getHtml("_home", locale) + "</a></li>");
+            if (otherLocales != null) {
+                for (Locale loc : otherLocales) {
+                    writer.write("<li><a href=\"/user.srv?act=changeLocale&language=" + loc.getLanguage() + "\">" + toHtml(loc.getDisplayName(loc)) + "</a></li>");
+                }
+            }
+        }
+        if (SessionReader.isLoggedIn(request)) {
+            writer.write("<li><a href=\"/user.srv?act=openProfile\">" + getHtml("_profile", locale) + "</a></li>");
+            writer.write("<li><a href=\"/login.srv?act=logout\">" + getHtml("_logout", locale) + "</a></li>");
+        } else {
+            writer.write("<li><a href=\"/login.srv?act=openLogin\">" + getHtml("_login", locale) + "</a></li>");
+        }
+        writer.write("</ul></nav>");
     }
 
 }

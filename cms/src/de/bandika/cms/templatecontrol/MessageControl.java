@@ -14,6 +14,8 @@ import de.bandika.servlet.RequestError;
 import de.bandika.servlet.RequestReader;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
 
 public class MessageControl extends TemplateControl {
 
@@ -34,6 +36,16 @@ public class MessageControl extends TemplateControl {
             sb.append("<div class=\"error\">").append(toHtml(error.getErrorString())).append("<button type=\"button\" class=\"close\" onclick=\"$(this).closest('.error').hide();\">&times;</button></div>");
         } else if (message != null && message.length() > 0) {
             sb.append("<div class=\"message\">").append(toHtml(message)).append("<button type=\"button\" class=\"close\" onclick=\"$(this).closest('.message').hide();\">&times;</button></div>");
+        }
+    }
+
+    public void appendHtml(JspWriter writer, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) throws IOException {
+        RequestError error = RequestError.getError(request);
+        String message = RequestReader.getMessage(request);
+        if (error != null) {
+            writer.write("<div class=\"error\">" + toHtml(error.getErrorString()) + "<button type=\"button\" class=\"close\" onclick=\"$(this).closest('.error').hide();\">&times;</button></div>");
+        } else if (message != null && message.length() > 0) {
+            writer.write("<div class=\"message\">" + toHtml(message) + "<button type=\"button\" class=\"close\" onclick=\"$(this).closest('.message').hide();\">&times;</button></div>");
         }
     }
 

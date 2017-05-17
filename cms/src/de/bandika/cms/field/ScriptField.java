@@ -18,6 +18,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
 
 public class ScriptField extends Field {
 
@@ -61,6 +63,25 @@ public class ScriptField extends Field {
                 sb.append(defaultContent);
             } else {
                 sb.append("<script type=\"text/javascript\">").append(getCode()).append("</script>");
+            }
+        }
+    }
+
+    @Override
+    public void appendFieldHtml(JspWriter writer, TemplateAttributes attributes, String defaultContent, PagePartData partData, PageData pageData, HttpServletRequest request) throws IOException {
+        boolean partEditMode = pageData.isEditMode() && partData == pageData.getEditPagePart();
+        int height = attributes.getInt("height");
+        if (partEditMode) {
+            writer.write("<textarea class=\"editField\" name=\"" + getIdentifier() + "\" rows=\"5\" ");
+            if (height == -1) {
+                writer.write("style=\"height:" + height + "\"");
+            }
+            writer.write(" >" + StringUtil.toHtmlInput(getCode()) + "</textarea>");
+        } else {
+            if (getCode().length() == 0) {
+                writer.write(defaultContent);
+            } else {
+                writer.write("<script type=\"text/javascript\">" + getCode() + "</script>");
             }
         }
     }

@@ -18,6 +18,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
 
 public class TextField extends Field {
 
@@ -63,6 +65,27 @@ public class TextField extends Field {
                 sb.append("&nbsp;");
             } else {
                 sb.append(StringUtil.toHtmlText(getText()));
+            }
+        }
+    }
+
+    @Override
+    public void appendFieldHtml(JspWriter writer, TemplateAttributes attributes, String defaultContent, PagePartData partData, PageData pageData, HttpServletRequest request) throws IOException {
+        boolean partEditMode = pageData.isEditMode() && partData == pageData.getEditPagePart();
+        int rows = attributes.getInt("rows");
+        if (partEditMode) {
+            String content = getText();
+            if (content.isEmpty())
+                content = defaultContent;
+            if (rows > 1)
+                writer.write("<textarea class=\"editField\" name=\"" + getIdentifier() + "\" rows=\"" + rows + "\" >" + StringUtil.toHtmlInput(content) + "</textarea>");
+            else
+                writer.write("<input type=\"text\" class=\"editField\" name=\"" + getIdentifier() + "\" value=\"" + StringUtil.toHtmlInput(content) + "\" />");
+        } else {
+            if (getText().length() == 0) {
+                writer.write("&nbsp;");
+            } else {
+                writer.write(StringUtil.toHtmlText(getText()));
             }
         }
     }

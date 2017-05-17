@@ -20,6 +20,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Set;
 
@@ -171,6 +173,9 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
     }
 
     public void appendPartHtml(StringBuilder sb, String sectionType, PageData pageData, HttpServletRequest request) {
+    }
+
+    public void appendPartHtml(JspWriter writer, String sectionType, PageData pageData, HttpServletRequest request) throws IOException {
     }
 
     public String toHtml(String src) {

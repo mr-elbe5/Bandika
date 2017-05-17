@@ -13,6 +13,8 @@ import de.bandika.cms.pagepart.PagePartData;
 import de.bandika.cms.field.Field;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
 
 public class PartTemplateData extends TemplateData {
 
@@ -54,6 +56,29 @@ public class PartTemplateData extends TemplateData {
         String fieldName = attributes.getString("name");
         Field field = partData.ensureField(fieldName, fieldType);
         field.appendFieldHtml(sb, attributes, content, partData, pageData, request);
+
+    }
+
+    protected boolean appendTagReplacement(JspWriter writer, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) throws IOException {
+        if (super.appendTagReplacement(writer, tagType, attributes, content, pageData, partData, request))
+            return true;
+        switch (tagType) {
+            case FIELD:
+                appendField(writer, attributes, content, pageData, partData, request);
+                return true;
+            case PARTID:
+                if (partData != null)
+                    writer.write(partData.getHtmlId());
+                return true;
+        }
+        return false;
+    }
+
+    protected void appendField(JspWriter writer, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) throws IOException {
+        String fieldType = attributes.getString("type");
+        String fieldName = attributes.getString("name");
+        Field field = partData.ensureField(fieldName, fieldType);
+        field.appendFieldHtml(writer, attributes, content, partData, pageData, request);
 
     }
 

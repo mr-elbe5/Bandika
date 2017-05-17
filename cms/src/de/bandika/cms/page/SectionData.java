@@ -18,6 +18,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
 
@@ -197,6 +199,32 @@ public class SectionData implements XmlData {
         }
         if (editMode) {
             sb.append("</div>");
+        }
+    }
+
+    public void appendSectionHtml(JspWriter writer, TemplateAttributes attributes, PageData pageData, HttpServletRequest request) throws IOException {
+        boolean editMode = pageData.isEditMode();
+        Locale locale = SessionReader.getSessionLocale(request);
+        String cls = attributes.getString("class");
+        boolean hasParts = getParts().size() > 0;
+        if (editMode) {
+            writer.write("<div class = \"editSection\">");
+            if (hasParts) {
+                writer.write("<div class = \"editSectionHeader\">Section " + getName()+ "</div>");
+            } else {
+                writer.write("<div class = \"editSectionHeader empty contextSource\" title=\"" + StringUtil.getHtml("_rightClickEditHint") + "\">Section " + getName() + "</div>");
+                writer.write("<div class = \"contextMenu\"><div class=\"icn inew\" onclick = \"return openLayerDialog('" + StringUtil.getHtml("_addPart", locale) + "', '/pagepart.ajx?act=openAddPagePart&pageId=" + pageData.getId() + "&sectionName=" + getName() + "&sectionType=" + attributes.getString("type") + "&partId=-1');\">" + StringUtil.getHtml("_new", locale) + "\n</div>\n</div>");
+            }
+        }
+        if (!getParts().isEmpty()) {
+            writer.write("<div class = \"section " + cls + "\">");
+            for (PagePartData pdata : getParts()) {
+                pdata.appendPartHtml(writer, attributes.getString("type"), pageData, request);
+            }
+            writer.write("</div>");
+        }
+        if (editMode) {
+            writer.write("</div>");
         }
     }
 

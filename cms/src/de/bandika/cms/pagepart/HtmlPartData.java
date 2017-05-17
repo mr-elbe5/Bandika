@@ -22,6 +22,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -154,6 +156,67 @@ public class HtmlPartData extends PagePartData {
             sb.append("</div>\n");
         } else if (this == editPagePart) {
             sb.append("</form>\n");
+        }
+    }
+
+    public void appendPartHtml(JspWriter writer, String sectionType, PageData pageData, HttpServletRequest request) throws IOException {
+        if (pageData.isEditMode())
+            appendEditPartHtml(writer, sectionType, pageData, request);
+        else
+            appendLivePartHtml(writer, pageData, request);
+    }
+
+    public void appendEditPartHtml(JspWriter writer, String typeName, PageData pageData, HttpServletRequest request) throws IOException {
+        Locale locale = SessionReader.getSessionLocale(request);
+        writeEditPartStart(pageData.getEditPagePart(), getSection(), pageData.getId(), writer, locale);
+        TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PART, getTemplateName());
+        try {
+            partTemplate.writeTemplate(writer, pageData, this, request);
+        } catch (Exception e) {
+            Log.error("error in part template", e);
+        }
+        writeEditPartEnd(pageData.getEditPagePart(), getSection(), typeName, pageData.getId(), writer, locale);
+    }
+
+    public void appendLivePartHtml(JspWriter writer, PageData pageData, HttpServletRequest request) throws IOException {
+        TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PART, getTemplateName());
+        try {
+            writer.write("<div class=\"pagePart\" id=\"" + getHtmlId() + "\" >");
+            partTemplate.writeTemplate(writer, pageData, this, request);
+            writer.write("</div>");
+        } catch (Exception e) {
+            Log.error("error in part template", e);
+        }
+    }
+
+    protected void writeEditPartStart(PagePartData editPagePart, String sectionName, int pageId, JspWriter writer, Locale locale) throws IOException {
+        if (editPagePart == null) {
+            writer.write("<div title=\"" + StringUtil.toHtml(getTemplateName()) + "(ID=" + getId() + ") - " + StringUtil.getHtml("_rightClickEditHint") + "\" id=\"part_" + getId() + "\" class = \"pagePart viewPagePart contextSource\">\n");
+        } else if (this == editPagePart) {
+            writer.write(String.format(EDITSTARTCODE, getId(), pageId, sectionName, getId(), getHtml("_ok", locale), pageId, getHtml("_cancel", locale)));
+        } else {
+            writer.write("<div class = \"pagePart viewPagePart\">\n");
+        }
+    }
+
+    public void writeEditPartEnd(PagePartData editPagePart, String sectionName, String sectionType, int pageId, JspWriter writer, Locale locale) throws IOException {
+        boolean staticSection = sectionName.equals(PageData.STATIC_SECTION_NAME);
+        writer.write("</div>");
+        if (editPagePart == null) {
+            writer.write("<div class = \"contextMenu\">");
+            writer.write("<div class=\"icn iedit\" onclick = \"return post2EditPageContent('/pagepart.ajx?',{act:'editPagePart',pageId:'" + pageId + "',sectionName:'" + sectionName + "',partId:'" + getId() + "'})\">" + getHtml("_edit", locale) + "</div>\n");
+            if (!staticSection) {
+                writer.write(String.format(HTMLCONTEXTCODE, getHtml("_settings", locale), pageId, sectionName, getId(), getHtml("_settings", locale),
+                        getHtml("_addPart", locale), pageId, sectionName, sectionType, getId(), getHtml("_newAbove", locale),
+                        getHtml("_addPart", locale), pageId, sectionName, sectionType, getId(), getHtml("_newBelow", locale),
+                        getHtml("_share", locale), pageId, sectionName, getId(), getHtml("_share", locale),
+                        pageId, sectionName, getId(), getHtml("_up", locale),
+                        pageId, sectionName, getId(), getHtml("_down", locale),
+                        pageId, sectionName, getId(), getHtml("_delete", locale)));
+            }
+            writer.write("</div>\n");
+        } else if (this == editPagePart) {
+            writer.write("</form>\n");
         }
     }
 
