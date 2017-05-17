@@ -11,6 +11,7 @@ package de.bandika.cms.template;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.pagepart.PagePartData;
 import de.bandika.cms.page.SectionData;
+import de.bandika.cms.tag.SectionTag;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -56,37 +57,5 @@ public class PageTemplateData extends TemplateData {
         data.appendPartHtml(sb, "", pageData, request);
     }
 
-    protected boolean appendTagReplacement(PageContext context, JspWriter writer, HttpServletRequest request, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData) throws IOException {
-        if (super.appendTagReplacement(context, writer, request, tagType, attributes, content, pageData, partData))
-            return true;
-        switch (tagType) {
-            case SECTION:
-                appendSection(context, writer, request, attributes, pageData);
-                return true;
-            case PART:
-                appendStaticPart(context, writer, request, attributes, pageData);
-                return true;
-        }
-        return false;
-    }
-
-    protected void appendSection(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, PageData pageData) throws IOException {
-        String sectionName = attributes.getString("name");
-        SectionData section = pageData.getSection(sectionName);
-        if (section == null) {
-            pageData.ensureSection(sectionName);
-            section = pageData.getSection(sectionName);
-        }
-        if (section != null) {
-            section.appendSectionHtml(context, writer, request, attributes, pageData);
-        }
-    }
-
-    protected void appendStaticPart(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, PageData pageData) throws IOException {
-        String templateName = attributes.getString("template");
-        int idx = attributes.getInt("id");
-        PagePartData data = pageData.ensureStaticPart(templateName, idx);
-        data.appendPartHtml(context, writer, request, "", pageData);
-    }
 
 }

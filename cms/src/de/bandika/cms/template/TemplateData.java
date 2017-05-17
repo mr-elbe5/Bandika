@@ -11,13 +11,19 @@ package de.bandika.cms.template;
 import de.bandika.base.data.BaseData;
 import de.bandika.base.log.Log;
 import de.bandika.base.util.StringUtil;
+import de.bandika.cms.field.Field;
 import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.SectionData;
 import de.bandika.cms.pagepart.PagePartData;
+import de.bandika.cms.tag.PageTag;
+import de.bandika.cms.tag.PartTag;
+import de.bandika.cms.tag.SectionTag;
 import de.bandika.servlet.SessionReader;
 import de.bandika.cms.templatecontrol.TemplateControl;
 import de.bandika.cms.templatecontrol.TemplateControls;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
@@ -233,12 +239,12 @@ public class TemplateData extends BaseData implements Serializable {
         return false;
     }
 
-    public void writeTemplate(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws ParseException, IOException {
+    public void writeTemplate(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws Exception {
         String src = getCode();
         writeTemplate(context, writer, request, src, pageData, partData);
     }
 
-    public void writeTemplate(PageContext context, JspWriter writer, HttpServletRequest request, String src, PageData pageData, PagePartData partData) throws ParseException, IOException {
+    public void writeTemplate(PageContext context, JspWriter writer, HttpServletRequest request, String src, PageData pageData, PagePartData partData) throws Exception {
         int pos1;
         int pos2 = 0;
         boolean shortTag;
@@ -276,7 +282,7 @@ public class TemplateData extends BaseData implements Serializable {
         }
     }
 
-    protected boolean appendTagReplacement(PageContext context, JspWriter writer, HttpServletRequest request, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData) throws IOException{
+    protected boolean appendTagReplacement(PageContext context, JspWriter writer, HttpServletRequest request, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData) throws Exception {
         switch (tagType) {
             case CONTROL:
                 TemplateControl control = TemplateControls.getControl(attributes.get("type"));
@@ -295,6 +301,39 @@ public class TemplateData extends BaseData implements Serializable {
                 return true;
             case RESOURCE:
                 writer.write(StringUtil.getHtml(attributes.get("key"), SessionReader.getSessionLocale(request)));
+                return true;
+            case SECTION:
+                String sectionName = attributes.getString("name");
+                SectionData section = pageData.getSection(sectionName);
+                if (section == null) {
+                    pageData.ensureSection(sectionName);
+                    section = pageData.getSection(sectionName);
+                }
+                if (section != null) {
+                    section.setClassName(attributes.getString("class"));
+                    section.setType(attributes.getString("type"));
+                    SectionTag.writeTag(context, writer, request, pageData, section);
+                }
+                return true;
+            case CONTENT:
+                PageTag.writeTag(context, writer, request, pageData);
+                return true;
+            case FIELD:
+                String fieldType = attributes.getString("type");
+                String fieldName = attributes.getString("name");
+                Field field = partData.ensureField(fieldName, fieldType);
+                field.appendFieldHtml(context, writer, request, attributes, content, partData, pageData);
+                return true;
+            case PARTID:
+                if (partData != null)
+                    writer.write(partData.getHtmlId());
+                return true;
+            case PART:
+                //todo
+                String templateName = attributes.getString("template");
+                int idx = attributes.getInt("id");
+                PagePartData data = pageData.ensureStaticPart(templateName, idx);
+                PartTag.writeTag(context, writer, request, pageData, data);
                 return true;
         }
         return false;

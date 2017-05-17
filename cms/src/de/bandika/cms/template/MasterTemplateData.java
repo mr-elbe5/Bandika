@@ -10,6 +10,7 @@ package de.bandika.cms.template;
 
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.pagepart.PagePartData;
+import de.bandika.cms.tag.PageTag;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -28,17 +29,6 @@ public class MasterTemplateData extends TemplateData {
         switch (tagType) {
             case CONTENT:
                 pageData.appendContentHtml(sb, request);
-                return true;
-        }
-        return false;
-    }
-
-    protected boolean appendTagReplacement(PageContext context, JspWriter writer, HttpServletRequest request, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData) throws IOException {
-        if (super.appendTagReplacement(context, writer, request, tagType, attributes, content, pageData, partData))
-            return true;
-        switch (tagType) {
-            case CONTENT:
-                pageData.appendContentHtml(context, writer, request);
                 return true;
         }
         return false;
