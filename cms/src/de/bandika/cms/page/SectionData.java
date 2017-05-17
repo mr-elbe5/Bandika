@@ -19,6 +19,7 @@ import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
@@ -202,7 +203,7 @@ public class SectionData implements XmlData {
         }
     }
 
-    public void appendSectionHtml(JspWriter writer, TemplateAttributes attributes, PageData pageData, HttpServletRequest request) throws IOException {
+    public void appendSectionHtml(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, PageData pageData) throws IOException {
         boolean editMode = pageData.isEditMode();
         Locale locale = SessionReader.getSessionLocale(request);
         String cls = attributes.getString("class");
@@ -219,7 +220,7 @@ public class SectionData implements XmlData {
         if (!getParts().isEmpty()) {
             writer.write("<div class = \"section " + cls + "\">");
             for (PagePartData pdata : getParts()) {
-                pdata.appendPartHtml(writer, attributes.getString("type"), pageData, request);
+                pdata.appendPartHtml(context, writer, request, attributes.getString("type"), pageData);
             }
             writer.write("</div>");
         }

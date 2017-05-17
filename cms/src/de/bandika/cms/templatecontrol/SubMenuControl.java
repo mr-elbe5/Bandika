@@ -17,6 +17,7 @@ import de.bandika.cms.tree.TreeCache;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 
 public class SubMenuControl extends TemplateControl {
@@ -59,17 +60,17 @@ public class SubMenuControl extends TemplateControl {
         }
     }
 
-    public void appendHtml(JspWriter writer, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) throws IOException {
+    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, String content, PageData pageData) throws IOException {
         if (pageData==null)
             return;
         TreeCache tc = TreeCache.getInstance();
         SiteData parentSite = tc.getSite(pageData.getParentId());
         writer.write("<nav class=\"subNav links\"><ul>");
-        addNodes(parentSite, pageData.getId(),request, writer);
+        addNodes(context, writer, request, parentSite, pageData.getId());
         writer.write("</ul></nav>");
     }
 
-    public void addNodes(SiteData parentSite, int currentId, HttpServletRequest request, JspWriter writer) throws IOException {
+    public void addNodes(PageContext context, JspWriter writer, HttpServletRequest request, SiteData parentSite, int currentId) throws IOException {
         for (SiteData site : parentSite.getSites()) {
             if (site.isInNavigation() && (site.isAnonymous() || SessionReader.hasContentRight(request,site.getId(),Right.READ))) {
                 writer.write("<li><a class=\"active\"");

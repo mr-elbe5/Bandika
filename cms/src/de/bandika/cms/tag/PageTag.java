@@ -17,23 +17,29 @@ import de.bandika.cms.tree.TreeCache;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 
 public class PageTag extends BaseTag {
     public int doStartTag() throws JspException {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
             PageData data=(PageData) request.getAttribute("pageData");
-            String masterName=TreeCache.getInstance().getSite(data.getParentId()).getTemplateName();
-            TemplateData masterTemplate = TemplateCache.getInstance().getTemplate(TemplateType.MASTER, masterName);
-            try {
-                masterTemplate.writeTemplate(getWriter(), data, null, request);
-            } catch (Exception e) {
-                Log.error("could not get page html", e);
-            }
+            writeTag(getContext(), getWriter(), request, data);
         } catch (Exception e) {
             Log.error("could not write page tag", e);
         }
         return SKIP_BODY;
+    }
+
+    public static void writeTag(PageContext context, JspWriter writer, HttpServletRequest request, PageData data) throws JspException {
+        String masterName=TreeCache.getInstance().getSite(data.getParentId()).getTemplateName();
+        TemplateData masterTemplate = TemplateCache.getInstance().getTemplate(TemplateType.MASTER, masterName);
+        try {
+            masterTemplate.writeTemplate(context, writer, request, data, null);
+        } catch (Exception e) {
+            Log.error("could not get page html", e);
+        }
     }
 
 }

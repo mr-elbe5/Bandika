@@ -24,6 +24,7 @@ import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
@@ -283,13 +284,13 @@ public class PageData extends ResourceNode implements ISearchTextProvider {
         }
     }
 
-    public void appendContentHtml(JspWriter writer, HttpServletRequest request) throws IOException{
+    public void appendContentHtml(PageContext context, JspWriter writer, HttpServletRequest request) throws IOException{
         if (isEditMode()) {
             writer.write("<div id=\"pageContent\" class=\"editArea\">");
         } else {
             writer.write("<div id=\"pageContent\" class=\"viewArea\">");
         }
-        appendInnerContentHtml(writer, request);
+        appendInnerContentHtml(context, writer, request);
         if (isEditMode()) {
             writer.write("</div><script>$('#pageContent').initEditArea();</script>");
         } else {
@@ -297,10 +298,10 @@ public class PageData extends ResourceNode implements ISearchTextProvider {
         }
     }
 
-    public void appendInnerContentHtml(JspWriter writer, HttpServletRequest request) throws IOException {
+    public void appendInnerContentHtml(PageContext context, JspWriter writer, HttpServletRequest request) throws IOException {
         TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PAGE, getTemplateName());
         try {
-            pageTemplate.writeTemplate(writer, this, null, request);
+            pageTemplate.writeTemplate(context, writer, request, this, null);
             if (editPagePart!=null){
                 writer.write("<script>$('.editControl').hide();</script>");
             }

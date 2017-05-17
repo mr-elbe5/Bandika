@@ -15,6 +15,7 @@ import de.bandika.cms.tree.TreeCache;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ public class BreadcrumbControl extends TemplateControl {
         sb.append("</ul></nav>");
     }
 
-    public void appendHtml(JspWriter writer, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) throws IOException {
+    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, String content, PageData pageData) throws IOException {
         TreeCache tc = TreeCache.getInstance();
         List<Integer> activeIds = new ArrayList<>();
         if (pageData != null) {

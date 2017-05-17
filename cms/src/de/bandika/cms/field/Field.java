@@ -20,6 +20,7 @@ import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Set;
@@ -86,7 +87,7 @@ public abstract class Field implements Cloneable, XmlData {
 
     public abstract void appendFieldHtml(StringBuilder sb, TemplateAttributes attributes, String content, PagePartData partData, PageData pageData, HttpServletRequest request);
 
-    public abstract void appendFieldHtml(JspWriter writer, TemplateAttributes attributes, String content, PagePartData partData, PageData pageData, HttpServletRequest request) throws IOException;
+    public abstract void appendFieldHtml(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, String content, PagePartData partData, PageData pageData) throws IOException;
 
     /******************* XML part *********************************/
 

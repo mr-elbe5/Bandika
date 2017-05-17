@@ -19,6 +19,7 @@ import de.bandika.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -41,7 +42,7 @@ public class TreeHelper {
         return tc.getLanguageRootSite(locale);
     }
 
-    public static void addAdminSiteNode(SiteData data, int currentId, List<Integer> activeIds, HttpServletRequest request, Locale locale, JspWriter writer) throws IOException {
+    public static void addAdminSiteNode(PageContext context, JspWriter writer, HttpServletRequest request, SiteData data, int currentId, List<Integer> activeIds, Locale locale) throws IOException {
         if (data == null)
             return;
         boolean isOpen = data.getId() == TreeNode.ID_ROOT || activeIds.contains(data.getId()) || currentId == data.getId();
@@ -166,7 +167,7 @@ public class TreeHelper {
         writer.write("<ul>");
         for (PageData child : data.getPages()) {
             if (SessionReader.hasContentRight(request, child.getId(), Right.READ)) {
-                addAdminPageNode(child, currentId, request, locale, writer);
+                addAdminPageNode(context, writer, request, child, currentId, locale);
             }
         }
         writer.write("</ul></li>");
@@ -204,20 +205,20 @@ public class TreeHelper {
         writer.write("<ul>");
         for (FileData child : data.getFiles()) {
             if (SessionReader.hasContentRight(request, child.getId(), Right.READ)) {
-                addAdminFileNode(child, currentId, request, locale, writer);
+                addAdminFileNode(context, writer, request, child, currentId, locale);
             }
         }
         writer.write("</ul></li>");
         for (SiteData child : data.getSites()) {
             if (SessionReader.hasContentRight(request, child.getId(), Right.READ)) {
-                addAdminSiteNode(child, currentId, activeIds, request, locale, writer);
+                addAdminSiteNode(context, writer, request, child, currentId, activeIds, locale);
             }
         }
         writer.write("</ul>");
         writer.write("</li>");
     }
 
-    public static void addAdminPageNode(PageData data, int currentId, HttpServletRequest request, Locale locale, JspWriter writer) throws IOException {
+    public static void addAdminPageNode(PageContext context, JspWriter writer, HttpServletRequest request, PageData data, int currentId, Locale locale) throws IOException {
         writer.write("<li>");
         writer.write("<div class=\"contextSource icn ipage");
         if (currentId == data.getId()) {
@@ -284,7 +285,7 @@ public class TreeHelper {
         writer.write("</li>");
     }
 
-    public static void addAdminFileNode(FileData data, int currentId, HttpServletRequest request, Locale locale, JspWriter writer) throws IOException {
+    public static void addAdminFileNode(PageContext context, JspWriter writer, HttpServletRequest request, FileData data, int currentId, Locale locale) throws IOException {
         writer.print("<li>");
         writer.write("<div class=\"contextSource icn ");
         if (data.isImage()) {
@@ -359,7 +360,7 @@ public class TreeHelper {
         writer.write("</li>");
     }
 
-    public static void addBrowserSiteNode(SiteData data, int currentId, List<Integer> activeIds, String functionName, HttpServletRequest request, Locale locale, JspWriter writer) throws IOException {
+    public static void addBrowserSiteNode(PageContext context, JspWriter writer, HttpServletRequest request, SiteData data, int currentId, List<Integer> activeIds, String functionName, Locale locale) throws IOException {
         writer.print("<li");
         if (data.getId() == TreeNode.ID_ROOT || activeIds.contains(data.getId())) {
             writer.write(" class=\"open\"");
@@ -387,7 +388,7 @@ public class TreeHelper {
             writer.write("<ul>");
             for (SiteData child : data.getSites()) {
                 if (SessionReader.hasContentRight(request, child.getId(), Right.READ)) {
-                    addBrowserSiteNode(child, currentId, activeIds, functionName, request, locale, writer);
+                    addBrowserSiteNode(context, writer, request, child, currentId, activeIds, functionName, locale);
                 }
             }
             writer.write("</ul>");

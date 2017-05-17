@@ -17,6 +17,7 @@ import de.bandika.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.Locale;
 
@@ -69,7 +70,7 @@ public class TopAdminNavControl extends TemplateControl {
         sb.append("</ul></nav>");
     }
 
-    public void appendHtml(JspWriter writer, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) throws IOException {
+    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, String content, PageData pageData) throws IOException {
         Locale locale = SessionReader.getSessionLocale(request);
         int siteId = pageData == null ? 0 : pageData.getParentId();
         int pageId = pageData == null ? 0 : pageData.getId();

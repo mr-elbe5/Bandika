@@ -15,6 +15,7 @@ import de.bandika.servlet.RequestReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 
 public class MessageControl extends TemplateControl {
@@ -39,7 +40,7 @@ public class MessageControl extends TemplateControl {
         }
     }
 
-    public void appendHtml(JspWriter writer, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) throws IOException {
+    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, String content, PageData pageData) throws IOException {
         RequestError error = RequestError.getError(request);
         String message = RequestReader.getMessage(request);
         if (error != null) {

@@ -34,7 +34,7 @@
                 <%=StringUtil.getHtml("_structure", locale)%>
             </h3>
             <ul id="browseNavigation" class="treeRoot">
-                <%TreeHelper.addBrowserSiteNode(tc.getRootSite(), siteId, activeIds, FieldAction.showSelectableBrowserImages.name(), request, locale, out);%>
+                <%TreeHelper.addBrowserSiteNode(pageContext, out, request, tc.getRootSite(), siteId, activeIds, FieldAction.showSelectableBrowserImages.name(), locale);%>
             </ul>
         </div>
     </section>

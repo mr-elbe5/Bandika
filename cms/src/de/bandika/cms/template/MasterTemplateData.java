@@ -13,6 +13,7 @@ import de.bandika.cms.pagepart.PagePartData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 
 public class MasterTemplateData extends TemplateData {
@@ -32,12 +33,12 @@ public class MasterTemplateData extends TemplateData {
         return false;
     }
 
-    protected boolean appendTagReplacement(JspWriter writer, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) throws IOException {
-        if (super.appendTagReplacement(writer, tagType, attributes, content, pageData, partData, request))
+    protected boolean appendTagReplacement(PageContext context, JspWriter writer, HttpServletRequest request, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData) throws IOException {
+        if (super.appendTagReplacement(context, writer, request, tagType, attributes, content, pageData, partData))
             return true;
         switch (tagType) {
             case CONTENT:
-                pageData.appendContentHtml(writer, request);
+                pageData.appendContentHtml(context, writer, request);
                 return true;
         }
         return false;

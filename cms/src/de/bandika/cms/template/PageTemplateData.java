@@ -14,6 +14,7 @@ import de.bandika.cms.page.SectionData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 
 public class PageTemplateData extends TemplateData {
@@ -55,21 +56,21 @@ public class PageTemplateData extends TemplateData {
         data.appendPartHtml(sb, "", pageData, request);
     }
 
-    protected boolean appendTagReplacement(JspWriter writer, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) throws IOException {
-        if (super.appendTagReplacement(writer, tagType, attributes, content, pageData, partData, request))
+    protected boolean appendTagReplacement(PageContext context, JspWriter writer, HttpServletRequest request, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData) throws IOException {
+        if (super.appendTagReplacement(context, writer, request, tagType, attributes, content, pageData, partData))
             return true;
         switch (tagType) {
             case SECTION:
-                appendSection(writer, attributes, pageData, request);
+                appendSection(context, writer, request, attributes, pageData);
                 return true;
             case PART:
-                appendStaticPart(writer, attributes, pageData, request);
+                appendStaticPart(context, writer, request, attributes, pageData);
                 return true;
         }
         return false;
     }
 
-    protected void appendSection(JspWriter writer, TemplateAttributes attributes, PageData pageData, HttpServletRequest request) throws IOException {
+    protected void appendSection(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, PageData pageData) throws IOException {
         String sectionName = attributes.getString("name");
         SectionData section = pageData.getSection(sectionName);
         if (section == null) {
@@ -77,15 +78,15 @@ public class PageTemplateData extends TemplateData {
             section = pageData.getSection(sectionName);
         }
         if (section != null) {
-            section.appendSectionHtml(writer, attributes, pageData, request);
+            section.appendSectionHtml(context, writer, request, attributes, pageData);
         }
     }
 
-    protected void appendStaticPart(JspWriter writer, TemplateAttributes attributes, PageData pageData, HttpServletRequest request) throws IOException {
+    protected void appendStaticPart(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, PageData pageData) throws IOException {
         String templateName = attributes.getString("template");
         int idx = attributes.getInt("id");
         PagePartData data = pageData.ensureStaticPart(templateName, idx);
-        data.appendPartHtml(writer, "", pageData, request);
+        data.appendPartHtml(context, writer, request, "", pageData);
     }
 
 }

@@ -17,6 +17,7 @@ import de.bandika.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +79,7 @@ public class MainMenuControl extends TemplateControl {
         }
     }
 
-    public void appendHtml(JspWriter writer, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) throws IOException {
+    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, String content, PageData pageData) throws IOException {
         TreeCache tc = TreeCache.getInstance();
         SiteData homeSite = tc.getLanguageRootSite(SessionReader.getSessionLocale(request));
         List<Integer> activeIds = new ArrayList<>();
@@ -90,11 +91,11 @@ public class MainMenuControl extends TemplateControl {
         }
         writer.write("<nav class=\"mainNav\"><ul>");
         if (homeSite != null)
-            addNodes(homeSite, pageId, activeIds, request, writer);
+            addNodes(context, writer, request, homeSite, pageId, activeIds);
         writer.write("</ul></nav>");
     }
 
-    public void addNodes(SiteData parentSite, int currentId, List<Integer> activeIds, HttpServletRequest request, JspWriter writer) throws IOException {
+    public void addNodes(PageContext context, JspWriter writer, HttpServletRequest request, SiteData parentSite, int currentId, List<Integer> activeIds) throws IOException {
         for (SiteData site : parentSite.getSites()) {
             if (site.isInNavigation() && (site.isAnonymous() || SessionReader.hasContentRight(request, site.getId(), Right.READ))) {
                 boolean hasSubSites = site.getSites().size() > 0;
@@ -106,7 +107,7 @@ public class MainMenuControl extends TemplateControl {
                 writer.write(" href=\"" + site.getUrl() + "\">" + toHtml(site.getDisplayName()) + "</a>");
                 if (hasSubSites || hasSubPages) {
                     writer.write("<ul>");
-                    addNodes(site, currentId, activeIds, request, writer);
+                    addNodes(context, writer, request, site, currentId, activeIds);
                     writer.write("</ul>");
                 }
                 writer.write("</li>");

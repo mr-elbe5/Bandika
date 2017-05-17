@@ -19,6 +19,7 @@ import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 
 public class TextField extends Field {
@@ -70,7 +71,7 @@ public class TextField extends Field {
     }
 
     @Override
-    public void appendFieldHtml(JspWriter writer, TemplateAttributes attributes, String defaultContent, PagePartData partData, PageData pageData, HttpServletRequest request) throws IOException {
+    public void appendFieldHtml(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, String defaultContent, PagePartData partData, PageData pageData) throws IOException {
         boolean partEditMode = pageData.isEditMode() && partData == pageData.getEditPagePart();
         int rows = attributes.getInt("rows");
         if (partEditMode) {

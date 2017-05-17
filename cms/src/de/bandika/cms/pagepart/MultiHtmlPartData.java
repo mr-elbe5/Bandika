@@ -22,6 +22,7 @@ import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -196,14 +197,14 @@ public class MultiHtmlPartData extends HtmlPartData {
         }
     }
 
-    public void appendLivePartHtml(JspWriter writer, PageData pageData, HttpServletRequest request) throws IOException {
+    public void appendLivePartHtml(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData) throws IOException {
         TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PART, getTemplateName());
         try {
             writer.write("<div class=\"pagePart\" id=\"" + getHtmlId() + "\" >");
             writer.write("<div id=\"" + getContainerId() + "\">");
             for (int i = 0; i < getContentCount(); i++) {
                 setCurrentContentIdx(i);
-                partTemplate.writeTemplate(writer, pageData, this, request);
+                partTemplate.writeTemplate(context, writer, request, pageData, this);
             }
             setCurrentContentIdx(0);
             writer.write("</div>");
@@ -214,7 +215,7 @@ public class MultiHtmlPartData extends HtmlPartData {
         }
     }
 
-    public void writeEditPartEnd(PagePartData editPagePart, String sectionName, String sectionType, int pageId, JspWriter writer, Locale locale) throws IOException {
+    public void writeEditPartEnd(PageContext context, JspWriter writer, HttpServletRequest request, PagePartData editPagePart, String sectionName, String sectionType, int pageId, Locale locale) throws IOException {
         boolean staticSection = sectionName.equals(PageData.STATIC_SECTION_NAME);
         writer.write("</div>");
         if (editPagePart == null) {

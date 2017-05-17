@@ -14,7 +14,6 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.servlet.RequestReader" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     TreeNode node = TreeHelper.getRequestedNode(request, locale);
@@ -33,7 +32,7 @@
                         <%=StringUtil.getString("_structure", SessionReader.getSessionLocale(request))%>
                     </h3>
                     <ul id="structure" class="treeRoot">
-                        <%TreeHelper.addAdminSiteNode(tc.getRootSite(), nodeId, parentIds, request, locale, out);%>
+                        <%TreeHelper.addAdminSiteNode(pageContext, out, request, tc.getRootSite(), nodeId, parentIds, locale);%>
                     </ul>
                     <%}%>
                 </div>

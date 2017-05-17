@@ -23,6 +23,7 @@ import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -159,37 +160,37 @@ public class HtmlPartData extends PagePartData {
         }
     }
 
-    public void appendPartHtml(JspWriter writer, String sectionType, PageData pageData, HttpServletRequest request) throws IOException {
+    public void appendPartHtml(PageContext context, JspWriter writer, HttpServletRequest request, String sectionType, PageData pageData) throws IOException {
         if (pageData.isEditMode())
-            appendEditPartHtml(writer, sectionType, pageData, request);
+            appendEditPartHtml(context, writer, request, sectionType, pageData);
         else
-            appendLivePartHtml(writer, pageData, request);
+            appendLivePartHtml(context, writer, request, pageData);
     }
 
-    public void appendEditPartHtml(JspWriter writer, String typeName, PageData pageData, HttpServletRequest request) throws IOException {
+    public void appendEditPartHtml(PageContext context, JspWriter writer, HttpServletRequest request, String typeName, PageData pageData) throws IOException {
         Locale locale = SessionReader.getSessionLocale(request);
-        writeEditPartStart(pageData.getEditPagePart(), getSection(), pageData.getId(), writer, locale);
+        writeEditPartStart(context, writer, request, pageData.getEditPagePart(), getSection(), pageData.getId(), locale);
         TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PART, getTemplateName());
         try {
-            partTemplate.writeTemplate(writer, pageData, this, request);
+            partTemplate.writeTemplate(context, writer, request, pageData, this);
         } catch (Exception e) {
             Log.error("error in part template", e);
         }
-        writeEditPartEnd(pageData.getEditPagePart(), getSection(), typeName, pageData.getId(), writer, locale);
+        writeEditPartEnd(context, writer, request, pageData.getEditPagePart(), getSection(), typeName, pageData.getId(), locale);
     }
 
-    public void appendLivePartHtml(JspWriter writer, PageData pageData, HttpServletRequest request) throws IOException {
+    public void appendLivePartHtml(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData) throws IOException {
         TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PART, getTemplateName());
         try {
             writer.write("<div class=\"pagePart\" id=\"" + getHtmlId() + "\" >");
-            partTemplate.writeTemplate(writer, pageData, this, request);
+            partTemplate.writeTemplate(context, writer, request, pageData, this);
             writer.write("</div>");
         } catch (Exception e) {
             Log.error("error in part template", e);
         }
     }
 
-    protected void writeEditPartStart(PagePartData editPagePart, String sectionName, int pageId, JspWriter writer, Locale locale) throws IOException {
+    protected void writeEditPartStart(PageContext context, JspWriter writer, HttpServletRequest request, PagePartData editPagePart, String sectionName, int pageId, Locale locale) throws IOException {
         if (editPagePart == null) {
             writer.write("<div title=\"" + StringUtil.toHtml(getTemplateName()) + "(ID=" + getId() + ") - " + StringUtil.getHtml("_rightClickEditHint") + "\" id=\"part_" + getId() + "\" class = \"pagePart viewPagePart contextSource\">\n");
         } else if (this == editPagePart) {
@@ -199,7 +200,7 @@ public class HtmlPartData extends PagePartData {
         }
     }
 
-    public void writeEditPartEnd(PagePartData editPagePart, String sectionName, String sectionType, int pageId, JspWriter writer, Locale locale) throws IOException {
+    public void writeEditPartEnd(PageContext context, JspWriter writer, HttpServletRequest request, PagePartData editPagePart, String sectionName, String sectionType, int pageId, Locale locale) throws IOException {
         boolean staticSection = sectionName.equals(PageData.STATIC_SECTION_NAME);
         writer.write("</div>");
         if (editPagePart == null) {

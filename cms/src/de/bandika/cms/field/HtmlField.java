@@ -22,6 +22,7 @@ import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Set;
@@ -112,7 +113,7 @@ public class HtmlField extends Field {
     }
 
     @Override
-    public void appendFieldHtml(JspWriter writer, TemplateAttributes attributes, String defaultContent, PagePartData partData, PageData pageData, HttpServletRequest request) throws IOException {
+    public void appendFieldHtml(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, String defaultContent, PagePartData partData, PageData pageData) throws IOException {
         String toolbar = attributes.getString("toolbar");
         boolean partEditMode = pageData.isEditMode() && partData == pageData.getEditPagePart();
         int siteId = pageData.getParentId();

@@ -14,6 +14,7 @@ import de.bandika.cms.field.Field;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 
 public class PartTemplateData extends TemplateData {
@@ -59,12 +60,12 @@ public class PartTemplateData extends TemplateData {
 
     }
 
-    protected boolean appendTagReplacement(JspWriter writer, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) throws IOException {
-        if (super.appendTagReplacement(writer, tagType, attributes, content, pageData, partData, request))
+    protected boolean appendTagReplacement(PageContext context, JspWriter writer, HttpServletRequest request, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData) throws IOException {
+        if (super.appendTagReplacement(context, writer, request, tagType, attributes, content, pageData, partData))
             return true;
         switch (tagType) {
             case FIELD:
-                appendField(writer, attributes, content, pageData, partData, request);
+                appendField(context, writer, request, attributes, content, pageData, partData);
                 return true;
             case PARTID:
                 if (partData != null)
@@ -74,11 +75,11 @@ public class PartTemplateData extends TemplateData {
         return false;
     }
 
-    protected void appendField(JspWriter writer, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) throws IOException {
+    protected void appendField(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData) throws IOException {
         String fieldType = attributes.getString("type");
         String fieldName = attributes.getString("name");
         Field field = partData.ensureField(fieldName, fieldType);
-        field.appendFieldHtml(writer, attributes, content, partData, pageData, request);
+        field.appendFieldHtml(context, writer, request, attributes, content, partData, pageData);
 
     }
 
