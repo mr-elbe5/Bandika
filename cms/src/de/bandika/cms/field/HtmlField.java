@@ -13,6 +13,7 @@ import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.pagepart.PagePartData;
+import de.bandika.cms.template.TemplateTagType;
 import de.bandika.cms.template.TemplateAttributes;
 import de.bandika.cms.tree.TreeNode;
 import de.bandika.servlet.RequestReader;
@@ -25,6 +26,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Map;
 import java.util.Set;
 
 public class HtmlField extends Field {
@@ -113,8 +115,8 @@ public class HtmlField extends Field {
     }
 
     @Override
-    public void appendFieldHtml(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, String defaultContent, PagePartData partData, PageData pageData) throws IOException {
-        String toolbar = attributes.getString("toolbar");
+    public void appendFieldHtml(PageContext context, JspWriter writer, HttpServletRequest request, Map<String, String> attributes, String defaultContent, PagePartData partData, PageData pageData) throws IOException {
+        String toolbar = TemplateTagType.getString(attributes, "toolbar");
         boolean partEditMode = pageData.isEditMode() && partData == pageData.getEditPagePart();
         int siteId = pageData.getParentId();
         int pageId = pageData.getId();

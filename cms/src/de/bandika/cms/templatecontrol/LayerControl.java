@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
+import java.util.Map;
 
 public class LayerControl extends TemplateControl {
 
@@ -39,7 +40,7 @@ public class LayerControl extends TemplateControl {
         }
     }
 
-    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, String content, PageData pageData) throws IOException {
+    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, Map<String, String> attributes, String content, PageData pageData) throws IOException {
         writer.write(TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, "treeLayer").getCode());
         writer.write(TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, "dialogLayer").getCode());
         if (pageData.isEditMode()) {

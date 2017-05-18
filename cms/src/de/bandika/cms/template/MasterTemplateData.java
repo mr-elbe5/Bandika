@@ -10,12 +10,8 @@ package de.bandika.cms.template;
 
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.pagepart.PagePartData;
-import de.bandika.cms.tag.PageTag;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
-import java.io.IOException;
 
 public class MasterTemplateData extends TemplateData {
 
@@ -23,7 +19,7 @@ public class MasterTemplateData extends TemplateData {
         type = TemplateType.MASTER;
     }
 
-    protected boolean appendTagReplacement(StringBuilder sb, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) {
+    protected boolean appendTagReplacement(StringBuilder sb, TemplateTagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) {
         if (super.appendTagReplacement(sb, tagType, attributes, content, pageData, partData, request))
             return true;
         switch (tagType) {

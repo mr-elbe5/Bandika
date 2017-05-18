@@ -221,10 +221,10 @@ public class SectionData implements XmlData {
         }
     }
 
-    public void appendSectionHtml(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, PageData pageData) throws IOException {
+    public void appendSectionHtml(PageContext context, JspWriter writer, HttpServletRequest request, Map<String, String> attributes, PageData pageData) throws IOException {
         boolean editMode = pageData.isEditMode();
         Locale locale = SessionReader.getSessionLocale(request);
-        String cls = attributes.getString("class");
+        String cls = TemplateTagType.getString(attributes, "class");
         boolean hasParts = getParts().size() > 0;
         if (editMode) {
             writer.write("<div class = \"editSection\">");
@@ -232,13 +232,13 @@ public class SectionData implements XmlData {
                 writer.write("<div class = \"editSectionHeader\">Section " + getName()+ "</div>");
             } else {
                 writer.write("<div class = \"editSectionHeader empty contextSource\" title=\"" + StringUtil.getHtml("_rightClickEditHint") + "\">Section " + getName() + "</div>");
-                writer.write("<div class = \"contextMenu\"><div class=\"icn inew\" onclick = \"return openLayerDialog('" + StringUtil.getHtml("_addPart", locale) + "', '/pagepart.ajx?act=openAddPagePart&pageId=" + pageData.getId() + "&sectionName=" + getName() + "&sectionType=" + attributes.getString("type") + "&partId=-1');\">" + StringUtil.getHtml("_new", locale) + "\n</div>\n</div>");
+                writer.write("<div class = \"contextMenu\"><div class=\"icn inew\" onclick = \"return openLayerDialog('" + StringUtil.getHtml("_addPart", locale) + "', '/pagepart.ajx?act=openAddPagePart&pageId=" + pageData.getId() + "&sectionName=" + getName() + "&sectionType=" + TemplateTagType.getString(attributes,"type") + "&partId=-1');\">" + StringUtil.getHtml("_new", locale) + "\n</div>\n</div>");
             }
         }
         if (!getParts().isEmpty()) {
             writer.write("<div class = \"section " + cls + "\">");
             for (PagePartData pdata : getParts()) {
-                pdata.appendPartHtml(context, writer, request, attributes.getString("type"), pageData);
+                pdata.appendPartHtml(context, writer, request, TemplateTagType.getString(attributes,"type"), pageData);
             }
             writer.write("</div>");
         }

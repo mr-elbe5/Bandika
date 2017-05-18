@@ -20,11 +20,11 @@ import java.util.Map;
 
 public class TemplateTagPart extends TemplatePart {
 
-    TagType tagType;
+    TemplateTagType tagType;
     protected String content="";
     protected Map<String, String> attributes=new HashMap<>();
 
-    public TemplateTagPart(TagType tagType, String content, String attributeString){
+    public TemplateTagPart(TemplateTagType tagType, String content, String attributeString){
         this.tagType=tagType;
         this.content=content;
         setAttributes(attributeString);
@@ -56,24 +56,8 @@ public class TemplateTagPart extends TemplatePart {
         }
     }
 
-    public String getStringAttribute(String key) {
-        String value = attributes.get(key);
-        if (value != null)
-            return value;
-        return "";
-    }
-
-    public int getIntAttribute(String key) {
-        int value = -1;
-        try {
-            value = Integer.parseInt(attributes.get(key));
-        } catch (Exception ignore) {
-        }
-        return value;
-    }
-
     public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException {
-        writer.write(content);
+        tagType.writeTemplatePart(context, writer, request, pageData, partData, content, attributes);
     }
 
 }

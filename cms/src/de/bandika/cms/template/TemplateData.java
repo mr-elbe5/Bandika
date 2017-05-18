@@ -115,78 +115,85 @@ public class TemplateData extends BaseData implements Serializable {
 
     /****** parser part ****/
 
-    protected TagType getTagType(String src) throws ParseException {
+    protected TemplateTagType getTagType(String src) throws ParseException {
         int blankPos = src.indexOf(" ");
         if (blankPos != -1)
             src = src.substring(0, blankPos);
         switch (src) {
             case "content":
-                return TagType.CONTENT;
+                return TemplateTagType.CONTENT;
             case "part":
-                return TagType.PART;
+                return TemplateTagType.PART;
             case "field":
-                return TagType.FIELD;
+                return TemplateTagType.FIELD;
             case "control":
-                return TagType.CONTROL;
+                return TemplateTagType.CONTROL;
             case "section":
-                return TagType.SECTION;
+                return TemplateTagType.SECTION;
             case "snippet":
-                return TagType.SNIPPET;
+                return TemplateTagType.SNIPPET;
             case "res":
-                return TagType.RESOURCE;
+                return TemplateTagType.RESOURCE;
             case "pid":
-                return TagType.PARTID;
+                return TemplateTagType.PARTID;
         }
         throw new ParseException("bad cms tag: " + src, 0);
     }
 
-    public void parseTemplate(String src) throws ParseException {
-        if (templateParts==null)
-            templateParts=new ArrayList<>();
-        else
-            templateParts.clear();
-        int pos1;
-        int pos2 = 0;
-        boolean shortTag;
-        while (true) {
-            pos1 = src.indexOf(TagType.TAG_START, pos2);
-            if (pos1 == -1) {
-                templateParts.add(new TemplateHtmlPart(src.substring(pos2)));
-                break;
-            }
-            templateParts.add(new TemplateHtmlPart(src.substring(pos2, pos1)));
-            pos2 = src.indexOf('>', pos1 + 5);
-            if (pos2 == -1)
-                throw new ParseException("no cms tag end", pos1);
-            String startTag = src.substring(pos1, pos2);
-            shortTag = false;
-            if (startTag.endsWith("/")) {
-                startTag = startTag.substring(0, startTag.length() - 1);
-                shortTag = true;
-            }
-            TagType tagType = TagType.getTagType(startTag);
-            String attributesString=startTag.substring(tagType.getStartTag().length()).trim();
-            //no content
-            if (shortTag) {
-                templateParts.add(getNewTemplateTagPart(tagType, attributesString, ""));
+    public void parseTemplate() {
+        try {
+            if (templateParts == null)
+                templateParts = new ArrayList<>();
+            else
+                templateParts.clear();
+            int pos1;
+            int pos2 = 0;
+            boolean shortTag;
+            while (true) {
+                pos1 = code.indexOf(TemplateTagType.TAG_START, pos2);
+                if (pos1 == -1) {
+                    templateParts.add(new TemplateHtmlPart(code.substring(pos2)));
+                    break;
+                }
+                templateParts.add(new TemplateHtmlPart(code.substring(pos2, pos1)));
+                pos2 = code.indexOf('>', pos1 + 5);
+                if (pos2 == -1)
+                    throw new ParseException("no cms tag end", pos1);
+                String startTag = code.substring(pos1, pos2);
+                shortTag = false;
+                if (startTag.endsWith("/")) {
+                    startTag = startTag.substring(0, startTag.length() - 1);
+                    shortTag = true;
+                }
+                TemplateTagType tagType = TemplateTagType.getTagType(startTag);
+                String attributesString = startTag.substring(tagType.getStartTag().length()).trim();
+                //no content
+                if (shortTag) {
+                    templateParts.add(getNewTemplateTagPart(tagType, attributesString, ""));
+                    pos2++;
+                    continue;
+                }
                 pos2++;
-                continue;
+                pos1 = code.indexOf(tagType.getEndTag(), pos2);
+                if (pos1 == -1)
+                    throw new ParseException("no cms end tag ", pos2);
+                String content = code.substring(pos2, pos1).trim();
+                pos2 = pos1 + tagType.getEndTag().length();
+                templateParts.add(getNewTemplateTagPart(tagType, attributesString, content));
             }
-            pos2++;
-            pos1 = src.indexOf(tagType.getEndTag(), pos2);
-            if (pos1 == -1)
-                throw new ParseException("no cms end tag ", pos2);
-            String content = src.substring(pos2, pos1).trim();
-            pos2 = pos1 + tagType.getEndTag().length();
-            templateParts.add(getNewTemplateTagPart(tagType, attributesString, content));
+            Log.info("template parsed and ok: "+getName());
+        }
+        catch (ParseException e){
+            templateParts.clear();
+            Log.error("parse error for template "+getName(), e);
         }
     }
 
-    protected TemplateTagPart getNewTemplateTagPart(TagType tagType, String attributeString, String content){
+    protected TemplateTagPart getNewTemplateTagPart(TemplateTagType tagType, String attributeString, String content){
         return new TemplateTagPart(tagType, attributeString, content);
     }
 
-    /*public void writeTemplate(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws JspException {
+    /*public void writeTemplate(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException {
         try{
             for (TemplatePart templatePart : templateParts){
                 templatePart.writeTemplatePart(context, writer, request, pageData, partData);
@@ -207,7 +214,7 @@ public class TemplateData extends BaseData implements Serializable {
         int pos2 = 0;
         boolean shortTag;
         while (true) {
-            pos1 = src.indexOf(TagType.TAG_START, pos2);
+            pos1 = src.indexOf(TemplateTagType.TAG_START, pos2);
             if (pos1 == -1) {
                 sb.append(src.substring(pos2));
                 break;
@@ -222,7 +229,7 @@ public class TemplateData extends BaseData implements Serializable {
                 startTag = startTag.substring(0, startTag.length() - 1);
                 shortTag = true;
             }
-            TagType tagType = TagType.getTagType(startTag);
+            TemplateTagType tagType = TemplateTagType.getTagType(startTag);
             TemplateAttributes attributes = new TemplateAttributes(startTag.substring(tagType.getStartTag().length()).trim());
             //no content
             if (shortTag) {
@@ -240,7 +247,7 @@ public class TemplateData extends BaseData implements Serializable {
         }
     }
 
-    protected boolean appendTagReplacement(StringBuilder sb, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) {
+    protected boolean appendTagReplacement(StringBuilder sb, TemplateTagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) {
         switch (tagType) {
             case CONTROL:
                 TemplateControl control = TemplateControls.getControl(attributes.get("type"));
@@ -274,7 +281,7 @@ public class TemplateData extends BaseData implements Serializable {
         int pos2 = 0;
         boolean shortTag;
         while (true) {
-            pos1 = src.indexOf(TagType.TAG_START, pos2);
+            pos1 = src.indexOf(TemplateTagType.TAG_START, pos2);
             if (pos1 == -1) {
                 writer.write(src.substring(pos2));
                 break;
@@ -289,7 +296,7 @@ public class TemplateData extends BaseData implements Serializable {
                 startTag = startTag.substring(0, startTag.length() - 1);
                 shortTag = true;
             }
-            TagType tagType = TagType.getTagType(startTag);
+            TemplateTagType tagType = TemplateTagType.getTagType(startTag);
             TemplateAttributes attributes = new TemplateAttributes(startTag.substring(tagType.getStartTag().length()).trim());
             //no content
             if (shortTag) {
@@ -307,7 +314,7 @@ public class TemplateData extends BaseData implements Serializable {
         }
     }
 
-    protected boolean appendTagReplacement(PageContext context, JspWriter writer, HttpServletRequest request, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData) throws Exception {
+    protected boolean appendTagReplacement(PageContext context, JspWriter writer, HttpServletRequest request, TemplateTagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData) throws Exception {
         switch (tagType) {
             case CONTROL:
                 TemplateControl control = TemplateControls.getControl(attributes.get("type"));

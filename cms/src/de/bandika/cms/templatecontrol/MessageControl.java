@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
+import java.util.Map;
 
 public class MessageControl extends TemplateControl {
 
@@ -40,7 +41,7 @@ public class MessageControl extends TemplateControl {
         }
     }
 
-    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, String content, PageData pageData) throws IOException {
+    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, Map<String, String> attributes, String content, PageData pageData) throws IOException {
         RequestError error = RequestError.getError(request);
         String message = RequestReader.getMessage(request);
         if (error != null) {

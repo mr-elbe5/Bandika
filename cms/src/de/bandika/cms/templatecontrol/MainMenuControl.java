@@ -21,6 +21,7 @@ import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MainMenuControl extends TemplateControl {
 
@@ -79,7 +80,7 @@ public class MainMenuControl extends TemplateControl {
         }
     }
 
-    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, String content, PageData pageData) throws IOException {
+    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, Map<String, String> attributes, String content, PageData pageData) throws IOException {
         TreeCache tc = TreeCache.getInstance();
         SiteData homeSite = tc.getLanguageRootSite(SessionReader.getSessionLocale(request));
         List<Integer> activeIds = new ArrayList<>();

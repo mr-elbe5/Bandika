@@ -12,6 +12,7 @@ import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.pagepart.PagePartData;
+import de.bandika.cms.template.TemplateTagType;
 import de.bandika.cms.template.TemplateAttributes;
 import de.bandika.servlet.RequestReader;
 import org.w3c.dom.Document;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
+import java.util.Map;
 
 public class TextField extends Field {
 
@@ -71,9 +73,9 @@ public class TextField extends Field {
     }
 
     @Override
-    public void appendFieldHtml(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, String defaultContent, PagePartData partData, PageData pageData) throws IOException {
+    public void appendFieldHtml(PageContext context, JspWriter writer, HttpServletRequest request, Map<String, String> attributes, String defaultContent, PagePartData partData, PageData pageData) throws IOException {
         boolean partEditMode = pageData.isEditMode() && partData == pageData.getEditPagePart();
-        int rows = attributes.getInt("rows");
+        int rows = TemplateTagType.getInt(attributes, "rows");
         if (partEditMode) {
             String content = getText();
             if (content.isEmpty())

@@ -121,6 +121,7 @@ public enum TemplateAction implements ICmsAction {
                     if (!isDataComplete(data, request)) {
                         return showEditTemplate(request, response);
                     }
+                    data.parseTemplate();
                     TemplateBean.getInstance().saveTemplate(data, true);
                     TemplateCache.getInstance().setDirty();
                     return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&templateType=" + data.getType().name() + "&templateName=" + data.getName(), "_templateSaved");
@@ -205,6 +206,7 @@ public enum TemplateAction implements ICmsAction {
         data.setCode(code);
         if (TemplateCache.getInstance().getTemplate(data.getType(), data.getName()) == null)
             data.setNew(true);
+        data.parseTemplate();
         return TemplateBean.getInstance().saveTemplate(data, false);
     }
 

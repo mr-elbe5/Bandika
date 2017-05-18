@@ -26,8 +26,14 @@ public class PageTag extends BaseTag {
     public int doStartTag() throws JspException {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
-            PageData data=(PageData) request.getAttribute("pageData");
-            writeTag(getContext(), getWriter(), request, data);
+            PageData pageData = (PageData) request.getAttribute("pageData");
+            String templateName=TreeCache.getInstance().getSite(pageData.getParentId()).getTemplateName();
+            TemplateData masterTemplate = TemplateCache.getInstance().getTemplate(TemplateType.MASTER, templateName);
+            try {
+                masterTemplate.writeTemplate(context, getWriter(), request, pageData, null);
+            } catch (Exception e) {
+                Log.error("could not write page html", e);
+            }
         } catch (Exception e) {
             Log.error("could not write page tag", e);
         }

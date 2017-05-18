@@ -20,7 +20,7 @@ public class PageTemplateData extends TemplateData {
         type = TemplateType.PAGE;
     }
 
-    protected boolean appendTagReplacement(StringBuilder sb, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) {
+    protected boolean appendTagReplacement(StringBuilder sb, TemplateTagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) {
         if (super.appendTagReplacement(sb, tagType, attributes, content, pageData, partData, request))
             return true;
         switch (tagType) {
