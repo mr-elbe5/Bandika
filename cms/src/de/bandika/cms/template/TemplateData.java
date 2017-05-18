@@ -18,6 +18,7 @@ import de.bandika.cms.templatecontrol.TemplateControl;
 import de.bandika.cms.templatecontrol.TemplateControls;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
@@ -30,36 +31,6 @@ public class TemplateData extends BaseData implements Serializable {
 
     public static final String USAGE_ALL = "all";
 
-    public enum TagType {
-        CONTENT("<cms-content", "</cms-content>"),
-        PART("<cms-part", "</cms-part>"),
-        FIELD("<cms-field", "</cms-field>"),
-        CONTROL("<cms-control", "</cms-control>"),
-        SECTION("<cms-section", "</cms-section>"),
-        SNIPPET("<cms-snippet", "</cms-snippet>"),
-        RESOURCE("<cms-res", "</cms-res>"),
-        PARTID("<cms-pid", "</cms-pid>"),
-        CONTAINERID("<cms-cid", "</cms-cid>");
-
-        private String startTag;
-        private String endTag;
-
-        TagType(String startTag, String endTag) {
-            this.startTag = startTag;
-            this.endTag = endTag;
-        }
-
-        public String getStartTag() {
-            return startTag;
-        }
-
-        public String getEndTag() {
-            return endTag;
-        }
-    }
-
-    public static final String TAG_START = "<cms-";
-
     public static final String PLACEHOLDER_CONTAINERID = "<cms-cid/>";
     public static final String PLACEHOLDER_PARTS = "<cms-parts/>";
 
@@ -71,6 +42,8 @@ public class TemplateData extends BaseData implements Serializable {
     protected String description = "";
     protected String usage = "";
     protected String code = "";
+
+    protected List<TemplatePart> templateParts=null;
 
     public TemplateData(){
     }
@@ -166,6 +139,63 @@ public class TemplateData extends BaseData implements Serializable {
         throw new ParseException("bad cms tag: " + src, 0);
     }
 
+    public void parseTemplate(String src) throws ParseException {
+        if (templateParts==null)
+            templateParts=new ArrayList<>();
+        else
+            templateParts.clear();
+        int pos1;
+        int pos2 = 0;
+        boolean shortTag;
+        while (true) {
+            pos1 = src.indexOf(TagType.TAG_START, pos2);
+            if (pos1 == -1) {
+                templateParts.add(new TemplateHtmlPart(src.substring(pos2)));
+                break;
+            }
+            templateParts.add(new TemplateHtmlPart(src.substring(pos2, pos1)));
+            pos2 = src.indexOf('>', pos1 + 5);
+            if (pos2 == -1)
+                throw new ParseException("no cms tag end", pos1);
+            String startTag = src.substring(pos1, pos2);
+            shortTag = false;
+            if (startTag.endsWith("/")) {
+                startTag = startTag.substring(0, startTag.length() - 1);
+                shortTag = true;
+            }
+            TagType tagType = TagType.getTagType(startTag);
+            String attributesString=startTag.substring(tagType.getStartTag().length()).trim();
+            //no content
+            if (shortTag) {
+                templateParts.add(getNewTemplateTagPart(tagType, attributesString, ""));
+                pos2++;
+                continue;
+            }
+            pos2++;
+            pos1 = src.indexOf(tagType.getEndTag(), pos2);
+            if (pos1 == -1)
+                throw new ParseException("no cms end tag ", pos2);
+            String content = src.substring(pos2, pos1).trim();
+            pos2 = pos1 + tagType.getEndTag().length();
+            templateParts.add(getNewTemplateTagPart(tagType, attributesString, content));
+        }
+    }
+
+    protected TemplateTagPart getNewTemplateTagPart(TagType tagType, String attributeString, String content){
+        return new TemplateTagPart(tagType, attributeString, content);
+    }
+
+    /*public void writeTemplate(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws JspException {
+        try{
+            for (TemplatePart templatePart : templateParts){
+                templatePart.writeTemplatePart(context, writer, request, pageData, partData);
+            }
+        }
+        catch (IOException e){
+            throw new JspException(e);
+        }
+    }*/
+
     public void fillTemplate(StringBuilder sb, PageData pageData, PagePartData partData, HttpServletRequest request) throws ParseException {
         String src = getCode();
         fillTemplate(src, sb, pageData, partData, request);
@@ -176,7 +206,7 @@ public class TemplateData extends BaseData implements Serializable {
         int pos2 = 0;
         boolean shortTag;
         while (true) {
-            pos1 = src.indexOf(TAG_START, pos2);
+            pos1 = src.indexOf(TagType.TAG_START, pos2);
             if (pos1 == -1) {
                 sb.append(src.substring(pos2));
                 break;
@@ -191,7 +221,7 @@ public class TemplateData extends BaseData implements Serializable {
                 startTag = startTag.substring(0, startTag.length() - 1);
                 shortTag = true;
             }
-            TagType tagType = getTagType(startTag.substring(5));
+            TagType tagType = TagType.getTagType(startTag);
             TemplateAttributes attributes = new TemplateAttributes(startTag.substring(tagType.getStartTag().length()).trim());
             //no content
             if (shortTag) {
@@ -243,7 +273,7 @@ public class TemplateData extends BaseData implements Serializable {
         int pos2 = 0;
         boolean shortTag;
         while (true) {
-            pos1 = src.indexOf(TAG_START, pos2);
+            pos1 = src.indexOf(TagType.TAG_START, pos2);
             if (pos1 == -1) {
                 writer.write(src.substring(pos2));
                 break;
@@ -258,7 +288,7 @@ public class TemplateData extends BaseData implements Serializable {
                 startTag = startTag.substring(0, startTag.length() - 1);
                 shortTag = true;
             }
-            TagType tagType = getTagType(startTag.substring(5));
+            TagType tagType = TagType.getTagType(startTag);
             TemplateAttributes attributes = new TemplateAttributes(startTag.substring(tagType.getStartTag().length()).trim());
             //no content
             if (shortTag) {
