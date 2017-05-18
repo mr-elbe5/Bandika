@@ -60,7 +60,7 @@ public enum PageAction implements ITreeAction {
                         return forbidden();
                     }
                     request.setAttribute("pageData", data);
-                    return sendForwardResponse(request, response, "/WEB-INF/_jsp/default.jsp");
+                    return sendForwardResponse(request, response, "/WEB-INF/_jsp/page.jsp");
                     //return setPageResponse(request, response, data);
                 }
             }, /**

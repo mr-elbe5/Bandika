@@ -60,27 +60,4 @@ public class PartTemplateData extends TemplateData {
 
     }
 
-    protected boolean appendTagReplacement(PageContext context, JspWriter writer, HttpServletRequest request, TagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData) throws IOException {
-        if (super.appendTagReplacement(context, writer, request, tagType, attributes, content, pageData, partData))
-            return true;
-        switch (tagType) {
-            case FIELD:
-                appendField(context, writer, request, attributes, content, pageData, partData);
-                return true;
-            case PARTID:
-                if (partData != null)
-                    writer.write(partData.getHtmlId());
-                return true;
-        }
-        return false;
-    }
-
-    protected void appendField(PageContext context, JspWriter writer, HttpServletRequest request, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData) throws IOException {
-        String fieldType = attributes.getString("type");
-        String fieldName = attributes.getString("name");
-        Field field = partData.ensureField(fieldName, fieldType);
-        field.appendFieldHtml(context, writer, request, attributes, content, partData, pageData);
-
-    }
-
 }

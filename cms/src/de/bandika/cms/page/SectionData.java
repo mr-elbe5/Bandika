@@ -27,6 +27,8 @@ import java.util.*;
 public class SectionData implements XmlData {
 
     protected String name;
+    protected String className = "";
+    protected String type = "";
     protected List<PagePartData> parts = new ArrayList<>();
 
     int pageId = 0;
@@ -51,6 +53,22 @@ public class SectionData implements XmlData {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public List<PagePartData> getParts() {
