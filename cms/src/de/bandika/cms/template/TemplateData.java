@@ -16,17 +16,13 @@ import de.bandika.cms.page.PageData;
 import de.bandika.cms.page.SectionData;
 import de.bandika.cms.pagepart.PagePartData;
 import de.bandika.cms.tag.PageTag;
-import de.bandika.cms.tag.PartTag;
-import de.bandika.cms.tag.SectionTag;
 import de.bandika.servlet.SessionReader;
 import de.bandika.cms.templatecontrol.TemplateControl;
 import de.bandika.cms.templatecontrol.TemplateControls;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
-import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -341,7 +337,7 @@ public class TemplateData extends BaseData implements Serializable {
                 if (section != null) {
                     section.setClassName(attributes.getString("class"));
                     section.setType(attributes.getString("type"));
-                    SectionTag.writeTag(context, writer, request, pageData, section);
+                    section.appendSectionHtml(context, writer, request, attributes, pageData);
                 }
                 return true;
             case CONTENT:
@@ -362,7 +358,7 @@ public class TemplateData extends BaseData implements Serializable {
                 String templateName = attributes.getString("template");
                 int idx = attributes.getInt("id");
                 PagePartData data = pageData.ensureStaticPart(templateName, idx);
-                PartTag.writeTag(context, writer, request, pageData, data);
+                data.appendPartHtml(context, writer, request, "", pageData);
                 return true;
         }
         return false;
