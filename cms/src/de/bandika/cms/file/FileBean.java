@@ -284,7 +284,7 @@ public class FileBean extends ResourceBean {
         PreparedStatement pst = null;
         try {
             int i = 1;
-            pst = con.prepareStatement("INSERT INTO t_file_content (id,version,change_date,published,author_name,content_type,file_size,width,height,bytes,preview_content_type,preview_bytes,search_text) VALUES(?,?,?,FALSE,?,?,?,?,?,?,?,?,?)");
+            pst = con.prepareStatement("INSERT INTO t_file_content (id,version,change_date,published,author_name,content_type,file_size,width,height,bytes,preview_content_type,preview_bytes) VALUES(?,?,?,FALSE,?,?,?,?,?,?,?,?)");
             pst.setInt(i++, data.getId());
             pst.setInt(i++, data.getLoadedVersion());
             pst.setTimestamp(i++, data.getSqlContentChangeDate());
@@ -296,11 +296,10 @@ public class FileBean extends ResourceBean {
             pst.setBytes(i++, data.getBytes());
             pst.setString(i++, data.getPreviewContentType());
             if (data.getPreviewBytes() == null) {
-                pst.setNull(i++, Types.BINARY);
+                pst.setNull(i, Types.BINARY);
             } else {
-                pst.setBytes(i++, data.getPreviewBytes());
+                pst.setBytes(i, data.getPreviewBytes());
             }
-            pst.setString(i, data.getSearchText());
             pst.executeUpdate();
         } finally {
             closeStatement(pst);

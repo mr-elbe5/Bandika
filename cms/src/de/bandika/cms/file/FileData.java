@@ -9,19 +9,13 @@
 package de.bandika.cms.file;
 
 import de.bandika.base.data.BinaryFileData;
-import de.bandika.base.log.Log;
-import de.bandika.base.search.ISearchTextProvider;
 import de.bandika.base.util.FileUtil;
 import de.bandika.base.util.ImageUtil;
 import de.bandika.base.util.StringUtil;
-import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.tree.ResourceNode;
-import de.bandika.cms.search.SearchHelper;
 import de.bandika.servlet.RequestError;
 import de.bandika.servlet.RequestReader;
 import de.bandika.servlet.SessionReader;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
@@ -30,13 +24,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Iterator;
 import java.util.List;
 
-public class FileData extends ResourceNode implements ISearchTextProvider {
+public class FileData extends ResourceNode {
 
     public static int MAX_THUMBNAIL_WIDTH = 200;
     public static int MAX_THUMBNAIL_HEIGHT = 200;
@@ -232,7 +224,7 @@ public class FileData extends ResourceNode implements ISearchTextProvider {
             setFileSize(file.getBytes().length);
             setName(file.getFileName());
             setContentType(file.getContentType());
-            setContentChanged(true);
+            setContentChanged();
             String name = RequestReader.getString(request, "displayName").trim();
             setDisplayName(name.isEmpty() ? getName() : name);
             name = RequestReader.getString(request, "name").trim();
@@ -248,7 +240,7 @@ public class FileData extends ResourceNode implements ISearchTextProvider {
             setName(file.getFileName());
             setMediaType("");
             setContentType(file.getContentType());
-            setContentChanged(true);
+            setContentChanged();
         }
     }
 
@@ -324,17 +316,6 @@ public class FileData extends ResourceNode implements ISearchTextProvider {
         bout.close();
         setPreviewBytes(bout.toByteArray());
         setPreviewContentType("image/jpeg");
-    }
-
-    /******************* search part *********************************/
-
-    //todo
-    @Override
-    public String getSearchText() {
-        StringBuilder sb;
-        sb = new StringBuilder();
-        sb.append(name).append(" ").append(getDisplayName()).append(" ").append(getDescription()).append(" ").append(getMediaType()).append(" ").append(SearchHelper.getSearchContent(bytes, name, contentType));
-        return sb.toString();
     }
 
 }

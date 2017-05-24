@@ -72,7 +72,7 @@ public enum PageAction implements ITreeAction {
                         return false;
                     PageData data = (PageData) getSessionObject(request, "pageData");
                     checkObject(data, pageId);
-                    data.setContentChanged(true);
+                    data.setContentChanged();
                     data.setAuthorName(SessionReader.getLoginName(request));
                     data.prepareSave();
                     data.setPublished(true);
@@ -299,7 +299,7 @@ public enum PageAction implements ITreeAction {
                         return false;
                     PageData data = (PageData) getSessionObject(request, "pageData");
                     checkObject(data, pageId);
-                    data.setContentChanged(true);
+                    data.setContentChanged();
                     data.setAuthorName(SessionReader.getLoginName(request));
                     data.prepareSave();
                     data.setPublished(false);

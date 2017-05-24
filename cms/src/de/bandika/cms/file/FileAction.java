@@ -244,7 +244,7 @@ public enum FileAction implements ITreeAction {
                             data.setName(file.getFileName());
                             data.setName(file.getFileName());
                             data.setContentType(file.getContentType());
-                            data.setContentChanged(true);
+                            data.setContentChanged();
                         }
                         data.setCreateValues(parentNode);
                         data.setRanking(parentNode.getFiles().size());

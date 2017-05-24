@@ -207,7 +207,7 @@ public class SearchBean extends DbBean {
         data.setId(rs.getInt(i++));
         data.setName(rs.getString(i++));
         data.setDescription(rs.getString(i++));
-        data.setAuthorName(rs.getString(i++));
+        data.setAuthorName(rs.getString(i));
     }
 
     protected void indexPages(IndexWriter writer) throws Exception {
@@ -215,12 +215,12 @@ public class SearchBean extends DbBean {
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords,t3.search_text " + "FROM t_treenode t1, t_resource t2, t_page_content t3 " + "WHERE t1.id=t2.id AND t1.id=t3.id AND t3.version=t2.published_version");
+            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords " + "FROM t_treenode t1, t_resource t2 " + "WHERE t1.id=t2.id ");
             ResultSet rs = pst.executeQuery();
             int count = 0;
             while (rs.next()) {
                 PageSearchData data = new PageSearchData();
-                getContentSearchData(data, rs);
+                getPageSearchData(data, rs);
                 data.setDoc();
                 writer.addDocument(data.getDoc());
                 count++;
@@ -244,14 +244,14 @@ public class SearchBean extends DbBean {
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords,t3.search_text " + "FROM t_treenode t1, t_resource t2, t_page_content t3 " + "WHERE t1.id=? AND t2.id=? AND t3.id=? AND t3.version=t2.published_version");
+            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords " + "FROM t_treenode t1, t_resource t2 " + "WHERE t1.id=? AND t2.id=? ");
             pst.setInt(1, id);
             pst.setInt(2, id);
-            pst.setInt(3, id);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
                 PageSearchData data = new PageSearchData();
-                getContentSearchData(data, rs);
+                getPageSearchData(data, rs);
+                //todo read parts
                 data.setDoc();
                 writer.addDocument(data.getDoc());
             }
@@ -266,17 +266,26 @@ public class SearchBean extends DbBean {
         }
     }
 
+    private void getPageSearchData(ContentSearchData data, ResultSet rs) throws SQLException {
+        int i = 1;
+        data.setId(rs.getInt(i++));
+        data.setName(rs.getString(i++));
+        data.setDescription(rs.getString(i++));
+        data.setAuthorName(rs.getString(i++));
+        data.setKeywords(rs.getString(i));
+    }
+
     protected void indexFiles(IndexWriter writer) throws Exception {
         Connection con = null;
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords,t3.search_text " + "FROM t_treenode t1, t_resource t2, t_file_content t3 " + "WHERE t1.id=t2.id AND t1.id=t3.id AND t3.version=t2.published_version");
+            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords,t3.content_type,t3.bytes " + "FROM t_treenode t1, t_resource t2, t_file_content t3 " + "WHERE t1.id=t2.id AND t1.id=t3.id AND t3.version=t2.published_version");
             ResultSet rs = pst.executeQuery();
             int count = 0;
             while (rs.next()) {
                 FileSearchData data = new FileSearchData();
-                getContentSearchData(data, rs);
+                getFileSearchData(data, rs);
                 data.setDoc();
                 writer.addDocument(data.getDoc());
                 count++;
@@ -300,12 +309,12 @@ public class SearchBean extends DbBean {
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords,t3.search_text " + "FROM t_treenode t1, t_resource t2, t_file_content t3 " + "WHERE t1.id=? AND t2.id=? AND t3.id=? AND t3.version=t2.published_version");
+            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords,t3.content_type,t3.bytes " + "FROM t_treenode t1, t_resource t2, t_file_content t3 " + "WHERE t1.id=? AND t2.id=? AND t3.id=? AND t3.version=t2.published_version");
             pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
                 FileSearchData data = new FileSearchData();
-                getContentSearchData(data, rs);
+                getFileSearchData(data, rs);
                 data.setDoc();
                 writer.addDocument(data.getDoc());
             }
@@ -320,14 +329,16 @@ public class SearchBean extends DbBean {
         }
     }
 
-    private void getContentSearchData(ContentSearchData data, ResultSet rs) throws SQLException {
+    private void getFileSearchData(ContentSearchData data, ResultSet rs) throws SQLException {
         int i = 1;
         data.setId(rs.getInt(i++));
         data.setName(rs.getString(i++));
         data.setDescription(rs.getString(i++));
         data.setAuthorName(rs.getString(i++));
         data.setKeywords(rs.getString(i++));
-        data.setContent(rs.getString(i));
+        String contentType=rs.getString(i++);
+        byte[] bytes=rs.getBytes(i);
+        //todo
     }
 
     protected void indexUsers(IndexWriter writer) throws Exception {

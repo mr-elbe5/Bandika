@@ -74,8 +74,8 @@ public abstract class ResourceNode extends TreeNode {
         return loadedVersion != 0;
     }
 
-    public void setContentChanged(boolean contentChanged) {
-        this.contentChanged = contentChanged;
+    public void setContentChanged() {
+        this.contentChanged = true;
     }
 
     public boolean isContentChanged() {

@@ -245,12 +245,11 @@ public class PageBean extends ResourceBean {
         PreparedStatement pst = null;
         try {
             int i = 1;
-            pst = con.prepareStatement("INSERT INTO t_page_content (id,version,change_date,published,author_name,search_text) VALUES(?,?,?,FALSE,?,?)");
+            pst = con.prepareStatement("INSERT INTO t_page_content (id,version,change_date,published,author_name) VALUES(?,?,?,FALSE,?)");
             pst.setInt(i++, data.getId());
             pst.setInt(i++, data.getLoadedVersion());
             pst.setTimestamp(i++, data.getSqlContentChangeDate());
-            pst.setString(i++, data.getAuthorName());
-            pst.setString(i, data.getSearchText());
+            pst.setString(i, data.getAuthorName());
             pst.executeUpdate();
             pst.close();
         } finally {

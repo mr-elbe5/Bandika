@@ -20,7 +20,6 @@ public class DocCenterFileData extends FileData {
     protected String ownerName = "";
     protected int checkoutId = 0;
     protected String checkoutName = "";
-    protected String searchContent = "";
 
     protected int version = 1;
     protected String name = "";
@@ -58,14 +57,6 @@ public class DocCenterFileData extends FileData {
 
     public void setCheckoutName(String checkoutName) {
         this.checkoutName = checkoutName;
-    }
-
-    public String getSearchContent() {
-        return searchContent;
-    }
-
-    public void setSearchContent(String searchContent) {
-        this.searchContent = searchContent;
     }
 
     //********* version *************/

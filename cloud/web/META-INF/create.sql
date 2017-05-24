@@ -173,7 +173,6 @@ CREATE TABLE IF NOT EXISTS t_file (
   bytes                BYTEA        NOT NULL,
   preview_content_type VARCHAR(255) NOT NULL DEFAULT '',
   preview_bytes        BYTEA        NULL,
-  search_text          TEXT         NOT NULL DEFAULT '',
   CONSTRAINT t_file_content_pk PRIMARY KEY (id),
   CONSTRAINT t_file_content_fk1 FOREIGN KEY (id) REFERENCES t_file (id) ON DELETE CASCADE
 );

@@ -138,7 +138,7 @@ public class DocCenterBean extends DbBean {
     protected void writeFileData(Connection con, DocCenterFileData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            String sql = data.isNew() ? "insert into t_teamfile (change_date,teampart_id,owner_id,owner_name,checkout_id,checkout_name,search_content,id) values (?,?,?,?,?,?,?,?)" : "update t_teamfile set change_date=?,teampart_id=?,owner_id=?,owner_name=?,checkout_id=?,checkout_name=?,search_content=? where id=?";
+            String sql = data.isNew() ? "insert into t_teamfile (change_date,teampart_id,owner_id,owner_name,checkout_id,checkout_name,search_content,id) values (?,?,?,?,?,?,?,?)" : "update t_teamfile set change_date=?,teampart_id=?,owner_id=?,owner_name=?,checkout_id=?,checkout_name=? where id=?";
             pst = con.prepareStatement(sql);
             int i = 1;
             pst.setTimestamp(i++, data.getSqlChangeDate());
@@ -150,7 +150,6 @@ public class DocCenterBean extends DbBean {
             else
                 pst.setInt(i++, data.getCheckoutId());
             pst.setString(i++, data.getCheckoutName());
-            pst.setString(i++, data.getSearchContent());
             pst.setInt(i, data.getId());
             pst.executeUpdate();
         } finally {

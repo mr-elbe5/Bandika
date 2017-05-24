@@ -8,7 +8,6 @@
  */
 package de.bandika.cms.page;
 
-import de.bandika.base.search.ISearchTextProvider;
 import de.bandika.cms.pagepart.PagePartData;
 import de.bandika.servlet.RequestReader;
 import de.bandika.cms.tree.ResourceNode;
@@ -18,7 +17,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class PageData extends ResourceNode implements ISearchTextProvider {
+public class PageData extends ResourceNode {
 
     public static final String STATIC_SECTION_NAME = "static";
     protected String templateName = "";
@@ -213,17 +212,6 @@ public class PageData extends ResourceNode implements ISearchTextProvider {
         for (SectionData section : sections.values()) {
             section.prepareSave();
         }
-    }
-
-    /******************* search part *********************************/
-
-    @Override
-    public String getSearchText() {
-        StringBuilder sb = new StringBuilder();
-        for (SectionData section : sections.values()) {
-            section.appendSearchText(sb);
-        }
-        return sb.toString();
     }
 
 }

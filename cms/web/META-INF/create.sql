@@ -28,7 +28,6 @@ CREATE TABLE IF NOT EXISTS t_user (
   change_date        TIMESTAMP    NOT NULL DEFAULT now(),
   title              VARCHAR(30)  NOT NULL DEFAULT '',
   first_name         VARCHAR(100) NOT NULL DEFAULT '',
-  middle_name        VARCHAR(100) NOT NULL DEFAULT '',
   last_name          VARCHAR(100) NOT NULL,
   street             VARCHAR(100) NOT NULL DEFAULT '',
   zipCode            VARCHAR(16)  NOT NULL DEFAULT '',
@@ -220,7 +219,6 @@ CREATE TABLE IF NOT EXISTS t_file_content (
   bytes                BYTEA        NOT NULL,
   preview_content_type VARCHAR(255) NOT NULL DEFAULT '',
   preview_bytes        BYTEA        NULL,
-  search_text          TEXT         NOT NULL DEFAULT '',
   CONSTRAINT t_file_content_pk PRIMARY KEY (id, version),
   CONSTRAINT t_file_content_fk1 FOREIGN KEY (id) REFERENCES t_file (id) ON DELETE CASCADE
 );
@@ -242,7 +240,6 @@ CREATE TABLE IF NOT EXISTS t_page_content (
   change_date TIMESTAMP    NOT NULL DEFAULT now(),
   published   BOOLEAN      NOT NULL DEFAULT FALSE,
   author_name VARCHAR(255) NOT NULL,
-  search_text TEXT         NOT NULL DEFAULT '',
   CONSTRAINT t_page_content_pk PRIMARY KEY (id, version),
   CONSTRAINT t_page_content_fk1 FOREIGN KEY (id) REFERENCES t_page (id) ON DELETE CASCADE
 );
