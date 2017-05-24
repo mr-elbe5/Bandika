@@ -618,61 +618,6 @@ public enum SiteAction implements ITreeAction {
                     request.setAttribute("siteId", Integer.toString(parent));
                     return closeLayerToTree(request, response, "/tree.ajx?act=openTree", "_siteDeleted");
                 }
-            }, /**
-     * exports the site's structure and content as xml
-     */
-    exportToXml {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    int siteId = RequestReader.getInt(request, "siteId");
-                    if (!hasContentRight(request, siteId, Right.EDIT))
-                        return false;
-                    Document xmlDoc = XmlUtil.createXmlDocument();
-                    Element root = XmlUtil.createRootNode(xmlDoc, "root");
-                    SiteData siteData = TreeCache.getInstance().getSite(siteId);
-                    siteData.toXml(xmlDoc, root);
-                    String xml = XmlUtil.xmlToString(xmlDoc);
-                    assert xml != null;
-                    return sendBinaryResponse(request, response, "site_" + siteId + ".xml", "text/xml", xml.getBytes(RequestStatics.ENCODING), true);
-                }
-            }, /**
-     * open dialog for creating sub structure mailFrom xml
-     */
-    openImportFromXml {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    int siteId = RequestReader.getInt(request, "siteId");
-                    if (!hasContentRight(request, siteId, Right.EDIT))
-                        return false;
-                    return showImportFromXml(request, response);
-                }
-            }, /**
-     * creates substructure mailFrom xml
-     */
-    importFromXml {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    int siteId = RequestReader.getInt(request, "siteId");
-                    if (!hasContentRight(request, siteId, Right.EDIT))
-                        return false;
-                    SiteData site = TreeCache.getInstance().getSite(siteId);
-                    BinaryFileData file = RequestReader.getFile(request, "file");
-                    String xml = null;
-                    if (file != null && file.getBytes() != null) {
-                        xml = new String(file.getBytes());
-                    }
-                    if (xml == null)
-                        return showImportFromXml(request, response);
-                    Document xmlDoc = XmlUtil.getXmlDocument(xml, "UTF-8");
-                    Element root = XmlUtil.getRootNode(xmlDoc);
-                    try {
-                        site.childrenFromXml(root);
-                    } catch (ParseException e) {
-                        Log.error(e.getMessage());
-                        return false;
-                    }
-                    return closeLayerToTree(request, response, "/tree.ajx?act=openTree&siteId=" + siteId, "_importSucceeded");
-                }
             };
 
     public static final String KEY = "site";
@@ -716,10 +661,6 @@ public enum SiteAction implements ITreeAction {
 
     protected boolean showDeleteSite(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/site/deleteSite.ajax.jsp");
-    }
-
-    public boolean showImportFromXml(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/site/importFromXml.ajax.jsp");
     }
 
     protected boolean showSiteDetails(HttpServletRequest request, HttpServletResponse response) {

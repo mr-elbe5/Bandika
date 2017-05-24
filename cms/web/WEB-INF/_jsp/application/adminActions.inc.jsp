@@ -22,8 +22,6 @@
     <div class="contextMenu">
         <div class="icn iaction" onclick="return openLayerDialog('<%=StringUtil.getHtml("_executeDatabaseScript",locale)%>', '/admin.ajx?act=openExecuteDatabaseScript');"><%=StringUtil.getHtml("_executeDatabaseScript", locale)%>
         </div>
-        <div class="icn idownload" onclick="return linkTo('/admin.srv?act=getLocalBackup');"><%=StringUtil.getHtml("_getLocalBackup", locale)%>
-        </div>
         <div class="icn isync" onclick="linkTo('/admin.srv?act=reinitialize');"><%=StringUtil.getHtml("_reinitialize", locale)%>
         </div>
         <div class="icn isync" onclick="linkTo('/admin.srv?act=restart');"><%=StringUtil.getHtml("_restart", locale)%>

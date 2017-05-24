@@ -8,28 +8,14 @@
  */
 package de.bandika.cms.page;
 
-import de.bandika.base.log.Log;
 import de.bandika.base.search.ISearchTextProvider;
-import de.bandika.base.util.StringUtil;
-import de.bandika.base.util.XmlUtil;
-import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.pagepart.PagePartData;
 import de.bandika.servlet.RequestReader;
-import de.bandika.cms.template.TemplateData;
-import de.bandika.cms.template.TemplateType;
 import de.bandika.cms.tree.ResourceNode;
-import de.bandika.cms.tree.TreeCache;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 
 public class PageData extends ResourceNode implements ISearchTextProvider {
@@ -226,51 +212,6 @@ public class PageData extends ResourceNode implements ISearchTextProvider {
         super.prepareSave();
         for (SectionData section : sections.values()) {
             section.prepareSave();
-        }
-    }
-
-    /******************* XML part *********************************/
-
-    @Override
-    protected Element getNewNode(Document xmlDoc) {
-        return xmlDoc.createElement("page");
-    }
-
-    @Override
-    public Element toXml(Document xmlDoc, Element parentNode) {
-        PageBean.getInstance().loadPageContent(this, getMaxVersion());
-        Element node = super.toXml(xmlDoc, parentNode);
-        for (SectionData section : sections.values()) {
-            section.toXml(xmlDoc, node);
-        }
-        return node;
-    }
-
-    @Override
-    public void addXmlAttributes(Document xmlDoc, Element node) {
-        super.addXmlAttributes(xmlDoc, node);
-        XmlUtil.addAttribute(xmlDoc, node, "templateName", StringUtil.toXml(getTemplateName()));
-        XmlUtil.addBooleanAttribute(xmlDoc, node, "defaultPage", isDefaultPage());
-    }
-
-    @Override
-    public void getXmlAttributes(Element node) {
-        super.getXmlAttributes(node);
-        setTemplateName(XmlUtil.getStringAttribute(node, "templateName"));
-        setDefaultPage(XmlUtil.getBooleanAttribute(node, "defaultPage"));
-    }
-
-    @Override
-    public void fromXml(Element node) throws ParseException {
-        super.fromXml(node);
-        List<Element> children = XmlUtil.getChildElements(node);
-        for (Element child : children) {
-            if (child.getTagName().equals("section")) {
-                SectionData section = new SectionData();
-                section.setPageId(getId());
-                section.fromXml(child);
-                sections.put(section.getName(), section);
-            }
         }
     }
 

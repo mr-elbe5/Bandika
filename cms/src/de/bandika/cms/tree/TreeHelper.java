@@ -120,16 +120,6 @@ public class TreeHelper {
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_sortSites", locale));
             writer.write("</div>");
-            writer.write("<div class=\"icn idownload\" onclick=\"return linkToTree('");
-            writer.write(StringUtil.toJs("/site.srv?act=exportToXml&siteId=" + data.getId()));
-            writer.write("');\">");
-            writer.write(StringUtil.getHtml("_exportToXml", locale));
-            writer.write("</div>");
-            writer.write("<div class=\"icn iimport\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_addFromXml", locale) + "', '");
-            writer.write(StringUtil.toJs("/site.ajx?act=openImportFromXml&siteId=" + data.getId()));
-            writer.write("');\">");
-            writer.write(StringUtil.getHtml("_importFromXml", locale));
-            writer.write("</div>");
             writer.write("</div>");
         }
         writer.write("<ul>");

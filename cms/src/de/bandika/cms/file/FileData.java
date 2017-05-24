@@ -326,58 +326,6 @@ public class FileData extends ResourceNode implements ISearchTextProvider {
         setPreviewContentType("image/jpeg");
     }
 
-    /******************* XML part *********************************/
-
-    @Override
-    protected Element getNewNode(Document xmlDoc) {
-        return xmlDoc.createElement("file");
-    }
-
-    @Override
-    public void addXmlAttributes(Document xmlDoc, Element node) {
-        super.addXmlAttributes(xmlDoc, node);
-        XmlUtil.addAttribute(xmlDoc, node, "mediaType", StringUtil.toXml(getMediaType()));
-        XmlUtil.addAttribute(xmlDoc, node, "contentType", StringUtil.toXml(getContentType()));
-        XmlUtil.addIntAttribute(xmlDoc, node, "fileSize", getFileSize());
-        XmlUtil.addIntAttribute(xmlDoc, node, "width", getWidth());
-        XmlUtil.addIntAttribute(xmlDoc, node, "height", getHeight());
-        XmlUtil.addAttribute(xmlDoc, node, "previewContentType", StringUtil.toXml(getPreviewContentType()));
-        XmlUtil.addBooleanAttribute(xmlDoc, node, "hasPreview", hasPreview());
-    }
-
-    public Element toXml(Document xmlDoc, Element parentNode) {
-        if (!isLoaded())
-            FileBean.getInstance().loadFileContent(this, getMaxVersion());
-        String encodedBytes = "";
-        try {
-            BinaryFileData file = FileBean.getInstance().getBinaryFileData(getId(), getMaxVersion());
-            encodedBytes = Base64.getEncoder().encodeToString(file.getBytes());
-        } catch (Exception e) {
-            Log.error("could not encode file", e);
-        }
-        Element node = super.toXml(xmlDoc, parentNode);
-        XmlUtil.addCDATA(xmlDoc, node, encodedBytes);
-        return node;
-    }
-
-    public void fromXml(Element node) throws ParseException {
-        super.fromXml(node);
-        String cdata = XmlUtil.getCData(node);
-        bytes = Base64.getDecoder().decode(cdata);
-        fileSize = bytes.length;
-    }
-
-    public void getXmlAttributes(Element node) {
-        super.getXmlAttributes(node);
-        setMediaType(XmlUtil.getStringAttribute(node, "mediaType"));
-        setContentType(XmlUtil.getStringAttribute(node, "contentType"));
-        setFileSize(XmlUtil.getIntAttribute(node, "fileSize"));
-        setWidth(XmlUtil.getIntAttribute(node, "width"));
-        setHeight(XmlUtil.getIntAttribute(node, "height"));
-        setPreviewContentType(XmlUtil.getStringAttribute(node, "previewContentType"));
-        setHasPreview(XmlUtil.getBooleanAttribute(node, "hasPreview"));
-    }
-
     /******************* search part *********************************/
 
     //todo

@@ -115,49 +115,6 @@ public enum AdminAction implements ICmsAction {
                     return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_scriptExecuted");
                 }
             }, /**
-     * returns zip file with xml-data and files
-     */
-    getLocalBackup {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                        return false;
-                    Document xmlDoc = XmlUtil.createXmlDocument();
-                    Element root = XmlUtil.createRootNode(xmlDoc, "root");
-                    SiteData rootSite = TreeCache.getInstance().getRootSite();
-                    Element groupsNode = XmlUtil.addNode(xmlDoc, root, "groups");
-                    List<GroupData> groups = GroupBean.getInstance().getAllGroups();
-                    for (GroupData group : groups) {
-                        Map<Integer, Integer> groupRights = TreeBean.getInstance().getGroupRights(group.getId());
-                        group.fillTreeXml(xmlDoc, groupsNode, groupRights);
-                    }
-                    Element usersNode = XmlUtil.addNode(xmlDoc, root, "users");
-                    List<UserData> users = UserBean.getInstance().getAllUsers();
-                    for (UserData user : users) {
-                        user.fillTreeXml(xmlDoc, usersNode);
-                    }
-                    Element contentNode = XmlUtil.addNode(xmlDoc, root, "content");
-                    rootSite.toXml(xmlDoc, contentNode);
-                    String xml = XmlUtil.xmlToString(xmlDoc);
-                    List<FileData> files = TreeCache.getInstance().getAllFiles();
-                    setResponseType(request, RequestStatics.RESPONSE_TYPE_STREAM);
-                    response.setContentType("application/zip");
-                    response.addHeader("content-disposition", "attachment; filename=export.zip");
-                    try (ZipOutputStream zout = new ZipOutputStream(response.getOutputStream())) {
-                        assert xml != null;
-                        ZipUtil.addEntry(zout, "export.xml", xml.getBytes("UTF-8"));
-                        for (FileData file : files) {
-                            BinaryFileData binData = FileBean.getInstance().getBinaryFileData(file.getId(), file.getMaxVersion());
-                            if (binData == null) {
-                                continue;
-                            }
-                            ZipUtil.addEntry(zout, String.format("%s.%s", file.getId(), FileUtil.getExtension(file.getName())), binData.getBytes());
-                        }
-                        zout.flush();
-                    }
-                    return true;
-                }
-            }, /**
      * reloads configuration and resets all caches
      */
     reinitialize {

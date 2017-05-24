@@ -58,23 +58,6 @@ public class GroupData extends BaseIdData {
         return userIds;
     }
 
-    public List<UserData> getUsers() {
-        return users;
-    }
-
-    public void fillTreeXml(Document xmlDoc, Element parentNode, Map<Integer, Integer> groupRights) {
-        Element node = XmlUtil.addNode(xmlDoc, parentNode, "group");
-        XmlUtil.addIntAttribute(xmlDoc, node, "id", getId());
-        XmlUtil.addAttribute(xmlDoc, node, "name", StringUtil.toXml(getName()));
-        XmlUtil.addAttribute(xmlDoc, node, "notes", StringUtil.toXml(getNotes()));
-        Element rightsNode = XmlUtil.addNode(xmlDoc, node, "singleContentRights");
-        for (Integer treeId : groupRights.keySet()) {
-            Element rightNode = XmlUtil.addNode(xmlDoc, rightsNode, "right");
-            XmlUtil.addIntAttribute(xmlDoc, rightNode, "id", treeId);
-            XmlUtil.addIntAttribute(xmlDoc, rightNode, "right", groupRights.get(treeId));
-        }
-    }
-
     public void readGroupRequestData(HttpServletRequest request) {
         setName(RequestReader.getString(request, "name"));
         setNotes(RequestReader.getString(request, "notes"));

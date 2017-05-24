@@ -8,24 +8,19 @@
  */
 package de.bandika.cms.page;
 
-import de.bandika.base.data.XmlData;
 import de.bandika.base.util.StringUtil;
-import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.pagepart.PagePartData;
 import de.bandika.cms.template.*;
 import de.bandika.servlet.SessionReader;
 import de.bandika.util.TagAttributes;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.*;
 
-public class SectionData implements XmlData {
+public class SectionData {
 
     protected String name;
     protected String className = "";
@@ -219,39 +214,6 @@ public class SectionData implements XmlData {
         }
         if (editMode) {
             writer.write("</div>");
-        }
-    }
-
-    /******************* XML part *********************************/
-
-    public void addXmlAttributes(Document xmlDoc, Element node) {
-        XmlUtil.addAttribute(xmlDoc, node, "name", StringUtil.toXml(getName()));
-    }
-
-    public Element toXml(Document xmlDoc, Element parentNode) {
-        Element node = XmlUtil.addNode(xmlDoc, parentNode, "section");
-        addXmlAttributes(xmlDoc, node);
-        for (PagePartData part : parts) {
-            part.toXml(xmlDoc, node);
-        }
-        return node;
-    }
-
-    public void getXmlAttributes(Element node) {
-        setName(XmlUtil.getStringAttribute(node, "name"));
-    }
-
-    public void fromXml(Element node) throws ParseException {
-        getXmlAttributes(node);
-        List<Element> children = XmlUtil.getChildElements(node);
-        for (Element child : children) {
-            if (child.getTagName().equals("part")) {
-                PagePartData part = PartTemplateDataType.getPageTemplateDataType(child.getAttribute("dataType")).getNewPagePartData();
-                part.setPageId(getPageId());
-                part.setSection(getName());
-                part.fromXml(child);
-                parts.add(part);
-            }
         }
     }
 

@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.*;
 
-public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode>, XmlData {
+public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode> {
 
     public static final int ID_ALL = 0;
     public static final int ID_ROOT = 1;
@@ -331,58 +331,6 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
             return val;
         }
         return getDisplayName().compareTo(node.getDisplayName());
-    }
-
-    @Override
-    public Element toXml(Document xmlDoc, Element parentNode) {
-        Element node = getNewNode(xmlDoc);
-        parentNode.appendChild(node);
-        addXmlAttributes(xmlDoc, node);
-        XmlUtil.addText(xmlDoc, node, "description", getDescription());
-        return node;
-    }
-
-    protected abstract Element getNewNode(Document xmlDoc);
-
-    public void addXmlAttributes(Document xmlDoc, Element node) {
-        XmlUtil.addAttribute(xmlDoc, node, "name", StringUtil.toXml(getName()));
-        XmlUtil.addAttribute(xmlDoc, node, "displayName", StringUtil.toXml(getDisplayName()));
-        XmlUtil.addIntAttribute(xmlDoc, node, "ranking", getRanking());
-        XmlUtil.addIntAttribute(xmlDoc, node, "ownerId", getOwnerId());
-        XmlUtil.addAttribute(xmlDoc, node, "authorName", StringUtil.toXml(getAuthorName()));
-        XmlUtil.addBooleanAttribute(xmlDoc, node, "inNavigation", isInNavigation());
-        XmlUtil.addBooleanAttribute(xmlDoc, node, "anonymous", isAnonymous());
-        XmlUtil.addBooleanAttribute(xmlDoc, node, "inheritsRights", inheritsRights());
-        XmlUtil.addLocaleAttribute(xmlDoc, node, "locale", getLocale());
-
-    }
-
-    public void fromXml(Element node) throws ParseException {
-        getXmlAttributes(node);
-        List<Element> children = XmlUtil.getChildElements(node);
-        for (Element child : children) {
-            getXmlTextNode(child);
-        }
-    }
-
-    public void getXmlAttributes(Element node) {
-        setName(XmlUtil.getStringAttribute(node, "name"));
-        setDisplayName(XmlUtil.getStringAttribute(node, "displayName"));
-        setRanking(XmlUtil.getIntAttribute(node, "ranking"));
-        setOwnerId(XmlUtil.getIntAttribute(node, "ownerId"));
-        setAuthorName(XmlUtil.getStringAttribute(node, "authorName"));
-        setInNavigation(XmlUtil.getBooleanAttribute(node, "inNavigation"));
-        setAnonymous(XmlUtil.getBooleanAttribute(node, "anonymous"));
-        setInheritsRights(XmlUtil.getBooleanAttribute(node, "inheritsRights"));
-        setLocale(XmlUtil.getLocaleAttribute(node, "locale"));
-    }
-
-    public void getXmlTextNode(Element textNode) throws ParseException {
-        switch (textNode.getTagName()) {
-            case "description":
-                setDescription(XmlUtil.getText(textNode));
-                break;
-        }
     }
 
 }

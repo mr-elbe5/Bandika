@@ -143,9 +143,59 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         generateXmlContent();
     }
 
+    public void generateXmlContent() {
+        Document xmlDoc = XmlUtil.createXmlDocument();
+        XmlUtil.createRootNode(xmlDoc, "part");
+        toXml(xmlDoc, null);
+        content = XmlUtil.xmlToString(xmlDoc);
+    }
+
     public void setXmlContent(String content) {
         this.content = content == null ? "" : content;
         evaluateXmlContent();
+    }
+
+    public void evaluateXmlContent() {
+        if (StringUtil.isNullOrEmpty(content)) {
+            return;
+        }
+        Document doc = XmlUtil.getXmlDocument(content, "UTF-8");
+        if (doc == null) {
+            return;
+        }
+        Element root = XmlUtil.getRootNode(doc);
+        if (root == null) {
+            return;
+        }
+        fromXml(root);
+    }
+
+    public void getXmlAttributes(Element node) {
+        setShared(XmlUtil.getBooleanAttribute(node, "shared"));
+        setShareName(XmlUtil.getStringAttribute(node, "shareName"));
+        setRanking(XmlUtil.getIntAttribute(node, "ranking"));
+        setTemplateName(XmlUtil.getStringAttribute(node, "templateName"));
+
+    }
+
+    public void addXmlAttributes(Document xmlDoc, Element node) {
+        XmlUtil.addBooleanAttribute(xmlDoc, node, "shared", isShared());
+        XmlUtil.addAttribute(xmlDoc, node, "dataType", getDataTypeName());
+        XmlUtil.addAttribute(xmlDoc, node, "shareName", StringUtil.toXml(getShareName()));
+        XmlUtil.addIntAttribute(xmlDoc, node, "ranking", getRanking());
+        XmlUtil.addAttribute(xmlDoc, node, "templateName", StringUtil.toXml(getTemplateName()));
+    }
+
+    public Element toXml(Document xmlDoc, Element parentNode) {
+        Element node = parentNode == null ? XmlUtil.getRootNode(xmlDoc) : XmlUtil.addNode(xmlDoc, parentNode, "part");
+        addXmlAttributes(xmlDoc, node);
+        return node;
+    }
+
+    public void fromXml(Element node) {
+        if (node == null)
+            return;
+        getXmlAttributes(node);
     }
 
     public String getXmlContent() {
@@ -178,58 +228,6 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
 
     public String getHtml(String key, Locale locale) {
         return StringUtil.getHtml(key, locale);
-    }
-
-    /******************* XML part *********************************/
-
-    public void evaluateXmlContent() {
-        if (StringUtil.isNullOrEmpty(content)) {
-            return;
-        }
-        Document doc = XmlUtil.getXmlDocument(content, "UTF-8");
-        if (doc == null) {
-            return;
-        }
-        Element root = XmlUtil.getRootNode(doc);
-        if (root == null) {
-            return;
-        }
-        fromXml(root);
-    }
-
-    public void generateXmlContent() {
-        Document xmlDoc = XmlUtil.createXmlDocument();
-        XmlUtil.createRootNode(xmlDoc, "part");
-        toXml(xmlDoc, null);
-        content = XmlUtil.xmlToString(xmlDoc);
-    }
-
-    public void getXmlAttributes(Element node) {
-        setShared(XmlUtil.getBooleanAttribute(node, "shared"));
-        setShareName(XmlUtil.getStringAttribute(node, "shareName"));
-        setRanking(XmlUtil.getIntAttribute(node, "ranking"));
-        setTemplateName(XmlUtil.getStringAttribute(node, "templateName"));
-
-    }
-
-    public void addXmlAttributes(Document xmlDoc, Element node) {
-        XmlUtil.addBooleanAttribute(xmlDoc, node, "shared", isShared());
-        XmlUtil.addAttribute(xmlDoc, node, "dataType", getDataTypeName());
-        XmlUtil.addAttribute(xmlDoc, node, "shareName", StringUtil.toXml(getShareName()));
-        XmlUtil.addIntAttribute(xmlDoc, node, "ranking", getRanking());
-        XmlUtil.addAttribute(xmlDoc, node, "templateName", StringUtil.toXml(getTemplateName()));
-    }
-
-    public Element toXml(Document xmlDoc, Element parentNode) {
-        Element node = parentNode == null ? XmlUtil.getRootNode(xmlDoc) : XmlUtil.addNode(xmlDoc, parentNode, "part");
-        addXmlAttributes(xmlDoc, node);
-        return node;
-    }
-
-    public void fromXml(Element node) {
-        if (node == null)
-            return;
-        getXmlAttributes(node);
     }
 
     /******************* search part *********************************/

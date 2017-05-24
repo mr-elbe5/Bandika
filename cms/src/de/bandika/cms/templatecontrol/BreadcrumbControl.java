@@ -11,6 +11,7 @@ package de.bandika.cms.templatecontrol;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.tree.TreeNode;
 import de.bandika.cms.tree.TreeCache;
+import de.bandika.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -18,7 +19,6 @@ import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class BreadcrumbControl extends TemplateControl {
 
@@ -32,7 +32,7 @@ public class BreadcrumbControl extends TemplateControl {
         return instance;
     }
 
-    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, Map<String, String> attributes, String content, PageData pageData) throws IOException {
+    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException {
         TreeCache tc = TreeCache.getInstance();
         List<Integer> activeIds = new ArrayList<>();
         if (pageData != null) {

@@ -15,6 +15,7 @@ import de.bandika.cms.site.SiteData;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.rights.Right;
 import de.bandika.servlet.SessionReader;
+import de.bandika.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -22,7 +23,6 @@ import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class DocumentListControl extends TemplateControl {
 
@@ -36,7 +36,7 @@ public class DocumentListControl extends TemplateControl {
         return instance;
     }
 
-    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, Map<String, String> attributes, String content, PageData pageData) throws IOException {
+    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException {
         int siteId=pageData.getParentId();
         SiteData site = TreeCache.getInstance().getSite(siteId);
         Locale locale=SessionReader.getSessionLocale(request);

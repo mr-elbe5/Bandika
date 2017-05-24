@@ -211,11 +211,6 @@ public class UserLoginData extends BaseIdData {
         XmlUtil.addBooleanAttribute(xmlDoc, node, "deleted", isDeleted());
     }
 
-    public void fillTreeXml(Document xmlDoc, Element parentNode) {
-        Element node = XmlUtil.addNode(xmlDoc, parentNode, "user");
-        addAttributesXml(xmlDoc, node);
-    }
-
     @Override
     public boolean isComplete() {
         return isComplete(login) && isCompletePassword() && isComplete(email) && isComplete(lastName);

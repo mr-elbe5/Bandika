@@ -38,14 +38,6 @@ public abstract class ResourceNode extends TreeNode {
         setKeywords(data.getKeywords());
     }
 
-    public void addXmlAttributes(Document xmlDoc, Element node) {
-        super.addXmlAttributes(xmlDoc, node);
-        XmlUtil.addAttribute(xmlDoc, node, "keywords", StringUtil.toXml(getKeywords()));
-        XmlUtil.addIntAttribute(xmlDoc, node, "publishedVersion", getPublishedVersion());
-        XmlUtil.addIntAttribute(xmlDoc, node, "draftVersion", getDraftVersion());
-        XmlUtil.addDateAttribute(xmlDoc, node, "contentChangeDate", getContentChangeDate());
-    }
-
     public String getKeywords() {
         return keywords;
     }

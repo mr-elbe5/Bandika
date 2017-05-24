@@ -27,20 +27,20 @@ public enum TreeAction implements IAction {
      * show content tree in tree layer
      */
     openTree {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!SessionReader.isLoggedIn(request)) {
-                        if (!isAjaxRequest(request)) {
-                            return LoginAction.openLogin.execute(request, response);
-                        }
-                        return forbidden();
-                    }
-                    if (SessionReader.hasAnySystemRight(request)) {
-                        return showTree(request, response, "");
-                    }
-                    return forbidden();
+        @Override
+        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            if (!SessionReader.isLoggedIn(request)) {
+                if (!isAjaxRequest(request)) {
+                    return LoginAction.openLogin.execute(request, response);
                 }
-            };
+                return forbidden();
+            }
+            if (SessionReader.hasAnySystemRight(request)) {
+                return showTree(request, response, "");
+            }
+            return forbidden();
+        }
+    };
 
     public static final String KEY = "tree";
 
