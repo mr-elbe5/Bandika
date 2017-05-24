@@ -10,45 +10,32 @@ package de.bandika.cms.tag;
 
 import de.bandika.base.log.Log;
 import de.bandika.cms.page.PageData;
-import de.bandika.cms.templatecontrol.TemplateControl;
-import de.bandika.cms.templatecontrol.TemplateControls;
+import de.bandika.cms.template.TemplateCache;
+import de.bandika.cms.template.TemplateData;
+import de.bandika.cms.template.TemplateType;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
 
-public class TemplateControlTag extends BaseTag {
-    private String name = "";
-    private String content = "";
-    private String pageKey = "";
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public void setPageKey(String pageKey) {
-        this.pageKey = pageKey;
-    }
+public class ContentTag extends BaseTag {
 
     public int doStartTag() throws JspException {
-        HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
-        PageData pageData = null;
         try {
-            if (!pageKey.isEmpty())
-                pageData = (PageData) request.getAttribute(pageKey);
-            TemplateControl control = TemplateControls.getControl(name);
-            if (control != null) {
-                control.appendHtml(context, getWriter(), request, null, content, pageData);
+            HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+            PageData pageData = (PageData) request.getAttribute("pageData");
+            TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PAGE, pageData.getTemplateName());
+            JspWriter writer = getWriter();
+            pageTemplate.writeTemplate(context, writer, request, pageData, null);
+            if (pageData.getEditPagePart()!=null){
+                writer.write("<script>$('.editControl').hide();</script>");
+            }
+            else{
+                writer.write("<script>$('.editControl').show();</script>");
             }
         } catch (Exception e) {
-            Log.error("could not write control tag", e);
+            Log.error("error writing content", e);
+            throw new JspException(e);
         }
         return SKIP_BODY;
     }

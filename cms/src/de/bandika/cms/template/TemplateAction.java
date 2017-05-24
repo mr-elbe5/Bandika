@@ -9,12 +9,13 @@
 package de.bandika.cms.template;
 
 import de.bandika.base.data.BinaryFileData;
+import de.bandika.cms.servlet.ICmsAction;
 import de.bandika.rights.Right;
 import de.bandika.rights.SystemZone;
 import de.bandika.servlet.ActionDispatcher;
-import de.bandika.cms.servlet.ICmsAction;
 import de.bandika.servlet.RequestReader;
 import de.bandika.servlet.SessionWriter;
+import de.bandika.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -179,7 +180,8 @@ public enum TemplateAction implements ICmsAction {
                 pos2 = src.indexOf('>', pos1);
                 if (pos2 == -1)
                     throw new ParseException("no cms tag end", pos1);
-                TemplateAttributes attributes = new TemplateAttributes(src.substring(pos1, pos2).trim());
+                TagAttributes attributes = new TagAttributes();
+                attributes.setAttributes(src.substring(pos1, pos2).trim());
                 pos2++;
                 pos1 = src.indexOf(TAG_END, pos2);
                 if (pos1 == -1)
@@ -195,10 +197,10 @@ public enum TemplateAction implements ICmsAction {
         return true;
     }
 
-    protected boolean importTemplate(TemplateAttributes attributes, String code) {
+    protected boolean importTemplate(TagAttributes attributes, String code) {
         TemplateType type = TemplateType.valueOf(attributes.getString("type"));
         TemplateData data = type.getNewTemplateData();
-        String dataTypeName=attributes.getString("dataType");
+        String dataTypeName = attributes.getString("dataType");
         data.setDataTypeName(dataTypeName.isEmpty() ? TemplateData.DEFAULT_DATA_TYPE : dataTypeName);
         data.setName(attributes.getString("name"));
         data.setDisplayName(attributes.getString("displayName"));

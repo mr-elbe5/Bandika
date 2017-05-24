@@ -169,13 +169,6 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
 
     /******************* HTML part *********************************/
 
-    public String getContentHtml(PageData pageData, HttpServletRequest request) {
-        return "";
-    }
-
-    public void appendPartHtml(StringBuilder sb, String sectionType, PageData pageData, HttpServletRequest request) {
-    }
-
     public void appendPartHtml(PageContext context, JspWriter writer, HttpServletRequest request, String sectionType, PageData pageData) throws IOException {
     }
 

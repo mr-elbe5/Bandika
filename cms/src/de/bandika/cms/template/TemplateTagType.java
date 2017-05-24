@@ -17,84 +17,79 @@ import de.bandika.cms.pagepart.PagePartData;
 import de.bandika.cms.templatecontrol.TemplateControl;
 import de.bandika.cms.templatecontrol.TemplateControls;
 import de.bandika.servlet.SessionReader;
+import de.bandika.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Map;
 
 public enum TemplateTagType {
     CONTENT("content"){
-        public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, Map<String, String> attributes) throws IOException{
+        public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, TagAttributes attributes) throws IOException{
             if (pageData.isEditMode()) {
                 writer.write("<div id=\"pageContent\" class=\"editArea\">");
             } else {
                 writer.write("<div id=\"pageContent\" class=\"viewArea\">");
             }
-            writeInnerTag(context, writer, request, pageData);
+            TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PAGE, pageData.getTemplateName());
+            pageTemplate.writeTemplate(context, writer, request, pageData, partData);
+            if (pageData.getEditPagePart()!=null){
+                writer.write("<script>$('.editControl').hide();</script>");
+            }
+            else{
+                writer.write("<script>$('.editControl').show();</script>");
+            }
             if (pageData.isEditMode()) {
                 writer.write("</div><script>$('#pageContent').initEditArea();</script>");
             } else {
                 writer.write("</div>");
             }
         }
-
-        public void writeInnerTag(PageContext context, JspWriter writer, HttpServletRequest request, PageData data) throws IOException {
-            TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PAGE, data.getTemplateName());
-            //todo
-            //pageTemplate.writeTemplate(context, writer, request, data);
-            if (data.getEditPagePart()!=null){
-                writer.write("<script>$('.editControl').hide();</script>");
-            }
-            else{
-                writer.write("<script>$('.editControl').show();</script>");
-            }
-        }
     },
     PART("part"){
-        public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, Map<String, String> attributes) throws IOException{
+        public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, TagAttributes attributes) throws IOException{
             //todo
-            String templateName = getString(attributes, "template");
-            int idx = getInt(attributes, "id");
+            String templateName = attributes.getString("template");
+            int idx = attributes.getInt("id");
             PagePartData data = pageData.ensureStaticPart(templateName, idx);
             data.appendPartHtml(context, writer, request, "", pageData);
         }
     },
     FIELD("field"){
-        public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, Map<String, String> attributes) throws IOException{
-            String fieldType = getString(attributes,"type");
-            String fieldName = getString(attributes,"name");
+        public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, TagAttributes attributes) throws IOException{
+            String fieldType = attributes.getString("type");
+            String fieldName = attributes.getString("name");
             Field field = partData.ensureField(fieldName, fieldType);
             field.appendFieldHtml(context, writer, request, attributes, content, partData, pageData);
         }
     },
     CONTROL("control"){
-        public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, Map<String, String> attributes) throws IOException{
+        public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, TagAttributes attributes) throws IOException{
             TemplateControl control = TemplateControls.getControl(attributes.get("type"));
             if (control != null)
                 control.appendHtml(context, writer, request, attributes, content, pageData);
         }
     },
     SECTION("section"){
-        public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, Map<String, String> attributes) throws IOException{
-            String sectionName = getString(attributes, "name");
+        public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, TagAttributes attributes) throws IOException{
+            String sectionName = attributes.getString("name");
             SectionData section = pageData.getSection(sectionName);
             if (section == null) {
                 pageData.ensureSection(sectionName);
                 section = pageData.getSection(sectionName);
             }
             if (section != null) {
-                section.setClassName(getString(attributes, "class"));
-                section.setType(getString(attributes, "type"));
+                section.setClassName(attributes.getString("class"));
+                section.setType(attributes.getString("type"));
                 section.appendSectionHtml(context, writer, request, attributes, pageData);
             }
         }
     },
     SNIPPET("snippet"){
-        public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, Map<String, String> attributes) throws IOException{
-            TemplateData snippet = TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, getString(attributes, "name"));
+        public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, TagAttributes attributes) throws IOException{
+            TemplateData snippet = TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, attributes.getString("name"));
             if (snippet != null) {
                 try {
                     snippet.writeTemplate(context, writer, request, pageData, null);
@@ -105,12 +100,12 @@ public enum TemplateTagType {
         }
     },
     RESOURCE("res"){
-        public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, Map<String, String> attributes) throws IOException{
+        public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, TagAttributes attributes) throws IOException{
             writer.write(StringUtil.getHtml(attributes.get("key"), SessionReader.getSessionLocale(request)));
         }
     },
     PARTID("pid"){
-        public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, Map<String, String> attributes) throws IOException{
+        public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, TagAttributes attributes) throws IOException{
             if (partData != null)
                 writer.write(partData.getHtmlId());
         }
@@ -136,23 +131,7 @@ public enum TemplateTagType {
         return endTag;
     }
 
-    public abstract void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, Map<String, String> attributes) throws IOException;
-
-    public static String getString(Map<String, String> attributes, String key) {
-        String value = attributes.get(key);
-        if (value != null)
-            return value;
-        return "";
-    }
-
-    public static int getInt(Map<String, String> attributes, String key) {
-        int value = -1;
-        try {
-            value = Integer.parseInt(attributes.get(key));
-        } catch (Exception ignore) {
-        }
-        return value;
-    }
+    public abstract void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, TagAttributes attributes) throws IOException;
 
     public static TemplateTagType getTagType(String src) throws ParseException {
         int blankPos = src.indexOf(" ");

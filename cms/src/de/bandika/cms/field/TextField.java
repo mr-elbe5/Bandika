@@ -12,9 +12,8 @@ import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.pagepart.PagePartData;
-import de.bandika.cms.template.TemplateTagType;
-import de.bandika.cms.template.TemplateAttributes;
 import de.bandika.servlet.RequestReader;
+import de.bandika.util.TagAttributes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -22,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
-import java.util.Map;
 
 public class TextField extends Field {
 
@@ -52,30 +50,9 @@ public class TextField extends Field {
     }
 
     @Override
-    public void appendFieldHtml(StringBuilder sb, TemplateAttributes attributes, String defaultContent, PagePartData partData, PageData pageData, HttpServletRequest request) {
+    public void appendFieldHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String defaultContent, PagePartData partData, PageData pageData) throws IOException {
         boolean partEditMode = pageData.isEditMode() && partData == pageData.getEditPagePart();
         int rows = attributes.getInt("rows");
-        if (partEditMode) {
-            String content = getText();
-            if (content.isEmpty())
-                content = defaultContent;
-            if (rows > 1)
-                sb.append("<textarea class=\"editField\" name=\"").append(getIdentifier()).append("\" rows=\"").append(rows).append("\" >").append(StringUtil.toHtmlInput(content)).append("</textarea>");
-            else
-                sb.append("<input type=\"text\" class=\"editField\" name=\"").append(getIdentifier()).append("\" value=\"").append(StringUtil.toHtmlInput(content)).append("\" />");
-        } else {
-            if (getText().length() == 0) {
-                sb.append("&nbsp;");
-            } else {
-                sb.append(StringUtil.toHtmlText(getText()));
-            }
-        }
-    }
-
-    @Override
-    public void appendFieldHtml(PageContext context, JspWriter writer, HttpServletRequest request, Map<String, String> attributes, String defaultContent, PagePartData partData, PageData pageData) throws IOException {
-        boolean partEditMode = pageData.isEditMode() && partData == pageData.getEditPagePart();
-        int rows = TemplateTagType.getInt(attributes, "rows");
         if (partEditMode) {
             String content = getText();
             if (content.isEmpty())

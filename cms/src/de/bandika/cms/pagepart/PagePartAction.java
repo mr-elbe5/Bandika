@@ -123,7 +123,8 @@ public enum PagePartAction implements ICmsAction {
             String sectionName = RequestReader.getString(request, "sectionName");
             MultiHtmlPartData partData = (MultiHtmlPartData) data.getPagePart(sectionName, partId);
             partData.readPagePartVisibilityData(request);
-            return setEditPageResponse(request, response, data);
+            data.setEditMode(true);
+            return setPageResponse(request, response, data);
         }
     }, /**
      * opens dialog for sharing a page part (make it accessible for common use)
@@ -160,7 +161,7 @@ public enum PagePartAction implements ICmsAction {
                     Log.warn("bad part method");
                 }
             }
-            return setPageResponse(request, response, pageId);
+            return setPageResponse(request, response, data);
         }
     }, /**
      * shows content of page part
@@ -274,7 +275,8 @@ public enum PagePartAction implements ICmsAction {
             String sectionName = RequestReader.getString(request, "sectionName");
             int dir = RequestReader.getInt(request, "dir");
             data.movePagePart(sectionName, partId, dir);
-            return setEditPageResponse(request, response, data);
+            data.setEditMode(true);
+            return setPageResponse(request, response, data);
         }
     }, /**
      * deletes a page part
@@ -326,10 +328,10 @@ public enum PagePartAction implements ICmsAction {
             String sectionName = RequestReader.getString(request, "sectionName");
             PagePartData pdata = data.getEditPagePart();
             if (pdata == null || data.getPagePart(sectionName, partId) != pdata) {
-                return setPageResponse(request, response, pageId);
+                return setPageResponse(request, response, data);
             }
             if (!pdata.readPagePartRequestData(request)) {
-                return setPageResponse(request, response, pageId);
+                return setPageResponse(request, response, data);
             }
             if (pdata.isShared()) {
                 data.shareChanges(pdata);
@@ -387,32 +389,15 @@ public enum PagePartAction implements ICmsAction {
         return KEY;
     }
 
-    public boolean setPageResponse(HttpServletRequest request, HttpServletResponse response, int id) {
-        TreeCache tc = TreeCache.getInstance();
-        PageData node = tc.getPage(id);
-        String html = node.getPageHtml(request);
-        return sendHtmlResponse(request, response, html);
-    }
-
-    public boolean setEditPageResponse(HttpServletRequest request, HttpServletResponse response, PageData data) {
-        data.setEditMode(true);
-        String html = data.getPageHtml(request);
+    public boolean setPageResponse(HttpServletRequest request, HttpServletResponse response, PageData data) {
         request.setAttribute("pageData", data);
-        return sendHtmlResponse(request, response, html);
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page.jsp");
     }
 
     public boolean setEditPageContentAjaxResponse(HttpServletRequest request, HttpServletResponse response, PageData data) {
         data.setEditMode(true);
-        String html = data.getContentHtml(request);
         request.setAttribute("pageData", data);
-        return sendHtmlResponse(request, response, html);
-    }
-
-    public boolean setEditPartContentAjaxResponse(HttpServletRequest request, HttpServletResponse response, PageData data) {
-        data.setEditMode(true);
-        String html = data.getPartContentHtml(request);
-        request.setAttribute("pageData", data);
-        return sendHtmlResponse(request, response, html);
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp//page/content.ajax.jsp");
     }
 
     protected boolean showAddPagePart(HttpServletRequest request, HttpServletResponse response) {

@@ -14,6 +14,7 @@ import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.pagepart.PagePartData;
 import de.bandika.cms.template.*;
 import de.bandika.servlet.SessionReader;
+import de.bandika.util.TagAttributes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -195,36 +196,10 @@ public class SectionData implements XmlData {
 
     /******************* HTML part *********************************/
 
-    public void appendSectionHtml(StringBuilder sb, TemplateAttributes attributes, PageData pageData, HttpServletRequest request) {
+    public void appendSectionHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, PageData pageData) throws IOException {
         boolean editMode = pageData.isEditMode();
         Locale locale = SessionReader.getSessionLocale(request);
         String cls = attributes.getString("class");
-        boolean hasParts = getParts().size() > 0;
-        if (editMode) {
-            sb.append("<div class = \"editSection\">");
-            if (hasParts) {
-                sb.append("<div class = \"editSectionHeader\">Section ").append(getName()).append("</div>");
-            } else {
-                sb.append("<div class = \"editSectionHeader empty contextSource\" title=\"").append(StringUtil.getHtml("_rightClickEditHint")).append("\">Section ").append(getName()).append("</div>");
-                sb.append("<div class = \"contextMenu\"><div class=\"icn inew\" onclick = \"return openLayerDialog('").append(StringUtil.getHtml("_addPart", locale)).append("', '/pagepart.ajx?act=openAddPagePart&pageId=").append(pageData.getId()).append("&sectionName=").append(getName()).append("&sectionType=").append(attributes.getString("type")).append("&partId=-1');\">").append(StringUtil.getHtml("_new", locale)).append("\n</div>\n</div>");
-            }
-        }
-        if (!getParts().isEmpty()) {
-            sb.append("<div class = \"section ").append(cls).append("\">");
-            for (PagePartData pdata : getParts()) {
-                pdata.appendPartHtml(sb, attributes.getString("type"), pageData, request);
-            }
-            sb.append("</div>");
-        }
-        if (editMode) {
-            sb.append("</div>");
-        }
-    }
-
-    public void appendSectionHtml(PageContext context, JspWriter writer, HttpServletRequest request, Map<String, String> attributes, PageData pageData) throws IOException {
-        boolean editMode = pageData.isEditMode();
-        Locale locale = SessionReader.getSessionLocale(request);
-        String cls = TemplateTagType.getString(attributes, "class");
         boolean hasParts = getParts().size() > 0;
         if (editMode) {
             writer.write("<div class = \"editSection\">");
@@ -232,13 +207,13 @@ public class SectionData implements XmlData {
                 writer.write("<div class = \"editSectionHeader\">Section " + getName()+ "</div>");
             } else {
                 writer.write("<div class = \"editSectionHeader empty contextSource\" title=\"" + StringUtil.getHtml("_rightClickEditHint") + "\">Section " + getName() + "</div>");
-                writer.write("<div class = \"contextMenu\"><div class=\"icn inew\" onclick = \"return openLayerDialog('" + StringUtil.getHtml("_addPart", locale) + "', '/pagepart.ajx?act=openAddPagePart&pageId=" + pageData.getId() + "&sectionName=" + getName() + "&sectionType=" + TemplateTagType.getString(attributes,"type") + "&partId=-1');\">" + StringUtil.getHtml("_new", locale) + "\n</div>\n</div>");
+                writer.write("<div class = \"contextMenu\"><div class=\"icn inew\" onclick = \"return openLayerDialog('" + StringUtil.getHtml("_addPart", locale) + "', '/pagepart.ajx?act=openAddPagePart&pageId=" + pageData.getId() + "&sectionName=" + getName() + "&sectionType=" + attributes.getString("type") + "&partId=-1');\">" + StringUtil.getHtml("_new", locale) + "\n</div>\n</div>");
             }
         }
         if (!getParts().isEmpty()) {
             writer.write("<div class = \"section " + cls + "\">");
             for (PagePartData pdata : getParts()) {
-                pdata.appendPartHtml(context, writer, request, TemplateTagType.getString(attributes,"type"), pageData);
+                pdata.appendPartHtml(context, writer, request, attributes.getString("type"), pageData);
             }
             writer.write("</div>");
         }

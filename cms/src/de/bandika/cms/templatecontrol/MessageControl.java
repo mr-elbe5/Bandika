@@ -9,15 +9,14 @@
 package de.bandika.cms.templatecontrol;
 
 import de.bandika.cms.page.PageData;
-import de.bandika.cms.template.TemplateAttributes;
 import de.bandika.servlet.RequestError;
 import de.bandika.servlet.RequestReader;
+import de.bandika.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
-import java.util.Map;
 
 public class MessageControl extends TemplateControl {
 
@@ -31,17 +30,7 @@ public class MessageControl extends TemplateControl {
         return instance;
     }
 
-    public void appendHtml(StringBuilder sb, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) {
-        RequestError error = RequestError.getError(request);
-        String message = RequestReader.getMessage(request);
-        if (error != null) {
-            sb.append("<div class=\"error\">").append(toHtml(error.getErrorString())).append("<button type=\"button\" class=\"close\" onclick=\"$(this).closest('.error').hide();\">&times;</button></div>");
-        } else if (message != null && message.length() > 0) {
-            sb.append("<div class=\"message\">").append(toHtml(message)).append("<button type=\"button\" class=\"close\" onclick=\"$(this).closest('.message').hide();\">&times;</button></div>");
-        }
-    }
-
-    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, Map<String, String> attributes, String content, PageData pageData) throws IOException {
+    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException {
         RequestError error = RequestError.getError(request);
         String message = RequestReader.getMessage(request);
         if (error != null) {

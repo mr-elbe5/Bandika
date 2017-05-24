@@ -47,4 +47,10 @@
         <body-content>JSP</body-content>
     </tag>
 
+    <tag>
+        <name>content</name>
+        <tag-class>de.bandika.cms.tag.ContentTag</tag-class>
+        <body-content>JSP</body-content>
+    </tag>
+
 </taglib>

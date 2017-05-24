@@ -22,7 +22,9 @@ public enum TemplateType {
             return new PageTemplateData();
         }
     }, PART {
-        public TemplateData getNewTemplateData() {return new PartTemplateData(); }
+        public TemplateData getNewTemplateData() {
+            return new PartTemplateData();
+        }
     }, SNIPPET {
         public TemplateData getNewTemplateData() {
             return new SnippetTemplateData();

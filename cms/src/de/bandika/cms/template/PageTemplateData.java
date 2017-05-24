@@ -8,50 +8,10 @@
  */
 package de.bandika.cms.template;
 
-import de.bandika.cms.page.PageData;
-import de.bandika.cms.pagepart.PagePartData;
-import de.bandika.cms.page.SectionData;
-
-import javax.servlet.http.HttpServletRequest;
-
 public class PageTemplateData extends TemplateData {
 
     public PageTemplateData() {
         type = TemplateType.PAGE;
     }
-
-    protected boolean appendTagReplacement(StringBuilder sb, TemplateTagType tagType, TemplateAttributes attributes, String content, PageData pageData, PagePartData partData, HttpServletRequest request) {
-        if (super.appendTagReplacement(sb, tagType, attributes, content, pageData, partData, request))
-            return true;
-        switch (tagType) {
-            case SECTION:
-                appendSection(sb, attributes, pageData, request);
-                return true;
-            case PART:
-                appendStaticPart(sb, attributes, pageData, request);
-                return true;
-        }
-        return false;
-    }
-
-    protected void appendSection(StringBuilder sb, TemplateAttributes attributes, PageData pageData, HttpServletRequest request) {
-        String sectionName = attributes.getString("name");
-        SectionData section = pageData.getSection(sectionName);
-        if (section == null) {
-            pageData.ensureSection(sectionName);
-            section = pageData.getSection(sectionName);
-        }
-        if (section != null) {
-            section.appendSectionHtml(sb, attributes, pageData, request);
-        }
-    }
-
-    protected void appendStaticPart(StringBuilder sb, TemplateAttributes attributes, PageData pageData, HttpServletRequest request) {
-        String templateName = attributes.getString("template");
-        int idx = attributes.getInt("id");
-        PagePartData data = pageData.ensureStaticPart(templateName, idx);
-        data.appendPartHtml(sb, "", pageData, request);
-    }
-
 
 }

@@ -10,16 +10,15 @@ package de.bandika.cms.templatecontrol;
 
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.site.SiteData;
-import de.bandika.cms.template.TemplateAttributes;
 import de.bandika.rights.Right;
 import de.bandika.servlet.SessionReader;
 import de.bandika.cms.tree.TreeCache;
+import de.bandika.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
-import java.util.Map;
 
 public class SubMenuControl extends TemplateControl {
 
@@ -33,35 +32,7 @@ public class SubMenuControl extends TemplateControl {
         return instance;
     }
 
-    public void appendHtml(StringBuilder sb, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) {
-        if (pageData==null)
-            return;
-        TreeCache tc = TreeCache.getInstance();
-        SiteData parentSite = tc.getSite(pageData.getParentId());
-        sb.append("<nav class=\"subNav links\"><ul>");
-            addNodes(parentSite, pageData.getId(),request, sb);
-        sb.append("</ul></nav>");
-    }
-
-    public void addNodes(SiteData parentSite, int currentId, HttpServletRequest request, StringBuilder sb) {
-        for (SiteData site : parentSite.getSites()) {
-            if (site.isInNavigation() && (site.isAnonymous() || SessionReader.hasContentRight(request,site.getId(),Right.READ))) {
-                sb.append("<li><a class=\"active\"");
-                sb.append(" href=\"").append(site.getUrl()).append("\">").append(toHtml(site.getDisplayName())).append("</a></li>");
-            }
-        }
-        for (PageData page : parentSite.getPages()) {
-            if (page.isInNavigation() && (page.isAnonymous() || SessionReader.hasContentRight(request,page.getId(),Right.READ)) && !page.isDefaultPage()){
-                boolean active = page.getId() == currentId;
-                sb.append("<li><a");
-                if (active)
-                    sb.append(" class=\"active\"");
-                sb.append(" href=\"").append(page.getUrl()).append("\">").append(toHtml(page.getDisplayName())).append("</a></li>");
-            }
-        }
-    }
-
-    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, Map<String, String> attributes, String content, PageData pageData) throws IOException {
+   public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException {
         if (pageData==null)
             return;
         TreeCache tc = TreeCache.getInstance();

@@ -59,9 +59,7 @@ public enum PageAction implements ITreeAction {
                     if (!data.isAnonymous() && !SessionReader.hasContentRight(request, pageId, Right.READ)) {
                         return forbidden();
                     }
-                    request.setAttribute("pageData", data);
-                    return sendForwardResponse(request, response, "/WEB-INF/_jsp/page.jsp");
-                    //return setPageResponse(request, response, data);
+                    return setPageResponse(request, response, data);
                 }
             }, /**
      * saves and published a page
@@ -274,7 +272,8 @@ public enum PageAction implements ITreeAction {
                     checkObject(data);
                     data.prepareEditing();
                     SessionWriter.setSessionObject(request, "pageData", data);
-                    return setPageEditResponse(request, response, data);
+                    data.setEditMode(true);
+                    return setPageResponse(request, response, data);
                 }
             }, /**
      * refreshes the page during wysiwyg editing
@@ -286,7 +285,8 @@ public enum PageAction implements ITreeAction {
                     if (!hasContentRight(request, pageId, Right.EDIT))
                         return false;
                     PageData data = (PageData) getSessionObject(request, "pageData");
-                    return setPageEditResponse(request, response, data);
+                    data.setEditMode(true);
+                    return setPageResponse(request, response, data);
                 }
             }, /**
      * saves page content to database
@@ -523,15 +523,8 @@ public enum PageAction implements ITreeAction {
     }
 
     protected boolean setPageResponse(HttpServletRequest request, HttpServletResponse response, PageData data) {
-        String html = data.getPageHtml(request);
-        return sendHtmlResponse(request, response, html);
-    }
-
-    protected boolean setPageEditResponse(HttpServletRequest request, HttpServletResponse response, PageData data) {
-        data.setEditMode(true);
-        String html = data.getPageHtml(request);
         request.setAttribute("pageData", data);
-        return sendHtmlResponse(request, response, html);
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page.jsp");
     }
 
     protected boolean showCreatePage(HttpServletRequest request, HttpServletResponse response) {

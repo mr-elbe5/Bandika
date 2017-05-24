@@ -9,7 +9,6 @@
 package de.bandika.cms.templatecontrol;
 
 import de.bandika.cms.page.PageData;
-import de.bandika.cms.template.TemplateAttributes;
 import de.bandika.cms.tree.TreeNode;
 import de.bandika.cms.tree.TreeCache;
 
@@ -31,24 +30,6 @@ public class BreadcrumbControl extends TemplateControl {
         if (instance == null)
             instance = new BreadcrumbControl();
         return instance;
-    }
-
-    public void appendHtml(StringBuilder sb, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) {
-        TreeCache tc = TreeCache.getInstance();
-        List<Integer> activeIds = new ArrayList<>();
-        if (pageData != null) {
-            activeIds.addAll(pageData.getParentIds());
-            activeIds.add(pageData.getId());
-        }
-        sb.append("<nav class=\"breadcrumb\"><ul>");
-        for (int i = 1; i < activeIds.size(); i++) {
-            TreeNode bcnode = tc.getNode(activeIds.get(i));
-            if (bcnode == null || ((bcnode instanceof PageData) && ((PageData) bcnode).isDefaultPage())) {
-                continue;
-            }
-            sb.append("<li><a href=\"").append(bcnode.getUrl()).append("\">").append(toHtml(bcnode.getDisplayName())).append("</a></li>");
-        }
-        sb.append("</ul></nav>");
     }
 
     public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, Map<String, String> attributes, String content, PageData pageData) throws IOException {

@@ -12,7 +12,6 @@ import de.bandika.base.util.StringUtil;
 import de.bandika.cms.file.FileData;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.site.SiteData;
-import de.bandika.cms.template.TemplateAttributes;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.rights.Right;
 import de.bandika.servlet.SessionReader;
@@ -35,20 +34,6 @@ public class DocumentListControl extends TemplateControl {
         if (instance == null)
             instance = new DocumentListControl();
         return instance;
-    }
-
-    public void appendHtml(StringBuilder sb, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request){
-        int siteId=pageData.getParentId();
-        SiteData site = TreeCache.getInstance().getSite(siteId);
-        Locale locale=SessionReader.getSessionLocale(request);
-        List<FileData> files=site.getFiles();
-        for (FileData file : files){
-            if (!file.isAnonymous() && !SessionReader.hasContentRight(request, file.getId(), Right.READ))
-                continue;
-            sb.append("<div class=\"documentListLine icn ifile\"><a href=\"").append(file.getUrl()).append("\" target=\"_blank\" title=\"")
-                    .append(StringUtil.getHtml("_show", locale)).append("\">").append(StringUtil.toHtml(file.getDisplayName()))
-                    .append("</a></div>");
-        }
     }
 
     public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, Map<String, String> attributes, String content, PageData pageData) throws IOException {

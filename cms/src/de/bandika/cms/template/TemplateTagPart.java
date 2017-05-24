@@ -10,50 +10,23 @@ package de.bandika.cms.template;
 
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.pagepart.PagePartData;
+import de.bandika.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class TemplateTagPart extends TemplatePart {
 
     TemplateTagType tagType;
     protected String content="";
-    protected Map<String, String> attributes=new HashMap<>();
+    protected TagAttributes attributes=new TagAttributes();
 
     public TemplateTagPart(TemplateTagType tagType, String content, String attributeString){
         this.tagType=tagType;
         this.content=content;
-        setAttributes(attributeString);
-    }
-
-    protected void setAttributes(String src) {
-        attributes.clear();
-        boolean inString = false;
-        char ch;
-        int lastBlank = 0;
-        for (int i = 0; i < src.length(); i++) {
-            ch = src.charAt(i);
-            if (ch == '\"')
-                inString = !inString;
-            if ((ch == ' ' && !inString) || i == src.length() - 1) {
-                String attributesString = (i == src.length() - 1 ? src.substring(lastBlank) : src.substring(lastBlank, i));
-                int pos = attributesString.indexOf('=');
-                if (pos != -1) {
-                    String key = attributesString.substring(0, pos).trim();
-                    String value = attributesString.substring(pos + 1).trim();
-                    if (value.startsWith("\""))
-                        value = value.substring(1);
-                    if (value.endsWith("\""))
-                        value = value.substring(0, value.length() - 1);
-                    attributes.put(key, value.trim());
-                }
-                lastBlank = i;
-            }
-        }
+        attributes.setAttributes(attributeString);
     }
 
     public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException {

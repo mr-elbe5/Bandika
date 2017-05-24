@@ -10,9 +10,9 @@ package de.bandika.cms.templatecontrol;
 
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.site.SiteData;
-import de.bandika.cms.template.TemplateAttributes;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.servlet.SessionReader;
+import de.bandika.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -20,7 +20,6 @@ import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class TopNavControl extends TemplateControl {
 
@@ -34,34 +33,7 @@ public class TopNavControl extends TemplateControl {
         return instance;
     }
 
-    public void appendHtml(StringBuilder sb, TemplateAttributes attributes, String content, PageData pageData, HttpServletRequest request) {
-        Locale locale = SessionReader.getSessionLocale(request);
-        List<Locale> otherLocales = null;
-        SiteData homeSite = null;
-        try {
-            homeSite = TreeCache.getInstance().getLanguageRootSite(locale);
-            otherLocales = TreeCache.getInstance().getOtherLocales(locale);
-        } catch (Exception ignore) {
-        }
-        sb.append("<nav><ul>");
-        if (homeSite != null) {
-            sb.append("<li><a href=\"").append(homeSite.getUrl()).append("\">").append(getHtml("_home", locale)).append("</a></li>");
-            if (otherLocales != null) {
-                for (Locale loc : otherLocales) {
-                    sb.append("<li><a href=\"/user.srv?act=changeLocale&language=").append(loc.getLanguage()).append("\">").append(toHtml(loc.getDisplayName(loc))).append("</a></li>");
-                }
-            }
-        }
-        if (SessionReader.isLoggedIn(request)) {
-            sb.append("<li><a href=\"/user.srv?act=openProfile\">").append(getHtml("_profile", locale)).append("</a></li>");
-            sb.append("<li><a href=\"/login.srv?act=logout\">").append(getHtml("_logout", locale)).append("</a></li>");
-        } else {
-            sb.append("<li><a href=\"/login.srv?act=openLogin\">").append(getHtml("_login", locale)).append("</a></li>");
-        }
-        sb.append("</ul></nav>");
-    }
-
-    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, Map<String, String> attributes, String content, PageData pageData) throws IOException {
+    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException {
         Locale locale = SessionReader.getSessionLocale(request);
         List<Locale> otherLocales = null;
         SiteData homeSite = null;

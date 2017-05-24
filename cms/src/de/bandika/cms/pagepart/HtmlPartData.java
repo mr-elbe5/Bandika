@@ -83,53 +83,7 @@ public class HtmlPartData extends PagePartData {
 
     /******************* HTML part *********************************/
 
-    public String getContentHtml(PageData pageData, HttpServletRequest request) {
-        StringBuilder sb = new StringBuilder();
-        appendEditPartHtml(sb, "", pageData, request);
-        return sb.toString();
-    }
-
-    public void appendPartHtml(StringBuilder sb, String sectionType, PageData pageData, HttpServletRequest request) {
-        if (pageData.isEditMode())
-            appendEditPartHtml(sb, sectionType, pageData, request);
-        else
-            appendLivePartHtml(sb, pageData, request);
-    }
-
-    public void appendEditPartHtml(StringBuilder sb, String typeName, PageData pageData, HttpServletRequest request) {
-        Locale locale = SessionReader.getSessionLocale(request);
-        writeEditPartStart(pageData.getEditPagePart(), getSection(), pageData.getId(), sb, locale);
-        TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PART, getTemplateName());
-        try {
-            partTemplate.fillTemplate(sb, pageData, this, request);
-        } catch (Exception e) {
-            Log.error("error in part template", e);
-        }
-        writeEditPartEnd(pageData.getEditPagePart(), getSection(), typeName, pageData.getId(), sb, locale);
-    }
-
-    public void appendLivePartHtml(StringBuilder sb, PageData pageData, HttpServletRequest request) {
-        TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PART, getTemplateName());
-        try {
-            sb.append("<div class=\"pagePart\" id=\"").append(getHtmlId()).append("\" >");
-            partTemplate.fillTemplate(sb, pageData, this, request);
-            sb.append("</div>");
-        } catch (Exception e) {
-            Log.error("error in part template", e);
-        }
-    }
-
     protected static String EDITSTARTCODE = "<div id=\"part_%s\" class = \"pagePart editPagePart\">\n" + "<form action = \"/pagepart.srv\" method = \"post\" id = \"partform\" name = \"partform\" accept-charset = \"UTF-8\">" + "<input type = \"hidden\" name = \"act\" value = \"savePagePart\"/>" + "<input type = \"hidden\" name = \"pageId\" value = \"%s\"/>" + "<input type = \"hidden\" name = \"sectionName\" value = \"%s\"/>" + "<input type = \"hidden\" name = \"partId\" value = \"%s\"/>\n" + "<div class = \"buttonset editSection\">" + "<button class = \"primary icn iok\" onclick = \"evaluateEditFields();return post2EditPageContent('/pagepart.srv',$('#partform').serialize());\">%s</button>" + "<button class=\"icn icancel\" onclick = \"return post2EditPageContent('/pagepart.srv',{act:'cancelEditPagePart',pageId:'%s'});\">%s</button>" + "</div>";
-
-    protected void writeEditPartStart(PagePartData editPagePart, String sectionName, int pageId, StringBuilder sb, Locale locale) {
-        if (editPagePart == null) {
-            sb.append("<div title=\"").append(StringUtil.toHtml(getTemplateName())).append("(ID=").append(getId()).append(") - ").append(StringUtil.getHtml("_rightClickEditHint")).append("\" id=\"part_").append(getId()).append("\" class = \"pagePart viewPagePart contextSource\">\n");
-        } else if (this == editPagePart) {
-            sb.append(String.format(EDITSTARTCODE, getId(), pageId, sectionName, getId(), getHtml("_ok", locale), pageId, getHtml("_cancel", locale)));
-        } else {
-            sb.append("<div class = \"pagePart viewPagePart\">\n");
-        }
-    }
 
     private static String HTMLCONTEXTCODE = "<div class=\"icn isetting\" onclick = \"return openLayerDialog('%s', '/pagepart.ajx?act=openEditHtmlPartSettings&pageId=%s&sectionName=%s&partId=%s');\">%s</div>\n" +
             "<div class=\"icn inew\" onclick = \"return openLayerDialog('%s', '/pagepart.ajx?act=openAddPagePart&pageId=%s&sectionName=%s&sectionType=%s&partId=%s');\">%s</div>\n" +
@@ -138,27 +92,6 @@ public class HtmlPartData extends PagePartData {
             "<div class=\"icn iup\" onclick = \"return linkTo('/pagepart.srv?act=movePagePart&pageId=%s&sectionName=%s&partId=%s&dir=-1');\">%s</div>\n" +
             "<div class=\"icn idown\" onclick = \"return linkTo('/pagepart.srv?act=movePagePart&pageId=%s&sectionName=%s&partId=%s&dir=1');\">%s</div>\n" +
             "<div class=\"icn idelete\" onclick = \"return post2EditPageContent('/pagepart.srv?',{act:'deletePagePart',pageId:'%s',sectionName:'%s',partId:'%s'});\">%s</div>\n";
-
-    public void writeEditPartEnd(PagePartData editPagePart, String sectionName, String sectionType, int pageId, StringBuilder sb, Locale locale) {
-        boolean staticSection = sectionName.equals(PageData.STATIC_SECTION_NAME);
-        sb.append("</div>");
-        if (editPagePart == null) {
-            sb.append("<div class = \"contextMenu\">");
-            sb.append("<div class=\"icn iedit\" onclick = \"return post2EditPageContent('/pagepart.ajx?',{act:'editPagePart',pageId:'").append(pageId).append("',sectionName:'").append(sectionName).append("',partId:'").append(getId()).append("'})\">").append(getHtml("_edit", locale)).append("</div>\n");
-            if (!staticSection) {
-                sb.append(String.format(HTMLCONTEXTCODE, getHtml("_settings", locale), pageId, sectionName, getId(), getHtml("_settings", locale),
-                        getHtml("_addPart", locale), pageId, sectionName, sectionType, getId(), getHtml("_newAbove", locale),
-                        getHtml("_addPart", locale), pageId, sectionName, sectionType, getId(), getHtml("_newBelow", locale),
-                        getHtml("_share", locale), pageId, sectionName, getId(), getHtml("_share", locale),
-                        pageId, sectionName, getId(), getHtml("_up", locale),
-                        pageId, sectionName, getId(), getHtml("_down", locale),
-                        pageId, sectionName, getId(), getHtml("_delete", locale)));
-            }
-            sb.append("</div>\n");
-        } else if (this == editPagePart) {
-            sb.append("</form>\n");
-        }
-    }
 
     public void appendPartHtml(PageContext context, JspWriter writer, HttpServletRequest request, String sectionType, PageData pageData) throws IOException {
         if (pageData.isEditMode())

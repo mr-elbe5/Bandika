@@ -6,18 +6,14 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.cms.template;
+package de.bandika.util;
 
 import java.io.Serializable;
 import java.util.HashMap;
 
-public class TemplateAttributes extends HashMap<String, String> implements Serializable {
+public class TagAttributes extends HashMap<String, String> implements Serializable {
 
-    public TemplateAttributes(String src) {
-        setAttributes(src);
-    }
-
-    protected void setAttributes(String src) {
+    public void setAttributes(String src) {
         clear();
         boolean inString = false;
         char ch;

@@ -12,9 +12,8 @@ import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.pagepart.PagePartData;
-import de.bandika.cms.template.TemplateTagType;
-import de.bandika.cms.template.TemplateAttributes;
 import de.bandika.servlet.RequestReader;
+import de.bandika.util.TagAttributes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -22,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
-import java.util.Map;
 
 public class ScriptField extends Field {
 
@@ -52,28 +50,9 @@ public class ScriptField extends Field {
     }
 
     @Override
-    public void appendFieldHtml(StringBuilder sb, TemplateAttributes attributes, String defaultContent, PagePartData partData, PageData pageData, HttpServletRequest request) {
+    public void appendFieldHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String defaultContent, PagePartData partData, PageData pageData) throws IOException {
         boolean partEditMode = pageData.isEditMode() && partData == pageData.getEditPagePart();
         int height = attributes.getInt("height");
-        if (partEditMode) {
-            sb.append("<textarea class=\"editField\" name=\"").append(getIdentifier()).append("\" rows=\"5\" ");
-            if (height == -1) {
-                sb.append("style=\"height:").append(height).append("\"");
-            }
-            sb.append(" >").append(StringUtil.toHtmlInput(getCode())).append("</textarea>");
-        } else {
-            if (getCode().length() == 0) {
-                sb.append(defaultContent);
-            } else {
-                sb.append("<script type=\"text/javascript\">").append(getCode()).append("</script>");
-            }
-        }
-    }
-
-    @Override
-    public void appendFieldHtml(PageContext context, JspWriter writer, HttpServletRequest request, Map<String, String> attributes, String defaultContent, PagePartData partData, PageData pageData) throws IOException {
-        boolean partEditMode = pageData.isEditMode() && partData == pageData.getEditPagePart();
-        int height = TemplateTagType.getInt(attributes, "height");
         if (partEditMode) {
             writer.write("<textarea class=\"editField\" name=\"" + getIdentifier() + "\" rows=\"5\" ");
             if (height == -1) {

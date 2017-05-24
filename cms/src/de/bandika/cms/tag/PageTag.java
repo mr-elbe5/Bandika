@@ -17,9 +17,6 @@ import de.bandika.cms.tree.TreeCache;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
-import java.io.IOException;
 
 public class PageTag extends BaseTag {
 
@@ -38,41 +35,6 @@ public class PageTag extends BaseTag {
             Log.error("could not write page tag", e);
         }
         return SKIP_BODY;
-    }
-
-    public static void writeTag(PageContext context, JspWriter writer, HttpServletRequest request, PageData data) throws JspException{
-        try {
-            if (data.isEditMode()) {
-                writer.write("<div id=\"pageContent\" class=\"editArea\">");
-            } else {
-                writer.write("<div id=\"pageContent\" class=\"viewArea\">");
-            }
-            writeInnerTag(context, writer, request, data);
-            if (data.isEditMode()) {
-                writer.write("</div><script>$('#pageContent').initEditArea();</script>");
-            } else {
-                writer.write("</div>");
-            }
-        } catch (IOException e) {
-            Log.error("error in page template", e);
-            throw new JspException(e);
-        }
-    }
-
-    public static void writeInnerTag(PageContext context, JspWriter writer, HttpServletRequest request, PageData data) throws JspException {
-        TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PAGE, data.getTemplateName());
-        try {
-            pageTemplate.writeTemplate(context, writer, request, data, null);
-            if (data.getEditPagePart()!=null){
-                writer.write("<script>$('.editControl').hide();</script>");
-            }
-            else{
-                writer.write("<script>$('.editControl').show();</script>");
-            }
-        } catch (Exception e) {
-            Log.error("error in page template", e);
-            throw new JspException(e);
-        }
     }
 
 }
