@@ -148,20 +148,15 @@ public enum PagePartAction implements ICmsAction {
         @Override
         public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
             int pageId = RequestReader.getInt(request, "pageId");
-            if (!hasContentRight(request, pageId, Right.EDIT))
-                return false;
-            PageData data = (PageData) getSessionObject(request, "pageData");
-            checkObject(data, pageId);
             int partId = RequestReader.getInt(request, "partId");
             String sectionName = RequestReader.getString(request, "sectionName");
             String partMethod = RequestReader.getString(request, "partMethod");
-            PagePartData pdata = data.getPagePart(sectionName, partId);
-            if (pdata != null) {
-                if (!pdata.executePagePartMethod(partMethod, request)){
-                    Log.warn("bad part method");
-                }
+            PageData data = TreeCache.getInstance().getPage(pageId);
+            if (!data.isLoaded()) {
+                PageBean.getInstance().loadPageContent(data, data.getPublishedVersion());
             }
-            return setPageResponse(request, response, data);
+            PagePartData pdata = data.getPagePart(sectionName, partId);
+            return pdata != null && pdata.executePagePartMethod(partMethod, request, response);
         }
     }, /**
      * shows content of page part

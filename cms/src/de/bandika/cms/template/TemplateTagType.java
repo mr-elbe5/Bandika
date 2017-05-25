@@ -19,6 +19,7 @@ import de.bandika.cms.templatecontrol.TemplateControls;
 import de.bandika.servlet.SessionReader;
 import de.bandika.util.TagAttributes;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
@@ -96,6 +97,22 @@ public enum TemplateTagType {
                 } catch (Exception e) {
                     Log.error("error in snippet template", e);
                 }
+            }
+        }
+    },
+    JSP("jsp"){
+        public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, TagAttributes attributes) throws IOException{
+            String url=attributes.getString("url");
+            request.setAttribute("pageData", pageData);
+            if (partData!=null){
+                request.setAttribute("partData", partData);
+            }
+            try {
+                context.include(url);
+            }
+            catch (ServletException e){
+                Log.error("could not include jsp:"+url,e);
+                writer.write("<div>JSP missing</div>");
             }
         }
     },

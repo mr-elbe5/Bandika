@@ -72,7 +72,7 @@ public class TemplateBean extends DbBean {
         PreparedStatement pst = null;
         TemplateData data;
         try {
-            pst = con.prepareStatement("SELECT data_type,name,change_date,display_name,description,usage,code FROM t_template WHERE type=? ORDER BY name");
+            pst = con.prepareStatement("SELECT data_type,name,change_date,display_name,description,usage,editable,dynamic,code FROM t_template WHERE type=? ORDER BY name");
             pst.setString(1, type.name());
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
@@ -84,9 +84,11 @@ public class TemplateBean extends DbBean {
                 data.setDisplayName(rs.getString(i++));
                 data.setDescription(rs.getString(i++));
                 data.setUsage(rs.getString(i++));
+                data.setEditable(rs.getBoolean(i++));
+                data.setDynamic(rs.getBoolean(i++));
                 data.setCode(rs.getString(i));
-                data.parseTemplate();
-                list.add(data);
+                if (data.parseTemplate())
+                    list.add(data);
             }
             rs.close();
         } finally {
@@ -113,12 +115,14 @@ public class TemplateBean extends DbBean {
     protected void writeTemplate(Connection con, TemplateData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(data.isNew() ? "insert into t_template (change_date,description,usage,display_name,code,data_type,name,type) values(?,?,?,?,?,?,?,?)" : "update t_template set change_date=?, description=?, usage=?, display_name=?, code=?, data_type=? where name=? and type=?");
+            pst = con.prepareStatement(data.isNew() ? "insert into t_template (change_date,display_name,description,usage,editable,dynamic,code,data_type,name,type) values(?,?,?,?,?,?,?,?,?,?)" : "update t_template set change_date=?, display_name=?, description=?, usage=?, editable=?, dynamic=?, code=?, data_type=? where name=? and type=?");
             int i = 1;
             pst.setTimestamp(i++, data.getSqlChangeDate());
+            pst.setString(i++, data.getDisplayName());
             pst.setString(i++, data.getDescription());
             pst.setString(i++, data.getUsage());
-            pst.setString(i++, data.getDisplayName());
+            pst.setBoolean(i++, data.isEditable());
+            pst.setBoolean(i++, data.isDynamic());
             pst.setString(i++, data.getCode());
             pst.setString(i++, data.getDataTypeName());
             pst.setString(i++, data.getName());

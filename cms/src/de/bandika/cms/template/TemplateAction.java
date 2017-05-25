@@ -119,10 +119,14 @@ public enum TemplateAction implements ICmsAction {
                     data.setDescription(RequestReader.getString(request, "description"));
                     data.setCode(RequestReader.getString(request, "code"));
                     data.setUsage(RequestReader.getString(request, "usage"));
+                    data.setEditable(RequestReader.getBoolean(request, "editable"));
+                    data.setDynamic(RequestReader.getBoolean(request, "dynamic"));
                     if (!isDataComplete(data, request)) {
                         return showEditTemplate(request, response);
                     }
-                    data.parseTemplate();
+                    if (!data.parseTemplate()){
+                        return showEditTemplate(request, response);
+                    }
                     TemplateBean.getInstance().saveTemplate(data, true);
                     TemplateCache.getInstance().setDirty();
                     return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&templateType=" + data.getType().name() + "&templateName=" + data.getName(), "_templateSaved");
@@ -147,7 +151,8 @@ public enum TemplateAction implements ICmsAction {
                         return false;
                     TemplateType templateType = TemplateType.valueOf(RequestReader.getString(request, "templateType"));
                     String templateName = RequestReader.getString(request, "templateName");
-                    TemplateBean.getInstance().deleteTemplate(templateName, templateType);
+                    if (!TemplateBean.getInstance().deleteTemplate(templateName, templateType))
+                        return false;
                     TemplateCache.getInstance().setDirty();
                     return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_templateDeleted");
                 }
@@ -205,10 +210,13 @@ public enum TemplateAction implements ICmsAction {
         data.setName(attributes.getString("name"));
         data.setDisplayName(attributes.getString("displayName"));
         data.setUsage(attributes.getString("usage"));
+        data.setEditable(attributes.getBoolean("editable"));
+        data.setDynamic(attributes.getBoolean("dynamic"));
         data.setCode(code);
         if (TemplateCache.getInstance().getTemplate(data.getType(), data.getName()) == null)
             data.setNew(true);
-        data.parseTemplate();
+        if (!data.parseTemplate())
+            return false;
         return TemplateBean.getInstance().saveTemplate(data, false);
     }
 

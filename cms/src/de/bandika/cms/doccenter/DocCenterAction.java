@@ -8,6 +8,7 @@
  */
 package de.bandika.cms.doccenter;
 
+import de.bandika.base.log.Log;
 import de.bandika.servlet.ActionDispatcher;
 import de.bandika.servlet.IAction;
 
@@ -15,13 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public enum DocCenterAction implements IAction {
-    /**
-     * no action
-     */
+
     defaultAction {
         @Override
         public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            return forbidden();
+            return sendHtmlResponse(request, response, "<div>teeeeest</div>");
         }
     };
 

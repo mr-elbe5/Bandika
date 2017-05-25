@@ -1,5 +1,5 @@
 <!--suppress XmlDuplicatedId -->
-<cms-template type="MASTER" name="pageMaster" displayName="Page Master" usage="" update="true">
+<cms-template type="MASTER" name="pageMaster" displayName="Page Master" usage="" editable="true" update="true" xmlns="">
     <!DOCTYPE html>
     <html>
     <head>
@@ -58,7 +58,7 @@
     </body>
     </html>
 </cms-template>
-<cms-template type="PAGE" name="homePage" displayName="Home Page Layout" usage="">
+<cms-template type="PAGE" name="homePage" displayName="Home Page Layout" usage="" editable="true">
     <section class="mainSection flexRow">
         <section class="contentSection flexItemThree">
             <cms-section name="banner" type="banner"/>
@@ -69,7 +69,7 @@
         </aside>
     </section>
 </cms-template>
-<cms-template type="PAGE" name="areaPage" displayName="Area Page Layout" usage="">
+<cms-template type="PAGE" name="areaPage" displayName="Area Page Layout" usage="" editable="true">
     <section class="mainSection flexRow">
         <section class="contentSection flexItemThree">
             <cms-section name="banner" type="banner"/>
@@ -80,7 +80,7 @@
         </aside>
     </section>
 </cms-template>
-<cms-template type="PAGE" name="articlePage" displayName="Article Page Layout" usage="">
+<cms-template type="PAGE" name="articlePage" displayName="Article Page Layout" usage="" editable="true">
     <section class="mainSection flexRow">
         <section class="contentSection flexItemThree">
             <cms-section name="article" type="article"/>
@@ -91,20 +91,20 @@
     </section>
 </cms-template>
 
-<cms-template type="PART" dataType="HTML" name="html" displayName="Html Paragraph" usage="all">
+<cms-template type="PART" dataType="HTML" name="html" displayName="Html Paragraph" usage="all" editable="true" dynamic="false">
     <cms-field type="html" name="html" toolbar="Full">Lorem ipsum</cms-field>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="bannerImg" displayName="Banner Image" usage="banner">
+<cms-template type="PART" dataType="HTML" name="bannerImg" displayName="Banner Image" usage="banner" editable="true" dynamic="false">
     <div class="banner imageBox">
         <cms-field type="html" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="MULTIHTML" name="bannerImgSlider" displayName="Banner Image Slider" usage="banner">
+<cms-template type="PART" dataType="MULTIHTML" name="bannerImgSlider" displayName="Banner Image Slider" usage="banner" editable="true" dynamic="false">
     <div class="banner imageBox">
         <cms-field type="html" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="bannerImgTxt" displayName="Banner Image+Text" usage="banner">
+<cms-template type="PART" dataType="HTML" name="bannerImgTxt" displayName="Banner Image+Text" usage="banner" editable="true" dynamic="false">
     <div class="banner flexRow">
         <div class="imageBox flexItemTwo">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
@@ -117,7 +117,7 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="bannerImgHtml" displayName="Banner Image+Html" usage="banner">
+<cms-template type="PART" dataType="HTML" name="bannerImgHtml" displayName="Banner Image+Html" usage="banner" editable="true" dynamic="false">
     <div class="banner flexRow">
         <div class="imageBox flexItemTwo">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
@@ -130,7 +130,7 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="teaserImgTxtH" displayName="Teaser Image+Text Horz" usage="teaser">
+<cms-template type="PART" dataType="HTML" name="teaserImgTxtH" displayName="Teaser Image+Text Horz" usage="teaser" editable="true" dynamic="false">
     <div class="teaser">
         <div class="teaserLeft imageBox">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
@@ -140,7 +140,7 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="teaserImgTxtV" displayName="Teaser Image+Text Vert" usage="teaser">
+<cms-template type="PART" dataType="HTML" name="teaserImgTxtV" displayName="Teaser Image+Text Vert" usage="teaser" editable="true" dynamic="false">
     <div class="teaser">
         <div class="imageBox">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
@@ -150,14 +150,14 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="asideImagePure" displayName="Side Image Pure" usage="aside">
+<cms-template type="PART" dataType="HTML" name="asideImagePure" displayName="Side Image Pure" usage="aside" editable="true" dynamic="false">
     <div class="aside">
         <div class="imageBox">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
         </div>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="asideImage" displayName="Side Image" usage="aside">
+<cms-template type="PART" dataType="HTML" name="asideImage" displayName="Side Image" usage="aside" editable="true" dynamic="false">
     <div class="aside">
         <h3>
             <cms-field type="text" name="header">Lorem ipsum</cms-field>
@@ -167,7 +167,7 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="asideText" displayName="Side Text" usage="aside">
+<cms-template type="PART" dataType="HTML" name="asideText" displayName="Side Text" usage="aside" editable="true" dynamic="false">
     <div class="aside">
         <h3>
             <cms-field type="text" name="header">Lorem ipsum</cms-field>
@@ -177,7 +177,7 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="asideHtml" displayName="Side Html" usage="aside">
+<cms-template type="PART" dataType="HTML" name="asideHtml" displayName="Side Html" usage="aside" editable="true" dynamic="false">
     <div class="aside">
         <h3>
             <cms-field type="text" name="header">Lorem ipsum</cms-field>
@@ -187,36 +187,36 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="asideLink" displayName="Side Line (Link)" usage="aside">
+<cms-template type="PART" dataType="HTML" name="asideLink" displayName="Side Line (Link)" usage="aside" editable="true" dynamic="false">
     <div class="aside">
         <cms-field type="html" toolbar="Text" name="textlink"><a href="#">Lorem ipsum</a></cms-field>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="articleHeader" displayName="Article Header" usage="article">
+<cms-template type="PART" dataType="HTML" name="articleHeader" displayName="Article Header" usage="article" editable="true" dynamic="false">
     <div class="article">
         <h1>
             <cms-field type="text" name="text">Lorem ipsum</cms-field>
         </h1>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="articleSubHeader" displayName="Article Sub-Header" usage="article">
+<cms-template type="PART" dataType="HTML" name="articleSubHeader" displayName="Article Sub-Header" usage="article" editable="true" dynamic="false">
     <div class="article">
         <h2>
             <cms-field type="text" name="text">Lorem ipsum</cms-field>
         </h2>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="articleSummary" displayName="Article Summary" usage="article">
+<cms-template type="PART" dataType="HTML" name="articleSummary" displayName="Article Summary" usage="article" editable="true" dynamic="false">
     <div class="article">
         <cms-field type="html" toolbar="Text" name="text">Lorem ipsum</cms-field>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="articleText" displayName="Article Text" usage="article">
+<cms-template type="PART" dataType="HTML" name="articleText" displayName="Article Text" usage="article" editable="true" dynamic="false">
     <div class="article">
         <cms-field type="html" toolbar="Text" name="text">Lorem ipsum</cms-field>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="articleImgTxt" displayName="Article Image+Text" usage="article">
+<cms-template type="PART" dataType="HTML" name="articleImgTxt" displayName="Article Image+Text" usage="article" editable="true" dynamic="false">
     <div class="article flexRow">
         <div class="imageBox flexItemOne">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
@@ -227,12 +227,12 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="articleHtml" displayName="Article Html" usage="article">
+<cms-template type="PART" dataType="HTML" name="articleHtml" displayName="Article Html" usage="article" editable="true" dynamic="false">
     <div class="article">
         <cms-field type="html" toolbar="Full" name="html">Lorem ipsum</cms-field>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="articleImgHtml" displayName="Article Image+Html" usage="article">
+<cms-template type="PART" dataType="HTML" name="articleImgHtml" displayName="Article Image+Html" usage="article" editable="true" dynamic="false">
     <div class="article flexRow">
         <div class="imageBox flexItemOne">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
@@ -242,20 +242,21 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="script" displayName="JavaScript" usage="all">
+<cms-template type="PART" dataType="HTML" name="script" displayName="JavaScript" usage="all" editable="true" dynamic="false">
     <cms-field type="script" name="script"/>
 </cms-template>
-<cms-template type="PART" name="articleLink" displayName="Article Line (Link)" usage="article">
+<cms-template type="PART" name="articleLink" displayName="Article Line (Link)" usage="article" editable="true" dynamic="false">
     <div class="article">
         <cms-field type="html" toolbar="Text" name="textlink"><a href="#">Lorem ipsum</a></cms-field>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="DOCCENTER" name="docCenter" displayName="Document Center" usage="article">
+<cms-template type="PART" dataType="DOCCENTER" name="docCenter" displayName="Document Center" usage="article" editable="true" dynamic="true">
     <div class="article">
         <cms-field type="html" toolbar="Text" name="textlink"><a href="#">Lorem ipsum</a></cms-field>
+        <cms-jsp url="/WEB-INF/_jsp/doccenter/doccenter.inc.jsp" />
     </div>
 </cms-template>
-<cms-template type="SNIPPET" name="searchBox" displayName="Search Box" usage="SearchBoxModule">
+<cms-template type="SNIPPET" name="searchBox" displayName="Search Box" usage="SearchBoxModule" editable="false" dynamic="false">
     <div class="searchBox flexItemOne">
         <form action="/search.srv" method="post" id="searchboxform" name="searchboxform" accept-charset="UTF-8">
             <input type="hidden" name="act" value="search"/>
@@ -264,12 +265,12 @@
         </form>
     </div>
 </cms-template>
-<cms-template type="SNIPPET" name="footer" displayName="Footer" usage="Page">
+<cms-template type="SNIPPET" name="footer" displayName="Footer" usage="Page" editable="false" dynamic="false">
     <a href="/imprint.html">
         <cms-res key="_imprint"/>
     </a>
 </cms-template>
-<cms-template type="SNIPPET" name="dialogLayer" displayName="Dialog Layer" usage="Page">
+<cms-template type="SNIPPET" name="dialogLayer" displayName="Dialog Layer" usage="Page" editable="false" dynamic="false">
     <div id="dialogLayer" class="layeroverlay dialog" data-hidden="true">
         <div class="layercontent">
             <div class="layerheadbox"><span>&nbsp;</span>
@@ -279,7 +280,7 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="SNIPPET" name="treeLayer" displayName="Tree Layer" usage="Page">
+<cms-template type="SNIPPET" name="treeLayer" displayName="Tree Layer" usage="Page" editable="false" dynamic="false">
     <div id="treeLayer" class="layeroverlay tree" data-hidden="true">
         <div class="layercontent">
             <div class="treeContainer">
@@ -295,7 +296,7 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="SNIPPET" name="browserLayer" displayName="Browser Layer" usage="Page">
+<cms-template type="SNIPPET" name="browserLayer" displayName="Browser Layer" usage="Page" editable="false" dynamic="false">
     <div id="browserLayer" class="layeroverlay browser" data-hidden="true">
         <div class="layercontent">
             <div class="layerheadbox"><span>&nbsp;</span>
@@ -305,7 +306,7 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="SNIPPET" name="browserDialogLayer" displayName="Browser Dialog Layer" usage="Page">
+<cms-template type="SNIPPET" name="browserDialogLayer" displayName="Browser Dialog Layer" usage="Page" editable="false" dynamic="false">
     <div id="browserDialogLayer" class="layeroverlay browser dialog" data-hidden="true">
         <div class="layercontent">
             <div class="layerheadbox"><span>&nbsp;</span>

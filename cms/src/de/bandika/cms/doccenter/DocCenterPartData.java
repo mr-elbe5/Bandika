@@ -8,12 +8,13 @@
  */
 package de.bandika.cms.doccenter;
 
-import de.bandika.cms.pagepart.PagePartData;
+import de.bandika.cms.pagepart.HtmlPartData;
 import de.bandika.cms.template.PartTemplateDataType;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-public class DocCenterPartData extends PagePartData {
+public class DocCenterPartData extends HtmlPartData {
 
     public final static int MODE_LIST = 0;
     public final static int MODE_EDIT = 1;
@@ -30,19 +31,9 @@ public class DocCenterPartData extends PagePartData {
         return PartTemplateDataType.DOCCENTER;
     }
 
-    protected String title = "";
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     @Override
-    public boolean executePagePartMethod(String method, HttpServletRequest request) {
-        return true;
+    public boolean executePagePartMethod(String method, HttpServletRequest request, HttpServletResponse response) throws Exception{
+        return DocCenterAction.defaultAction.execute(request, response);
     }
 
 }

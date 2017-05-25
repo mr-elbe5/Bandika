@@ -55,4 +55,13 @@ public class TagAttributes extends HashMap<String, String> implements Serializab
         return value;
     }
 
+    public boolean getBoolean(String key) {
+        boolean value = false;
+        try {
+            value = Boolean.parseBoolean(get(key));
+        } catch (Exception ignore) {
+        }
+        return value;
+    }
+
 }

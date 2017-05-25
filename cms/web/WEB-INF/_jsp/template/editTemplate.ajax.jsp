@@ -77,6 +77,22 @@
                     <input type="text" id="usage" name="usage" value="<%=StringUtil.toHtml(data.getUsage())%>" maxlength="120"/>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <label for="editable"><%=StringUtil.getHtml("_editable", locale)%>
+                    </label></td>
+                <td>
+                    <input type="checkbox" id="editable" name="editable" value="true" <%=data.isEditable() ? "checked" : ""%>/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="dynamic"><%=StringUtil.getHtml("_dynamic", locale)%>
+                    </label></td>
+                <td>
+                    <input type="checkbox" id="dynamic" name="dynamic" value="true" <%=data.isDynamic() ? "checked" : ""%>/>
+                </td>
+            </tr>
         </table>
     </fieldset>
     <div class="buttonset topspace">

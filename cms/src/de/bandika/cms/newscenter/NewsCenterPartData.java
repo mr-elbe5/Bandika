@@ -12,6 +12,7 @@ import de.bandika.cms.pagepart.PagePartData;
 import de.bandika.cms.template.PartTemplateDataType;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class NewsCenterPartData extends PagePartData {
 
@@ -31,7 +32,7 @@ public class NewsCenterPartData extends PagePartData {
     }
 
     @Override
-    public boolean executePagePartMethod(String method, HttpServletRequest request) {
+    public boolean executePagePartMethod(String method, HttpServletRequest request, HttpServletResponse response) throws Exception {
         return true;
     }
 

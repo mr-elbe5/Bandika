@@ -35,6 +35,8 @@ public class TemplateData extends BaseData implements Serializable {
     protected String displayName = "";
     protected String description = "";
     protected String usage = "";
+    protected boolean editable = false;
+    protected boolean dynamic = false;
     protected String code = "";
 
     protected List<TemplatePart> templateParts=null;
@@ -98,6 +100,22 @@ public class TemplateData extends BaseData implements Serializable {
         }
     }
 
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
+    public boolean isDynamic() {
+        return dynamic;
+    }
+
+    public void setDynamic(boolean dynamic) {
+        this.dynamic = dynamic;
+    }
+
     public String getCode() {
         return code;
     }
@@ -108,7 +126,7 @@ public class TemplateData extends BaseData implements Serializable {
 
     /****** parser part ****/
 
-    public void parseTemplate() {
+    public boolean parseTemplate() {
         try {
             if (templateParts == null)
                 templateParts = new ArrayList<>();
@@ -153,7 +171,9 @@ public class TemplateData extends BaseData implements Serializable {
         catch (ParseException e){
             templateParts.clear();
             Log.error("parse error for template "+getName(), e);
+            return false;
         }
+        return true;
     }
 
     protected TemplateTagPart getNewTemplateTagPart(TemplateTagType tagType, String content, String attributeString){

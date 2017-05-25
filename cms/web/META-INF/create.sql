@@ -125,6 +125,8 @@ CREATE TABLE t_template (
   display_name VARCHAR(100) NOT NULL DEFAULT '',
   description  VARCHAR(255) NOT NULL DEFAULT '',
   usage        VARCHAR(100) NOT NULL DEFAULT '',
+  editable     BOOLEAN      NOT NULL DEFAULT TRUE,
+  dynamic      BOOLEAN      NOT NULL DEFAULT FALSE,
   code         TEXT         NOT NULL DEFAULT '',
   CONSTRAINT t_template_pk PRIMARY KEY (name, type)
 );

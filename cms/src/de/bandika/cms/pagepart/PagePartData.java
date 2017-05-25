@@ -20,6 +20,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
@@ -213,7 +214,7 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         return true;
     }
 
-    public boolean executePagePartMethod(String method, HttpServletRequest request) {
+    public boolean executePagePartMethod(String method, HttpServletRequest request, HttpServletResponse response)  throws Exception{
         return true;
     }
 
