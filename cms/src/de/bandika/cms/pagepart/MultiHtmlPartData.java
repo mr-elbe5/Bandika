@@ -59,11 +59,11 @@ public class MultiHtmlPartData extends HtmlPartData {
     }
 
     public String getHtmlId() {
-        return getSection() + "-part-" + getId() + "." + getCurrentContentIdx();
+        return getSectionName() + "-part-" + getId() + "." + getCurrentContentIdx();
     }
 
     public String getContainerId() {
-        return getSection() + "-cntr-" + getId();
+        return getSectionName() + "-cntr-" + getId();
     }
 
     public int getCurrentContentIdx() {
@@ -146,39 +146,6 @@ public class MultiHtmlPartData extends HtmlPartData {
 
     /******************* HTML part *********************************/
 
-    private static String MULTICONTEXTCODE = "<div class=\"icn isetting\" onclick = \"return openLayerDialog('%s', '/pagepart.ajx?act=openEditMultiHtmlPartSettings&pageId=%s&sectionName=%s&partId=%s');\">%s</div>\n" +
-            "<div class=\"icn iup\" onclick = \"return linkTo('/pagepart.srv?act=setVisibleContentIdx&pageId=%s&sectionName=%s&partId=%s&dir=-1');\">%s</div>\n" +
-            "<div class=\"icn idown\" onclick = \"return linkTo('/pagepart.srv?act=setVisibleContentIdx&pageId=%s&sectionName=%s&partId=%s&dir=1');\">%s</div>\n" +
-            "<div class=\"icn inew\" onclick = \"return openLayerDialog('%s', '/pagepart.ajx?act=openAddPagePart&pageId=%s&sectionName=%s&sectionType=%s&partId=%s');\">%s</div>\n" +
-            "<div class=\"icn inew\" onclick = \"return openLayerDialog('%s', '/pagepart.ajx?act=openAddPagePart&pageId=%s&sectionName=%s&sectionType=%s&partId=%s&below=true');\">%s</div>\n" +
-            "<div class=\"icn ishare\" onclick = \"return openLayerDialog('%s', '/pagepart.ajx?act=openSharePagePart&pageId=%s&sectionName=%s&partId=%s');\">%s</div>\n" +
-            "<div class=\"icn iup\" onclick = \"return linkTo('/pagepart.srv?act=movePagePart&pageId=%s&sectionName=%s&partId=%s&dir=-1');\">%s</div>\n" +
-            "<div class=\"icn idown\" onclick = \"return linkTo('/pagepart.srv?act=movePagePart&pageId=%s&sectionName=%s&partId=%s&dir=1');\">%s</div>\n" +
-            "<div class=\"icn idelete\" onclick = \"return post2EditPageContent('/pagepart.srv?',{act:'deletePagePart',pageId:'%s',sectionName:'%s',partId:'%s'});\">%s</div>\n";
-
-    public void writeEditPartEnd(PagePartData editPagePart, String sectionName, String sectionType, int pageId, StringBuilder sb, Locale locale) {
-        boolean staticSection = sectionName.equals(PageData.STATIC_SECTION_NAME);
-        sb.append("</div>");
-        if (editPagePart == null) {
-            sb.append("<div class = \"contextMenu\">");
-            sb.append("<div class=\"icn iedit\" onclick = \"return post2EditPageContent('/pagepart.ajx?',{act:'editPagePart',pageId:'").append(pageId).append("',sectionName:'").append(sectionName).append("',partId:'").append(getId()).append("'})\">").append(getHtml("_edit", locale)).append("</div>\n");
-            if (!staticSection) {
-                sb.append(String.format(MULTICONTEXTCODE, getHtml("_settings", locale), pageId, sectionName, getId(), getHtml("_settings", locale),
-                        pageId, sectionName, getId(), getHtml("_previousContent", locale),
-                        pageId, sectionName, getId(), getHtml("_nextContent", locale),
-                        getHtml("_addPart", locale), pageId, sectionName, sectionType, getId(), getHtml("_newAbove", locale),
-                        getHtml("_addPart", locale), pageId, sectionName, sectionType, getId(), getHtml("_newBelow", locale),
-                        getHtml("_share", locale), pageId, sectionName, getId(), getHtml("_share", locale),
-                        pageId, sectionName, getId(), getHtml("_up", locale),
-                        pageId, sectionName, getId(), getHtml("_down", locale),
-                        pageId, sectionName, getId(), getHtml("_delete", locale)));
-            }
-            sb.append("</div>\n");
-        } else if (this == editPagePart) {
-            sb.append("</form>\n");
-        }
-    }
-
     public void appendLivePartHtml(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData) throws IOException {
         TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PART, getTemplateName());
         try {
@@ -197,27 +164,16 @@ public class MultiHtmlPartData extends HtmlPartData {
         }
     }
 
-    public void writeEditPartEnd(PageContext context, JspWriter writer, HttpServletRequest request, PagePartData editPagePart, String sectionName, String sectionType, int pageId, Locale locale) throws IOException {
-        boolean staticSection = sectionName.equals(PageData.STATIC_SECTION_NAME);
-        writer.write("</div>");
-        if (editPagePart == null) {
-            writer.write("<div class = \"contextMenu\">");
-            writer.write("<div class=\"icn iedit\" onclick = \"return post2EditPageContent('/pagepart.ajx?',{act:'editPagePart',pageId:'" + pageId + "',sectionName:'" + sectionName + "',partId:'" + getId() + "'})\">" + getHtml("_edit", locale) + "</div>\n");
-            if (!staticSection) {
-                writer.write(String.format(MULTICONTEXTCODE, getHtml("_settings", locale), pageId, sectionName, getId(), getHtml("_settings", locale),
-                        pageId, sectionName, getId(), getHtml("_previousContent", locale),
-                        pageId, sectionName, getId(), getHtml("_nextContent", locale),
-                        getHtml("_addPart", locale), pageId, sectionName, sectionType, getId(), getHtml("_newAbove", locale),
-                        getHtml("_addPart", locale), pageId, sectionName, sectionType, getId(), getHtml("_newBelow", locale),
-                        getHtml("_share", locale), pageId, sectionName, getId(), getHtml("_share", locale),
-                        pageId, sectionName, getId(), getHtml("_up", locale),
-                        pageId, sectionName, getId(), getHtml("_down", locale),
-                        pageId, sectionName, getId(), getHtml("_delete", locale)));
-            }
-            writer.write("</div>\n");
-        } else if (this == editPagePart) {
-            writer.write("</form>\n");
-        }
+    protected void appendContextCode(JspWriter writer, String sectionType, Locale locale) throws IOException {
+        writer.write("<div class=\"icn isetting\" onclick = \"return openLayerDialog('"+getHtml("_settings", locale)+"', '/pagepart.ajx?act=openEditMultiHtmlPartSettings&pageId="+pageId+"&sectionName="+sectionName+"&partId="+getId()+"');\">"+getHtml("_settings", locale)+"</div>\n" +
+                "<div class=\"icn iup\" onclick = \"return linkTo('/pagepart.srv?act=setVisibleContentIdx&pageId="+pageId+"&sectionName="+sectionName+"&partId="+getId()+"&dir=-1');\">"+getHtml("_previousContent", locale)+"</div>\n" +
+                "<div class=\"icn idown\" onclick = \"return linkTo('/pagepart.srv?act=setVisibleContentIdx&pageId="+pageId+"&sectionName="+sectionName+"&partId="+getId()+"&dir=1');\">"+getHtml("_nextContent", locale)+"</div>\n" +
+                "<div class=\"icn inew\" onclick = \"return openLayerDialog('"+getHtml("_addPart", locale)+"', '/pagepart.ajx?act=openAddPagePart&pageId="+pageId+"&sectionName="+sectionName+"&sectionType="+sectionType+"&partId="+getId()+"');\">"+getHtml("_newAbove", locale)+"</div>\n" +
+                "<div class=\"icn inew\" onclick = \"return openLayerDialog('"+getHtml("_addPart", locale)+"', '/pagepart.ajx?act=openAddPagePart&pageId="+pageId+"&sectionName="+sectionName+"&sectionType="+sectionType+"&partId="+getId()+"&below=true');\">"+getHtml("_newBelow", locale)+"</div>\n" +
+                "<div class=\"icn ishare\" onclick = \"return openLayerDialog('"+getHtml("_share", locale)+"', '/pagepart.ajx?act=openSharePagePart&pageId="+pageId+"&sectionName="+sectionName+"&partId="+getId()+"');\">"+getHtml("_share", locale)+"</div>\n" +
+                "<div class=\"icn iup\" onclick = \"return linkTo('/pagepart.srv?act=movePagePart&pageId="+pageId+"&sectionName="+sectionName+"&partId="+getId()+"&dir=-1');\">"+getHtml("_up", locale)+"</div>\n" +
+                "<div class=\"icn idown\" onclick = \"return linkTo('/pagepart.srv?act=movePagePart&pageId="+pageId+"&sectionName="+sectionName+"&partId="+getId()+"&dir=1');\">"+getHtml("_down", locale)+"</div>\n" +
+                "<div class=\"icn idelete\" onclick = \"return post2EditPageContent('/pagepart.srv?',{act:'deletePagePart',pageId:'"+pageId+"',sectionName:'"+sectionName+"',partId:'"+getId()+"'});\">"+getHtml("_delete", locale)+"</div>\n");
     }
 
 
@@ -264,14 +220,6 @@ public class MultiHtmlPartData extends HtmlPartData {
             if (child.getTagName().equals("script")) {
                 setScript(XmlUtil.getCData(child));
             }
-        }
-    }
-
-    /******************* search part *********************************/
-
-    public void appendSearchText(StringBuilder sb) {
-        for (PagePartContent content : contents) {
-            content.appendSearchText(sb);
         }
     }
 

@@ -19,7 +19,6 @@ import java.util.Map;
 
 public class PageData extends ResourceNode {
 
-    public static final String STATIC_SECTION_NAME = "static";
     protected String templateName = "";
     protected boolean isDefaultPage = false;
     protected Map<String, SectionData> sections = new HashMap<>();
@@ -100,16 +99,8 @@ public class PageData extends ResourceNode {
         return sections.get(sectionName);
     }
 
-    public SectionData getStaticSection() {
-        return ensureSection(PageData.STATIC_SECTION_NAME);
-    }
-
     public Map<String, SectionData> getSections() {
         return sections;
-    }
-
-    public PagePartData ensureStaticPart(String templateName, int ranking) {
-        return getStaticSection().ensurePart(templateName, ranking);
     }
 
     public void sortPageParts() {
@@ -172,12 +163,12 @@ public class PageData extends ResourceNode {
     }
 
     public void addPagePart(PagePartData part, int fromPartId, boolean below, boolean setRanking) {
-        SectionData section = getSection(part.getSection());
+        SectionData section = getSection(part.getSectionName());
         if (section == null) {
             section = new SectionData();
             section.setPageId(getId());
-            section.setName(part.getSection());
-            sections.put(part.getSection(), section);
+            section.setName(part.getSectionName());
+            sections.put(part.getSectionName(), section);
         }
         section.addPagePart(part, fromPartId, below, setRanking);
     }

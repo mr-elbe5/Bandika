@@ -130,12 +130,4 @@ public class PagePartContent extends BaseData implements XmlData {
         }
     }
 
-    /******************* search part *********************************/
-
-    public void appendSearchText(StringBuilder sb) {
-        for (Field field : fields.values()) {
-            field.appendSearchText(sb);
-        }
-    }
-
 }

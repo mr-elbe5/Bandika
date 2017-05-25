@@ -23,7 +23,6 @@ public class DocCenterPartData extends HtmlPartData {
     public final static int MODE_HISTORY_DELETE = 4;
 
     public DocCenterPartData(){
-        System.out.println("doccenter part created");
     }
 
     @Override

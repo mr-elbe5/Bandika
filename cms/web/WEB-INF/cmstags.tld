@@ -10,6 +10,29 @@
     <uri>http://java.sun.com/jsp/jstl/core</uri>
 
     <tag>
+        <name>page</name>
+        <tag-class>de.bandika.cms.tag.PageTag</tag-class>
+        <body-content>JSP</body-content>
+    </tag>
+
+    <tag>
+        <name>content</name>
+        <tag-class>de.bandika.cms.tag.ContentTag</tag-class>
+        <body-content>JSP</body-content>
+    </tag>
+
+    <tag>
+        <name>snippet</name>
+        <tag-class>de.bandika.cms.tag.SnippetTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
         <name>control</name>
         <tag-class>de.bandika.cms.tag.TemplateControlTag</tag-class>
         <body-content>JSP</body-content>
@@ -28,29 +51,6 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-    </tag>
-
-    <tag>
-        <name>snippet</name>
-        <tag-class>de.bandika.cms.tag.SnippetTag</tag-class>
-        <body-content>JSP</body-content>
-        <attribute>
-            <name>name</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-
-    <tag>
-        <name>page</name>
-        <tag-class>de.bandika.cms.tag.PageTag</tag-class>
-        <body-content>JSP</body-content>
-    </tag>
-
-    <tag>
-        <name>content</name>
-        <tag-class>de.bandika.cms.tag.ContentTag</tag-class>
-        <body-content>JSP</body-content>
     </tag>
 
 </taglib>

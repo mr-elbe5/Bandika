@@ -8,7 +8,6 @@
  */
 package de.bandika.cms.pagepart;
 
-import de.bandika.base.log.Log;
 import de.bandika.cms.application.AdminAction;
 import de.bandika.cms.page.PageBean;
 import de.bandika.cms.page.PageData;
@@ -191,7 +190,7 @@ public enum PagePartAction implements ICmsAction {
             pdata.setId(PageBean.getInstance().getNextId());
             pdata.setPageId(data.getId());
             pdata.setVersion(data.getLoadedVersion());
-            pdata.setSection(sectionName);
+            pdata.setSectionName(sectionName);
             pdata.setTemplateName(templateName);
             pdata.setNew(true);
             data.addPagePart(pdata, fromPartId, below, true);
@@ -216,7 +215,7 @@ public enum PagePartAction implements ICmsAction {
             checkObject(pdata);
             pdata.setPageId(data.getId());
             pdata.setVersion(data.getLoadedVersion());
-            pdata.setSection(sectionName);
+            pdata.setSectionName(sectionName);
             data.addPagePart(pdata, fromPartId, below, true);
             return closeLayer(request, response, "replacePageContent();");
         }
@@ -303,7 +302,7 @@ public enum PagePartAction implements ICmsAction {
             checkObject(data, pageId);
             PagePartData pdata = data.getEditPagePart();
             if (pdata != null && pdata.getTemplateName().isEmpty()) {
-                data.removePagePart(pdata.getSection(), pdata.getId());
+                data.removePagePart(pdata.getSectionName(), pdata.getId());
             }
             data.setEditPagePart(null);
             return setEditPageContentAjaxResponse(request, response, data);

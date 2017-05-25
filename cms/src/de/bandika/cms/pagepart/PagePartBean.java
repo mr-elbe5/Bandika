@@ -52,7 +52,7 @@ public class PagePartBean extends TreeBean {
                     partData.setChangeDate(rs.getTimestamp(i++));
                     partData.setPageId(pageData.getId());
                     partData.setVersion(version);
-                    partData.setSection(rs.getString(i++));
+                    partData.setSectionName(rs.getString(i++));
                     partData.setRanking(rs.getInt(i++));
                     partData.setXmlContent(rs.getString(i));
                     pageData.addPagePart(partData, -1, false, false);
@@ -83,7 +83,7 @@ public class PagePartBean extends TreeBean {
                     partData.setShared(true);
                     partData.setVersion(version);
                     partData.setShareName(rs.getString(i++));
-                    partData.setSection(rs.getString(i++));
+                    partData.setSectionName(rs.getString(i++));
                     partData.setRanking(rs.getInt(i++));
                     partData.setXmlContent(rs.getString(i));
                     page.addPagePart(partData, -1, false, false);
@@ -145,7 +145,7 @@ public class PagePartBean extends TreeBean {
                     partData.setVersion(0);
                     partData.setShared(true);
                     partData.setShareName(rs.getString(i++));
-                    partData.setSection("");
+                    partData.setSectionName("");
                     partData.setXmlContent(rs.getString(i));
                     list.add(partData);
                 }
@@ -176,7 +176,7 @@ public class PagePartBean extends TreeBean {
                     partData.setVersion(0);
                     partData.setShared(true);
                     partData.setShareName(rs.getString(i++));
-                    partData.setSection("");
+                    partData.setSectionName("");
                     partData.setXmlContent(rs.getString(i));
                 }
             }
@@ -219,7 +219,7 @@ public class PagePartBean extends TreeBean {
                 pst.setInt(i++, data.getPageId());
             }
             pst.setTimestamp(i++, data.getSqlChangeDate());
-            pst.setString(i++, data.getSection());
+            pst.setString(i++, data.getSectionName());
             pst.setInt(i++, data.getRanking());
             pst.setString(i++, data.getTemplateName());
             pst.setString(i++, data.getXmlContent());
@@ -286,7 +286,7 @@ public class PagePartBean extends TreeBean {
             pst.setInt(i++, page.getId());
             pst.setInt(i++, page.getLoadedVersion());
             pst.setTimestamp(i++, data.getSqlChangeDate());
-            pst.setString(i++, data.getSection());
+            pst.setString(i++, data.getSectionName());
             pst.setInt(i, data.getRanking());
             pst.executeUpdate();
             pst.close();

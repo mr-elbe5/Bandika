@@ -54,8 +54,8 @@ public enum TemplateTagType {
             //todo
             String templateName = attributes.getString("template");
             int idx = attributes.getInt("id");
-            PagePartData data = pageData.ensureStaticPart(templateName, idx);
-            data.appendPartHtml(context, writer, request, "", pageData);
+            //PagePartData data = pageData.ensureStaticPart(templateName, idx);
+            //data.appendPartHtml(context, writer, request, "", pageData);
         }
     },
     FIELD("field"){

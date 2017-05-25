@@ -10,12 +10,18 @@ package de.bandika.cms.pagepart;
 
 import de.bandika.base.data.BaseIdData;
 import de.bandika.base.data.XmlData;
+import de.bandika.base.log.Log;
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.field.Field;
 import de.bandika.cms.page.PageBean;
 import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.SectionData;
 import de.bandika.cms.template.PartTemplateDataType;
+import de.bandika.cms.template.TemplateCache;
+import de.bandika.cms.template.TemplateData;
+import de.bandika.cms.template.TemplateType;
+import de.bandika.servlet.SessionReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -31,7 +37,7 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
 
     protected int version = 0;
     protected int pageId = 0;
-    protected String section = "";
+    protected String sectionName = "";
     protected boolean shared = false;
     protected String shareName = "";
     protected int ranking = 0;
@@ -85,15 +91,15 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
     }
 
     public String getHtmlId() {
-        return getSection() + "-part-" + getId();
+        return getSectionName() + "-part-" + getId();
     }
 
-    public String getSection() {
-        return section;
+    public String getSectionName() {
+        return sectionName;
     }
 
-    public void setSection(String section) {
-        this.section = section;
+    public void setSectionName(String sectionName) {
+        this.sectionName = sectionName;
     }
 
     public boolean isShared() {
@@ -221,6 +227,81 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
     /******************* HTML part *********************************/
 
     public void appendPartHtml(PageContext context, JspWriter writer, HttpServletRequest request, String sectionType, PageData pageData) throws IOException {
+        if (pageData.isEditMode())
+            appendEditPartHtml(context, writer, request, sectionType, pageData);
+        else
+            appendLivePartHtml(context, writer, request, pageData);
+    }
+
+    public void appendEditPartHtml(PageContext context, JspWriter writer, HttpServletRequest request, String sectionType, PageData pageData) throws IOException {
+        Locale locale = SessionReader.getSessionLocale(request);
+        writeEditPartStart(context, writer, request, pageData.getEditPagePart(), getSectionName(), pageData.getId(), locale);
+        TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PART, getTemplateName());
+        try {
+            partTemplate.writeTemplate(context, writer, request, pageData, this);
+        } catch (Exception e) {
+            Log.error("error in part template", e);
+        }
+        writeEditPartEnd(context, writer, request, pageData.getEditPagePart(), getSectionName(), sectionType, pageData.getId(), locale);
+    }
+
+    public void appendLivePartHtml(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData) throws IOException {
+        TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PART, getTemplateName());
+        try {
+            writer.write("<div class=\"pagePart\" id=\"" + getHtmlId() + "\" >");
+            partTemplate.writeTemplate(context, writer, request, pageData, this);
+            writer.write("</div>");
+        } catch (Exception e) {
+            Log.error("error in part template", e);
+        }
+    }
+
+    protected void writeEditPartStart(PageContext context, JspWriter writer, HttpServletRequest request, PagePartData editPagePart, String sectionName, int pageId, Locale locale) throws IOException {
+        if (editPagePart == null) {
+            writer.write("<div title=\"" + StringUtil.toHtml(getTemplateName()) + "(ID=" + getId() + ") - " + StringUtil.getHtml("_rightClickEditHint") + "\" id=\"part_" + getId() + "\" class = \"pagePart viewPagePart contextSource\">\n");
+        } else if (this == editPagePart) {
+            appendEditStartCode(writer, locale);
+        } else {
+            writer.write("<div class = \"pagePart viewPagePart\">\n");
+        }
+    }
+
+    protected void appendEditStartCode(JspWriter writer, Locale locale) throws IOException {
+        writer.write("<div id=\"part_"+getId()+"\" class = \"pagePart editPagePart\">\n" +
+                "<form action = \"/pagepart.srv\" method = \"post\" id = \"partform\" name = \"partform\" accept-charset = \"UTF-8\">\n" +
+                "<input type = \"hidden\" name = \"act\" value = \"savePagePart\"/>\n" +
+                "<input type = \"hidden\" name = \"pageId\" value = \""+pageId+"\"/>\n" +
+                "<input type = \"hidden\" name = \"sectionName\" value = \""+sectionName+"\"/>\n" +
+                "<input type = \"hidden\" name = \"partId\" value = \""+getId()+"\"/>\n" +
+                "<div class = \"buttonset editSection\">\n" +
+                "<button class = \"primary icn iok\" onclick = \"evaluateEditFields();return post2EditPageContent('/pagepart.srv',$('#partform').serialize());\">"+getHtml("_ok", locale)+"</button>\n" +
+                "<button class=\"icn icancel\" onclick = \"return post2EditPageContent('/pagepart.srv',{act:'cancelEditPagePart',pageId:'"+pageId+"'});\">"+getHtml("_cancel", locale)+"</button>\n" +
+                "</div>");
+    }
+
+    public void writeEditPartEnd(PageContext context, JspWriter writer, HttpServletRequest request, PagePartData editPagePart, String sectionName, String sectionType, int pageId, Locale locale) throws IOException {
+        boolean staticSection = sectionType.equals(SectionData.TYPE_STATIC);
+        writer.write("</div>");
+        if (editPagePart == null) {
+            writer.write("<div class = \"contextMenu\">");
+            writer.write("<div class=\"icn iedit\" onclick = \"return post2EditPageContent('/pagepart.ajx?',{act:'editPagePart',pageId:'" + pageId + "',sectionName:'" + sectionName + "',partId:'" + getId() + "'})\">" + getHtml("_edit", locale) + "</div>\n");
+            if (!staticSection) {
+                appendContextCode(writer, sectionType, locale);
+            }
+            writer.write("</div>\n");
+        } else if (this == editPagePart) {
+            writer.write("</form>\n");
+        }
+    }
+
+    protected void appendContextCode(JspWriter writer, String sectionType, Locale locale) throws IOException {
+        writer.write("<div class=\"icn isetting\" onclick = \"return openLayerDialog('"+getHtml("_settings", locale)+"', '/pagepart.ajx?act=openEditHtmlPartSettings&pageId="+pageId+"&sectionName="+sectionName+"&partId="+getId()+"');\">"+getHtml("_settings", locale)+"</div>\n" +
+                "<div class=\"icn inew\" onclick = \"return openLayerDialog('"+getHtml("_addPart", locale)+"', '/pagepart.ajx?act=openAddPagePart&pageId="+pageId+"&sectionName="+sectionName+"&sectionType="+sectionType+"&partId="+getId()+"');\">"+getHtml("_newAbove", locale)+"</div>\n" +
+                "<div class=\"icn inew\" onclick = \"return openLayerDialog('"+getHtml("_addPart", locale)+"', '/pagepart.ajx?act=openAddPagePart&pageId="+pageId+"&sectionName="+sectionName+"&sectionType="+sectionType+"&partId="+getId()+"&below=true');\">"+getHtml("_newBelow", locale)+"</div>\n" +
+                "<div class=\"icn ishare\" onclick = \"return openLayerDialog('"+getHtml("_share", locale)+"', '/pagepart.ajx?act=openSharePagePart&pageId="+pageId+"&sectionName="+sectionName+"&partId="+getId()+"');\">"+getHtml("_share", locale)+"</div>\n" +
+                "<div class=\"icn iup\" onclick = \"return linkTo('/pagepart.srv?act=movePagePart&pageId="+pageId+"&sectionName="+sectionName+"&partId="+getId()+"&dir=-1');\">"+getHtml("_up", locale)+"</div>\n" +
+                "<div class=\"icn idown\" onclick = \"return linkTo('/pagepart.srv?act=movePagePart&pageId="+pageId+"&sectionName="+sectionName+"&partId="+getId()+"&dir=1');\">"+getHtml("_down", locale)+"</div>\n" +
+                "<div class=\"icn idelete\" onclick = \"return post2EditPageContent('/pagepart.srv?',{act:'deletePagePart',pageId:'"+pageId+"',sectionName:'"+sectionName+"',partId:'"+getId()+"'});\">"+getHtml("_delete", locale)+"</div>\n");
     }
 
     public String toHtml(String src) {
@@ -229,11 +310,6 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
 
     public String getHtml(String key, Locale locale) {
         return StringUtil.getHtml(key, locale);
-    }
-
-    /******************* search part *********************************/
-
-    public void appendSearchText(StringBuilder sb) {
     }
 
 }

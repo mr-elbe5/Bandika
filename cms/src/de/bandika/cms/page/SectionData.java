@@ -22,6 +22,8 @@ import java.util.*;
 
 public class SectionData {
 
+    public static final String TYPE_STATIC = "static";
+
     protected String name;
     protected String className = "";
     protected String type = "";
@@ -37,7 +39,7 @@ public class SectionData {
         for (PagePartData srcPart : data.parts) {
             PagePartData part = srcPart.getDataType().getNewPagePartData();
             part.setPageId(getPageId());
-            part.setSection(getName());
+            part.setSectionName(getName());
             part.cloneData(srcPart);
             parts.add(part);
         }
@@ -94,7 +96,7 @@ public class SectionData {
         part = template.getDataType().getNewPagePartData();
         part.setTemplateName(templateName);
         part.setId(PageBean.getInstance().getNextId());
-        part.setSection(getName());
+        part.setSectionName(getName());
         part.setRanking(ranking);
         parts.add(part);
         return part;
@@ -214,14 +216,6 @@ public class SectionData {
         }
         if (editMode) {
             writer.write("</div>");
-        }
-    }
-
-    /******************* search part *********************************/
-
-    public void appendSearchText(StringBuilder sb) {
-        for (PagePartData part : parts) {
-            part.appendSearchText(sb);
         }
     }
 

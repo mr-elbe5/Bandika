@@ -15,7 +15,7 @@ DOCCENTER
     function sendDoccenterCall(){
         $.ajax({
             type: 'POST',
-            url: '/pagepart.ajx?act=executePagePartMethod&pageId=<%=data.getId()%>&sectionName=<%=partData.getSection()%>&partId=<%=partData.getId()%>&partMethod=test',
+            url: '/pagepart.ajx?act=executePagePartMethod&pageId=<%=data.getId()%>&sectionName=<%=partData.getSectionName()%>&partId=<%=partData.getId()%>&partMethod=test',
             processData: false,
             contentType: false,
             success: function (data) {
