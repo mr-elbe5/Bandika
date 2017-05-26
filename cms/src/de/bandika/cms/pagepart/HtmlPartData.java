@@ -73,20 +73,8 @@ public class HtmlPartData extends PagePartData {
 
     /******************* XML part *********************************/
 
-    public void getXmlAttributes(Element node) {
-        super.getXmlAttributes(node);
-        setCssClass(XmlUtil.getStringAttribute(node, "cssClass"));
-
-    }
-
-    public void addXmlAttributes(Document xmlDoc, Element node) {
-        super.addXmlAttributes(xmlDoc, node);
-        XmlUtil.addAttribute(xmlDoc, node, "cssClass", StringUtil.toXml(getCssClass()));
-    }
-
     public Element toXml(Document xmlDoc, Element parentNode) {
         Element node = parentNode == null ? XmlUtil.getRootNode(xmlDoc) : XmlUtil.addNode(xmlDoc, parentNode, "part");
-        addXmlAttributes(xmlDoc, node);
         partContent.toXml(xmlDoc, node);
         return node;
     }
@@ -94,7 +82,6 @@ public class HtmlPartData extends PagePartData {
     public void fromXml(Element node) {
         if (node == null)
             return;
-        getXmlAttributes(node);
         List<Element> children = XmlUtil.getChildElements(node);
         for (Element child : children) {
             if (child.getTagName().equals("partContent")) {

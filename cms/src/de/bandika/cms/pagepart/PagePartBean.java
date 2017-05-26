@@ -47,7 +47,7 @@ public class PagePartBean extends TreeBean {
                     String templateName=rs.getString(i++);
                     PartTemplateData template= (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART,templateName);
                     partData = template.getDataType().getNewPagePartData();
-                    partData.setTemplateName(templateName);
+                    partData.setTemplateData(template);
                     partData.setId(rs.getInt(i++));
                     partData.setChangeDate(rs.getTimestamp(i++));
                     partData.setPageId(pageData.getId());
@@ -76,7 +76,7 @@ public class PagePartBean extends TreeBean {
                     String templateName=rs.getString(i++);
                     PartTemplateData template= (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART,templateName);
                     partData = template.getDataType().getNewPagePartData();
-                    partData.setTemplateName(templateName);
+                    partData.setTemplateData(template);
                     partData.setId(rs.getInt(i++));
                     partData.setChangeDate(rs.getTimestamp(i++));
                     partData.setPageId(page.getId());
@@ -138,7 +138,7 @@ public class PagePartBean extends TreeBean {
                     String templateName=rs.getString(i++);
                     PartTemplateData template= (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART,templateName);
                     partData = template.getDataType().getNewPagePartData();
-                    partData.setTemplateName(templateName);
+                    partData.setTemplateData(template);
                     partData.setId(rs.getInt(i++));
                     partData.setChangeDate(rs.getTimestamp(i++));
                     partData.setPageId(0);
@@ -169,7 +169,7 @@ public class PagePartBean extends TreeBean {
                     String templateName=rs.getString(i++);
                     PartTemplateData template= (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART,templateName);
                     partData = template.getDataType().getNewPagePartData();
-                    partData.setTemplateName(templateName);
+                    partData.setTemplateData(template);
                     partData.setId(partId);
                     partData.setChangeDate(rs.getTimestamp(i++));
                     partData.setPageId(0);

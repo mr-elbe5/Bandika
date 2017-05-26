@@ -186,12 +186,11 @@ public enum PagePartAction implements ICmsAction {
             String templateName = RequestReader.getString(request, "templateName");
             PartTemplateData template= (PartTemplateData)TemplateCache.getInstance().getTemplate(TemplateType.PART,templateName);
             PagePartData pdata = template.getDataType().getNewPagePartData();
-            pdata.setTemplateName(templateName);
+            pdata.setTemplateData(template);
             pdata.setId(PageBean.getInstance().getNextId());
             pdata.setPageId(data.getId());
             pdata.setVersion(data.getLoadedVersion());
             pdata.setSectionName(sectionName);
-            pdata.setTemplateName(templateName);
             pdata.setNew(true);
             data.addPagePart(pdata, fromPartId, below, true);
             data.setEditPagePart(pdata);

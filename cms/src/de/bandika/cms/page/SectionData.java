@@ -94,7 +94,7 @@ public class SectionData {
         }
         PartTemplateData template= (PartTemplateData)TemplateCache.getInstance().getTemplate(TemplateType.PART,templateName);
         part = template.getDataType().getNewPagePartData();
-        part.setTemplateName(templateName);
+        part.setTemplateData(template);
         part.setId(PageBean.getInstance().getNextId());
         part.setSectionName(getName());
         part.setRanking(ranking);

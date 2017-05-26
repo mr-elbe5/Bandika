@@ -42,6 +42,8 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
     protected String shareName = "";
     protected int ranking = 0;
     protected String templateName;
+    protected boolean editable = false;
+    protected boolean dynamic = false;
     protected String content = "";
     protected Set<Integer> pageIds = null;
 
@@ -59,6 +61,8 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
     public void cloneData(PagePartData data) {
         setId(PageBean.getInstance().getNextId());
         setTemplateName(data.getTemplateName());
+        setEditable((data.isEditable()));
+        setDynamic(data.isDynamic());
         content = data.content;
     }
 
@@ -134,6 +138,28 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         this.templateName = templateName;
     }
 
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
+    public boolean isDynamic() {
+        return dynamic;
+    }
+
+    public void setDynamic(boolean dynamic) {
+        this.dynamic = dynamic;
+    }
+
+    public void setTemplateData(TemplateData data){
+        setTemplateName(data.getName());
+        setEditable(data.isEditable());
+        setDynamic(data.isDynamic());
+    }
+
     public void prepareCopy(int pageId) throws Exception {
         setNew(true);
         setId(PageBean.getInstance().getNextId());
@@ -177,32 +203,12 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         fromXml(root);
     }
 
-    public void getXmlAttributes(Element node) {
-        setShared(XmlUtil.getBooleanAttribute(node, "shared"));
-        setShareName(XmlUtil.getStringAttribute(node, "shareName"));
-        setRanking(XmlUtil.getIntAttribute(node, "ranking"));
-        setTemplateName(XmlUtil.getStringAttribute(node, "templateName"));
-
-    }
-
-    public void addXmlAttributes(Document xmlDoc, Element node) {
-        XmlUtil.addBooleanAttribute(xmlDoc, node, "shared", isShared());
-        XmlUtil.addAttribute(xmlDoc, node, "dataType", getDataTypeName());
-        XmlUtil.addAttribute(xmlDoc, node, "shareName", StringUtil.toXml(getShareName()));
-        XmlUtil.addIntAttribute(xmlDoc, node, "ranking", getRanking());
-        XmlUtil.addAttribute(xmlDoc, node, "templateName", StringUtil.toXml(getTemplateName()));
-    }
-
     public Element toXml(Document xmlDoc, Element parentNode) {
         Element node = parentNode == null ? XmlUtil.getRootNode(xmlDoc) : XmlUtil.addNode(xmlDoc, parentNode, "part");
-        addXmlAttributes(xmlDoc, node);
         return node;
     }
 
     public void fromXml(Element node) {
-        if (node == null)
-            return;
-        getXmlAttributes(node);
     }
 
     public String getXmlContent() {
@@ -258,38 +264,42 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
 
     protected void writeEditPartStart(PageContext context, JspWriter writer, HttpServletRequest request, PagePartData editPagePart, String sectionName, int pageId, Locale locale) throws IOException {
         if (editPagePart == null) {
+            // nothing currently edited
             writer.write("<div title=\"" + StringUtil.toHtml(getTemplateName()) + "(ID=" + getId() + ") - " + StringUtil.getHtml("_rightClickEditHint") + "\" id=\"part_" + getId() + "\" class = \"pagePart viewPagePart contextSource\">\n");
         } else if (this == editPagePart) {
-            appendEditStartCode(writer, locale);
+            // this one currently edited
+            writer.write("<div id=\"part_"+getId()+"\" class = \"pagePart editPagePart\">\n" +
+                    "<form action = \"/pagepart.srv\" method = \"post\" id = \"partform\" name = \"partform\" accept-charset = \"UTF-8\">\n" +
+                    "<input type = \"hidden\" name = \"act\" value = \"savePagePart\"/>\n" +
+                    "<input type = \"hidden\" name = \"pageId\" value = \""+pageId+"\"/>\n" +
+                    "<input type = \"hidden\" name = \"sectionName\" value = \""+sectionName+"\"/>\n" +
+                    "<input type = \"hidden\" name = \"partId\" value = \""+getId()+"\"/>\n" +
+                    "<div class = \"buttonset editSection\">\n" +
+                    "<button class = \"primary icn iok\" onclick = \"evaluateEditFields();return post2EditPageContent('/pagepart.srv',$('#partform').serialize());\">"+getHtml("_ok", locale)+"</button>\n" +
+                    "<button class=\"icn icancel\" onclick = \"return post2EditPageContent('/pagepart.srv',{act:'cancelEditPagePart',pageId:'"+pageId+"'});\">"+getHtml("_cancel", locale)+"</button>\n" +
+                    "</div>");
         } else {
+            // some other currently edited
             writer.write("<div class = \"pagePart viewPagePart\">\n");
         }
     }
 
-    protected void appendEditStartCode(JspWriter writer, Locale locale) throws IOException {
-        writer.write("<div id=\"part_"+getId()+"\" class = \"pagePart editPagePart\">\n" +
-                "<form action = \"/pagepart.srv\" method = \"post\" id = \"partform\" name = \"partform\" accept-charset = \"UTF-8\">\n" +
-                "<input type = \"hidden\" name = \"act\" value = \"savePagePart\"/>\n" +
-                "<input type = \"hidden\" name = \"pageId\" value = \""+pageId+"\"/>\n" +
-                "<input type = \"hidden\" name = \"sectionName\" value = \""+sectionName+"\"/>\n" +
-                "<input type = \"hidden\" name = \"partId\" value = \""+getId()+"\"/>\n" +
-                "<div class = \"buttonset editSection\">\n" +
-                "<button class = \"primary icn iok\" onclick = \"evaluateEditFields();return post2EditPageContent('/pagepart.srv',$('#partform').serialize());\">"+getHtml("_ok", locale)+"</button>\n" +
-                "<button class=\"icn icancel\" onclick = \"return post2EditPageContent('/pagepart.srv',{act:'cancelEditPagePart',pageId:'"+pageId+"'});\">"+getHtml("_cancel", locale)+"</button>\n" +
-                "</div>");
-    }
-
     public void writeEditPartEnd(PageContext context, JspWriter writer, HttpServletRequest request, PagePartData editPagePart, String sectionName, String sectionType, int pageId, Locale locale) throws IOException {
         boolean staticSection = sectionType.equals(SectionData.TYPE_STATIC);
+        // end of pagePart div of any kind
         writer.write("</div>");
         if (editPagePart == null) {
+            // nothing currently edited
             writer.write("<div class = \"contextMenu\">");
-            writer.write("<div class=\"icn iedit\" onclick = \"return post2EditPageContent('/pagepart.ajx?',{act:'editPagePart',pageId:'" + pageId + "',sectionName:'" + sectionName + "',partId:'" + getId() + "'})\">" + getHtml("_edit", locale) + "</div>\n");
+            if (isEditable()) {
+                writer.write("<div class=\"icn iedit\" onclick = \"return post2EditPageContent('/pagepart.ajx?',{act:'editPagePart',pageId:'" + pageId + "',sectionName:'" + sectionName + "',partId:'" + getId() + "'})\">" + getHtml("_edit", locale) + "</div>\n");
+            }
             if (!staticSection) {
                 appendContextCode(writer, sectionType, locale);
             }
             writer.write("</div>\n");
         } else if (this == editPagePart) {
+            // this one currently edited
             writer.write("</form>\n");
         }
     }

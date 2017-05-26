@@ -179,20 +179,10 @@ public class MultiHtmlPartData extends HtmlPartData {
 
     /******************* XML part *********************************/
 
-    public void getXmlAttributes(Element node) {
-        super.getXmlAttributes(node);
-        setContainerName(XmlUtil.getStringAttribute(node, "containerName"));
-    }
-
-    public void addXmlAttributes(Document xmlDoc, Element node) {
-        super.addXmlAttributes(xmlDoc, node);
-        XmlUtil.addAttribute(xmlDoc, node, "containerName", StringUtil.toXml(getContainerName()));
-        XmlUtil.addIntAttribute(xmlDoc, node, "count", getContentCount());
-    }
-
     public Element toXml(Document xmlDoc, Element parentNode) {
         Element node = parentNode == null ? XmlUtil.getRootNode(xmlDoc) : XmlUtil.addNode(xmlDoc, parentNode, "part");
-        addXmlAttributes(xmlDoc, node);
+        XmlUtil.addAttribute(xmlDoc, node, "containerName", StringUtil.toXml(getContainerName()));
+        XmlUtil.addIntAttribute(xmlDoc, node, "count", getContentCount());
         for (int idx = 0; idx < getContentCount(); idx++) {
             PagePartContent partContent = contents[idx];
             partContent.setIdx(idx);
@@ -206,7 +196,7 @@ public class MultiHtmlPartData extends HtmlPartData {
     public void fromXml(Element node) {
         if (node == null)
             return;
-        getXmlAttributes(node);
+        setContainerName(XmlUtil.getStringAttribute(node, "containerName"));
         setContentCount(XmlUtil.getIntAttribute(node, "count"));
         List<Element> children = XmlUtil.getChildElements(node);
         for (Element child : children) {

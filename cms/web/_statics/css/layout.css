@@ -401,6 +401,12 @@ h1.topCenter {
     padding: 0;
 }
 
+.separator{
+    height: 1px;
+    margin: 10px 0;
+    border-bottom: 1px dotted #000;
+}
+
 /************ mobile part ***********/
 
 body.mobile {
