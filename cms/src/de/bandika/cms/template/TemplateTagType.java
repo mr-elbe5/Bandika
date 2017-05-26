@@ -13,7 +13,7 @@ import de.bandika.base.util.StringUtil;
 import de.bandika.cms.field.Field;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.page.SectionData;
-import de.bandika.cms.pagepart.PagePartData;
+import de.bandika.cms.page.PagePartData;
 import de.bandika.cms.templatecontrol.TemplateControl;
 import de.bandika.cms.templatecontrol.TemplateControls;
 import de.bandika.servlet.SessionReader;
@@ -78,8 +78,7 @@ public enum TemplateTagType {
             String sectionName = attributes.getString("name");
             SectionData section = pageData.getSection(sectionName);
             if (section == null) {
-                pageData.ensureSection(sectionName);
-                section = pageData.getSection(sectionName);
+                section = pageData.ensureSection(sectionName);
             }
             if (section != null) {
                 section.setClassName(attributes.getString("class"));

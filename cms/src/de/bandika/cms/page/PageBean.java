@@ -9,7 +9,6 @@
 package de.bandika.cms.page;
 
 import de.bandika.base.log.Log;
-import de.bandika.cms.pagepart.PagePartBean;
 import de.bandika.cms.tree.ResourceBean;
 
 import java.sql.Connection;

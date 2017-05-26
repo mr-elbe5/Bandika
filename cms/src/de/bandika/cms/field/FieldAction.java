@@ -12,7 +12,7 @@ import de.bandika.cms.file.FileData;
 import de.bandika.cms.site.SiteData;
 import de.bandika.cms.tree.ITreeAction;
 import de.bandika.cms.file.FileBean;
-import de.bandika.cms.pagepart.CkCallbackData;
+import de.bandika.cms.page.CkCallbackData;
 import de.bandika.rights.Right;
 import de.bandika.servlet.*;
 import de.bandika.cms.tree.TreeCache;

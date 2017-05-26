@@ -11,9 +11,9 @@ package de.bandika.cms.template;
 import de.bandika.base.log.Log;
 import de.bandika.cms.doccenter.DocCenterPartData;
 import de.bandika.cms.newscenter.NewsCenterPartData;
-import de.bandika.cms.pagepart.HtmlPartData;
-import de.bandika.cms.pagepart.MultiHtmlPartData;
-import de.bandika.cms.pagepart.PagePartData;
+import de.bandika.cms.page.HtmlPartData;
+import de.bandika.cms.page.MultiHtmlPartData;
+import de.bandika.cms.page.PagePartData;
 
 public enum PartTemplateDataType {
     DEFAULT {

@@ -7,8 +7,8 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.cms.pagepart.PagePartBean" %>
-<%@ page import="de.bandika.cms.pagepart.PagePartData" %>
+<%@ page import="de.bandika.cms.page.PagePartBean" %>
+<%@ page import="de.bandika.cms.page.PagePartData" %>
 <%@ page import="de.bandika.rights.Right" %>
 <%@ page import="de.bandika.rights.SystemZone" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
@@ -30,10 +30,10 @@
                 for (PagePartData part : parts) {
         %>
         <li>
-            <div class="contextSource icn ipart <%=partId==part.getId() ? "selected" : ""%>" onclick="$('#details').load('/pagepart.ajx?act=showSharedPartDetails&partId=<%=part.getId()%>')"><%=StringUtil.toHtml(part.getShareName())%>
+            <div class="contextSource icn ipart <%=partId==part.getId() ? "selected" : ""%>" onclick="$('#details').load('/pageadmin.ajx?act=showSharedPartDetails&partId=<%=part.getId()%>')"><%=StringUtil.toHtml(part.getShareName())%>
             </div>
             <div class="contextMenu">
-                <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteSharedPart",locale)%>', '/pagepart.ajx?act=openDeleteSharedPart&partId=<%=part.getId()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteSharedPart",locale)%>', '/pageadmin.ajx?act=openDeleteSharedPart&partId=<%=part.getId()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                 </div>
             </div>
         </li>

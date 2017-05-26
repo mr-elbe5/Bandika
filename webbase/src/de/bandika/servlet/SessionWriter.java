@@ -56,4 +56,11 @@ public final class SessionWriter {
         setSessionLocale(request, locale);
     }
 
+    public static void setEditMode(HttpServletRequest request, boolean flag){
+        if (flag)
+            setSessionObject(request, RequestStatics.KEY_EDITMODE, "true");
+        else
+            removeSessionObject(request, RequestStatics.KEY_EDITMODE);
+    }
+
 }

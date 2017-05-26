@@ -8,7 +8,7 @@
  */
 package de.bandika.cms.doccenter;
 
-import de.bandika.cms.pagepart.HtmlPartData;
+import de.bandika.cms.page.HtmlPartData;
 import de.bandika.cms.template.PartTemplateDataType;
 
 import javax.servlet.http.HttpServletRequest;

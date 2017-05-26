@@ -1,4 +1,4 @@
-package de.bandika.cms.pagepart;
+package de.bandika.cms.page;
 
 public class CkCallbackData {
 

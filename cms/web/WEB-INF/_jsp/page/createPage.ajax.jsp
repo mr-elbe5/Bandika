@@ -7,7 +7,6 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.cms.page.PageAction" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.template.TemplateCache" %>
@@ -21,10 +20,10 @@
     int siteId = RequestReader.getInt(request, "siteId");
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
-<form action="/page.srv" method="post" id="layoutform" name="layoutform" accept-charset="UTF-8">
+<form action="/pageadmin.ajx" method="post" id="layoutform" name="layoutform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="siteId" value="<%=siteId%>"/>
-        <input type="hidden" name="act" value="<%=PageAction.createPage.name()%>"/>
+        <input type="hidden" name="act" value="createPage"/>
         <table class="padded form">
             <tr>
                 <td>
@@ -71,6 +70,6 @@
     $('#layoutform').submit(function (event) {
         var $this = $(this);
         event.preventDefault();
-        post2ModalDialog('/page.ajx', $this.serialize());
+        post2ModalDialog('/pageadmin.ajx', $this.serialize());
     });
 </script>

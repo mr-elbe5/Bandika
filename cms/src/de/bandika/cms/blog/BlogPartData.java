@@ -8,7 +8,7 @@
  */
 package de.bandika.cms.blog;
 
-import de.bandika.cms.pagepart.PagePartData;
+import de.bandika.cms.page.PagePartData;
 
 public class BlogPartData extends PagePartData {
 

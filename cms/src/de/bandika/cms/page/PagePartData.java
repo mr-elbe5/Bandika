@@ -6,7 +6,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.cms.pagepart;
+package de.bandika.cms.page;
 
 import de.bandika.base.data.BaseIdData;
 import de.bandika.base.data.XmlData;
@@ -14,9 +14,6 @@ import de.bandika.base.log.Log;
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.field.Field;
-import de.bandika.cms.page.PageBean;
-import de.bandika.cms.page.PageData;
-import de.bandika.cms.page.SectionData;
 import de.bandika.cms.template.PartTemplateDataType;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
@@ -269,14 +266,14 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         } else if (this == editPagePart) {
             // this one currently edited
             writer.write("<div id=\"part_"+getId()+"\" class = \"pagePart editPagePart\">\n" +
-                    "<form action = \"/pagepart.srv\" method = \"post\" id = \"partform\" name = \"partform\" accept-charset = \"UTF-8\">\n" +
+                    "<form action = \"/pageedit.srv\" method = \"post\" id = \"partform\" name = \"partform\" accept-charset = \"UTF-8\">\n" +
                     "<input type = \"hidden\" name = \"act\" value = \"savePagePart\"/>\n" +
                     "<input type = \"hidden\" name = \"pageId\" value = \""+pageId+"\"/>\n" +
                     "<input type = \"hidden\" name = \"sectionName\" value = \""+sectionName+"\"/>\n" +
                     "<input type = \"hidden\" name = \"partId\" value = \""+getId()+"\"/>\n" +
                     "<div class = \"buttonset editSection\">\n" +
-                    "<button class = \"primary icn iok\" onclick = \"evaluateEditFields();return post2EditPageContent('/pagepart.srv',$('#partform').serialize());\">"+getHtml("_ok", locale)+"</button>\n" +
-                    "<button class=\"icn icancel\" onclick = \"return post2EditPageContent('/pagepart.srv',{act:'cancelEditPagePart',pageId:'"+pageId+"'});\">"+getHtml("_cancel", locale)+"</button>\n" +
+                    "<button class = \"primary icn iok\" onclick = \"evaluateEditFields();return post2EditPageContent('/pageedit.srv',$('#partform').serialize());\">"+getHtml("_ok", locale)+"</button>\n" +
+                    "<button class=\"icn icancel\" onclick = \"return post2EditPageContent('/pageedit.srv',{act:'cancelEditPagePart',pageId:'"+pageId+"'});\">"+getHtml("_cancel", locale)+"</button>\n" +
                     "</div>");
         } else {
             // some other currently edited
@@ -292,7 +289,7 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
             // nothing currently edited
             writer.write("<div class = \"contextMenu\">");
             if (isEditable()) {
-                writer.write("<div class=\"icn iedit\" onclick = \"return post2EditPageContent('/pagepart.ajx?',{act:'editPagePart',pageId:'" + pageId + "',sectionName:'" + sectionName + "',partId:'" + getId() + "'})\">" + getHtml("_edit", locale) + "</div>\n");
+                writer.write("<div class=\"icn iedit\" onclick = \"return post2EditPageContent('/pageedit.ajx?',{act:'editPagePart',pageId:'" + pageId + "',sectionName:'" + sectionName + "',partId:'" + getId() + "'})\">" + getHtml("_edit", locale) + "</div>\n");
             }
             if (!staticSection) {
                 appendContextCode(writer, sectionType, locale);
@@ -305,13 +302,13 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
     }
 
     protected void appendContextCode(JspWriter writer, String sectionType, Locale locale) throws IOException {
-        writer.write("<div class=\"icn isetting\" onclick = \"return openLayerDialog('"+getHtml("_settings", locale)+"', '/pagepart.ajx?act=openEditHtmlPartSettings&pageId="+pageId+"&sectionName="+sectionName+"&partId="+getId()+"');\">"+getHtml("_settings", locale)+"</div>\n" +
-                "<div class=\"icn inew\" onclick = \"return openLayerDialog('"+getHtml("_addPart", locale)+"', '/pagepart.ajx?act=openAddPagePart&pageId="+pageId+"&sectionName="+sectionName+"&sectionType="+sectionType+"&partId="+getId()+"');\">"+getHtml("_newAbove", locale)+"</div>\n" +
-                "<div class=\"icn inew\" onclick = \"return openLayerDialog('"+getHtml("_addPart", locale)+"', '/pagepart.ajx?act=openAddPagePart&pageId="+pageId+"&sectionName="+sectionName+"&sectionType="+sectionType+"&partId="+getId()+"&below=true');\">"+getHtml("_newBelow", locale)+"</div>\n" +
-                "<div class=\"icn ishare\" onclick = \"return openLayerDialog('"+getHtml("_share", locale)+"', '/pagepart.ajx?act=openSharePagePart&pageId="+pageId+"&sectionName="+sectionName+"&partId="+getId()+"');\">"+getHtml("_share", locale)+"</div>\n" +
-                "<div class=\"icn iup\" onclick = \"return linkTo('/pagepart.srv?act=movePagePart&pageId="+pageId+"&sectionName="+sectionName+"&partId="+getId()+"&dir=-1');\">"+getHtml("_up", locale)+"</div>\n" +
-                "<div class=\"icn idown\" onclick = \"return linkTo('/pagepart.srv?act=movePagePart&pageId="+pageId+"&sectionName="+sectionName+"&partId="+getId()+"&dir=1');\">"+getHtml("_down", locale)+"</div>\n" +
-                "<div class=\"icn idelete\" onclick = \"return post2EditPageContent('/pagepart.srv?',{act:'deletePagePart',pageId:'"+pageId+"',sectionName:'"+sectionName+"',partId:'"+getId()+"'});\">"+getHtml("_delete", locale)+"</div>\n");
+        writer.write("<div class=\"icn isetting\" onclick = \"return openLayerDialog('"+getHtml("_settings", locale)+"', '/pageedit.ajx?act=openEditHtmlPartSettings&pageId="+pageId+"&sectionName="+sectionName+"&partId="+getId()+"');\">"+getHtml("_settings", locale)+"</div>\n" +
+                "<div class=\"icn inew\" onclick = \"return openLayerDialog('"+getHtml("_addPart", locale)+"', '/pageedit.ajx?act=openAddPagePart&pageId="+pageId+"&sectionName="+sectionName+"&sectionType="+sectionType+"&partId="+getId()+"');\">"+getHtml("_newAbove", locale)+"</div>\n" +
+                "<div class=\"icn inew\" onclick = \"return openLayerDialog('"+getHtml("_addPart", locale)+"', '/pageedit.ajx?act=openAddPagePart&pageId="+pageId+"&sectionName="+sectionName+"&sectionType="+sectionType+"&partId="+getId()+"&below=true');\">"+getHtml("_newBelow", locale)+"</div>\n" +
+                "<div class=\"icn ishare\" onclick = \"return openLayerDialog('"+getHtml("_share", locale)+"', '/pageedit.ajx?act=openSharePagePart&pageId="+pageId+"&sectionName="+sectionName+"&partId="+getId()+"');\">"+getHtml("_share", locale)+"</div>\n" +
+                "<div class=\"icn iup\" onclick = \"return linkTo('/pageedit.ajx?act=movePagePart&pageId="+pageId+"&sectionName="+sectionName+"&partId="+getId()+"&dir=-1');\">"+getHtml("_up", locale)+"</div>\n" +
+                "<div class=\"icn idown\" onclick = \"return linkTo('/pageedit.ajx?act=movePagePart&pageId="+pageId+"&sectionName="+sectionName+"&partId="+getId()+"&dir=1');\">"+getHtml("_down", locale)+"</div>\n" +
+                "<div class=\"icn idelete\" onclick = \"return post2EditPageContent('/pageedit.ajx?',{act:'deletePagePart',pageId:'"+pageId+"',sectionName:'"+sectionName+"',partId:'"+getId()+"'});\">"+getHtml("_delete", locale)+"</div>\n");
     }
 
     public String toHtml(String src) {

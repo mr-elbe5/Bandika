@@ -12,8 +12,7 @@ import de.bandika.base.search.HtmlStripper;
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.page.PageData;
-import de.bandika.cms.pagepart.PagePartData;
-import de.bandika.cms.template.TemplateTagType;
+import de.bandika.cms.page.PagePartData;
 import de.bandika.cms.tree.TreeNode;
 import de.bandika.servlet.RequestReader;
 import de.bandika.cms.tree.TreeCache;
@@ -26,7 +25,6 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Map;
 import java.util.Set;
 
 public class HtmlField extends Field {

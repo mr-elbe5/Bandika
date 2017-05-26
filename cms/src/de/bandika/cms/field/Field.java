@@ -13,7 +13,7 @@ import de.bandika.base.data.XmlData;
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.page.PageData;
-import de.bandika.cms.pagepart.PagePartData;
+import de.bandika.cms.page.PagePartData;
 import de.bandika.util.TagAttributes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

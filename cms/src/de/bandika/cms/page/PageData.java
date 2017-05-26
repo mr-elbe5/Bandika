@@ -8,7 +8,6 @@
  */
 package de.bandika.cms.page;
 
-import de.bandika.cms.pagepart.PagePartData;
 import de.bandika.servlet.RequestReader;
 import de.bandika.cms.tree.ResourceNode;
 

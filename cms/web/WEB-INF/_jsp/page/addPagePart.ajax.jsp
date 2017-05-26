@@ -7,8 +7,8 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.cms.pagepart.PagePartBean" %>
-<%@ page import="de.bandika.cms.pagepart.PagePartData" %>
+<%@ page import="de.bandika.cms.page.PagePartBean" %>
+<%@ page import="de.bandika.cms.page.PagePartData" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.template.TemplateCache" %>
@@ -46,7 +46,7 @@
                     <% for (TemplateData tdata : templates) {%>
                     <tr>
                         <td>
-                            <a href="#" onclick="return post2ModalDialog('/pagepart.ajx', {act: 'addPagePart', pageId: '<%=pageId%>', partId: '<%=partId%>', below: '<%=below%>', sectionName: '<%=sectionName%>', templateName: '<%=tdata.getName()%>'});"><%=StringUtil.toHtml(tdata.getName())%>
+                            <a href="#" onclick="return post2ModalDialog('/pageedit.ajx', {act: 'addPagePart', pageId: '<%=pageId%>', partId: '<%=partId%>', below: '<%=below%>', sectionName: '<%=sectionName%>', templateName: '<%=tdata.getName()%>'});"><%=StringUtil.toHtml(tdata.getName())%>
                         </td>
                         <td><%=StringUtil.toHtml(tdata.getDescription())%>
                         </td>
@@ -73,7 +73,7 @@
                     <% for (PagePartData data : parts) {%>
                     <tr>
                         <td>
-                            <a href="#" onclick="return post2ModalDialog('/pagepart.ajx', {act: 'addSharedPart', pageId: '<%=pageId%>', partId: '<%=partId%>', below: '<%=below%>', sectionName: '<%=sectionName%>', sharedPartId: '<%=data.getId()%>'});"><%=StringUtil.toHtml(data.getShareName())%>
+                            <a href="#" onclick="return post2ModalDialog('/pageedit.ajx', {act: 'addSharedPart', pageId: '<%=pageId%>', partId: '<%=partId%>', below: '<%=below%>', sectionName: '<%=sectionName%>', sharedPartId: '<%=data.getId()%>'});"><%=StringUtil.toHtml(data.getShareName())%>
                         </td>
                     </tr>
                     <%}%>

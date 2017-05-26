@@ -8,16 +8,17 @@
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.cms.page.PageData" %>
-<%@ page import="de.bandika.cms.pagepart.PagePartData" %>
+<%@ page import="de.bandika.cms.page.PagePartData" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     PageData data = (PageData) SessionReader.getSessionObject(request, "pageData");
+    assert(data!=null);
     PagePartData part = data.getEditPagePart();
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
-<form action="/pagepart.srv" method="post" id="shareform" name="shareform" accept-charset="UTF-8">
+<form action="/pageedit.srv" method="post" id="shareform" name="shareform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
         <input type="hidden" name="partId" value="<%=part.getId()%>"/>
@@ -42,6 +43,6 @@
         var $this = $(this);
         event.preventDefault();
         var params = $this.serialize();
-        post2ModalDialog('/pagepart.ajx', params);
+        post2ModalDialog('/pageedit.ajx', params);
     });
 </script>

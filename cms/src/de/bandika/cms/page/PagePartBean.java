@@ -6,11 +6,9 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.cms.pagepart;
+package de.bandika.cms.page;
 
 import de.bandika.base.log.Log;
-import de.bandika.cms.page.PageData;
-import de.bandika.cms.page.SectionData;
 import de.bandika.cms.template.PartTemplateData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateType;

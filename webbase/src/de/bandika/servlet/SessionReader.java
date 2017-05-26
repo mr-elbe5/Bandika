@@ -78,4 +78,8 @@ public class SessionReader {
         UserLoginData data = getSessionLoginData(request);
         return data != null && data.checkRights() && data.getRights().hasContentRight(id, right);
     }
+
+    public static boolean isEditMode(HttpServletRequest request){
+        return getSessionObject(request, RequestStatics.KEY_EDITMODE) != null;
+    }
 }

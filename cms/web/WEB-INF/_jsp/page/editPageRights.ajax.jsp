@@ -13,11 +13,12 @@
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     PageData data = (PageData) SessionReader.getSessionObject(request, "pageData");
+    assert(data!=null);
     boolean inherited = data.inheritsRights();
     request.setAttribute("treeNode", data);
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
-<form action="/page.srv" method="post" id="pagerightsform" name="pagerightsform" accept-charset="UTF-8">
+<form action="/pageadmin.srv" method="post" id="pagerightsform" name="pagerightsform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
         <input type="hidden" name="act" value="savePageRights"/>
@@ -41,7 +42,7 @@
         var $this = $(this);
         event.preventDefault();
         var params = $this.serialize();
-        post2ModalDialog('/page.ajx', params);
+        post2ModalDialog('/pageadmin.ajx', params);
     });
 </script>
 

@@ -10,15 +10,16 @@
 <%@ page import="de.bandika.cms.page.PageData" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.pagepart.HtmlPartData" %>
+<%@ page import="de.bandika.cms.page.HtmlPartData" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     PageData data = (PageData) SessionReader.getSessionObject(request, "pageData");
+    assert(data!=null);
     HtmlPartData part = (HtmlPartData)data.getEditPagePart();
     request.setAttribute("treeNode", data);
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
-<form action="/pagepart.ajx" method="post" id="pagepartsettingsform" name="pagepartsettingsform" accept-charset="UTF-8">
+<form action="/pageedit.ajx" method="post" id="pagepartsettingsform" name="pagepartsettingsform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
         <input type="hidden" name="partId" value="<%=part.getId()%>"/>
@@ -48,7 +49,7 @@
         var $this = $(this);
         event.preventDefault();
         var params = $this.serialize();
-        post2ModalDialog('/pagepart.ajx', params);
+        post2ModalDialog('/pageedit.ajx', params);
     });
 </script>
 

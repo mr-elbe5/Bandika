@@ -1,7 +1,7 @@
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.cms.page.PageData" %>
-<%@ page import="de.bandika.cms.pagepart.PagePartData" %>
+<%@ page import="de.bandika.cms.page.PagePartData" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     PageData data = (PageData) request.getAttribute("pageData");

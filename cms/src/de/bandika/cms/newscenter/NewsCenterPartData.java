@@ -8,7 +8,7 @@
  */
 package de.bandika.cms.newscenter;
 
-import de.bandika.cms.pagepart.PagePartData;
+import de.bandika.cms.page.PagePartData;
 import de.bandika.cms.template.PartTemplateDataType;
 
 import javax.servlet.http.HttpServletRequest;

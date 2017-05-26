@@ -25,4 +25,8 @@ public interface ICmsAction extends IAction {
         return SessionReader.hasContentRight(request, id, right) || forbidden();
     }
 
+    default boolean hasAnyContentRight(HttpServletRequest request) throws Exception {
+        return SessionReader.hasAnyContentRight(request) || forbidden();
+    }
+
 }

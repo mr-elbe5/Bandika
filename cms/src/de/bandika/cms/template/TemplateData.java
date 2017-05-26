@@ -11,7 +11,7 @@ package de.bandika.cms.template;
 import de.bandika.base.data.BaseData;
 import de.bandika.base.log.Log;
 import de.bandika.cms.page.PageData;
-import de.bandika.cms.pagepart.PagePartData;
+import de.bandika.cms.page.PagePartData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;

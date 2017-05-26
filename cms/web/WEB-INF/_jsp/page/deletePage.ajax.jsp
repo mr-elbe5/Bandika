@@ -22,6 +22,6 @@
 <div class="buttonset topspace">
     <button onclick="closeLayerDialog();"><%=StringUtil.getHtml("_close", locale)%>
     </button>
-    <button class="primary" onclick="post2ModalDialog('/page.ajx', {act: 'delete', pageId: '<%=pageId%>'});"><%=StringUtil.getHtml("_delete", locale)%>
+    <button class="primary" onclick="post2ModalDialog('/pageadmin.ajx', {act: 'deletePage', pageId: '<%=pageId%>'});"><%=StringUtil.getHtml("_delete", locale)%>
     </button>
 </div>

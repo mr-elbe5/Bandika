@@ -9,7 +9,7 @@
 package de.bandika.cms.template;
 
 import de.bandika.cms.page.PageData;
-import de.bandika.cms.pagepart.PagePartData;
+import de.bandika.cms.page.PagePartData;
 import de.bandika.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
