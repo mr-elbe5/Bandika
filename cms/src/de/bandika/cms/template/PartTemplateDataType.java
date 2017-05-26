@@ -17,39 +17,34 @@ import de.bandika.cms.page.PagePartData;
 
 public enum PartTemplateDataType {
     DEFAULT {
-        public PagePartData getNewPagePartData(){
+        public PagePartData getNewPagePartData() {
             return HTML.getNewPagePartData();
         }
-    },
-    HTML{
-        public PagePartData getNewPagePartData(){
+    }, HTML {
+        public PagePartData getNewPagePartData() {
             return new HtmlPartData();
         }
-    },
-    MULTIHTML{
-        public PagePartData getNewPagePartData(){
+    }, MULTIHTML {
+        public PagePartData getNewPagePartData() {
             return new MultiHtmlPartData();
         }
-    },
-    DOCCENTER {
-        public PagePartData getNewPagePartData(){
+    }, DOCCENTER {
+        public PagePartData getNewPagePartData() {
             return new DocCenterPartData();
         }
-    },
-    NEWSCENTER {
-        public PagePartData getNewPagePartData(){
+    }, NEWSCENTER {
+        public PagePartData getNewPagePartData() {
             return new NewsCenterPartData();
         }
     };
 
     public abstract PagePartData getNewPagePartData();
 
-    public static PartTemplateDataType getPageTemplateDataType(String dataTypeName){
+    public static PartTemplateDataType getPageTemplateDataType(String dataTypeName) {
         try {
             return valueOf(dataTypeName);
-        }
-        catch (Exception e){
-            Log.warn("no valid page part data type: "+dataTypeName);
+        } catch (Exception e) {
+            Log.warn("no valid page part data type: " + dataTypeName);
             return DEFAULT;
         }
     }

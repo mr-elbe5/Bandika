@@ -70,6 +70,59 @@ public class FileBean extends ResourceBean {
         return list;
     }
 
+    public FileData getFile(int id, int version, boolean withBytes) {
+        FileData data = null;
+        Connection con = null;
+        PreparedStatement pst = null;
+        try {
+            con = getConnection();
+            pst = con.prepareStatement("SELECT t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
+                "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
+                "t2.keywords,t2.published_version,t2.draft_version,t3.media_type " +
+                "FROM t_treenode t1, t_resource t2, t_file t3 " +
+                "WHERE t1.id=? AND t2.id=? AND t3.id=? "
+            );
+            pst.setInt(1, id);
+            pst.setInt(2, id);
+            pst.setInt(3, id);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    int i = 1;
+                    data = new FileData();
+                    data.setId(id);
+                    data.setCreationDate(rs.getTimestamp(i++));
+                    data.setChangeDate(rs.getTimestamp(i++));
+                    data.setParentId(rs.getInt(i++));
+                    data.setRanking(rs.getInt(i++));
+                    data.setName(rs.getString(i++));
+                    data.setDisplayName(rs.getString(i++));
+                    data.setDescription(rs.getString(i++));
+                    data.setAuthorName(rs.getString(i++));
+                    data.setInNavigation(rs.getBoolean(i++));
+                    data.setAnonymous(rs.getBoolean(i++));
+                    data.setInheritsRights(rs.getBoolean(i++));
+                    data.setKeywords(rs.getString(i++));
+                    data.setPublishedVersion(rs.getInt(i++));
+                    data.setDraftVersion(rs.getInt(i++));
+                    data.setMediaType(rs.getString(i));
+                    if (!data.inheritsRights()) {
+                        data.setRights(getTreeNodeRights(con, data.getId()));
+                    }
+                    if (withBytes)
+                        loadFileContentWithBytes(data, version);
+                    else
+                        loadFileContent(data, version);
+                }
+            }
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+        return data;
+    }
+
     public BinaryFileData getBinaryPreview(int id, int version, boolean publishedVersion) {
         if (PreviewCache.getInstance().getMaxCount() == 0 || !publishedVersion) {
             try {

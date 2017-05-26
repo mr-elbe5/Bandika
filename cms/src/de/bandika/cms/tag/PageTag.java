@@ -24,7 +24,7 @@ public class PageTag extends BaseTag {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
             PageData pageData = (PageData) request.getAttribute("pageData");
-            String templateName=TreeCache.getInstance().getSite(pageData.getParentId()).getTemplateName();
+            String templateName = TreeCache.getInstance().getSite(pageData.getParentId()).getTemplateName();
             TemplateData masterTemplate = TemplateCache.getInstance().getTemplate(TemplateType.MASTER, templateName);
             try {
                 masterTemplate.writeTemplate(context, getWriter(), request, pageData, null);

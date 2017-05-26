@@ -9,9 +9,11 @@
 package de.bandika.cms.page;
 
 import de.bandika.cms.tree.ITreeAction;
-import de.bandika.rights.Right;
-import de.bandika.servlet.*;
 import de.bandika.cms.tree.TreeCache;
+import de.bandika.rights.Right;
+import de.bandika.servlet.ActionDispatcher;
+import de.bandika.servlet.RequestReader;
+import de.bandika.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,34 +31,50 @@ public enum PageAction implements ITreeAction {
      * shows a page
      */
     show {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    PageData data;
-                    int pageId = RequestReader.getInt(request, "pageId");
-                    TreeCache tc = TreeCache.getInstance();
-                    if (pageId == 0) {
-                        String url = request.getRequestURI();
-                        data = tc.getPage(url);
-                    } else {
-                        data = tc.getPage(pageId);
-                    }
-                    checkObject(data);
-                    request.setAttribute("pageId", Integer.toString(data.getId()));
-                    int pageVersion = data.getVersionForUser(request);
-                    if (pageVersion == data.getPublishedVersion()) {
-                        if (!data.isLoaded()) {
-                            PageBean.getInstance().loadPageContent(data, pageVersion);
-                        }
-                    } else {
-                        data = getPageCopy(data, pageVersion);
-                    }
-                    if (!data.isAnonymous() && !SessionReader.hasContentRight(request, pageId, Right.READ)) {
-                        return forbidden();
-                    }
-                    return setPageResponse(request, response, data);
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                PageData data;
+                int pageId = RequestReader.getInt(request, "pageId");
+                TreeCache tc = TreeCache.getInstance();
+                if (pageId == 0) {
+                    String url = request.getRequestURI();
+                    data = tc.getPage(url);
+                } else {
+                    data = tc.getPage(pageId);
                 }
-            };
-
+                checkObject(data);
+                if (!data.isAnonymous() && !SessionReader.hasContentRight(request, pageId, Right.READ)) {
+                    return forbidden();
+                }
+                request.setAttribute("pageId", Integer.toString(data.getId()));
+                int pageVersion = data.getVersionForUser(request);
+                if (pageVersion == data.getPublishedVersion()) {
+                    assert (data.isPublishedLoaded());
+                } else {
+                    data = PageBean.getInstance().getPage(pageId, pageVersion);
+                }
+                return setPageResponse(request, response, data);
+            }
+        }, /**
+     * executes a method within the page part
+     */
+    executePagePartMethod {
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                int pageId = RequestReader.getInt(request, "pageId");
+                int partId = RequestReader.getInt(request, "partId");
+                String sectionName = RequestReader.getString(request, "sectionName");
+                String partMethod = RequestReader.getString(request, "partMethod");
+                PageData data = TreeCache.getInstance().getPage(pageId);
+                if (!data.isAnonymous() && !SessionReader.hasContentRight(request, pageId, Right.READ)) {
+                    return forbidden();
+                }
+                if (!data.isPublishedLoaded())
+                    return false;
+                PagePartData pdata = data.getPagePart(sectionName, partId);
+                return pdata != null && pdata.executePagePartMethod(partMethod, request, response);
+            }
+        };
 
     public static final String KEY = "page";
 
@@ -67,13 +85,6 @@ public enum PageAction implements ITreeAction {
     @Override
     public String getKey() {
         return KEY;
-    }
-
-    protected PageData getPageCopy(PageData source, int version) {
-        PageData data = new PageData();
-        data.copy(source);
-        PageBean.getInstance().loadPageContent(data, version);
-        return data;
     }
 
     protected boolean setPageResponse(HttpServletRequest request, HttpServletResponse response, PageData data) {

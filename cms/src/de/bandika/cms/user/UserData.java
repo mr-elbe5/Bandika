@@ -132,7 +132,6 @@ public class UserData extends UserLoginData {
         this.portrait = portrait;
     }
 
-
     public Set<Integer> getGroupIds() {
         return groupIds;
     }
@@ -165,7 +164,7 @@ public class UserData extends UserLoginData {
         setNotes(RequestReader.getString(request, "notes"));
         BinaryFileData file = RequestReader.getFile(request, "portrait");
         if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringUtil.isNullOrEmpty(file.getContentType())) {
-            try{
+            try {
                 BufferedImage source = ImageUtil.createImage(file.getBytes(), file.getContentType());
                 if (source != null) {
                     float factor = ImageUtil.getResizeFactor(source, MAX_PORTRAIT_WIDTH, MAX_PORTRAIT_HEIGHT);
@@ -181,8 +180,7 @@ public class UserData extends UserLoginData {
                     setPortrait(bout.toByteArray());
                     setPortraitName(file.getFileName());
                 }
-            }
-            catch (IOException e){
+            } catch (IOException e) {
                 Log.error("could not create portrait", e);
             }
         }

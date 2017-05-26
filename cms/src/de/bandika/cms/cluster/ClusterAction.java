@@ -32,76 +32,76 @@ public enum ClusterAction implements ICmsAction {
      * shows current settings of the cluster
      */
     showClusterDetails {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                        return false;
-                    return showClusterDetails(request, response);
-                }
-            }, /**
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                    return false;
+                return showClusterDetails(request, response);
+            }
+        }, /**
      * opens dialog with cluster state
      */
     openViewCluster {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                        return false;
-                    return showCluster(request, response);
-                }
-            }, /**
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                    return false;
+                return showCluster(request, response);
+            }
+        }, /**
      * reloads cluster information mailFrom database
      */
     reloadCluster {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                        return false;
-                    boolean active = ClusterManager.getInstance().isInCluster();
-                    ClusterManager.getInstance().loadSelf();
-                    ClusterManager.getInstance().loadOtherServers();
-                    ClusterManager.getInstance().setBeingCluster();
-                    if (active != ClusterManager.getInstance().isInCluster()) {
-                        if (ClusterManager.getInstance().isInCluster()) {
-                            Log.log("joining cluster...");
-                            ClusterManager.getInstance().startNewListener();
-                            RequestWriter.setMessageKey(request, "_clusterJoined");
-                        } else {
-                            Log.log("not joining cluster");
-                            ClusterManager.getInstance().masterAddress = ClusterManager.getInstance().self.getAddress();
-                            RequestError.setError(request, new RequestError("_clusterNotJoined"));
-                        }
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                    return false;
+                boolean active = ClusterManager.getInstance().isInCluster();
+                ClusterManager.getInstance().loadSelf();
+                ClusterManager.getInstance().loadOtherServers();
+                ClusterManager.getInstance().setBeingCluster();
+                if (active != ClusterManager.getInstance().isInCluster()) {
+                    if (ClusterManager.getInstance().isInCluster()) {
+                        Log.log("joining cluster...");
+                        ClusterManager.getInstance().startNewListener();
+                        RequestWriter.setMessageKey(request, "_clusterJoined");
+                    } else {
+                        Log.log("not joining cluster");
+                        ClusterManager.getInstance().masterAddress = ClusterManager.getInstance().self.getAddress();
+                        RequestError.setError(request, new RequestError("_clusterNotJoined"));
                     }
-                    return showCluster(request, response);
                 }
-            }, /**
+                return showCluster(request, response);
+            }
+        }, /**
      * activates server as part of the cluster
      */
     activateSelf {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                        return false;
-                    if (ClusterManager.getInstance().self.isActive())
-                        return showCluster(request, response);
-                    ClusterBean.getInstance().activateServer(ClusterManager.getInstance().self.getAddress(), true);
-                    RequestWriter.setMessageKey(request, "_serverActivated");
-                    return reloadCluster.execute(request, response);
-                }
-            }, /**
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                    return false;
+                if (ClusterManager.getInstance().self.isActive())
+                    return showCluster(request, response);
+                ClusterBean.getInstance().activateServer(ClusterManager.getInstance().self.getAddress(), true);
+                RequestWriter.setMessageKey(request, "_serverActivated");
+                return reloadCluster.execute(request, response);
+            }
+        }, /**
      * deactivates server mailFrom being part of the cluster
      */
     deactivateSelf {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                        return false;
-                    if (!ClusterManager.getInstance().self.isActive())
-                        return showCluster(request, response);
-                    ClusterBean.getInstance().activateServer(ClusterManager.getInstance().self.getAddress(), false);
-                    RequestWriter.setMessageKey(request, "_serverDeactivated");
-                    return reloadCluster.execute(request, response);
-                }
-            };
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                    return false;
+                if (!ClusterManager.getInstance().self.isActive())
+                    return showCluster(request, response);
+                ClusterBean.getInstance().activateServer(ClusterManager.getInstance().self.getAddress(), false);
+                RequestWriter.setMessageKey(request, "_serverDeactivated");
+                return reloadCluster.execute(request, response);
+            }
+        };
 
     public static final String KEY = "cluster";
 

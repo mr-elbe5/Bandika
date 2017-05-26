@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 public class NewsCenterPartData extends PagePartData {
 
     @Override
-    public PartTemplateDataType getDataType(){
+    public PartTemplateDataType getDataType() {
         return PartTemplateDataType.NEWSCENTER;
     }
 

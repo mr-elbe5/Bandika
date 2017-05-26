@@ -8,7 +8,10 @@
  */
 package de.bandika.cms.tree;
 
-import de.bandika.servlet.*;
+import de.bandika.servlet.ActionDispatcher;
+import de.bandika.servlet.IAction;
+import de.bandika.servlet.RequestStatics;
+import de.bandika.servlet.SessionReader;
 import de.bandika.user.LoginAction;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,20 +30,20 @@ public enum TreeAction implements IAction {
      * show content tree in tree layer
      */
     openTree {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!SessionReader.isLoggedIn(request)) {
-                if (!isAjaxRequest(request)) {
-                    return LoginAction.openLogin.execute(request, response);
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!SessionReader.isLoggedIn(request)) {
+                    if (!isAjaxRequest(request)) {
+                        return LoginAction.openLogin.execute(request, response);
+                    }
+                    return forbidden();
+                }
+                if (SessionReader.hasAnySystemRight(request)) {
+                    return showTree(request, response, "");
                 }
                 return forbidden();
             }
-            if (SessionReader.hasAnySystemRight(request)) {
-                return showTree(request, response, "");
-            }
-            return forbidden();
-        }
-    };
+        };
 
     public static final String KEY = "tree";
 

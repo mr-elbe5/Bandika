@@ -16,23 +16,23 @@ import java.util.Locale;
 
 public class FileSearchData extends ContentSearchData {
 
-    public static final String TYPE="file";
+    public static final String TYPE = "file";
 
     public String getIconSpan(Locale locale) {
         return "<span class=\"icn ifile\" title=\"" + StringUtil.getHtml("_file", locale) + "\"></span>";
     }
 
-    public String getInfoSpan(Locale locale){
-        return "<span class=\"searchInfo\"><a class=\"icn iinfo\" href=\"\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_file",locale) + "', '/search.ajx?act=showFileSearchDetails&fileId=" + getId() + "');\">&nbsp;</a></span>";
+    public String getInfoSpan(Locale locale) {
+        return "<span class=\"searchInfo\"><a class=\"icn iinfo\" href=\"\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_file", locale) + "', '/search.ajx?act=showFileSearchDetails&fileId=" + getId() + "');\">&nbsp;</a></span>";
     }
 
     public String getNameSpan(Locale locale) {
         if (getUrl().isEmpty())
             return "<span>" + getNameContext() + "</span>";
-        return "<span><a href=\"" + getUrl() + "\" target=\"_blank\" title=\""+StringUtil.getHtml("_show",locale) + "\">" + getNameContext() + "</a></span>";
+        return "<span><a href=\"" + getUrl() + "\" target=\"_blank\" title=\"" + StringUtil.getHtml("_show", locale) + "\">" + getNameContext() + "</a></span>";
     }
 
-    public String getType(){
+    public String getType() {
         return TYPE;
     }
 

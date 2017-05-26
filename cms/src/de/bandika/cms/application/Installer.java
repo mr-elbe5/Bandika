@@ -8,9 +8,9 @@
  */
 package de.bandika.cms.application;
 
+import de.bandika.cms.user.UserBean;
 import de.bandika.database.DbConnector;
 import de.bandika.database.DbCreator;
-import de.bandika.cms.user.UserBean;
 
 public class Installer {
 

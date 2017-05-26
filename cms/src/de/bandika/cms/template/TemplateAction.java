@@ -34,129 +34,129 @@ public enum TemplateAction implements ICmsAction {
      * opens dialog for importing templates
      */
     openImportTemplates {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
-                        return false;
-                    return showImportTemplates(request, response);
-                }
-            }, /**
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
+                    return false;
+                return showImportTemplates(request, response);
+            }
+        }, /**
      * imports template to database
      */
     importTemplates {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
-                        return false;
-                    String html = "";
-                    BinaryFileData file = RequestReader.getFile(request, "file");
-                    if (file != null && file.getBytes() != null) {
-                        html = new String(file.getBytes());
-                    }
-                    if (!importTemplates(html)) {
-                        addError(request, "could not import templates");
-                        return showImportTemplates(request, response);
-                    }
-                    TemplateCache.getInstance().setDirty();
-                    return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_templatesImported");
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
+                    return false;
+                String html = "";
+                BinaryFileData file = RequestReader.getFile(request, "file");
+                if (file != null && file.getBytes() != null) {
+                    html = new String(file.getBytes());
                 }
-            }, /**
+                if (!importTemplates(html)) {
+                    addError(request, "could not import templates");
+                    return showImportTemplates(request, response);
+                }
+                TemplateCache.getInstance().setDirty();
+                return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_templatesImported");
+            }
+        }, /**
      * opens dialog for creating a new template
      */
     openCreateTemplate {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
-                        return false;
-                    TemplateType type = TemplateType.valueOf(RequestReader.getString(request, "templateType"));
-                    TemplateData data = type.getNewTemplateData();
-                    data.setDataTypeName(RequestReader.getString(request, "dataType"));
-                    data.setNew(true);
-                    data.prepareEditing();
-                    SessionWriter.setSessionObject(request, "templateData", data);
-                    return showEditTemplate(request, response);
-                }
-            }, /**
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
+                    return false;
+                TemplateType type = TemplateType.valueOf(RequestReader.getString(request, "templateType"));
+                TemplateData data = type.getNewTemplateData();
+                data.setDataTypeName(RequestReader.getString(request, "dataType"));
+                data.setNew(true);
+                data.prepareEditing();
+                SessionWriter.setSessionObject(request, "templateData", data);
+                return showEditTemplate(request, response);
+            }
+        }, /**
      * shows template properties
      */
     showTemplateDetails {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
-                        return false;
-                    return showTemplateDetails(request, response);
-                }
-            }, /**
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
+                    return false;
+                return showTemplateDetails(request, response);
+            }
+        }, /**
      * opens dialog for editing a template
      */
     openEditTemplate {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
-                        return false;
-                    TemplateType templateType = TemplateType.valueOf(RequestReader.getString(request, "templateType"));
-                    String templateName = RequestReader.getString(request, "templateName");
-                    TemplateData data = TemplateCache.getInstance().getTemplate(templateType, templateName);
-                    if (data == null) {
-                        return false;
-                    }
-                    data.prepareEditing();
-                    SessionWriter.setSessionObject(request, "templateData", data);
-                    return showEditTemplate(request, response);
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
+                    return false;
+                TemplateType templateType = TemplateType.valueOf(RequestReader.getString(request, "templateType"));
+                String templateName = RequestReader.getString(request, "templateName");
+                TemplateData data = TemplateCache.getInstance().getTemplate(templateType, templateName);
+                if (data == null) {
+                    return false;
                 }
-            }, /**
+                data.prepareEditing();
+                SessionWriter.setSessionObject(request, "templateData", data);
+                return showEditTemplate(request, response);
+            }
+        }, /**
      * saves template to database
      */
     saveTemplate {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
-                        return false;
-                    TemplateData data = (TemplateData) getSessionObject(request, "templateData");
-                    if (data.isNew())
-                        data.setName(RequestReader.getString(request, "name"));
-                    data.setDisplayName(RequestReader.getString(request, "displayName"));
-                    data.setDescription(RequestReader.getString(request, "description"));
-                    data.setCode(RequestReader.getString(request, "code"));
-                    data.setUsage(RequestReader.getString(request, "usage"));
-                    data.setEditable(RequestReader.getBoolean(request, "editable"));
-                    data.setDynamic(RequestReader.getBoolean(request, "dynamic"));
-                    if (!isDataComplete(data, request)) {
-                        return showEditTemplate(request, response);
-                    }
-                    if (!data.parseTemplate()){
-                        return showEditTemplate(request, response);
-                    }
-                    TemplateBean.getInstance().saveTemplate(data, true);
-                    TemplateCache.getInstance().setDirty();
-                    return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&templateType=" + data.getType().name() + "&templateName=" + data.getName(), "_templateSaved");
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
+                    return false;
+                TemplateData data = (TemplateData) getSessionObject(request, "templateData");
+                if (data.isNew())
+                    data.setName(RequestReader.getString(request, "name"));
+                data.setDisplayName(RequestReader.getString(request, "displayName"));
+                data.setDescription(RequestReader.getString(request, "description"));
+                data.setCode(RequestReader.getString(request, "code"));
+                data.setUsage(RequestReader.getString(request, "usage"));
+                data.setEditable(RequestReader.getBoolean(request, "editable"));
+                data.setDynamic(RequestReader.getBoolean(request, "dynamic"));
+                if (!isDataComplete(data, request)) {
+                    return showEditTemplate(request, response);
                 }
-            }, /**
+                if (!data.parseTemplate()) {
+                    return showEditTemplate(request, response);
+                }
+                TemplateBean.getInstance().saveTemplate(data, true);
+                TemplateCache.getInstance().setDirty();
+                return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&templateType=" + data.getType().name() + "&templateName=" + data.getName(), "_templateSaved");
+            }
+        }, /**
      * opens dialog for deleting a master template
      */
     openDeleteTemplate {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
-                        return false;
-                    return showDeleteTemplate(request, response);
-                }
-            }, /**
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
+                    return false;
+                return showDeleteTemplate(request, response);
+            }
+        }, /**
      * deletes master template mailFrom database
      */
     deleteTemplate {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
-                        return false;
-                    TemplateType templateType = TemplateType.valueOf(RequestReader.getString(request, "templateType"));
-                    String templateName = RequestReader.getString(request, "templateName");
-                    if (!TemplateBean.getInstance().deleteTemplate(templateName, templateType))
-                        return false;
-                    TemplateCache.getInstance().setDirty();
-                    return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_templateDeleted");
-                }
-            };
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
+                    return false;
+                TemplateType templateType = TemplateType.valueOf(RequestReader.getString(request, "templateType"));
+                String templateName = RequestReader.getString(request, "templateName");
+                if (!TemplateBean.getInstance().deleteTemplate(templateName, templateType))
+                    return false;
+                TemplateCache.getInstance().setDirty();
+                return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_templateDeleted");
+            }
+        };
 
     public static final String KEY = "template";
 

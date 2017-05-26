@@ -1,12 +1,8 @@
 package de.bandika.cms.tree;
 
-import de.bandika.base.util.StringUtil;
-import de.bandika.base.util.XmlUtil;
 import de.bandika.rights.Right;
 import de.bandika.servlet.RequestReader;
 import de.bandika.servlet.SessionReader;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -74,6 +70,10 @@ public abstract class ResourceNode extends TreeNode {
         return loadedVersion != 0;
     }
 
+    public boolean isPublishedLoaded() {
+        return loadedVersion == publishedVersion;
+    }
+
     public void setContentChanged() {
         this.contentChanged = true;
     }
@@ -110,7 +110,7 @@ public abstract class ResourceNode extends TreeNode {
     }
 
     public int getVersionForUser(HttpServletRequest request) {
-        if (SessionReader.hasContentRight(request, getId(), Right.EDIT)) {
+        if (SessionReader.isEditMode(request) && SessionReader.hasContentRight(request, getId(), Right.EDIT)) {
             return Math.max(draftVersion, publishedVersion);
         }
         return publishedVersion;

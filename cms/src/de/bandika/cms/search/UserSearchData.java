@@ -19,11 +19,11 @@ import org.apache.lucene.search.highlight.QueryScorer;
 
 import java.util.Locale;
 
-public class UserSearchData extends SearchData{
+public class UserSearchData extends SearchData {
 
-    public static final String TYPE="user";
+    public static final String TYPE = "user";
 
-    public String getType(){
+    public String getType() {
         return TYPE;
     }
 
@@ -31,8 +31,8 @@ public class UserSearchData extends SearchData{
         return "<span class=\"icn iuser\" title=\"" + StringUtil.getHtml("_user", locale) + "\"></span>";
     }
 
-    public String getInfoSpan(Locale locale){
-        return "<span class=\"searchInfo\"><a class=\"icn iinfo\" href=\"\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_user",locale) + "', '/search.ajx?act=showUserSearchDetails&userId=" + getId() + "');\">&nbsp;</a></span>";
+    public String getInfoSpan(Locale locale) {
+        return "<span class=\"searchInfo\"><a class=\"icn iinfo\" href=\"\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_user", locale) + "', '/search.ajx?act=showUserSearchDetails&userId=" + getId() + "');\">&nbsp;</a></span>";
     }
 
     public void setDoc() {

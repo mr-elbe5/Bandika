@@ -19,6 +19,6 @@ import java.io.Serializable;
 
 public abstract class TemplatePart implements Serializable {
 
-    public abstract void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData)  throws IOException;
+    public abstract void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException;
 
 }

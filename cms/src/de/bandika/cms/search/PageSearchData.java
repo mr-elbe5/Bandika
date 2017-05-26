@@ -16,17 +16,17 @@ import java.util.Locale;
 
 public class PageSearchData extends ContentSearchData {
 
-    public static final String TYPE="page";
+    public static final String TYPE = "page";
 
     public String getIconSpan(Locale locale) {
         return "<span class=\"icn ipage\" title=\"" + StringUtil.getHtml("_page", locale) + "\"></span>";
     }
 
-    public String getInfoSpan(Locale locale){
-        return "<span class=\"searchInfo\"><a class=\"icn iinfo\" href=\"\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_page",locale) + "', '/search.ajx?act=showPageSearchDetails&pageId=" + getId() + "');\">&nbsp;</a></span>";
+    public String getInfoSpan(Locale locale) {
+        return "<span class=\"searchInfo\"><a class=\"icn iinfo\" href=\"\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_page", locale) + "', '/search.ajx?act=showPageSearchDetails&pageId=" + getId() + "');\">&nbsp;</a></span>";
     }
 
-    public String getType(){
+    public String getType() {
         return TYPE;
     }
 

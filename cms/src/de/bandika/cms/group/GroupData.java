@@ -9,19 +9,18 @@
 package de.bandika.cms.group;
 
 import de.bandika.base.data.BaseIdData;
-import de.bandika.base.util.StringUtil;
-import de.bandika.base.util.XmlUtil;
-import de.bandika.rights.Right;
 import de.bandika.cms.rights.CmsRightBean;
+import de.bandika.cms.user.UserData;
+import de.bandika.rights.Right;
 import de.bandika.rights.RightsCache;
 import de.bandika.rights.SystemZone;
 import de.bandika.servlet.RequestReader;
-import de.bandika.cms.user.UserData;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * Class GroupData is the data class for user groups. <br>

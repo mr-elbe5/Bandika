@@ -9,7 +9,9 @@
 package de.bandika.cms.page;
 
 import de.bandika.base.util.StringUtil;
-import de.bandika.cms.template.*;
+import de.bandika.cms.template.PartTemplateData;
+import de.bandika.cms.template.TemplateCache;
+import de.bandika.cms.template.TemplateType;
 import de.bandika.servlet.SessionReader;
 import de.bandika.util.TagAttributes;
 
@@ -91,7 +93,7 @@ public class SectionData {
                 return ppd;
             }
         }
-        PartTemplateData template= (PartTemplateData)TemplateCache.getInstance().getTemplate(TemplateType.PART,templateName);
+        PartTemplateData template = (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART, templateName);
         part = template.getDataType().getNewPagePartData();
         part.setTemplateData(template);
         part.setId(PageBean.getInstance().getNextId());
@@ -200,7 +202,7 @@ public class SectionData {
         if (editMode) {
             writer.write("<div class = \"editSection\">");
             if (hasParts) {
-                writer.write("<div class = \"editSectionHeader\">Section " + getName()+ "</div>");
+                writer.write("<div class = \"editSectionHeader\">Section " + getName() + "</div>");
             } else {
                 writer.write("<div class = \"editSectionHeader empty contextSource\" title=\"" + StringUtil.getHtml("_rightClickEditHint") + "\">Section " + getName() + "</div>");
                 writer.write("<div class = \"contextMenu\"><div class=\"icn inew\" onclick = \"return openLayerDialog('" + StringUtil.getHtml("_addPart", locale) + "', '/pageedit.ajx?act=openAddPagePart&pageId=" + pageData.getId() + "&sectionName=" + getName() + "&sectionType=" + attributes.getString("type") + "&partId=-1');\">" + StringUtil.getHtml("_new", locale) + "\n</div>\n</div>");

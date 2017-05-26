@@ -9,9 +9,9 @@
 package de.bandika.cms.tree;
 
 import de.bandika.base.log.Log;
+import de.bandika.cms.rights.CmsRightBean;
 import de.bandika.database.DbBean;
 import de.bandika.rights.Right;
-import de.bandika.cms.rights.CmsRightBean;
 
 import java.sql.*;
 import java.util.HashMap;

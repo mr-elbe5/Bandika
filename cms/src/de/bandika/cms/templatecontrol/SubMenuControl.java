@@ -10,9 +10,9 @@ package de.bandika.cms.templatecontrol;
 
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.site.SiteData;
+import de.bandika.cms.tree.TreeCache;
 import de.bandika.rights.Right;
 import de.bandika.servlet.SessionReader;
-import de.bandika.cms.tree.TreeCache;
 import de.bandika.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,8 +32,8 @@ public class SubMenuControl extends TemplateControl {
         return instance;
     }
 
-   public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException {
-        if (pageData==null)
+    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException {
+        if (pageData == null)
             return;
         TreeCache tc = TreeCache.getInstance();
         SiteData parentSite = tc.getSite(pageData.getParentId());
@@ -44,13 +44,13 @@ public class SubMenuControl extends TemplateControl {
 
     public void addNodes(PageContext context, JspWriter writer, HttpServletRequest request, SiteData parentSite, int currentId) throws IOException {
         for (SiteData site : parentSite.getSites()) {
-            if (site.isInNavigation() && (site.isAnonymous() || SessionReader.hasContentRight(request,site.getId(),Right.READ))) {
+            if (site.isInNavigation() && (site.isAnonymous() || SessionReader.hasContentRight(request, site.getId(), Right.READ))) {
                 writer.write("<li><a class=\"active\"");
                 writer.write(" href=\"" + site.getUrl() + "\">" + toHtml(site.getDisplayName()) + "</a></li>");
             }
         }
         for (PageData page : parentSite.getPages()) {
-            if (page.isInNavigation() && (page.isAnonymous() || SessionReader.hasContentRight(request,page.getId(),Right.READ)) && !page.isDefaultPage()){
+            if (page.isInNavigation() && (page.isAnonymous() || SessionReader.hasContentRight(request, page.getId(), Right.READ)) && !page.isDefaultPage()) {
                 boolean active = page.getId() == currentId;
                 writer.write("<li><a");
                 if (active)

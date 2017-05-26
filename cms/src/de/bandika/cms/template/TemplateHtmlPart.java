@@ -18,10 +18,10 @@ import java.io.IOException;
 
 public class TemplateHtmlPart extends TemplatePart {
 
-    protected String html="";
+    protected String html = "";
 
-    public TemplateHtmlPart(String html){
-        this.html=html;
+    public TemplateHtmlPart(String html) {
+        this.html = html;
     }
 
     public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException {

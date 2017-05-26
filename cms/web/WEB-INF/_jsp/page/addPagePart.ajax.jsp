@@ -7,7 +7,6 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.cms.page.PagePartBean" %>
 <%@ page import="de.bandika.cms.page.PagePartData" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
@@ -16,6 +15,7 @@
 <%@ page import="de.bandika.cms.template.TemplateType" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.page.PageBean" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     int pageId = RequestReader.getInt(request, "pageId");
@@ -24,7 +24,7 @@
     int partId = RequestReader.getInt(request, "partId");
     boolean below = RequestReader.getBoolean(request, "below");
     List<TemplateData> templates = TemplateCache.getInstance().getTemplates(TemplateType.PART, sectionType);
-    List<PagePartData> parts = PagePartBean.getInstance().getAllSharedPageParts();
+    List<PagePartData> parts = PageBean.getInstance().getAllSharedPageParts();
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <section class="flexRow">

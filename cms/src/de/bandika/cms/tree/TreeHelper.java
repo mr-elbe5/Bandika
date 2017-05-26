@@ -135,7 +135,7 @@ public class TreeHelper {
         writer.write("\" >");
         writer.write(StringUtil.getHtml("_pages"));
         writer.write("</div>");
-        if (SessionReader.hasContentRight(request,data.getId(),Right.EDIT)) {
+        if (SessionReader.hasContentRight(request, data.getId(), Right.EDIT)) {
             writer.write("<div class=\"contextMenu\">");
             writer.write("<div class=\"icn inew\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_createPage", locale) + "', '");
             writer.write(StringUtil.toJs("/pageadmin.ajx?act=openCreatePage&siteId=" + data.getId()));
@@ -174,7 +174,7 @@ public class TreeHelper {
         writer.write("\" >");
         writer.write(StringUtil.getHtml("_files"));
         writer.write("</div>");
-        if (SessionReader.hasContentRight(request,data.getId(),Right.EDIT)) {
+        if (SessionReader.hasContentRight(request, data.getId(), Right.EDIT)) {
             writer.write("<div class=\"contextMenu\">");
             writer.write("<div class=\"icn inew\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_createFile", locale) + "', '");
             writer.write(StringUtil.toJs("/file.ajx?act=openCreateFile&siteId=" + data.getId()));

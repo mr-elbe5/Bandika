@@ -7,7 +7,6 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.cms.page.PagePartBean" %>
 <%@ page import="de.bandika.cms.page.PagePartData" %>
 <%@ page import="de.bandika.rights.Right" %>
 <%@ page import="de.bandika.rights.SystemZone" %>
@@ -15,10 +14,11 @@
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.page.PageBean" %>
 <%
     if (SessionReader.hasSystemRight(request, SystemZone.CONTENT, Right.EDIT)) {
         Locale locale = SessionReader.getSessionLocale(request);
-        List<PagePartData> parts = PagePartBean.getInstance().getAllSharedPagePartsWithUsages();
+        List<PagePartData> parts = PageBean.getInstance().getAllSharedPagePartsWithUsages();
         int partId = RequestReader.getInt(request, "partId");
 %>
 <li<%=partId != 0 ? " class=\"open\"" : ""%>>

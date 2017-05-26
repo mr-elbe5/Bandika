@@ -8,7 +8,6 @@
  */
 package de.bandika.cms.doccenter;
 
-import de.bandika.base.log.Log;
 import de.bandika.servlet.ActionDispatcher;
 import de.bandika.servlet.IAction;
 

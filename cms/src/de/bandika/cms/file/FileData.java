@@ -46,31 +46,6 @@ public class FileData extends ResourceNode {
     public FileData() {
     }
 
-    public void copy(FileData data) {
-        super.copy(data);
-        setMediaType(data.getMediaType());
-        setContentType(data.getContentType());
-        setFileSize(data.getFileSize());
-        setWidth(data.getWidth());
-        setHeight(data.getHeight());
-        setPreviewContentType(data.getPreviewContentType());
-        setHasPreview(data.hasPreview());
-        if (data.getBytes() == null) {
-            setBytes(null);
-        } else {
-            setBytes(new byte[data.getBytes().length]);
-            System.arraycopy(data.getBytes(), 0, getBytes(), 0, data.getBytes().length);
-        }
-        if (data.getPreviewBytes() == null) {
-            setPreviewBytes(null);
-        } else {
-            setPreviewBytes(new byte[data.getPreviewBytes().length]);
-            System.arraycopy(data.getPreviewBytes(), 0, getPreviewBytes(), 0, data.getPreviewBytes().length);
-        }
-        getPageIds().clear();
-        getPageIds().addAll(data.getPageIds());
-    }
-
     public void cloneData(FileData data) {
         super.cloneData(data);
         setMediaType(data.getMediaType());

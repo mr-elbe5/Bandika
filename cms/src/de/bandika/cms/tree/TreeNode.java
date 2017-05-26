@@ -2,19 +2,14 @@ package de.bandika.cms.tree;
 
 import de.bandika.base.data.BaseIdData;
 import de.bandika.base.data.Locales;
-import de.bandika.base.data.XmlData;
 import de.bandika.base.log.Log;
 import de.bandika.base.util.StringUtil;
-import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.group.GroupBean;
 import de.bandika.cms.group.GroupData;
 import de.bandika.rights.Right;
 import de.bandika.servlet.RequestReader;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.ParseException;
 import java.util.*;
 
 public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode> {

@@ -9,15 +9,16 @@
 package de.bandika.cms.page;
 
 import de.bandika.base.log.Log;
+import de.bandika.cms.template.PartTemplateData;
+import de.bandika.cms.template.TemplateCache;
+import de.bandika.cms.template.TemplateType;
 import de.bandika.cms.tree.ResourceBean;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class PageBean is the persistence class for any page. <br>
@@ -77,13 +78,62 @@ public class PageBean extends ResourceBean {
         return list;
     }
 
+    public PageData getPage(int id, int version) {
+        PageData data = null;
+        Connection con = null;
+        PreparedStatement pst = null;
+        try {
+            con = getConnection();
+            pst = con.prepareStatement("SELECT t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," + "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," + "t2.keywords,t2.published_version,t2.draft_version,t3.template " + "FROM t_treenode t1, t_resource t2, t_page t3 " + "WHERE t1.id=? AND t2.id=? AND t3.id=?");
+            pst.setInt(1, id);
+            pst.setInt(2, id);
+            pst.setInt(3, id);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    int i = 1;
+                    data = new PageData();
+                    data.setId(id);
+                    data.setCreationDate(rs.getTimestamp(i++));
+                    data.setChangeDate(rs.getTimestamp(i++));
+                    data.setParentId(rs.getInt(i++));
+                    data.setRanking(rs.getInt(i++));
+                    data.setName(rs.getString(i++));
+                    data.setDisplayName(rs.getString(i++));
+                    data.setDescription(rs.getString(i++));
+                    data.setAuthorName(rs.getString(i++));
+                    data.setInNavigation(rs.getBoolean(i++));
+                    data.setAnonymous(rs.getBoolean(i++));
+                    data.setInheritsRights(rs.getBoolean(i++));
+                    data.setKeywords(rs.getString(i++));
+                    data.setPublishedVersion(rs.getInt(i++));
+                    data.setDraftVersion(rs.getInt(i++));
+                    data.setTemplateName(rs.getString(i));
+                    if (!data.inheritsRights()) {
+                        data.setRights(getTreeNodeRights(con, data.getId()));
+                    }
+                    readPageContent(con, data, version);
+                    readAllPageParts(con, data, version);
+                    readAllSharedPageParts(con, data, version);
+                    data.sortPageParts();
+                    data.setLoadedVersion(version);
+                }
+            }
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+        return data;
+    }
+
     public void loadPageContent(PageData data, int version) {
         Connection con = null;
         try {
             con = getConnection();
             readPageContent(con, data, version);
-            PagePartBean.getInstance().readAllPageParts(con, data, version);
-            PagePartBean.getInstance().readAllSharedPageParts(con, data, version);
+            readAllPageParts(con, data, version);
+            readAllSharedPageParts(con, data, version);
             data.sortPageParts();
             data.setLoadedVersion(version);
         } catch (SQLException se) {
@@ -93,9 +143,8 @@ public class PageBean extends ResourceBean {
         }
     }
 
-    public boolean readPage(Connection con, PageData data) throws SQLException {
+    public void readPage(Connection con, PageData data) throws SQLException {
         PreparedStatement pst = null;
-        boolean success = false;
         try {
             pst = con.prepareStatement("SELECT template " + "FROM t_page " + "WHERE id=? ");
             pst.setInt(1, data.getId());
@@ -103,13 +152,11 @@ public class PageBean extends ResourceBean {
                 if (rs.next()) {
                     int i = 1;
                     data.setTemplateName(rs.getString(i));
-                    success = true;
                 }
             }
         } finally {
             closeStatement(pst);
         }
-        return success;
     }
 
     protected void readPageContent(Connection con, PageData data, int version) throws SQLException {
@@ -147,7 +194,7 @@ public class PageBean extends ResourceBean {
             writePage(con, data);
             writeDraftPageContent(con, data);
             if (withContent)
-                PagePartBean.getInstance().writeAllPageParts(con, data);
+                writeAllPageParts(con, data);
             if (data.isPublished()) {
                 publishPageContent(con, data);
             }
@@ -186,7 +233,7 @@ public class PageBean extends ResourceBean {
                 data.setLoadedVersion(getNextVersion(con, data.getId()));
                 data.setContentChangeDate();
                 writeDraftPageContent(con, data);
-                PagePartBean.getInstance().writeAllPageParts(con, data);
+                writeAllPageParts(con, data);
                 writeUsagesByPage(con, data);
                 if (data.isPublished()) {
                     publishPageContent(con, data);
@@ -356,8 +403,8 @@ public class PageBean extends ResourceBean {
             readResourceNode(con, data);
             readPage(con, data);
             readPageContent(con, data, version);
-            PagePartBean.getInstance().readAllPageParts(con, data, version);
-            PagePartBean.getInstance().readAllSharedPageParts(con, data, version);
+            readAllPageParts(con, data, version);
+            readAllSharedPageParts(con, data, version);
             data.sortPageParts();
             data.setLoadedVersion(version);
             data.setChangeDate(getServerTime(con));
@@ -365,7 +412,7 @@ public class PageBean extends ResourceBean {
             data.setLoadedVersion(getNextVersion(con, data.getId()));
             data.setContentChangeDate();
             writeDraftPageContent(con, data);
-            PagePartBean.getInstance().writeAllPageParts(con, data);
+            writeAllPageParts(con, data);
             writeUsagesByPage(con, data);
             updateDraftVersion(con, data.getId(), data.getLoadedVersion());
             return commitTransaction(con);
@@ -388,6 +435,307 @@ public class PageBean extends ResourceBean {
         } finally {
             closeStatement(pst);
             closeConnection(con);
+        }
+    }
+
+    public void readAllPageParts(Connection con, PageData pageData, int version) throws SQLException {
+        PreparedStatement pst = null;
+        PagePartData partData;
+        pageData.clearContent();
+        try {
+            pst = con.prepareStatement("SELECT template,id,change_date,section,ranking,content FROM t_page_part WHERE page_id=? AND version=? ORDER BY ranking");
+            pst.setInt(1, pageData.getId());
+            pst.setInt(2, version);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    int i = 1;
+                    String templateName = rs.getString(i++);
+                    PartTemplateData template = (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART, templateName);
+                    partData = template.getDataType().getNewPagePartData();
+                    partData.setTemplateData(template);
+                    partData.setId(rs.getInt(i++));
+                    partData.setChangeDate(rs.getTimestamp(i++));
+                    partData.setPageId(pageData.getId());
+                    partData.setVersion(version);
+                    partData.setSectionName(rs.getString(i++));
+                    partData.setRanking(rs.getInt(i++));
+                    partData.setXmlContent(rs.getString(i));
+                    pageData.addPagePart(partData, -1, false, false);
+                }
+            }
+        } finally {
+            closeStatement(pst);
+        }
+    }
+
+    public void readAllSharedPageParts(Connection con, PageData page, int version) throws SQLException {
+        PreparedStatement pst = null;
+        PagePartData partData;
+        try {
+            pst = con.prepareStatement("SELECT t1.template,t1.id,t1.change_date,t1.share_name,t2.section,t2.ranking,t1.content FROM t_shared_page_part t1, t_shared_part_usage t2 WHERE t1.id=t2.part_id AND t2.page_id=? AND t2.version=?");
+            pst.setInt(1, page.getId());
+            pst.setInt(2, version);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    int i = 1;
+                    String templateName = rs.getString(i++);
+                    PartTemplateData template = (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART, templateName);
+                    partData = template.getDataType().getNewPagePartData();
+                    partData.setTemplateData(template);
+                    partData.setId(rs.getInt(i++));
+                    partData.setChangeDate(rs.getTimestamp(i++));
+                    partData.setPageId(page.getId());
+                    partData.setShared(true);
+                    partData.setVersion(version);
+                    partData.setShareName(rs.getString(i++));
+                    partData.setSectionName(rs.getString(i++));
+                    partData.setRanking(rs.getInt(i++));
+                    partData.setXmlContent(rs.getString(i));
+                    page.addPagePart(partData, -1, false, false);
+                }
+            }
+        } finally {
+            closeStatement(pst);
+        }
+    }
+
+    public List<PagePartData> getAllSharedPageParts() {
+        Connection con = null;
+        List<PagePartData> list = new ArrayList<>();
+        try {
+            con = getConnection();
+            readAllSharedPageParts(con, list);
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+        } finally {
+            closeConnection(con);
+        }
+        return list;
+    }
+
+    public List<PagePartData> getAllSharedPagePartsWithUsages() {
+        Connection con = null;
+        List<PagePartData> list = new ArrayList<>();
+        try {
+            con = getConnection();
+            readAllSharedPageParts(con, list);
+            for (PagePartData part : list) {
+                readSharedPagePartUsage(con, part);
+            }
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+        } finally {
+            closeConnection(con);
+        }
+        return list;
+    }
+
+    protected void readAllSharedPageParts(Connection con, List<PagePartData> list) throws SQLException {
+        PreparedStatement pst = null;
+        PagePartData partData;
+        StringBuilder sb = new StringBuilder();
+        sb.append("select template,id,change_date,share_name,content from t_shared_page_part order by share_name");
+        try {
+            pst = con.prepareStatement(sb.toString());
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    int i = 1;
+                    String templateName = rs.getString(i++);
+                    PartTemplateData template = (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART, templateName);
+                    partData = template.getDataType().getNewPagePartData();
+                    partData.setTemplateData(template);
+                    partData.setId(rs.getInt(i++));
+                    partData.setChangeDate(rs.getTimestamp(i++));
+                    partData.setPageId(0);
+                    partData.setVersion(0);
+                    partData.setShared(true);
+                    partData.setShareName(rs.getString(i++));
+                    partData.setSectionName("");
+                    partData.setXmlContent(rs.getString(i));
+                    list.add(partData);
+                }
+            }
+        } finally {
+            closeStatement(pst);
+        }
+    }
+
+    public PagePartData getSharedPagePart(int partId) {
+        Connection con = null;
+        PreparedStatement pst = null;
+        PagePartData partData = null;
+        try {
+            con = getConnection();
+            pst = con.prepareStatement("SELECT template,change_date,share_name,content FROM t_shared_page_part WHERE id=?");
+            pst.setInt(1, partId);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    int i = 1;
+                    String templateName = rs.getString(i++);
+                    PartTemplateData template = (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART, templateName);
+                    partData = template.getDataType().getNewPagePartData();
+                    partData.setTemplateData(template);
+                    partData.setId(partId);
+                    partData.setChangeDate(rs.getTimestamp(i++));
+                    partData.setPageId(0);
+                    partData.setVersion(0);
+                    partData.setShared(true);
+                    partData.setShareName(rs.getString(i++));
+                    partData.setSectionName("");
+                    partData.setXmlContent(rs.getString(i));
+                }
+            }
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+        return partData;
+    }
+
+    public void writeAllPageParts(Connection con, PageData page) throws Exception {
+        for (SectionData section : page.getSections().values()) {
+            for (PagePartData part : section.getParts()) {
+                if (part.isShared()) {
+                    part.setChangeDate(page.getChangeDate());
+                    saveSharedPagePart(con, part);
+                    writeUsagesBySharedPart(con, part);
+                    writeSharedPagePartUsage(con, page, part);
+                } else {
+                    part.setChangeDate(page.getChangeDate());
+                    part.setPageId(page.getId());
+                    part.setVersion(page.getLoadedVersion());
+                    writePagePart(con, part);
+                }
+            }
+        }
+    }
+
+    protected void writePagePart(Connection con, PagePartData data) throws SQLException {
+        PreparedStatement pst = null;
+        try {
+            int i = 1;
+            pst = con.prepareStatement("INSERT INTO t_page_part (version,page_id,change_date,section,ranking,template,content,id) VALUES(?,?,?,?,?,?,?,?)");
+            pst.setInt(i++, data.getVersion());
+            if (data.getPageId() == 0) {
+                pst.setNull(i++, Types.INTEGER);
+            } else {
+                pst.setInt(i++, data.getPageId());
+            }
+            pst.setTimestamp(i++, data.getSqlChangeDate());
+            pst.setString(i++, data.getSectionName());
+            pst.setInt(i++, data.getRanking());
+            pst.setString(i++, data.getTemplateName());
+            pst.setString(i++, data.getXmlContent());
+            pst.setInt(i, data.getId());
+            pst.executeUpdate();
+            pst.close();
+        } finally {
+            closeStatement(pst);
+        }
+    }
+
+    protected void saveSharedPagePart(Connection con, PagePartData data) throws SQLException {
+        PreparedStatement pst = null;
+        try {
+            int i = 1;
+            pst = con.prepareStatement("SELECT change_date FROM t_shared_page_part WHERE id=?");
+            pst.setInt(1, data.getId());
+            try (ResultSet rs = pst.executeQuery()) {
+                if (!rs.next()) {
+                    data.setNew(true);
+                }
+            }
+            pst.close();
+            if (data.isNew()) {
+                pst = con.prepareStatement("INSERT INTO t_shared_page_part (change_date,share_name,template,content,id) VALUES(?,?,?,?,?)");
+            } else {
+                pst = con.prepareStatement("UPDATE t_shared_page_part SET change_date=?,share_name=?,template=?,content=? WHERE id=?");
+            }
+            pst.setTimestamp(i++, data.getSqlChangeDate());
+            pst.setString(i++, data.getShareName());
+            pst.setString(i++, data.getTemplateName());
+            pst.setString(i++, data.getXmlContent());
+            pst.setInt(i, data.getId());
+            pst.executeUpdate();
+            pst.close();
+        } finally {
+            closeStatement(pst);
+        }
+    }
+
+    protected void readSharedPagePartUsage(Connection con, PagePartData data) throws SQLException {
+        PreparedStatement pst = null;
+        Set<Integer> ids = new HashSet<>();
+        try {
+            pst = con.prepareStatement("SELECT DISTINCT t1.page_id FROM t_shared_part_usage t1, t_resource t2 " + "WHERE t1.part_id=? AND t1.page_id=t2.id AND (t1.version=t2.published_version OR t1.version=t2.draft_version)");
+            pst.setInt(1, data.getId());
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                ids.add(rs.getInt(1));
+            }
+            pst.close();
+            data.setPageIds(ids);
+        } finally {
+            closeStatement(pst);
+        }
+    }
+
+    protected void writeSharedPagePartUsage(Connection con, PageData page, PagePartData data) throws SQLException {
+        PreparedStatement pst = null;
+        try {
+            int i = 1;
+            pst = con.prepareStatement("INSERT INTO t_shared_part_usage (part_id,page_id,version,change_date,section,ranking) VALUES(?,?,?,?,?,?)");
+            pst.setInt(i++, data.getId());
+            pst.setInt(i++, page.getId());
+            pst.setInt(i++, page.getLoadedVersion());
+            pst.setTimestamp(i++, data.getSqlChangeDate());
+            pst.setString(i++, data.getSectionName());
+            pst.setInt(i, data.getRanking());
+            pst.executeUpdate();
+            pst.close();
+        } finally {
+            closeStatement(pst);
+        }
+    }
+
+    public boolean deleteSharedPagePart(int id) {
+        Connection con = null;
+        PreparedStatement pst = null;
+        int count = 0;
+        try {
+            con = getConnection();
+            pst = con.prepareStatement("DELETE FROM t_shared_page_part WHERE id=?");
+            pst.setInt(1, id);
+            count = pst.executeUpdate();
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+        return count != 0;
+    }
+
+    protected void writeUsagesBySharedPart(Connection con, PagePartData data) throws SQLException {
+        PreparedStatement pst = null;
+        Set<Integer> nset = new HashSet<>();
+        try {
+            pst = con.prepareStatement("DELETE FROM t_shared_node_usage WHERE part_id=?");
+            pst.setInt(1, data.getId());
+            pst.executeUpdate();
+            pst.close();
+            pst = con.prepareStatement("INSERT INTO t_shared_node_usage (part_id,linked_node_id) VALUES(?,?)");
+            pst.setInt(1, data.getId());
+            data.getNodeUsage(nset);
+            for (int nid : nset) {
+                pst.setInt(2, nid);
+                pst.executeUpdate();
+            }
+            pst.close();
+        } finally {
+            closeStatement(pst);
         }
     }
 

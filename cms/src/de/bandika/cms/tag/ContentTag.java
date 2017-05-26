@@ -27,10 +27,9 @@ public class ContentTag extends BaseTag {
             TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PAGE, pageData.getTemplateName());
             JspWriter writer = getWriter();
             pageTemplate.writeTemplate(context, writer, request, pageData, null);
-            if (pageData.getEditPagePart()!=null){
+            if (pageData.getEditPagePart() != null) {
                 writer.write("<script>$('.editControl').hide();</script>");
-            }
-            else{
+            } else {
                 writer.write("<script>$('.editControl').show();</script>");
             }
         } catch (Exception e) {

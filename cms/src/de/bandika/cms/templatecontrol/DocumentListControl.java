@@ -37,11 +37,11 @@ public class DocumentListControl extends TemplateControl {
     }
 
     public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException {
-        int siteId=pageData.getParentId();
+        int siteId = pageData.getParentId();
         SiteData site = TreeCache.getInstance().getSite(siteId);
-        Locale locale=SessionReader.getSessionLocale(request);
-        List<FileData> files=site.getFiles();
-        for (FileData file : files){
+        Locale locale = SessionReader.getSessionLocale(request);
+        List<FileData> files = site.getFiles();
+        for (FileData file : files) {
             if (!file.isAnonymous() && !SessionReader.hasContentRight(request, file.getId(), Right.READ))
                 continue;
             writer.write("<div class=\"documentListLine icn ifile\"><a href=\"" + file.getUrl() + "\" target=\"_blank\" title=\"" + StringUtil.getHtml("_show", locale) + "\">" + StringUtil.toHtml(file.getDisplayName()) + "</a></div>");

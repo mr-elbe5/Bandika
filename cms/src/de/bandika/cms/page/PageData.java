@@ -8,8 +8,8 @@
  */
 package de.bandika.cms.page;
 
-import de.bandika.servlet.RequestReader;
 import de.bandika.cms.tree.ResourceNode;
+import de.bandika.servlet.RequestReader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -26,16 +26,6 @@ public class PageData extends ResourceNode {
     protected PagePartData editPagePart = null;
 
     public PageData() {
-    }
-
-    public PageData(PageData source) {
-        copy(source);
-    }
-
-    public void copy(PageData data) {
-        super.copy(data);
-        setTemplateName(data.getTemplateName());
-        setDefaultPage(data.isDefaultPage());
     }
 
     public void cloneData(PageData data) {

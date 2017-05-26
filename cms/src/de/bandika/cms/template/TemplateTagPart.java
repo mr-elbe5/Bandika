@@ -20,12 +20,12 @@ import java.io.IOException;
 public class TemplateTagPart extends TemplatePart {
 
     TemplateTagType tagType;
-    protected String content="";
-    protected TagAttributes attributes=new TagAttributes();
+    protected String content = "";
+    protected TagAttributes attributes = new TagAttributes();
 
-    public TemplateTagPart(TemplateTagType tagType, String content, String attributeString){
-        this.tagType=tagType;
-        this.content=content;
+    public TemplateTagPart(TemplateTagType tagType, String content, String attributeString) {
+        this.tagType = tagType;
+        this.content = content;
         attributes.setAttributes(attributeString);
     }
 

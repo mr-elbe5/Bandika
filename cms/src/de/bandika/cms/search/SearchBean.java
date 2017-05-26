@@ -44,7 +44,7 @@ public class SearchBean extends DbBean {
     }
 
     public void indexAllContent() {
-        try (IndexWriter writer = openContentIndexWriter(true)){
+        try (IndexWriter writer = openContentIndexWriter(true)) {
             indexSites(writer);
             indexPages(writer);
             indexFiles(writer);
@@ -54,7 +54,7 @@ public class SearchBean extends DbBean {
     }
 
     public void indexAllUsers() {
-        try (IndexWriter writer = openUserIndexWriter(true)){
+        try (IndexWriter writer = openUserIndexWriter(true)) {
             indexUsers(writer);
         } catch (Exception e) {
             Log.error("error while writing user index", e);
@@ -64,17 +64,17 @@ public class SearchBean extends DbBean {
     public void addItem(int id, String dataType) {
         try {
             switch (dataType) {
-                case SiteSearchData.TYPE:{
+                case SiteSearchData.TYPE: {
                     IndexWriter writer = openContentIndexWriter(false);
                     indexSite(writer, id);
                 }
                 break;
-                case PageSearchData.TYPE:{
+                case PageSearchData.TYPE: {
                     IndexWriter writer = openContentIndexWriter(false);
                     indexPage(writer, id);
                 }
                 break;
-                case FileSearchData.TYPE:{
+                case FileSearchData.TYPE: {
                     IndexWriter writer = openContentIndexWriter(false);
                     indexFile(writer, id);
                 }
@@ -96,12 +96,12 @@ public class SearchBean extends DbBean {
     }
 
     public void deleteItem(int id, String dataType) {
-        IndexWriter writer=null;
+        IndexWriter writer = null;
         try {
             switch (dataType) {
                 case SiteSearchData.TYPE:
                 case PageSearchData.TYPE:
-                case FileSearchData.TYPE:{
+                case FileSearchData.TYPE: {
                     writer = openContentIndexWriter(false);
                 }
                 break;
@@ -110,7 +110,7 @@ public class SearchBean extends DbBean {
                 }
                 break;
             }
-            assert(writer!=null);
+            assert (writer != null);
             writer.deleteDocuments(SearchData.getTerm(id));
             writer.close();
         } catch (Exception e) {
@@ -336,8 +336,8 @@ public class SearchBean extends DbBean {
         data.setDescription(rs.getString(i++));
         data.setAuthorName(rs.getString(i++));
         data.setKeywords(rs.getString(i++));
-        String contentType=rs.getString(i++);
-        byte[] bytes=rs.getBytes(i);
+        String contentType = rs.getString(i++);
+        byte[] bytes = rs.getBytes(i);
         //todo
     }
 
@@ -428,19 +428,19 @@ public class SearchBean extends DbBean {
                 for (ScoreDoc hit : hits) {
                     Document doc = searcher.doc(hit.doc);
                     ContentSearchData data = null;
-                    String type=doc.get("type");
-                    switch (type){
+                    String type = doc.get("type");
+                    switch (type) {
                         case SiteSearchData.TYPE:
-                            data=new SiteSearchData();
+                            data = new SiteSearchData();
                             break;
                         case PageSearchData.TYPE:
-                            data=new PageSearchData();
+                            data = new PageSearchData();
                             break;
                         case FileSearchData.TYPE:
-                            data=new FileSearchData();
+                            data = new FileSearchData();
                             break;
                     }
-                    assert(data!=null);
+                    assert (data != null);
                     data.setDoc(doc);
                     data.setScore(maxScore <= 1f ? hit.score : hit.score / maxScore);
                     data.evaluateDoc();

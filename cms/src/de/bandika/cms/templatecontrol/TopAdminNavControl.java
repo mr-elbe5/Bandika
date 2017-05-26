@@ -76,5 +76,4 @@ public class TopAdminNavControl extends TemplateControl {
         writer.write("</ul></nav>");
     }
 
-
 }

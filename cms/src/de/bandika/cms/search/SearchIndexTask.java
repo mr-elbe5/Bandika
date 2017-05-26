@@ -9,9 +9,9 @@
 package de.bandika.cms.search;
 
 import de.bandika.base.log.Log;
-import de.bandika.cms.timer.TimerTask;
 import de.bandika.cms.configuration.Configuration;
 import de.bandika.cms.timer.TimerBean;
+import de.bandika.cms.timer.TimerTask;
 
 import java.util.Date;
 import java.util.Locale;

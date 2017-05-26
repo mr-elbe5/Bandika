@@ -10,7 +10,7 @@ package de.bandika.cms.template;
 
 public class PartTemplateData extends TemplateData {
 
-    PartTemplateDataType dataType=PartTemplateDataType.DEFAULT;
+    PartTemplateDataType dataType = PartTemplateDataType.DEFAULT;
 
     public PartTemplateData() {
         type = TemplateType.PART;
@@ -20,12 +20,12 @@ public class PartTemplateData extends TemplateData {
         return dataType;
     }
 
-    public String getDataTypeName(){
+    public String getDataTypeName() {
         return getDataType().name();
     }
 
-    public void setDataTypeName(String dataTypeName){
-        dataType=PartTemplateDataType.getPageTemplateDataType(dataTypeName);
+    public void setDataTypeName(String dataTypeName) {
+        dataType = PartTemplateDataType.getPageTemplateDataType(dataTypeName);
     }
 
 }

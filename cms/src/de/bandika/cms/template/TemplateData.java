@@ -39,20 +39,20 @@ public class TemplateData extends BaseData implements Serializable {
     protected boolean dynamic = false;
     protected String code = "";
 
-    protected List<TemplatePart> templateParts=null;
+    protected List<TemplatePart> templateParts = null;
 
-    public TemplateData(){
+    public TemplateData() {
     }
 
     public TemplateType getType() {
         return type;
     }
 
-    public String getDataTypeName(){
+    public String getDataTypeName() {
         return DEFAULT_DATA_TYPE;
     }
 
-    public void setDataTypeName(String dataTypeName){
+    public void setDataTypeName(String dataTypeName) {
     }
 
     public String getName() {
@@ -167,21 +167,20 @@ public class TemplateData extends BaseData implements Serializable {
                 pos2 = pos1 + tagType.getEndTag().length();
                 templateParts.add(getNewTemplateTagPart(tagType, content, attributesString));
             }
-        }
-        catch (ParseException e){
+        } catch (ParseException e) {
             templateParts.clear();
-            Log.error("parse error for template "+getName(), e);
+            Log.error("parse error for template " + getName(), e);
             return false;
         }
         return true;
     }
 
-    protected TemplateTagPart getNewTemplateTagPart(TemplateTagType tagType, String content, String attributeString){
+    protected TemplateTagPart getNewTemplateTagPart(TemplateTagType tagType, String content, String attributeString) {
         return new TemplateTagPart(tagType, content, attributeString);
     }
 
     public void writeTemplate(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException {
-        for (TemplatePart templatePart : templateParts){
+        for (TemplatePart templatePart : templateParts) {
             templatePart.writeTemplatePart(context, writer, request, pageData, partData);
         }
     }

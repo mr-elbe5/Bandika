@@ -8,9 +8,9 @@
  */
 package de.bandika.cms.configuration;
 
-import de.bandika.cms.application.AdminAction;
 import de.bandika.base.cache.DataCache;
 import de.bandika.base.mail.Mailer;
+import de.bandika.cms.application.AdminAction;
 import de.bandika.cms.servlet.ICmsAction;
 import de.bandika.rights.Right;
 import de.bandika.rights.SystemZone;
@@ -34,96 +34,96 @@ public enum ConfigAction implements ICmsAction {
      * shows configuration details
      */
     showConfigurationDetails {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                        return false;
-                    return showConfigurationDetails(request, response);
-                }
-            }, /**
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                    return false;
+                return showConfigurationDetails(request, response);
+            }
+        }, /**
      * opens configuration for editing
      */
     openEditConfiguration {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                        return false;
-                    Configuration config = null;
-                    try {
-                        config = (Configuration) Configuration.getInstance().clone();
-                    } catch (CloneNotSupportedException ignore) {
-                        config = new Configuration();
-                    }
-                    SessionWriter.setSessionObject(request, "config", config);
-                    return showEditConfiguration(request, response);
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                    return false;
+                Configuration config = null;
+                try {
+                    config = (Configuration) Configuration.getInstance().clone();
+                } catch (CloneNotSupportedException ignore) {
+                    config = new Configuration();
                 }
-            }, /**
+                SessionWriter.setSessionObject(request, "config", config);
+                return showEditConfiguration(request, response);
+            }
+        }, /**
      * saves configuration and reloads it
      */
     saveConfiguration {
-                @Override
-                @SuppressWarnings("unchecked")
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                        return false;
-                    Configuration config = (Configuration) SessionReader.getSessionObject(request, "config");
-                    if (!readConfigRequestData(config, request)) {
-                        return showEditConfiguration(request, response);
-                    }
-                    ConfigurationBean ts = ConfigurationBean.getInstance();
-                    if (!ts.saveConfiguration(config)) {
-                        return showEditConfiguration(request, response);
-                    }
-                    SessionWriter.removeSessionObject(request, "config");
-                    Configuration.getInstance().loadAppConfiguration(config);
-                    return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_configurationSaved");
+            @Override
+            @SuppressWarnings("unchecked")
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                    return false;
+                Configuration config = (Configuration) SessionReader.getSessionObject(request, "config");
+                if (!readConfigRequestData(config, request)) {
+                    return showEditConfiguration(request, response);
                 }
+                ConfigurationBean ts = ConfigurationBean.getInstance();
+                if (!ts.saveConfiguration(config)) {
+                    return showEditConfiguration(request, response);
+                }
+                SessionWriter.removeSessionObject(request, "config");
+                Configuration.getInstance().loadAppConfiguration(config);
+                return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_configurationSaved");
+            }
 
-                public boolean readConfigRequestData(Configuration config, HttpServletRequest request) {
-                    config.setDefaultLocale(new Locale(RequestReader.getString(request, "defaultLocale")));
-                    config.setSmtpHost(RequestReader.getString(request, "smtpHost"));
-                    config.setSmtpPort(RequestReader.getInt(request, "smtpPort"));
-                    config.setSmtpConnectionType(Mailer.SmtpConnectionType.valueOf(RequestReader.getString(request, "smtpConnectionType")));
-                    config.setSmtpUser(RequestReader.getString(request, "smtpUser"));
-                    config.setSmtpPassword(RequestReader.getString(request, "smtpPassword"));
-                    config.setMailSender(RequestReader.getString(request, "mailSender"));
-                    config.setTimerInterval(RequestReader.getInt(request, "timerInterval"));
-                    config.setClusterPort(RequestReader.getInt(request, "clusterPort"));
-                    config.setClusterTimeout(RequestReader.getInt(request, "clusterTimeout"));
-                    config.setMaxClusterTimeouts(RequestReader.getInt(request, "clusterMaxTimeouts"));
-                    config.setMaxVersions(RequestReader.getInt(request, "maxVersions"));
-                    return config.isComplete();
-                }
-            }, /**
+            public boolean readConfigRequestData(Configuration config, HttpServletRequest request) {
+                config.setDefaultLocale(new Locale(RequestReader.getString(request, "defaultLocale")));
+                config.setSmtpHost(RequestReader.getString(request, "smtpHost"));
+                config.setSmtpPort(RequestReader.getInt(request, "smtpPort"));
+                config.setSmtpConnectionType(Mailer.SmtpConnectionType.valueOf(RequestReader.getString(request, "smtpConnectionType")));
+                config.setSmtpUser(RequestReader.getString(request, "smtpUser"));
+                config.setSmtpPassword(RequestReader.getString(request, "smtpPassword"));
+                config.setMailSender(RequestReader.getString(request, "mailSender"));
+                config.setTimerInterval(RequestReader.getInt(request, "timerInterval"));
+                config.setClusterPort(RequestReader.getInt(request, "clusterPort"));
+                config.setClusterTimeout(RequestReader.getInt(request, "clusterTimeout"));
+                config.setMaxClusterTimeouts(RequestReader.getInt(request, "clusterMaxTimeouts"));
+                config.setMaxVersions(RequestReader.getInt(request, "maxVersions"));
+                return config.isComplete();
+            }
+        }, /**
      * shows cache properties
      */
     showCacheDetails {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                        return false;
-                    return showCacheDetails(request, response);
-                }
-            }, /**
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                    return false;
+                return showCacheDetails(request, response);
+            }
+        }, /**
      * empties a cache
      */
     clearCache {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                        return false;
-                    List<String> names = RequestReader.getStringList(request, "cacheName");
-                    for (String name : names) {
-                        DataCache cache = DataCache.getCache(name);
-                        if (cache != null) {
-                            cache.setDirty();
-                            cache.checkDirty();
-                        }
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                    return false;
+                List<String> names = RequestReader.getStringList(request, "cacheName");
+                for (String name : names) {
+                    DataCache cache = DataCache.getCache(name);
+                    if (cache != null) {
+                        cache.setDirty();
+                        cache.checkDirty();
                     }
-                    RequestWriter.setMessageKey(request, "_cacheCleared");
-                    return AdminAction.openAdministration.execute(request, response);
                 }
-            };
+                RequestWriter.setMessageKey(request, "_cacheCleared");
+                return AdminAction.openAdministration.execute(request, response);
+            }
+        };
 
     public static final String KEY = "config";
 

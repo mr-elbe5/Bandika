@@ -60,7 +60,7 @@ public class UserBean extends LoginBean {
                     data.setPhone(rs.getString(i++));
                     data.setMobile(rs.getString(i++));
                     data.setNotes(rs.getString(i++));
-                    data.setPortraitName (rs.getString(i++));
+                    data.setPortraitName(rs.getString(i++));
                     data.setLogin(rs.getString(i++));
                     data.setPassword("");
                     data.setApprovalCode(rs.getString(i++));
@@ -107,7 +107,7 @@ public class UserBean extends LoginBean {
                 data.setPhone(rs.getString(i++));
                 data.setMobile(rs.getString(i++));
                 data.setNotes(rs.getString(i++));
-                data.setPortraitName (rs.getString(i++));
+                data.setPortraitName(rs.getString(i++));
                 data.setLogin(rs.getString(i++));
                 data.setPassword("");
                 data.setApprovalCode(rs.getString(i++));
@@ -142,7 +142,7 @@ public class UserBean extends LoginBean {
                     data.setFileName(rs.getString(i++));
                     data.setContentType("image/jpeg");
                     data.setBytes(rs.getBytes(i));
-                    data.setFileSize(data.getBytes()==null ? 0 : data.getBytes().length);
+                    data.setFileSize(data.getBytes() == null ? 0 : data.getBytes().length);
                 }
             }
         } finally {
@@ -151,7 +151,6 @@ public class UserBean extends LoginBean {
         }
         return data;
     }
-
 
     protected void readUserGroups(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
@@ -188,9 +187,7 @@ public class UserBean extends LoginBean {
     protected void writeUser(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(data.isNew() ? "insert into t_user (change_date,title,first_name,last_name,street,zipCode,city,country,locale,email,phone,fax,mobile,notes,portrait_name,portrait,login,pwd,pkey,approval_code,approved,failed_login_count,locked,deleted,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" :
-                    data.getPassword().length() == 0 ? "update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?" :
-                            "update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,pwd=?,pkey=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?");
+            pst = con.prepareStatement(data.isNew() ? "insert into t_user (change_date,title,first_name,last_name,street,zipCode,city,country,locale,email,phone,fax,mobile,notes,portrait_name,portrait,login,pwd,pkey,approval_code,approved,failed_login_count,locked,deleted,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" : data.getPassword().length() == 0 ? "update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?" : "update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,pwd=?,pkey=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?");
             int i = 1;
             pst.setTimestamp(i++, data.getSqlChangeDate());
             pst.setString(i++, data.getTitle());
@@ -207,10 +204,10 @@ public class UserBean extends LoginBean {
             pst.setString(i++, data.getMobile());
             pst.setString(i++, data.getNotes());
             pst.setString(i++, data.getPortraitName());
-            if (data.getPortrait()==null)
+            if (data.getPortrait() == null)
                 pst.setNull(i++, Types.BINARY);
             else
-                pst.setBytes(i++,data.getPortrait());
+                pst.setBytes(i++, data.getPortrait());
             pst.setString(i++, data.getLogin());
             if (data.getPassword().length() > 0) {
                 String key = generateKey();
@@ -266,10 +263,10 @@ public class UserBean extends LoginBean {
             pst.setString(i++, data.getMobile());
             pst.setString(i++, data.getNotes());
             pst.setString(i++, data.getPortraitName());
-            if (data.getPortrait()==null)
-                pst.setNull(i++,Types.BINARY);
+            if (data.getPortrait() == null)
+                pst.setNull(i++, Types.BINARY);
             else
-                pst.setBytes(i++,data.getPortrait());
+                pst.setBytes(i++, data.getPortrait());
             pst.setInt(i, data.getId());
             pst.executeUpdate();
             pst.close();

@@ -28,7 +28,7 @@ import java.util.List;
 public class CmsRightBean extends RightBean {
 
     public static CmsRightBean getInstance() {
-        if (RightBean.getInstance()==null)
+        if (RightBean.getInstance() == null)
             RightBean.setInstance(new CmsRightBean());
         return (CmsRightBean) RightBean.getInstance();
     }

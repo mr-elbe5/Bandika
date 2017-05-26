@@ -22,16 +22,16 @@ public class DocCenterPartData extends HtmlPartData {
     public final static int MODE_HISTORY = 3;
     public final static int MODE_HISTORY_DELETE = 4;
 
-    public DocCenterPartData(){
+    public DocCenterPartData() {
     }
 
     @Override
-    public PartTemplateDataType getDataType(){
+    public PartTemplateDataType getDataType() {
         return PartTemplateDataType.DOCCENTER;
     }
 
     @Override
-    public boolean executePagePartMethod(String method, HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public boolean executePagePartMethod(String method, HttpServletRequest request, HttpServletResponse response) throws Exception {
         return DocCenterAction.defaultAction.execute(request, response);
     }
 

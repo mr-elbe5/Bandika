@@ -11,7 +11,7 @@ package de.bandika.cms.search;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserSearchResultData extends SearchResultData{
+public class UserSearchResultData extends SearchResultData {
 
     protected String[] fieldNames = {"name"};
     protected List<UserSearchData> results = new ArrayList<>();

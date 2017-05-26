@@ -12,11 +12,11 @@ import de.bandika.application.Initializer;
 import de.bandika.base.util.StringUtil;
 import de.bandika.cms.servlet.ICmsAction;
 import de.bandika.cms.user.UserBean;
+import de.bandika.cms.user.UserData;
 import de.bandika.database.DbConnector;
 import de.bandika.database.DbCreator;
 import de.bandika.servlet.ActionDispatcher;
 import de.bandika.servlet.RequestReader;
-import de.bandika.cms.user.UserData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,58 +48,58 @@ public enum InstallerAction implements ICmsAction {
      * initializes the database configuration and creates the first database tables and entries
      */
     setDatabaseConfiguration {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (isAllInstalled())
-                        return false;
-                    String dbClass = RequestReader.getString(request, "dbClass");
-                    String dbUrl = RequestReader.getString(request, "dbUrl");
-                    String dbUser = RequestReader.getString(request, "dbUser");
-                    String dbPassword = RequestReader.getString(request, "dbPwd");
-                    DbConnector.getInstance().setProperties(dbClass, dbUrl, dbUser, dbPassword);
-                    if (!DbConnector.getInstance().loadDataSource()) {
-                        addError(request, StringUtil.getString("_noValidConnection"));
-                        return showSetBasicConfigurationJsp(request, response);
-                    }
-                    try {
-                        DbConnector.getInstance().writeProperties();
-                    } catch (Exception e) {
-                        addError(request, e);
-                        return showSetBasicConfigurationJsp(request, response);
-                    }
-                    if (!DbCreator.getInstance().isDatabaseCreated() && !DbCreator.getInstance().createDatabase()) {
-                        addError(request, StringUtil.getString("_dbNotCreated"));
-                        return showSetBasicConfigurationJsp(request, response);
-                    }
-                    if (!Installer.getInstance().hasSystemPassword()) {
-                        return showSetSystemPasswordJsp(request, response);
-                    }
-                    Initializer.getInstance().initialize();
-                    return showConfigurationSavedJsp(request, response);
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (isAllInstalled())
+                    return false;
+                String dbClass = RequestReader.getString(request, "dbClass");
+                String dbUrl = RequestReader.getString(request, "dbUrl");
+                String dbUser = RequestReader.getString(request, "dbUser");
+                String dbPassword = RequestReader.getString(request, "dbPwd");
+                DbConnector.getInstance().setProperties(dbClass, dbUrl, dbUser, dbPassword);
+                if (!DbConnector.getInstance().loadDataSource()) {
+                    addError(request, StringUtil.getString("_noValidConnection"));
+                    return showSetBasicConfigurationJsp(request, response);
                 }
-            }, /**
+                try {
+                    DbConnector.getInstance().writeProperties();
+                } catch (Exception e) {
+                    addError(request, e);
+                    return showSetBasicConfigurationJsp(request, response);
+                }
+                if (!DbCreator.getInstance().isDatabaseCreated() && !DbCreator.getInstance().createDatabase()) {
+                    addError(request, StringUtil.getString("_dbNotCreated"));
+                    return showSetBasicConfigurationJsp(request, response);
+                }
+                if (!Installer.getInstance().hasSystemPassword()) {
+                    return showSetSystemPasswordJsp(request, response);
+                }
+                Initializer.getInstance().initialize();
+                return showConfigurationSavedJsp(request, response);
+            }
+        }, /**
      * sets first password for system user
      */
     setSystemPassword {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (isAllInstalled())
-                        return false;
-                    String systemPassword = RequestReader.getString(request, "systemPwd");
-                    String systemPassword2 = RequestReader.getString(request, "systemPwd2");
-                    assert systemPassword != null;
-                    if (!systemPassword.equals(systemPassword2)) {
-                        addError(request, StringUtil.getString("_passwordsDontMatch"));
-                        return showSetSystemPasswordJsp(request, response);
-                    }
-                    if (!UserBean.getInstance().changePassword(UserData.ID_SYSTEM, systemPassword)) {
-                        addError(request, StringUtil.getString("_passwordNotSet"));
-                        return showSetSystemPasswordJsp(request, response);
-                    }
-                    Initializer.getInstance().initialize();
-                    return showConfigurationSavedJsp(request, response);
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (isAllInstalled())
+                    return false;
+                String systemPassword = RequestReader.getString(request, "systemPwd");
+                String systemPassword2 = RequestReader.getString(request, "systemPwd2");
+                assert systemPassword != null;
+                if (!systemPassword.equals(systemPassword2)) {
+                    addError(request, StringUtil.getString("_passwordsDontMatch"));
+                    return showSetSystemPasswordJsp(request, response);
                 }
-            };
+                if (!UserBean.getInstance().changePassword(UserData.ID_SYSTEM, systemPassword)) {
+                    addError(request, StringUtil.getString("_passwordNotSet"));
+                    return showSetSystemPasswordJsp(request, response);
+                }
+                Initializer.getInstance().initialize();
+                return showConfigurationSavedJsp(request, response);
+            }
+        };
 
     private static final String MASTER_INSTALL = "installMaster.jsp";
 

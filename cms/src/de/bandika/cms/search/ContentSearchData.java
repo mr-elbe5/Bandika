@@ -19,7 +19,7 @@ import org.apache.lucene.search.highlight.QueryScorer;
 
 import java.util.Locale;
 
-public abstract class ContentSearchData extends SearchData{
+public abstract class ContentSearchData extends SearchData {
 
     protected static final int CONTEXT_LENGTH_DESCRIPTION = 200;
     protected static final int CONTEXT_LENGTH_KEYWORDS = 80;

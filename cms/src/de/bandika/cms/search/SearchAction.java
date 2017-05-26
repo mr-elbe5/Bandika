@@ -8,12 +8,12 @@
  */
 package de.bandika.cms.search;
 
-import de.bandika.cms.application.AdminAction;
 import de.bandika.application.MasterStatics;
+import de.bandika.cms.application.AdminAction;
+import de.bandika.cms.servlet.ICmsAction;
 import de.bandika.rights.Right;
 import de.bandika.rights.SystemZone;
 import de.bandika.servlet.ActionDispatcher;
-import de.bandika.cms.servlet.ICmsAction;
 import de.bandika.servlet.RequestReader;
 import de.bandika.servlet.RequestWriter;
 
@@ -33,95 +33,94 @@ public enum SearchAction implements ICmsAction {
      * opens search page
      */
     openSearch {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    return showSearch(request, response);
-                }
-            }, /**
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                return showSearch(request, response);
+            }
+        }, /**
      * executes a search and shows the results
      */
     search {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    ContentSearchResultData contentResult = new ContentSearchResultData();
-                    String pattern=RequestReader.getString(request, "searchPattern");
-                    contentResult.setPattern(pattern);
-                    SearchBean.getInstance().searchContent(contentResult);
-                    request.setAttribute("contentSearchResultData", contentResult);
-                    UserSearchResultData userResult = new UserSearchResultData();
-                    userResult.setPattern(pattern);
-                    SearchBean.getInstance().searchUsers(userResult);
-                    request.setAttribute("userSearchResultData", userResult);
-                    return showSearch(request, response);
-                }
-            }, /**
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                ContentSearchResultData contentResult = new ContentSearchResultData();
+                String pattern = RequestReader.getString(request, "searchPattern");
+                contentResult.setPattern(pattern);
+                SearchBean.getInstance().searchContent(contentResult);
+                request.setAttribute("contentSearchResultData", contentResult);
+                UserSearchResultData userResult = new UserSearchResultData();
+                userResult.setPattern(pattern);
+                SearchBean.getInstance().searchUsers(userResult);
+                request.setAttribute("userSearchResultData", userResult);
+                return showSearch(request, response);
+            }
+        }, /**
      * shows search settings and properties
      */
     showAdminSearchDetails {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
-                        return false;
-                    return showAdminSearchDetails(request, response);
-                }
-            },/**
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
+                    return false;
+                return showAdminSearchDetails(request, response);
+            }
+        }, /**
      * shows site search result details
      */
     showSiteSearchDetails {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    return showSiteSearchDetails(request, response);
-                }
-            },/**
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                return showSiteSearchDetails(request, response);
+            }
+        }, /**
      * shows page search result details
      */
     showPageSearchDetails {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    return showPageSearchDetails(request, response);
-                }
-            },/**
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                return showPageSearchDetails(request, response);
+            }
+        }, /**
      * shows file search result details
      */
     showFileSearchDetails {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    return showFileSearchDetails(request, response);
-                }
-            },/**
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                return showFileSearchDetails(request, response);
+            }
+        }, /**
      * shows user search result details
      */
     showUserSearchDetails {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    return showUserSearchDetails(request, response);
-                }
-            }, /**
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                return showUserSearchDetails(request, response);
+            }
+        }, /**
      * reindexes all content elements
      */
     indexAllContent {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
-                        return false;
-                    SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_CONTENT, 0, null));
-                    RequestWriter.setMessageKey(request, "_indexingContentQueued");
-                    return AdminAction.openAdministration.execute(request, response);
-                }
-            },
-    /**
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
+                    return false;
+                SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_CONTENT, 0, null));
+                RequestWriter.setMessageKey(request, "_indexingContentQueued");
+                return AdminAction.openAdministration.execute(request, response);
+            }
+        }, /**
      * reindexes all users
      */
     indexAllUsers {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
-                return false;
-            SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_USERS, 0, null));
-            RequestWriter.setMessageKey(request, "_indexingUsersQueued");
-            return AdminAction.openAdministration.execute(request, response);
-        }
-    };
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
+                    return false;
+                SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_USERS, 0, null));
+                RequestWriter.setMessageKey(request, "_indexingUsersQueued");
+                return AdminAction.openAdministration.execute(request, response);
+            }
+        };
 
     public static final String KEY = "search";
 

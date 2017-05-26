@@ -1,14 +1,13 @@
 package de.bandika.cms.tree;
 
 import de.bandika.base.cache.BaseCache;
-import de.bandika.base.data.Locales;
+import de.bandika.cms.file.FileBean;
 import de.bandika.cms.file.FileData;
+import de.bandika.cms.file.FileDataComparator;
 import de.bandika.cms.page.PageBean;
 import de.bandika.cms.page.PageData;
-import de.bandika.cms.site.SiteData;
-import de.bandika.cms.file.FileBean;
-import de.bandika.cms.file.FileDataComparator;
 import de.bandika.cms.site.SiteBean;
+import de.bandika.cms.site.SiteData;
 
 import java.util.*;
 
@@ -31,10 +30,10 @@ public class TreeCache extends BaseCache {
     protected Map<Integer, FileData> fileMap = new HashMap<>();
     protected Map<Integer, PageData> pageMap = new HashMap<>();
     protected Map<Integer, TreeNode> nodeMap = new HashMap<>();
-    protected Map<String, SiteData> sitePathMap = new HashMap<>();
-    protected Map<String, FileData> filePathMap = new HashMap<>();
-    protected Map<String, PageData> pagePathMap = new HashMap<>();
-    protected Map<String, TreeNode> nodePathMap = new HashMap<>();
+    protected Map<String, Integer> sitePathMap = new HashMap<>();
+    protected Map<String, Integer> filePathMap = new HashMap<>();
+    protected Map<String, Integer> pagePathMap = new HashMap<>();
+    protected Map<String, Integer> nodePathMap = new HashMap<>();
 
     @Override
     public synchronized void load() {
@@ -85,21 +84,21 @@ public class TreeCache extends BaseCache {
             }
         }
         rootSite.inheritToChildren();
-        Map<String, TreeNode> nodePaths = new HashMap<>();
-        Map<String, SiteData> sitePaths = new HashMap<>();
+        Map<String, Integer> nodePaths = new HashMap<>();
+        Map<String, Integer> sitePaths = new HashMap<>();
         for (SiteData site : sites.values()) {
-            sitePaths.put(site.getUrl(), site);
-            nodePaths.put(site.getUrl(), site);
+            sitePaths.put(site.getUrl(), site.getId());
+            nodePaths.put(site.getUrl(), site.getId());
         }
-        Map<String, FileData> filePaths = new HashMap<>();
+        Map<String, Integer> filePaths = new HashMap<>();
         for (FileData file : files.values()) {
-            filePaths.put(file.getUrl(), file);
-            nodePaths.put(file.getUrl(), file);
+            filePaths.put(file.getUrl(), file.getId());
+            nodePaths.put(file.getUrl(), file.getId());
         }
-        Map<String, PageData> pagePaths = new HashMap<>();
+        Map<String, Integer> pagePaths = new HashMap<>();
         for (PageData page : pages.values()) {
-            pagePaths.put(page.getUrl(), page);
-            nodePaths.put(page.getUrl(), page);
+            pagePaths.put(page.getUrl(), page.getId());
+            nodePaths.put(page.getUrl(), page.getId());
         }
         siteMap = sites;
         fileMap = files;
@@ -126,9 +125,38 @@ public class TreeCache extends BaseCache {
         return version;
     }
 
+    public TreeNode getNode(int id) {
+        checkDirty();
+        return nodeMap.get(id);
+    }
+
+    public TreeNode getNode(String path) {
+        checkDirty();
+        int id = nodePathMap.get(path);
+        return getNode(id);
+    }
+
     public SiteData getRootSite() {
         checkDirty();
         return rootSite;
+    }
+
+    public int getLanguageRootSiteId(Locale locale) {
+        return getLanguageRootId(locale);
+    }
+
+    public SiteData getLanguageRootSite(Locale locale) {
+        checkDirty();
+        int id = getLanguageRootSiteId(locale);
+        return id == 0 ? null : siteMap.get(id);
+    }
+
+    public int getLanguageRootId(Locale locale) {
+        checkDirty();
+        if (!languageRootIds.containsKey(locale)) {
+            return 0;
+        }
+        return languageRootIds.get(locale);
     }
 
     public SiteData getSite(int id) {
@@ -136,22 +164,10 @@ public class TreeCache extends BaseCache {
         return siteMap.get(id);
     }
 
-    public FileData getFile(int id) {
+    public SiteData getSite(String path) {
         checkDirty();
-        FileData data = fileMap.get(id);
-        if (!data.isLoaded() && data.getPublishedVersion() != 0) {
-            FileBean.getInstance().loadFileContent(data, data.getPublishedVersion());
-        }
-        return data;
-    }
-
-    public List<FileData> getAllFiles() {
-        List<FileData> files = new ArrayList<>();
-        for (FileData file : fileMap.values()) {
-            files.add(file);
-        }
-        Collections.sort(files, new FileDataComparator());
-        return files;
+        int id = sitePathMap.get(path);
+        return getSite(id);
     }
 
     public PageData getPage(int id) {
@@ -163,29 +179,32 @@ public class TreeCache extends BaseCache {
         return data;
     }
 
-    public TreeNode getNode(int id) {
+    public PageData getPage(String path) {
         checkDirty();
-        return nodeMap.get(id);
+        int id = pagePathMap.get(path);
+        return getPage(id);
     }
 
-    public SiteData getSite(String path) {
+    public List<FileData> getAllFiles() {
+        List<FileData> files = new ArrayList<>();
+        files.addAll(fileMap.values());
+        files.sort(new FileDataComparator());
+        return files;
+    }
+
+    public FileData getFile(int id) {
         checkDirty();
-        return sitePathMap.get(path);
+        FileData data = fileMap.get(id);
+        if (!data.isLoaded() && data.getPublishedVersion() != 0) {
+            FileBean.getInstance().loadFileContent(data, data.getPublishedVersion());
+        }
+        return data;
     }
 
     public FileData getFile(String path) {
         checkDirty();
-        return filePathMap.get(path);
-    }
-
-    public PageData getPage(String path) {
-        checkDirty();
-        return pagePathMap.get(path);
-    }
-
-    public TreeNode getNode(String path) {
-        checkDirty();
-        return nodePathMap.get(path);
+        int id = filePathMap.get(path);
+        return getFile(id);
     }
 
     public int getParentNodeId(int id) {
@@ -209,49 +228,6 @@ public class TreeCache extends BaseCache {
         }
     }
 
-    public void inheritFromParent(PageData child) {
-        checkDirty();
-        SiteData site = getSite(child.getParentId());
-        if (site == null) {
-            return;
-        }
-        site.inheritToChild(child);
-        if (site.hasDefaultPage() && site.getDefaultPageId() == child.getId()) {
-            child.setDefaultPage(true);
-        }
-    }
-
-    public void inheritFromParent(FileData child) {
-        checkDirty();
-        SiteData site = getSite(child.getParentId());
-        if (site == null) {
-            return;
-        }
-        site.inheritToChild(child);
-    }
-
-    public int getLanguageRootSiteId(Locale locale) {
-        return getLanguageRootId(locale);
-    }
-
-    public SiteData getLanguageRootSite(Locale locale) {
-        checkDirty();
-        int id = getLanguageRootSiteId(locale);
-        return id == 0 ? null : siteMap.get(id);
-    }
-
-    public boolean isLanguageRootId(int id) {
-        return languageRootIds.containsValue(id);
-    }
-
-    public int getLanguageRootId(Locale locale) {
-        checkDirty();
-        if (!languageRootIds.containsKey(locale)) {
-            return 0;
-        }
-        return languageRootIds.get(locale);
-    }
-
     public List<Locale> getOtherLocales(Locale locale) {
         checkDirty();
         List<Locale> list = new ArrayList<>();
@@ -262,15 +238,6 @@ public class TreeCache extends BaseCache {
             list.add(loc);
         }
         return list;
-    }
-
-    public Locale getLocale(int id) {
-        checkDirty();
-        TreeNode node = getNode(id);
-        if (node == null) {
-            return Locales.getInstance().getDefaultLocale();
-        }
-        return node.getLocale();
     }
 
 }

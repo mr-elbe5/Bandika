@@ -10,8 +10,8 @@ package de.bandika.cms.site;
 
 import de.bandika.base.log.Log;
 import de.bandika.cms.page.PageBean;
-import de.bandika.cms.tree.TreeCache;
 import de.bandika.cms.tree.TreeBean;
+import de.bandika.cms.tree.TreeCache;
 import de.bandika.cms.tree.TreeNodeSortData;
 
 import java.sql.*;
@@ -163,7 +163,7 @@ public class SiteBean extends TreeBean {
             sortData.setName(rs.getString(1));
             rs.close();
             pst.close();
-            pst = con.prepareStatement("SELECT t1.id,t1.name FROM t_treenode t1, t_site t2 WHERE t1.parent_id=? and t2.id=t1.id ORDER BY t1.ranking");
+            pst = con.prepareStatement("SELECT t1.id,t1.name FROM t_treenode t1, t_site t2 WHERE t1.parent_id=? AND t2.id=t1.id ORDER BY t1.ranking");
             pst.setInt(1, nodeId);
             rs = pst.executeQuery();
             while (rs.next()) {
@@ -198,7 +198,7 @@ public class SiteBean extends TreeBean {
             sortData.setName(rs.getString(1));
             rs.close();
             pst.close();
-            pst = con.prepareStatement("SELECT t1.id,t1.name FROM t_treenode t1, t_page t2 WHERE t1.parent_id=? and t2.id=t1.id ORDER BY t1.ranking");
+            pst = con.prepareStatement("SELECT t1.id,t1.name FROM t_treenode t1, t_page t2 WHERE t1.parent_id=? AND t2.id=t1.id ORDER BY t1.ranking");
             pst.setInt(1, nodeId);
             rs = pst.executeQuery();
             while (rs.next()) {
@@ -233,7 +233,7 @@ public class SiteBean extends TreeBean {
             sortData.setName(rs.getString(1));
             rs.close();
             pst.close();
-            pst = con.prepareStatement("SELECT t1.id,t1.name FROM t_treenode t1, t_file t2 WHERE t1.parent_id=? and t2.id=t1.id ORDER BY t1.ranking");
+            pst = con.prepareStatement("SELECT t1.id,t1.name FROM t_treenode t1, t_file t2 WHERE t1.parent_id=? AND t2.id=t1.id ORDER BY t1.ranking");
             pst.setInt(1, nodeId);
             rs = pst.executeQuery();
             while (rs.next()) {

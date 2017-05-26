@@ -23,13 +23,13 @@ public class HtmlPartData extends PagePartData {
     protected String cssClass = "";
     protected PagePartContent partContent = new PagePartContent();
 
-    public HtmlPartData(){
+    public HtmlPartData() {
     }
 
     public void cloneData(PagePartData data) {
         super.cloneData(data);
         if (data instanceof HtmlPartData) {
-            HtmlPartData htmlData = (HtmlPartData)data;
+            HtmlPartData htmlData = (HtmlPartData) data;
             setCssClass(htmlData.getCssClass());
             copyContent(htmlData);
         }
@@ -37,7 +37,7 @@ public class HtmlPartData extends PagePartData {
 
     public void copyContent(PagePartData part) {
         if (part instanceof HtmlPartData) {
-            HtmlPartData htmlData = (HtmlPartData)part;
+            HtmlPartData htmlData = (HtmlPartData) part;
             partContent.copyContent(htmlData.getPartContent());
         }
     }
