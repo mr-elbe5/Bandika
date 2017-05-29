@@ -91,7 +91,7 @@
     </section>
 </cms-template>
 
-<cms-template type="PART" dataType="HTML" name="script" displayName="JavaScript" usage="all" editable="true" dynamic="false">
+<cms-template type="PART" dataType="HTML" name="Script" displayName="JavaScript" usage="all" editable="true" dynamic="false">
     <cms-field type="script" name="script"/>
 </cms-template>
 
@@ -208,6 +208,13 @@
         <div class="textBox">
             <cms-field type="html" name="text" toolbar="Full">Lorem ipsum</cms-field>
         </div>
+    </div>
+</cms-template>
+
+<cms-template type="PART" dataType="DOCCENTER" name="DocCenter" displayName="Document Center" usage="content" editable="true" dynamic="true">
+    <div class="article">
+        <cms-field type="html" toolbar="Text" name="header"><a href="#">Lorem ipsum</a></cms-field>
+        <cms-jsp url="/WEB-INF/_jsp/doccenter/doccenter.inc.jsp" />
     </div>
 </cms-template>
 
