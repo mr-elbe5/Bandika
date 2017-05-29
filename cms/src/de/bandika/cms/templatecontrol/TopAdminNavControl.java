@@ -54,7 +54,7 @@ public class TopAdminNavControl extends TemplateControl {
         } else {
             writer.write("<li class=\"admin\"><a href=\"javascript:window.print();\" title=\"" + getHtml("_print", locale) + "\"><span class=\"icn iprint\"></span></a></li>");
             if (hasAnyEditRight) {
-                writer.write("<li class=\"admin\"><a href=\"/pageedit.srv?act=toggleEditMode&pageId=" + pageId + "\" title=\"" + getHtml("_editMode", locale) + "\"><span class=\"icn ipencil " + (editMode ? "active" : "") + "\"></span></a></li>");
+                writer.write("<li class=\"admin\"><a href=\"/pageedit.srv?act=toggleEditMode&pageId=" + pageId + "\" title=\"" + getHtml("_editMode", locale) + "\"><span class=\"icn ipencil " + (editMode ? "open" : "") + "\"></span></a></li>");
             }
             if (editMode) {
                 if (pageId != 0 && hasEditRight) {

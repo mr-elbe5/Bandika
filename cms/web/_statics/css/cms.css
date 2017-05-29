@@ -611,12 +611,8 @@ h3.treeHeader {
     margin-right: 10px;
 }
 
-.topNavSection ul li.admin .icn.ipencil::before{
-    color:lightcoral;
-}
-
-.topNavSection ul li.admin .icn.ipencil.active::before{
-    color:lightgreen;
+.topNavSection ul li.admin .icn.ipencil.open::before{
+    color:white;
 }
 
 .pageAdminLinks {
