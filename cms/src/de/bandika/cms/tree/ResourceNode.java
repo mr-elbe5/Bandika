@@ -46,6 +46,10 @@ public abstract class ResourceNode extends TreeNode {
         return publishedVersion;
     }
 
+    public boolean hasPublishedVersion() {
+        return publishedVersion>0;
+    }
+
     public void setPublishedVersion(int publishedVersion) {
         this.publishedVersion = publishedVersion;
     }
@@ -123,6 +127,11 @@ public abstract class ResourceNode extends TreeNode {
     public void readResourceNodeRequestData(HttpServletRequest request) {
         readTreeNodeRequestData(request);
         setKeywords(RequestReader.getString(request, "keywords"));
+    }
+
+    @Override
+    public boolean isVisibleToUser(HttpServletRequest request) {
+        return (SessionReader.isEditMode(request) || hasPublishedVersion()) && (isAnonymous() || SessionReader.hasContentRight(request, getId(), Right.READ));
     }
 
 }
