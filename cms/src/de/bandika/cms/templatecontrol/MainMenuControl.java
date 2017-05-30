@@ -52,7 +52,7 @@ public class MainMenuControl extends TemplateControl {
 
     public void addNodes(PageContext context, JspWriter writer, HttpServletRequest request, SiteData parentSite, int currentId, List<Integer> activeIds) throws IOException {
         for (SiteData site : parentSite.getSites()) {
-            if (site.isInNavigation() && (site.isAnonymous() || SessionReader.hasContentRight(request, site.getId(), Right.READ))) {
+            if (site.isInNavigation() && site.isVisibleToUser(request)) {
                 boolean hasSubSites = site.getSites().size() > 0;
                 boolean hasSubPages = site.getPages().size() > 1;
                 boolean active = site.getId() == currentId || activeIds.contains(site.getId());
@@ -69,7 +69,7 @@ public class MainMenuControl extends TemplateControl {
             }
         }
         for (PageData page : parentSite.getPages()) {
-            if (page.isInNavigation() && (page.isAnonymous() || SessionReader.hasContentRight(request, page.getId(), Right.READ)) && !page.isDefaultPage()) {
+            if (page.isInNavigation() && page.isVisibleToUser(request) && !page.isDefaultPage()) {
                 boolean active = page.getId() == currentId || activeIds.contains(page.getId());
                 writer.write("<li><a");
                 if (active)

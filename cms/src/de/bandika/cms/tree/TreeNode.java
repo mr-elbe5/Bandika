@@ -319,6 +319,9 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
         return isComplete(name);
     }
 
+
+    public abstract boolean isVisibleToUser(HttpServletRequest request);
+
     @Override
     public int compareTo(TreeNode node) {
         int val = ranking - node.ranking;

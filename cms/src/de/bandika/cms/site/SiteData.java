@@ -11,7 +11,9 @@ package de.bandika.cms.site;
 import de.bandika.cms.file.FileData;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.tree.TreeNode;
+import de.bandika.rights.Right;
 import de.bandika.servlet.RequestReader;
+import de.bandika.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -151,6 +153,11 @@ public class SiteData extends TreeNode {
     @Override
     public boolean isComplete() {
         return isComplete(name);
+    }
+
+    @Override
+    public boolean isVisibleToUser(HttpServletRequest request) {
+        return (isAnonymous() || SessionReader.hasContentRight(request, getId(), Right.READ)) && (!hasDefaultPage() || getDefaultPage().isVisibleToUser(request));
     }
 
 }
