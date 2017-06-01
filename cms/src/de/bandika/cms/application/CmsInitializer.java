@@ -14,6 +14,7 @@ import de.bandika.base.cache.BaseCache;
 import de.bandika.base.log.Log;
 import de.bandika.cms.blog.BlogAction;
 import de.bandika.cms.cluster.ClusterAction;
+import de.bandika.cms.cluster.ClusterControlTask;
 import de.bandika.cms.cluster.ClusterManager;
 import de.bandika.cms.cluster.ClusterMessageProcessor;
 import de.bandika.cms.configuration.ConfigAction;
@@ -59,10 +60,10 @@ public class CmsInitializer extends Initializer {
             Log.log("initializing");
             // actions
             AdminAction.initialize();
-            BlogAction.initialize();
+            //BlogAction.initialize();
             DefaultAction.initialize();
-            DocCenterAction.initialize();
-            NewsCenterAction.initialize();
+            //DocCenterAction.initialize();
+            //NewsCenterAction.initialize();
             InstallerAction.initialize();
             ClusterAction.initialize();
             ConfigAction.initialize();
@@ -116,7 +117,8 @@ public class CmsInitializer extends Initializer {
             //timer
             TimerCache.getInstance().registerTimerTask(new HeartbeatTask());
             TimerCache.getInstance().registerTimerTask(new SearchIndexTask());
-            TimerCache.getInstance().load();
+            //TimerCache.getInstance().registerTimerTask(new ClusterControlTask());
+            TimerCache.getInstance().loadTasks();
             TimerCache.getInstance().startThread();
             initialized = true;
         }

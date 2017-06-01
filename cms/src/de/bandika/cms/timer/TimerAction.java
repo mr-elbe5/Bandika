@@ -65,8 +65,7 @@ public enum TimerAction implements ICmsAction {
                 }
                 TimerBean ts = TimerBean.getInstance();
                 ts.updateTaskData(data);
-                TimerCache.getInstance().updateTask(data);
-                TimerCache.getInstance().reloadTask(data);
+                TimerCache.getInstance().loadTask(data.getName());
                 return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&timerName=" + data.getName(), "_taskSaved");
             }
         };

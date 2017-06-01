@@ -9,7 +9,6 @@
 package de.bandika.cms.timer;
 
 import de.bandika.application.AppContextListener;
-import de.bandika.base.cache.BaseCache;
 import de.bandika.base.log.Log;
 import de.bandika.cms.configuration.Configuration;
 
@@ -17,9 +16,8 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TimerCache extends BaseCache {
+public class TimerCache {
 
-    public static final String CACHEKEY = "cache|timer";
     private static TimerCache instance = null;
 
     public static TimerCache getInstance() {
@@ -31,10 +29,6 @@ public class TimerCache extends BaseCache {
 
     protected Map<String, TimerTask> tasks = new HashMap<>();
     protected TimerThread timerThread = null;
-
-    public String getCacheKey() {
-        return CACHEKEY;
-    }
 
     public void registerTimerTask(TimerTask task){
         tasks.put(task.getName(),task);
@@ -66,22 +60,26 @@ public class TimerCache extends BaseCache {
         AppContextListener.registerThread(timerThread);
     }
 
-    @Override
-    public void load() {
+    public void loadTasks() {
         LocalDateTime now = TimerBean.getInstance().getServerTime();
         for (TimerTask task : tasks.values()) {
             TimerBean.getInstance().readTimerTask(task);
-            task.initialize(now);
+            task.setNextExecution(task.computeNextExecution(now));
         }
     }
 
+    public void loadTask(String name) {
+        TimerTask data=tasks.get(name);
+        TimerBean.getInstance().readTimerTask(data);
+        LocalDateTime now = TimerBean.getInstance().getServerTime();
+        data.setNextExecution(data.computeNextExecution(now));
+    }
+
     public Map<String, TimerTask> getTasks() {
-        checkDirty();
         return tasks;
     }
 
     public TimerTask getTaskCopy(String name) {
-        checkDirty();
         TimerTask data = tasks.get(name);
         try {
             return (TimerTask) data.clone();
@@ -90,16 +88,4 @@ public class TimerCache extends BaseCache {
         }
     }
 
-    public void reloadTask(TimerTask data) {
-        checkDirty();
-        TimerBean.getInstance().readTimerTask(data);
-        LocalDateTime now = TimerBean.getInstance().getServerTime();
-        data.setNextExecution(data.computeNextExecution(now));
-    }
-
-    public void updateTask(TimerTask data) {
-        checkDirty();
-        LocalDateTime now = TimerBean.getInstance().getServerTime();
-        data.setNextExecution(data.computeNextExecution(now));
-    }
 }

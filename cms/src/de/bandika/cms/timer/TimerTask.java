@@ -106,10 +106,6 @@ public abstract class TimerTask extends BaseData implements Cloneable {
         this.active = active;
     }
 
-    public void initialize(LocalDateTime now) {
-       setNextExecution(computeNextExecution(now));
-    }
-
     protected LocalDateTime computeNextExecution(LocalDateTime now) {
         LocalDateTime next;
         switch (interval) {
