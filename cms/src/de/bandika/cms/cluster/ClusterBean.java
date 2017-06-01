@@ -46,7 +46,7 @@ public class ClusterBean extends DbBean {
                 data.setAddress(ownAddress);
                 data.setPort(rs.getInt(i++));
                 data.setActive(rs.getBoolean(i++));
-                data.setChangeDate(rs.getTimestamp(i));
+                data.setChangeDate(rs.getTimestamp(i).toLocalDateTime());
             }
             rs.close();
             if (data == null) {
@@ -83,7 +83,7 @@ public class ClusterBean extends DbBean {
                 data.setAddress(rs.getString(i++));
                 data.setPort(rs.getInt(i++));
                 data.setActive(true);
-                data.setChangeDate(rs.getTimestamp(i));
+                data.setChangeDate(rs.getTimestamp(i).toLocalDateTime());
                 if (!data.getAddress().equals(ownAddress))
                     list.add(data);
             }

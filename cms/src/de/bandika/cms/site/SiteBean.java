@@ -41,8 +41,8 @@ public class SiteBean extends TreeBean {
                     int i = 1;
                     SiteData data = new SiteData();
                     data.setId(rs.getInt(i++));
-                    data.setCreationDate(rs.getTimestamp(i++));
-                    data.setChangeDate(rs.getTimestamp(i++));
+                    data.setCreationDate(rs.getTimestamp(i++).toLocalDateTime());
+                    data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     data.setParentId(rs.getInt(i++));
                     data.setRanking(rs.getInt(i++));
                     data.setName(rs.getString(i++));

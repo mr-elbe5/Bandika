@@ -10,6 +10,7 @@ import de.bandika.rights.Right;
 import de.bandika.servlet.RequestReader;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode> {
@@ -17,7 +18,7 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
     public static final int ID_ALL = 0;
     public static final int ID_ROOT = 1;
 
-    protected Date creationDate = null;
+    protected LocalDateTime creationDate = null;
     protected int parentId = 0;
     protected TreeNode parent = null;
     protected int ranking = 0;
@@ -79,15 +80,11 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
         setLocale(data.getLocale());
     }
 
-    public Date getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public java.sql.Timestamp getSqlCreationDate() {
-        return new java.sql.Timestamp(creationDate.getTime());
-    }
-
-    public void setCreationDate(Date d) {
+    public void setCreationDate(LocalDateTime d) {
         creationDate = d;
     }
 

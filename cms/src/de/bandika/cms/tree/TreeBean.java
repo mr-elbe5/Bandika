@@ -14,6 +14,7 @@ import de.bandika.database.DbBean;
 import de.bandika.rights.Right;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -45,9 +46,9 @@ public class TreeBean extends DbBean {
             pst.setInt(1, data.getId());
             rs = pst.executeQuery();
             if (rs.next()) {
-                Timestamp date = rs.getTimestamp(1);
+                LocalDateTime date = rs.getTimestamp(1).toLocalDateTime();
                 rs.close();
-                result = date.getTime() == data.getChangeDate().getTime();
+                result = date.equals(data.getChangeDate());
             }
         } catch (Exception ignored) {
         } finally {
@@ -93,8 +94,8 @@ public class TreeBean extends DbBean {
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
-                    data.setCreationDate(rs.getTimestamp(i++));
-                    data.setChangeDate(rs.getTimestamp(i++));
+                    data.setCreationDate(rs.getTimestamp(i++).toLocalDateTime());
+                    data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     data.setParentId(rs.getInt(i++));
                     data.setRanking(rs.getInt(i++));
                     data.setName(rs.getString(i++));
@@ -115,17 +116,17 @@ public class TreeBean extends DbBean {
     }
 
     protected void writeTreeNode(Connection con, TreeNode data) throws SQLException {
-        Timestamp timestamp = getServerTime(con);
-        data.setChangeDate(timestamp);
+        LocalDateTime now = getServerTime(con);
+        data.setChangeDate(now);
         if (data.isNew()) {
-            data.setCreationDate(timestamp);
+            data.setCreationDate(now);
         }
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(data.isNew() ? "insert into t_treenode (creation_date,change_date,parent_id,ranking,name,display_name,description,owner_id,author_name,in_navigation,anonymous,inherits_rights,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?)" : "update t_treenode set creation_date=?,change_date=?,parent_id=?,ranking=?,name=?,display_name=?,description=?,owner_id=?,author_name=?,in_navigation=?,anonymous=?,inherits_rights=? where id=?");
             int i = 1;
-            pst.setTimestamp(i++, data.getSqlCreationDate());
-            pst.setTimestamp(i++, data.getSqlChangeDate());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getCreationDate()));
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             if (data.getParentId() == 0) {
                 pst.setNull(i++, Types.INTEGER);
             } else {

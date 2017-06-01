@@ -15,7 +15,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Date;
+import java.time.Instant;
 import java.util.Random;
 
 public class UserSecurity {
@@ -35,7 +35,7 @@ public class UserSecurity {
 
     public static String generateSimplePassword() {
         Random random = new Random();
-        random.setSeed(new Date().getTime());
+        random.setSeed(Instant.now().toEpochMilli());
         char[] chars = new char[7];
         chars[0] = getRandomChar(UPPER_SIMPLE_CONSONANTS, random);
         chars[1] = getRandomChar(LOWER_VOWELS, random);
@@ -49,7 +49,7 @@ public class UserSecurity {
 
     public static String generateCaptchaString() {
         Random random = new Random();
-        random.setSeed(new Date().getTime());
+        random.setSeed(Instant.now().toEpochMilli());
         char[] chars = new char[5];
         chars[0] = getRandomChar(UPPER_SIMPLE_CONSONANTS, random);
         chars[1] = getRandomChar(LOWER_VOWELS, random);
@@ -65,7 +65,7 @@ public class UserSecurity {
 
     public static String getRandomString(int count, String sourceChars) {
         Random random = new Random();
-        random.setSeed(new Date().getTime());
+        random.setSeed(Instant.now().toEpochMilli());
         char[] chars = new char[count];
         for (int i = 0; i < count; i++) {
             chars[i] = getRandomChar(sourceChars, random);

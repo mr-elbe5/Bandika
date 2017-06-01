@@ -10,15 +10,15 @@ package de.bandika.cms.timer;
 
 import de.bandika.base.data.Locales;
 import de.bandika.base.log.Log;
-import de.bandika.cms.configuration.Configuration;
+import de.bandika.base.util.StringUtil;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class HeartbeatTask implements TimerTask {
 
     @Override
-    public boolean execute(Date executionTime, Date checkTime) {
-        Log.log(String.format("heartbeat at %s", Configuration.getInstance().getDateTimeFormat(Locales.getInstance().getDefaultLocale()).format(TimerBean.getInstance().getServerTime())));
+    public boolean execute(LocalDateTime executionTime, LocalDateTime checkTime) {
+        Log.log("Heartbeat at " + StringUtil.toHtmlDateTime(TimerBean.getInstance().getServerTime(),Locales.getInstance().getDefaultLocale()));
         return true;
     }
 }

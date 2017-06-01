@@ -11,6 +11,7 @@ package de.bandika.database;
 import de.bandika.base.log.Log;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 
 public abstract class DbBean {
 
@@ -60,7 +61,7 @@ public abstract class DbBean {
     }
 
     public int getNextId(Connection con) throws SQLException {
-        int id = 0;
+        int id;
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement("SELECT id FROM t_id");
@@ -78,8 +79,8 @@ public abstract class DbBean {
         return id;
     }
 
-    public Timestamp getServerTime() {
-        Timestamp now = null;
+    public LocalDateTime getServerTime() {
+        LocalDateTime now = null;
         Connection con = null;
         try {
             con = getConnection();
@@ -91,14 +92,14 @@ public abstract class DbBean {
         return now;
     }
 
-    public Timestamp getServerTime(Connection con) throws SQLException {
-        Timestamp now = null;
+    public LocalDateTime getServerTime(Connection con) throws SQLException {
+        LocalDateTime now;
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement("SELECT now()");
             try (ResultSet rs = pst.executeQuery()) {
                 rs.next();
-                now = rs.getTimestamp(1);
+                now = rs.getTimestamp(1).toLocalDateTime();
             }
         } finally {
             closeStatement(pst);

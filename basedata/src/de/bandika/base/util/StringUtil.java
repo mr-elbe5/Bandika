@@ -12,7 +12,8 @@ import de.bandika.base.data.Locales;
 import de.bandika.base.log.Log;
 
 import java.net.URLEncoder;
-import java.text.DateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.apache.commons.lang3.StringEscapeUtils.*;
@@ -78,16 +79,28 @@ public class StringUtil {
         return sb.toString();
     }
 
-    public static String toHtmlDate(Date date, DateFormat formatter) {
-        return formatter == null ? "..." : formatter.format(date.getTime());
+    public static String toHtmlDate(LocalDateTime date, Locale locale) {
+        if (date==null)
+            return "";
+        if (locale==null)
+            locale=Locales.getInstance().getDefaultLocale();
+        return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd", locale));
     }
 
-    public static String toHtmlTime(Date date, DateFormat formatter) {
-        return formatter == null ? "..." : formatter.format(date.getTime());
+    public static String toHtmlTime(LocalDateTime date, Locale locale) {
+        if (date==null)
+            return "";
+        if (locale==null)
+            locale=Locales.getInstance().getDefaultLocale();
+        return date.format(DateTimeFormatter.ofPattern("HH:mm:ss", locale));
     }
 
-    public static String toHtmlDateTime(Date date, DateFormat formatter) {
-        return formatter == null ? "..." : formatter.format(date.getTime());
+    public static String toHtmlDateTime(LocalDateTime date, Locale locale) {
+        if (date==null)
+            return "";
+        if (locale==null)
+            locale=Locales.getInstance().getDefaultLocale();
+        return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", locale));
     }
 
     public static String toXml(String src) {

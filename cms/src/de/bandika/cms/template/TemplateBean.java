@@ -11,6 +11,7 @@ package de.bandika.cms.template;
 import de.bandika.database.DbBean;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,9 +40,9 @@ public class TemplateBean extends DbBean {
             pst.setString(2, data.getType().name());
             rs = pst.executeQuery();
             if (rs.next()) {
-                Timestamp date = rs.getTimestamp(1);
+                LocalDateTime date = rs.getTimestamp(1).toLocalDateTime();
                 rs.close();
-                result = date.getTime() == data.getChangeDate().getTime();
+                result = date.equals(data.getChangeDate());
             }
         } catch (Exception ignored) {
         } finally {
@@ -80,7 +81,7 @@ public class TemplateBean extends DbBean {
                 data = type.getNewTemplateData();
                 data.setDataTypeName(rs.getString(i++));
                 data.setName(rs.getString(i++));
-                data.setChangeDate(rs.getTimestamp(i++));
+                data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                 data.setDisplayName(rs.getString(i++));
                 data.setDescription(rs.getString(i++));
                 data.setUsage(rs.getString(i++));
@@ -117,7 +118,7 @@ public class TemplateBean extends DbBean {
         try {
             pst = con.prepareStatement(data.isNew() ? "insert into t_template (change_date,display_name,description,usage,editable,dynamic,code,data_type,name,type) values(?,?,?,?,?,?,?,?,?,?)" : "update t_template set change_date=?, display_name=?, description=?, usage=?, editable=?, dynamic=?, code=?, data_type=? where name=? and type=?");
             int i = 1;
-            pst.setTimestamp(i++, data.getSqlChangeDate());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getDisplayName());
             pst.setString(i++, data.getDescription());
             pst.setString(i++, data.getUsage());

@@ -11,7 +11,7 @@ package de.bandika.cms.timer;
 import de.bandika.base.log.Log;
 import de.bandika.base.thread.BaseThread;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class TimerThread extends BaseThread {
 
@@ -38,7 +38,7 @@ public class TimerThread extends BaseThread {
     }
 
     protected void checkTasks() {
-        Date now = TimerBean.getInstance().getServerTime();
+        LocalDateTime now = TimerBean.getInstance().getServerTime();
         for (TimerTaskData task : TimerCache.getInstance().getTasks()) {
             try {
                 if (task.isActive()) {
@@ -50,14 +50,13 @@ public class TimerThread extends BaseThread {
         }
     }
 
-    protected void checkTask(TimerTaskData data, Date now) {
+    protected void checkTask(TimerTaskData data, LocalDateTime now) {
         if (now == null) {
             return;
         }
-        Date next = data.getNextExecution();
-        if (now.before(next)) {
-            return;
+        LocalDateTime next = data.getNextExecution();
+        if (now.isAfter(next)) {
+            data.execute(now);
         }
-        data.execute(now);
     }
 }

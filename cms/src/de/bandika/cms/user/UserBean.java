@@ -48,7 +48,7 @@ public class UserBean extends LoginBean {
                     int i = 1;
                     data = new UserData();
                     data.setId(rs.getInt(i++));
-                    data.setChangeDate(rs.getTimestamp(i++));
+                    data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     data.setFirstName(rs.getString(i++));
                     data.setLastName(rs.getString(i++));
                     data.setStreet(rs.getString(i++));
@@ -94,7 +94,7 @@ public class UserBean extends LoginBean {
                 int i = 1;
                 data = new UserData();
                 data.setId(id);
-                data.setChangeDate(rs.getTimestamp(i++));
+                data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                 data.setTitle(rs.getString(i++));
                 data.setFirstName(rs.getString(i++));
                 data.setLastName(rs.getString(i++));
@@ -189,7 +189,7 @@ public class UserBean extends LoginBean {
         try {
             pst = con.prepareStatement(data.isNew() ? "insert into t_user (change_date,title,first_name,last_name,street,zipCode,city,country,locale,email,phone,fax,mobile,notes,portrait_name,portrait,login,pwd,pkey,approval_code,approved,failed_login_count,locked,deleted,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" : data.getPassword().length() == 0 ? "update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?" : "update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,pwd=?,pkey=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?");
             int i = 1;
-            pst.setTimestamp(i++, data.getSqlChangeDate());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getTitle());
             pst.setString(i++, data.getFirstName());
             pst.setString(i++, data.getLastName());
@@ -248,7 +248,7 @@ public class UserBean extends LoginBean {
         try {
             pst = con.prepareStatement("UPDATE t_user SET change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=? WHERE id=?");
             int i = 1;
-            pst.setTimestamp(i++, data.getSqlChangeDate());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getTitle());
             pst.setString(i++, data.getFirstName());
             pst.setString(i++, data.getLastName());

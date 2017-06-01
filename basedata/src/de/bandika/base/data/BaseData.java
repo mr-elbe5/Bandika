@@ -8,12 +8,12 @@
  */
 package de.bandika.base.data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class BaseData {
 
     private boolean isNew = false;
-    private Date changeDate = null;
+    private LocalDateTime changeDate = null;
 
     public int getSize() {
         return 0;
@@ -27,15 +27,11 @@ public class BaseData {
         isNew = aNew;
     }
 
-    public Date getChangeDate() {
+    public LocalDateTime getChangeDate() {
         return changeDate;
     }
 
-    public java.sql.Timestamp getSqlChangeDate() {
-        return new java.sql.Timestamp(changeDate.getTime());
-    }
-
-    public void setChangeDate(Date changeDate) {
+    public void setChangeDate(LocalDateTime changeDate) {
         this.changeDate = changeDate;
     }
 

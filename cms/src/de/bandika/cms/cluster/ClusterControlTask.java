@@ -10,11 +10,11 @@ package de.bandika.cms.cluster;
 
 import de.bandika.cms.timer.TimerTask;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ClusterControlTask implements TimerTask {
 
-    public boolean execute(Date executionTime, Date checkTime) {
+    public boolean execute(LocalDateTime executionTime, LocalDateTime checkTime) {
         ClusterManager.getInstance().checkOtherServers();
         return true;
     }

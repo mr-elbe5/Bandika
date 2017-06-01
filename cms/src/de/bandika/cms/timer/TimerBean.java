@@ -47,7 +47,8 @@ public class TimerBean extends DbBean {
                     data.setMinute(rs.getInt(i++));
                     data.setSecond(rs.getInt(i++));
                     data.setNoteExecution(rs.getBoolean(i++));
-                    data.setLastExecution(rs.getTimestamp(i++));
+                    Timestamp ts=rs.getTimestamp(i++);
+                    data.setLastExecution(ts==null ? null : ts.toLocalDateTime());
                     data.setActive(rs.getBoolean(i));
                     list.add(data);
                 }
@@ -78,7 +79,8 @@ public class TimerBean extends DbBean {
                     data.setMinute(rs.getInt(i++));
                     data.setSecond(rs.getInt(i++));
                     data.setNoteExecution(rs.getBoolean(i++));
-                    data.setLastExecution(rs.getTimestamp(i++));
+                    Timestamp ts=rs.getTimestamp(i++);
+                    data.setLastExecution(ts==null ? null : ts.toLocalDateTime());
                     data.setActive(rs.getBoolean(i));
                 }
             }
@@ -99,7 +101,7 @@ public class TimerBean extends DbBean {
             if (data.getLastExecution() == null) {
                 pst.setNull(1, Types.TIMESTAMP);
             } else {
-                pst.setTimestamp(1, data.getSqlLastExecution());
+                pst.setTimestamp(1, Timestamp.valueOf(data.getLastExecution()));
             }
             pst.setInt(2, data.getId());
             pst.executeUpdate();

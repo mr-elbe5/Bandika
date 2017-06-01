@@ -33,14 +33,14 @@
     <td><label><%=StringUtil.getHtml("_creationDate", locale)%>
     </label></td>
     <td>
-        <%=Configuration.getInstance().getHtmlDateTime(data.getCreationDate(), locale)%>
+        <%=StringUtil.toHtmlDateTime(data.getCreationDate(), locale)%>
     </td>
 </tr>
 <tr>
     <td><label><%=StringUtil.getHtml("_changeDate", locale)%>
     </label></td>
     <td>
-        <%=Configuration.getInstance().getHtmlDateTime(data.getChangeDate(), locale)%>
+        <%=StringUtil.toHtmlDateTime(data.getChangeDate(), locale)%>
     </td>
 </tr>
 <tr>

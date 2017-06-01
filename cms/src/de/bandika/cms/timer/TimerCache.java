@@ -13,8 +13,8 @@ import de.bandika.base.cache.BaseCache;
 import de.bandika.base.log.Log;
 import de.bandika.cms.configuration.Configuration;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class TimerCache extends BaseCache {
@@ -66,7 +66,7 @@ public class TimerCache extends BaseCache {
     public void load() {
         tasks.clear();
         List<TimerTaskData> list = TimerBean.getInstance().getAllTimerTasks();
-        Date now = TimerBean.getInstance().getServerTime();
+        LocalDateTime now = TimerBean.getInstance().getServerTime();
         for (TimerTaskData task : list) {
             if (task.initialize(now)) {
                 tasks.add(task);
@@ -96,13 +96,13 @@ public class TimerCache extends BaseCache {
     public void reloadTask(TimerTaskData data) {
         checkDirty();
         TimerBean.getInstance().reloadTimerTask(data);
-        Date now = TimerBean.getInstance().getServerTime();
+        LocalDateTime now = TimerBean.getInstance().getServerTime();
         data.setNextExecution(data.computeNextExecution(now));
     }
 
     public void updateTask(TimerTaskData data) {
         checkDirty();
-        Date now = TimerBean.getInstance().getServerTime();
+        LocalDateTime now = TimerBean.getInstance().getServerTime();
         for (int i = 0; i < tasks.size(); i++) {
             TimerTaskData task = tasks.get(i);
             if (task.getId() == data.getId()) {

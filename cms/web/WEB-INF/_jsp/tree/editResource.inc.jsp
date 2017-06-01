@@ -53,6 +53,6 @@
     <td><label><%=StringUtil.getHtml("_contentChangeDate", locale)%>
     </label></td>
     <td>
-        <div><%=Configuration.getInstance().getHtmlDateTime(data.getContentChangeDate(), locale)%>
+        <div><%=StringUtil.toHtmlDateTime(data.getContentChangeDate(), locale)%>
         </div>
 </tr>

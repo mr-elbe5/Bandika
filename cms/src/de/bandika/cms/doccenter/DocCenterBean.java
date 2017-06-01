@@ -12,6 +12,7 @@ import de.bandika.base.data.BinaryFileData;
 import de.bandika.database.DbBean;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class DocCenterBean extends DbBean {
@@ -35,9 +36,9 @@ public class DocCenterBean extends DbBean {
             pst.setInt(1, data.getId());
             rs = pst.executeQuery();
             if (rs.next()) {
-                Timestamp date = rs.getTimestamp(1);
+                LocalDateTime date = rs.getTimestamp(1).toLocalDateTime();
                 rs.close();
-                result = date.getTime() == data.getChangeDate().getTime();
+                result = date.equals(data.getChangeDate());
             }
         } catch (Exception ignored) {
         } finally {
@@ -141,7 +142,7 @@ public class DocCenterBean extends DbBean {
             String sql = data.isNew() ? "insert into t_teamfile (change_date,teampart_id,owner_id,owner_name,checkout_id,checkout_name,search_content,id) values (?,?,?,?,?,?,?,?)" : "update t_teamfile set change_date=?,teampart_id=?,owner_id=?,owner_name=?,checkout_id=?,checkout_name=? where id=?";
             pst = con.prepareStatement(sql);
             int i = 1;
-            pst.setTimestamp(i++, data.getSqlChangeDate());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setInt(i++, data.getTeamPartId());
             pst.setInt(i++, data.getOwnerId());
             pst.setString(i++, data.getOwnerName());
@@ -172,7 +173,7 @@ public class DocCenterBean extends DbBean {
             String sql = insert ? "insert into t_teamfile_version (change_date,file_name,name,description,content_type,size,author_id,author_name,bytes,id,version) values (?,?,?,?,?,?,?,?,?,?,?)" : "update t_teamfile_version version set change_date=?,file_name=?,name=?,description=?,content_type=?,size=?,author_id=?,author_name=?,bytes=? where id=? and version=?";
             pst = con.prepareStatement(sql);
             int i = 1;
-            pst.setTimestamp(i++, data.getSqlVersionChangeDate());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getVersionChangeDate()));
             pst.setString(i++, data.getName());
             pst.setString(i++, data.getDisplayName());
             pst.setString(i++, data.getDescription());
@@ -195,7 +196,7 @@ public class DocCenterBean extends DbBean {
             String sql = "INSERT INTO t_teamfile_current (change_date,current_version,checkout_version,id) VALUES (?,NULL,?,?)";
             pst = con.prepareStatement(sql);
             int i = 1;
-            pst.setTimestamp(i++, data.getSqlChangeDate());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setInt(i++, data.getVersion());
             pst.setInt(i, data.getId());
             pst.executeUpdate();
@@ -210,7 +211,7 @@ public class DocCenterBean extends DbBean {
             String sql = "UPDATE t_teamfile_current SET change_date=?,checkout_version=? WHERE id=?";
             pst = con.prepareStatement(sql);
             int i = 1;
-            pst.setTimestamp(i++, data.getSqlChangeDate());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             if (data.getVersion() == 0)
                 pst.setNull(i++, Types.INTEGER);
             else
@@ -228,7 +229,7 @@ public class DocCenterBean extends DbBean {
             String sql = "UPDATE t_teamfile_current SET change_date=?,current_version=?,checkout_version=? WHERE id=?";
             pst = con.prepareStatement(sql);
             int i = 1;
-            pst.setTimestamp(i++, data.getSqlChangeDate());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setInt(i++, data.getVersion());
             pst.setNull(i++, Types.INTEGER);
             pst.setInt(i, data.getId());
@@ -281,7 +282,7 @@ public class DocCenterBean extends DbBean {
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
                 int i = 1;
-                data.setChangeDate(rs.getTimestamp(i++));
+                data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                 data.setTeamPartId(rs.getInt(i++));
                 data.setOwnerId(rs.getInt(i++));
                 data.setOwnerName(rs.getString(i++));
@@ -305,7 +306,7 @@ public class DocCenterBean extends DbBean {
             if (rs.next()) {
                 int i = 1;
                 data.setVersion(rs.getInt(i++));
-                data.setVersionChangeDate(rs.getTimestamp(i++));
+                data.setVersionChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                 data.setName(rs.getString(i++));
                 data.setDisplayName(rs.getString(i++));
                 data.setDescription(rs.getString(i++));
@@ -489,7 +490,7 @@ public class DocCenterBean extends DbBean {
             i = 1;
             DocCenterFileData data = new DocCenterFileData();
             data.setId(rs.getInt(i++));
-            data.setChangeDate(rs.getTimestamp(i++));
+            data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
             data.setTeamPartId(rs.getInt(i++));
             data.setOwnerId(rs.getInt(i++));
             data.setOwnerName(rs.getString(i++));

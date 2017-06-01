@@ -48,16 +48,10 @@
                         <input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_MONTH%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_MONTH ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_monthly", locale)%>
                     </div>
                     <div>
-                        <input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_WEEK%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_WEEK ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_weekly", locale)%>
-                    </div>
-                    <div>
                         <input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_DAY%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_DAY ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_daily", locale)%>
                     </div>
                     <div>
                         <input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_HOUR%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_HOUR ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_everyHour", locale)%>
-                    </div>
-                    <div>
-                        <input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_MINUTE%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_MINUTE ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_everyMinute", locale)%>
                     </div>
                 </td>
             </tr>

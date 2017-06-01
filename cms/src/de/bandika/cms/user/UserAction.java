@@ -119,9 +119,8 @@ public enum UserAction implements ICmsAction {
             public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
                 if (!SessionReader.isLoggedIn(request) || SessionReader.getLoginId(request) != RequestReader.getInt(request, "userId"))
                     return false;
-                UserData user = UserBean.getInstance().getUser(SessionReader.getSessionLoginData(request).getId());
-                checkObject(user);
-                UserData data = UserBean.getInstance().getUser(user.getId());
+                int userId=SessionReader.getSessionLoginData(request).getId();
+                UserData data = UserBean.getInstance().getUser(userId);
                 data.readUserProfileRequestData(request);
                 if (!data.isCompleteProfile()) {
                     RequestError err = new RequestError();

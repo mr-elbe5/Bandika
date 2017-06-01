@@ -11,6 +11,7 @@ package de.bandika.cms.blog;
 import de.bandika.database.DbBean;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class BlogBean extends DbBean {
@@ -34,9 +35,9 @@ public class BlogBean extends DbBean {
             pst.setInt(1, data.getId());
             rs = pst.executeQuery();
             if (rs.next()) {
-                Timestamp date = rs.getTimestamp(1);
+                LocalDateTime date = rs.getTimestamp(1).toLocalDateTime();
                 rs.close();
-                result = date.getTime() == data.getChangeDate().getTime();
+                result = date.equals(data.getChangeDate());
             }
         } catch (Exception ignored) {
         } finally {
@@ -66,7 +67,7 @@ public class BlogBean extends DbBean {
             String sql = data.isNew() ? "insert into t_teamblogentry (change_date,teampart_id,title,author_id,author_name,entry,id) values (?,?,?,?,?,?,?)" : "update t_teamblogentry set change_date=?,teampart_id=?,title=?,author_id=?,author_name=?,entry=? where id=?";
             pst = con.prepareStatement(sql);
             int i = 1;
-            pst.setTimestamp(i++, data.getSqlChangeDate());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setInt(i++, data.getTeamPartId());
             pst.setString(i++, data.getTitle());
             pst.setInt(i++, data.getAuthorId());
@@ -103,7 +104,7 @@ public class BlogBean extends DbBean {
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
                 int i = 1;
-                data.setChangeDate(rs.getTimestamp(i++));
+                data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                 data.setTeamPartId(rs.getInt(i++));
                 data.setTitle(rs.getString(i++));
                 data.setAuthorId(rs.getInt(i++));
@@ -140,7 +141,7 @@ public class BlogBean extends DbBean {
             i = 1;
             BlogEntryData data = new BlogEntryData();
             data.setId(rs.getInt(i++));
-            data.setChangeDate(rs.getTimestamp(i++));
+            data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
             data.setTeamPartId(rs.getInt(i++));
             data.setTitle(rs.getString(i++));
             data.setAuthorId(rs.getInt(i++));

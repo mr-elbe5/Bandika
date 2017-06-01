@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class XmlUtil {
@@ -88,7 +89,7 @@ public class XmlUtil {
         addAttribute(doc, node, key, Boolean.toString(value));
     }
 
-    public static void addDateAttribute(Document doc, Element node, String key, Date date) {
+    public static void addDateAttribute(Document doc, Element node, String key, LocalDateTime date) {
         if (date != null) {
             addAttribute(doc, node, key, dateFormat.format(date));
         }
@@ -233,14 +234,14 @@ public class XmlUtil {
         return result;
     }
 
-    public static Date getDateAttribute(Node node, String key) {
-        Date result = null;
+    public static LocalDateTime getDateAttribute(Node node, String key) {
+        LocalDateTime result = null;
         if (node.hasAttributes()) {
             NamedNodeMap attrMap = node.getAttributes();
             Node attr = attrMap.getNamedItem(key);
             if (attr != null) {
                 try {
-                    result = dateFormat.parse(attr.getNodeValue());
+                    result = LocalDateTime.parse(attr.getNodeValue());
                 } catch (Exception ignored) {
                 }
             }

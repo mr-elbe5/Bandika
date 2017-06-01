@@ -14,6 +14,7 @@ import de.bandika.base.util.StringUtil;
 import de.bandika.database.DbBean;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 
 /**
  * Class LoginBean is the persistence class user login and registration. <br>
@@ -42,9 +43,9 @@ public class LoginBean extends DbBean {
             pst.setInt(1, data.getId());
             rs = pst.executeQuery();
             if (rs.next()) {
-                Timestamp date = rs.getTimestamp(1);
+                LocalDateTime date = rs.getTimestamp(1).toLocalDateTime();
                 rs.close();
-                result = date.getTime() == data.getChangeDate().getTime();
+                result = date.equals(data.getChangeDate());
             }
         } catch (Exception ignored) {
         } finally {
@@ -68,7 +69,7 @@ public class LoginBean extends DbBean {
                     int i = 1;
                     data = new UserLoginData();
                     data.setId(rs.getInt(i++));
-                    data.setChangeDate(rs.getTimestamp(i++));
+                    data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     data.setLogin(login);
                     String encypted = rs.getString(i++);
                     String key = rs.getString(i++);
@@ -153,7 +154,7 @@ public class LoginBean extends DbBean {
                     String key = rs.getString(i++);
                     passed = (encryptPassword(pwd, key).equals(encrypted));
                     data.setPassword("");
-                    data.setChangeDate(rs.getTimestamp(i++));
+                    data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     data.setFirstName(rs.getString(i++));
                     data.setLastName(rs.getString(i++));
                     data.setLocale(rs.getString(i++));
@@ -212,7 +213,7 @@ public class LoginBean extends DbBean {
         try {
             pst = con.prepareStatement(data.isNew() ? "insert into t_user (change_date,first_name,last_name,locale,email,login,pwd,pkey,approval_code,approved,failed_login_count,locked,deleted,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)" : data.getPassword().length() == 0 ? "update t_user set change_date=?,first_name=?,last_name=?,locale=?,email=?,login=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?" : "update t_user set change_date=?,first_name=?,last_name=?,street=?,email=?,login=?,pwd=?,pkey=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?");
             int i = 1;
-            pst.setTimestamp(i++, data.getSqlChangeDate());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getFirstName());
             pst.setString(i++, data.getLastName());
             pst.setString(i++, data.getLocale().getLanguage());
@@ -277,7 +278,7 @@ public class LoginBean extends DbBean {
         try {
             pst = con.prepareStatement("UPDATE t_user SET change_date=?, pwd=?, pkey=? WHERE id=?");
             int i = 1;
-            pst.setTimestamp(i++, data.getSqlChangeDate());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             String key = generateKey();
             pst.setString(i++, encryptPassword(data.getPassword(), key));
             pst.setString(i++, key);

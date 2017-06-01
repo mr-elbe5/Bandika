@@ -48,8 +48,8 @@ public class PageBean extends ResourceBean {
                     int i = 1;
                     PageData data = new PageData();
                     data.setId(rs.getInt(i++));
-                    data.setCreationDate(rs.getTimestamp(i++));
-                    data.setChangeDate(rs.getTimestamp(i++));
+                    data.setCreationDate(rs.getTimestamp(i++).toLocalDateTime());
+                    data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     data.setParentId(rs.getInt(i++));
                     data.setRanking(rs.getInt(i++));
                     data.setName(rs.getString(i++));
@@ -93,8 +93,8 @@ public class PageBean extends ResourceBean {
                     int i = 1;
                     data = new PageData();
                     data.setId(id);
-                    data.setCreationDate(rs.getTimestamp(i++));
-                    data.setChangeDate(rs.getTimestamp(i++));
+                    data.setCreationDate(rs.getTimestamp(i++).toLocalDateTime());
+                    data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     data.setParentId(rs.getInt(i++));
                     data.setRanking(rs.getInt(i++));
                     data.setName(rs.getString(i++));
@@ -169,7 +169,7 @@ public class PageBean extends ResourceBean {
                 while (rs.next()) {
                     int i = 1;
                     data.setLoadedVersion(version);
-                    data.setContentChangeDate(rs.getTimestamp(i++));
+                    data.setContentChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     data.setPublished(rs.getBoolean(i++));
                     data.setAuthorName(rs.getString(i));
                 }
@@ -294,7 +294,7 @@ public class PageBean extends ResourceBean {
             pst = con.prepareStatement("INSERT INTO t_page_content (id,version,change_date,published,author_name) VALUES(?,?,?,FALSE,?)");
             pst.setInt(i++, data.getId());
             pst.setInt(i++, data.getLoadedVersion());
-            pst.setTimestamp(i++, data.getSqlContentChangeDate());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getContentChangeDate()));
             pst.setString(i, data.getAuthorName());
             pst.executeUpdate();
             pst.close();
@@ -379,7 +379,7 @@ public class PageBean extends ResourceBean {
                     readResourceNode(con, data);
                     data.setLoadedVersion(rs.getInt(i++));
                     readPage(con, data);
-                    data.setContentChangeDate(rs.getTimestamp(i++));
+                    data.setContentChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     data.setPublished(rs.getBoolean(i++));
                     data.setAuthorName(rs.getString(i));
                     list.add(data);
@@ -454,7 +454,7 @@ public class PageBean extends ResourceBean {
                     partData = template.getDataType().getNewPagePartData();
                     partData.setTemplateData(template);
                     partData.setId(rs.getInt(i++));
-                    partData.setChangeDate(rs.getTimestamp(i++));
+                    partData.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     partData.setPageId(pageData.getId());
                     partData.setVersion(version);
                     partData.setSectionName(rs.getString(i++));
@@ -483,7 +483,7 @@ public class PageBean extends ResourceBean {
                     partData = template.getDataType().getNewPagePartData();
                     partData.setTemplateData(template);
                     partData.setId(rs.getInt(i++));
-                    partData.setChangeDate(rs.getTimestamp(i++));
+                    partData.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     partData.setPageId(page.getId());
                     partData.setShared(true);
                     partData.setVersion(version);
@@ -545,7 +545,7 @@ public class PageBean extends ResourceBean {
                     partData = template.getDataType().getNewPagePartData();
                     partData.setTemplateData(template);
                     partData.setId(rs.getInt(i++));
-                    partData.setChangeDate(rs.getTimestamp(i++));
+                    partData.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     partData.setPageId(0);
                     partData.setVersion(0);
                     partData.setShared(true);
@@ -576,7 +576,7 @@ public class PageBean extends ResourceBean {
                     partData = template.getDataType().getNewPagePartData();
                     partData.setTemplateData(template);
                     partData.setId(partId);
-                    partData.setChangeDate(rs.getTimestamp(i++));
+                    partData.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     partData.setPageId(0);
                     partData.setVersion(0);
                     partData.setShared(true);
@@ -623,7 +623,7 @@ public class PageBean extends ResourceBean {
             } else {
                 pst.setInt(i++, data.getPageId());
             }
-            pst.setTimestamp(i++, data.getSqlChangeDate());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getSectionName());
             pst.setInt(i++, data.getRanking());
             pst.setString(i++, data.getTemplateName());
@@ -653,7 +653,7 @@ public class PageBean extends ResourceBean {
             } else {
                 pst = con.prepareStatement("UPDATE t_shared_page_part SET change_date=?,share_name=?,template=?,content=? WHERE id=?");
             }
-            pst.setTimestamp(i++, data.getSqlChangeDate());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getShareName());
             pst.setString(i++, data.getTemplateName());
             pst.setString(i++, data.getXmlContent());
@@ -690,7 +690,7 @@ public class PageBean extends ResourceBean {
             pst.setInt(i++, data.getId());
             pst.setInt(i++, page.getId());
             pst.setInt(i++, page.getLoadedVersion());
-            pst.setTimestamp(i++, data.getSqlChangeDate());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getSectionName());
             pst.setInt(i, data.getRanking());
             pst.executeUpdate();

@@ -16,7 +16,7 @@ import de.bandika.base.util.StringUtil;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Locale;
 
 public class WebConfiguration extends BaseData implements Cloneable {
@@ -43,18 +43,6 @@ public class WebConfiguration extends BaseData implements Cloneable {
 
     public void setDefaultLocale(Locale defaultLocale) {
         this.defaultLocale = defaultLocale;
-    }
-
-    public DateFormat getDateFormat(Locale locale) {
-        return new SimpleDateFormat(StringUtil.getString("_datepattern", locale));
-    }
-
-    public DateFormat getDateTimeFormat(Locale locale) {
-        return new SimpleDateFormat(StringUtil.getString("_datetimepattern", locale));
-    }
-
-    public String getHtmlDateTime(Date date, Locale locale) {
-        return StringUtil.toHtmlDateTime(date, getDateFormat(locale));
     }
 
     public String getSmtpHost() {

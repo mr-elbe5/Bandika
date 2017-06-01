@@ -8,18 +8,18 @@
  */
 package de.bandika.cms.search;
 
+import de.bandika.base.data.Locales;
 import de.bandika.base.log.Log;
-import de.bandika.cms.configuration.Configuration;
+import de.bandika.base.util.StringUtil;
 import de.bandika.cms.timer.TimerBean;
 import de.bandika.cms.timer.TimerTask;
 
-import java.util.Date;
-import java.util.Locale;
+import java.time.LocalDateTime;
 
 public class SearchIndexTask implements TimerTask {
 
-    public boolean execute(Date executionTime, Date checkTime) {
-        Log.log("indexing content for search at " + Configuration.getInstance().getDateTimeFormat(Locale.ENGLISH).format(TimerBean.getInstance().getServerTime()));
+    public boolean execute(LocalDateTime executionTime, LocalDateTime checkTime) {
+        Log.log("indexing content for search at " + StringUtil.toHtmlDateTime(TimerBean.getInstance().getServerTime(), Locales.getInstance().getDefaultLocale()));
         SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_CONTENT, 0, null));
         SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_USERS, 0, null));
         return true;

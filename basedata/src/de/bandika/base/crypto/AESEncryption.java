@@ -14,15 +14,11 @@ import de.bandika.base.crypto.shirocodec.Base64;
 import de.bandika.base.crypto.shirocodec.CodecSupport;
 import de.bandika.base.log.Log;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Date;
 
 public class AESEncryption {
 
-    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private static final byte[] NULLBYTES = CodecSupport.toBytes("NULL.0000.NULL");
 
     public static byte[] generateKey() {
@@ -66,9 +62,8 @@ public class AESEncryption {
         return encryptBytes(original, keyBase64);
     }
 
-    public static String encryptDate(Date date, String keyBase64) {
-        DateFormat df = new SimpleDateFormat(DATE_FORMAT);
-        String original = (date == null) ? null : df.format(date);
+    public static String encryptDate(LocalDateTime date, String keyBase64) {
+        String original = (date == null) ? null : date.toString();
         return encryptString(original, keyBase64);
     }
 
@@ -105,14 +100,9 @@ public class AESEncryption {
         return (original == null) ? null : CodecSupport.toString(original);
     }
 
-    public static Date decryptDate(String cipherTextBase64, String keyBase64) {
+    public static LocalDateTime decryptDate(String cipherTextBase64, String keyBase64) {
         String dateString = decryptString(cipherTextBase64, keyBase64);
-        try {
-            DateFormat df = new SimpleDateFormat(DATE_FORMAT);
-            return (dateString == null) ? null : df.parse(dateString);
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Unexpected date format: " + dateString, e);
-        }
+        return (dateString == null) ? null : LocalDateTime.parse(dateString);
     }
 
     public static Number decryptNumber(String cipherTextBase64, String keyBase64) {

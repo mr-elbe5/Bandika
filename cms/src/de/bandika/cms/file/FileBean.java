@@ -40,8 +40,8 @@ public class FileBean extends ResourceBean {
                     int i = 1;
                     FileData data = new FileData();
                     data.setId(rs.getInt(i++));
-                    data.setCreationDate(rs.getTimestamp(i++));
-                    data.setChangeDate(rs.getTimestamp(i++));
+                    data.setCreationDate(rs.getTimestamp(i++).toLocalDateTime());
+                    data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     data.setParentId(rs.getInt(i++));
                     data.setRanking(rs.getInt(i++));
                     data.setName(rs.getString(i++));
@@ -90,8 +90,8 @@ public class FileBean extends ResourceBean {
                     int i = 1;
                     data = new FileData();
                     data.setId(id);
-                    data.setCreationDate(rs.getTimestamp(i++));
-                    data.setChangeDate(rs.getTimestamp(i++));
+                    data.setCreationDate(rs.getTimestamp(i++).toLocalDateTime());
+                    data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     data.setParentId(rs.getInt(i++));
                     data.setRanking(rs.getInt(i++));
                     data.setName(rs.getString(i++));
@@ -199,7 +199,7 @@ public class FileBean extends ResourceBean {
                 while (rs.next()) {
                     int i = 1;
                     data.setLoadedVersion(version);
-                    data.setContentChangeDate(rs.getTimestamp(i++));
+                    data.setContentChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     data.setPublished(rs.getBoolean(i++));
                     data.setAuthorName(rs.getString(i++));
                     data.setContentType(rs.getString(i++));
@@ -340,7 +340,7 @@ public class FileBean extends ResourceBean {
             pst = con.prepareStatement("INSERT INTO t_file_content (id,version,change_date,published,author_name,content_type,file_size,width,height,bytes,preview_content_type,preview_bytes) VALUES(?,?,?,FALSE,?,?,?,?,?,?,?,?)");
             pst.setInt(i++, data.getId());
             pst.setInt(i++, data.getLoadedVersion());
-            pst.setTimestamp(i++, data.getSqlContentChangeDate());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getContentChangeDate()));
             pst.setString(i++, data.getAuthorName());
             pst.setString(i++, data.getContentType());
             pst.setInt(i++, data.getFileSize());
@@ -544,7 +544,7 @@ public class FileBean extends ResourceBean {
                     readResourceNode(con, data);
                     data.setLoadedVersion(rs.getInt(i++));
                     readFile(con, data);
-                    data.setContentChangeDate(rs.getTimestamp(i++));
+                    data.setContentChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     data.setPublished(rs.getBoolean(i++));
                     data.setAuthorName(rs.getString(i));
                     list.add(data);

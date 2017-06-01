@@ -8,9 +8,9 @@
  */
 package de.bandika.cms.timer;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public interface TimerTask {
 
-    boolean execute(Date executionTime, Date checkTime);
+    boolean execute(LocalDateTime executionTime, LocalDateTime checkTime);
 }

@@ -13,9 +13,7 @@ import de.bandika.base.log.Log;
 import de.bandika.servlet.RequestReader;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.time.LocalDateTime;
 
 /**
  * Class TimerTaskData is the data class for timer tasks groups. <br>
@@ -25,10 +23,9 @@ public class TimerTaskData extends BaseIdData implements Cloneable {
 
     public static final int INTERVAL_TYPE_CONTINOUS = 0;
     public static final int INTERVAL_TYPE_MONTH = 1;
-    public static final int INTERVAL_TYPE_WEEK = 2;
-    public static final int INTERVAL_TYPE_DAY = 3;
-    public static final int INTERVAL_TYPE_HOUR = 4;
-    public static final int INTERVAL_TYPE_MINUTE = 5;
+    public static final int INTERVAL_TYPE_DAY = 2;
+    public static final int INTERVAL_TYPE_HOUR = 3;
+
     protected String name;
     protected String className;
     protected int intervalType = INTERVAL_TYPE_DAY;
@@ -37,10 +34,10 @@ public class TimerTaskData extends BaseIdData implements Cloneable {
     protected int minute = 0;
     protected int second = 0;
     protected boolean noteExecution = false;
-    protected Date lastExecution = null;
+    protected LocalDateTime lastExecution = null;
     protected boolean active = true;
     protected TimerTask task = null;
-    protected Date nextExecution = null;
+    protected LocalDateTime nextExecution = null;
 
     @Override
     public Object clone() throws CloneNotSupportedException {
@@ -111,15 +108,11 @@ public class TimerTaskData extends BaseIdData implements Cloneable {
         this.noteExecution = noteExecution;
     }
 
-    public Date getLastExecution() {
+    public LocalDateTime getLastExecution() {
         return lastExecution;
     }
 
-    public java.sql.Timestamp getSqlLastExecution() {
-        return new java.sql.Timestamp(lastExecution.getTime());
-    }
-
-    public void setLastExecution(Date lastExecution) {
+    public void setLastExecution(LocalDateTime lastExecution) {
         if (lastExecution == null) {
             this.lastExecution = TimerBean.getInstance().getServerTime();
         } else {
@@ -135,7 +128,7 @@ public class TimerTaskData extends BaseIdData implements Cloneable {
         this.active = active;
     }
 
-    public boolean initialize(Date now) {
+    public boolean initialize(LocalDateTime now) {
         try {
             Class cls = Object.class;
             if (className != null && !className.isEmpty()) {
@@ -153,100 +146,68 @@ public class TimerTaskData extends BaseIdData implements Cloneable {
         return true;
     }
 
-    protected Date computeNextExecution(Date now) {
-        Calendar cal = new GregorianCalendar();
-    /* cal = lastExecution | now >> lastExpected >> nextExecution  */
+    protected LocalDateTime computeNextExecution(LocalDateTime now) {
+        LocalDateTime next;
         switch (intervalType) {
             case INTERVAL_TYPE_CONTINOUS: {
-                cal.setTime(lastExecution);
-                cal.add(Calendar.DATE, getDay());
-                cal.add(Calendar.HOUR, getHour());
-                cal.add(Calendar.MINUTE, getMinute());
-                cal.add(Calendar.SECOND, getSecond());
+                next=lastExecution.plusDays(getDay());
+                next=next.plusHours(getHour());
+                next=next.plusMinutes(getMinute());
+                next=next.plusSeconds(getSecond());
+                return next;
             }
-            break;
             case INTERVAL_TYPE_MONTH: {
-                cal.setTime(now);
-                cal.set(Calendar.MILLISECOND, 0);
-                cal.set(Calendar.DAY_OF_MONTH, getDay());
-                cal.set(Calendar.HOUR, getHour());
-                cal.set(Calendar.MINUTE, getMinute());
-                cal.set(Calendar.SECOND, getSecond());
-                if (cal.getTime().after(now)) {
-                    cal.add(Calendar.MONTH, -1);
+                next=now;
+                next=next.withDayOfMonth(getDay());
+                next=next.withHour(getHour());
+                next=next.withMinute(getMinute());
+                next=next.withSecond(getSecond());
+                if (next.isAfter(now)) {
+                    next=next.minusMonths(1);
                 }
-                if (!(lastExecution.before(cal.getTime()))) {
-                    cal.add(Calendar.MONTH, 1);
+                if (!(lastExecution.isBefore(next))) {
+                    next=next.plusMonths(1);
                 }
+                return next;
             }
-            break;
-            case INTERVAL_TYPE_WEEK: {
-                cal.setTime(now);
-                cal.set(Calendar.MILLISECOND, 0);
-                cal.set(Calendar.HOUR, getHour());
-                cal.set(Calendar.MINUTE, getMinute());
-                cal.set(Calendar.SECOND, getSecond());
-                cal.set(Calendar.DAY_OF_WEEK, getDay());
-                if (cal.getTime().after(now)) {
-                    cal.add(Calendar.DATE, -7);
-                }
-                if (!(lastExecution.before(cal.getTime()))) {
-                    cal.add(Calendar.DATE, 7);
-                }
-            }
-            break;
             case INTERVAL_TYPE_DAY: {
-                cal.setTime(now);
-                cal.set(Calendar.MILLISECOND, 0);
-                cal.set(Calendar.HOUR, getHour());
-                cal.set(Calendar.MINUTE, getMinute());
-                cal.set(Calendar.SECOND, getSecond());
-                if (cal.getTime().after(now)) {
-                    cal.add(Calendar.DATE, -1);
+                next=now;
+                next=next.withHour(getHour());
+                next=next.withMinute(getMinute());
+                next=next.withSecond(getSecond());
+                if (next.isAfter(now)) {
+                    next=next.minusDays(1);
                 }
-                if (!(lastExecution.before(cal.getTime()))) {
-                    cal.add(Calendar.DATE, 1);
+                if (!(lastExecution.isBefore(next))) {
+                    next=next.plusDays(1);
                 }
+                return next;
             }
-            break;
             case INTERVAL_TYPE_HOUR: {
-                cal.setTime(now);
-                cal.set(Calendar.MINUTE, getMinute());
-                cal.set(Calendar.SECOND, getSecond());
-                cal.set(Calendar.MILLISECOND, 0);
-                if (cal.getTime().after(now)) {
-                    cal.add(Calendar.HOUR, -1);
+                next=now;
+                next=next.withMinute(getMinute());
+                next=next.withSecond(getSecond());
+                if (next.isAfter(now)) {
+                    next=next.minusHours(1);
                 }
-                if (!(lastExecution.before(cal.getTime()))) {
-                    cal.add(Calendar.HOUR, 1);
+                if (!(lastExecution.isBefore(next))) {
+                    next=next.plusHours(1);
                 }
+                return next;
             }
-            break;
-            case INTERVAL_TYPE_MINUTE: {
-                cal.setTime(now);
-                cal.set(Calendar.MILLISECOND, 0);
-                cal.set(Calendar.SECOND, getSecond());
-                if (cal.getTime().after(now)) {
-                    cal.add(Calendar.MINUTE, -1);
-                }
-                if (!(lastExecution.before(cal.getTime()))) {
-                    cal.add(Calendar.MINUTE, 1);
-                }
-            }
-            break;
         }
-        return cal.getTime();
+        return LocalDateTime.now();
     }
 
-    public Date getNextExecution() {
+    public LocalDateTime getNextExecution() {
         return nextExecution;
     }
 
-    public void setNextExecution(Date nextExecution) {
+    public void setNextExecution(LocalDateTime nextExecution) {
         this.nextExecution = nextExecution;
     }
 
-    public boolean execute(Date now) {
+    public boolean execute(LocalDateTime now) {
         if (task != null) {
             if (task.execute(nextExecution, now)) {
                 setLastExecution(nextExecution);
@@ -272,6 +233,6 @@ public class TimerTaskData extends BaseIdData implements Cloneable {
 
     @Override
     public boolean isComplete() {
-        return (intervalType >= INTERVAL_TYPE_CONTINOUS && intervalType <= INTERVAL_TYPE_MINUTE) && (day >= 1 || intervalType != INTERVAL_TYPE_MONTH) && (hour >= 0 && hour <= 24) && (minute >= 0 && minute <= 60) && (second >= 0 && second <= 60);
+        return (intervalType >= INTERVAL_TYPE_CONTINOUS && intervalType <= INTERVAL_TYPE_HOUR) && (day >= 1 || intervalType != INTERVAL_TYPE_MONTH) && (hour >= 0 && hour <= 24) && (minute >= 0 && minute <= 60) && (second >= 0 && second <= 60);
     }
 }

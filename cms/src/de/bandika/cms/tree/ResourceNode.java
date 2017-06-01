@@ -5,7 +5,7 @@ import de.bandika.servlet.RequestReader;
 import de.bandika.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public abstract class ResourceNode extends TreeNode {
 
@@ -14,7 +14,7 @@ public abstract class ResourceNode extends TreeNode {
     protected int draftVersion = 0;
     protected int loadedVersion = 0;
     protected boolean contentChanged = false;
-    protected Date contentChangeDate = new Date();
+    protected LocalDateTime contentChangeDate = LocalDateTime.now();
     protected boolean published = false;
 
     public ResourceNode() {
@@ -86,15 +86,11 @@ public abstract class ResourceNode extends TreeNode {
         return contentChanged;
     }
 
-    public Date getContentChangeDate() {
+    public LocalDateTime getContentChangeDate() {
         return contentChangeDate;
     }
 
-    public java.sql.Timestamp getSqlContentChangeDate() {
-        return new java.sql.Timestamp(contentChangeDate.getTime());
-    }
-
-    public void setContentChangeDate(Date contentChangeDate) {
+    public void setContentChangeDate(LocalDateTime contentChangeDate) {
         this.contentChangeDate = contentChangeDate;
     }
 

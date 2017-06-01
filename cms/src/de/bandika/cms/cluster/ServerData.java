@@ -8,7 +8,7 @@
  */
 package de.bandika.cms.cluster;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ServerData {
 
@@ -17,7 +17,7 @@ public class ServerData {
     protected String address;
     protected int port = PORT_DEFAULT;
     protected boolean active = false;
-    protected Date changeDate = new Date();
+    protected LocalDateTime changeDate = LocalDateTime.now();
 
     protected int timeouts = 0;
 
@@ -45,15 +45,11 @@ public class ServerData {
         this.active = active;
     }
 
-    public Date getChangeDate() {
+    public LocalDateTime getChangeDate() {
         return changeDate;
     }
 
-    public java.sql.Date getSqlChangeDate() {
-        return new java.sql.Date(changeDate.getTime());
-    }
-
-    public void setChangeDate(Date changeDate) {
+    public void setChangeDate(LocalDateTime changeDate) {
         this.changeDate = changeDate;
     }
 

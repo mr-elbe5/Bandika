@@ -10,7 +10,7 @@ package de.bandika.cms.doccenter;
 
 import de.bandika.cms.file.FileData;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class DocCenterFileData extends FileData {
 
@@ -24,7 +24,7 @@ public class DocCenterFileData extends FileData {
     protected int version = 1;
     protected String name = "";
     protected String description = "";
-    protected Date versionChangeDate = new Date();
+    protected LocalDateTime versionChangeDate = LocalDateTime.now();
     protected int authorId = 0;
 
     public int getTeamPartId() {
@@ -79,15 +79,11 @@ public class DocCenterFileData extends FileData {
         return name.substring(0, MAX_SHORTNAME_LENGTH);
     }
 
-    public Date getVersionChangeDate() {
+    public LocalDateTime getVersionChangeDate() {
         return versionChangeDate;
     }
 
-    public java.sql.Timestamp getSqlVersionChangeDate() {
-        return new java.sql.Timestamp(versionChangeDate.getTime());
-    }
-
-    public void setVersionChangeDate(Date versionChangeDate) {
+    public void setVersionChangeDate(LocalDateTime versionChangeDate) {
         this.versionChangeDate = versionChangeDate;
     }
 

@@ -34,7 +34,7 @@
         <tbody>
         <tr>
             <td><%=data.getLoadedVersion()%> (<%=StringUtil.getHtml("_current", locale)%>)</td>
-            <td><%=Configuration.getInstance().getDateFormat(locale).format(data.getContentChangeDate())%>
+            <td><%=StringUtil.toHtmlDateTime(data.getContentChangeDate(),locale)%>
             </td>
             <td><%=StringUtil.toHtml(data.getAuthorName())%>
             </td>
@@ -47,7 +47,7 @@
         <tr>
             <td><%=versionData.getLoadedVersion()%>
             </td>
-            <td><%=Configuration.getInstance().getDateFormat(locale).format(versionData.getContentChangeDate())%>
+            <td><%=StringUtil.toHtmlDateTime(versionData.getContentChangeDate(),locale)%>
             </td>
             <td><%=StringUtil.toHtml(versionData.getAuthorName())%>
             </td>

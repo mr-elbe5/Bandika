@@ -66,7 +66,7 @@ public class Log {
         LogRecord rec = new LogRecord(lev, message);
         rec.setSourceClassName(caller != null ? caller.getClassName() : "");
         rec.setSourceMethodName(caller != null ? caller.getMethodName() : "");
-        rec.setThrown(t != null ? t : null);
+        rec.setThrown(t);
         julog.log(rec);
     }
 

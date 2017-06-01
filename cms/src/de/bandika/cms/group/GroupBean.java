@@ -14,6 +14,7 @@ import de.bandika.cms.user.User2GroupRelation;
 import de.bandika.database.DbBean;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,9 +45,9 @@ public class GroupBean extends DbBean {
             pst.setInt(1, data.getId());
             rs = pst.executeQuery();
             if (rs.next()) {
-                Timestamp date = rs.getTimestamp(1);
+                LocalDateTime date = rs.getTimestamp(1).toLocalDateTime();
                 rs.close();
-                result = date.getTime() == data.getChangeDate().getTime();
+                result = date.equals(data.getChangeDate());
             }
         } catch (Exception ignored) {
         } finally {
@@ -96,7 +97,7 @@ public class GroupBean extends DbBean {
                 int i = 1;
                 data = new GroupData();
                 data.setId(id);
-                data.setChangeDate(rs.getTimestamp(i++));
+                data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                 data.setName(rs.getString(i++));
                 data.setNotes(rs.getString(i));
                 rs.close();
@@ -165,7 +166,7 @@ public class GroupBean extends DbBean {
         try {
             pst = con.prepareStatement(data.isNew() ? "insert into t_group (change_date,name,notes, id) values(?,?,?,?)" : "update t_group set change_date=?,name=?,notes=? where id=?");
             int i = 1;
-            pst.setTimestamp(i++, data.getSqlChangeDate());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getName());
             pst.setString(i++, data.getNotes());
             pst.setInt(i, data.getId());
