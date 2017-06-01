@@ -10,26 +10,26 @@
 <%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.timer.TimerCache" %>
-<%@ page import="de.bandika.cms.timer.TimerTaskData" %>
+<%@ page import="de.bandika.cms.timer.TimerTask" %>
 <%@ page import="java.util.Locale" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
-    int timerId = RequestReader.getInt(request, "timerId");
-    TimerTaskData data = TimerCache.getInstance().getTaskCopy(timerId);
+    String timerName = RequestReader.getString(request, "timerName");
+    TimerTask data = TimerCache.getInstance().getTaskCopy(timerName);
 %>
 <h3><%=StringUtil.getString("_task", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
 </h3>
 <table class="padded details">
     <tr>
-        <td><label><%=StringUtil.getHtml("_id", locale)%>
-        </label></td>
-        <td><%=data.getId()%>
-        </td>
-    </tr>
-    <tr>
         <td><label><%=StringUtil.getHtml("_name", locale)%>
         </label></td>
         <td><%=StringUtil.toHtml(data.getName())%>
+        </td>
+    </tr>
+    <tr>
+        <td><label><%=StringUtil.getHtml("_displayName", locale)%>
+        </label></td>
+        <td><%=StringUtil.toHtml(data.getDisplayName())%>
         </td>
     </tr>
     <tr>
@@ -47,7 +47,7 @@
     <tr>
         <td><label><%=StringUtil.getHtml("_intervalType", locale)%>
         </label></td>
-        <td><%=data.getIntervalType()%>
+        <td><%=data.getInterval().name()%>
         </td>
     </tr>
 </table>

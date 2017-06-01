@@ -30,10 +30,12 @@ import de.bandika.cms.page.PageAdminAction;
 import de.bandika.cms.page.PageEditAction;
 import de.bandika.cms.rights.CmsRightBean;
 import de.bandika.cms.search.SearchAction;
+import de.bandika.cms.search.SearchIndexTask;
 import de.bandika.cms.site.SiteAction;
 import de.bandika.cms.template.TemplateAction;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.templatecontrol.*;
+import de.bandika.cms.timer.HeartbeatTask;
 import de.bandika.cms.timer.TimerAction;
 import de.bandika.cms.timer.TimerCache;
 import de.bandika.cms.tree.TreeAction;
@@ -112,7 +114,9 @@ public class CmsInitializer extends Initializer {
                 ClusterMessageProcessor.getInstance().putListener(BaseCache.LISTENER_TYPE, PreviewCache.getInstance());
             }
             //timer
-            TimerCache.getInstance().checkDirty();
+            TimerCache.getInstance().registerTimerTask(new HeartbeatTask());
+            TimerCache.getInstance().registerTimerTask(new SearchIndexTask());
+            TimerCache.getInstance().load();
             TimerCache.getInstance().startThread();
             initialized = true;
         }

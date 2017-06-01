@@ -8,22 +8,9 @@
  */
 package de.bandika.cms.timer;
 
-import de.bandika.base.data.Locales;
-import de.bandika.base.log.Log;
-import de.bandika.base.util.StringUtil;
-
-import java.time.LocalDateTime;
-
-public class HeartbeatTask extends TimerTask {
-
-    @Override
-    public String getName() {
-        return "heartbeat";
-    }
-
-    @Override
-    public boolean execute(LocalDateTime executionTime, LocalDateTime checkTime) {
-        Log.log("Heartbeat at " + StringUtil.toHtmlDateTime(TimerBean.getInstance().getServerTime(),Locales.getInstance().getDefaultLocale()));
-        return true;
-    }
+public enum TimerInterval {
+    CONTINOUS,
+    MONTH,
+    DAY,
+    HOUR
 }

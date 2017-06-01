@@ -16,7 +16,12 @@ import de.bandika.cms.timer.TimerTask;
 
 import java.time.LocalDateTime;
 
-public class SearchIndexTask implements TimerTask {
+public class SearchIndexTask extends TimerTask {
+
+    @Override
+    public String getName() {
+        return "searchindex";
+    }
 
     public boolean execute(LocalDateTime executionTime, LocalDateTime checkTime) {
         Log.log("indexing content for search at " + StringUtil.toHtmlDateTime(TimerBean.getInstance().getServerTime(), Locales.getInstance().getDefaultLocale()));

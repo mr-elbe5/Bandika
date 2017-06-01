@@ -103,18 +103,16 @@ CREATE TABLE t_cluster (
 );
 --
 CREATE TABLE t_timer_task (
-  id               INTEGER      NOT NULL,
-  name             VARCHAR(60)  NOT NULL,
-  class_name       VARCHAR(255) NOT NULL,
-  interval_type    INTEGER      NOT NULL,
-  execution_day    INTEGER      NOT NULL DEFAULT 0,
-  execution_hour   INTEGER      NOT NULL DEFAULT 0,
-  execution_minute INTEGER      NOT NULL DEFAULT 0,
-  execution_second INTEGER      NOT NULL DEFAULT 0,
-  last_execution   TIMESTAMP    NULL,
-  note_execution   BOOLEAN      NOT NULL DEFAULT FALSE,
-  active           BOOLEAN      NOT NULL DEFAULT TRUE,
-  CONSTRAINT t_timer_task_pk PRIMARY KEY (id)
+  name            VARCHAR(60)  NOT NULL,
+  display_name    VARCHAR(255) NOT NULL,
+  interval        VARCHAR(30)  NOT NULL,
+  day             INTEGER      NOT NULL DEFAULT 0,
+  hour            INTEGER      NOT NULL DEFAULT 0,
+  minute          INTEGER      NOT NULL DEFAULT 0,
+  last_execution  TIMESTAMP    NULL,
+  note_execution  BOOLEAN      NOT NULL DEFAULT FALSE,
+  active          BOOLEAN      NOT NULL DEFAULT TRUE,
+  CONSTRAINT t_timer_task_pk PRIMARY KEY (name)
 );
 --
 CREATE TABLE t_template (
@@ -360,11 +358,11 @@ INSERT INTO t_user2group (user_id, group_id, relation) VALUES (1, 1, 'RIGHTS');
 INSERT INTO t_configuration (defaultLocale, mailHost, mailPort, mailConnectionType, mailUser, mailPassword, mailSender, timerInterval, clusterPort, clusterTimeout, maxClusterTimeouts, maxVersions)
 VALUES ('en', 'localhost', 25, 'plain', '', '', 'me@myhost.tld', 30, 2555, 60, 5, 5);
 --
-INSERT INTO t_timer_task (id, name, class_name, interval_type, execution_minute, active, note_execution)
-VALUES (500, 'Heartbeat Task', 'de.bandika.cms.timer.HeartbeatTask', 0, 5, TRUE, FALSE);
+INSERT INTO t_timer_task (name, display_name, interval, minute, active, note_execution)
+VALUES ('heartbeat', 'Heartbeat Task', 'CONTINOUS', 5, TRUE, FALSE);
 --
-INSERT INTO t_timer_task (id, name, class_name, interval_type, execution_minute, active, note_execution)
-VALUES (501, 'Search Index Task', 'de.bandika.cms.search.SearchIndexTask', 0, 15, FALSE, FALSE);
+INSERT INTO t_timer_task (name, display_name, interval, hour, active, note_execution)
+VALUES ('searchindex', 'Search Index Task', 'CONTINOUS', 1, FALSE, FALSE);
 -- virtual all ids node
 INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, in_navigation, anonymous, inherits_rights)
 VALUES (0, NULL, 0, '', 'ALL-NODE', 'Virtual Node for all IDs', 1, 'System', FALSE, FALSE, FALSE);

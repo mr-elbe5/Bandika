@@ -12,8 +12,6 @@ import de.bandika.base.log.Log;
 import de.bandika.database.DbBean;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TimerBean extends DbBean {
 
@@ -26,58 +24,21 @@ public class TimerBean extends DbBean {
         return instance;
     }
 
-    public List<TimerTaskData> getAllTimerTasks() {
-        List<TimerTaskData> list = new ArrayList<>();
-        Connection con = null;
-        PreparedStatement pst = null;
-        TimerTaskData data;
-        try {
-            con = getConnection();
-            pst = con.prepareStatement("SELECT id,name,class_name,interval_type,execution_day,execution_hour,execution_minute,execution_second,note_execution,last_execution,active FROM t_timer_task ORDER BY name");
-            try (ResultSet rs = pst.executeQuery()) {
-                while (rs.next()) {
-                    int i = 1;
-                    data = new TimerTaskData();
-                    data.setId(rs.getInt(i++));
-                    data.setName(rs.getString(i++));
-                    data.setClassName(rs.getString(i++));
-                    data.setIntervalType(rs.getInt(i++));
-                    data.setDay(rs.getInt(i++));
-                    data.setHour(rs.getInt(i++));
-                    data.setMinute(rs.getInt(i++));
-                    data.setSecond(rs.getInt(i++));
-                    data.setNoteExecution(rs.getBoolean(i++));
-                    Timestamp ts=rs.getTimestamp(i++);
-                    data.setLastExecution(ts==null ? null : ts.toLocalDateTime());
-                    data.setActive(rs.getBoolean(i));
-                    list.add(data);
-                }
-            }
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-        return list;
-    }
-
-    public void reloadTimerTask(TimerTaskData data) {
+    public void readTimerTask(TimerTask data) {
         Connection con = null;
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT name,interval_type,execution_day,execution_hour,execution_minute,execution_second,note_execution,last_execution,active FROM t_timer_task WHERE id=?");
-            pst.setInt(1, data.getId());
+            pst = con.prepareStatement("SELECT display_name,interval,day,hour,minute,note_execution,last_execution,active FROM t_timer_task WHERE name=?");
+            pst.setString(1, data.getName());
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
-                    data.setName(rs.getString(i++));
-                    data.setIntervalType(rs.getInt(i++));
+                    data.setDisplayName(rs.getString(i++));
+                    data.setInterval(TimerInterval.valueOf(rs.getString(i++)));
                     data.setDay(rs.getInt(i++));
                     data.setHour(rs.getInt(i++));
                     data.setMinute(rs.getInt(i++));
-                    data.setSecond(rs.getInt(i++));
                     data.setNoteExecution(rs.getBoolean(i++));
                     Timestamp ts=rs.getTimestamp(i++);
                     data.setLastExecution(ts==null ? null : ts.toLocalDateTime());
@@ -92,18 +53,18 @@ public class TimerBean extends DbBean {
         }
     }
 
-    public void updateExcecutionDate(TimerTaskData data) {
+    public void updateExcecutionDate(TimerTask data) {
         Connection con = null;
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("UPDATE t_timer_task SET last_execution=? WHERE id=?");
+            pst = con.prepareStatement("UPDATE t_timer_task SET last_execution=? WHERE name=?");
             if (data.getLastExecution() == null) {
                 pst.setNull(1, Types.TIMESTAMP);
             } else {
                 pst.setTimestamp(1, Timestamp.valueOf(data.getLastExecution()));
             }
-            pst.setInt(2, data.getId());
+            pst.setString(2, data.getName());
             pst.executeUpdate();
         } catch (SQLException se) {
             Log.error("sql error", se);
@@ -113,21 +74,20 @@ public class TimerBean extends DbBean {
         }
     }
 
-    public void updateTaskData(TimerTaskData data) {
+    public void updateTaskData(TimerTask data) {
         Connection con = null;
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("UPDATE t_timer_task SET name=?,interval_type=?,execution_day=?,execution_hour=?,execution_minute=?,execution_second=?,active=? WHERE id=?");
+            pst = con.prepareStatement("UPDATE t_timer_task SET display_name=?,interval=?,day=?,hour=?,minute=?,active=? WHERE name=?");
             int i = 1;
-            pst.setString(i++, data.getName());
-            pst.setInt(i++, data.getIntervalType());
+            pst.setString(i++, data.getDisplayName());
+            pst.setString(i++, data.getInterval().name());
             pst.setInt(i++, data.getDay());
             pst.setInt(i++, data.getHour());
             pst.setInt(i++, data.getMinute());
-            pst.setInt(i++, data.getSecond());
             pst.setBoolean(i++, data.isActive());
-            pst.setInt(i, data.getId());
+            pst.setString(i, data.getName());
             pst.executeUpdate();
         } catch (SQLException se) {
             Log.error("sql error", se);

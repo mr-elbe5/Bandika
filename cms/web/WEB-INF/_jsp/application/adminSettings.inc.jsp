@@ -13,9 +13,10 @@
 <%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.timer.TimerCache" %>
-<%@ page import="de.bandika.cms.timer.TimerTaskData" %>
+<%@ page import="de.bandika.cms.timer.TimerTask" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="java.util.Map" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     if (SessionReader.hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT)) {
@@ -24,13 +25,13 @@
             caches = DataCache.getAllCaches();
         } catch (Exception ignore) {
         }
-        List<TimerTaskData> tasks = null;
+        Map<String,TimerTask> tasks = null;
         try {
             TimerCache timerCache = TimerCache.getInstance();
             tasks = timerCache.getTasks();
         } catch (Exception ignore) {
         }
-        int timerId = RequestReader.getInt(request, "timerId", -1);
+        String timerName = RequestReader.getString(request, "timerName");
         String cacheName = RequestReader.getString(request, "cacheName");
 %><!--general-->
 <li>
@@ -74,19 +75,19 @@
     </div>
 </li>
 <!--timers-->
-<li<%= timerId != -1 ? " class=\"open\"" : ""%>>
+<li<%= !timerName.isEmpty() ? " class=\"open\"" : ""%>>
     <div class="icn itimer"><%=StringUtil.getHtml("_timers", locale)%>
     </div>
     <ul>
         <%
             if (tasks != null) {
-                for (TimerTaskData task : tasks) {
+                for (TimerTask task : tasks.values()) {
         %>
         <li>
-            <div class="contextSource icn itimer <%=timerId==task.getId() ? "selected" : ""%>" onclick="$('#details').load('/timer.ajx?act=showTimerTaskDetails&timerId=<%=task.getId()%>')"><%=StringUtil.toHtml(task.getName())%>
+            <div class="contextSource icn itimer <%=timerName.equals(task.getName()) ? "selected" : ""%>" onclick="$('#details').load('/timer.ajx?act=showTimerTaskDetails&timerName=<%=task.getName()%>')"><%=StringUtil.toHtml(task.getDisplayName())%>
             </div>
             <div class="contextMenu">
-                <div class="icn isetting" onclick="return openLayerDialog('<%=StringUtil.getHtml("_taskSettings",locale)%>', '/timer.ajx?act=openEditTimerTask&timerId=<%=task.getId()%>');"><%=StringUtil.getHtml("_edit", locale)%>
+                <div class="icn isetting" onclick="return openLayerDialog('<%=StringUtil.getHtml("_taskSettings",locale)%>', '/timer.ajx?act=openEditTimerTask&timerName=<%=task.getName()%>');"><%=StringUtil.getHtml("_edit", locale)%>
                 </div>
             </div>
         </li>

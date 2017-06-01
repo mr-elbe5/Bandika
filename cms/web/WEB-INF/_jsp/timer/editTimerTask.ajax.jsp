@@ -8,18 +8,19 @@
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="de.bandika.cms.timer.TimerTaskData" %>
+<%@ page import="de.bandika.cms.timer.TimerTask" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.timer.TimerInterval" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
-    TimerTaskData data = (TimerTaskData) SessionReader.getSessionObject(request, "timerTaskData");
+    TimerTask data = (TimerTask) SessionReader.getSessionObject(request, "timerTaskData");
     if ((data == null))
         throw new AssertionError();
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/timer.ajx" method="post" id="taskform" name="taskform" accept-charset="UTF-8">
     <input type="hidden" name="act" value="saveTimerTask"/>
-    <input type="hidden" name="timerId" value="<%=data.getId()%>"/>
+    <input type="hidden" name="timerName" value="<%=data.getName()%>"/>
     <fieldset>
         <table class="padded form">
             <tr>
@@ -30,9 +31,9 @@
                 </td>
             </tr>
             <tr>
-                <td><label><%=StringUtil.getHtml("_className", locale)%>&nbsp;*</label></td>
+                <td><label><%=StringUtil.getHtml("_displayName", locale)%>&nbsp;*</label></td>
                 <td>
-          <span><%=StringUtil.toHtml(data.getClassName())%>
+          <span><%=StringUtil.toHtml(data.getDisplayName())%>
           </span>
                 </td>
             </tr>
@@ -42,16 +43,16 @@
                     </label></td>
                 <td>
                     <div>
-                        <input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_CONTINOUS%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_CONTINOUS ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_continous", locale)%>
+                        <input type="radio" name="interval" value="<%=TimerInterval.CONTINOUS.name()%>"<%=data.getInterval() == TimerInterval.CONTINOUS ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_continous", locale)%>
                     </div>
                     <div>
-                        <input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_MONTH%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_MONTH ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_monthly", locale)%>
+                        <input type="radio" name="interval" value="<%=TimerInterval.MONTH.name()%>"<%=data.getInterval() == TimerInterval.MONTH ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_monthly", locale)%>
                     </div>
                     <div>
-                        <input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_DAY%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_DAY ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_daily", locale)%>
+                        <input type="radio" name="interval" value="<%=TimerInterval.DAY.name()%>"<%=data.getInterval() == TimerInterval.DAY ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_daily", locale)%>
                     </div>
                     <div>
-                        <input type="radio" name="intervalType" value="<%=TimerTaskData.INTERVAL_TYPE_HOUR%>"<%=data.getIntervalType() == TimerTaskData.INTERVAL_TYPE_HOUR ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_everyHour", locale)%>
+                        <input type="radio" name="interval" value="<%=TimerInterval.HOUR.name()%>"<%=data.getInterval() == TimerInterval.HOUR ? "checked=\"checked\"" : ""%> />&nbsp;<%=StringUtil.getHtml("_everyHour", locale)%>
                     </div>
                 </td>
             </tr>

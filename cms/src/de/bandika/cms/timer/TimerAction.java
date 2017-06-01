@@ -45,8 +45,8 @@ public enum TimerAction implements ICmsAction {
             public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
                     return false;
-                int timerId = RequestReader.getInt(request, "timerId");
-                TimerTaskData data = TimerCache.getInstance().getTaskCopy(timerId);
+                String name = RequestReader.getString(request, "timerName");
+                TimerTask data = TimerCache.getInstance().getTaskCopy(name);
                 SessionWriter.setSessionObject(request, "timerTaskData", data);
                 return showEditTimerTask(request, response);
             }
@@ -58,7 +58,7 @@ public enum TimerAction implements ICmsAction {
             public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
                     return false;
-                TimerTaskData data = (TimerTaskData) getSessionObject(request, "timerTaskData");
+                TimerTask data = (TimerTask) getSessionObject(request, "timerTaskData");
                 data.readTimerTaskRequestData(request);
                 if (!isDataComplete(data, request)) {
                     return showEditTimerTask(request, response);
@@ -67,7 +67,7 @@ public enum TimerAction implements ICmsAction {
                 ts.updateTaskData(data);
                 TimerCache.getInstance().updateTask(data);
                 TimerCache.getInstance().reloadTask(data);
-                return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&timerId=" + data.getId(), "_taskSaved");
+                return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&timerName=" + data.getName(), "_taskSaved");
             }
         };
 

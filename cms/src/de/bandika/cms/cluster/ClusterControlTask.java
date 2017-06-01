@@ -12,7 +12,12 @@ import de.bandika.cms.timer.TimerTask;
 
 import java.time.LocalDateTime;
 
-public class ClusterControlTask implements TimerTask {
+public class ClusterControlTask extends TimerTask {
+
+    @Override
+    public String getName() {
+        return "cluster";
+    }
 
     public boolean execute(LocalDateTime executionTime, LocalDateTime checkTime) {
         ClusterManager.getInstance().checkOtherServers();

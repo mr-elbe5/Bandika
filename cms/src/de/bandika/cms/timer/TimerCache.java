@@ -14,8 +14,8 @@ import de.bandika.base.log.Log;
 import de.bandika.cms.configuration.Configuration;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TimerCache extends BaseCache {
 
@@ -29,11 +29,15 @@ public class TimerCache extends BaseCache {
         return instance;
     }
 
-    protected List<TimerTaskData> tasks = new ArrayList<>();
+    protected Map<String, TimerTask> tasks = new HashMap<>();
     protected TimerThread timerThread = null;
 
     public String getCacheKey() {
         return CACHEKEY;
+    }
+
+    public void registerTimerTask(TimerTask task){
+        tasks.put(task.getName(),task);
     }
 
     public void startThread() {
@@ -64,52 +68,38 @@ public class TimerCache extends BaseCache {
 
     @Override
     public void load() {
-        tasks.clear();
-        List<TimerTaskData> list = TimerBean.getInstance().getAllTimerTasks();
         LocalDateTime now = TimerBean.getInstance().getServerTime();
-        for (TimerTaskData task : list) {
-            if (task.initialize(now)) {
-                tasks.add(task);
-            }
+        for (TimerTask task : tasks.values()) {
+            TimerBean.getInstance().readTimerTask(task);
+            task.initialize(now);
         }
     }
 
-    public List<TimerTaskData> getTasks() {
+    public Map<String, TimerTask> getTasks() {
         checkDirty();
         return tasks;
     }
 
-    public TimerTaskData getTaskCopy(int timerId) {
+    public TimerTask getTaskCopy(String name) {
         checkDirty();
-        for (TimerTaskData task : tasks) {
-            if (task.getId() == timerId) {
-                try {
-                    return (TimerTaskData) task.clone();
-                } catch (CloneNotSupportedException e) {
-                    return null;
-                }
-            }
+        TimerTask data = tasks.get(name);
+        try {
+            return (TimerTask) data.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
         }
-        return null;
     }
 
-    public void reloadTask(TimerTaskData data) {
+    public void reloadTask(TimerTask data) {
         checkDirty();
-        TimerBean.getInstance().reloadTimerTask(data);
+        TimerBean.getInstance().readTimerTask(data);
         LocalDateTime now = TimerBean.getInstance().getServerTime();
         data.setNextExecution(data.computeNextExecution(now));
     }
 
-    public void updateTask(TimerTaskData data) {
+    public void updateTask(TimerTask data) {
         checkDirty();
         LocalDateTime now = TimerBean.getInstance().getServerTime();
-        for (int i = 0; i < tasks.size(); i++) {
-            TimerTaskData task = tasks.get(i);
-            if (task.getId() == data.getId()) {
-                tasks.set(i, data);
-                data.setNextExecution(data.computeNextExecution(now));
-                break;
-            }
-        }
+        data.setNextExecution(data.computeNextExecution(now));
     }
 }
