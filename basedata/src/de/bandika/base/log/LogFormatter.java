@@ -9,15 +9,15 @@ public class LogFormatter extends Formatter {
 
     @Override
     public String format(LogRecord record) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(record.getLoggerName());
         String srcClass = record.getSourceClassName();
         String srcMethod = record.getSourceMethodName();
         if (record.getLevel() == Level.INFO) {
-            sb.append("INFO    ");
+            sb.append(" INFO    ");
         } else if (record.getLevel() == Level.WARNING) {
-            sb.append("WARNING ");
+            sb.append(" WARNING ");
         } else if (record.getLevel() == Level.SEVERE) {
-            sb.append("ERROR   ");
+            sb.append(" ERROR   ");
         }
         sb.append(Instant.ofEpochMilli(record.getMillis()).toString());
         if (srcClass.length() > 0) {

@@ -31,10 +31,9 @@
                 </td>
             </tr>
             <tr>
-                <td><label><%=StringUtil.getHtml("_displayName", locale)%>&nbsp;*</label></td>
+                <td><label for="displayName"><%=StringUtil.getHtml("_displayName", locale)%>&nbsp;*</label></td>
                 <td>
-          <span><%=StringUtil.toHtml(data.getDisplayName())%>
-          </span>
+                    <input type="text" id="displayName" name="displayName" value="<%=StringUtil.toHtml(data.getDisplayName())%>"/>
                 </td>
             </tr>
             <tr>
@@ -89,10 +88,10 @@
             </tr>
             <tr>
                 <td>
-                    <label for="noteExecution"><%=StringUtil.getHtml("_noteExecution", locale)%>
+                    <label for="registerExecution"><%=StringUtil.getHtml("_registerExecution", locale)%>
                     </label></td>
                 <td>
-                    <input type="checkbox" id="noteExecution" name="noteExecution" value="true" <%=data.noteExecution() ? "checked" : ""%>/>
+                    <input type="checkbox" id="registerExecution" name="registerExecution" value="true" <%=data.registerExecution() ? "checked" : ""%>/>
                 </td>
             </tr>
         </table>

@@ -16,13 +16,13 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TimerCache {
+public class TimerController {
 
-    private static TimerCache instance = null;
+    private static TimerController instance = null;
 
-    public static TimerCache getInstance() {
+    public static TimerController getInstance() {
         if (instance == null) {
-            instance = new TimerCache();
+            instance = new TimerController();
         }
         return instance;
     }
@@ -31,6 +31,7 @@ public class TimerCache {
     protected TimerThread timerThread = null;
 
     public void registerTimerTask(TimerTask task){
+        TimerBean.getInstance().assertTimerTask(task);
         tasks.put(task.getName(),task);
     }
 
@@ -69,10 +70,10 @@ public class TimerCache {
     }
 
     public void loadTask(String name) {
-        TimerTask data=tasks.get(name);
-        TimerBean.getInstance().readTimerTask(data);
+        TimerTask task=tasks.get(name);
+        TimerBean.getInstance().readTimerTask(task);
         LocalDateTime now = TimerBean.getInstance().getServerTime();
-        data.setNextExecution(data.computeNextExecution(now));
+        task.setNextExecution(task.computeNextExecution(now));
     }
 
     public Map<String, TimerTask> getTasks() {
@@ -80,9 +81,9 @@ public class TimerCache {
     }
 
     public TimerTask getTaskCopy(String name) {
-        TimerTask data = tasks.get(name);
+        TimerTask task = tasks.get(name);
         try {
-            return (TimerTask) data.clone();
+            return (TimerTask) task.clone();
         } catch (CloneNotSupportedException e) {
             return null;
         }

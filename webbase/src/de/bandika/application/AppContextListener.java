@@ -33,7 +33,7 @@ public class AppContextListener implements ServletContextListener {
         threads.put(thread.getName(), thread);
     }
 
-    /*public static void registerStoppable(IStoppable stp) {
+    public static void registerStoppable(IStoppable stp) {
         if (stoppables.containsKey(stp.getName())) {
             try {
                 stoppables.get(stp.getName()).stop();
@@ -41,7 +41,7 @@ public class AppContextListener implements ServletContextListener {
             }
         }
         stoppables.put(stp.getName(), stp);
-    }*/
+    }
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {

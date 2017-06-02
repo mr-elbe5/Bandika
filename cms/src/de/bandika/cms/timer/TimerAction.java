@@ -46,8 +46,8 @@ public enum TimerAction implements ICmsAction {
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
                     return false;
                 String name = RequestReader.getString(request, "timerName");
-                TimerTask data = TimerCache.getInstance().getTaskCopy(name);
-                SessionWriter.setSessionObject(request, "timerTaskData", data);
+                TimerTask task = TimerController.getInstance().getTaskCopy(name);
+                SessionWriter.setSessionObject(request, "timerTaskData", task);
                 return showEditTimerTask(request, response);
             }
         }, /**
@@ -58,15 +58,15 @@ public enum TimerAction implements ICmsAction {
             public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
                     return false;
-                TimerTask data = (TimerTask) getSessionObject(request, "timerTaskData");
-                data.readTimerTaskRequestData(request);
-                if (!isDataComplete(data, request)) {
+                TimerTask task = (TimerTask) getSessionObject(request, "timerTaskData");
+                task.readTimerTaskRequestData(request);
+                if (!isDataComplete(task, request)) {
                     return showEditTimerTask(request, response);
                 }
                 TimerBean ts = TimerBean.getInstance();
-                ts.updateTaskData(data);
-                TimerCache.getInstance().loadTask(data.getName());
-                return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&timerName=" + data.getName(), "_taskSaved");
+                ts.updateTaskData(task);
+                TimerController.getInstance().loadTask(task.getName());
+                return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&timerName=" + task.getName(), "_taskSaved");
             }
         };
 

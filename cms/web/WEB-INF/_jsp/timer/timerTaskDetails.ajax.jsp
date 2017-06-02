@@ -9,13 +9,13 @@
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.servlet.RequestReader" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
-<%@ page import="de.bandika.cms.timer.TimerCache" %>
+<%@ page import="de.bandika.cms.timer.TimerController" %>
 <%@ page import="de.bandika.cms.timer.TimerTask" %>
 <%@ page import="java.util.Locale" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     String timerName = RequestReader.getString(request, "timerName");
-    TimerTask data = TimerCache.getInstance().getTaskCopy(timerName);
+    TimerTask data = TimerController.getInstance().getTaskCopy(timerName);
 %>
 <h3><%=StringUtil.getString("_task", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
 </h3>
@@ -39,9 +39,9 @@
         </td>
     </tr>
     <tr>
-        <td><label><%=StringUtil.getHtml("_noteExecution", locale)%>
+        <td><label><%=StringUtil.getHtml("_registerExecution", locale)%>
         </label></td>
-        <td><%=data.noteExecution() ? "X" : "-"%>
+        <td><%=data.registerExecution() ? "X" : "-"%>
         </td>
     </tr>
     <tr>

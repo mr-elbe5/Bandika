@@ -15,8 +15,13 @@ import java.io.File;
 
 public class ApplicationPath {
 
+    private static String appName = "";
     private static String appPath = "";
     private static String appROOTPath = "";
+
+    public static String getAppName() {
+        return appName;
+    }
 
     public static String getAppPath() {
         return appPath;
@@ -31,7 +36,9 @@ public class ApplicationPath {
             return;
         }
         appPath = appDir.getAbsolutePath().replace('\\', '/');
-        Log.log("application path is: " + ApplicationPath.getAppPath());
+        appName = appPath.substring(appPath.lastIndexOf('/')+1);
+        System.out.println("application name is: " + ApplicationPath.getAppName());
+        System.out.println("application path is: " + ApplicationPath.getAppPath());
         ApplicationPath.appROOTPath = appROOTDir.getAbsolutePath().replace('\\', '/');
     }
 

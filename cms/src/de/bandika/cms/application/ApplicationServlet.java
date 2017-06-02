@@ -31,10 +31,11 @@ public class ApplicationServlet extends WebServlet {
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
-        Log.log("initialzing CMS Application...");
+        System.out.println("initialzing CMS Application...");
         super.init(servletConfig);
         StringUtil.setBundleName("cms");
         ApplicationPath.initializePath(ApplicationPath.getCatalinaAppDir(getServletContext()), ApplicationPath.getCatalinaAppROOTDir(getServletContext()));
+        Log.initLog(ApplicationPath.getAppName());
         if (Initializer.getInstance() == null) {
             Initializer.setInstance(new CmsInitializer());
         }

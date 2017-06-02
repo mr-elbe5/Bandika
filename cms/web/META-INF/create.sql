@@ -363,6 +363,9 @@ VALUES ('heartbeat', 'Heartbeat Task', 'CONTINOUS', 5, TRUE, FALSE);
 --
 INSERT INTO t_timer_task (name, display_name, interval, hour, active, note_execution)
 VALUES ('searchindex', 'Search Index Task', 'CONTINOUS', 1, FALSE, FALSE);
+--
+INSERT INTO t_timer_task (name, display_name, interval, hour, active, note_execution)
+VALUES ('cluster', 'Cluster Control Task', 'CONTINOUS', 1, FALSE, FALSE);
 -- virtual all ids node
 INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, in_navigation, anonymous, inherits_rights)
 VALUES (0, NULL, 0, '', 'ALL-NODE', 'Virtual Node for all IDs', 1, 'System', FALSE, FALSE, FALSE);

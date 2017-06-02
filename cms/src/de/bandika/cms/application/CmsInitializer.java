@@ -12,7 +12,6 @@ import de.bandika.application.DefaultAction;
 import de.bandika.application.Initializer;
 import de.bandika.base.cache.BaseCache;
 import de.bandika.base.log.Log;
-import de.bandika.cms.blog.BlogAction;
 import de.bandika.cms.cluster.ClusterAction;
 import de.bandika.cms.cluster.ClusterControlTask;
 import de.bandika.cms.cluster.ClusterManager;
@@ -20,12 +19,10 @@ import de.bandika.cms.cluster.ClusterMessageProcessor;
 import de.bandika.cms.configuration.ConfigAction;
 import de.bandika.cms.configuration.Configuration;
 import de.bandika.cms.configuration.ConfigurationBean;
-import de.bandika.cms.doccenter.DocCenterAction;
 import de.bandika.cms.field.*;
 import de.bandika.cms.file.FileAction;
 import de.bandika.cms.file.PreviewCache;
 import de.bandika.cms.group.GroupAction;
-import de.bandika.cms.newscenter.NewsCenterAction;
 import de.bandika.cms.page.PageAction;
 import de.bandika.cms.page.PageAdminAction;
 import de.bandika.cms.page.PageEditAction;
@@ -38,7 +35,7 @@ import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.templatecontrol.*;
 import de.bandika.cms.timer.HeartbeatTask;
 import de.bandika.cms.timer.TimerAction;
-import de.bandika.cms.timer.TimerCache;
+import de.bandika.cms.timer.TimerController;
 import de.bandika.cms.tree.TreeAction;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.cms.user.UserAction;
@@ -115,11 +112,11 @@ public class CmsInitializer extends Initializer {
                 ClusterMessageProcessor.getInstance().putListener(BaseCache.LISTENER_TYPE, PreviewCache.getInstance());
             }
             //timer
-            TimerCache.getInstance().registerTimerTask(new HeartbeatTask());
-            TimerCache.getInstance().registerTimerTask(new SearchIndexTask());
-            //TimerCache.getInstance().registerTimerTask(new ClusterControlTask());
-            TimerCache.getInstance().loadTasks();
-            TimerCache.getInstance().startThread();
+            TimerController.getInstance().registerTimerTask(new HeartbeatTask());
+            TimerController.getInstance().registerTimerTask(new SearchIndexTask());
+            TimerController.getInstance().registerTimerTask(new ClusterControlTask());
+            TimerController.getInstance().loadTasks();
+            TimerController.getInstance().startThread();
             initialized = true;
         }
         return true;

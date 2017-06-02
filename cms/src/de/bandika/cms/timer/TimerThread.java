@@ -39,7 +39,7 @@ public class TimerThread extends BaseThread {
 
     protected void checkTasks() {
         LocalDateTime now = TimerBean.getInstance().getServerTime();
-        for (TimerTask task : TimerCache.getInstance().getTasks().values()) {
+        for (TimerTask task : TimerController.getInstance().getTasks().values()) {
             try {
                 if (task.isActive()) {
                     checkTask(task, now);
@@ -50,13 +50,13 @@ public class TimerThread extends BaseThread {
         }
     }
 
-    protected void checkTask(TimerTask data, LocalDateTime now) {
+    protected void checkTask(TimerTask task, LocalDateTime now) {
         if (now == null) {
             return;
         }
-        LocalDateTime next = data.getNextExecution();
+        LocalDateTime next = task.getNextExecution();
         if (now.isAfter(next)) {
-            data.execute(now);
+            task.execute(now);
         }
     }
 }

@@ -26,7 +26,7 @@ public abstract class TimerTask extends BaseData implements Cloneable {
     protected int day = 0;
     protected int hour = 0;
     protected int minute = 0;
-    protected boolean noteExecution = false;
+    protected boolean registerExecution = false;
     protected LocalDateTime lastExecution = null;
     protected boolean active = true;
     protected LocalDateTime nextExecution = null;
@@ -78,12 +78,12 @@ public abstract class TimerTask extends BaseData implements Cloneable {
         this.minute = minute;
     }
 
-    public boolean noteExecution() {
-        return noteExecution;
+    public boolean registerExecution() {
+        return registerExecution;
     }
 
-    public void setNoteExecution(boolean noteExecution) {
-        this.noteExecution = noteExecution;
+    public void setRegisterExecution(boolean registerExecution) {
+        this.registerExecution = registerExecution;
     }
 
     public LocalDateTime getLastExecution() {
@@ -108,6 +108,8 @@ public abstract class TimerTask extends BaseData implements Cloneable {
 
     protected LocalDateTime computeNextExecution(LocalDateTime now) {
         LocalDateTime next;
+        if (lastExecution==null)
+            lastExecution=LocalDateTime.now();
         switch (interval) {
             case CONTINOUS: {
                 next=lastExecution.plusDays(getDay());
@@ -167,7 +169,7 @@ public abstract class TimerTask extends BaseData implements Cloneable {
         if (execute(nextExecution, now)) {
             setLastExecution(nextExecution);
             setNextExecution(computeNextExecution(now));
-            if (noteExecution()) {
+            if (registerExecution()) {
                 TimerBean.getInstance().updateExcecutionDate(this);
             }
         }
@@ -175,12 +177,13 @@ public abstract class TimerTask extends BaseData implements Cloneable {
     }
 
     public void readTimerTaskRequestData(HttpServletRequest request) {
+        setDisplayName(RequestReader.getString(request, "displayName"));
         setInterval(TimerInterval.valueOf(RequestReader.getString(request, "interval")));
         setDay(RequestReader.getInt(request, "day"));
         setHour(RequestReader.getInt(request, "hour"));
         setMinute(RequestReader.getInt(request, "minute"));
         setActive(RequestReader.getBoolean(request, "active"));
-        setNoteExecution(RequestReader.getBoolean(request, "noteExecution"));
+        setRegisterExecution(RequestReader.getBoolean(request, "registerExecution"));
     }
 
     public abstract boolean execute(LocalDateTime executionTime, LocalDateTime checkTime);

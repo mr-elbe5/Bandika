@@ -8,14 +8,16 @@ public class Log {
     public static final int INFO = 1;
     public static final int WARN = 2;
     public static final int ERROR = 3;
-    private static final Logger julog = Logger.getLogger("CMSLog");
-    private static final LogFormatter logFormatter = new LogFormatter();
+    private static Logger julog = null;
+    private static LogFormatter logFormatter = new LogFormatter();
 
-    static {
-        initLog();
-    }
-
-    private static void initLog() {
+    public static void initLog(String name) {
+        if (julog!=null){
+            for (Handler handler : julog.getHandlers()) {
+                julog.removeHandler(handler);
+            }
+        }
+        julog = Logger.getLogger(name);
         if (julog.getUseParentHandlers() && julog.getParent() != null) {
             for (Handler handler : julog.getParent().getHandlers()) {
                 if (handler instanceof ConsoleHandler) {
@@ -64,6 +66,7 @@ public class Log {
                 break;
         }
         LogRecord rec = new LogRecord(lev, message);
+        rec.setLoggerName(julog.getName());
         rec.setSourceClassName(caller != null ? caller.getClassName() : "");
         rec.setSourceMethodName(caller != null ? caller.getMethodName() : "");
         rec.setThrown(t);
