@@ -88,20 +88,8 @@ body {
 
 /* links above mainArea */
 .topNavSection {
-    display: table;
-    width: 100%;
-    height: 25px;
-}
-
-.topNavSection div.left {
-    display: table-cell;
-    text-align: left;
-    padding-left: 5px;
-}
-
-.topNavSection div.right {
-    display: table-cell;
     text-align: right;
+    padding: 0 5px 0 5px;
 }
 
 .topNavSection ul {
@@ -116,17 +104,8 @@ body {
     padding: 3px 5px 3px;
 }
 
-.topNavSection ul li.admin {
-    font-size: 13px;
-    padding: 1px 0 3px 5px;
-}
-
 .topNavSection ul li a {
     color: #8bbdd7;
-}
-
-.topNavSection ul li.admin .icn::before {
-    color: #b0b0b0;
 }
 
 .headerSection {
@@ -136,7 +115,7 @@ body {
     display: table;
     width: 100%;
     position: relative;
-    padding: 10px 10px 0 10px;
+    padding: 0 10px 0 10px;
 }
 
 .headerMain .title {
@@ -172,7 +151,7 @@ a.navBtn {
     background: rgba(255, 255, 255, 0.95);
     bottom: 30px;
     position: absolute;
-    top: 120px;
+    top: 110px;
     width: 100%;
     overflow-y: auto;
 }

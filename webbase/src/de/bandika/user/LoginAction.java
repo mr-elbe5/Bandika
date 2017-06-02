@@ -8,10 +8,8 @@
  */
 package de.bandika.user;
 
-import de.bandika.application.MasterStatics;
 import de.bandika.base.data.BinaryFileData;
 import de.bandika.base.util.StringUtil;
-import de.bandika.rights.RightsCache;
 import de.bandika.servlet.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -96,7 +94,7 @@ public enum LoginAction implements IAction {
     }
 
     protected boolean showLogin(HttpServletRequest request, HttpServletResponse response) {
-        return sendJspResponse(request, response, "/WEB-INF/_jsp/user/login.jsp", MasterStatics.PAGE_MASTER);
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/user/login.jsp");
     }
 
 }

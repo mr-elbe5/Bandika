@@ -9,7 +9,6 @@
 package de.bandika.cms.application;
 
 import de.bandika.application.Initializer;
-import de.bandika.application.MasterStatics;
 import de.bandika.base.data.BinaryFileData;
 import de.bandika.base.log.Log;
 import de.bandika.base.util.FileUtil;
@@ -136,6 +135,8 @@ public enum AdminAction implements ICmsAction {
 
     public static final String KEY = "admin";
 
+    public static final String ADMIN_MASTER = "adminMaster.jsp";
+
     public static void initialize() {
         ActionDispatcher.addClass(KEY, AdminAction.class);
     }
@@ -146,12 +147,12 @@ public enum AdminAction implements ICmsAction {
     }
 
     protected boolean showAdministration(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return sendJspResponse(request, response, "/WEB-INF/_jsp/application/administration.jsp", MasterStatics.ADMIN_MASTER);
+        return sendJspResponse(request, response, "/WEB-INF/_jsp/application/administration.jsp", ADMIN_MASTER);
     }
 
     protected boolean showAdministration(HttpServletRequest request, HttpServletResponse response, String messageKey) throws Exception {
         request.setAttribute(RequestStatics.KEY_MESSAGEKEY, messageKey);
-        return sendJspResponse(request, response, "/WEB-INF/_jsp/application/administration.jsp", MasterStatics.ADMIN_MASTER);
+        return sendJspResponse(request, response, "/WEB-INF/_jsp/application/administration.jsp", ADMIN_MASTER);
     }
 
     protected boolean showExecuteDatabaseScript(HttpServletRequest request, HttpServletResponse response) throws Exception {

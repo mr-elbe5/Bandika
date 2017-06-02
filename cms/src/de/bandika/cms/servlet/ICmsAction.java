@@ -11,9 +11,11 @@ package de.bandika.cms.servlet;
 import de.bandika.rights.Right;
 import de.bandika.rights.SystemZone;
 import de.bandika.servlet.IAction;
+import de.bandika.servlet.RequestStatics;
 import de.bandika.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public interface ICmsAction extends IAction {
 
@@ -27,6 +29,11 @@ public interface ICmsAction extends IAction {
 
     default boolean hasAnyContentRight(HttpServletRequest request) throws Exception {
         return SessionReader.hasAnyContentRight(request) || forbidden();
+    }
+
+    default boolean setJspResponse(HttpServletRequest request, HttpServletResponse response, String jsp) {
+        request.setAttribute(RequestStatics.KEY_JSP, jsp);
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page.jsp");
     }
 
 }

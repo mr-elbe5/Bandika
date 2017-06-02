@@ -8,7 +8,6 @@
  */
 package de.bandika.cms.user;
 
-import de.bandika.application.MasterStatics;
 import de.bandika.base.data.BaseIdData;
 import de.bandika.base.data.BinaryFileData;
 import de.bandika.base.data.Locales;
@@ -66,9 +65,7 @@ public enum UserAction implements ICmsAction {
     openChangePassword {
             @Override
             public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                if (!SessionReader.isLoggedIn(request))
-                    return false;
-                return showChangePassword(request, response);
+                return SessionReader.isLoggedIn(request) && showChangePassword(request, response);
             }
         }, /**
      * saves the user's password to database
@@ -107,9 +104,7 @@ public enum UserAction implements ICmsAction {
     openChangeProfile {
             @Override
             public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                if (!SessionReader.isLoggedIn(request))
-                    return false;
-                return showChangeProfile(request, response);
+                return SessionReader.isLoggedIn(request) && showChangeProfile(request, response);
             }
         }, /**
      * saves the user's profile to database
@@ -139,9 +134,7 @@ public enum UserAction implements ICmsAction {
     showUserDetails {
             @Override
             public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
-                    return false;
-                return showUserDetails(request, response);
+                return hasSystemRight(request, SystemZone.USER, Right.EDIT) && showUserDetails(request, response);
             }
         }, /**
      * open dialog for editing user settings
@@ -385,7 +378,7 @@ public enum UserAction implements ICmsAction {
     }
 
     protected boolean showProfile(HttpServletRequest request, HttpServletResponse response) {
-        return sendJspResponse(request, response, "/WEB-INF/_jsp/user/profile.jsp", MasterStatics.PAGE_MASTER);
+        return setJspResponse(request, response, "/WEB-INF/_jsp/user/profile.jsp");
     }
 
     protected boolean showChangePassword(HttpServletRequest request, HttpServletResponse response) {
@@ -413,19 +406,19 @@ public enum UserAction implements ICmsAction {
     }
 
     protected boolean showRegisterUser(HttpServletRequest request, HttpServletResponse response) {
-        return sendJspResponse(request, response, "/WEB-INF/_jsp/user/registerUser.jsp", MasterStatics.PAGE_MASTER);
+        return setJspResponse(request, response, "/WEB-INF/_jsp/user/registerUser.jsp");
     }
 
     protected boolean showUserRegistered(HttpServletRequest request, HttpServletResponse response) {
-        return sendJspResponse(request, response, "/WEB-INF/_jsp/user/userRegistered.jsp", MasterStatics.PAGE_MASTER);
+        return setJspResponse(request, response, "/WEB-INF/_jsp/user/userRegistered.jsp");
     }
 
     protected boolean showApproveRegistration(HttpServletRequest request, HttpServletResponse response) {
-        return sendJspResponse(request, response, "/WEB-INF/_jsp/user/approveRegistration.jsp", MasterStatics.PAGE_MASTER);
+        return setJspResponse(request, response, "/WEB-INF/_jsp/user/approveRegistration.jsp");
     }
 
     protected boolean showRegistrationApproved(HttpServletRequest request, HttpServletResponse response) {
-        return sendJspResponse(request, response, "/WEB-INF/_jsp/user/registrationApproved.jsp", MasterStatics.PAGE_MASTER);
+        return setJspResponse(request, response, "/WEB-INF/_jsp/user/registrationApproved.jsp");
     }
 
 }

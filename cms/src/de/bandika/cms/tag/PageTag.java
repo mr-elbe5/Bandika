@@ -10,10 +10,12 @@ package de.bandika.cms.tag;
 
 import de.bandika.base.log.Log;
 import de.bandika.cms.page.PageData;
+import de.bandika.cms.site.SiteData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
 import de.bandika.cms.template.TemplateType;
 import de.bandika.cms.tree.TreeCache;
+import de.bandika.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -24,7 +26,8 @@ public class PageTag extends BaseTag {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
             PageData pageData = (PageData) request.getAttribute("pageData");
-            String templateName = TreeCache.getInstance().getSite(pageData.getParentId()).getTemplateName();
+            int siteId = pageData==null ? TreeCache.getInstance().getLanguageRootId(SessionReader.getSessionLocale(request)) : pageData.getParentId();
+            String templateName = TreeCache.getInstance().getSite(siteId).getTemplateName();
             TemplateData masterTemplate = TemplateCache.getInstance().getTemplate(TemplateType.MASTER, templateName);
             try {
                 masterTemplate.writeTemplate(context, getWriter(), request, pageData, null);

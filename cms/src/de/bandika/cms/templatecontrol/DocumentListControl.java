@@ -37,6 +37,8 @@ public class DocumentListControl extends TemplateControl {
     }
 
     public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException {
+        if (pageData==null)
+            return;
         int siteId = pageData.getParentId();
         SiteData site = TreeCache.getInstance().getSite(siteId);
         Locale locale = SessionReader.getSessionLocale(request);

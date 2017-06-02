@@ -33,7 +33,7 @@ public class LayerControl extends TemplateControl {
     public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException {
         writer.write(TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, "treeLayer").getCode());
         writer.write(TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, "dialogLayer").getCode());
-        if (pageData.isEditMode()) {
+        if (pageData!=null && pageData.isEditMode()) {
             writer.write(TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, "browserLayer").getCode());
             writer.write(TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, "browserDialogLayer").getCode());
         }

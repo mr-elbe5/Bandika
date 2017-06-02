@@ -8,7 +8,6 @@
  */
 package de.bandika.cms.search;
 
-import de.bandika.application.MasterStatics;
 import de.bandika.cms.application.AdminAction;
 import de.bandika.cms.servlet.ICmsAction;
 import de.bandika.rights.Right;
@@ -134,7 +133,7 @@ public enum SearchAction implements ICmsAction {
     }
 
     protected boolean showSearch(HttpServletRequest request, HttpServletResponse response) {
-        return sendJspResponse(request, response, "/WEB-INF/_jsp/search/search.jsp", MasterStatics.PAGE_MASTER);
+        return setJspResponse(request, response, "/WEB-INF/_jsp/search/search.jsp");
     }
 
     protected boolean showAdminSearchDetails(HttpServletRequest request, HttpServletResponse response) {

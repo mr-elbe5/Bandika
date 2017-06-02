@@ -86,7 +86,6 @@ public class CmsInitializer extends Initializer {
             TemplateControls.addPageControlClass(MainMenuControl.KEY, MainMenuControl.class);
             TemplateControls.addPageControlClass(BreadcrumbControl.KEY, BreadcrumbControl.class);
             TemplateControls.addPageControlClass(TopNavControl.KEY, TopNavControl.class);
-            TemplateControls.addPageControlClass(TopAdminNavControl.KEY, TopAdminNavControl.class);
             TemplateControls.addPageControlClass(MessageControl.KEY, MessageControl.class);
             TemplateControls.addPageControlClass(KeywordsControl.KEY, KeywordsControl.class);
             TemplateControls.addPageControlClass(LayerControl.KEY, LayerControl.class);

@@ -186,22 +186,4 @@ public class UserData extends UserLoginData {
         }
     }
 
-    public void addAtributesXml(Document xmlDoc, Element node) {
-        super.addAttributesXml(xmlDoc, node);
-        XmlUtil.addAttribute(xmlDoc, node, "street", StringUtil.toXml(getStreet()));
-        XmlUtil.addAttribute(xmlDoc, node, "zipCode", StringUtil.toXml(getZipCode()));
-        XmlUtil.addAttribute(xmlDoc, node, "city", StringUtil.toXml(getCity()));
-        XmlUtil.addAttribute(xmlDoc, node, "country", StringUtil.toXml(getCountry()));
-        XmlUtil.addAttribute(xmlDoc, node, "phone", StringUtil.toXml(getPhone()));
-        XmlUtil.addAttribute(xmlDoc, node, "fax", StringUtil.toXml(getFax()));
-        XmlUtil.addAttribute(xmlDoc, node, "mobile", StringUtil.toXml(getMobile()));
-        XmlUtil.addAttribute(xmlDoc, node, "notes", StringUtil.toXml(getNotes()));
-        XmlUtil.addAttribute(xmlDoc, node, "portraitName", StringUtil.toXml(getPortraitName()));
-        Element groupsNode = XmlUtil.addNode(xmlDoc, node, "groups");
-        for (Integer gid : groupIds) {
-            Element groupNode = XmlUtil.addNode(xmlDoc, groupsNode, "group");
-            XmlUtil.addIntAttribute(xmlDoc, groupNode, "id", gid);
-        }
-    }
-
 }

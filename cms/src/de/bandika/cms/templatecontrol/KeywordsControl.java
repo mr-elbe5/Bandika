@@ -30,6 +30,8 @@ public class KeywordsControl extends TemplateControl {
     }
 
     public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException {
+        if (pageData==null)
+            return;
         writer.write("<meta name=\"keywords\" content=\"" + StringUtil.toHtml(pageData.getKeywords()) + "\">");
     }
 
