@@ -78,7 +78,7 @@ public class TopNavControl extends TemplateControl {
                 }
             }
             if (hasAnyEditRight || hasAdminRight){
-                writer.write("<li><a href=\"/pageedit.srv?act=toggleEditMode&pageId=" + pageId + "\" title=\""+getHtml("_editMode", locale)+"\">" + (editMode ? "&gt;" : "&lt;") + "</a></li>");
+                writer.write("<li><a href=\"/pageedit.srv?act=toggleEditMode&pageId=" + pageId + "\" title=\""+getHtml(editMode ? "_editModeOff" : "_editModeOn", locale)+"\">" + (editMode ? "&gt;" : "&lt;") + "</a></li>");
             }
             if (homeSite != null) {
                 if (otherLocales != null) {
