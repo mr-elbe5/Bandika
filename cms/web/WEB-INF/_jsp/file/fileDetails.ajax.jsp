@@ -21,9 +21,7 @@
     FileData data = tc.getFile(fileId);
     FileBean.getInstance().loadFileContent(data, FileAction.getFileVersionForUser(data.getId(), request));
 %>
-<h3><%=StringUtil.getString("_file", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
-</h3>
-<table class="padded details">
+<table class="details">
     <tr>
         <td><label><%=StringUtil.getHtml("_id", locale)%>
         </label></td>

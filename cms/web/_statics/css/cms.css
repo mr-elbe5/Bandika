@@ -305,23 +305,30 @@ table.listTable .selected {
     background: #d8e8ff;
 }
 
-#details {
-    border-left: 1px solid #c0c0c0;
-    min-height: 100px;
+div.details{
+    border: 1px solid #ccc;
+    background: white;
     padding: 10px;
 }
 
-#details h3 {
+div.details h3{
     color: #327598;
     margin-bottom: 10px;
 }
 
 table.details {
-
 }
 
-table.details.lined td {
+table.details td, table.details th {
+    padding: 5px;
+}
+
+table.details tr td {
     border-bottom: 1px solid #dddddd;
+}
+
+table.details tr:last-child td {
+    border-bottom: none;
 }
 
 table.versions {

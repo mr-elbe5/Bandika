@@ -13,9 +13,7 @@
 <%
     Locale locale = SessionReader.getSessionLocale(request);
 %>
-<h3><%=StringUtil.getString("_cluster", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
-</h3>
-<table class="padded details">
+<table class="details">
     <tr>
         <td><label><%=StringUtil.getHtml("_self", locale)%>
         </label></td>

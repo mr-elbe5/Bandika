@@ -14,9 +14,7 @@
     Locale locale = SessionReader.getSessionLocale(request);
     SearchQueue data = SearchQueue.getInstance();
 %>
-<h3><%=StringUtil.getString("_search", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
-</h3>
-<table class="padded details">
+<table class="details">
     <tr>
         <td><label><%=StringUtil.getHtml("_currentActions", locale)%>
         </label></td>

@@ -19,9 +19,7 @@
     int groupId = RequestReader.getInt(request, "groupId");
     GroupData data = GroupBean.getInstance().getGroup(groupId);
 %>
-<h3><%=StringUtil.getString("_group", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
-</h3>
-<table class="padded details">
+<table class="details">
     <tr>
         <td><label><%=StringUtil.getHtml("_id", locale)%>
         </label></td>

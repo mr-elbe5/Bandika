@@ -198,19 +198,6 @@ public class UserLoginData extends BaseIdData {
         return true;
     }
 
-    public void addAttributesXml(Document xmlDoc, Element node) {
-        XmlUtil.addIntAttribute(xmlDoc, node, "id", getId());
-        XmlUtil.addAttribute(xmlDoc, node, "title", StringUtil.toXml(getTitle()));
-        XmlUtil.addAttribute(xmlDoc, node, "firstName", StringUtil.toXml(getFirstName()));
-        XmlUtil.addAttribute(xmlDoc, node, "lastName", StringUtil.toXml(getLastName()));
-        XmlUtil.addAttribute(xmlDoc, node, "locale", StringUtil.toXml(getLocale().getLanguage()));
-        XmlUtil.addAttribute(xmlDoc, node, "email", StringUtil.toXml(getEmail()));
-        XmlUtil.addAttribute(xmlDoc, node, "login", StringUtil.toXml(getLogin()));
-        XmlUtil.addBooleanAttribute(xmlDoc, node, "approved", isApproved());
-        XmlUtil.addBooleanAttribute(xmlDoc, node, "locked", isLocked());
-        XmlUtil.addBooleanAttribute(xmlDoc, node, "deleted", isDeleted());
-    }
-
     @Override
     public boolean isComplete() {
         return isComplete(login) && isCompletePassword() && isComplete(email) && isComplete(lastName);

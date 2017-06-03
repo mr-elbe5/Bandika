@@ -18,39 +18,41 @@
     TreeCache tc = TreeCache.getInstance();
     PageData data = tc.getPage(id);
 %>
-<h3><%=StringUtil.getString("_page", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
-</h3>
-<table class="padded details">
-    <tr>
-        <td><label><%=StringUtil.getHtml("_id", locale)%>
-        </label></td>
-        <td><%=data.getId()%>
-        </td>
-    </tr>
-    <tr>
-        <td><label><%=StringUtil.getHtml("_creationDate", locale)%>
-        </label></td>
-        <td><%=data.getCreationDate()%>
-        </td>
-    </tr>
-    <tr>
-        <td><label><%=StringUtil.getHtml("_name", locale)%>
-        </label></td>
-        <td><%=StringUtil.toHtml(data.getName())%>
-        </td>
-    </tr>
-    <tr>
-        <td><label><%=StringUtil.getHtml("_displayName", locale)%>
-        </label></td>
-        <td><%=StringUtil.toHtml(data.getDisplayName())%>
-        </td>
-    </tr>
-    <tr>
-        <td><label><%=StringUtil.getHtml("_description", locale)%>
-        </label></td>
-        <td><%=StringUtil.toHtml(data.getDescription())%>
-        </td>
-    </tr>
-</table>
+<div class="details">
+    <h3><%=StringUtil.getString("_page", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
+    </h3>
+    <table class="details">
+        <tr>
+            <td><label><%=StringUtil.getHtml("_id", locale)%>
+            </label></td>
+            <td><%=data.getId()%>
+            </td>
+        </tr>
+        <tr>
+            <td><label><%=StringUtil.getHtml("_creationDate", locale)%>
+            </label></td>
+            <td><%=data.getCreationDate()%>
+            </td>
+        </tr>
+        <tr>
+            <td><label><%=StringUtil.getHtml("_name", locale)%>
+            </label></td>
+            <td><%=StringUtil.toHtml(data.getName())%>
+            </td>
+        </tr>
+        <tr>
+            <td><label><%=StringUtil.getHtml("_displayName", locale)%>
+            </label></td>
+            <td><%=StringUtil.toHtml(data.getDisplayName())%>
+            </td>
+        </tr>
+        <tr>
+            <td><label><%=StringUtil.getHtml("_description", locale)%>
+            </label></td>
+            <td><%=StringUtil.toHtml(data.getDescription())%>
+            </td>
+        </tr>
+    </table>
+</div>
 
 

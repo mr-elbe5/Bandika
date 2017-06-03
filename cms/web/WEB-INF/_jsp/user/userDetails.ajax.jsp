@@ -19,9 +19,7 @@
     int userId = RequestReader.getInt(request, "userId");
     UserData data = UserBean.getInstance().getUser(userId);
 %>
-<h3><%=StringUtil.getString("_user", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
-</h3>
-<table class="padded details">
+<table class="details">
     <tr>
         <td><label><%=StringUtil.getHtml("_id", locale)%>
         </label></td>

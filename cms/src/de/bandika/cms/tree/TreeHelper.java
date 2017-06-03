@@ -75,7 +75,7 @@ public class TreeHelper {
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_settings", locale));
             writer.write("</div>");
-            writer.write("<div class=\"icn iright\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_editSiteRights", locale) + "', '");
+            writer.write("<div class=\"icn ilock\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_editSiteRights", locale) + "', '");
             writer.write(StringUtil.toJs("/site.ajx?act=openEditSiteRights&siteId=" + data.getId()));
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_rights", locale));
@@ -248,7 +248,7 @@ public class TreeHelper {
                 writer.write(StringUtil.getHtml("_publish", locale));
                 writer.write("</div>");
             }
-            writer.write("<div class=\"icn iright\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_editPageRights", locale) + "', '");
+            writer.write("<div class=\"icn ilock\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_editPageRights", locale) + "', '");
             writer.write(StringUtil.toJs("/pageadmin.ajx?act=openEditPageRights&pageId=" + data.getId()));
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_rights", locale));
@@ -323,7 +323,7 @@ public class TreeHelper {
                 writer.write(StringUtil.getHtml("_publish", locale));
                 writer.write("</div>");
             }
-            writer.write("<div class=\"icn iright\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_editFileRights", locale) + "', '");
+            writer.write("<div class=\"icn ilock\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_editFileRights", locale) + "', '");
             writer.write(StringUtil.toJs("/file.ajx?act=openEditFileRights&fileId=" + data.getId()));
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_rights", locale));

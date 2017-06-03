@@ -38,8 +38,10 @@
                 </div>
             </td>
             <td class="asideSection">
-                <div id="details">
-                
+                <div class="details">
+                    <h3><%=StringUtil.getString("_details", locale)%>
+                    </h3>
+                    <div id="details"></div>
                 </div>
             </td>
         </tr>

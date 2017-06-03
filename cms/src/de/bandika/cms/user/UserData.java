@@ -153,7 +153,11 @@ public class UserData extends UserLoginData {
     }
 
     public void readUserProfileRequestData(HttpServletRequest request) {
-        readLoginRequestData(request);
+        setTitle(RequestReader.getString(request, "title"));
+        setFirstName(RequestReader.getString(request, "firstName"));
+        setLastName(RequestReader.getString(request, "lastName"));
+        setLocale(new Locale(RequestReader.getString(request, "locale")));
+        setEmail(RequestReader.getString(request, "email"));
         setStreet(RequestReader.getString(request, "street"));
         setZipCode(RequestReader.getString(request, "zipCode"));
         setCity(RequestReader.getString(request, "city"));

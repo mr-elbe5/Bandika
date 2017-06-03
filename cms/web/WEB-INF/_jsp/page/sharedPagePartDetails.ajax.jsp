@@ -18,9 +18,7 @@
     PagePartData pdata = PageBean.getInstance().getSharedPagePart(partId);
     if (pdata != null) {
 %>
-<h3><%=StringUtil.getString("_pagePart", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
-</h3>
-<table class="padded details">
+<table class="details">
     <tr>
         <td><label><%=StringUtil.getHtml("_name", locale)%>
         </label></td>

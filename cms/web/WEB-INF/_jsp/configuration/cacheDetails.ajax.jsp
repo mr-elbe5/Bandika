@@ -17,9 +17,7 @@
     DataCache cache = DataCache.getCache(name);
     if (cache != null) {
 %>
-<h3><%=StringUtil.getString("_cache", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
-</h3>
-<table class="padded details">
+<table class="details">
     <tr>
         <td><label><%=StringUtil.getHtml("_name", locale)%>
         </label></td>

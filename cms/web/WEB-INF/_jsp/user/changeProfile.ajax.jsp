@@ -16,6 +16,7 @@
     Locale locale = SessionReader.getSessionLocale(request);
     UserData user = UserBean.getInstance().getUser(SessionReader.getSessionLoginData(request).getId());
 %>
+<jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/user.ajx" method="post" id="userform" name="userform" accept-charset="UTF-8">
     <input type="hidden" name="act" value="changeProfile">
     <input type="hidden" name="userId" value="<%=user.getId()%>">

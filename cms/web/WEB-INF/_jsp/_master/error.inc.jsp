@@ -14,7 +14,7 @@
     String message = RequestReader.getMessage(request);
 %><% if (error != null) { %>
 <div class="error">
-    <%=StringUtil.toHtml(error.getErrorString())%>
+    <%=error.getErrorString()%>
     <button type="button" class="close" onclick="$(this).closest('.error').hide();">&times;</button>
 </div>
 <%} else if (message != null && message.length() > 0) {%>

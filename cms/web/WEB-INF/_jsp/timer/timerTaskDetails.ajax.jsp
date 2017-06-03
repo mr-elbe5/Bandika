@@ -17,9 +17,7 @@
     String timerName = RequestReader.getString(request, "timerName");
     TimerTask data = TimerController.getInstance().getTaskCopy(timerName);
 %>
-<h3><%=StringUtil.getString("_task", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
-</h3>
-<table class="padded details">
+<table class="details">
     <tr>
         <td><label><%=StringUtil.getHtml("_name", locale)%>
         </label></td>

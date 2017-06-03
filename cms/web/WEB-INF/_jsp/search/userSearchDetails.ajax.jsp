@@ -17,75 +17,77 @@
     int userId = RequestReader.getInt(request, "userId");
     UserData data = UserBean.getInstance().getUser(userId);
 %>
-<h3><%=StringUtil.getString("_user", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
-</h3>
-<table class="padded details">
-    <tr>
-        <td><label><%=StringUtil.getHtml("_id", locale)%>
-        </label></td>
-        <td><%=data.getId()%>
-        </td>
-    </tr>
-    <tr>
-        <td><label><%=StringUtil.getHtml("_firstName", locale)%>
-        </label></td>
-        <td><%=StringUtil.toHtml(data.getFirstName())%>
-        </td>
-    </tr>
-    <tr>
-        <td><label><%=StringUtil.getHtml("_lastName", locale)%>
-        </label></td>
-        <td><%=StringUtil.toHtml(data.getLastName())%>
-        </td>
-    </tr>
-    <tr>
-        <td><label><%=StringUtil.getHtml("_street", locale)%>
-        </label></td>
-        <td><%=StringUtil.toHtml(data.getStreet())%>
-        </td>
-    </tr>
-    <tr>
-        <td><label><%=StringUtil.getHtml("_zipCode", locale)%>
-        </label></td>
-        <td><%=StringUtil.toHtml(data.getZipCode())%>
-        </td>
-    </tr>
-    <tr>
-        <td><label><%=StringUtil.getHtml("_city", locale)%>
-        </label></td>
-        <td><%=StringUtil.toHtml(data.getCity())%>
-        </td>
-    </tr>
-    <tr>
-        <td><label><%=StringUtil.getHtml("_country", locale)%>
-        </label></td>
-        <td><%=StringUtil.toHtml(data.getCountry())%>
-        </td>
-    </tr>
-    <tr>
-        <td><label><%=StringUtil.getHtml("_locale", locale)%>
-        </label></td>
-        <td><%=StringUtil.toHtml(data.getLocale().getDisplayName(locale))%>
-        </td>
-    </tr>
-    <tr>
-        <td><label><%=StringUtil.getHtml("_email", locale)%>
-        </label></td>
-        <td><%=StringUtil.toHtml(data.getEmail())%>
-        </td>
-    </tr>
-    <tr>
-        <td><label><%=StringUtil.getHtml("_phone", locale)%>
-        </label></td>
-        <td><%=StringUtil.toHtml(data.getPhone())%>
-        </td>
-    </tr>
-    <tr>
-        <td><label><%=StringUtil.getHtml("_mobile", locale)%>
-        </label></td>
-        <td><%=StringUtil.toHtml(data.getMobile())%>
-        </td>
-    </tr>
-</table>
+<div class="details">
+    <h3><%=StringUtil.getString("_user", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
+    </h3>
+    <table class="details">
+        <tr>
+            <td><label><%=StringUtil.getHtml("_id", locale)%>
+            </label></td>
+            <td><%=data.getId()%>
+            </td>
+        </tr>
+        <tr>
+            <td><label><%=StringUtil.getHtml("_firstName", locale)%>
+            </label></td>
+            <td><%=StringUtil.toHtml(data.getFirstName())%>
+            </td>
+        </tr>
+        <tr>
+            <td><label><%=StringUtil.getHtml("_lastName", locale)%>
+            </label></td>
+            <td><%=StringUtil.toHtml(data.getLastName())%>
+            </td>
+        </tr>
+        <tr>
+            <td><label><%=StringUtil.getHtml("_street", locale)%>
+            </label></td>
+            <td><%=StringUtil.toHtml(data.getStreet())%>
+            </td>
+        </tr>
+        <tr>
+            <td><label><%=StringUtil.getHtml("_zipCode", locale)%>
+            </label></td>
+            <td><%=StringUtil.toHtml(data.getZipCode())%>
+            </td>
+        </tr>
+        <tr>
+            <td><label><%=StringUtil.getHtml("_city", locale)%>
+            </label></td>
+            <td><%=StringUtil.toHtml(data.getCity())%>
+            </td>
+        </tr>
+        <tr>
+            <td><label><%=StringUtil.getHtml("_country", locale)%>
+            </label></td>
+            <td><%=StringUtil.toHtml(data.getCountry())%>
+            </td>
+        </tr>
+        <tr>
+            <td><label><%=StringUtil.getHtml("_locale", locale)%>
+            </label></td>
+            <td><%=StringUtil.toHtml(data.getLocale().getDisplayName(locale))%>
+            </td>
+        </tr>
+        <tr>
+            <td><label><%=StringUtil.getHtml("_email", locale)%>
+            </label></td>
+            <td><%=StringUtil.toHtml(data.getEmail())%>
+            </td>
+        </tr>
+        <tr>
+            <td><label><%=StringUtil.getHtml("_phone", locale)%>
+            </label></td>
+            <td><%=StringUtil.toHtml(data.getPhone())%>
+            </td>
+        </tr>
+        <tr>
+            <td><label><%=StringUtil.getHtml("_mobile", locale)%>
+            </label></td>
+            <td><%=StringUtil.toHtml(data.getMobile())%>
+            </td>
+        </tr>
+    </table>
+</div>
 
 

@@ -8,7 +8,9 @@
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.servlet.SessionReader" %>
-
+<%@ page import="java.util.Locale" %>
+<% Locale locale = SessionReader.getSessionLocale(request);
+%>
 <section class="mainSection flexRow">
     <section class="contentSection flexItemTwo">
         <div class="adminTree">
@@ -27,8 +29,10 @@
         </div>
     </section>
     <aside class="asideSection flexItemOne">
-        <div id="details">
-        
+        <div class="details">
+            <h3><%=StringUtil.getString("_details", locale)%>
+            </h3>
+            <div id="details"></div>
         </div>
     </aside>
 </section>

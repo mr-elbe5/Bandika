@@ -38,6 +38,9 @@ public enum PageEditAction implements ITreeAction {
                 if (!hasAnyContentRight(request))
                     return false;
                 SessionWriter.setEditMode(request, !SessionReader.isEditMode(request));
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (pageId==0)
+                    request.setAttribute("pageId", Integer.toString(TreeCache.getInstance().getFallbackPageId(request)));
                 return PageAction.show.execute(request, response);
             }
         }, /**

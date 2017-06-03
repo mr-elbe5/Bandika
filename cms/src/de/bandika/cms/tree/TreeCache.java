@@ -8,7 +8,10 @@ import de.bandika.cms.page.PageBean;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.site.SiteBean;
 import de.bandika.cms.site.SiteData;
+import de.bandika.servlet.SessionReader;
+import org.apache.http.HttpRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 public class TreeCache extends BaseCache {
@@ -157,6 +160,10 @@ public class TreeCache extends BaseCache {
             return 0;
         }
         return languageRootIds.get(locale);
+    }
+
+    public int getFallbackPageId(HttpServletRequest request){
+       return getLanguageRootSite(SessionReader.getSessionLocale(request)).getDefaultPage().getId();
     }
 
     public SiteData getSite(int id) {

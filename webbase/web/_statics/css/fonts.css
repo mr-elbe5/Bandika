@@ -141,6 +141,10 @@
     content: '\E07c';
 }
 
+.icn.ileft:before {
+    content: '\E080';
+}
+
 .icn.ilogin:before {
     content: '\E087';
 }
@@ -209,8 +213,12 @@
     content: '\E08f';
 }
 
-.icn.iright:before {
+.icn.ilock:before {
     content: '\E086';
+}
+
+.icn.iright:before {
+    content: '\E112';
 }
 
 .icn.isearch:before {

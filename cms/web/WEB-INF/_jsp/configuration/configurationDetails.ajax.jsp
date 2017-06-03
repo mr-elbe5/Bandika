@@ -15,8 +15,6 @@
     Locale locale = SessionReader.getSessionLocale(request);
     Configuration configuration = Configuration.getInstance();
 %>
-<h3><%=StringUtil.getString("_configuration", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
-</h3>
 <table class="padded details">
     <tr>
         <td><label><%=StringUtil.getHtml("_defaultLocale", locale)%>

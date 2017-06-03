@@ -20,9 +20,7 @@
     TemplateData data = TemplateCache.getInstance().getTemplate(templateType, templateName);
     if (data != null) {
 %>
-<h3><%=StringUtil.getString("_template", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
-</h3>
-<table class="padded details">
+<table class="details">
     <tr>
         <td><label><%=StringUtil.getHtml("_name", locale)%>
         </label></td>

@@ -18,9 +18,7 @@
     TreeCache tc = TreeCache.getInstance();
     PageData data = tc.getPage(id);
 %>
-<h3><%=StringUtil.getString("_page", locale)%> - <%=StringUtil.getHtml("_details", locale)%>
-</h3>
-<table class="padded details">
+<table class="details">
     <tr>
         <td><label><%=StringUtil.getHtml("_id", locale)%>
         </label></td>
