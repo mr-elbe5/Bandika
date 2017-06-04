@@ -8,7 +8,7 @@
  */
 package de.bandika.base.data;
 
-public class BinaryFileBaseData {
+public class BinaryFileBaseData{
 
     protected String fileName = null;
     protected String contentType = null;

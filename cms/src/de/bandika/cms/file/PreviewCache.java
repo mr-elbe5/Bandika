@@ -8,10 +8,10 @@
  */
 package de.bandika.cms.file;
 
-import de.bandika.base.cache.DataCache;
+import de.bandika.base.cache.FileCache;
 import de.bandika.base.data.BinaryFileData;
 
-public class PreviewCache extends DataCache<BinaryFileData> {
+public class PreviewCache extends FileCache<BinaryFileData> {
 
     public static final String CACHEKEY = "File Previews";
     private static PreviewCache instance = null;

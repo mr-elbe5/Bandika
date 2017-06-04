@@ -47,7 +47,7 @@ public class ConfigurationBean extends WebConfigurationBean {
     public void readConfiguration(Connection con, Configuration config) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT defaultLocale, mailHost, mailPort, mailConnectionType, mailUser, mailPassword, mailSender, timerInterval, clusterPort, clusterTimeout, maxClusterTimeouts, maxVersions FROM t_configuration");
+            pst = con.prepareStatement("SELECT defaultLocale, mailHost, mailPort, mailConnectionType, mailUser, mailPassword, mailSender, timerInterval, maxVersions FROM t_configuration");
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
@@ -59,9 +59,6 @@ public class ConfigurationBean extends WebConfigurationBean {
                     config.setSmtpPassword(new String(Base64.getEncoder().encode(rs.getString(i++).getBytes())));
                     config.setMailSender(rs.getString(i++));
                     config.setTimerInterval(rs.getInt(i++));
-                    config.setClusterPort(rs.getInt(i++));
-                    config.setClusterTimeout(rs.getInt(i++));
-                    config.setMaxClusterTimeouts(rs.getInt(i++));
                     config.setMaxVersions(rs.getInt(i));
                 }
             }
@@ -88,7 +85,7 @@ public class ConfigurationBean extends WebConfigurationBean {
     protected void writeConfiguration(Connection con, Configuration config) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("UPDATE t_configuration SET defaultLocale=?, mailHost=?, mailPort=?, mailConnectionType=?, mailUser=?, mailPassword=?, mailSender=?, timerInterval=?, clusterPort=?, clusterTimeout=?, maxClusterTimeouts=?, maxVersions=? ");
+            pst = con.prepareStatement("UPDATE t_configuration SET defaultLocale=?, mailHost=?, mailPort=?, mailConnectionType=?, mailUser=?, mailPassword=?, mailSender=?, timerInterval=?, maxVersions=? ");
             int i = 1;
             pst.setString(i++, config.getDefaultLocale().getLanguage());
             pst.setString(i++, config.getSmtpHost());
@@ -98,9 +95,6 @@ public class ConfigurationBean extends WebConfigurationBean {
             pst.setString(i++, new String(Base64.getDecoder().decode(config.getSmtpPassword().getBytes())));
             pst.setString(i++, config.getMailSender());
             pst.setInt(i++, config.getTimerInterval());
-            pst.setInt(i++, config.getClusterPort());
-            pst.setInt(i++, config.getClusterTimeout());
-            pst.setInt(i++, config.getMaxClusterTimeouts());
             pst.setInt(i, config.getMaxVersions());
             pst.executeUpdate();
         } finally {

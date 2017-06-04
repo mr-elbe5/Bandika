@@ -8,35 +8,39 @@
  */
 package de.bandika.base.cache;
 
+import de.bandika.base.data.BinaryFileBaseData;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DataCache extends BaseCache{
+public class FileCache<T extends BinaryFileBaseData> extends BaseCache{
 
-    protected static Map<String, DataCache> cacheMap = new HashMap<>();
+    protected static Map<String, FileCache> cacheMap = new HashMap<>();
 
-    public static DataCache getCache(String cacheName) {
+    public static FileCache getCache(String cacheName) {
         if (!cacheMap.containsKey(cacheName)) {
             return null;
         }
         return cacheMap.get(cacheName);
     }
 
-    public static List<DataCache> getAllCaches() {
-        List<DataCache> list = new ArrayList<>();
+    public static List<FileCache> getAllCaches() {
+        List<FileCache> list = new ArrayList<>();
         list.addAll(cacheMap.values());
         return list;
     }
 
     protected String name = "";
     protected int maxCount = 0;
+    protected long maxSize = 0;
     protected int cacheCount = 0;
-    protected Map<Integer, Object> map;
+    protected long cacheSize = 0;
+    protected Map<Integer, T> map;
     protected List<Integer> list;
 
-    public DataCache() {
+    public FileCache() {
         map = new HashMap<>();
         list = new ArrayList<>();
     }
@@ -52,6 +56,7 @@ public class DataCache extends BaseCache{
         map.clear();
         list.clear();
         cacheCount = 0;
+        cacheSize=0;
     }
 
     public String getName() {
@@ -70,6 +75,14 @@ public class DataCache extends BaseCache{
         return maxCount;
     }
 
+    public long getMaxSize() {
+        return maxSize;
+    }
+
+    public long getCacheSize() {
+        return cacheSize;
+    }
+
     public void setMaxCount(int maxCount) {
         if ((maxCount <= 0)) {
             return;
@@ -84,10 +97,24 @@ public class DataCache extends BaseCache{
         this.maxCount = maxCount;
     }
 
-    public Object get(Integer key) {
+    public void setMaxSize(long maxSize) {
+        if ((maxSize <= 0)) {
+            return;
+        }
+        if ((maxSize < this.maxSize)) {
+            synchronized (this) {
+                while (cacheSize > maxSize) {
+                    removeLeastUsed();
+                }
+            }
+        }
+        this.maxSize = maxSize;
+    }
+
+    public T get(Integer key) {
         checkDirty();
         synchronized (this) {
-            Object data = map.get(key);
+            T data = map.get(key);
             if (data != null) {
                 list.remove(key);
                 list.add(key);
@@ -96,7 +123,7 @@ public class DataCache extends BaseCache{
         }
     }
 
-    public void add(Integer key, Object data) {
+    public void add(Integer key, T data) {
         checkDirty();
         synchronized (this) {
             if (!map.containsKey(key)) {
@@ -106,6 +133,7 @@ public class DataCache extends BaseCache{
                     }
                 }
                 cacheCount++;
+                cacheSize+=data.getFileSize();
                 map.put(key, data);
             }
             list.remove(key);
@@ -116,11 +144,12 @@ public class DataCache extends BaseCache{
     public void remove(Integer key) {
         checkDirty();
         synchronized (this) {
-            Object data = map.get(key);
+            T data = map.get(key);
             list.remove(key);
             map.remove(key);
             if (data != null) {
                 cacheCount--;
+                cacheSize -= data.getFileSize();
             }
         }
     }
@@ -131,8 +160,10 @@ public class DataCache extends BaseCache{
             return;
         }
         Integer key = list.get(0);
+        T data = map.get(key);
         list.remove(0);
         cacheCount--;
+        cacheSize-=data.getFileSize();
         map.remove(key);
     }
 

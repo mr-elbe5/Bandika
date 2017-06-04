@@ -93,28 +93,6 @@
             </tr>
             <tr>
                 <td>
-                    <label for="clusterPort"><%=StringUtil.getHtml("_clusterPort", locale)%>&nbsp;*</label></td>
-                <td>
-                    <input type="text" id="clusterPort" name="clusterPort" value="<%=configuration.getClusterPort()%>" maxlength="10"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="clusterTimeout"><%=StringUtil.getHtml("_clusterTimeout", locale)%>&nbsp;*</label></td>
-                <td>
-                    <input type="text" id="clusterTimeout" name="clusterTimeout" value="<%=configuration.getClusterTimeout()%>" maxlength="10"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="clusterMaxTimeouts"><%=StringUtil.getHtml("_clusterMaxTimeouts", locale)%>&nbsp;*</label>
-                </td>
-                <td>
-                    <input type="text" id="clusterMaxTimeouts" name="clusterMaxTimeouts" value="<%=configuration.getMaxClusterTimeouts()%>" maxlength="10"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <label for="maxVersions"><%=StringUtil.getHtml("_maxVersions", locale)%>&nbsp;*</label></td>
                 <td>
                     <input type="text" id="maxVersions" name="maxVersions" value="<%=configuration.getMaxVersions()%>" maxlength="10"/>

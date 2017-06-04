@@ -8,14 +8,7 @@
  */
 package de.bandika.base.cache;
 
-import de.bandika.base.event.Event;
-import de.bandika.base.event.IEventListener;
-
-public abstract class BaseCache implements IEventListener {
-
-    public static final String LISTENER_TYPE = "cache";
-
-    public static final String EVENT_DIRTY = "dirty";
+public abstract class BaseCache {
 
     protected boolean dirty = true;
     protected final Integer lockObj = 1;
@@ -32,13 +25,6 @@ public abstract class BaseCache implements IEventListener {
                     dirty = false;
                 }
             }
-        }
-    }
-
-    @Override
-    public void eventReceived(Event event) {
-        if (event.getType().equals(BaseCache.EVENT_DIRTY)) {
-            setDirty();
         }
     }
 

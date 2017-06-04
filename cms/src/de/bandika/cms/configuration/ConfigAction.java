@@ -9,6 +9,7 @@
 package de.bandika.cms.configuration;
 
 import de.bandika.base.cache.DataCache;
+import de.bandika.base.cache.FileCache;
 import de.bandika.base.mail.Mailer;
 import de.bandika.cms.application.AdminAction;
 import de.bandika.cms.servlet.ICmsAction;
@@ -88,37 +89,59 @@ public enum ConfigAction implements ICmsAction {
                 config.setSmtpPassword(RequestReader.getString(request, "smtpPassword"));
                 config.setMailSender(RequestReader.getString(request, "mailSender"));
                 config.setTimerInterval(RequestReader.getInt(request, "timerInterval"));
-                config.setClusterPort(RequestReader.getInt(request, "clusterPort"));
-                config.setClusterTimeout(RequestReader.getInt(request, "clusterTimeout"));
-                config.setMaxClusterTimeouts(RequestReader.getInt(request, "clusterMaxTimeouts"));
                 config.setMaxVersions(RequestReader.getInt(request, "maxVersions"));
                 return config.isComplete();
             }
         }, /**
-     * shows cache properties
+     * shows data cache properties
      */
-    showCacheDetails {
+    showDataCacheDetails {
             @Override
             public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
                     return false;
-                return showCacheDetails(request, response);
+                return showDataCacheDetails(request, response);
             }
         }, /**
-     * empties a cache
+     * shows file cache properties
      */
-    clearCache {
+    showFileCacheDetails {
             @Override
             public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
                     return false;
-                List<String> names = RequestReader.getStringList(request, "cacheName");
-                for (String name : names) {
-                    DataCache cache = DataCache.getCache(name);
-                    if (cache != null) {
-                        cache.setDirty();
-                        cache.checkDirty();
-                    }
+                return showFileCacheDetails(request, response);
+            }
+        }, /**
+     * empties a data cache
+     */
+    clearDataCache {
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                    return false;
+                String name = RequestReader.getString(request, "cacheName");
+                DataCache cache = DataCache.getCache(name);
+                if (cache != null) {
+                    cache.setDirty();
+                    cache.checkDirty();
+                }
+                RequestWriter.setMessageKey(request, "_cacheCleared");
+                return AdminAction.openAdministration.execute(request, response);
+            }
+        },/**
+     * empties a file cache
+     */
+    clearFileCache {
+            @Override
+            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+                if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
+                    return false;
+                String name = RequestReader.getString(request, "cacheName");
+                FileCache cache = FileCache.getCache(name);
+                if (cache != null) {
+                    cache.setDirty();
+                    cache.checkDirty();
                 }
                 RequestWriter.setMessageKey(request, "_cacheCleared");
                 return AdminAction.openAdministration.execute(request, response);
@@ -144,8 +167,12 @@ public enum ConfigAction implements ICmsAction {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/configuration/configurationDetails.ajax.jsp");
     }
 
-    protected boolean showCacheDetails(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/configuration/cacheDetails.ajax.jsp");
+    protected boolean showDataCacheDetails(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/configuration/dataCacheDetails.ajax.jsp");
+    }
+
+    protected boolean showFileCacheDetails(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/configuration/fileCacheDetails.ajax.jsp");
     }
 
 }

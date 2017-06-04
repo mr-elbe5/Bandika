@@ -18,7 +18,6 @@ import java.util.Map;
 
 public class TemplateCache extends BaseCache {
 
-    public static final String CACHEKEY = "cache|template";
     private static TemplateCache instance = null;
 
     public static TemplateCache getInstance() {
@@ -29,10 +28,6 @@ public class TemplateCache extends BaseCache {
     }
 
     protected Map<TemplateType, List<TemplateData>> templates = new HashMap<>();
-
-    public String getCacheKey() {
-        return CACHEKEY;
-    }
 
     public void initialize() {
         checkDirty();

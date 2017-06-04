@@ -10,12 +10,7 @@ package de.bandika.cms.application;
 
 import de.bandika.application.DefaultAction;
 import de.bandika.application.Initializer;
-import de.bandika.base.cache.BaseCache;
 import de.bandika.base.log.Log;
-import de.bandika.cms.cluster.ClusterAction;
-import de.bandika.cms.cluster.ClusterControlTask;
-import de.bandika.cms.cluster.ClusterManager;
-import de.bandika.cms.cluster.ClusterMessageProcessor;
 import de.bandika.cms.configuration.ConfigAction;
 import de.bandika.cms.configuration.Configuration;
 import de.bandika.cms.configuration.ConfigurationBean;
@@ -62,7 +57,6 @@ public class CmsInitializer extends Initializer {
             //DocCenterAction.initialize();
             //NewsCenterAction.initialize();
             InstallerAction.initialize();
-            ClusterAction.initialize();
             ConfigAction.initialize();
             FieldAction.initialize();
             FileAction.initialize();
@@ -77,8 +71,6 @@ public class CmsInitializer extends Initializer {
             TreeAction.initialize();
             LoginAction.initialize();
             UserAction.initialize();
-            // controllers
-            ClusterManager.setInstance(new ClusterManager());
             // cms fields
             Fields.registerFieldType(HtmlField.FIELDTYPE_HTML, HtmlField.class);
             Fields.registerFieldType(TextField.FIELDTYPE_TEXT, TextField.class);
@@ -102,18 +94,9 @@ public class CmsInitializer extends Initializer {
             RightsCache.getInstance().checkDirty();
             //previews
             PreviewCache.getInstance().initialize(PreviewCache.CACHEKEY, 100);
-            // cluster
-            ClusterManager.getInstance().initialize();
-            if (ClusterManager.getInstance().isInCluster()) {
-                ClusterMessageProcessor.getInstance().putListener(BaseCache.LISTENER_TYPE, TemplateCache.getInstance());
-                ClusterMessageProcessor.getInstance().putListener(BaseCache.LISTENER_TYPE, TreeCache.getInstance());
-                ClusterMessageProcessor.getInstance().putListener(BaseCache.LISTENER_TYPE, RightsCache.getInstance());
-                ClusterMessageProcessor.getInstance().putListener(BaseCache.LISTENER_TYPE, PreviewCache.getInstance());
-            }
             //timer
             TimerController.getInstance().registerTimerTask(new HeartbeatTask());
             TimerController.getInstance().registerTimerTask(new SearchIndexTask());
-            TimerController.getInstance().registerTimerTask(new ClusterControlTask());
             TimerController.getInstance().loadTasks();
             TimerController.getInstance().startThread();
             initialized = true;
@@ -125,9 +108,11 @@ public class CmsInitializer extends Initializer {
         TemplateCache.getInstance().setDirty();
         TreeCache.getInstance().setDirty();
         PreviewCache.getInstance().setDirty();
-        if (ClusterManager.getInstance().isInCluster()) {
-            ClusterManager.getInstance().broadcastMessage(BaseCache.LISTENER_TYPE, BaseCache.EVENT_DIRTY, 0);
-        }
+    }
+
+    public void resetTimers() {
+        TimerController.getInstance().loadTasks();
+        TimerController.getInstance().restartThread();
     }
 
 }

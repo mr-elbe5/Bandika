@@ -17,12 +17,18 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="de.bandika.base.cache.FileCache" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     if (SessionReader.hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT)) {
-        List<DataCache> caches = null;
+        List<DataCache> dataCaches = null;
         try {
-            caches = DataCache.getAllCaches();
+            dataCaches = DataCache.getAllCaches();
+        } catch (Exception ignore) {
+        }
+        List<FileCache> fileCaches = null;
+        try {
+            fileCaches = FileCache.getAllCaches();
         } catch (Exception ignore) {
         }
         Map<String,TimerTask> tasks = null;
@@ -48,14 +54,30 @@
     </div>
     <ul>
         <%
-            if (caches != null) {
-                for (DataCache cache : caches) {
+            if (dataCaches != null) {
+                for (DataCache cache : dataCaches) {
         %>
         <li>
-            <div class="contextSource icn icache <%=cacheName.equals(cache.getName()) ? "selected" : ""%>" onclick="$('#details').load('/config.ajx?act=showCacheDetails&cacheName=<%=StringUtil.toUrl(cache.getName())%>')"><%=StringUtil.toHtml(cache.getName())%>
+            <div class="contextSource icn icache <%=cacheName.equals(cache.getName()) ? "selected" : ""%>" onclick="$('#details').load('/config.ajx?act=showDataCacheDetails&cacheName=<%=StringUtil.toUrl(cache.getName())%>')"><%=StringUtil.toHtml(cache.getName())%>
             </div>
             <div class="contextMenu">
-                <div class="icn iclear" onclick="linkTo('/config.srv?act=clearCache&cacheName=<%=StringUtil.toUrl(cache.getName())%>');"><%=StringUtil.getHtml("_clear", locale)%>
+                <div class="icn iclear" onclick="linkTo('/config.srv?act=clearDataCache&cacheName=<%=StringUtil.toUrl(cache.getName())%>');"><%=StringUtil.getHtml("_clear", locale)%>
+                </div>
+            </div>
+        </li>
+        <%
+                }
+            }
+        %>
+        <%
+            if (fileCaches != null) {
+                for (FileCache cache : fileCaches) {
+        %>
+        <li>
+            <div class="contextSource icn icache <%=cacheName.equals(cache.getName()) ? "selected" : ""%>" onclick="$('#details').load('/config.ajx?act=showFileCacheDetails&cacheName=<%=StringUtil.toUrl(cache.getName())%>')"><%=StringUtil.toHtml(cache.getName())%>
+            </div>
+            <div class="contextMenu">
+                <div class="icn iclear" onclick="linkTo('/config.srv?act=clearFileCache&cacheName=<%=StringUtil.toUrl(cache.getName())%>');"><%=StringUtil.getHtml("_clear", locale)%>
                 </div>
             </div>
         </li>
@@ -64,15 +86,6 @@
             }
         %>
     </ul>
-</li>
-<!--cluster-->
-<li>
-    <div class="contextSource icn isetting" onclick="$('#details').load('/cluster.ajx?act=showClusterDetails')"><%=StringUtil.getHtml("_clusterSettings", locale)%>
-    </div>
-    <div class="contextMenu">
-        <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_cluster",locale)%>', '/cluster.ajx?act=openViewCluster')"><%=StringUtil.getHtml("_view", locale)%>
-        </div>
-    </div>
 </li>
 <!--timers-->
 <li<%= !timerName.isEmpty() ? " class=\"open\"" : ""%>>
