@@ -52,10 +52,7 @@ public class CmsInitializer extends Initializer {
             Log.log("initializing");
             // actions
             AdminAction.initialize();
-            //BlogAction.initialize();
             DefaultAction.initialize();
-            //DocCenterAction.initialize();
-            //NewsCenterAction.initialize();
             InstallerAction.initialize();
             ConfigAction.initialize();
             FieldAction.initialize();

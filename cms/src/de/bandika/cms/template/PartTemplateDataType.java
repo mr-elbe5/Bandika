@@ -9,8 +9,6 @@
 package de.bandika.cms.template;
 
 import de.bandika.base.log.Log;
-import de.bandika.cms.doccenter.DocCenterPartData;
-import de.bandika.cms.newscenter.NewsCenterPartData;
 import de.bandika.cms.page.HtmlPartData;
 import de.bandika.cms.page.MultiHtmlPartData;
 import de.bandika.cms.page.PagePartData;
@@ -27,14 +25,6 @@ public enum PartTemplateDataType {
     }, MULTIHTML {
         public PagePartData getNewPagePartData() {
             return new MultiHtmlPartData();
-        }
-    }, DOCCENTER {
-        public PagePartData getNewPagePartData() {
-            return new DocCenterPartData();
-        }
-    }, NEWSCENTER {
-        public PagePartData getNewPagePartData() {
-            return new NewsCenterPartData();
         }
     };
 
