@@ -33,25 +33,29 @@ public enum PageAction implements ITreeAction {
     show {
             @Override
             public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                PageData data;
+                PageData treeData, data;
                 int pageId = RequestReader.getInt(request, "pageId");
                 TreeCache tc = TreeCache.getInstance();
                 if (pageId == 0) {
                     String url = request.getRequestURI();
-                    data = tc.getPage(url);
+                    treeData = tc.getPage(url);
                 } else {
-                    data = tc.getPage(pageId);
+                    treeData = tc.getPage(pageId);
                 }
-                checkObject(data);
-                if (!data.isAnonymous() && !SessionReader.hasContentRight(request, pageId, Right.READ)) {
+                checkObject(treeData);
+                if (!treeData.isAnonymous() && !SessionReader.hasContentRight(request, pageId, Right.READ)) {
                     return forbidden();
                 }
-                request.setAttribute("pageId", Integer.toString(data.getId()));
-                int pageVersion = data.getVersionForUser(request);
-                if (pageVersion == data.getPublishedVersion()) {
-                    assert (data.isPublishedLoaded());
+                request.setAttribute("pageId", Integer.toString(treeData.getId()));
+                int pageVersion = treeData.getVersionForUser(request);
+                if (pageVersion == treeData.getPublishedVersion()) {
+                    assert (treeData.isPublishedLoaded());
+                    data=treeData;
                 } else {
                     data = PageBean.getInstance().getPage(pageId, pageVersion);
+                    data.setPath(treeData.getPath());
+                    data.setDefaultPage(treeData.isDefaultPage());
+                    data.setParentIds(treeData.getParentIds());
                 }
                 return setPageResponse(request, response, data);
             }

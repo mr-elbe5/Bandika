@@ -52,7 +52,12 @@ public enum PageEditAction implements ITreeAction {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
+                PageData treeData=TreeCache.getInstance().getPage(pageId);
                 PageData data = PageBean.getInstance().getPage(pageId, getEditVersion(pageId));
+                if (treeData!=null){
+                    data.setDefaultPage(treeData.isDefaultPage());
+                    data.setPath(treeData.getPath());
+                }
                 checkObject(data);
                 data.prepareEditing();
                 SessionWriter.setSessionObject(request, "pageData", data);

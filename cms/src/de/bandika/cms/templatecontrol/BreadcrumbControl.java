@@ -11,6 +11,7 @@ package de.bandika.cms.templatecontrol;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.cms.tree.TreeNode;
+import de.bandika.servlet.SessionReader;
 import de.bandika.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +39,13 @@ public class BreadcrumbControl extends TemplateControl {
         if (pageData != null) {
             activeIds.addAll(pageData.getParentIds());
             activeIds.add(pageData.getId());
+        }
+        else {
+            int homeId=TreeCache.getInstance().getLanguageRootSiteId(SessionReader.getSessionLocale(request));
+            if (homeId!=0) {
+                activeIds.add(TreeNode.ID_ROOT);
+                activeIds.add(homeId);
+            }
         }
         writer.write("<nav class=\"breadcrumb\"><ul>");
         for (int i = 1; i < activeIds.size(); i++) {

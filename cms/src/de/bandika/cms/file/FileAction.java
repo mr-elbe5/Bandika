@@ -149,11 +149,11 @@ public enum FileAction implements ITreeAction {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
-                TreeCache tc = TreeCache.getInstance();
-                FileData data = tc.getFile(fileId);
-                checkObject(data);
-                int fileVersion = data.getVersionForUser(request);
-                data = FileBean.getInstance().getFile(fileId, fileVersion, false);
+                FileData treeData = TreeCache.getInstance().getFile(fileId);
+                checkObject(treeData);
+                int fileVersion = treeData.getVersionForUser(request);
+                FileData data = FileBean.getInstance().getFile(fileId, fileVersion, false);
+                data.setPath(treeData.getPath());
                 data.prepareEditing();
                 SessionWriter.setSessionObject(request, "fileData", data);
                 return showEditFileSettings(request, response);

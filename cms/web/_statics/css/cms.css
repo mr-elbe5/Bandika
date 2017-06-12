@@ -1,3 +1,5 @@
+
+
 /* tree view */
 
 .treeview, .treeview ul {
@@ -54,122 +56,6 @@
     background-position: 0;
 }
 
-/* general webserver */
-
-body {
-    font-family: Verdana, Arial, Helvetica, sans-serif;
-    font-size: 13px;
-    color: #442E2E;
-    height: 100%;
-    overflow-y: hidden;
-    overflow-x: auto;
-}
-
-.carbon {
-    background: #333 url(img/carbon.png);
-}
-
-.carbon-light {
-    background: #333 url(img/carbon_light.png);
-}
-
-.viewport {
-    position: relative;
-    max-width: 1280px;
-    min-width: 480px;
-    height: 100%;
-    margin: 0 auto 0 auto;
-    background: transparent;
-}
-
-.header {
-    background: transparent;
-}
-
-/* links above mainArea */
-.topNavSection {
-    text-align: right;
-    padding: 0 5px 0 5px;
-}
-
-.topNavSection ul {
-    display: inline-block;
-}
-
-.topNavSection ul li {
-    display: inline-block;
-    vertical-align: top;
-    font-size: 11px;
-    margin: 3px;
-    padding: 3px 5px 3px;
-}
-
-.topNavSection ul li a {
-    color: #8bbdd7;
-}
-
-.headerSection {
-}
-
-.headerMain {
-    display: table;
-    width: 100%;
-    position: relative;
-    padding: 0 10px 0 10px;
-}
-
-.headerMain .title {
-    display: table-cell;
-    vertical-align: top;
-    margin-right: 10px;
-    width: 250px;
-}
-
-.headerMain .menu {
-    display: table-cell;
-    vertical-align: top;
-    margin-left: 10px;
-}
-
-/* main navigation and breadcrumb*/
-
-nav {
-}
-
-/* main navigation */
-
-a.navBtn {
-    display: none;
-}
-
-.breadcrumb {
-}
-
-/* main section */
-
-.main {
-    background: rgba(255, 255, 255, 0.95);
-    bottom: 30px;
-    position: absolute;
-    top: 110px;
-    width: 100%;
-    overflow-y: auto;
-}
-
-.footer {
-    position: absolute;
-    height: 30px;
-    width: 100%;
-    left: 0;
-    bottom: 0;
-    background: transparent;
-    color: #aaaaaa;
-    padding: 5px 0;
-}
-
-.footer a, .footer a:active, .footer a:hover, .footer a:focus {
-    color: #c8c8c8;
-}
 
 /* forms and tables */
 

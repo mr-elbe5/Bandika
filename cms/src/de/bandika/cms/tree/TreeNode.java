@@ -273,6 +273,10 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
         return parentIds;
     }
 
+    public void setParentIds(List<Integer> parentIds) {
+        this.parentIds = parentIds;
+    }
+
     public void setCreateValues(TreeNode parent) {
         setNew(true);
         setId(TreeBean.getInstance().getNextId());

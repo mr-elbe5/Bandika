@@ -96,11 +96,12 @@ public enum PageAdminAction implements ITreeAction {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
-                TreeCache tc = TreeCache.getInstance();
-                PageData data = tc.getPage(pageId);
-                checkObject(data);
-                int pageVersion = data.getVersionForUser(request);
-                data = PageBean.getInstance().getPage(pageId, pageVersion);
+                PageData treeData=TreeCache.getInstance().getPage(pageId);
+                checkObject(treeData);
+                int pageVersion = treeData.getVersionForUser(request);
+                PageData data = PageBean.getInstance().getPage(pageId, pageVersion);
+                data.setDefaultPage(treeData.isDefaultPage());
+                data.setPath(treeData.getPath());
                 data.prepareEditing();
                 SessionWriter.setSessionObject(request, "pageData", data);
                 return showEditPageSettings(request, response);
