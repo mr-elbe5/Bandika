@@ -8,4 +8,4 @@
 /out
 /.idea/dataSources
 /.sass-cache
-/cms/.sass-cache/75fcaf1b4852ceb732871195e41567cc2a7d8997/C%058/Source/Bandika/cms/web/_statics/scss/*.scssc
+*.scssc
