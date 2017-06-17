@@ -1,4 +1,4 @@
-
+@import "compass/css3";
 
 /* tree view */
 
@@ -13,7 +13,7 @@
 }
 
 .treeview .hitarea {
-    background: url(img/treeview-default.gif) -64px -25px no-repeat;
+    background: image-url("treeview-default.gif") -64px -25px no-repeat;
     height: 16px;
     width: 16px;
     margin-left: -19px;
@@ -25,7 +25,7 @@
     margin: 0;
     padding: 3px 3px 3px 19px;
     line-height: 12px;
-    background: url(img/treeview-default-line.gif) 0 0 no-repeat;
+    background: image-url("treeview-default-line.gif") no-repeat;
 }
 
 .treeview li.collapsable, .treeview li.expandable {
@@ -41,7 +41,7 @@
 }
 
 .treeview li.lastCollapsable, .treeview li.lastExpandable {
-    background-image: url(img/treeview-default.gif);
+    background-image: image-url("treeview-default.gif");
 }
 
 .treeview li.lastCollapsable {

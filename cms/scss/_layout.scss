@@ -20,10 +20,10 @@
     color: #404040;
 }
 .carbon {
-    background: #333 url(img/carbon.png);
+    background: #333 image-url("carbon.png");
 }
 .carbon-light {
-    background: #333 url(img/carbon_light.png);
+    background: #333 image-url("carbon_light.png");
 }
 
 /* general classes */
@@ -258,7 +258,7 @@ nav.mainNav li ul {
     position: absolute;
     display: none;
     width: inherit;
-    background: #333 url(img/carbon.png);
+    background: #333 image-url("carbon.png");
     border: 1px solid #c8c8c8;
     z-index: 9999;
 }
