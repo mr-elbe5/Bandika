@@ -1,12 +1,13 @@
 /* icons */
 @import "compass/css3";
+@import "globals.scss";
 
 @include font-face("LigatureSymbols" ,
         font-files("LigatureSymbols-2.11.eot","LigatureSymbols-2.11.woff", "LigatureSymbols-2.11.ttf", "LigatureSymbols-2.11.svg"),
         "LigatureSymbols-2.11.eot", normal, normal);
 
 .icn:before {
-    font-family: 'LigatureSymbols';
+    font-family: 'LigatureSymbols', fantasy;
     -webkit-text-rendering: optimizeLegibility;
     -moz-text-rendering: optimizeLegibility;
     -ms-text-rendering: optimizeLegibility;
@@ -19,11 +20,11 @@
     font-smoothing: antialiased;
     margin-right: 0.3em;
     font-size: 130%;
-    color: #888;
+    color: $color-darkgrey;
 }
 
 .icn.disabled:before {
-    color: #ccc;
+    color: $color-midgrey;
 }
 
 .icn.iaction:before {

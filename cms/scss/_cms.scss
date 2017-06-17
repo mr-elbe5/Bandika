@@ -1,4 +1,5 @@
 @import "compass/css3";
+@import "globals.scss";
 
 /* tree view */
 
@@ -65,12 +66,12 @@ form {
 
 fieldset {
     padding: 5px 5px 15px 5px;
-    border: 1px solid #ccc;
+    border: 1px solid $color-midgrey;
 }
 
 fieldset legend {
-    border-color: #ccc;
-    color: #aaa;
+    border-color: $color-midgrey;
+    color: $color-darkgrey;
     padding: 0 5px;
     position: relative;
     top: -0.2em;
@@ -154,9 +155,9 @@ fieldset div.line input[type="radio"] {
 .buttonset input[type="button"],
 .buttonset input[type="submit"],
 .buttonset input[type="reset"] {
-    border: 1px solid #aaa;
+    border: 1px solid $color-darkgrey;
     border-radius: 5px;
-    background: #fff;
+    background: $color-white;
     margin-right: 10px;
     padding: 2px 6px 3px;
 }
@@ -165,7 +166,7 @@ fieldset div.line input[type="radio"] {
 .buttonset input[type="button"].primary,
 .buttonset input[type="submit"].primary,
 .buttonset input[type="reset"].primary {
-    border-color: #8bbdd7;
+    border-color: $color-mid;
 }
 
 .buttonset input[type="checkbox"],
@@ -188,17 +189,17 @@ table.listTable input[type="checkbox"].toggle {
 }
 
 table.listTable .selected {
-    background: #d8e8ff;
+    background: $color-superlight;
 }
 
 div.details{
-    border: 1px solid #ccc;
-    background: white;
+    border: 1px solid $color-midgrey;
+    background: $color-white;
     padding: 10px;
 }
 
 div.details h3{
-    color: #327598;
+    color: $color-dark;
     margin-bottom: 10px;
 }
 
@@ -223,9 +224,9 @@ table.versions {
 table.versions td:last-child button,
 table.versions td:last-child a {
     display: inline-block;
-    border: 1px solid #8bbdd7;
+    border: 1px solid $color-dark;
     border-radius: 5px;
-    background: #eee;
+    background: $color-lightgrey;
     margin-right: 10px;
     padding: 2px 6px 3px;
 }
@@ -285,8 +286,8 @@ table.versions td:last-child a {
     overflow: hidden;
     position: relative;
     margin: auto;
-    background: #fff;
-    border: 1px solid #aaa;
+    background: $color-white;
+    border: 1px solid $color-darkgrey;
 }
 
 .layeroverlay.dialog .layercontent {
@@ -317,7 +318,7 @@ table.versions td:last-child a {
     float: right;
     width: 5px;
     height: 100%;
-    background: #e8e8e8;
+    background: $color-lightgrey;
     cursor: ew-resize;
 }
 
@@ -336,11 +337,11 @@ table.versions td:last-child a {
 }
 
 .layerheadbox {
-    color: #333;
-    background: #d8e8ff;
+    color: $color-text;
+    background: $color-superlight;
     height: 35px;
     padding: 8px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid $color-lightgrey;
 
 }
 
@@ -375,11 +376,11 @@ table.versions td:last-child a {
 /* error and message box */
 
 div.error {
-    background: lightcoral;
+    background: $color-error;
 }
 
 div.message {
-    background: palegoldenrod;
+    background: $color-message;
 }
 
 div.error, div.message {
@@ -399,18 +400,18 @@ div.message button, div.error button {
 /* admin and edit styles */
 
 ul.linkList {
-    background: white;
-    border: 1px solid #ccc;
+    background: $color-white;
+    border: 1px solid $color-midgrey;
 }
 
 ul.linkList li {
     padding: 5px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid $color-midgrey;
     cursor: pointer;
 }
 
 ul.linkList li:hover {
-    background: #eee;
+    background: $color-lightgrey;
 }
 
 div.contextSource,
@@ -419,8 +420,8 @@ div.selectable {
 }
 
 div.contextMenu {
-    background: white;
-    border: 1px solid #ccc;
+    background: $color-white;
+    border: 1px solid $color-midgrey;
     position: absolute;
     display: none;
     width: 200px;
@@ -435,11 +436,11 @@ div.contextMenu div {
 }
 
 div.contextMenu div:hover {
-    background: #eee;
+    background: $color-lightgrey;
 }
 
 h3.treeHeader {
-    color: #327598;
+    color: $color-text;
 }
 
 .treeRoot div.contextSource,
@@ -449,14 +450,14 @@ h3.treeHeader {
 
 .treeRoot div.contextSource.selected,
 .treeRoot div.selectable.selected {
-    color: #00a;
+    color: $color-dark;
 }
 
 .treeRoot div.contextMenu {
 }
 
 .dropTarget {
-    background: lightgreen;
+    background: $color-light;
 }
 
 /* cms part */
@@ -491,30 +492,30 @@ h3.treeHeader {
 }
 
 .pageAdminLinks a {
-    color: #333;
+    color: $color-text;
 }
 
 .pageAdminLinks a:hover {
-    color: #338;
+    color: $color-dark;
 }
 
 .editArea div.contextSource:hover {
-    box-shadow: 1px 1px 1px #fff inset, 1px 1px 1px #fff;
+    box-shadow: 1px 1px 1px $color-white inset, 1px 1px 1px $color-white;
 }
 
 .editArea div.contextSource.selected {
-    box-shadow: 1px 1px 1px #fff inset, 1px 1px 1px #fff;
+    box-shadow: 1px 1px 1px $color-white inset, 1px 1px 1px $color-white;
 }
 
 .editArea .editSection {
 }
 
 .editArea .editSectionHeader {
-    border: 1px solid #888;
+    border: 1px solid $color-darkgrey;
     border-radius: 10px;
     padding: 0 5px 1px 5px;
-    background: #333;
-    color: #fff;
+    background: $color-almostblack;
+    color: $color-white;
 }
 
 .editArea .editSectionHeader.contextSource {
@@ -522,8 +523,8 @@ h3.treeHeader {
 }
 
 .editArea .editSectionHeader.contextSource:hover {
-    background: #333;
-    color: #c8d8ff;
+    background: $color-almostblack;
+    color: $color-superlight;
 }
 
 .editArea .buttonset.editSection {
@@ -540,7 +541,7 @@ h3.treeHeader {
 }
 
 .editArea div.viewPagePart:hover {
-    box-shadow: 1px 1px 1px #c8d8ff inset, 1px 1px 1px #c8d8ff;
+    box-shadow: 1px 1px 1px $color-superlight inset, 1px 1px 1px $color-superlight;
 }
 
 .editArea div.editPagePart {

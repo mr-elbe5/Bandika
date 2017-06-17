@@ -1,3 +1,5 @@
+@import "globals.scss";
+
 /* tag standards */
 
 * {
@@ -65,7 +67,7 @@ audio:not([controls]) {
 
 a {
     background: transparent;
-    color: #000;
+    color: $color-black;
     text-decoration: none;
 }
 
@@ -76,7 +78,7 @@ a:hover {
 
 a:hover,
 a:focus {
-    color: #000;
+    color: $color-black;
 }
 
 img {

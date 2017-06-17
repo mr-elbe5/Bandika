@@ -1,29 +1,10 @@
-/*
-    std-colors
-*/
-.bandika-superlight {
-    color: #c0efff
-}
-.bandika-light {
-    color: #00EAF7
-}
-.bandika-mid-light {
-    color: #00D7F7
-}
-.bandika-mid {
-    color: #00BBEF
-}
-.bandika-dark {
-    color: #0F96E8
-}
-.bandika-text {
-    color: #404040;
-}
+@import "globals.scss";
+
 .carbon {
-    background: #333 image-url("carbon.png");
+    background: $color-almostblack image-url("carbon.png");
 }
 .carbon-light {
-    background: #333 image-url("carbon_light.png");
+    background: $color-lightgrey image-url("carbon_light.png");
 }
 
 /* general classes */
@@ -128,7 +109,7 @@ h1.topCenter {
 }
 
 .white{
-    background: white;
+    background: $color-white;
 }
 
 /********** body and main sections *************/
@@ -157,7 +138,7 @@ h1.topCenter {
 body {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: 13px;
-    color: #404040;
+    color: $color-text;
     height: 100%;
     overflow-y: hidden;
     overflow-x: auto;
@@ -192,7 +173,7 @@ body {
 }
 
 .topNavSection ul li a {
-    color: #8bbdd7;
+    color: $color-mid;
 }
 
 /*headerSection*/
@@ -224,7 +205,7 @@ a.navBtn {
 }
 
 nav.mainNav {
-    border-bottom: 1px solid #e7e7e7;
+    border-bottom: 1px solid $color-lightgrey;
     margin-top: 15px;
 }
 
@@ -243,7 +224,7 @@ nav.mainNav li {
 
 nav.mainNav li a {
     text-decoration: none;
-    color: #e7e7e7;
+    color: $color-lightgrey;
     display: block;
     white-space: nowrap;
     padding-left: 15px;
@@ -251,15 +232,15 @@ nav.mainNav li a {
 }
 
 nav.mainNav li a:hover{
-    color: #c0efff;
+    color: $color-superlight;
 }
 
 nav.mainNav li ul {
     position: absolute;
     display: none;
     width: inherit;
-    background: #333 image-url("carbon.png");
-    border: 1px solid #c8c8c8;
+    background: $color-darkgrey image-url("carbon.png");
+    border: 1px solid $color-midgrey;
     z-index: 9999;
 }
 
@@ -272,7 +253,7 @@ nav.mainNav li li a:hover {
 }
 
 nav.mainNav li a.active {
-    color: #c0efff;
+    color: $color-superlight;
     cursor: default;
 }
 
@@ -281,7 +262,7 @@ nav.mainNav li li {
     display: block;
     font-size: 14px;
     font-weight: normal;
-    border-bottom: 1px dotted #c8c8c8;
+    border-bottom: 1px dotted $color-midgrey;
 }
 
 nav.mainNav li li:last-child {
@@ -337,11 +318,11 @@ nav.mainNav li li li a {
 }
 
 .breadcrumb li a {
-    color: #eeeeee;
+    color: $color-lightgrey;
 }
 
 .breadcrumb li:last-child a {
-    color: #8bbdd7;
+    color: $color-light;
 }
 
 .breadcrumb li a:before {
@@ -356,7 +337,7 @@ nav.mainNav li li li a {
 }
 
 .searchBox input[type="text"] {
-    color: #327598;
+    color: $color-text;
     border: none;
     margin-right: 5px;
 }
@@ -367,7 +348,7 @@ nav.mainNav li li li a {
 }
 
 .searchBox button[type="submit"] span.icn::before {
-    color: #8bbdd7;
+    color: $color-mid;
 }
 
 /* main section */
@@ -451,12 +432,12 @@ nav.mainNav li li li a {
 }
 
 .aside {
-    border: 1px solid #c8c8c8;
+    border: 1px solid $color-midgrey;
     margin-bottom: 10px;
 }
 
 .aside h3 {
-    background: #d8d8d8;
+    background: $color-midgrey;
     padding: 5px;
 }
 
@@ -501,12 +482,12 @@ nav.mainNav li li li a {
     left: 0;
     bottom: 0;
     background: transparent;
-    color: #aaaaaa;
+    color: $color-darkgrey;
     padding: 5px 0;
 }
 
 .footer a, .footer a:active, .footer a:hover, .footer a:focus {
-    color: #c8c8c8;
+    color: $color-midgrey;
 }
 
 /* special pages */
@@ -536,7 +517,7 @@ section.searchResults {
 }
 
 .searchResultsTable tr:first-child {
-    border-bottom: 1px solid #888;
+    border-bottom: 1px solid $color-darkgrey;
 }
 
 .searchResultsTable tr:first-child th {
@@ -564,7 +545,8 @@ section.searchResults {
 }
 
 .searchHighlight {
-    background: yellow;
+    background: $color-highlight;
+;
 }
 
 .mainSection.login form {
@@ -612,14 +594,14 @@ body.mobile {
     width: 33px;
     height: 24px;
     margin-top: 15px;
-    background: url('img/navbtn.png') no-repeat;
+    background: image-url('navbtn.png') no-repeat;
     cursor: pointer;
 }
 
 .mobile .menu{
     display: block;
     margin: 10px 0 10px 0;
-    border: 1px solid #888;
+    border: 1px solid $color-darkgrey;
     background: rgba(255,255,255,0.1);
 }
 

@@ -3,14 +3,13 @@ require 'compass/import-once/activate'
 
 # Set this to the root of your project when deployed:
 http_path = "/"
-add_import_path "webbase/scss"
-css_dir = "cms/web/_statics/css"
-sass_dir = "cms/scss"
-images_dir = "cms/web/_statics/img"
+css_dir = "web/_statics/css"
+sass_dir = "scss"
+images_dir = "web/_statics/img"
 http_images_path = "/_statics/img"
-fonts_dir = "cms/web/_statics/fonts"
+fonts_dir = "web/_statics/fonts"
 http_fonts_path = "/_statics/fonts"
-javascripts_dir = "cms/web/_statics/js"
+javascripts_dir = "web/_statics/js"
 sourcemap = true
 
 # You can select your preferred output style here (can be overridden via the command line):
