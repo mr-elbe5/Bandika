@@ -10,7 +10,7 @@ package de.bandika.cms.page;
 
 import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.field.Field;
-import de.bandika.servlet.RequestReader;
+import de.bandika.webbase.servlet.RequestReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

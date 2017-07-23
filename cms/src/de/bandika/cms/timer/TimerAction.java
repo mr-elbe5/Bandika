@@ -9,11 +9,11 @@
 package de.bandika.cms.timer;
 
 import de.bandika.cms.servlet.ICmsAction;
-import de.bandika.rights.Right;
-import de.bandika.rights.SystemZone;
-import de.bandika.servlet.ActionDispatcher;
-import de.bandika.servlet.RequestReader;
-import de.bandika.servlet.SessionWriter;
+import de.bandika.webbase.rights.Right;
+import de.bandika.webbase.rights.SystemZone;
+import de.bandika.webbase.servlet.ActionDispatcher;
+import de.bandika.webbase.servlet.RequestReader;
+import de.bandika.webbase.servlet.SessionWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

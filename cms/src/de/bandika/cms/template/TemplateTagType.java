@@ -16,10 +16,10 @@ import de.bandika.cms.page.PagePartData;
 import de.bandika.cms.page.SectionData;
 import de.bandika.cms.templatecontrol.TemplateControl;
 import de.bandika.cms.templatecontrol.TemplateControls;
-import de.bandika.servlet.RequestReader;
-import de.bandika.servlet.RequestStatics;
-import de.bandika.servlet.SessionReader;
-import de.bandika.util.TagAttributes;
+import de.bandika.webbase.servlet.RequestReader;
+import de.bandika.webbase.servlet.RequestStatics;
+import de.bandika.webbase.servlet.SessionReader;
+import de.bandika.webbase.util.TagAttributes;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

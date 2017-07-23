@@ -9,7 +9,7 @@
 package de.bandika.cms.tree;
 
 import de.bandika.base.data.BaseIdData;
-import de.bandika.servlet.RequestReader;
+import de.bandika.webbase.servlet.RequestReader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;

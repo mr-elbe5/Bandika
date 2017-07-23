@@ -8,8 +8,8 @@
  */
 package de.bandika.cms.application;
 
-import de.bandika.application.DefaultAction;
-import de.bandika.application.Initializer;
+import de.bandika.webbase.application.DefaultAction;
+import de.bandika.webbase.application.Initializer;
 import de.bandika.base.log.Log;
 import de.bandika.cms.configuration.ConfigAction;
 import de.bandika.cms.configuration.Configuration;
@@ -34,8 +34,8 @@ import de.bandika.cms.timer.TimerController;
 import de.bandika.cms.tree.TreeAction;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.cms.user.UserAction;
-import de.bandika.rights.RightsCache;
-import de.bandika.user.LoginAction;
+import de.bandika.webbase.rights.RightsCache;
+import de.bandika.webbase.user.LoginAction;
 
 public class CmsInitializer extends Initializer {
 

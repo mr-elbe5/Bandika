@@ -10,7 +10,7 @@ package de.bandika.cms.templatecontrol;
 
 import de.bandika.base.util.StringUtil;
 import de.bandika.cms.page.PageData;
-import de.bandika.util.TagAttributes;
+import de.bandika.webbase.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;

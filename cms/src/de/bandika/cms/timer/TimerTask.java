@@ -9,7 +9,7 @@
 package de.bandika.cms.timer;
 
 import de.bandika.base.data.BaseData;
-import de.bandika.servlet.RequestReader;
+import de.bandika.webbase.servlet.RequestReader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;

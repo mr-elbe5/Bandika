@@ -10,11 +10,11 @@ package de.bandika.cms.search;
 
 import de.bandika.cms.application.AdminAction;
 import de.bandika.cms.servlet.ICmsAction;
-import de.bandika.rights.Right;
-import de.bandika.rights.SystemZone;
-import de.bandika.servlet.ActionDispatcher;
-import de.bandika.servlet.RequestReader;
-import de.bandika.servlet.RequestWriter;
+import de.bandika.webbase.rights.Right;
+import de.bandika.webbase.rights.SystemZone;
+import de.bandika.webbase.servlet.ActionDispatcher;
+import de.bandika.webbase.servlet.RequestReader;
+import de.bandika.webbase.servlet.RequestWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

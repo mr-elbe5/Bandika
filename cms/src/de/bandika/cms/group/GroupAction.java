@@ -11,10 +11,10 @@ package de.bandika.cms.group;
 import de.bandika.base.data.BaseIdData;
 import de.bandika.base.util.StringUtil;
 import de.bandika.cms.servlet.ICmsAction;
-import de.bandika.rights.Right;
-import de.bandika.rights.RightsCache;
-import de.bandika.rights.SystemZone;
-import de.bandika.servlet.*;
+import de.bandika.webbase.rights.Right;
+import de.bandika.webbase.rights.RightsCache;
+import de.bandika.webbase.rights.SystemZone;
+import de.bandika.webbase.servlet.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

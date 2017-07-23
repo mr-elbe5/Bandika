@@ -8,11 +8,11 @@
  */
 package de.bandika.cms.servlet;
 
-import de.bandika.rights.Right;
-import de.bandika.rights.SystemZone;
-import de.bandika.servlet.IAction;
-import de.bandika.servlet.RequestStatics;
-import de.bandika.servlet.SessionReader;
+import de.bandika.webbase.rights.Right;
+import de.bandika.webbase.rights.SystemZone;
+import de.bandika.webbase.servlet.IAction;
+import de.bandika.webbase.servlet.RequestStatics;
+import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

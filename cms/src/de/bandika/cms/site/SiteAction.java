@@ -19,9 +19,9 @@ import de.bandika.cms.tree.ITreeAction;
 import de.bandika.cms.tree.TreeBean;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.cms.tree.TreeNodeSortData;
-import de.bandika.rights.Right;
-import de.bandika.rights.RightsCache;
-import de.bandika.servlet.*;
+import de.bandika.webbase.rights.Right;
+import de.bandika.webbase.rights.RightsCache;
+import de.bandika.webbase.servlet.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

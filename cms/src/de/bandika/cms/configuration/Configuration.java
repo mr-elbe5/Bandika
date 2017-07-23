@@ -9,7 +9,7 @@
 package de.bandika.cms.configuration;
 
 import de.bandika.base.data.Locales;
-import de.bandika.configuration.WebConfiguration;
+import de.bandika.webbase.configuration.WebConfiguration;
 
 public class Configuration extends WebConfiguration implements Cloneable {
 

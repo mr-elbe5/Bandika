@@ -8,7 +8,7 @@
  */
 package de.bandika.cms.timer;
 
-import de.bandika.application.AppContextListener;
+import de.bandika.webbase.application.AppContextListener;
 import de.bandika.base.log.Log;
 import de.bandika.cms.configuration.Configuration;
 

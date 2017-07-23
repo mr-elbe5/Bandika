@@ -8,7 +8,7 @@ import de.bandika.cms.page.PageBean;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.site.SiteBean;
 import de.bandika.cms.site.SiteData;
-import de.bandika.servlet.SessionReader;
+import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;

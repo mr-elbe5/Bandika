@@ -13,10 +13,10 @@ import de.bandika.cms.group.GroupData;
 import de.bandika.cms.group.GroupRightsData;
 import de.bandika.cms.tree.TreeNode;
 import de.bandika.cms.user.User2GroupRelation;
-import de.bandika.rights.Right;
-import de.bandika.rights.RightBean;
-import de.bandika.rights.SystemZone;
-import de.bandika.user.UserRightsData;
+import de.bandika.webbase.rights.Right;
+import de.bandika.webbase.rights.RightBean;
+import de.bandika.webbase.rights.SystemZone;
+import de.bandika.webbase.user.UserRightsData;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -8,7 +8,7 @@
  */
 package de.bandika.cms.search;
 
-import de.bandika.application.AppContextListener;
+import de.bandika.webbase.application.AppContextListener;
 import de.bandika.base.thread.BaseThread;
 
 import java.util.ArrayList;

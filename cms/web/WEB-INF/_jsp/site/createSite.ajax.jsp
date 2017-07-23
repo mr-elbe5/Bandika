@@ -7,8 +7,8 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.servlet.RequestReader" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
+<%@ page import="de.bandika.webbase.servlet.RequestReader" %>
+<%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.template.TemplateCache" %>
 <%@ page import="de.bandika.cms.template.TemplateData" %>
 <%@ page import="de.bandika.cms.template.TemplateType" %>

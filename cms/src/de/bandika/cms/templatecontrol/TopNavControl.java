@@ -13,9 +13,9 @@ import de.bandika.cms.page.PageData;
 import de.bandika.cms.site.SiteData;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.cms.tree.TreeNode;
-import de.bandika.rights.Right;
-import de.bandika.servlet.SessionReader;
-import de.bandika.util.TagAttributes;
+import de.bandika.webbase.rights.Right;
+import de.bandika.webbase.servlet.SessionReader;
+import de.bandika.webbase.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;

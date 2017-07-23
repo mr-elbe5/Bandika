@@ -8,9 +8,9 @@
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.cms.group.GroupData" %>
-<%@ page import="de.bandika.rights.Right" %>
-<%@ page import="de.bandika.rights.SystemZone" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
+<%@ page import="de.bandika.webbase.rights.Right" %>
+<%@ page import="de.bandika.webbase.rights.SystemZone" %>
+<%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);

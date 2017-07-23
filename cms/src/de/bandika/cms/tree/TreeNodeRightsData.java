@@ -8,7 +8,7 @@
  */
 package de.bandika.cms.tree;
 
-import de.bandika.rights.Right;
+import de.bandika.webbase.rights.Right;
 
 import java.util.HashMap;
 import java.util.Map;

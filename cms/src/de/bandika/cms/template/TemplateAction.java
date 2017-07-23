@@ -10,12 +10,12 @@ package de.bandika.cms.template;
 
 import de.bandika.base.data.BinaryFileData;
 import de.bandika.cms.servlet.ICmsAction;
-import de.bandika.rights.Right;
-import de.bandika.rights.SystemZone;
-import de.bandika.servlet.ActionDispatcher;
-import de.bandika.servlet.RequestReader;
-import de.bandika.servlet.SessionWriter;
-import de.bandika.util.TagAttributes;
+import de.bandika.webbase.rights.Right;
+import de.bandika.webbase.rights.SystemZone;
+import de.bandika.webbase.servlet.ActionDispatcher;
+import de.bandika.webbase.servlet.RequestReader;
+import de.bandika.webbase.servlet.SessionWriter;
+import de.bandika.webbase.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

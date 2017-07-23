@@ -8,7 +8,7 @@
 --%>
 <%@ page import="de.bandika.cms.application.InstallerAction" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.servlet.RequestReader" %>
+<%@ page import="de.bandika.webbase.servlet.RequestReader" %>
 <form action="/installer.srv" method="post" name="form" accept-charset="UTF-8">
     <input type="hidden" name="act" value="<%=InstallerAction.setDatabaseConfiguration.name()%>"/>
     <fieldset>

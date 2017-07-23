@@ -10,7 +10,7 @@ package de.bandika.cms.configuration;
 
 import de.bandika.base.log.Log;
 import de.bandika.base.mail.Mailer;
-import de.bandika.configuration.WebConfigurationBean;
+import de.bandika.webbase.configuration.WebConfigurationBean;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

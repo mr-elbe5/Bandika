@@ -10,12 +10,11 @@ package de.bandika.cms.tag;
 
 import de.bandika.base.log.Log;
 import de.bandika.cms.page.PageData;
-import de.bandika.cms.site.SiteData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
 import de.bandika.cms.template.TemplateType;
 import de.bandika.cms.tree.TreeCache;
-import de.bandika.servlet.SessionReader;
+import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;

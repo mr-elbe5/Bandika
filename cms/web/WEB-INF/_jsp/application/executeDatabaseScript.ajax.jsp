@@ -8,8 +8,8 @@
 --%>
 <%@ page import="de.bandika.cms.application.AdminAction" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.servlet.RequestReader" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
+<%@ page import="de.bandika.webbase.servlet.RequestReader" %>
+<%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
 <%Locale locale = SessionReader.getSessionLocale(request);%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>

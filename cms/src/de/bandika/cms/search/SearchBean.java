@@ -9,8 +9,8 @@
 package de.bandika.cms.search;
 
 import de.bandika.base.log.Log;
-import de.bandika.database.DbBean;
-import de.bandika.util.ApplicationPath;
+import de.bandika.webbase.database.DbBean;
+import de.bandika.webbase.util.ApplicationPath;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;

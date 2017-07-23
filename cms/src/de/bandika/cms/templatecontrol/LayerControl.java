@@ -11,7 +11,7 @@ package de.bandika.cms.templatecontrol;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateType;
-import de.bandika.util.TagAttributes;
+import de.bandika.webbase.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;

@@ -18,7 +18,7 @@ import de.bandika.cms.template.PartTemplateDataType;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
 import de.bandika.cms.template.TemplateType;
-import de.bandika.servlet.SessionReader;
+import de.bandika.webbase.servlet.SessionReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

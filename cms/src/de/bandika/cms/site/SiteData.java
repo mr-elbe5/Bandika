@@ -11,9 +11,9 @@ package de.bandika.cms.site;
 import de.bandika.cms.file.FileData;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.tree.TreeNode;
-import de.bandika.rights.Right;
-import de.bandika.servlet.RequestReader;
-import de.bandika.servlet.SessionReader;
+import de.bandika.webbase.rights.Right;
+import de.bandika.webbase.servlet.RequestReader;
+import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;

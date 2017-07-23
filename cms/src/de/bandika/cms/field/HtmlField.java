@@ -15,8 +15,8 @@ import de.bandika.cms.page.PageData;
 import de.bandika.cms.page.PagePartData;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.cms.tree.TreeNode;
-import de.bandika.servlet.RequestReader;
-import de.bandika.util.TagAttributes;
+import de.bandika.webbase.servlet.RequestReader;
+import de.bandika.webbase.util.TagAttributes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

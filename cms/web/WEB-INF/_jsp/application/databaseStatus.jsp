@@ -8,8 +8,8 @@
 --%>
 <%@ page import="de.bandika.cms.application.Installer" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.database.DbConnector" %>
-<%@ page import="de.bandika.database.DbCreator" %>
+<%@ page import="de.bandika.webbase.database.DbConnector" %>
+<%@ page import="de.bandika.webbase.database.DbCreator" %>
 <%
     boolean connectorInitialized = DbConnector.getInstance().isInitialized();
     boolean databaseCreated = connectorInitialized && DbCreator.getInstance().isDatabaseCreated();

@@ -10,10 +10,10 @@ package de.bandika.cms.page;
 
 import de.bandika.cms.tree.ITreeAction;
 import de.bandika.cms.tree.TreeCache;
-import de.bandika.rights.Right;
-import de.bandika.servlet.ActionDispatcher;
-import de.bandika.servlet.RequestReader;
-import de.bandika.servlet.SessionReader;
+import de.bandika.webbase.rights.Right;
+import de.bandika.webbase.servlet.ActionDispatcher;
+import de.bandika.webbase.servlet.RequestReader;
+import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

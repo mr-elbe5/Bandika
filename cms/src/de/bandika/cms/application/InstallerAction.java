@@ -8,15 +8,15 @@
  */
 package de.bandika.cms.application;
 
-import de.bandika.application.Initializer;
+import de.bandika.webbase.application.Initializer;
 import de.bandika.base.util.StringUtil;
 import de.bandika.cms.servlet.ICmsAction;
 import de.bandika.cms.user.UserBean;
 import de.bandika.cms.user.UserData;
-import de.bandika.database.DbConnector;
-import de.bandika.database.DbCreator;
-import de.bandika.servlet.ActionDispatcher;
-import de.bandika.servlet.RequestReader;
+import de.bandika.webbase.database.DbConnector;
+import de.bandika.webbase.database.DbCreator;
+import de.bandika.webbase.servlet.ActionDispatcher;
+import de.bandika.webbase.servlet.RequestReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

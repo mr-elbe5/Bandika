@@ -8,10 +8,10 @@
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.cms.page.PagePartData" %>
-<%@ page import="de.bandika.rights.Right" %>
-<%@ page import="de.bandika.rights.SystemZone" %>
-<%@ page import="de.bandika.servlet.RequestReader" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
+<%@ page import="de.bandika.webbase.rights.Right" %>
+<%@ page import="de.bandika.webbase.rights.SystemZone" %>
+<%@ page import="de.bandika.webbase.servlet.RequestReader" %>
+<%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.cms.page.PageBean" %>

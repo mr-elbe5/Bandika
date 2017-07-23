@@ -30,6 +30,6 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
     <listener>
-        <listener-class>de.bandika.application.AppContextListener</listener-class>
+        <listener-class>de.bandika.webbase.application.AppContextListener</listener-class>
     </listener>
 </web-app>

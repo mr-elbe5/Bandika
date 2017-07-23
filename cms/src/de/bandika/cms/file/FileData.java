@@ -13,9 +13,9 @@ import de.bandika.base.util.FileUtil;
 import de.bandika.base.util.ImageUtil;
 import de.bandika.base.util.StringUtil;
 import de.bandika.cms.tree.ResourceNode;
-import de.bandika.servlet.RequestError;
-import de.bandika.servlet.RequestReader;
-import de.bandika.servlet.SessionReader;
+import de.bandika.webbase.servlet.RequestError;
+import de.bandika.webbase.servlet.RequestReader;
+import de.bandika.webbase.servlet.SessionReader;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;

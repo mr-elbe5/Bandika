@@ -9,7 +9,7 @@
 package de.bandika.cms.page;
 
 import de.bandika.cms.tree.ResourceNode;
-import de.bandika.servlet.RequestReader;
+import de.bandika.webbase.servlet.RequestReader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;

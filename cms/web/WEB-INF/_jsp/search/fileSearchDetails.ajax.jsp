@@ -10,8 +10,8 @@
 <%@ page import="de.bandika.cms.file.FileAction" %>
 <%@ page import="de.bandika.cms.file.FileBean" %>
 <%@ page import="de.bandika.cms.file.FileData" %>
-<%@ page import="de.bandika.servlet.RequestReader" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
+<%@ page import="de.bandika.webbase.servlet.RequestReader" %>
+<%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.tree.TreeCache" %>
 <%@ page import="java.util.Locale" %>
 <%

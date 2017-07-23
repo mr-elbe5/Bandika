@@ -8,7 +8,7 @@
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.cms.configuration.Configuration" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
+<%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.site.SiteData" %>
 <%@ page import="de.bandika.cms.tree.TreeCache" %>
 <%@ page import="de.bandika.cms.tree.TreeNode" %>

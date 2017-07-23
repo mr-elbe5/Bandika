@@ -11,7 +11,7 @@ package de.bandika.cms.group;
 import de.bandika.base.log.Log;
 import de.bandika.cms.rights.CmsRightBean;
 import de.bandika.cms.user.User2GroupRelation;
-import de.bandika.database.DbBean;
+import de.bandika.webbase.database.DbBean;
 
 import java.sql.*;
 import java.time.LocalDateTime;

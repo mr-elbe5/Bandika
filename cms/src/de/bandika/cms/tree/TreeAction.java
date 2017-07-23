@@ -8,11 +8,11 @@
  */
 package de.bandika.cms.tree;
 
-import de.bandika.servlet.ActionDispatcher;
-import de.bandika.servlet.IAction;
-import de.bandika.servlet.RequestStatics;
-import de.bandika.servlet.SessionReader;
-import de.bandika.user.LoginAction;
+import de.bandika.webbase.servlet.ActionDispatcher;
+import de.bandika.webbase.servlet.IAction;
+import de.bandika.webbase.servlet.RequestStatics;
+import de.bandika.webbase.servlet.SessionReader;
+import de.bandika.webbase.user.LoginAction;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

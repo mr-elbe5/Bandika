@@ -9,9 +9,9 @@
 package de.bandika.cms.templatecontrol;
 
 import de.bandika.cms.page.PageData;
-import de.bandika.servlet.RequestError;
-import de.bandika.servlet.RequestReader;
-import de.bandika.util.TagAttributes;
+import de.bandika.webbase.servlet.RequestError;
+import de.bandika.webbase.servlet.RequestReader;
+import de.bandika.webbase.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;

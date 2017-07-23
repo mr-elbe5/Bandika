@@ -8,7 +8,7 @@
 --%><!DOCTYPE html><%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
+<%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
     String title = StringUtil.getString("appTitle");

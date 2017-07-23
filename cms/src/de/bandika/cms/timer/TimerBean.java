@@ -9,7 +9,7 @@
 package de.bandika.cms.timer;
 
 import de.bandika.base.log.Log;
-import de.bandika.database.DbBean;
+import de.bandika.webbase.database.DbBean;
 
 import java.sql.*;
 

@@ -12,8 +12,8 @@ import de.bandika.base.util.StringUtil;
 import de.bandika.cms.template.PartTemplateData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateType;
-import de.bandika.servlet.SessionReader;
-import de.bandika.util.TagAttributes;
+import de.bandika.webbase.servlet.SessionReader;
+import de.bandika.webbase.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;

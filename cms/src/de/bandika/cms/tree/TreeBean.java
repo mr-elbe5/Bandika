@@ -10,8 +10,8 @@ package de.bandika.cms.tree;
 
 import de.bandika.base.log.Log;
 import de.bandika.cms.rights.CmsRightBean;
-import de.bandika.database.DbBean;
-import de.bandika.rights.Right;
+import de.bandika.webbase.database.DbBean;
+import de.bandika.webbase.rights.Right;
 
 import java.sql.*;
 import java.time.LocalDateTime;

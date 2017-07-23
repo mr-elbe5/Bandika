@@ -13,13 +13,12 @@ import de.bandika.base.cache.FileCache;
 import de.bandika.base.mail.Mailer;
 import de.bandika.cms.application.AdminAction;
 import de.bandika.cms.servlet.ICmsAction;
-import de.bandika.rights.Right;
-import de.bandika.rights.SystemZone;
-import de.bandika.servlet.*;
+import de.bandika.webbase.rights.Right;
+import de.bandika.webbase.rights.SystemZone;
+import de.bandika.webbase.servlet.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Locale;
 
 public enum ConfigAction implements ICmsAction {

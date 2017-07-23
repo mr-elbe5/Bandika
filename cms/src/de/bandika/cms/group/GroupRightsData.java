@@ -8,8 +8,8 @@
  */
 package de.bandika.cms.group;
 
-import de.bandika.rights.Right;
-import de.bandika.rights.SystemZone;
+import de.bandika.webbase.rights.Right;
+import de.bandika.webbase.rights.SystemZone;
 
 import java.util.HashMap;
 import java.util.Map;

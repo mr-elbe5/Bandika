@@ -12,12 +12,9 @@ import de.bandika.base.data.BinaryFileData;
 import de.bandika.base.log.Log;
 import de.bandika.base.util.ImageUtil;
 import de.bandika.base.util.StringUtil;
-import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.group.GroupData;
-import de.bandika.servlet.RequestReader;
-import de.bandika.user.UserLoginData;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import de.bandika.webbase.servlet.RequestReader;
+import de.bandika.webbase.user.UserLoginData;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;

@@ -6,8 +6,8 @@ import de.bandika.base.log.Log;
 import de.bandika.base.util.StringUtil;
 import de.bandika.cms.group.GroupBean;
 import de.bandika.cms.group.GroupData;
-import de.bandika.rights.Right;
-import de.bandika.servlet.RequestReader;
+import de.bandika.webbase.rights.Right;
+import de.bandika.webbase.servlet.RequestReader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;

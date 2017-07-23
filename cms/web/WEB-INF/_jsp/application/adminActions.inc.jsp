@@ -7,11 +7,11 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%><!DOCTYPE html><%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.rights.Right" %>
-<%@ page import="de.bandika.rights.SystemZone" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
+<%@ page import="de.bandika.webbase.rights.Right" %>
+<%@ page import="de.bandika.webbase.rights.SystemZone" %>
+<%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.servlet.RequestReader" %>
+<%@ page import="de.bandika.webbase.servlet.RequestReader" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     if (SessionReader.hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT)) {

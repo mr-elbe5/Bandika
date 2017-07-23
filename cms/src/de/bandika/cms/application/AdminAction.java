@@ -8,22 +8,22 @@
  */
 package de.bandika.cms.application;
 
-import de.bandika.application.Initializer;
+import de.bandika.webbase.application.Initializer;
 import de.bandika.base.data.BinaryFileData;
 import de.bandika.base.log.Log;
 import de.bandika.base.util.FileUtil;
 import de.bandika.cms.configuration.Configuration;
 import de.bandika.cms.configuration.ConfigurationBean;
 import de.bandika.cms.servlet.ICmsAction;
-import de.bandika.database.DbConnector;
-import de.bandika.rights.Right;
-import de.bandika.rights.SystemZone;
-import de.bandika.servlet.ActionDispatcher;
-import de.bandika.servlet.RequestReader;
-import de.bandika.servlet.RequestStatics;
-import de.bandika.servlet.SessionReader;
-import de.bandika.user.LoginAction;
-import de.bandika.util.ApplicationPath;
+import de.bandika.webbase.database.DbConnector;
+import de.bandika.webbase.rights.Right;
+import de.bandika.webbase.rights.SystemZone;
+import de.bandika.webbase.servlet.ActionDispatcher;
+import de.bandika.webbase.servlet.RequestReader;
+import de.bandika.webbase.servlet.RequestStatics;
+import de.bandika.webbase.servlet.SessionReader;
+import de.bandika.webbase.user.LoginAction;
+import de.bandika.webbase.util.ApplicationPath;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

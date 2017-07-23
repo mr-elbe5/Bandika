@@ -12,10 +12,10 @@ import de.bandika.base.util.StringUtil;
 import de.bandika.cms.file.FileData;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.site.SiteData;
-import de.bandika.rights.Right;
-import de.bandika.rights.SystemZone;
-import de.bandika.servlet.RequestReader;
-import de.bandika.servlet.SessionReader;
+import de.bandika.webbase.rights.Right;
+import de.bandika.webbase.rights.SystemZone;
+import de.bandika.webbase.servlet.RequestReader;
+import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;

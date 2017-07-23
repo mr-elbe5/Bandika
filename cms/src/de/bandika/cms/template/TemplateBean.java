@@ -8,7 +8,7 @@
  */
 package de.bandika.cms.template;
 
-import de.bandika.database.DbBean;
+import de.bandika.webbase.database.DbBean;
 
 import java.sql.*;
 import java.time.LocalDateTime;

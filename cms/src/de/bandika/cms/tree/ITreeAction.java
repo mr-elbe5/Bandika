@@ -9,7 +9,7 @@
 package de.bandika.cms.tree;
 
 import de.bandika.cms.servlet.ICmsAction;
-import de.bandika.servlet.RequestStatics;
+import de.bandika.webbase.servlet.RequestStatics;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

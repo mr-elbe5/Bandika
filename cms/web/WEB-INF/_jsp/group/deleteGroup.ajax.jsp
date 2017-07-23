@@ -9,8 +9,8 @@
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.cms.group.GroupBean" %>
 <%@ page import="de.bandika.cms.group.GroupData" %>
-<%@ page import="de.bandika.servlet.RequestReader" %>
-<%@ page import="de.bandika.servlet.SessionReader" %>
+<%@ page import="de.bandika.webbase.servlet.RequestReader" %>
+<%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%
