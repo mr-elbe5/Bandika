@@ -1,9 +1,7 @@
-/* icons */
+@import "vars.scss";
 @import "compass/css3";
-@import "globals.scss";
 
-@include font-face("LigatureSymbols" ,
-        font-files("LigatureSymbols-2.11.eot","LigatureSymbols-2.11.woff", "LigatureSymbols-2.11.ttf", "LigatureSymbols-2.11.svg"),
+@include font-face("LigatureSymbols" , font-files("LigatureSymbols-2.11.eot","LigatureSymbols-2.11.woff", "LigatureSymbols-2.11.ttf", "LigatureSymbols-2.11.svg"),
         "LigatureSymbols-2.11.eot", normal, normal);
 
 .icn:before {

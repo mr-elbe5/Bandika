@@ -1,0 +1,169 @@
+@import "compass/css3";
+@import "vars.scss";
+
+/* general purpose layer */
+
+.layeroverlay {
+    display: flex;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.layeroverlay.dialog {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.layeroverlay.tree {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.layeroverlay.browser {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.layeroverlay[data-hidden="true"] {
+    opacity: 0;
+    z-index: -1;
+}
+
+.layeroverlay[data-hidden="false"] {
+    opacity: 1;
+}
+
+.layeroverlay.tree[data-hidden="false"] {
+    z-index: 900;
+}
+
+.layeroverlay.dialog[data-hidden="false"] {
+    z-index: 1000;
+}
+
+/* ck editor dialog is up to 10010 */
+.layeroverlay.browser[data-hidden="false"] {
+    z-index: 10020;
+}
+
+.layeroverlay.browser.dialog[data-hidden="false"] {
+    z-index: 10030;
+}
+
+.layercontent {
+    overflow: hidden;
+    position: relative;
+    margin: auto;
+    background: $color-white;
+    border: 1px solid $color-darkgrey;
+}
+
+.layeroverlay.dialog .layercontent {
+    max-width: 800px;
+    width: 100%;
+}
+
+.layeroverlay.tree .layercontent {
+    margin: 10px;
+    min-width: 600px;
+    width: 50%;
+    height: calc(100% - 20px);
+}
+
+.layeroverlay.tree .treeContainer {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.layeroverlay.tree .treeMainCell {
+    float: left;
+    width: calc(100% - 5px);
+    height: 100%;
+}
+
+.layeroverlay.tree .treeResizeCell {
+    float: right;
+    width: 5px;
+    height: 100%;
+    background: $color-lightgrey;
+    cursor: ew-resize;
+}
+
+.layeroverlay.tree .contentSection {
+    width: 60%;
+}
+
+.layeroverlay.tree .asideSection {
+    width: 40%;
+}
+
+.layeroverlay.browser .layercontent {
+    max-width: 800px;
+    width: 100%;
+    height: 600px;
+}
+
+.layerheadbox {
+    color: $color-text;
+    background: $color-superlight;
+    height: 35px;
+    padding: 8px;
+    border-bottom: 1px solid $color-lightgrey;
+
+}
+
+.layerheadbox span {
+    font-size: 14px;
+}
+
+.layerheadbox div.closeLayer {
+    font-weight: bold;
+    width: 15px;
+    float: right;
+    cursor: pointer;
+}
+
+.layermainbox {
+    min-height: 100px;
+    padding: 8px;
+    height: calc(100% - 35px);
+    overflow-y: auto;
+}
+
+.layeroverlay.tree .treeContainer .layermainbox {
+    height: 100%;
+}
+
+.layermainbox fieldset {
+    margin: 5px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+/* error and message box */
+
+div.error {
+    background: $color-error;
+}
+
+div.message {
+    background: $color-message;
+}
+
+div.error, div.message {
+    padding: 3px 10px 4px;
+    margin-bottom: 10px;
+}
+
+div.message button, div.error button {
+    font-weight: bold;
+    background: inherit;
+    border: none;
+    width: 15px;
+    float: right;
+    cursor: pointer;
+}
+

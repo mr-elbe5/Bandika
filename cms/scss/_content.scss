@@ -1,0 +1,118 @@
+@import "vars.scss";
+@import "compass/css3";
+
+.main {
+  background: rgba(255, 255, 255, 0.95);
+  bottom: $footer_hgt;
+  position: absolute;
+  top: $header_hgt;
+  width: 100%;
+  overflow-y: auto;
+}
+
+h1 {
+  margin: 0 0 $space_two 0;
+}
+
+h1.topCenter {
+  margin: $space_two;
+  text-align: center;
+}
+
+
+.pagePart{
+  img {
+    width: 100%;
+  }
+}
+
+.textBox {
+  padding: 0;
+}
+
+.imageBox {
+  padding: 0;
+
+  img {
+    width: 100%;
+  }
+}
+
+.teaser {
+  padding: $space_two;
+}
+
+.teaser .teaserLeft {
+
+}
+
+.teaser .teaserRight {
+
+}
+
+.separator{
+  height: 1px;
+  margin: $space_two 0;
+  border-bottom: 1px dotted #000;
+}
+
+/* areas */
+
+.mainSection {
+  min-height: 300px;
+  border: 1px solid $color-midgrey;
+  margin-bottom: $space_two;
+
+  .contentSection {
+    min-width: 300px;
+    padding: $space_two;
+  }
+
+  .flexrow{
+
+    &.twoCol .pagePart {
+      flex: 1 1;
+      min-width: 50%;
+    }
+
+    &.threeCol .pagePart {
+      flex: 1 1;
+      min-width: 33%;
+    }
+
+    &.fourCol .pagePart {
+      flex: 1 1;
+      min-width: 25%;
+    }
+
+  }
+}
+
+.asideSection {
+  padding: $space_two;
+
+  .content{
+
+  }
+
+  .aside{
+
+  }
+
+  h3 {
+    background: $color-midgrey;
+    padding: $space_one;
+  }
+
+  .imageBox {
+    padding: 0;
+  }
+
+  .textBox {
+    padding: $space_one;
+  }
+
+}
+
+
+

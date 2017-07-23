@@ -1,4 +1,5 @@
-@import "globals.scss";
+@import "vars.scss";
+@import "compass/css3";
 
 /* tag standards */
 
@@ -19,23 +20,28 @@
 
 html {
     font-family: sans-serif;
-    font-size: 13px;
+    font-size: $size_txt;
     height: 100%;
 }
 
 h1 {
-    font-size: 2em;
+    font-size: $size_h1;
     font-weight: normal;
 }
 
 h2 {
-    font-size: 1.5em;
+    font-size: $size_h2;
     font-weight: normal;
 }
 
 h3 {
-    font-size: 1.2em;
+    font-size: $size_h3;
     font-weight: normal;
+}
+
+h4 {
+  font-size: $size_h4;
+  font-weight: bold;
 }
 
 article,
@@ -106,7 +112,7 @@ textarea {
     margin: 0;
     font: inherit;
     color: inherit;
-    padding: 0 3px 1px;
+    padding: $vpad_text $hpad_text;
 }
 
 button,
@@ -182,5 +188,101 @@ li {
 
 nav li {
     list-style: none;
+}
+
+/* general classes */
+
+.flexRow {
+  display: -webkit-flex;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.flexCol {
+  display: -webkit-flex;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.flexItem {
+  flex: 1 1;
+}
+
+.flexItemOne {
+  flex: 1 1;
+}
+
+.flexItemTwo {
+  flex: 2 1;
+}
+
+.flexItemThree {
+  flex: 3 1;
+}
+
+.flexItemFour {
+  flex: 4 1;
+}
+
+.pullLeft {
+  display: inline-block;
+  float: left;
+}
+
+.pullRight {
+  display: inline-block;
+  float: right;
+}
+
+.clearFloat {
+  clear: both;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.maxFullWidth {
+  max-width: 100%;
+}
+
+.cutContent {
+  overflow: hidden;
+}
+
+.relative {
+  position: relative;
+}
+
+.zeroIndex {
+  z-index: 0;
+}
+
+.inline {
+  display: inline-block;
+}
+
+.centerAlign {
+  text-align: center;
+}
+
+.padded {
+  padding: 10px;
+}
+
+.white{
+  background: $color-white;
 }
 
