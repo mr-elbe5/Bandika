@@ -3,6 +3,13 @@
 
 /************ mobile part ***********/
 
+@media screen and (max-width: $vp_width + (2 * $space_two)) {
+  .viewport {
+    margin-left: $space_two;
+    margin-right: $space_two;
+  }
+}
+
 body.mobile {
     height: auto;
     overflow: auto;

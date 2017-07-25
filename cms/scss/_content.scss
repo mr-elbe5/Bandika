@@ -59,37 +59,39 @@ h1.topCenter {
 /* areas */
 
 .mainSection {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: stretch;
   min-height: 300px;
   border: 1px solid $color-midgrey;
   margin-bottom: $space_two;
+  padding: $space_two $hspace_half;
 
   .contentSection {
-    min-width: 300px;
-    padding: $space_two;
+    flex: 3 1 900px;
   }
 
-  .flexrow{
-
-    &.twoCol .pagePart {
-      flex: 1 1;
-      min-width: 50%;
-    }
-
-    &.threeCol .pagePart {
-      flex: 1 1;
-      min-width: 33%;
-    }
-
-    &.fourCol .pagePart {
-      flex: 1 1;
-      min-width: 25%;
-    }
-
+  .section{
+    padding-left: $hspace_half;
+    padding-right: $hspace_half;
   }
+
+  .section.flexRow{
+    padding-left: 0;
+    padding-right: 0;
+
+    .flexItem {
+      padding-left: $hspace_half;
+      padding-right: $hspace_half;
+    }
+  }
+
 }
 
 .asideSection {
-  padding: $space_two;
+  flex: 1 1 300px;
+  padding: $space_two $hspace_half;
 
   .content{
 
