@@ -584,7 +584,7 @@ h2.block { margin: 0 0 10px 0; }
 .mainSection .section.flexRow .flexItem, .mainSection .section .flexRow .flexItem { padding-left: 5px; padding-right: 5px; }
 
 .asideSection { flex: 1 1 300px; padding: 10px 10px; }
-.asideSection .aside { border: 1px solid #eeeeee; }
+.asideSection .aside { border: 1px solid #eeeeee; margin-bottom: 20px; }
 .asideSection h3 { background: #eeeeee; padding: 5px; }
 .asideSection .imageBox { padding: 0; }
 .asideSection .textBox { padding: 5px; }
