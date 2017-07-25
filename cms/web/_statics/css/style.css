@@ -288,7 +288,7 @@ nav li { list-style: none; }
 
 .layeroverlay.browser .layercontent { max-width: 800px; width: 100%; height: 600px; }
 
-.layerheadbox { color: #404040; background: #c0efff; height: 35px; padding: 8px; border-bottom: 1px solid #eeeeee; }
+.layerheadbox { color: #404040; background: #f0f0f0; height: 35px; padding: 8px; border-bottom: 1px solid #eeeeee; }
 
 .layerheadbox span { font-size: 14px; }
 
@@ -303,7 +303,7 @@ nav li { list-style: none; }
 /* error and message box */
 div.error { background: #ff8888; }
 
-div.message { background: #eeee00; }
+div.message { background: #ffff88; }
 
 div.error, div.message { padding: 3px 10px 4px; margin-bottom: 10px; }
 
@@ -347,7 +347,7 @@ fieldset div.line input[type="checkbox"], fieldset div.line input[type="radio"] 
 
 .buttonset button, .buttonset input[type="button"], .buttonset input[type="submit"], .buttonset input[type="reset"] { border: 1px solid #aaaaaa; border-radius: 5px; background: #ffffff; margin-right: 10px; padding: 2px 6px 3px; }
 
-.buttonset button.primary, .buttonset input[type="button"].primary, .buttonset input[type="submit"].primary, .buttonset input[type="reset"].primary { border-color: #00BBEF; }
+.buttonset button.primary, .buttonset input[type="button"].primary, .buttonset input[type="submit"].primary, .buttonset input[type="reset"].primary { border-color: #b0b0b0; }
 
 .buttonset input[type="checkbox"], .buttonset label { vertical-align: top; margin: 2px; }
 
@@ -357,11 +357,11 @@ table.listTable td { border-top: 1px solid #ddd; padding: 2px 0; }
 
 table.listTable input[type="checkbox"].toggle { margin-top: 2px; }
 
-table.listTable .selected { background: #c0efff; }
+table.listTable .selected { background: #f0f0f0; }
 
 div.details { border: 1px solid #cccccc; background: #ffffff; padding: 10px; }
 
-div.details h3 { color: #0F96E8; margin-bottom: 10px; }
+div.details h3 { color: #808080; margin-bottom: 10px; }
 
 table.details td, table.details th { padding: 5px; }
 
@@ -369,7 +369,7 @@ table.details tr td { border-bottom: 1px solid #dddddd; }
 
 table.details tr:last-child td { border-bottom: none; }
 
-table.versions td:last-child button, table.versions td:last-child a { display: inline-block; border: 1px solid #0F96E8; border-radius: 5px; background: #eeeeee; margin-right: 10px; padding: 2px 6px 3px; }
+table.versions td:last-child button, table.versions td:last-child a { display: inline-block; border: 1px solid #808080; border-radius: 5px; background: #eeeeee; margin-right: 10px; padding: 2px 6px 3px; }
 
 /* admin and edit styles */
 ul.linkList { background: #ffffff; border: 1px solid #cccccc; }
@@ -390,9 +390,9 @@ h3.treeHeader { color: #404040; }
 
 .treeRoot div.contextSource, .treeRoot div.selectable { display: inline-block; }
 
-.treeRoot div.contextSource.selected, .treeRoot div.selectable.selected { color: #0F96E8; }
+.treeRoot div.contextSource.selected, .treeRoot div.selectable.selected { color: #808080; }
 
-.dropTarget { background: #00EAF7; }
+.dropTarget { background: #e0e0e0; }
 
 /* cms part */
 .adminTree { padding: 10px; }
@@ -407,7 +407,7 @@ h3.treeHeader { color: #404040; }
 
 .pageAdminLinks a { color: #404040; }
 
-.pageAdminLinks a:hover { color: #0F96E8; }
+.pageAdminLinks a:hover { color: #808080; }
 
 .editArea div.contextSource:hover { box-shadow: 1px 1px 1px #ffffff inset, 1px 1px 1px #ffffff; }
 
@@ -417,7 +417,7 @@ h3.treeHeader { color: #404040; }
 
 .editArea .editSectionHeader.contextSource { min-height: 20px; }
 
-.editArea .editSectionHeader.contextSource:hover { background: #404040; color: #c0efff; }
+.editArea .editSectionHeader.contextSource:hover { background: #404040; color: #f0f0f0; }
 
 .editArea .buttonset.editSection { padding: 1px 0 3px; display: block; }
 
@@ -425,7 +425,7 @@ h3.treeHeader { color: #404040; }
 
 .editArea div.viewPagePart { min-height: 10px; }
 
-.editArea div.viewPagePart:hover { box-shadow: 1px 1px 1px #c0efff inset, 1px 1px 1px #c0efff; }
+.editArea div.viewPagePart:hover { box-shadow: 1px 1px 1px #f0f0f0 inset, 1px 1px 1px #f0f0f0; }
 
 .editArea div.editPagePart { box-shadow: 1px 1px 1px #fff inset, 1px 1px 1px #fff; }
 
@@ -450,7 +450,9 @@ body { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; colo
 
 .topNavSection ul li { display: inline-block; vertical-align: top; font-size: 11px; margin: 3px; padding: 3px 5px 3px; }
 
-.topNavSection ul li a { color: #00BBEF; }
+.topNavSection ul li a { color: #d0d0d0; }
+
+.topNavSection ul li a:hover { color: white; }
 
 /*headerSection*/
 .headerMain { display: table; width: 100%; position: relative; }
@@ -469,7 +471,7 @@ nav.mainNav li { text-align: left; font-size: 15.96px; display: inline-block; }
 
 nav.mainNav li a { text-decoration: none; color: #eeeeee; display: block; white-space: nowrap; padding-left: 15px; transition: .3s background-color; }
 
-nav.mainNav li a:hover { color: #c0efff; }
+nav.mainNav li a:hover { color: #f0f0f0; }
 
 nav.mainNav li ul { position: absolute; display: none; width: inherit; background: #aaaaaa url('/_statics/img/carbon.png?1496079847'); border: 1px solid #cccccc; z-index: 9999; }
 
@@ -477,7 +479,7 @@ nav.mainNav li:hover ul { display: block; }
 
 nav.mainNav li li a:hover { background-color: rgba(255, 255, 255, 0.2); }
 
-nav.mainNav li a.active { color: #c0efff; cursor: default; }
+nav.mainNav li a.active { color: #f0f0f0; cursor: default; }
 
 /* Sub Menus */
 nav.mainNav li li { display: block; font-size: 14px; font-weight: normal; border-bottom: 1px dotted #cccccc; }
@@ -504,9 +506,9 @@ nav.mainNav li li li a { padding: 7px 14px 6px 24px; }
 
 .breadcrumb li { display: inline-block; vertical-align: top; padding: 0 2px; }
 
-.breadcrumb li a { color: #eeeeee; }
+.breadcrumb li a { color: #d0d0d0; }
 
-.breadcrumb li:last-child a { color: #00EAF7; }
+.breadcrumb li a:hover, .breadcrumb li:last-child a { color: #e0e0e0; }
 
 .breadcrumb li a:before { content: "\2192\00A0"; font-size: 12px; }
 
@@ -516,7 +518,7 @@ nav.mainNav li li li a { padding: 7px 14px 6px 24px; }
 
 .searchBox button[type="submit"] { border: none; background: transparent; }
 
-.searchBox button[type="submit"] span.icn::before { color: #00BBEF; }
+.searchBox button[type="submit"] span.icn::before { color: #b0b0b0; }
 
 /* footer section */
 .footer { position: absolute; height: 30px; width: 100%; left: 0; bottom: 0; background: transparent; color: #aaaaaa; padding: 10px 0; }
@@ -550,7 +552,7 @@ section.searchResults { padding: 20px; }
 
 .searchResultsTable .col5 { width: 10%; }
 
-.searchHighlight { background: #ffff00; }
+.searchHighlight { background: #ffff88; }
 
 .login form { max-width: 100%; width: 500px; margin: 20px auto; }
 

@@ -66,7 +66,11 @@ body {
 }
 
 .topNavSection ul li a {
-    color: $color-mid;
+    color: $color-midlight;
+}
+
+.topNavSection ul li a:hover {
+  color: white;
 }
 
 /*headerSection*/
@@ -210,10 +214,10 @@ nav.mainNav li li li a {
 }
 
 .breadcrumb li a {
-    color: $color-lightgrey;
+    color: $color-midlight;
 }
 
-.breadcrumb li:last-child a {
+.breadcrumb li a:hover, .breadcrumb li:last-child a {
     color: $color-light;
 }
 
