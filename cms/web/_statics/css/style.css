@@ -66,13 +66,13 @@ nav li { list-style: none; }
 
 .flexItem { flex: 1 1; }
 
-.flexItemOne { flex: 1 1; }
+.flexItem.one { flex: 1 1; }
 
-.flexItemTwo { flex: 2 1; }
+.flexItem.two { flex: 2 1; }
 
-.flexItemThree { flex: 3 1; }
+.flexItem.three { flex: 3 1; }
 
-.flexItemFour { flex: 4 1; }
+.flexItem.four { flex: 4 1; }
 
 .pullLeft { display: inline-block; float: left; }
 
@@ -435,11 +435,9 @@ h3.treeHeader { color: #404040; }
 
 .carbon { background: #404040 url('/_statics/img/carbon.png?1496079847'); }
 
-.carbon-light { background: #eeeeee url('/_statics/img/carbon_light.png?1496079847'); }
-
 /********** body and main sections *************/
 /* Structure:
- body viewport topNavSection nav headerSection headerMain title menu searchSection breadcrumb searchBox main pageContent mainSection contentSection asideSection footer */
+ body viewport topNavSection nav headerSection headerMain title menu searchSection breadcrumb searchBox main pageContent contentTop mainSection contentSection asideSection footer */
 body { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; color: #404040; height: 100%; overflow-y: hidden; overflow-x: auto; }
 
 /* viewport */
@@ -558,15 +556,15 @@ section.searchResults { padding: 20px; }
 
 .login fieldset { padding: 40px; }
 
-.main { background: rgba(255, 255, 255, 0.95); bottom: 30px; position: absolute; top: 110px; width: 100%; overflow-y: auto; }
+.main { background: white; bottom: 30px; position: absolute; top: 110px; width: 100%; overflow-y: auto; }
 
-h1 { margin: 0 0 10px 0; }
+h1.block { margin: 0 0 10px 0; }
 
-h1.topCenter { margin: 10px; text-align: center; }
+h2.block { margin: 0 0 10px 0; }
 
 .pagePart img { width: 100%; }
 
-.textBox { padding: 0; }
+.textBox { padding-top: 5px; padding-bottom: 5px; }
 
 .imageBox { padding: 0; }
 .imageBox img { width: 100%; }
@@ -576,14 +574,18 @@ h1.topCenter { margin: 10px; text-align: center; }
 .separator { height: 1px; margin: 10px 0; border-bottom: 1px dotted #000; }
 
 /* areas */
-.mainSection { display: flex; flex-wrap: wrap; flex-direction: row; align-items: stretch; min-height: 300px; border: 1px solid #cccccc; margin-bottom: 10px; padding: 10px 5px; }
-.mainSection .contentSection { flex: 3 1 900px; }
-.mainSection .section { padding-left: 5px; padding-right: 5px; }
-.mainSection .section.flexRow { padding-left: 0; padding-right: 0; }
-.mainSection .section.flexRow .flexItem { padding-left: 5px; padding-right: 5px; }
+.contentTop { padding: 10px 10px; }
+.contentTop h1 { margin: 10px; text-align: center; }
 
-.asideSection { flex: 1 1 300px; padding: 10px 5px; }
-.asideSection h3 { background: #cccccc; padding: 5px; }
+.mainSection { display: flex; flex-wrap: wrap; flex-direction: row; align-items: stretch; min-height: 300px; margin-bottom: 10px; }
+.mainSection .contentSection { flex: 3 1 900px; padding: 10px 5px; }
+.mainSection .section { padding-left: 5px; padding-right: 5px; }
+.mainSection .section.flexRow, .mainSection .section .flexRow { padding-left: 0; padding-right: 0; margin-left: -5px; margin-right: -5px; }
+.mainSection .section.flexRow .flexItem, .mainSection .section .flexRow .flexItem { padding-left: 5px; padding-right: 5px; }
+
+.asideSection { flex: 1 1 300px; padding: 10px 10px; }
+.asideSection .aside { border: 1px solid #eeeeee; }
+.asideSection h3 { background: #eeeeee; padding: 5px; }
 .asideSection .imageBox { padding: 0; }
 .asideSection .textBox { padding: 5px; }
 

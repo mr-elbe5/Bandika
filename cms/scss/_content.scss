@@ -2,7 +2,7 @@
 @import "compass/css3";
 
 .main {
-  background: rgba(255, 255, 255, 0.95);
+  background: white;
   bottom: $footer_hgt;
   position: absolute;
   top: $header_hgt;
@@ -10,15 +10,13 @@
   overflow-y: auto;
 }
 
-h1 {
+h1.block {
   margin: 0 0 $space_two 0;
 }
 
-h1.topCenter {
-  margin: $space_two;
-  text-align: center;
+h2.block {
+  margin: 0 0 $space_two 0;
 }
-
 
 .pagePart{
   img {
@@ -27,7 +25,8 @@ h1.topCenter {
 }
 
 .textBox {
-  padding: 0;
+  padding-top: $space_one;
+  padding-bottom: $space_one;
 }
 
 .imageBox {
@@ -58,18 +57,26 @@ h1.topCenter {
 
 /* areas */
 
+.contentTop{
+  padding: $space_two $hspace;
+
+  h1 {
+    margin: $space_two;
+    text-align: center;
+  }
+}
+
 .mainSection {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
   align-items: stretch;
   min-height: 300px;
-  border: 1px solid $color-midgrey;
   margin-bottom: $space_two;
-  padding: $space_two $hspace_half;
 
   .contentSection {
     flex: 3 1 900px;
+    padding: $space_two $hspace_half;
   }
 
   .section{
@@ -77,9 +84,11 @@ h1.topCenter {
     padding-right: $hspace_half;
   }
 
-  .section.flexRow{
+  .section.flexRow, .section .flexRow{
     padding-left: 0;
     padding-right: 0;
+    margin-left: - $hspace_half;
+    margin-right: - $hspace_half;
 
     .flexItem {
       padding-left: $hspace_half;
@@ -91,18 +100,18 @@ h1.topCenter {
 
 .asideSection {
   flex: 1 1 300px;
-  padding: $space_two $hspace_half;
+  padding: $space_two $hspace;
 
   .content{
 
   }
 
   .aside{
-
+    border: 1px solid $color-lightgrey;
   }
 
   h3 {
-    background: $color-midgrey;
+    background: $color-lightgrey;
     padding: $space_one;
   }
 

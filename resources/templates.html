@@ -51,10 +51,13 @@
     </html>
 </cms-template>
 <cms-template type="PAGE" name="homePage" displayName="Home Page Layout" >
-    <section class="mainSection flexRow">
+    <section class="contentTop">
+        <cms-section name="top" type="content"/>
+    </section>
+    <section class="mainSection">
         <section class="contentSection">
-            <cms-section name="banner" type="content"/>
-            <cms-section class="flexRow twoCol" name="teasers" type="teaser"/>
+            <cms-section name="overview" type="content"/>
+            <cms-section class="flexRow" name="teasers" type="teaser"/>
         </section>
         <aside class="asideSection">
             <cms-section name="aside" type="aside"/>
@@ -62,9 +65,12 @@
     </section>
 </cms-template>
 <cms-template type="PAGE" name="areaPage" displayName="Area Page Layout" >
-    <section class="mainSection flexRow">
+    <section class="contentTop">
+        <cms-section name="top" type="content"/>
+    </section>
+    <section class="mainSection">
         <section class="contentSection">
-            <cms-section name="banner" type="content"/>
+            <cms-section name="overview" type="content"/>
             <cms-section class="flexRow" name="teasers" type="teaser"/>
         </section>
         <aside class="asideSection">
@@ -73,7 +79,10 @@
     </section>
 </cms-template>
 <cms-template type="PAGE" name="articlePage" displayName="Article Page Layout" usage="" editable="true">
-    <section class="mainSection flexRow">
+    <section class="contentTop">
+        <cms-section name="top" type="content"/>
+    </section>
+    <section class="mainSection">
         <section class="contentSection">
             <cms-section name="article" type="content"/>
         </section>
@@ -118,10 +127,10 @@
 </cms-template>
 <cms-template type="PART" dataType="HTML" name="ImageText" displayName="Image+Text 2:1" usage="content" editable="true" dynamic="false">
     <div class="flexRow">
-        <div class="imageBox flexItemTwo">
+        <div class="imageBox flexItem two">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
         </div>
-        <div class="textBox flexItemOne">
+        <div class="textBox flexItem one">
             <h3>
                 <cms-field type="text" name="header">Lorem ipsum</cms-field>
             </h3>
@@ -131,10 +140,10 @@
 </cms-template>
 <cms-template type="PART" dataType="HTML" name="ImageHtml" displayName="Image+Html 2:1" usage="content" editable="true" dynamic="false">
     <div class="flexRow">
-        <div class="imageBox flexItemTwo">
+        <div class="imageBox flexItem two">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
         </div>
-        <div class="textBox flexItemOne">
+        <div class="textBox flexItem one">
             <h3>
                 <cms-field type="text" name="header">Lorem ipsum</cms-field>
             </h3>
@@ -204,7 +213,7 @@
 </cms-template>
 
 <cms-template type="SNIPPET" name="searchBox" displayName="Search Box" usage="SearchBoxModule" editable="false" dynamic="false">
-    <div class="searchBox flexItemOne">
+    <div class="searchBox flexItem one">
         <form action="/search.srv" method="post" id="searchboxform" name="searchboxform" accept-charset="UTF-8">
             <input type="hidden" name="act" value="search"/>
             <input type="text" id="searchPattern" name="searchPattern" title="" value="" maxlength="60"/>

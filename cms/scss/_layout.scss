@@ -4,9 +4,6 @@
 .carbon {
     background: $color-almostblack image-url("carbon.png");
 }
-.carbon-light {
-    background: $color-lightgrey image-url("carbon_light.png");
-}
 
 /********** body and main sections *************/
 /*
@@ -25,6 +22,7 @@
                     searchBox
             main
                 pageContent
+                    contentTop
                     mainSection
                         contentSection
                         asideSection
