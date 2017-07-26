@@ -28,7 +28,7 @@
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <section class="flexRow">
-    <section class="flexItemOne">
+    <section class="flexItem one">
         <div class="sectionInner">
             <fieldset>
                 <legend><%=StringUtil.getHtml("_fromTemplate", locale)%>
@@ -57,7 +57,7 @@
             </fieldset>
         </div>
     </section>
-    <section class="flexItemOne">
+    <section class="flexItem one">
         <div class="sectionInner">
             <fieldset>
                 <legend><%=StringUtil.getHtml("_sharedPart", locale)%>

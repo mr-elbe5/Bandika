@@ -17,7 +17,7 @@
 %>
 <section class="mainSection">
     <div class="flexRow">
-        <section class="contentSection flexItemThree">
+        <section class="contentSection flexItem three">
             <div class="section">
                 <div class="details">
                     <h3><%=StringUtil.getString("_profile", locale)%>
@@ -103,7 +103,7 @@
                 </div>
             </div>
         </section>
-        <aside class="asideSection flexItemOne">
+        <aside class="asideSection flexItem one">
             <nav class="section">
                 <ul class="linkList">
                     <li>

@@ -12,7 +12,7 @@
 <% Locale locale = SessionReader.getSessionLocale(request);
 %>
 <section class="mainSection flexRow">
-    <section class="contentSection flexItemTwo">
+    <section class="contentSection flexItem two">
         <div class="adminTree">
             <h3 class="treeHeader">
                 <%=StringUtil.getString("_administration", SessionReader.getSessionLocale(request))%>
@@ -28,7 +28,7 @@
             </ul>
         </div>
     </section>
-    <aside class="asideSection flexItemOne">
+    <aside class="asideSection flexItem one">
         <div class="details">
             <h3><%=StringUtil.getString("_details", locale)%>
             </h3>

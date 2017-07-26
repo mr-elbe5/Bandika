@@ -25,7 +25,7 @@
     $("#browserLayer").setLayerHeader("<%=StringUtil.getHtml("_selectImage",locale)%>&nbsp;<span style=\"font-size:80%;\">(<%=StringUtil.getHtml("_selectImageHint",locale)%>)</span>");
 </script>
 <section class="mainSection flexRow">
-    <section class="contentSection flexItemOne">
+    <section class="contentSection flexItem one">
         <div class="sectionInner">
             <div class="icn iimage clickable" onclick="$('#browserView').load('/field.srv?act=showSelectableBrowserImages')"><%=StringUtil.getHtml("_all", locale)%>
                 <br>
@@ -38,7 +38,7 @@
             </ul>
         </div>
     </section>
-    <aside class="asideSection flexItemOne">
+    <aside class="asideSection flexItem one">
         <div class="sectionInner">
             <div id="browserView"></div>
         </div>

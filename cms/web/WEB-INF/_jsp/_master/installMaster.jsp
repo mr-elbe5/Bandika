@@ -24,7 +24,7 @@
 </head>
 <body class="carbon">
 <div class="viewport">
-    <section class="topNavSection"></section>
+    <section class="topNavSection">&nbsp;</section>
     <section class="headerSection">
         <section class="headerMain">
             <div class="title">
@@ -35,7 +35,7 @@
     <div id="main" class="main carbon-light">
         <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
         <section class="mainSection flexRow">
-            <section class="contentSection flexItemTwo padded">
+            <section class="contentSection flexItem two padded">
                 <jsp:include page="/WEB-INF/_jsp/_master/content.inc.jsp"/>
             </section>
             <aside class="asideSection flexItemOne padded">
