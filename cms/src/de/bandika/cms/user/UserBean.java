@@ -10,7 +10,6 @@ package de.bandika.cms.user;
 
 import de.bandika.base.data.BinaryFileData;
 import de.bandika.base.log.Log;
-import de.bandika.webbase.user.LoginBean;
 
 import java.sql.*;
 import java.util.ArrayList;

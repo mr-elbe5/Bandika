@@ -10,6 +10,8 @@ package de.bandika.webbase.user;
 
 import de.bandika.base.data.BinaryFileData;
 import de.bandika.base.util.StringUtil;
+import de.bandika.cms.user.LoginBean;
+import de.bandika.cms.user.UserLoginData;
 import de.bandika.webbase.servlet.*;
 
 import javax.servlet.http.HttpServletRequest;

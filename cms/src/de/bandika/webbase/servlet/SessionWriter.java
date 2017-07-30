@@ -9,7 +9,7 @@
 package de.bandika.webbase.servlet;
 
 import de.bandika.base.data.Locales;
-import de.bandika.webbase.user.UserLoginData;
+import de.bandika.webbase.user.IUserData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -33,7 +33,7 @@ public final class SessionWriter {
         session.removeAttribute(key);
     }
 
-    public static void setSessionLoginData(HttpServletRequest request, UserLoginData data) {
+    public static void setSessionLoginData(HttpServletRequest request, IUserData data) {
         setSessionObject(request, RequestStatics.KEY_LOGIN, data);
     }
 

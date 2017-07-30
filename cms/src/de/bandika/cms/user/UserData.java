@@ -14,7 +14,6 @@ import de.bandika.base.util.ImageUtil;
 import de.bandika.base.util.StringUtil;
 import de.bandika.cms.group.GroupData;
 import de.bandika.webbase.servlet.RequestReader;
-import de.bandika.webbase.user.UserLoginData;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;

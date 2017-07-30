@@ -6,20 +6,42 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.base.data;
+package de.bandika.webbase.user;
 
-public class BaseIdData extends BaseData {
+import java.util.Locale;
 
-    public static final int ID_MIN = 100;
+public interface IUserData {
 
-    private int id = 0;
+    public static final int ID_SYSTEM = 1;
 
-    public int getId() {
-        return id;
-    }
+    public int getId();
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public String getTitle();
+
+    public void setTitle(String title);
+
+    public String getName();
+
+    public Locale getLocale();
+
+    public void setLocale(Locale locale);
+
+    public void setLocale(String localeName);
+
+    public String getEmail();
+
+    public void setEmail(String email);
+
+    public String getLogin();
+
+    public void setLogin(String login);
+
+    public String getPassword();
+
+    public void setPassword(String password);
+
+    public IUserRightsData getRights();
+
+    public boolean checkRights();
 
 }

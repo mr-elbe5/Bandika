@@ -20,8 +20,6 @@ import de.bandika.webbase.rights.RightsCache;
 import de.bandika.webbase.rights.SystemZone;
 import de.bandika.webbase.servlet.*;
 import de.bandika.webbase.user.LoginAction;
-import de.bandika.webbase.user.LoginBean;
-import de.bandika.webbase.user.UserLoginData;
 import de.bandika.webbase.user.UserSecurity;
 
 import javax.servlet.http.HttpServletRequest;

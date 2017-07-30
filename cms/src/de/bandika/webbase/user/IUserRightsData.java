@@ -6,20 +6,25 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.base.data;
+package de.bandika.webbase.user;
 
-public class BaseIdData extends BaseData {
+import de.bandika.webbase.rights.Right;
+import de.bandika.webbase.rights.SystemZone;
 
-    public static final int ID_MIN = 100;
+public interface IUserRightsData {
 
-    private int id = 0;
+    public boolean hasAnySystemRight();
 
-    public int getId() {
-        return id;
-    }
+    public boolean hasAnyElevatedSystemRight();
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public boolean hasSystemRight(SystemZone zone, Right right);
+
+    public boolean hasAnyContentRight();
+
+    public boolean hasContentRight(int id, Right right);
+
+    public int getVersion();
+
+    public void setVersion(int version);
 
 }

@@ -11,7 +11,7 @@ package de.bandika.webbase.servlet;
 import de.bandika.base.data.Locales;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.SystemZone;
-import de.bandika.webbase.user.UserLoginData;
+import de.bandika.webbase.user.IUserData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -27,8 +27,8 @@ public class SessionReader {
         return request.getSession().getAttribute(key);
     }
 
-    public static UserLoginData getSessionLoginData(HttpServletRequest request) {
-        return (UserLoginData) getSessionObject(request, RequestStatics.KEY_LOGIN);
+    public static IUserData getSessionLoginData(HttpServletRequest request) {
+        return (IUserData) getSessionObject(request, RequestStatics.KEY_LOGIN);
     }
 
     public static Locale getSessionLocale(HttpServletRequest request) {
@@ -40,42 +40,42 @@ public class SessionReader {
     }
 
     public static String getLoginName(HttpServletRequest request) {
-        UserLoginData loginData = getSessionLoginData(request);
+        IUserData loginData = getSessionLoginData(request);
         return loginData == null ? "" : loginData.getName();
     }
 
     public static int getLoginId(HttpServletRequest request) {
-        UserLoginData loginData = getSessionLoginData(request);
+        IUserData loginData = getSessionLoginData(request);
         return loginData == null ? 0 : loginData.getId();
     }
 
     public static boolean isLoggedIn(HttpServletRequest request) {
-        UserLoginData loginData = getSessionLoginData(request);
+        IUserData loginData = getSessionLoginData(request);
         return loginData != null;
     }
 
     public static boolean hasAnySystemRight(HttpServletRequest request) {
-        UserLoginData data = getSessionLoginData(request);
+        IUserData data = getSessionLoginData(request);
         return data != null && data.checkRights() && data.getRights().hasAnySystemRight();
     }
 
     public static boolean hasAnyElevatedSystemRight(HttpServletRequest request) {
-        UserLoginData data = getSessionLoginData(request);
+        IUserData data = getSessionLoginData(request);
         return data != null && data.checkRights() && data.getRights().hasAnyElevatedSystemRight();
     }
 
     public static boolean hasAnyContentRight(HttpServletRequest request) {
-        UserLoginData data = getSessionLoginData(request);
+        IUserData data = getSessionLoginData(request);
         return data != null && data.checkRights() && data.getRights().hasAnyContentRight();
     }
 
     public static boolean hasSystemRight(HttpServletRequest request, SystemZone zone, Right right) {
-        UserLoginData data = getSessionLoginData(request);
+        IUserData data = getSessionLoginData(request);
         return data != null && data.checkRights() && data.getRights().hasSystemRight(zone, right);
     }
 
     public static boolean hasContentRight(HttpServletRequest request, int id, Right right) {
-        UserLoginData data = getSessionLoginData(request);
+        IUserData data = getSessionLoginData(request);
         return data != null && data.checkRights() && data.getRights().hasContentRight(id, right);
     }
 

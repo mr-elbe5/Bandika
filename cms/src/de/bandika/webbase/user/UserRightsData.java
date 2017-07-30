@@ -14,7 +14,7 @@ import de.bandika.webbase.rights.SystemZone;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserRightsData {
+public class UserRightsData implements IUserRightsData{
 
     protected Map<Integer, Right> singleContentRights = new HashMap<>();
     protected Map<SystemZone, Right> systemRights = new HashMap<>();

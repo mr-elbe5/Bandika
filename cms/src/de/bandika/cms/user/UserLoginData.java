@@ -6,7 +6,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.webbase.user;
+package de.bandika.cms.user;
 
 import de.bandika.base.data.BaseIdData;
 import de.bandika.base.data.Locales;
@@ -14,11 +14,14 @@ import de.bandika.base.log.Log;
 import de.bandika.webbase.rights.RightBean;
 import de.bandika.webbase.rights.RightsCache;
 import de.bandika.webbase.servlet.RequestReader;
+import de.bandika.webbase.user.IUserData;
+import de.bandika.webbase.user.IUserRightsData;
+import de.bandika.webbase.user.UserRightsData;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
-public class UserLoginData extends BaseIdData {
+public class UserLoginData extends BaseIdData implements IUserData {
 
     public static final int ID_SYSTEM = 1;
 
@@ -154,7 +157,7 @@ public class UserLoginData extends BaseIdData {
         this.deleted = deleted;
     }
 
-    public UserRightsData getRights() {
+    public IUserRightsData getRights() {
         return rights;
     }
 
