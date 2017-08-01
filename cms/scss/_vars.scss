@@ -39,3 +39,23 @@ $size_h1: $size_txt * 2;
 $size_h2: $size_txt * 1.5;
 $size_h3: $size_txt * 1.2;
 $size_h4: $size_txt * 1;
+
+@mixin hpad($amount){
+  padding-left: $amount;
+  padding-right: $amount;
+}
+
+@mixin vpad($amount){
+  padding-top: $amount;
+  padding-bottom: $amount;
+}
+
+@mixin hmargin($amount){
+  margin-left: $amount;
+  margin-right: $amount;
+}
+
+@mixin vmargin($amount){
+  margin-top: $amount;
+  margin-bottom: $amount;
+}

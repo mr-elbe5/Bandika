@@ -56,8 +56,8 @@
     </section>
     <section class="mainSection">
         <section class="contentSection">
-            <cms-section name="overview" type="content"/>
-            <cms-section class="flexRow" name="teasers" type="teaser"/>
+            <cms-section class="fullWidth" name="overview" type="content"/>
+            <cms-section class="flexRow" name="teasers" type="flex"/>
         </section>
         <aside class="asideSection">
             <cms-section name="aside" type="aside"/>
@@ -71,7 +71,7 @@
     <section class="mainSection">
         <section class="contentSection">
             <cms-section name="overview" type="content"/>
-            <cms-section class="flexRow" name="teasers" type="teaser"/>
+            <cms-section class="flexRow" name="teasers" type="flex"/>
         </section>
         <aside class="asideSection">
             <cms-section name="aside" type="aside"/>
@@ -125,8 +125,8 @@
         <cms-field type="html" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="ImageText" displayName="Image+Text 2:1" usage="content" editable="true" dynamic="false">
-    <div class="flexRow">
+<cms-template type="PART" dataType="HTML" name="ImageHtml21" displayName="Image+Html 2:1" usage="content" editable="true" dynamic="false">
+    <div class="flexRow three">
         <div class="imageBox flexItem two">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
         </div>
@@ -134,16 +134,16 @@
             <h3>
                 <cms-field type="text" name="header">Lorem ipsum</cms-field>
             </h3>
-            <cms-field type="html" toolbar="Text" name="text">Lorem ipsum</cms-field>
+            <cms-field type="html" name="html">Lorem ipsum</cms-field>
         </div>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="ImageHtml" displayName="Image+Html 2:1" usage="content" editable="true" dynamic="false">
-    <div class="flexRow">
-        <div class="imageBox flexItem two">
+<cms-template type="PART" dataType="HTML" name="ImageHtml12" displayName="Image+Html 1:2" usage="content" editable="true" dynamic="false">
+    <div class="flexRow three">
+        <div class="imageBox flexItem one">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
         </div>
-        <div class="textBox flexItem one">
+        <div class="textBox flexItem two">
             <h3>
                 <cms-field type="text" name="header">Lorem ipsum</cms-field>
             </h3>
@@ -160,18 +160,18 @@
     </div>
 </cms-template>
 
-<cms-template type="PART" dataType="HTML" name="ImageTextTeaserHorz" displayName="Teaser Image+Text Horizontal" usage="teaser" editable="true" dynamic="false">
-    <div class="teaser">
-        <div class="teaserLeft imageBox">
+<cms-template type="PART" dataType="HTML" name="ImageTextTeaserHorz" displayName="Teaser Image+Text Horizontal" usage="flex" editable="true" dynamic="false">
+    <div class="teaser horz">
+        <div class="imageBox">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
         </div>
-        <div class="teaserRight textBox">
+        <div class="textBox">
             <cms-field type="html" toolbar="Text" name="text">Lorem ipsum</cms-field>
         </div>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="ImageTextTeaserVertical" displayName="Teaser Image+Text Vertical" usage="teaser" editable="true" dynamic="false">
-    <div class="teaser">
+<cms-template type="PART" dataType="HTML" name="ImageTextTeaserVertical" displayName="Teaser Image+Text Vertical" usage="flex" editable="true" dynamic="false">
+    <div class="teaser vert">
         <div class="imageBox">
             <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
         </div>

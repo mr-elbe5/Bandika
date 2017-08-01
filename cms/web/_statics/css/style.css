@@ -102,7 +102,7 @@ nav li { list-style: none; }
 
 .white { background: #ffffff; }
 
-@font-face { font-family: "LigatureSymbols"; src: url('/_statics/fonts/LigatureSymbols-2.11.eot?1490902855'); src: url('/_statics/fonts/LigatureSymbols-2.11.eot?&1490902855#iefix') format('embedded-opentype'), url('/_statics/fonts/LigatureSymbols-2.11.eot?1490902855') format('embedded-opentype'), url('/_statics/fonts/LigatureSymbols-2.11.woff?1490902855') format('woff'), url('/_statics/fonts/LigatureSymbols-2.11.ttf?1490902855') format('truetype'), url('/_statics/fonts/LigatureSymbols-2.11.svg?1490902855') format('svg'); font-weight: normal; font-style: normal; }
+@font-face { font-family: "LigatureSymbols"; src: url('/_statics/fonts/LigatureSymbols-2.11.eot?1498245794'); src: url('/_statics/fonts/LigatureSymbols-2.11.eot?&1498245794#iefix') format('embedded-opentype'), url('/_statics/fonts/LigatureSymbols-2.11.eot?1498245794') format('embedded-opentype'), url('/_statics/fonts/LigatureSymbols-2.11.woff?1498245794') format('woff'), url('/_statics/fonts/LigatureSymbols-2.11.ttf?1498245794') format('truetype'), url('/_statics/fonts/LigatureSymbols-2.11.svg?1498245794') format('svg'); font-weight: normal; font-style: normal; }
 .icn:before { font-family: 'LigatureSymbols', fantasy; -webkit-text-rendering: optimizeLegibility; -moz-text-rendering: optimizeLegibility; -ms-text-rendering: optimizeLegibility; -o-text-rendering: optimizeLegibility; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-font-smoothing: antialiased; -ms-font-smoothing: antialiased; -o-font-smoothing: antialiased; font-smoothing: antialiased; margin-right: 0.3em; font-size: 130%; color: #aaaaaa; }
 
 .icn.disabled:before { color: #cccccc; }
@@ -230,9 +230,9 @@ nav li { list-style: none; }
 
 .treeview ul { margin-top: 4px; }
 
-.treeview .hitarea { background: url('/_statics/img/treeview-default.gif?1496079847') -64px -25px no-repeat; height: 16px; width: 16px; margin-left: -19px; float: left; cursor: pointer; }
+.treeview .hitarea { background: url('/_statics/img/treeview-default.gif?1498245794') -64px -25px no-repeat; height: 16px; width: 16px; margin-left: -19px; float: left; cursor: pointer; }
 
-.treeview li { margin: 0; padding: 3px 3px 3px 19px; line-height: 12px; background: url('/_statics/img/treeview-default-line.gif?1496079847') no-repeat; }
+.treeview li { margin: 0; padding: 3px 3px 3px 19px; line-height: 12px; background: url('/_statics/img/treeview-default-line.gif?1498245794') no-repeat; }
 
 .treeview li.collapsable, .treeview li.expandable { background-position: 0 -176px; }
 
@@ -240,7 +240,7 @@ nav li { list-style: none; }
 
 .treeview li.last { background-position: 0 -1766px; }
 
-.treeview li.lastCollapsable, .treeview li.lastExpandable { background-image: url('/_statics/img/treeview-default.gif?1496079847'); }
+.treeview li.lastCollapsable, .treeview li.lastExpandable { background-image: url('/_statics/img/treeview-default.gif?1498245794'); }
 
 .treeview li.lastCollapsable { background-position: 0 -111px; }
 
@@ -433,7 +433,7 @@ h3.treeHeader { color: #404040; }
 
 .dropping { cursor: crosshair; }
 
-.carbon { background: #404040 url('/_statics/img/carbon.png?1496079847'); }
+.carbon { background: #404040 url('/_statics/img/carbon.png?1498245794'); }
 
 /********** body and main sections *************/
 /* Structure:
@@ -473,7 +473,7 @@ nav.mainNav li a { text-decoration: none; color: #eeeeee; display: block; white-
 
 nav.mainNav li a:hover { color: #f0f0f0; }
 
-nav.mainNav li ul { position: absolute; display: none; width: inherit; background: #aaaaaa url('/_statics/img/carbon.png?1496079847'); border: 1px solid #cccccc; z-index: 9999; }
+nav.mainNav li ul { position: absolute; display: none; width: inherit; background: #aaaaaa url('/_statics/img/carbon.png?1498245794'); border: 1px solid #cccccc; z-index: 9999; }
 
 nav.mainNav li:hover ul { display: block; }
 
@@ -566,12 +566,8 @@ h2.block { margin: 0 0 10px 0; }
 
 .pagePart img { width: 100%; }
 
-.textBox { padding-top: 5px; padding-bottom: 5px; }
-
 .imageBox { padding: 0; }
 .imageBox img { width: 100%; }
-
-.teaser { padding: 10px; }
 
 .separator { height: 1px; margin: 10px 0; border-bottom: 1px dotted #000; }
 
@@ -581,9 +577,19 @@ h2.block { margin: 0 0 10px 0; }
 
 .mainSection { display: flex; flex-wrap: wrap; flex-direction: row; align-items: stretch; min-height: 300px; margin-bottom: 10px; }
 .mainSection .contentSection { flex: 3 1 900px; padding: 10px 5px; }
-.mainSection .section { padding-left: 5px; padding-right: 5px; }
-.mainSection .section.flexRow, .mainSection .section .flexRow { padding-left: 0; padding-right: 0; margin-left: -5px; margin-right: -5px; }
-.mainSection .section.flexRow .flexItem, .mainSection .section .flexRow .flexItem { padding-left: 5px; padding-right: 5px; }
+.mainSection .contentSection > .section.fullWidth { padding-left: 5px; padding-right: 5px; }
+.mainSection .contentSection > .section.fullWidth .flexRow { padding-left: 0; padding-right: 0; margin-left: -5px; margin-right: -5px; }
+.mainSection .contentSection > .section.fullWidth .flexItem { padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; }
+.mainSection .contentSection > .section.fullWidth .flexRow.two .flexItem { flex: 1 1 450px; }
+.mainSection .contentSection > .section.fullWidth .flexRow.three .flexItem.one { flex: 1 1 300px; }
+.mainSection .contentSection > .section.fullWidth .flexRow.three .flexItem.two { flex: 1 1 600px; }
+.mainSection .contentSection > .section.flexRow > .pagePart { flex: 1 1 450px; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; }
+.mainSection .contentSection .teaser.horz { display: table; width: 100%; }
+.mainSection .contentSection .teaser.horz > div { display: table-cell; vertical-align: top; width: 50%; }
+.mainSection .contentSection .teaser.horz > div:first-child { padding-right: 5px; }
+.mainSection .contentSection .teaser.horz > div:last-child { padding-left: 5px; }
+.mainSection .contentSection .teaser.vert > div:first-child { padding-bottom: 5px; }
+.mainSection .contentSection .teaser.vert > div:last-child { padding-top: 5px; }
 
 .asideSection { flex: 1 1 300px; padding: 10px 10px; }
 .asideSection .aside { border: 1px solid #eeeeee; margin-bottom: 20px; }
@@ -605,7 +611,7 @@ body.mobile { height: auto; overflow: auto; }
 
 .mobile a.logo { display: inline-block; }
 
-.mobile a.navBtn { display: block; float: right; width: 33px; height: 24px; margin-top: 15px; background: url('/_statics/img/navbtn.png?1496079847') no-repeat; cursor: pointer; }
+.mobile a.navBtn { display: block; float: right; width: 33px; height: 24px; margin-top: 15px; background: url('/_statics/img/navbtn.png?1498245794') no-repeat; cursor: pointer; }
 
 .mobile .menu { display: block; margin: 10px 0; border: 1px solid #aaaaaa; background: rgba(255, 255, 255, 0.1); }
 

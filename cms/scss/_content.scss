@@ -25,8 +25,7 @@ h2.block {
 }
 
 .textBox {
-  padding-top: $space_one;
-  padding-bottom: $space_one;
+
 }
 
 .imageBox {
@@ -37,15 +36,7 @@ h2.block {
   }
 }
 
-.teaser {
-  padding: $space_two;
-}
-
-.teaser .teaserLeft {
-
-}
-
-.teaser .teaserRight {
+.htmlBox {
 
 }
 
@@ -77,22 +68,71 @@ h2.block {
   .contentSection {
     flex: 3 1 900px;
     padding: $space_two $hspace_half;
-  }
 
-  .section{
-    padding-left: $hspace_half;
-    padding-right: $hspace_half;
-  }
+    & > .section.fullWidth{
+      @include hpad($hspace_half);
 
-  .section.flexRow, .section .flexRow{
-    padding-left: 0;
-    padding-right: 0;
-    margin-left: - $hspace_half;
-    margin-right: - $hspace_half;
+      .flexRow{
+        @include hpad(0);
+        @include hmargin(-$hspace_half);
+      }
 
-    .flexItem {
-      padding-left: $hspace_half;
-      padding-right: $hspace_half;
+      .flexItem{
+        @include hpad($hspace_half);
+        @include vpad($hspace_half);
+      }
+
+      .flexRow.two{
+        .flexItem{
+          flex: 1 1 450px;
+        }
+      }
+
+      .flexRow.three{
+        .flexItem.one{
+          flex: 1 1 300px;
+        }
+        .flexItem.two{
+          flex: 1 1 600px;
+        }
+      }
+    }
+
+    & > .section.flexRow{
+
+      & > .pagePart {
+        flex: 1 1 450px;
+        @include hpad($hspace_half);
+        @include vpad($hspace_half);
+      }
+    }
+
+    .teaser.horz{
+
+      display: table;
+      width: 100%;
+
+      & > div{
+        display:table-cell;
+        vertical-align: top;
+        width: 50%;
+      }
+      & > div:first-child{
+        padding-right: $hspace_half;
+      }
+      & > div:last-child{
+        padding-left: $hspace_half;
+      }
+    }
+
+    .teaser.vert{
+
+      & > div:first-child{
+        padding-bottom: $hspace_half;
+      }
+      & > div:last-child{
+        padding-top: $hspace_half;
+      }
     }
   }
 
