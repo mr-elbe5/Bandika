@@ -65,7 +65,7 @@ h2.block {
   min-height: 300px;
   margin-bottom: $space_two;
 
-  .contentSection {
+  .contentSection, .editSection {
     flex: 3 1 900px;
     padding: $space_two $hspace_half;
 

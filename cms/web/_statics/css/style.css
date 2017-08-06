@@ -576,20 +576,20 @@ h2.block { margin: 0 0 10px 0; }
 .contentTop h1 { margin: 10px; text-align: center; }
 
 .mainSection { display: flex; flex-wrap: wrap; flex-direction: row; align-items: stretch; min-height: 300px; margin-bottom: 10px; }
-.mainSection .contentSection { flex: 3 1 900px; padding: 10px 5px; }
-.mainSection .contentSection > .section.fullWidth { padding-left: 5px; padding-right: 5px; }
-.mainSection .contentSection > .section.fullWidth .flexRow { padding-left: 0; padding-right: 0; margin-left: -5px; margin-right: -5px; }
-.mainSection .contentSection > .section.fullWidth .flexItem { padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; }
-.mainSection .contentSection > .section.fullWidth .flexRow.two .flexItem { flex: 1 1 450px; }
-.mainSection .contentSection > .section.fullWidth .flexRow.three .flexItem.one { flex: 1 1 300px; }
-.mainSection .contentSection > .section.fullWidth .flexRow.three .flexItem.two { flex: 1 1 600px; }
-.mainSection .contentSection > .section.flexRow > .pagePart { flex: 1 1 450px; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; }
-.mainSection .contentSection .teaser.horz { display: table; width: 100%; }
-.mainSection .contentSection .teaser.horz > div { display: table-cell; vertical-align: top; width: 50%; }
-.mainSection .contentSection .teaser.horz > div:first-child { padding-right: 5px; }
-.mainSection .contentSection .teaser.horz > div:last-child { padding-left: 5px; }
-.mainSection .contentSection .teaser.vert > div:first-child { padding-bottom: 5px; }
-.mainSection .contentSection .teaser.vert > div:last-child { padding-top: 5px; }
+.mainSection .contentSection, .mainSection .editSection { flex: 3 1 900px; padding: 10px 5px; }
+.mainSection .contentSection > .section.fullWidth, .mainSection .editSection > .section.fullWidth { padding-left: 5px; padding-right: 5px; }
+.mainSection .contentSection > .section.fullWidth .flexRow, .mainSection .editSection > .section.fullWidth .flexRow { padding-left: 0; padding-right: 0; margin-left: -5px; margin-right: -5px; }
+.mainSection .contentSection > .section.fullWidth .flexItem, .mainSection .editSection > .section.fullWidth .flexItem { padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; }
+.mainSection .contentSection > .section.fullWidth .flexRow.two .flexItem, .mainSection .editSection > .section.fullWidth .flexRow.two .flexItem { flex: 1 1 450px; }
+.mainSection .contentSection > .section.fullWidth .flexRow.three .flexItem.one, .mainSection .editSection > .section.fullWidth .flexRow.three .flexItem.one { flex: 1 1 300px; }
+.mainSection .contentSection > .section.fullWidth .flexRow.three .flexItem.two, .mainSection .editSection > .section.fullWidth .flexRow.three .flexItem.two { flex: 1 1 600px; }
+.mainSection .contentSection > .section.flexRow > .pagePart, .mainSection .editSection > .section.flexRow > .pagePart { flex: 1 1 450px; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; }
+.mainSection .contentSection .teaser.horz, .mainSection .editSection .teaser.horz { display: table; width: 100%; }
+.mainSection .contentSection .teaser.horz > div, .mainSection .editSection .teaser.horz > div { display: table-cell; vertical-align: top; width: 50%; }
+.mainSection .contentSection .teaser.horz > div:first-child, .mainSection .editSection .teaser.horz > div:first-child { padding-right: 5px; }
+.mainSection .contentSection .teaser.horz > div:last-child, .mainSection .editSection .teaser.horz > div:last-child { padding-left: 5px; }
+.mainSection .contentSection .teaser.vert > div:first-child, .mainSection .editSection .teaser.vert > div:first-child { padding-bottom: 5px; }
+.mainSection .contentSection .teaser.vert > div:last-child, .mainSection .editSection .teaser.vert > div:last-child { padding-top: 5px; }
 
 .asideSection { flex: 1 1 300px; padding: 10px 10px; }
 .asideSection .aside { border: 1px solid #eeeeee; margin-bottom: 20px; }
