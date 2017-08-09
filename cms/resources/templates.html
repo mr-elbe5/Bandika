@@ -1,4 +1,5 @@
 <!--suppress XmlDuplicatedId -->
+<!-- master -->
 <cms-template type="MASTER" name="pageMaster" displayName="Page Master" >
     <!DOCTYPE html>
     <html>
@@ -50,6 +51,7 @@
     </body>
     </html>
 </cms-template>
+<!-- pages -->
 <cms-template type="PAGE" name="homePage" displayName="Home Page Layout" >
     <section class="contentTop">
         <cms-section name="top" type="content"/>
@@ -70,7 +72,7 @@
     </section>
     <section class="mainSection">
         <section class="contentSection">
-            <cms-section name="overview" type="content"/>
+            <cms-section class="fullWidth" name="overview" type="content"/>
             <cms-section class="flexRow" name="teasers" type="flex"/>
         </section>
         <aside class="asideSection">
@@ -84,18 +86,18 @@
     </section>
     <section class="mainSection">
         <section class="contentSection">
-            <cms-section name="article" type="content"/>
+            <cms-section class="fullWidth" name="article" type="content"/>
         </section>
         <aside class="asideSection">
             <cms-section name="aside" type="aside"/>
         </aside>
     </section>
 </cms-template>
-
+<!-- general parts -->
 <cms-template type="PART" dataType="HTML" name="Script" displayName="JavaScript" usage="all" editable="true" dynamic="false">
     <cms-field type="script" name="script"/>
 </cms-template>
-
+<!-- content parts -->
 <cms-template type="PART" dataType="HTML" name="Header" displayName="Header" usage="content" editable="true" dynamic="false">
     <div class="textBox">
         <h1>
@@ -110,84 +112,75 @@
         </h2>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="Html" displayName="Html Paragraph" usage="all" editable="true" dynamic="false">
-    <div class="htmlBox">
-        <cms-field type="html" name="html" toolbar="Full">Lorem ipsum</cms-field>
-    </div>
+<cms-template type="PART" name="Separator" displayName="Separator Line" usage="content" editable="false" dynamic="false">
+    <div class="separator">&nbsp;</div>
 </cms-template>
 <cms-template type="PART" dataType="HTML" name="Text" displayName="Text" usage="content" editable="true" dynamic="false">
     <div class="textBox">
-        <cms-field type="html" toolbar="Text" name="text">Lorem ipsum</cms-field>
+        <cms-field type="html" name="text">Lorem ipsum</cms-field>
     </div>
 </cms-template>
 <cms-template type="PART" dataType="HTML" name="Image" displayName="Full Image" usage="content" editable="true" dynamic="false">
     <div class="imageBox">
-        <cms-field type="html" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
+        <cms-field type="image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="ImageHtml21" displayName="Image+Html 2:1" usage="content" editable="true" dynamic="false">
+<cms-template type="PART" dataType="HTML" name="ImageText21" displayName="Image+Text 2:1" usage="content" editable="true" dynamic="false">
     <div class="flexRow three">
         <div class="imageBox flexItem two">
-            <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
+            <cms-field type="image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
         </div>
         <div class="textBox flexItem one">
             <h3>
                 <cms-field type="text" name="header">Lorem ipsum</cms-field>
             </h3>
-            <cms-field type="html" name="html">Lorem ipsum</cms-field>
+            <cms-field type="html" name="text">Lorem ipsum</cms-field>
         </div>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="ImageHtml12" displayName="Image+Html 1:2" usage="content" editable="true" dynamic="false">
+<cms-template type="PART" dataType="HTML" name="ImageText12" displayName="Image+Text 1:2" usage="content" editable="true" dynamic="false">
     <div class="flexRow three">
         <div class="imageBox flexItem one">
-            <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
+            <cms-field type="image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
         </div>
         <div class="textBox flexItem two">
             <h3>
                 <cms-field type="text" name="header">Lorem ipsum</cms-field>
             </h3>
-            <cms-field type="html" name="html">Lorem ipsum</cms-field>
+            <cms-field type="html" name="text">Lorem ipsum</cms-field>
         </div>
-    </div>
-</cms-template>
-<cms-template type="PART" name="Separator" displayName="Separator Line" usage="content" editable="false" dynamic="false">
-    <div class="separator">&nbsp;</div>
-</cms-template>
-<cms-template type="PART" dataType="MULTIHTML" name="ImageSlider" displayName="Image Slider" usage="content" editable="true" dynamic="false">
-    <div class="imageBox">
-        <cms-field type="html" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
     </div>
 </cms-template>
 
 <cms-template type="PART" dataType="HTML" name="ImageTextTeaserHorz" displayName="Teaser Image+Text Horizontal" usage="flex" editable="true" dynamic="false">
     <div class="teaser horz">
         <div class="imageBox">
-            <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
+            <cms-field type="image"name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
         </div>
         <div class="textBox">
-            <cms-field type="html" toolbar="Text" name="text">Lorem ipsum</cms-field>
+            <cms-field type="html" name="text">Lorem ipsum</cms-field>
         </div>
     </div>
 </cms-template>
 <cms-template type="PART" dataType="HTML" name="ImageTextTeaserVertical" displayName="Teaser Image+Text Vertical" usage="flex" editable="true" dynamic="false">
     <div class="teaser vert">
         <div class="imageBox">
-            <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
+            <cms-field type="image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
         </div>
         <div class="textBox">
-            <cms-field type="html" toolbar="Text" name="text">Lorem ipsum</cms-field>
+            <cms-field type="html" name="text">Lorem ipsum</cms-field>
         </div>
     </div>
 </cms-template>
 
+<!-- aside parts -->
 <cms-template type="PART" dataType="HTML" name="ImageAside" displayName="Image" usage="aside" editable="true" dynamic="false">
     <div class="aside">
         <h3>
             <cms-field type="text" name="header">Lorem ipsum</cms-field>
         </h3>
         <div class="imageBox">
-            <cms-field type="html" toolbar="Image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
+            <cms-field type="image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
         </div>
     </div>
 </cms-template>
@@ -197,27 +190,18 @@
             <cms-field type="text" name="header">Lorem ipsum</cms-field>
         </h3>
         <div class="textBox">
-            <cms-field type="html" toolbar="Text" name="text">Lorem ipsum</cms-field>
-        </div>
-    </div>
-</cms-template>
-<cms-template type="PART" dataType="HTML" name="HtmlAside" displayName="Html" usage="aside" editable="true" dynamic="false">
-    <div class="aside">
-        <h3>
-            <cms-field type="text" name="header">Lorem ipsum</cms-field>
-        </h3>
-        <div class="textBox">
-            <cms-field type="html" name="text" toolbar="Full">Lorem ipsum</cms-field>
+            <cms-field type="html" name="text">Lorem ipsum</cms-field>
         </div>
     </div>
 </cms-template>
 
+<!-- snippets -->
 <cms-template type="SNIPPET" name="searchBox" displayName="Search Box" usage="SearchBoxModule" editable="false" dynamic="false">
     <div class="searchBox flexItem one">
         <form action="/search.srv" method="post" id="searchboxform" name="searchboxform" accept-charset="UTF-8">
             <input type="hidden" name="act" value="search"/>
-            <input type="text" id="searchPattern" name="searchPattern" title="" value="" maxlength="60"/>
-            <button type="submit"><span class="icn isearch"></span></button>
+            <input id="searchPattern" name="searchPattern" title="" value="" maxlength="60"/>
+            <button><span class="icn isearch"></span></button>
         </form>
     </div>
 </cms-template>

@@ -43,10 +43,13 @@ public enum PageAction implements ITreeAction {
                     treeData = tc.getPage(pageId);
                 }
                 checkObject(treeData);
+                if (pageId==0){
+                    pageId=treeData.getId();
+                    request.setAttribute("pageId", Integer.toString(pageId));
+                }
                 if (!treeData.isAnonymous() && !SessionReader.hasContentRight(request, pageId, Right.READ)) {
                     return forbidden();
                 }
-                request.setAttribute("pageId", Integer.toString(treeData.getId()));
                 int pageVersion = treeData.getVersionForUser(request);
                 if (pageVersion == treeData.getPublishedVersion()) {
                     assert (treeData.isPublishedLoaded());

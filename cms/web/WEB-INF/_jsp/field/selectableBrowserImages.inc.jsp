@@ -15,7 +15,7 @@
 <table class="padded listTable" id="fileTable">
     <thead>
     <tr>
-        <th><%=StringUtil.getHtml("_name", locale)%>
+        <th><%=StringUtil.getHtml("_select", locale)%>
         </th>
         <th><%=StringUtil.getHtml("_preview", locale)%>
         </th>
@@ -30,12 +30,14 @@
     %>
     <tr>
         <td>
-            <a href="#" onclick="<%=callbackLink%>"><%=StringUtil.toHtml(fileData.getDisplayName())%>
+            <a href="#" onclick="<%=callbackLink%>">
+                <img src="/file.srv?act=showPreview&fileId=<%=fileData.getId()%>" border='0' alt="" id="img<%=fileData.getId()%>"/><br>
+                <%=StringUtil.toHtml(fileData.getDisplayName())%>
             </a>
         </td>
         <td>
             <a href="#" onclick="window.open('<%=fileData.getUrl()%>', 'FileViewer', 'width=800,height=600,resizable=yes');return false;">
-                <img src="/file.srv?act=showPreview&fileId=<%=fileData.getId()%>" border='0' alt="" id="img<%=fileData.getId()%>"/>
+                <%=StringUtil.getHtml("_preview", locale)%>
             </a>
         </td>
     </tr>

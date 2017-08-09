@@ -24,27 +24,21 @@
 <script type="text/javascript">
     $("#browserLayer").setLayerHeader("<%=StringUtil.getHtml("_selectLink",locale)%>&nbsp;<span style=\"font-size:80%;\">(<%=StringUtil.getHtml("_selectLinkHint",locale)%>)</span>");
 </script>
-<section class="mainSection flexRow">
-    <section class="contentSection flexItem one">
-        <div class="sectionInner">
-            <h3 class="treeHeader">
-                <%=StringUtil.getHtml("_structure", locale)%>
-            </h3>
-            <ul id="navigation" class="treeRoot">
-                <%TreeHelper.addBrowserSiteNode(pageContext, out, request, tc.getRootSite(), siteId, activeIds, FieldAction.showSelectableBrowserLinks.name(), locale);%>
-            </ul>
-        </div>
-    </section>
-    <aside class="asideSection flexItem one">
-        <div class="sectionInner">
-            <div id="browserView"></div>
-        </div>
-    </aside>
+<section class="selectorMain">
+    <div class="tree">
+        <h3 class="treeHeader">
+            <%=StringUtil.getHtml("_structure", locale)%>
+        </h3>
+        <ul id="browseNavigation" class="treeRoot">
+            <%TreeHelper.addBrowserSiteNode(pageContext, out, request, tc.getRootSite(), siteId, activeIds, FieldAction.showSelectableBrowserLinks.name(), locale);%>
+        </ul>
+    </div>
+    <div id="browserView"></div>
 </section>
 <script type="text/javascript">
     $("#browserView").load('/field.srv?act=showSelectableBrowserLinks&siteId=<%=siteId%>');
-    $("#navigation").treeview({
+    $("#browseNavigation").treeview({
         persist: "location", collapsed: true, unique: false
     });
-    $(".contentSection").initSelectables();
+    $(".tree").initContextMenus();
 </script>

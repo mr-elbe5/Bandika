@@ -39,25 +39,31 @@ public enum FileAction implements ITreeAction {
     show {
             @Override
             public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                FileData data;
+                FileData treeData, data;
                 int fileId = RequestReader.getInt(request, "fileId");
                 TreeCache tc = TreeCache.getInstance();
                 if (fileId == 0) {
                     String url = request.getRequestURI();
-                    data = tc.getFile(url);
+                    treeData = tc.getFile(url);
                 } else {
-                    data = tc.getFile(fileId);
+                    treeData = tc.getFile(fileId);
                 }
-                checkObject(data);
-                request.setAttribute("fileId", Integer.toString(data.getId()));
-                int fileVersion = data.getVersionForUser(request);
-                if (fileVersion == data.getPublishedVersion()) {
-                    assert(data.isPublishedLoaded());
+                checkObject(treeData);
+                if (fileId==0){
+                    fileId=treeData.getId();
+                    request.setAttribute("fileId", Integer.toString(fileId));
+                }
+                if (!treeData.isAnonymous() && !SessionReader.hasContentRight(request, fileId, Right.READ)) {
+                    return false;
+                }
+                int fileVersion = treeData.getVersionForUser(request);
+                if (fileVersion == treeData.getPublishedVersion()) {
+                    assert (treeData.isPublishedLoaded());
+                    data=treeData;
                 } else {
                     data = FileBean.getInstance().getFile(fileId, fileVersion, false);
-                }
-                if (!data.isAnonymous() && !SessionReader.hasContentRight(request, fileId, Right.READ)) {
-                    return false;
+                    data.setPath(treeData.getPath());
+                    data.setParentIds(treeData.getParentIds());
                 }
                 BinaryFileStreamData streamData = FileBean.getInstance().getBinaryFileStreamData(data.getId(), fileVersion);
                 return streamData != null && sendBinaryFileResponse(request, response, streamData);

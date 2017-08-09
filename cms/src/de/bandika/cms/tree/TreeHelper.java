@@ -243,7 +243,7 @@ public class TreeHelper {
             writer.write("</div>");
             if (data.getDraftVersion() != 0 && SessionReader.hasContentRight(request, data.getId(), Right.APPROVE)) {
                 writer.write("<div class=\"icn ipublish\" onclick=\"return linkToTree('");
-                writer.write(StringUtil.toJs("/pageadmin.srv?act=publishPage&fromAdmin=true&pageId=" + data.getId()));
+                writer.write(StringUtil.toJs("/pageedit.srv?act=publishPage&fromAdmin=true&pageId=" + data.getId()));
                 writer.write("');\">");
                 writer.write(StringUtil.getHtml("_publish", locale));
                 writer.write("</div>");

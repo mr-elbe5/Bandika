@@ -70,6 +70,7 @@ public class CmsInitializer extends Initializer {
             UserAction.initialize();
             // cms fields
             Fields.registerFieldType(HtmlField.FIELDTYPE_HTML, HtmlField.class);
+            Fields.registerFieldType(ImageField.FIELDTYPE_IMAGE, ImageField.class);
             Fields.registerFieldType(TextField.FIELDTYPE_TEXT, TextField.class);
             Fields.registerFieldType(ScriptField.FIELDTYPE_SCRIPT, ScriptField.class);
             TemplateControls.addPageControlClass(MainMenuControl.KEY, MainMenuControl.class);

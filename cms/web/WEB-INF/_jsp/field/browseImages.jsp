@@ -24,30 +24,24 @@
 <script type="text/javascript">
     $("#browserLayer").setLayerHeader("<%=StringUtil.getHtml("_selectImage",locale)%>&nbsp;<span style=\"font-size:80%;\">(<%=StringUtil.getHtml("_selectImageHint",locale)%>)</span>");
 </script>
-<section class="mainSection flexRow">
-    <section class="contentSection flexItem one">
-        <div class="sectionInner">
-            <div class="icn iimage clickable" onclick="$('#browserView').load('/field.srv?act=showSelectableBrowserImages')"><%=StringUtil.getHtml("_all", locale)%>
-                <br>
-            </div>
-            <h3 class="treeHeader">
-                <%=StringUtil.getHtml("_structure", locale)%>
-            </h3>
-            <ul id="browseNavigation" class="treeRoot">
-                <%TreeHelper.addBrowserSiteNode(pageContext, out, request, tc.getRootSite(), siteId, activeIds, FieldAction.showSelectableBrowserImages.name(), locale);%>
-            </ul>
+<section class="selectorMain">
+    <div class="tree">
+        <div class="icn iimage clickable" onclick="$('#browserView').load('/field.srv?act=showSelectableBrowserImages')"><%=StringUtil.getHtml("_all", locale)%>
+            <br>
         </div>
-    </section>
-    <aside class="asideSection flexItem one">
-        <div class="sectionInner">
-            <div id="browserView"></div>
-        </div>
-    </aside>
+        <h3 class="treeHeader">
+            <%=StringUtil.getHtml("_structure", locale)%>
+        </h3>
+        <ul id="browseNavigation" class="treeRoot">
+            <%TreeHelper.addBrowserSiteNode(pageContext, out, request, tc.getRootSite(), siteId, activeIds, FieldAction.showSelectableBrowserImages.name(), locale);%>
+        </ul>
+    </div>
+    <div id="browserView"></div>
 </section>
 <script type="text/javascript">
     $("#browserView").load('/field.srv?act=showSelectableBrowserImages&siteId=<%=siteId%>');
     $("#browseNavigation").treeview({
         persist: "location", collapsed: true, unique: false
     });
-    $(".contentSection").initContextMenus();
+    $(".tree").initContextMenus();
 </script>

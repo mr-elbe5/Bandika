@@ -8,16 +8,13 @@
  */
 package de.bandika.cms.field;
 
-import de.bandika.base.search.HtmlStripper;
-import java.text.ParseException;
+public class ImageField extends HtmlBaseField {
 
-public class HtmlField extends HtmlBaseField {
-
-    public static String FIELDTYPE_HTML = "html";
+    public static String FIELDTYPE_IMAGE = "image";
 
     @Override
     public String getFieldType() {
-        return FIELDTYPE_HTML;
+        return FIELDTYPE_IMAGE;
     }
 
     protected String html = "";
@@ -29,20 +26,12 @@ public class HtmlField extends HtmlBaseField {
         return "<div class=\"ckeditField\" id=\"%s\" contenteditable=\"true\">%s</div>" +
             "<input type=\"hidden\" name=\"%s\" value=\"%s\" />" +
             "<script type=\"text/javascript\">$('#%s').ckeditor({" +
-            "toolbar : 'Full'," +
+            "toolbar : 'Image'," +
             "filebrowserBrowseUrl : '/field.srv?act=openLinkBrowser&siteId=%s&pageId=%s'," +
             "filebrowserImageBrowseUrl : '/field.srv?act=openImageBrowser&siteId=%s&pageId=%s'" +
             "});" +
             "</script>";
     }
 
-    /******************* search part *********************************/
-
-    public void appendSearchText(StringBuilder sb) {
-        try {
-            sb.append(" ").append(HtmlStripper.stripHtml(html));
-        } catch (ParseException ignore) {
-        }
-    }
 
 }
