@@ -102,6 +102,14 @@ nav li { list-style: none; }
 
 .white { background: #ffffff; }
 
+.topSpace { padding-top: 5px; }
+
+.topDoubleSpace { padding-top: 10px; }
+
+.bottomSpace { padding-bottom: 10px; }
+
+.bottomDoubleSpace { padding-bottom: 10px; }
+
 @font-face { font-family: "LigatureSymbols"; src: url('/_statics/fonts/LigatureSymbols-2.11.eot?1490902855'); src: url('/_statics/fonts/LigatureSymbols-2.11.eot?&1490902855#iefix') format('embedded-opentype'), url('/_statics/fonts/LigatureSymbols-2.11.eot?1490902855') format('embedded-opentype'), url('/_statics/fonts/LigatureSymbols-2.11.woff?1490902855') format('woff'), url('/_statics/fonts/LigatureSymbols-2.11.ttf?1490902855') format('truetype'), url('/_statics/fonts/LigatureSymbols-2.11.svg?1490902855') format('svg'); font-weight: normal; font-style: normal; }
 .icn:before { font-family: 'LigatureSymbols', fantasy; -webkit-text-rendering: optimizeLegibility; -moz-text-rendering: optimizeLegibility; -ms-text-rendering: optimizeLegibility; -o-text-rendering: optimizeLegibility; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-font-smoothing: antialiased; -ms-font-smoothing: antialiased; -o-font-smoothing: antialiased; font-smoothing: antialiased; margin-right: 0.3em; font-size: 130%; color: #aaaaaa; }
 
