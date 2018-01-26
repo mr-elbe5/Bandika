@@ -219,7 +219,7 @@ public abstract class Action {
     }
 
     protected boolean showHome(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return sendRedirect(request, response, "/protected.srv");
+        return sendRedirect(request, response, "/default.srv");
     }
 
     protected boolean sendRedirect(HttpServletRequest request, HttpServletResponse response, String url) {

@@ -9,7 +9,7 @@
 <%@ page import="de.bandika.cms.application.InstallerAction" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <form action="/installer.srv" method="post" name="form" accept-charset="UTF-8">
-    <input type="hidden" name="act" value="<%=InstallerAction.setSystemPassword.name()%>"/>
+    <input type="hidden" name="act" value="<%=InstallerAction.setSystemPassword%>"/>
     <fieldset>
         <legend><%=StringUtil.getHtml("_installation")%>
         </legend>

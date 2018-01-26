@@ -10,7 +10,7 @@
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.webbase.servlet.RequestReader" %>
 <form action="/installer.srv" method="post" name="form" accept-charset="UTF-8">
-    <input type="hidden" name="act" value="<%=InstallerAction.setDatabaseConfiguration.name()%>"/>
+    <input type="hidden" name="act" value="<%=InstallerAction.setDatabaseConfiguration%>"/>
     <fieldset>
         <legend><%=StringUtil.getHtml("_installation")%>
         </legend>
