@@ -44,8 +44,8 @@ public abstract class WebServlet extends HttpServlet {
             String actionKey = getActionKey(request);
             if (actionKey != null) {
                 String actionName = RequestReader.getString(request, RequestStatics.PARAM_ACTION);
-                IAction action = ActionDispatcher.getAction(actionKey, actionName);
-                if (action != null && action.execute(request, response)) {
+                Action action = ActionDispatcher.getAction(actionKey);
+                if (action != null && action.execute(request, response, actionName)) {
                     int responseType = action.getResponseType(request);
                     if (responseType == RequestStatics.RESPONSE_TYPE_FORWARD) {
                         String forwardUrl = action.getForwardUrl(request);

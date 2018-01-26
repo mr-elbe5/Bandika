@@ -17,77 +17,61 @@ import de.bandika.webbase.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public enum LoginAction implements IAction {
-    /**
-     * redirects to login
-     */
-    defaultAction {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            return LoginAction.login.execute(request, response);
+public class LoginAction extends Action {
+
+    public static final String openLogin="openLogin";
+    public static final String login="login";
+    public static final String showCaptcha="showCaptcha";
+    public static final String logout="logout";
+
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+        switch (actionName) {
+            case openLogin: {
+                return showLogin(request, response);
+            }
+            case login: {
+                if (!RequestReader.isPostback(request)) {
+                    return badRequest();
+                }
+                String login = RequestReader.getString(request, "login");
+                String pwd = RequestReader.getString(request, "password");
+                if (login.length() == 0 || pwd.length() == 0) {
+                    RequestError.setError(request, new RequestError(StringUtil.getString("_notComplete", SessionReader.getSessionLocale(request))));
+                    return new LoginAction().execute(request, response, openLogin);
+                }
+                LoginBean ts = LoginBean.getInstance();
+                UserLoginData data = ts.loginUser(login, pwd);
+                if (data == null) {
+                    RequestError.setError(request, new RequestError(StringUtil.getString("_badLogin", SessionReader.getSessionLocale(request))));
+                    return new LoginAction().execute(request, response, openLogin);
+                }
+                SessionWriter.setSessionLoginData(request, data);
+                data.checkRights();
+                SessionWriter.setSessionLocale(request);
+                return showHome(request, response);
+            }
+            case showCaptcha: {
+                String captcha = (String) getSessionObject(request, "captcha");
+                BinaryFileData data = UserSecurity.getCaptcha(captcha);
+                assert data != null;
+                return sendBinaryResponse(request, response, data.getFileName(), data.getContentType(), data.getBytes());
+            }
+            case logout: {
+                SessionWriter.setSessionLoginData(request, null);
+                SessionWriter.resetSession(request);
+                RequestWriter.setMessageKey(request, "_loggedOut");
+                return showHome(request, response);
+            }
+            default: {
+                return new LoginAction().execute(request, response, login);
+            }
         }
-    }, /**
-     * open login page
-     */
-    openLogin {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    return showLogin(request, response);
-                }
-            }, /**
-     * executes login for user
-     */
-    login {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    if (!RequestReader.isPostback(request)) {
-                        return badRequest();
-                    }
-                    String login = RequestReader.getString(request, "login");
-                    String pwd = RequestReader.getString(request, "password");
-                    if (login.length() == 0 || pwd.length() == 0) {
-                        RequestError.setError(request, new RequestError(StringUtil.getString("_notComplete", SessionReader.getSessionLocale(request))));
-                        return LoginAction.openLogin.execute(request, response);
-                    }
-                    LoginBean ts = LoginBean.getInstance();
-                    UserLoginData data = ts.loginUser(login, pwd);
-                    if (data == null) {
-                        RequestError.setError(request, new RequestError(StringUtil.getString("_badLogin", SessionReader.getSessionLocale(request))));
-                        return LoginAction.openLogin.execute(request, response);
-                    }
-                    SessionWriter.setSessionLoginData(request, data);
-                    data.checkRights();
-                    SessionWriter.setSessionLocale(request);
-                    return showHome(request, response);
-                }
-            }, /**
-     * shows captcha image for login, registration and others
-     */
-    showCaptcha {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    String captcha = (String) getSessionObject(request, "captcha");
-                    BinaryFileData data = UserSecurity.getCaptcha(captcha);
-                    assert data != null;
-                    return sendBinaryResponse(request, response, data.getFileName(), data.getContentType(), data.getBytes());
-                }
-            }, /**
-     * executes a logout for a user
-     */
-    logout {
-                @Override
-                public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-                    SessionWriter.setSessionLoginData(request, null);
-                    SessionWriter.resetSession(request);
-                    RequestWriter.setMessageKey(request, "_loggedOut");
-                    return showHome(request, response);
-                }
-            };
+    }
 
     public static final String KEY = "login";
 
     public static void initialize() {
-        ActionDispatcher.addClass(KEY, LoginAction.class);
+        ActionDispatcher.addAction(KEY, new LoginAction());
     }
 
     @Override

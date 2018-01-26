@@ -12,7 +12,7 @@ import de.bandika.cms.file.FileBean;
 import de.bandika.cms.file.FileData;
 import de.bandika.cms.page.CkCallbackData;
 import de.bandika.cms.site.SiteData;
-import de.bandika.cms.tree.ITreeAction;
+import de.bandika.cms.tree.BaseTreeAction;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.servlet.*;
@@ -20,40 +20,32 @@ import de.bandika.webbase.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public enum FieldAction implements ITreeAction {
-    /**
-     * no action
-     */
-    defaultAction {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            return forbidden();
-        }
-    },
-    // browser actions used for ckeditor and direct selection
-    /**
-     * opens tree browser in window for selecting a link
-     */
-    openLinkBrowser {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            int pageId = RequestReader.getInt(request, "pageId");
-            if (!hasContentRight(request, pageId, Right.EDIT))
-                return false;
-            int siteId = RequestReader.getInt(request, "siteId");
-            CkCallbackData browseData = new CkCallbackData();
-            browseData.setPageId(pageId);
-            browseData.setCkCallbackNum(RequestReader.getInt(request, "CKEditorFuncNum", -1));
-            browseData.setSiteId(siteId);
-            SessionWriter.setSessionObject(request, "browseData", browseData);
-            return showLinkBrowserJsp(request, response);
-        }
-    }, /**
-     * shows links of a certain site in the tree browser window
-     */
-    showSelectableBrowserLinks {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+public class FieldAction extends BaseTreeAction {
+
+    public static final String openLinkBrowser="openLinkBrowser";
+    public static final String showSelectableBrowserLinks="showSelectableBrowserLinks";
+    public static final String openImageBrowser="openImageBrowser";
+    public static final String reopenImageBrowser="reopenImageBrowser";
+    public static final String showSelectableBrowserImages="showSelectableBrowserImages";
+    public static final String openCreateImageInBrowser="openCreateImageInBrowser";
+    public static final String saveImageInBrowser="saveImageInBrowser";
+
+
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+        switch (actionName) {
+            case openLinkBrowser: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                int siteId = RequestReader.getInt(request, "siteId");
+                CkCallbackData browseData = new CkCallbackData();
+                browseData.setPageId(pageId);
+                browseData.setCkCallbackNum(RequestReader.getInt(request, "CKEditorFuncNum", -1));
+                browseData.setSiteId(siteId);
+                SessionWriter.setSessionObject(request, "browseData", browseData);
+                return showLinkBrowserJsp(request, response);
+            }
+            case showSelectableBrowserLinks: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -62,12 +54,7 @@ public enum FieldAction implements ITreeAction {
                 browseData.setSiteId(RequestReader.getInt(request, "siteId"));
                 return showSelectableBrowserLinksJsp(request, response);
             }
-        }, /**
-     * opens tree browser in window for selecting an image
-     */
-    openImageBrowser {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openImageBrowser: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -79,23 +66,13 @@ public enum FieldAction implements ITreeAction {
                 SessionWriter.setSessionObject(request, "browseData", browseData);
                 return showImageBrowserJsp(request, response);
             }
-        }, /**
-     * refreshes the image tree browser window
-     */
-    reopenImageBrowser {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case reopenImageBrowser: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
                 return showImageBrowserJsp(request, response);
             }
-        }, /**
-     * shows images of a certain site in the tree browser window
-     */
-    showSelectableBrowserImages {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case showSelectableBrowserImages: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -104,12 +81,7 @@ public enum FieldAction implements ITreeAction {
                 browseData.setSiteId(RequestReader.getInt(request, "siteId"));
                 return showSelectableBrowserImagesJsp(request, response);
             }
-        }, /**
-     * opens dialog for creating a new image in the tree browser window
-     */
-    openCreateImageInBrowser {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openCreateImageInBrowser: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -117,12 +89,7 @@ public enum FieldAction implements ITreeAction {
                     return false;
                 return showCreateImageInBrowserJsp(request, response);
             }
-        }, /**
-     * saves a new image in the tree browser window
-     */
-    saveImageInBrowser {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case saveImageInBrowser: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -151,14 +118,18 @@ public enum FieldAction implements ITreeAction {
                 data.setPublished(true);
                 ts.createFile(data);
                 TreeCache.getInstance().setDirty();
-                return closeLayer(request, response, "closeLayerToBrowserLayer('/field.srv?act=reopenImageBrowser&siteId=" + parentId + "&" + RequestStatics.KEY_MESSAGEKEY + "=_fileCreated');");
+                return closeLayer(request, response, "closeLayerToBrowserLayer('/field.srv?act="+reopenImageBrowser+"&siteId=" + parentId + "&" + RequestStatics.KEY_MESSAGEKEY + "=_fileCreated');");
             }
-        };
+            default: {
+                return forbidden();
+            }
+        }
+    }
 
     public static final String KEY = "field";
 
     public static void initialize() {
-        ActionDispatcher.addClass(KEY, FieldAction.class);
+        ActionDispatcher.addAction(KEY, new FieldAction());
     }
 
     @Override

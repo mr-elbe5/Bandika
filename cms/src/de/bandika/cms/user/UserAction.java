@@ -14,7 +14,7 @@ import de.bandika.base.data.Locales;
 import de.bandika.base.mail.Mailer;
 import de.bandika.base.util.StringUtil;
 import de.bandika.cms.configuration.Configuration;
-import de.bandika.cms.servlet.ICmsAction;
+import de.bandika.cms.servlet.CmsAction;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.RightsCache;
 import de.bandika.webbase.rights.SystemZone;
@@ -26,51 +26,45 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 
-public enum UserAction implements ICmsAction {
-    /**
-     * redirects to login
-     */
-    defaultAction {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            return LoginAction.login.execute(request, response);
-        }
-    }, /**
-     * changes the current language branch and locale
-     */
-    changeLocale {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+public class UserAction extends CmsAction {
+
+    public static final String changeLocale="changeLocale";
+    public static final String openProfile="openProfile";
+    public static final String openChangePassword="openChangePassword";
+    public static final String changePassword="changePassword";
+    public static final String openChangeProfile="openChangeProfile";
+    public static final String changeProfile="changeProfile";
+    public static final String showUserDetails="showUserDetails";
+    public static final String openEditUser="openEditUser";
+    public static final String openCreateUser="openCreateUser";
+    public static final String saveUser="saveUser";
+    public static final String openDeleteUser="openDeleteUser";
+    public static final String deleteUser="deleteUser";
+    public static final String openEditUsers="openEditUsers";
+    public static final String openRegisterUser="openRegisterUser";
+    public static final String registerUser="registerUser";
+    public static final String openApproveRegistration="openApproveRegistration";
+    public static final String approveRegistration="approveRegistration";
+    public static final String showPortrait="showPortrait";
+
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+        switch (actionName) {
+            case changeLocale: {
                 String language = RequestReader.getString(request, "language");
                 Locale locale = new Locale(language);
                 SessionWriter.setSessionLocale(request, locale);
                 String home = Locales.getInstance().getLocaleRoot(SessionReader.getSessionLocale(request));
                 return sendRedirect(request, response, home);
             }
-        }, /**
-     * opens the user's profile page
-     */
-    openProfile {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openProfile: {
                 if (!SessionReader.isLoggedIn(request))
                     return false;
                 return showProfile(request, response);
             }
-        }, /**
-     * opens page for editing the user's profile
-     */
-    openChangePassword {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openChangePassword: {
                 return SessionReader.isLoggedIn(request) && showChangePassword(request, response);
             }
-        }, /**
-     * saves the user's password to database
-     */
-    changePassword {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case changePassword: {
                 if (!SessionReader.isLoggedIn(request) || SessionReader.getLoginId(request) != RequestReader.getInt(request, "userId"))
                     return false;
                 UserData user = UserBean.getInstance().getUser(SessionReader.getSessionLoginData(request).getId());
@@ -96,20 +90,10 @@ public enum UserAction implements ICmsAction {
                 RequestWriter.setMessageKey(request, "_passwordChanged");
                 return closeLayerToUrl(request, response, "/user.srv?act=openProfile", "_passwordChanged");
             }
-        }, /**
-     * opens page for editing the user's profile
-     */
-    openChangeProfile {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openChangeProfile: {
                 return SessionReader.isLoggedIn(request) && showChangeProfile(request, response);
             }
-        }, /**
-     * saves the user's profile to database
-     */
-    changeProfile {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case changeProfile: {
                 if (!SessionReader.isLoggedIn(request) || SessionReader.getLoginId(request) != RequestReader.getInt(request, "userId"))
                     return false;
                 int userId=SessionReader.getSessionLoginData(request).getId();
@@ -126,20 +110,10 @@ public enum UserAction implements ICmsAction {
                 RequestWriter.setMessageKey(request, "_profileChanged");
                 return closeLayerToUrl(request, response, "/user.srv?act=openProfile", "_profileChanged");
             }
-        }, /**
-     * shows user properties
-     */
-    showUserDetails {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case showUserDetails: {
                 return hasSystemRight(request, SystemZone.USER, Right.EDIT) && showUserDetails(request, response);
             }
-        }, /**
-     * open dialog for editing user settings
-     */
-    openEditUser {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openEditUser: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 int userId = RequestReader.getInt(request, "userId");
@@ -148,12 +122,7 @@ public enum UserAction implements ICmsAction {
                 SessionWriter.setSessionObject(request, "userData", data);
                 return showEditUser(request, response);
             }
-        }, /**
-     * open dialog for creating new user data
-     */
-    openCreateUser {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openCreateUser: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 UserData data = new UserData();
@@ -163,12 +132,7 @@ public enum UserAction implements ICmsAction {
                 SessionWriter.setSessionObject(request, "userData", data);
                 return showEditUser(request, response);
             }
-        }, /**
-     * saves user data to database
-     */
-    saveUser {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case saveUser: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 UserData data = (UserData) getSessionObject(request, "userData");
@@ -184,12 +148,7 @@ public enum UserAction implements ICmsAction {
                 }
                 return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&userId=" + data.getId(), "_userSaved");
             }
-        }, /**
-     * opens dialog for deleting a user
-     */
-    openDeleteUser {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openDeleteUser: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 int id = RequestReader.getInt(request, "userId");
@@ -201,12 +160,7 @@ public enum UserAction implements ICmsAction {
                 }
                 return showDeleteUser(request, response);
             }
-        }, /**
-     * deletes a user from database
-     */
-    deleteUser {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case deleteUser: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 int id = RequestReader.getInt(request, "userId");
@@ -217,12 +171,7 @@ public enum UserAction implements ICmsAction {
                 }
                 return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_usersDeleted");
             }
-        }, /**
-     * open dialog for editing users
-     */
-    openEditUsers {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openEditUsers: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 UserData data = new UserData();
@@ -232,12 +181,7 @@ public enum UserAction implements ICmsAction {
                 SessionWriter.setSessionObject(request, "userData", data);
                 return showEditUsers(request, response);
             }
-        }, /**
-     * opens user page for a registration request
-     */
-    openRegisterUser {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openRegisterUser: {
                 UserData data = new UserData();
                 data.setId(LoginBean.getInstance().getNextId());
                 data.setNew(true);
@@ -245,12 +189,7 @@ public enum UserAction implements ICmsAction {
                 SessionWriter.setSessionObject(request, "captcha", UserSecurity.generateCaptchaString());
                 return showRegisterUser(request, response);
             }
-        }, /**
-     * saves a registration request for user in database
-     */
-    registerUser {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case registerUser: {
                 UserData data = (UserData) getSessionObject(request, "userData");
                 String captcha = (String) getSessionObject(request, "captcha");
                 if (captcha == null || captcha.isEmpty()) {
@@ -309,22 +248,12 @@ public enum UserAction implements ICmsAction {
                 request.setAttribute("userData", data);
                 return showUserRegistered(request, response);
             }
-        }, /**
-     * shows dialog for approving a registration request
-     */
-    openApproveRegistration {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openApproveRegistration: {
                 UserData data = new UserData();
                 SessionWriter.setSessionObject(request, "userData", data);
                 return showApproveRegistration(request, response);
             }
-        }, /**
-     * approves the registration for a user
-     */
-    approveRegistration {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case approveRegistration: {
                 getSessionObject(request, "userData");
                 String login = RequestReader.getString(request, "login");
                 String approvalCode = RequestReader.getString(request, "approvalCode");
@@ -351,23 +280,21 @@ public enum UserAction implements ICmsAction {
                 LoginBean.getInstance().saveLogin(registeredUser);
                 return showRegistrationApproved(request, response);
             }
-        }, /**
-     * +     * show user portrait
-     * +
-     */
-    showPortrait {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case showPortrait: {
                 int userId = RequestReader.getInt(request, "userId");
                 BinaryFileData file = UserBean.getInstance().getBinaryPortraitData(userId);
                 return file != null && sendBinaryResponse(request, response, file.getFileName(), file.getContentType(), file.getBytes());
             }
-        };
+            default: {
+                return new LoginAction().execute(request, response, LoginAction.login);
+            }
+        }
+    }
 
     public static final String KEY = "user";
 
     public static void initialize() {
-        ActionDispatcher.addClass(KEY, UserAction.class);
+        ActionDispatcher.addAction(KEY, new UserAction());
     }
 
     @Override

@@ -10,28 +10,29 @@ package de.bandika.webbase.application;
 
 import de.bandika.base.data.Locales;
 import de.bandika.webbase.servlet.ActionDispatcher;
-import de.bandika.webbase.servlet.IAction;
+import de.bandika.webbase.servlet.Action;
 import de.bandika.webbase.servlet.RequestReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public enum DefaultAction implements IAction {
-    /**
-     * opens currently configured home page
-     */
-    defaultAction {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            String home = Locales.getInstance().getLocaleRoot(RequestReader.getSessionLocale(request));
-            return sendRedirect(request, response, home);
+public class DefaultAction extends Action {
+
+    public static final String test="test";
+
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+        switch (actionName) {
+            default: {
+                String home = Locales.getInstance().getLocaleRoot(RequestReader.getSessionLocale(request));
+                return sendRedirect(request, response, home);
+            }
         }
-    };
+    }
 
     public static final String KEY = "default";
 
     public static void initialize() {
-        ActionDispatcher.addClass(KEY, DefaultAction.class);
+        ActionDispatcher.addAction(KEY, new DefaultAction());
     }
 
     @Override

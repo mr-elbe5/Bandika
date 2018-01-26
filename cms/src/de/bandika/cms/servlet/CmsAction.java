@@ -10,28 +10,28 @@ package de.bandika.cms.servlet;
 
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.SystemZone;
-import de.bandika.webbase.servlet.IAction;
+import de.bandika.webbase.servlet.Action;
 import de.bandika.webbase.servlet.RequestStatics;
 import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public interface ICmsAction extends IAction {
+public abstract class CmsAction extends Action {
 
-    default boolean hasSystemRight(HttpServletRequest request, SystemZone zone, Right right) throws Exception {
+    protected boolean hasSystemRight(HttpServletRequest request, SystemZone zone, Right right) throws Exception {
         return SessionReader.hasSystemRight(request, zone, right) || forbidden();
     }
 
-    default boolean hasContentRight(HttpServletRequest request, int id, Right right) throws Exception {
+    protected boolean hasContentRight(HttpServletRequest request, int id, Right right) throws Exception {
         return SessionReader.hasContentRight(request, id, right) || forbidden();
     }
 
-    default boolean hasAnyContentRight(HttpServletRequest request) throws Exception {
+    protected boolean hasAnyContentRight(HttpServletRequest request) throws Exception {
         return SessionReader.hasAnyContentRight(request) || forbidden();
     }
 
-    default boolean setJspResponse(HttpServletRequest request, HttpServletResponse response, String jsp) {
+    protected boolean setJspResponse(HttpServletRequest request, HttpServletResponse response, String jsp) {
         request.setAttribute(RequestStatics.KEY_JSP, jsp);
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/page.jsp");
     }

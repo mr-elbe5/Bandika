@@ -8,7 +8,7 @@
  */
 package de.bandika.cms.timer;
 
-import de.bandika.cms.servlet.ICmsAction;
+import de.bandika.cms.servlet.CmsAction;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.SystemZone;
 import de.bandika.webbase.servlet.ActionDispatcher;
@@ -18,31 +18,20 @@ import de.bandika.webbase.servlet.SessionWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public enum TimerAction implements ICmsAction {
-    /**
-     * no action
-     */
-    defaultAction {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            return forbidden();
-        }
-    }, /**
-     * show timer task settings
-     */
-    showTimerTaskDetails {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+public class TimerAction extends CmsAction {
+
+    public static final String showTimerTaskDetails="showTimerTaskDetails";
+    public static final String openEditTimerTask="openEditTimerTask";
+    public static final String saveTimerTask="saveTimerTask";
+
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+        switch (actionName) {
+            case showTimerTaskDetails: {
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
                     return false;
                 return showTimerTaskDetails(request, response);
             }
-        }, /**
-     * opens dialog for editing timer task settings
-     */
-    openEditTimerTask {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openEditTimerTask: {
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
                     return false;
                 String name = RequestReader.getString(request, "timerName");
@@ -50,12 +39,7 @@ public enum TimerAction implements ICmsAction {
                 SessionWriter.setSessionObject(request, "timerTaskData", task);
                 return showEditTimerTask(request, response);
             }
-        }, /**
-     * saves timer task settings to database
-     */
-    saveTimerTask {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case saveTimerTask: {
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
                     return false;
                 TimerTask task = (TimerTask) getSessionObject(request, "timerTaskData");
@@ -68,12 +52,16 @@ public enum TimerAction implements ICmsAction {
                 TimerController.getInstance().loadTask(task.getName());
                 return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&timerName=" + task.getName(), "_taskSaved");
             }
-        };
+            default: {
+                return forbidden();
+            }
+        }
+    }
 
     public static final String KEY = "timer";
 
     public static void initialize() {
-        ActionDispatcher.addClass(KEY, TimerAction.class);
+        ActionDispatcher.addAction(KEY, new TimerAction());
     }
 
     @Override

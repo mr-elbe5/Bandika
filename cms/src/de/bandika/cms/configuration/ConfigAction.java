@@ -12,7 +12,7 @@ import de.bandika.base.cache.DataCache;
 import de.bandika.base.cache.FileCache;
 import de.bandika.base.mail.Mailer;
 import de.bandika.cms.application.AdminAction;
-import de.bandika.cms.servlet.ICmsAction;
+import de.bandika.cms.servlet.CmsAction;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.SystemZone;
 import de.bandika.webbase.servlet.*;
@@ -21,31 +21,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 
-public enum ConfigAction implements ICmsAction {
-    /**
-     * no action
-     */
-    defaultAction {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            return forbidden();
-        }
-    }, /**
-     * shows configuration details
-     */
-    showConfigurationDetails {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+public class ConfigAction extends CmsAction {
+
+    public static final String showConfigurationDetails="showConfigurationDetails";
+    public static final String openEditConfiguration="openEditConfiguration";
+    public static final String saveConfiguration="saveConfiguration";
+    public static final String showDataCacheDetails="showDataCacheDetails";
+    public static final String showFileCacheDetails="showFileCacheDetails";
+    public static final String clearDataCache="clearDataCache";
+    public static final String clearFileCache="clearFileCache";
+
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+        switch (actionName){
+            case showConfigurationDetails:{
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
                     return false;
                 return showConfigurationDetails(request, response);
             }
-        }, /**
-     * opens configuration for editing
-     */
-    openEditConfiguration {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openEditConfiguration:{
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
                     return false;
                 Configuration config = null;
@@ -57,16 +50,11 @@ public enum ConfigAction implements ICmsAction {
                 SessionWriter.setSessionObject(request, "config", config);
                 return showEditConfiguration(request, response);
             }
-        }, /**
-     * saves configuration and reloads it
-     */
-    saveConfiguration {
-            @Override
-            @SuppressWarnings("unchecked")
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case saveConfiguration:{
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
                     return false;
                 Configuration config = (Configuration) SessionReader.getSessionObject(request, "config");
+                assert(config!=null);
                 if (!readConfigRequestData(config, request)) {
                     return showEditConfiguration(request, response);
                 }
@@ -76,47 +64,19 @@ public enum ConfigAction implements ICmsAction {
                 }
                 SessionWriter.removeSessionObject(request, "config");
                 Configuration.getInstance().loadAppConfiguration(config);
-                return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_configurationSaved");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+AdminAction.openAdministration, "_configurationSaved");
             }
-
-            public boolean readConfigRequestData(Configuration config, HttpServletRequest request) {
-                config.setDefaultLocale(new Locale(RequestReader.getString(request, "defaultLocale")));
-                config.setSmtpHost(RequestReader.getString(request, "smtpHost"));
-                config.setSmtpPort(RequestReader.getInt(request, "smtpPort"));
-                config.setSmtpConnectionType(Mailer.SmtpConnectionType.valueOf(RequestReader.getString(request, "smtpConnectionType")));
-                config.setSmtpUser(RequestReader.getString(request, "smtpUser"));
-                config.setSmtpPassword(RequestReader.getString(request, "smtpPassword"));
-                config.setMailSender(RequestReader.getString(request, "mailSender"));
-                config.setTimerInterval(RequestReader.getInt(request, "timerInterval"));
-                config.setMaxVersions(RequestReader.getInt(request, "maxVersions"));
-                return config.isComplete();
-            }
-        }, /**
-     * shows data cache properties
-     */
-    showDataCacheDetails {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case showDataCacheDetails:{
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
                     return false;
                 return showDataCacheDetails(request, response);
             }
-        }, /**
-     * shows file cache properties
-     */
-    showFileCacheDetails {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case showFileCacheDetails:{
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
                     return false;
                 return showFileCacheDetails(request, response);
             }
-        }, /**
-     * empties a data cache
-     */
-    clearDataCache {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case clearDataCache:{
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
                     return false;
                 String name = RequestReader.getString(request, "cacheName");
@@ -126,14 +86,9 @@ public enum ConfigAction implements ICmsAction {
                     cache.checkDirty();
                 }
                 RequestWriter.setMessageKey(request, "_cacheCleared");
-                return AdminAction.openAdministration.execute(request, response);
+                return AdminAction.instance.execute(request, response, AdminAction.openAdministration);
             }
-        },/**
-     * empties a file cache
-     */
-    clearFileCache {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case clearFileCache:{
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
                     return false;
                 String name = RequestReader.getString(request, "cacheName");
@@ -143,14 +98,19 @@ public enum ConfigAction implements ICmsAction {
                     cache.checkDirty();
                 }
                 RequestWriter.setMessageKey(request, "_cacheCleared");
-                return AdminAction.openAdministration.execute(request, response);
+                return AdminAction.instance.execute(request, response, AdminAction.openAdministration);
             }
-        };
+            default:{
+                return forbidden();
+            }
+        }
+
+    }
 
     public static final String KEY = "config";
 
     public static void initialize() {
-        ActionDispatcher.addClass(KEY, ConfigAction.class);
+        ActionDispatcher.addAction(KEY, new ConfigAction());
     }
 
     @Override
@@ -172,6 +132,19 @@ public enum ConfigAction implements ICmsAction {
 
     protected boolean showFileCacheDetails(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/configuration/fileCacheDetails.ajax.jsp");
+    }
+
+    private boolean readConfigRequestData(Configuration config, HttpServletRequest request) {
+        config.setDefaultLocale(new Locale(RequestReader.getString(request, "defaultLocale")));
+        config.setSmtpHost(RequestReader.getString(request, "smtpHost"));
+        config.setSmtpPort(RequestReader.getInt(request, "smtpPort"));
+        config.setSmtpConnectionType(Mailer.SmtpConnectionType.valueOf(RequestReader.getString(request, "smtpConnectionType")));
+        config.setSmtpUser(RequestReader.getString(request, "smtpUser"));
+        config.setSmtpPassword(RequestReader.getString(request, "smtpPassword"));
+        config.setMailSender(RequestReader.getString(request, "mailSender"));
+        config.setTimerInterval(RequestReader.getInt(request, "timerInterval"));
+        config.setMaxVersions(RequestReader.getInt(request, "maxVersions"));
+        return config.isComplete();
     }
 
 }

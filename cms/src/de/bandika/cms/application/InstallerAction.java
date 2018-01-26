@@ -10,7 +10,7 @@ package de.bandika.cms.application;
 
 import de.bandika.webbase.application.Initializer;
 import de.bandika.base.util.StringUtil;
-import de.bandika.cms.servlet.ICmsAction;
+import de.bandika.cms.servlet.CmsAction;
 import de.bandika.cms.user.UserBean;
 import de.bandika.cms.user.UserData;
 import de.bandika.webbase.database.DbConnector;
@@ -21,35 +21,14 @@ import de.bandika.webbase.servlet.RequestReader;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public enum InstallerAction implements ICmsAction {
-    /**
-     * does what is left to initialize the app
-     */
-    defaultAction {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            if (isAllInstalled())
-                return false;
-            if (!DbConnector.getInstance().isInitialized()) {
-                request.setAttribute("dbClass", "org.postgresql.Driver");
-                request.setAttribute("dbUrl", "jdbc:postgresql://localhost/mydb");
-                return showSetBasicConfigurationJsp(request, response);
-            }
-            if (!DbCreator.getInstance().isDatabaseCreated() && !DbCreator.getInstance().createDatabase()) {
-                return showSetBasicConfigurationJsp(request, response);
-            }
-            if (!Installer.getInstance().hasSystemPassword()) {
-                return showSetSystemPasswordJsp(request, response);
-            }
-            Initializer.getInstance().initialize();
-            return showConfigurationSavedJsp(request, response);
-        }
-    }, /**
-     * initializes the database configuration and creates the first database tables and entries
-     */
-    setDatabaseConfiguration {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+public class InstallerAction extends CmsAction {
+
+    public static final String setDatabaseConfiguration="setDatabaseConfiguration";
+    public static final String setSystemPassword="setSystemPassword";
+
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+        switch (actionName) {
+            case setDatabaseConfiguration:{
                 if (isAllInstalled())
                     return false;
                 String dbClass = RequestReader.getString(request, "dbClass");
@@ -77,12 +56,7 @@ public enum InstallerAction implements ICmsAction {
                 Initializer.getInstance().initialize();
                 return showConfigurationSavedJsp(request, response);
             }
-        }, /**
-     * sets first password for system user
-     */
-    setSystemPassword {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case setSystemPassword:{
                 if (isAllInstalled())
                     return false;
                 String systemPassword = RequestReader.getString(request, "systemPwd");
@@ -99,7 +73,25 @@ public enum InstallerAction implements ICmsAction {
                 Initializer.getInstance().initialize();
                 return showConfigurationSavedJsp(request, response);
             }
-        };
+            default: {
+                if (isAllInstalled())
+                    return false;
+                if (!DbConnector.getInstance().isInitialized()) {
+                    request.setAttribute("dbClass", "org.postgresql.Driver");
+                    request.setAttribute("dbUrl", "jdbc:postgresql://localhost/mydb");
+                    return showSetBasicConfigurationJsp(request, response);
+                }
+                if (!DbCreator.getInstance().isDatabaseCreated() && !DbCreator.getInstance().createDatabase()) {
+                    return showSetBasicConfigurationJsp(request, response);
+                }
+                if (!Installer.getInstance().hasSystemPassword()) {
+                    return showSetSystemPasswordJsp(request, response);
+                }
+                Initializer.getInstance().initialize();
+                return showConfigurationSavedJsp(request, response);
+            }
+        }
+    }
 
     private static final String MASTER_INSTALL = "installMaster.jsp";
 
@@ -110,7 +102,7 @@ public enum InstallerAction implements ICmsAction {
     public static final String KEY = "installer";
 
     public static void initialize() {
-        ActionDispatcher.addClass(KEY, InstallerAction.class);
+        ActionDispatcher.addAction(KEY, new InstallerAction());
     }
 
     @Override

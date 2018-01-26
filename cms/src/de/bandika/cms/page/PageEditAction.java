@@ -11,7 +11,7 @@ package de.bandika.cms.page;
 import de.bandika.cms.template.PartTemplateData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateType;
-import de.bandika.cms.tree.ITreeAction;
+import de.bandika.cms.tree.BaseTreeAction;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.RightsCache;
@@ -20,35 +20,44 @@ import de.bandika.webbase.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public enum PageEditAction implements ITreeAction {
-    /**
-     * redirects to show
-     */
-    defaultAction {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            return forbidden();
-        }
-    }, /**
-     * toggles edit mode
-     */
-    toggleEditMode {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+public class PageEditAction extends BaseTreeAction {
+
+    public static final String toggleEditMode="toggleEditMode";
+    public static final String openEditPageContent="openEditPageContent";
+    public static final String reopenEditPageContent="reopenEditPageContent";
+    public static final String savePageContent="savePageContent";
+    public static final String savePageContentAndPublish="savePageContentAndPublish";
+    public static final String publishPage="publishPage";
+    public static final String stopEditing="stopEditing";
+    public static final String showPageContent="showPageContent";
+    public static final String openAddPagePart="openAddPagePart";
+    public static final String addPagePart="addPagePart";
+    public static final String addSharedPart="addSharedPart";
+    public static final String editPagePart="editPagePart";
+    public static final String cancelEditPagePart="cancelEditPagePart";
+    public static final String savePagePart="savePagePart";
+    public static final String openEditHtmlPartSettings="openEditHtmlPartSettings";
+    public static final String saveHtmlPartSettings="saveHtmlPartSettings";
+    public static final String openEditMultiHtmlPartSettings="openEditMultiHtmlPartSettings";
+    public static final String saveMultiHtmlPartSettings="saveMultiHtmlPartSettings";
+    public static final String setVisibleContentIdx="setVisibleContentIdx";
+    public static final String openSharePagePart="openSharePagePart";
+    public static final String sharePagePart="sharePagePart";
+    public static final String movePagePart="movePagePart";
+    public static final String deletePagePart="deletePagePart";
+
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+        switch (actionName) {
+            case toggleEditMode: {
                 if (!hasAnyContentRight(request))
                     return false;
                 SessionWriter.setEditMode(request, !SessionReader.isEditMode(request));
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (pageId==0)
                     request.setAttribute("pageId", Integer.toString(TreeCache.getInstance().getFallbackPageId(request)));
-                return PageAction.show.execute(request, response);
+                return new PageAction().execute(request, response, PageAction.show);
             }
-        }, /**
-     * open page content for wysiwyg editing
-     */
-    openEditPageContent {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openEditPageContent: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -64,12 +73,7 @@ public enum PageEditAction implements ITreeAction {
                 data.setEditMode(true);
                 return setPageResponse(request, response, data);
             }
-        }, /**
-     * refreshes the page during wysiwyg editing
-     */
-    reopenEditPageContent {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case reopenEditPageContent: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -77,12 +81,7 @@ public enum PageEditAction implements ITreeAction {
                 data.setEditMode(true);
                 return setPageResponse(request, response, data);
             }
-        }, /**
-     * saves page content to database
-     */
-    savePageContent {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case savePageContent: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -97,14 +96,9 @@ public enum PageEditAction implements ITreeAction {
                 data.stopEditing();
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return PageAction.show.execute(request, response);
+                return new PageAction().execute(request, response, PageAction.show);
             }
-        }, /**
-     * shows a page
-     */
-    savePageContentAndPublish {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case savePageContentAndPublish: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.APPROVE))
                     return false;
@@ -119,14 +113,9 @@ public enum PageEditAction implements ITreeAction {
                 data.stopEditing();
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return PageAction.show.execute(request, response);
+                return new PageAction().execute(request, response, PageAction.show);
             }
-        }, /**
-     * publishes a draft page
-     */
-    publishPage {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case publishPage: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.APPROVE))
                     return false;
@@ -143,49 +132,29 @@ public enum PageEditAction implements ITreeAction {
                 if (fromAdmin) {
                     return showTree(request, response);
                 }
-                return PageAction.show.execute(request, response);
+                return new PageAction().execute(request, response, PageAction.show);
             }
-        }, /**
-     * stops editing and closes the dialog
-     */
-    stopEditing {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case stopEditing: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
                 SessionWriter.removeSessionObject(request, "pageData");
-                return PageAction.show.execute(request, response);
+                return new PageAction().execute(request, response, PageAction.show);
             }
-        }, /**
-     * shows content of page part
-     */
-    showPageContent {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case showPageContent: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
                 PageData data = (PageData) getSessionObject(request, "pageData");
                 return setEditPageContentAjaxResponse(request, response, data);
             }
-        }, /**
-     * opens dialog for adding a new page part
-     */
-    openAddPagePart {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openAddPagePart: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
                 return showAddPagePart(request, response);
             }
-        }, /**
-     * adds page part to an section of the page
-     */
-    addPagePart {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case addPagePart: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -207,12 +176,7 @@ public enum PageEditAction implements ITreeAction {
                 data.setEditPagePart(pdata);
                 return closeLayer(request, response, "replacePageContent();");
             }
-        }, /**
-     * adds a shared page part to an section of the page
-     */
-    addSharedPart {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case addSharedPart: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -229,12 +193,7 @@ public enum PageEditAction implements ITreeAction {
                 data.addPagePart(pdata, fromPartId, below, true);
                 return closeLayer(request, response, "replacePageContent();");
             }
-        }, /**
-     * sets page part ready for editing
-     */
-    editPagePart {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case editPagePart: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -245,12 +204,7 @@ public enum PageEditAction implements ITreeAction {
                 data.setEditPagePart(sectionName, partId);
                 return setEditPageContentAjaxResponse(request, response, data);
             }
-        }, /**
-     * stops editing a page part
-     */
-    cancelEditPagePart {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case cancelEditPagePart: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -264,12 +218,7 @@ public enum PageEditAction implements ITreeAction {
                 data.setEditPagePart(null);
                 return setEditPageContentAjaxResponse(request, response, data);
             }
-        }, /**
-     * saves page part content to page
-     */
-    savePagePart {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case savePagePart: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -290,12 +239,7 @@ public enum PageEditAction implements ITreeAction {
                 data.setEditPagePart(null);
                 return setEditPageContentAjaxResponse(request, response, data);
             }
-        }, /**
-     * opens dialog for editing html part settings (css class etc.)
-     */
-    openEditHtmlPartSettings {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openEditHtmlPartSettings: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -305,12 +249,7 @@ public enum PageEditAction implements ITreeAction {
                 data.setEditPagePart(sectionName, partId);
                 return showEditHtmlPartSettings(request, response);
             }
-        }, /**
-     * saves page part settings (css class etc.)
-     */
-    saveHtmlPartSettings {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case saveHtmlPartSettings: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -322,12 +261,7 @@ public enum PageEditAction implements ITreeAction {
                 data.setEditPagePart(null);
                 return closeLayerToUrl(request, response, "/page.srv?act=reopenEditPageContent&pageId=" + data.getId());
             }
-        }, /**
-     * opens dialog for editing multi html part settings (css class etc.)
-     */
-    openEditMultiHtmlPartSettings {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openEditMultiHtmlPartSettings: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -337,12 +271,7 @@ public enum PageEditAction implements ITreeAction {
                 data.setEditPagePart(sectionName, partId);
                 return showEditMultiHtmlPartSettings(request, response);
             }
-        }, /**
-     * saves page part settings (css class etc.)
-     */
-    saveMultiHtmlPartSettings {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case saveMultiHtmlPartSettings: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -354,12 +283,7 @@ public enum PageEditAction implements ITreeAction {
                 data.setEditPagePart(null);
                 return closeLayerToUrl(request, response, "/page.srv?act=reopenEditPageContent&pageId=" + data.getId());
             }
-        }, /**
-     * opens dialog for setting the currently visible content
-     */
-    setVisibleContentIdx {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case setVisibleContentIdx: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -371,12 +295,7 @@ public enum PageEditAction implements ITreeAction {
                 data.setEditMode(true);
                 return setPageResponse(request, response, data);
             }
-        }, /**
-     * opens dialog for sharing a page part (make it accessible for common use)
-     */
-    openSharePagePart {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openSharePagePart: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -386,12 +305,7 @@ public enum PageEditAction implements ITreeAction {
                 data.setEditPagePart(sectionName, partId);
                 return showSharePagePart(request, response);
             }
-        }, /**
-     * sets a page part as shared (open for common usage)
-     */
-    sharePagePart {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case sharePagePart: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -405,12 +319,7 @@ public enum PageEditAction implements ITreeAction {
                 data.setEditPagePart(null);
                 return closeLayerToUrl(request, response, "/page.srv?act=reopenEditPageContent&pageId=" + data.getId());
             }
-        }, /**
-     * move page part to somewhere else in the section of the page
-     */
-    movePagePart {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case movePagePart: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -423,12 +332,7 @@ public enum PageEditAction implements ITreeAction {
                 data.setEditMode(true);
                 return setPageResponse(request, response, data);
             }
-        }, /**
-     * deletes a page part
-     */
-    deletePagePart {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case deletePagePart: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -439,12 +343,16 @@ public enum PageEditAction implements ITreeAction {
                 data.removePagePart(sectionName, partId);
                 return setEditPageContentAjaxResponse(request, response, data);
             }
-        };
+            default: {
+                return forbidden();
+            }
+        }
+    }
 
     public static final String KEY = "pageedit";
 
     public static void initialize() {
-        ActionDispatcher.addClass(KEY, PageEditAction.class);
+        ActionDispatcher.addAction(KEY, new PageEditAction());
     }
 
     @Override

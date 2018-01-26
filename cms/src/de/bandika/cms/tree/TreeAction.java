@@ -9,7 +9,7 @@
 package de.bandika.cms.tree;
 
 import de.bandika.webbase.servlet.ActionDispatcher;
-import de.bandika.webbase.servlet.IAction;
+import de.bandika.webbase.servlet.Action;
 import de.bandika.webbase.servlet.RequestStatics;
 import de.bandika.webbase.servlet.SessionReader;
 import de.bandika.webbase.user.LoginAction;
@@ -17,24 +17,17 @@ import de.bandika.webbase.user.LoginAction;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public enum TreeAction implements IAction {
-    /**
-     * redirects to openTree
-     */
-    defaultAction {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            return TreeAction.openTree.execute(request, response);
-        }
-    }, /**
-     * show content tree in tree layer
-     */
-    openTree {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+public class TreeAction extends Action {
+
+    public static final String openTree="openTree";
+
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+        switch (actionName) {
+            case openTree:
+            default: {
                 if (!SessionReader.isLoggedIn(request)) {
                     if (!isAjaxRequest(request)) {
-                        return LoginAction.openLogin.execute(request, response);
+                        return new LoginAction().execute(request, response, LoginAction.openLogin);
                     }
                     return forbidden();
                 }
@@ -43,12 +36,13 @@ public enum TreeAction implements IAction {
                 }
                 return forbidden();
             }
-        };
+        }
+    }
 
     public static final String KEY = "tree";
 
     public static void initialize() {
-        ActionDispatcher.addClass(KEY, TreeAction.class);
+        ActionDispatcher.addAction(KEY, new TreeAction());
     }
 
     @Override

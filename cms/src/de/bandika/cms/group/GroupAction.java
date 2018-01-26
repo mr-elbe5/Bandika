@@ -10,7 +10,7 @@ package de.bandika.cms.group;
 
 import de.bandika.base.data.BaseIdData;
 import de.bandika.base.util.StringUtil;
-import de.bandika.cms.servlet.ICmsAction;
+import de.bandika.cms.servlet.CmsAction;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.RightsCache;
 import de.bandika.webbase.rights.SystemZone;
@@ -20,21 +20,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-public enum GroupAction implements ICmsAction {
-    /**
-     * no action
-     */
-    defaultAction {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            return forbidden();
-        }
-    }, /**
-     * opens dialog for adding a user to the group
-     */
-    openAddGroupUser {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+public class GroupAction extends CmsAction {
+
+    public static final String openAddGroupUser="openAddGroupUser";
+    public static final String addGroupUser="addGroupUser";
+    public static final String openRemoveGroupUsers="openRemoveGroupUsers";
+    public static final String removeGroupUsers="removeGroupUsers";
+    public static final String showGroupDetails="showGroupDetails";
+    public static final String openEditGroup="openEditGroup";
+    public static final String openCreateGroup="openCreateGroup";
+    public static final String saveGroup="saveGroup";
+    public static final String openDeleteGroup="openDeleteGroup";
+    public static final String deleteGroup="deleteGroup";
+
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+        switch (actionName) {
+            case openAddGroupUser: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 int groupId = RequestReader.getInt(request, "groupId");
@@ -42,12 +43,7 @@ public enum GroupAction implements ICmsAction {
                 SessionWriter.setSessionObject(request, "groupData", data);
                 return showAddGroupUser(request, response);
             }
-        }, /**
-     * adds user to the group
-     */
-    addGroupUser {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case addGroupUser: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 GroupData data = (GroupData) getSessionObject(request, "groupData");
@@ -64,12 +60,7 @@ public enum GroupAction implements ICmsAction {
                 RightsCache.getInstance().setDirty();
                 return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&groupId=" + data.getId(), "_userAdded");
             }
-        }, /**
-     * opens dialog for removing users from the group
-     */
-    openRemoveGroupUsers {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openRemoveGroupUsers: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 int groupId = RequestReader.getInt(request, "groupId");
@@ -77,12 +68,7 @@ public enum GroupAction implements ICmsAction {
                 SessionWriter.setSessionObject(request, "groupData", data);
                 return showRemoveGroupUsers(request, response);
             }
-        }, /**
-     * removes users from the group
-     */
-    removeGroupUsers {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case removeGroupUsers: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 GroupData data = (GroupData) getSessionObject(request, "groupData");
@@ -95,22 +81,12 @@ public enum GroupAction implements ICmsAction {
                 RightsCache.getInstance().setDirty();
                 return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&groupId=" + data.getId(), "_usersRemoved");
             }
-        }, /**
-     * show group properties
-     */
-    showGroupDetails {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case showGroupDetails: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 return showGroupDetails(request, response);
             }
-        }, /**
-     * opens dialog for editing group settings
-     */
-    openEditGroup {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openEditGroup: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 int groupId = RequestReader.getInt(request, "groupId");
@@ -120,12 +96,7 @@ public enum GroupAction implements ICmsAction {
                 SessionWriter.setSessionObject(request, "groupData", data);
                 return showEditGroup(request, response);
             }
-        }, /**
-     * open dialog for creating a new group
-     */
-    openCreateGroup {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openCreateGroup: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 GroupData data = new GroupData();
@@ -135,12 +106,7 @@ public enum GroupAction implements ICmsAction {
                 SessionWriter.setSessionObject(request, "groupData", data);
                 return showEditGroup(request, response);
             }
-        }, /**
-     * saves group (new or edited)
-     */
-    saveGroup {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case saveGroup: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 GroupData data = (GroupData) getSessionObject(request, "groupData");
@@ -152,12 +118,7 @@ public enum GroupAction implements ICmsAction {
                 RightsCache.getInstance().setDirty();
                 return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&groupId=" + data.getId(), "_groupSaved");
             }
-        }, /**
-     * opens dialog for deleting a group
-     */
-    openDeleteGroup {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openDeleteGroup: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 int id = RequestReader.getInt(request, "groupId");
@@ -166,12 +127,7 @@ public enum GroupAction implements ICmsAction {
                 }
                 return showDeleteGroup(request, response);
             }
-        }, /**
-     * deletes a group
-     */
-    deleteGroup {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case deleteGroup: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 int id = RequestReader.getInt(request, "groupId");
@@ -183,12 +139,16 @@ public enum GroupAction implements ICmsAction {
                 }
                 return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_groupDeleted");
             }
-        };
+            default: {
+                return forbidden();
+            }
+        }
+    }
 
     public static final String KEY = "group";
 
     public static void initialize() {
-        ActionDispatcher.addClass(KEY, GroupAction.class);
+        ActionDispatcher.addAction(KEY, new GroupAction());
     }
 
     @Override

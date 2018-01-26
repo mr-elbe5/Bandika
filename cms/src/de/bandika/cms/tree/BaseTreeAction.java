@@ -8,23 +8,23 @@
  */
 package de.bandika.cms.tree;
 
-import de.bandika.cms.servlet.ICmsAction;
+import de.bandika.cms.servlet.CmsAction;
 import de.bandika.webbase.servlet.RequestStatics;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public interface ITreeAction extends ICmsAction {
+public abstract class BaseTreeAction extends CmsAction {
 
-    default boolean showTree(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public boolean showTree(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/tree/tree.ajax.jsp");
     }
 
-    default boolean closeLayerToTree(HttpServletRequest request, HttpServletResponse response, String url) {
+    public boolean closeLayerToTree(HttpServletRequest request, HttpServletResponse response, String url) {
         return closeLayer(request, response, "closeLayerToTree('" + url + "')");
     }
 
-    default boolean closeLayerToTree(HttpServletRequest request, HttpServletResponse response, String url, String messageKey) {
+    public boolean closeLayerToTree(HttpServletRequest request, HttpServletResponse response, String url, String messageKey) {
         return closeLayer(request, response, "closeLayerToTree('" + url + "&" + RequestStatics.KEY_MESSAGEKEY + "=" + messageKey + "');");
     }
 

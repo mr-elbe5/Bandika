@@ -20,57 +20,57 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.MessageFormat;
 
-public interface IAction {
+public abstract class Action {
 
-    String name();
+    protected abstract String getKey();
 
-    String getKey();
+    protected abstract boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception;
 
-    default String getServletCall() {
+    protected String getServletCall() {
         return "/" + getKey() + ".srv";
     }
 
-    default String getAjaxCall() {
+    protected String getAjaxCall() {
         return "/" + getKey() + ".ajx";
     }
 
-    default boolean setResponseType(HttpServletRequest request, int responseType) {
+    protected boolean setResponseType(HttpServletRequest request, int responseType) {
         request.setAttribute(RequestStatics.KEY_RESPONSE_TYPE, Integer.toString(responseType));
         return true;
     }
 
-    default int getResponseType(HttpServletRequest request) {
+    protected int getResponseType(HttpServletRequest request) {
         return RequestReader.getInt(request, RequestStatics.KEY_RESPONSE_TYPE);
     }
 
-    default boolean setForwardUrl(HttpServletRequest request, String forwardUrl) {
+    protected boolean setForwardUrl(HttpServletRequest request, String forwardUrl) {
         request.setAttribute(RequestStatics.KEY_FORWARD_URL, forwardUrl);
         return true;
     }
 
-    default String getForwardUrl(HttpServletRequest request) {
+    protected String getForwardUrl(HttpServletRequest request) {
         return RequestReader.getString(request, RequestStatics.KEY_FORWARD_URL);
     }
 
-    default Object getSessionObject(HttpServletRequest request, String key) {
+    protected Object getSessionObject(HttpServletRequest request, String key) {
         Object obj = RequestReader.getSessionObject(request, key);
         checkObject(obj);
         return obj;
     }
 
-    default void checkObject(Object obj) {
+    protected void checkObject(Object obj) {
         if (obj == null) {
             throw new HttpException(HttpServletResponse.SC_NO_CONTENT);
         }
     }
 
-    default void checkObject(BaseIdData obj, int requestId) {
+    protected void checkObject(BaseIdData obj, int requestId) {
         if (obj == null || obj.getId() != requestId) {
             throw new HttpException(HttpServletResponse.SC_NO_CONTENT);
         }
     }
 
-    default boolean isDataComplete(BaseData data, HttpServletRequest request) {
+    protected boolean isDataComplete(BaseData data, HttpServletRequest request) {
         if (!data.isComplete()) {
             RequestError err = new RequestError();
             err.addErrorString(StringUtil.getHtml("_notComplete", RequestReader.getSessionLocale(request)));
@@ -80,11 +80,11 @@ public interface IAction {
         return true;
     }
 
-    default boolean sendBinaryResponse(HttpServletRequest request, HttpServletResponse response, String fileName, String contentType, byte[] bytes) throws IOException {
+    protected boolean sendBinaryResponse(HttpServletRequest request, HttpServletResponse response, String fileName, String contentType, byte[] bytes) throws IOException {
         return sendBinaryResponse(request, response, fileName, contentType, bytes, false);
     }
 
-    default boolean sendBinaryResponse(HttpServletRequest request, HttpServletResponse response, String fileName, String contentType, byte[] bytes, boolean forceDownload) throws IOException {
+    protected boolean sendBinaryResponse(HttpServletRequest request, HttpServletResponse response, String fileName, String contentType, byte[] bytes, boolean forceDownload) throws IOException {
         setResponseType(request, RequestStatics.RESPONSE_TYPE_STREAM);
         if (contentType != null && !contentType.isEmpty()) {
             contentType = "*/*";
@@ -110,11 +110,11 @@ public interface IAction {
         return true;
     }
 
-    default boolean sendBinaryFileResponse(HttpServletRequest request, HttpServletResponse response, BinaryFileStreamData data) throws IOException {
+    protected boolean sendBinaryFileResponse(HttpServletRequest request, HttpServletResponse response, BinaryFileStreamData data) throws IOException {
         return sendBinaryFileResponse(request, response, data, false);
     }
 
-    default boolean sendBinaryFileResponse(HttpServletRequest request, HttpServletResponse response, BinaryFileStreamData data, boolean forceDownload) throws IOException {
+    protected boolean sendBinaryFileResponse(HttpServletRequest request, HttpServletResponse response, BinaryFileStreamData data, boolean forceDownload) throws IOException {
         setResponseType(request, RequestStatics.RESPONSE_TYPE_STREAM);
         String contentType = data.getContentType();
         if (contentType != null && !contentType.isEmpty()) {
@@ -136,30 +136,30 @@ public interface IAction {
         return true;
     }
 
-    default boolean sendForwardResponse(HttpServletRequest request, HttpServletResponse response, String url) {
+    protected boolean sendForwardResponse(HttpServletRequest request, HttpServletResponse response, String url) {
         setResponseType(request, RequestStatics.RESPONSE_TYPE_FORWARD);
         setForwardUrl(request, url);
         return true;
     }
 
-    default boolean sendJspResponse(HttpServletRequest request, HttpServletResponse response, String jsp, String master) {
+    protected boolean sendJspResponse(HttpServletRequest request, HttpServletResponse response, String jsp, String master) {
         setResponseType(request, RequestStatics.RESPONSE_TYPE_FORWARD);
         request.setAttribute(RequestStatics.KEY_JSP, jsp);
         setForwardUrl(request, "/WEB-INF/_jsp/_master/" + master);
         return true;
     }
 
-    default boolean sendXmlResponse(HttpServletRequest request, HttpServletResponse response, String xml) {
+    protected boolean sendXmlResponse(HttpServletRequest request, HttpServletResponse response, String xml) {
         response.setContentType(MessageFormat.format("text/xml;charset={0}", RequestStatics.ENCODING));
         return sendStdResponse(request, response, xml);
     }
 
-    default boolean sendHtmlResponse(HttpServletRequest request, HttpServletResponse response, String html) {
+    protected boolean sendHtmlResponse(HttpServletRequest request, HttpServletResponse response, String html) {
         response.setContentType(MessageFormat.format("text/html;charset={0}", RequestStatics.ENCODING));
         return sendStdResponse(request, response, html);
     }
 
-    default boolean sendStdResponse(HttpServletRequest request, HttpServletResponse response, String str) {
+    protected boolean sendStdResponse(HttpServletRequest request, HttpServletResponse response, String str) {
         setResponseType(request, RequestStatics.RESPONSE_TYPE_STD);
         RequestWriter.setNoCache(response);
         try {
@@ -180,7 +180,7 @@ public interface IAction {
         return true;
     }
 
-    default void addError(HttpServletRequest request, String s) {
+    protected void addError(HttpServletRequest request, String s) {
         RequestError err = RequestError.getError(request);
         if (err == null) {
             err = new RequestError();
@@ -189,7 +189,7 @@ public interface IAction {
         err.addErrorString(s);
     }
 
-    default void addError(HttpServletRequest request, Exception e) {
+    protected void addError(HttpServletRequest request, Exception e) {
         RequestError err = RequestError.getError(request);
         if (err == null) {
             err = new RequestError();
@@ -198,47 +198,45 @@ public interface IAction {
         err.addError(e);
     }
 
-    default boolean closeLayer(HttpServletRequest request, HttpServletResponse response) {
+    protected boolean closeLayer(HttpServletRequest request, HttpServletResponse response) {
         request.removeAttribute(RequestStatics.PARAM_ACTION);
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/closeLayer.ajax.jsp");
     }
 
-    default boolean closeLayer(HttpServletRequest request, HttpServletResponse response, String jsCommand) {
+    protected boolean closeLayer(HttpServletRequest request, HttpServletResponse response, String jsCommand) {
         request.setAttribute("closeLayerFunction", jsCommand);
         return closeLayer(request, response);
     }
 
-    default boolean closeLayerToUrl(HttpServletRequest request, HttpServletResponse response, String url) {
+    protected boolean closeLayerToUrl(HttpServletRequest request, HttpServletResponse response, String url) {
 
         return closeLayer(request, response, "linkTo('" + url + "');");
     }
 
-    default boolean closeLayerToUrl(HttpServletRequest request, HttpServletResponse response, String url, String messageKey) {
+    protected boolean closeLayerToUrl(HttpServletRequest request, HttpServletResponse response, String url, String messageKey) {
 
         return closeLayer(request, response, "linkTo('" + url + "&" + RequestStatics.KEY_MESSAGEKEY + "=" + messageKey + "');");
     }
 
-    default boolean showHome(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return sendRedirect(request, response, "/default.srv");
+    protected boolean showHome(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return sendRedirect(request, response, "/protected.srv");
     }
 
-    default boolean sendRedirect(HttpServletRequest request, HttpServletResponse response, String url) {
+    protected boolean sendRedirect(HttpServletRequest request, HttpServletResponse response, String url) {
         request.removeAttribute(RequestStatics.PARAM_ACTION);
         request.setAttribute("redirectUrl", url);
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/redirect.jsp");
     }
 
-    boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception;
-
-    default boolean forbidden() {
+    protected boolean forbidden() {
         throw new HttpException(HttpServletResponse.SC_FORBIDDEN);
     }
 
-    default boolean badRequest() {
+    protected boolean badRequest() {
         throw new HttpException(HttpServletResponse.SC_BAD_REQUEST);
     }
 
-    default boolean isAjaxRequest(HttpServletRequest request) {
+    protected boolean isAjaxRequest(HttpServletRequest request) {
         return RequestReader.getString(request, RequestStatics.PARAM_SUFFIX).equals(RequestStatics.AJAX_SUFFIX);
     }
 

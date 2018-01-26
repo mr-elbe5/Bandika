@@ -8,7 +8,7 @@
  */
 package de.bandika.cms.page;
 
-import de.bandika.cms.tree.ITreeAction;
+import de.bandika.cms.tree.BaseTreeAction;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.servlet.ActionDispatcher;
@@ -18,21 +18,15 @@ import de.bandika.webbase.servlet.SessionReader;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public enum PageAction implements ITreeAction {
-    /**
-     * redirects to show
-     */
-    defaultAction {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            return PageAction.show.execute(request, response);
-        }
-    }, /**
-     * shows a page
-     */
-    show {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+public class PageAction extends BaseTreeAction {
+
+    public static final String test="test";
+    public static final String show="show";
+    public static final String executePagePartMethod="executePagePartMethod";
+
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+        switch (actionName) {
+            case show: {
                 PageData treeData, data;
                 int pageId = RequestReader.getInt(request, "pageId");
                 TreeCache tc = TreeCache.getInstance();
@@ -62,12 +56,7 @@ public enum PageAction implements ITreeAction {
                 }
                 return setPageResponse(request, response, data);
             }
-        }, /**
-     * executes a method within the page part
-     */
-    executePagePartMethod {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case executePagePartMethod: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 int partId = RequestReader.getInt(request, "partId");
                 String sectionName = RequestReader.getString(request, "sectionName");
@@ -81,12 +70,16 @@ public enum PageAction implements ITreeAction {
                 PagePartData pdata = data.getPagePart(sectionName, partId);
                 return pdata != null && pdata.executePagePartMethod(partMethod, request, response);
             }
-        };
+            default: {
+                return new PageAction().execute(request, response, show);
+            }
+        }
+    }
 
     public static final String KEY = "page";
 
     public static void initialize() {
-        ActionDispatcher.addClass(KEY, PageAction.class);
+        ActionDispatcher.addAction(KEY, new PageAction());
     }
 
     @Override

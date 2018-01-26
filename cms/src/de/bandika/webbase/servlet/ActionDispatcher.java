@@ -13,28 +13,17 @@ import java.util.Map;
 
 public class ActionDispatcher {
 
-    private static final Map<String, Class<? extends Enum>> classes = new HashMap<>();
+    private static final Map<String, Action> actions = new HashMap<>();
 
-    public static void addClass(String key, Class<? extends Enum> cls) {
-        classes.put(key, cls);
+    public static void addAction(String key, Action action) {
+        actions.put(key, action);
     }
 
-    public static Class<? extends Enum> getClass(String key) {
-        if (!classes.containsKey(key)) {
+    public static Action getAction(String key) {
+        if (!actions.containsKey(key)) {
             return null;
         }
-        return classes.get(key);
+        return actions.get(key);
     }
 
-    public static IAction getAction(String key, String actionName) {
-        Class<? extends Enum> cls = getClass(key);
-        if (cls == null)
-            return null;
-        if (actionName.isEmpty())
-            actionName = "defaultAction";
-        Object obj = Enum.valueOf(cls, actionName);
-        if (obj instanceof IAction)
-            return (IAction) obj;
-        return null;
-    }
 }

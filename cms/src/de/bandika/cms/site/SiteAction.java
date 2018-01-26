@@ -15,7 +15,7 @@ import de.bandika.cms.file.FileData;
 import de.bandika.cms.page.PageAction;
 import de.bandika.cms.page.PageBean;
 import de.bandika.cms.page.PageData;
-import de.bandika.cms.tree.ITreeAction;
+import de.bandika.cms.tree.BaseTreeAction;
 import de.bandika.cms.tree.TreeBean;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.cms.tree.TreeNodeSortData;
@@ -28,21 +28,39 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-public enum SiteAction implements ITreeAction {
-    /**
-     * no action
-     */
-    defaultAction {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            return SiteAction.show.execute(request, response);
-        }
-    }, /**
-     * shows site (default page)
-     */
-    show {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+public class SiteAction extends BaseTreeAction {
+
+    public static final String show="show";
+    public static final String openCreateSite="openCreateSite";
+    public static final String createSite="createSite";
+    public static final String showSiteDetails="showSiteDetails";
+    public static final String openEditSiteSettings="openEditSiteSettings";
+    public static final String openEditSiteRights="openEditSiteRights";
+    public static final String stopEditing="stopEditing";
+    public static final String saveSiteSettings="saveSiteSettings";
+    public static final String saveSiteRights="saveSiteRights";
+    public static final String publishAll="publishAll";
+    public static final String inheritAll="inheritAll";
+    public static final String cutSite="cutSite";
+    public static final String pasteSite="pasteSite";
+    public static final String pastePage="pastePage";
+    public static final String pasteFile="pasteFile";
+    public static final String moveSite="moveSite";
+    public static final String openSortSites="openSortSites";
+    public static final String changeSiteRanking="changeSiteRanking";
+    public static final String saveSortSites="saveSortSites";
+    public static final String openSortPages="openSortPages";
+    public static final String changePageRanking="changePageRanking";
+    public static final String saveSortPages="saveSortPages";
+    public static final String openSortFiles="openSortFiles";
+    public static final String changeFileRanking="changeFileRanking";
+    public static final String saveSortFiles="saveSortFiles";
+    public static final String openDeleteSite="openDeleteSite";
+    public static final String delete="delete";
+
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+        switch (actionName) {
+            case show: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 //if (!hasContentRight(request,siteId,Right.READ))
                 //    return false;
@@ -62,27 +80,17 @@ public enum SiteAction implements ITreeAction {
                 if (data.hasDefaultPage()) {
                     int defaultPageId = data.getDefaultPageId();
                     request.setAttribute("pageId", Integer.toString(defaultPageId));
-                    return PageAction.show.execute(request, response);
+                    return new PageAction().execute(request, response, PageAction.show);
                 }
                 return showBlankSite(request, response);
             }
-        }, /**
-     * open dialog for creating a new site
-     */
-    openCreateSite {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openCreateSite: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
                 return showCreateSite(request, response);
             }
-        }, /**
-     * creates a new site in database
-     */
-    createSite {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case createSite: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -126,23 +134,13 @@ public enum SiteAction implements ITreeAction {
                 RightsCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.srv?act=openTree&siteId=" + data.getId(), "_siteCreated");
             }
-        }, /**
-     * show site properties
-     */
-    showSiteDetails {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case showSiteDetails: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
                 return showSiteDetails(request, response);
             }
-        }, /**
-     * opens dialog for editing site settings
-     */
-    openEditSiteSettings {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openEditSiteSettings: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -156,12 +154,7 @@ public enum SiteAction implements ITreeAction {
                 SessionWriter.setSessionObject(request, "siteData", data);
                 return showEditSiteSettings(request, response);
             }
-        }, /**
-     * opens dialog for editing site rights
-     */
-    openEditSiteRights {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openEditSiteRights: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -175,24 +168,14 @@ public enum SiteAction implements ITreeAction {
                 SessionWriter.setSessionObject(request, "siteData", data);
                 return showEditSiteRights(request, response);
             }
-        }, /**
-     * closes dialog and stops editing site
-     */
-    stopEditing {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case stopEditing: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
                 SessionWriter.removeSessionObject(request, "siteData");
-                return SiteAction.show.execute(request, response);
+                return new SiteAction().execute(request, response, show);
             }
-        }, /**
-     * saves site settings to database
-     */
-    saveSiteSettings {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case saveSiteSettings: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -211,12 +194,7 @@ public enum SiteAction implements ITreeAction {
                 RightsCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act=openTree&siteId=" + siteId, "_siteSettingsChanged");
             }
-        }, /**
-     * saves site rights to database
-     */
-    saveSiteRights {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case saveSiteRights: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -230,12 +208,7 @@ public enum SiteAction implements ITreeAction {
                 RightsCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act=openTree", "_siteRightsChanged");
             }
-        }, /**
-     * publish all subitems
-     */
-    publishAll {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case publishAll: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.APPROVE))
                     return false;
@@ -268,12 +241,7 @@ public enum SiteAction implements ITreeAction {
                 RightsCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act=openTree", "_allPublished");
             }
-        }, /**
-     * inherit all subitems
-     */
-    inheritAll {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case inheritAll: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.APPROVE))
                     return false;
@@ -307,12 +275,7 @@ public enum SiteAction implements ITreeAction {
                 RightsCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act=openTree", "_allInherited");
             }
-        }, /**
-     * cuts the site for pasting it somewhere else in the tree
-     */
-    cutSite {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case cutSite: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -320,12 +283,7 @@ public enum SiteAction implements ITreeAction {
                 RequestWriter.setMessageKey(request, "_siteCut");
                 return showTree(request, response);
             }
-        }, /**
-     * pastes a cut site in this site
-     */
-    pasteSite {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case pasteSite: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -344,12 +302,7 @@ public enum SiteAction implements ITreeAction {
                 }
                 return showTree(request, response);
             }
-        }, /**
-     * pastes a cut page in this site
-     */
-    pastePage {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case pastePage: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -368,12 +321,7 @@ public enum SiteAction implements ITreeAction {
                 }
                 return showTree(request, response);
             }
-        }, /**
-     * pastes a cut file in this site
-     */
-    pasteFile {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case pasteFile: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -392,12 +340,7 @@ public enum SiteAction implements ITreeAction {
                 }
                 return showTree(request, response);
             }
-        }, /**
-     * move this site to somewhere else in the tree
-     */
-    moveSite {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case moveSite: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -414,12 +357,7 @@ public enum SiteAction implements ITreeAction {
                 }
                 return true;
             }
-        }, /**
-     * open dialog for sorting children manually
-     */
-    openSortSites {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openSortSites: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -428,12 +366,7 @@ public enum SiteAction implements ITreeAction {
                 SessionWriter.setSessionObject(request, "sortData", sortData);
                 return showSortSites(request, response);
             }
-        }, /**
-     * changes the ranking / sort order of site children
-     */
-    changeSiteRanking {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case changeSiteRanking: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -445,31 +378,21 @@ public enum SiteAction implements ITreeAction {
                 sortData.readSortRequestData(request);
                 return showSortSites(request, response);
             }
-        }, /**
-     * saves ranking of newly sorted children to database
-     */
-    saveSortSites {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case saveSortSites: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
                 TreeNodeSortData sortData = (TreeNodeSortData) getSessionObject(request, "sortData");
                 if (siteId == 0) {
                     addError(request, StringUtil.getString("_noData", SessionReader.getSessionLocale(request)));
-                    return SiteAction.show.execute(request, response);
+                    return new SiteAction().execute(request, response, show);
                 }
                 SiteBean ts = SiteBean.getInstance();
                 ts.saveSortData(sortData);
                 TreeCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act=openTree", "_childOrderSaved");
             }
-        }, /**
-     * open dialog for sorting children manually
-     */
-    openSortPages {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openSortPages: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -478,12 +401,7 @@ public enum SiteAction implements ITreeAction {
                 SessionWriter.setSessionObject(request, "sortData", sortData);
                 return showSortPages(request, response);
             }
-        }, /**
-     * changes the ranking / sort order of site children
-     */
-    changePageRanking {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case changePageRanking: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -495,12 +413,7 @@ public enum SiteAction implements ITreeAction {
                 sortData.readSortRequestData(request);
                 return showSortPages(request, response);
             }
-        }, /**
-     * saves ranking of newly sorted children to database
-     */
-    saveSortPages {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case saveSortPages: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -514,12 +427,7 @@ public enum SiteAction implements ITreeAction {
                 TreeCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act=openTree", "_childOrderSaved");
             }
-        }, /**
-     * open dialog for sorting children manually
-     */
-    openSortFiles {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openSortFiles: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -528,12 +436,7 @@ public enum SiteAction implements ITreeAction {
                 SessionWriter.setSessionObject(request, "sortData", sortData);
                 return showSortFiles(request, response);
             }
-        }, /**
-     * changes the ranking / sort order of site children
-     */
-    changeFileRanking {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case changeFileRanking: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -545,12 +448,7 @@ public enum SiteAction implements ITreeAction {
                 sortData.readSortRequestData(request);
                 return showSortFiles(request, response);
             }
-        }, /**
-     * saves ranking of newly sorted children to database
-     */
-    saveSortFiles {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case saveSortFiles: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -564,27 +462,17 @@ public enum SiteAction implements ITreeAction {
                 TreeCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act=openTree", "_childOrderSaved");
             }
-        }, /**
-     * opens dialog for deleting the site
-     */
-    openDeleteSite {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openDeleteSite: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
                 if (siteId == 0) {
                     addError(request, StringUtil.getString("_noSelection", SessionReader.getSessionLocale(request)));
-                    return SiteAction.show.execute(request, response);
+                    return new SiteAction().execute(request, response, show);
                 }
                 return showDeleteSite(request, response);
             }
-        }, /**
-     * delete the site including children mailFrom database
-     */
-    delete {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case delete: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -600,12 +488,16 @@ public enum SiteAction implements ITreeAction {
                 request.setAttribute("siteId", Integer.toString(parent));
                 return closeLayerToTree(request, response, "/tree.ajx?act=openTree", "_siteDeleted");
             }
-        };
+            default: {
+                return new SiteAction().execute(request, response, show);
+            }
+        }
+    }
 
     public static final String KEY = "site";
 
     public static void initialize() {
-        ActionDispatcher.addClass(KEY, SiteAction.class);
+        ActionDispatcher.addAction(KEY, new SiteAction());
     }
 
     @Override

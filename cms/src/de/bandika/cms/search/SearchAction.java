@@ -9,7 +9,7 @@
 package de.bandika.cms.search;
 
 import de.bandika.cms.application.AdminAction;
-import de.bandika.cms.servlet.ICmsAction;
+import de.bandika.cms.servlet.CmsAction;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.SystemZone;
 import de.bandika.webbase.servlet.ActionDispatcher;
@@ -19,29 +19,24 @@ import de.bandika.webbase.servlet.RequestWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public enum SearchAction implements ICmsAction {
-    /**
-     * no action
-     */
-    defaultAction {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            return SearchAction.openSearch.execute(request, response);
-        }
-    }, /**
-     * opens search page
-     */
-    openSearch {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+public class SearchAction extends CmsAction {
+
+    public static final String openSearch="openSearch";
+    public static final String search="search";
+    public static final String showAdminSearchDetails="showAdminSearchDetails";
+    public static final String showSiteSearchDetails="showSiteSearchDetails";
+    public static final String showPageSearchDetails="showPageSearchDetails";
+    public static final String showFileSearchDetails="showFileSearchDetails";
+    public static final String showUserSearchDetails="showUserSearchDetails";
+    public static final String indexAllContent="indexAllContent";
+    public static final String indexAllUsers="indexAllUsers";
+
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+        switch (actionName) {
+            case openSearch: {
                 return showSearch(request, response);
             }
-        }, /**
-     * executes a search and shows the results
-     */
-    search {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case search: {
                 ContentSearchResultData contentResult = new ContentSearchResultData();
                 String pattern = RequestReader.getString(request, "searchPattern");
                 contentResult.setPattern(pattern);
@@ -53,78 +48,47 @@ public enum SearchAction implements ICmsAction {
                 request.setAttribute("userSearchResultData", userResult);
                 return showSearch(request, response);
             }
-        }, /**
-     * shows search settings and properties
-     */
-    showAdminSearchDetails {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case showAdminSearchDetails: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
                 return showAdminSearchDetails(request, response);
             }
-        }, /**
-     * shows site search result details
-     */
-    showSiteSearchDetails {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case showSiteSearchDetails: {
                 return showSiteSearchDetails(request, response);
             }
-        }, /**
-     * shows page search result details
-     */
-    showPageSearchDetails {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case showPageSearchDetails: {
                 return showPageSearchDetails(request, response);
             }
-        }, /**
-     * shows file search result details
-     */
-    showFileSearchDetails {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case showFileSearchDetails: {
                 return showFileSearchDetails(request, response);
             }
-        }, /**
-     * shows user search result details
-     */
-    showUserSearchDetails {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case showUserSearchDetails: {
                 return showUserSearchDetails(request, response);
             }
-        }, /**
-     * reindexes all content elements
-     */
-    indexAllContent {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case indexAllContent: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
                 SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_CONTENT, 0, null));
                 RequestWriter.setMessageKey(request, "_indexingContentQueued");
-                return AdminAction.openAdministration.execute(request, response);
+                return new AdminAction().execute(request, response, AdminAction.openAdministration);
             }
-        }, /**
-     * reindexes all users
-     */
-    indexAllUsers {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case indexAllUsers: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
                 SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_USERS, 0, null));
                 RequestWriter.setMessageKey(request, "_indexingUsersQueued");
-                return AdminAction.openAdministration.execute(request, response);
+                return new AdminAction().execute(request, response, AdminAction.openAdministration);
             }
-        };
+            default: {
+                return new SearchAction().execute(request, response,openSearch);
+            }
+        }
+    }
 
     public static final String KEY = "search";
 
     public static void initialize() {
-        ActionDispatcher.addClass(KEY, SearchAction.class);
+        ActionDispatcher.addAction(KEY, new SearchAction());
     }
 
     @Override

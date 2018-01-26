@@ -12,7 +12,7 @@ import de.bandika.base.data.BaseIdData;
 import de.bandika.base.util.StringUtil;
 import de.bandika.cms.application.AdminAction;
 import de.bandika.cms.site.SiteData;
-import de.bandika.cms.tree.ITreeAction;
+import de.bandika.cms.tree.BaseTreeAction;
 import de.bandika.cms.tree.TreeBean;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.rights.Right;
@@ -22,43 +22,43 @@ import de.bandika.webbase.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public enum PageAdminAction implements ITreeAction {
-    /**
-     * not used
-     */
-    defaultAction {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            return forbidden();
-        }
-    }, /**
-     * shows page properties
-     */
-    showPageDetails {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+public class PageAdminAction extends BaseTreeAction {
+
+    public static final String showPageDetails="showPageDetails";
+    public static final String openCreatePage="openCreatePage";
+    public static final String createPage="createPage";
+    public static final String openEditPageSettings="openEditPageSettings";
+    public static final String savePageSettings="savePageSettings";
+    public static final String openEditPageRights="openEditPageRights";
+    public static final String savePageRights="savePageRights";
+    public static final String clonePage="clonePage";
+    public static final String cutPage="cutPage";
+    public static final String movePage="movePage";
+    public static final String openDeletePage="openDeletePage";
+    public static final String deletePage="deletePage";
+    public static final String openPageHistory="openPageHistory";
+    public static final String showHistoryPage="showHistoryPage";
+    public static final String restoreHistoryPage="restoreHistoryPage";
+    public static final String deleteHistoryPage="deleteHistoryPage";
+    public static final String showSharedPartDetails="showSharedPartDetails";
+    public static final String openDeleteSharedPart="openDeleteSharedPart";
+    public static final String deleteSharedPart="deleteSharedPart";
+
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+        switch (actionName) {
+            case showPageDetails: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
                 return showPageDetails(request, response);
             }
-        }, /**
-     * open dialog for creating a page
-     */
-    openCreatePage {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openCreatePage: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
                 return showCreatePage(request, response);
             }
-        }, /**
-     * craetes a new page to database
-     */
-    createPage {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case createPage: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
@@ -87,12 +87,7 @@ public enum PageAdminAction implements ITreeAction {
                 RightsCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act=openTree&siteId=" + data.getParentId() + "&pageId=" + data.getId());
             }
-        }, /**
-     * opens dialog for editing page settings
-     */
-    openEditPageSettings {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openEditPageSettings: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -106,12 +101,7 @@ public enum PageAdminAction implements ITreeAction {
                 SessionWriter.setSessionObject(request, "pageData", data);
                 return showEditPageSettings(request, response);
             }
-        }, /**
-     * saves page settings to database
-     */
-    savePageSettings {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case savePageSettings: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -131,12 +121,7 @@ public enum PageAdminAction implements ITreeAction {
                 RightsCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act=openTree&pageId=" + data.getId(), "_pageSettingsChanged");
             }
-        }, /**
-     * opens dialog for editing rights
-     */
-    openEditPageRights {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openEditPageRights: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -153,12 +138,7 @@ public enum PageAdminAction implements ITreeAction {
                 SessionWriter.setSessionObject(request, "pageData", data);
                 return showEditPageRights(request, response);
             }
-        }, /**
-     * saves page rights to database
-     */
-    savePageRights {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case savePageRights: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -172,12 +152,7 @@ public enum PageAdminAction implements ITreeAction {
                 RightsCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act=openTree&pageId=" + data.getId(), "_pageRightsChanged");
             }
-        }, /**
-     * clones page as sibling
-     */
-    clonePage {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case clonePage: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -200,12 +175,7 @@ public enum PageAdminAction implements ITreeAction {
                 RightsCache.getInstance().setDirty();
                 return showTree(request, response);
             }
-        }, /**
-     * cuts page mailFrom tree for pasting somewhere else
-     */
-    cutPage {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case cutPage: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -213,12 +183,7 @@ public enum PageAdminAction implements ITreeAction {
                 RequestWriter.setMessageKey(request, "_pageCut");
                 return showTree(request, response);
             }
-        }, /**
-     * moves page to somewhere else in the tree
-     */
-    movePage {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case movePage: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -235,12 +200,7 @@ public enum PageAdminAction implements ITreeAction {
                 }
                 return true;
             }
-        }, /**
-     * opens dialog for deleting the page
-     */
-    openDeletePage {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openDeletePage: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -250,12 +210,7 @@ public enum PageAdminAction implements ITreeAction {
                 }
                 return showDeletePage(request, response);
             }
-        }, /**
-     * deletes the page mailFrom database
-     */
-    deletePage {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case deletePage: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -274,12 +229,7 @@ public enum PageAdminAction implements ITreeAction {
                 request.setAttribute("siteId", Integer.toString(parentId));
                 return closeLayerToTree(request, response, "/tree.ajx?act=openTree&siteId=" + parentId, "_pageDeleted");
             }
-        }, /**
-     * opens dialog with page history (old versions)
-     */
-    openPageHistory {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openPageHistory: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -288,12 +238,7 @@ public enum PageAdminAction implements ITreeAction {
                 request.setAttribute("pageData", data);
                 return showPageHistory(request, response);
             }
-        }, /**
-     * shows a page
-     */
-    showHistoryPage {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case showHistoryPage: {
                 PageData data;
                 int pageId = RequestReader.getInt(request, "pageId");
                 int pageVersion = RequestReader.getInt(request, "version");
@@ -312,12 +257,7 @@ public enum PageAdminAction implements ITreeAction {
                 request.setAttribute("pageData", data);
                 return setPageResponse(request, response, data);
             }
-        }, /**
-     * restores old page version as current draft
-     */
-    restoreHistoryPage {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case restoreHistoryPage: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -329,12 +269,7 @@ public enum PageAdminAction implements ITreeAction {
                 RightsCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act=openTree&siteId=" + data.getParentId() + "&pageId=" + pageId, "_pageVersionRestored");
             }
-        }, /**
-     * deletes old version from history
-     */
-    deleteHistoryPage {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case deleteHistoryPage: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -346,34 +281,19 @@ public enum PageAdminAction implements ITreeAction {
                 RequestWriter.setMessageKey(request, "_pageVersionDeleted");
                 return showPageHistory(request, response);
             }
-        }, /**
-     * shows shared page part properties
-     */
-    showSharedPartDetails {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case showSharedPartDetails: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
                 return showSharedPartDetails(request, response);
             }
-        }, /**
-     * opens dialog for deleting a shared/commonly used page part
-     */
-    openDeleteSharedPart {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openDeleteSharedPart: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
                 return showDeleteSharedPart(request, response);
             }
-        }, /**
-     * deletes a shared page part
-     */
-    deleteSharedPart {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case deleteSharedPart: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -381,14 +301,18 @@ public enum PageAdminAction implements ITreeAction {
                 if (PageBean.getInstance().deleteSharedPagePart(id)) {
                     RequestWriter.setMessageKey(request, "partDeleted");
                 }
-                return AdminAction.openAdministration.execute(request, response);
+                return new AdminAction().execute(request, response, AdminAction.openAdministration);
             }
-        };
+            default: {
+                return forbidden();
+            }
+        }
+    }
 
     public static final String KEY = "pageadmin";
 
     public static void initialize() {
-        ActionDispatcher.addClass(KEY, PageAdminAction.class);
+        ActionDispatcher.addAction(KEY, new PageAdminAction());
     }
 
     @Override

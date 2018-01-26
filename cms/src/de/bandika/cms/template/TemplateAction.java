@@ -9,7 +9,7 @@
 package de.bandika.cms.template;
 
 import de.bandika.base.data.BinaryFileData;
-import de.bandika.cms.servlet.ICmsAction;
+import de.bandika.cms.servlet.CmsAction;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.SystemZone;
 import de.bandika.webbase.servlet.ActionDispatcher;
@@ -21,31 +21,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 
-public enum TemplateAction implements ICmsAction {
-    /**
-     * no action
-     */
-    defaultAction {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            return forbidden();
-        }
-    }, /**
-     * opens dialog for importing templates
-     */
-    openImportTemplates {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+public class TemplateAction extends CmsAction {
+
+    public static final String openImportTemplates="openImportTemplates";
+    public static final String importTemplates="importTemplates";
+    public static final String openCreateTemplate="openCreateTemplate";
+    public static final String showTemplateDetails="showTemplateDetails";
+    public static final String openEditTemplate="openEditTemplate";
+    public static final String saveTemplate="saveTemplate";
+    public static final String openDeleteTemplate="openDeleteTemplate";
+    public static final String deleteTemplate="deleteTemplate";
+
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+        switch (actionName) {
+            case openImportTemplates: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
                 return showImportTemplates(request, response);
             }
-        }, /**
-     * imports template to database
-     */
-    importTemplates {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case importTemplates: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
                 String html = "";
@@ -60,12 +54,7 @@ public enum TemplateAction implements ICmsAction {
                 TemplateCache.getInstance().setDirty();
                 return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_templatesImported");
             }
-        }, /**
-     * opens dialog for creating a new template
-     */
-    openCreateTemplate {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openCreateTemplate: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
                 TemplateType type = TemplateType.valueOf(RequestReader.getString(request, "templateType"));
@@ -76,22 +65,12 @@ public enum TemplateAction implements ICmsAction {
                 SessionWriter.setSessionObject(request, "templateData", data);
                 return showEditTemplate(request, response);
             }
-        }, /**
-     * shows template properties
-     */
-    showTemplateDetails {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case showTemplateDetails: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
                 return showTemplateDetails(request, response);
             }
-        }, /**
-     * opens dialog for editing a template
-     */
-    openEditTemplate {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openEditTemplate: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
                 TemplateType templateType = TemplateType.valueOf(RequestReader.getString(request, "templateType"));
@@ -104,12 +83,7 @@ public enum TemplateAction implements ICmsAction {
                 SessionWriter.setSessionObject(request, "templateData", data);
                 return showEditTemplate(request, response);
             }
-        }, /**
-     * saves template to database
-     */
-    saveTemplate {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case saveTemplate: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
                 TemplateData data = (TemplateData) getSessionObject(request, "templateData");
@@ -131,22 +105,12 @@ public enum TemplateAction implements ICmsAction {
                 TemplateCache.getInstance().setDirty();
                 return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&templateType=" + data.getType().name() + "&templateName=" + data.getName(), "_templateSaved");
             }
-        }, /**
-     * opens dialog for deleting a master template
-     */
-    openDeleteTemplate {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openDeleteTemplate: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
                 return showDeleteTemplate(request, response);
             }
-        }, /**
-     * deletes master template mailFrom database
-     */
-    deleteTemplate {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case deleteTemplate: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
                 TemplateType templateType = TemplateType.valueOf(RequestReader.getString(request, "templateType"));
@@ -156,12 +120,16 @@ public enum TemplateAction implements ICmsAction {
                 TemplateCache.getInstance().setDirty();
                 return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_templateDeleted");
             }
-        };
+            default: {
+                return forbidden();
+            }
+        }
+    }
 
     public static final String KEY = "template";
 
     public static void initialize() {
-        ActionDispatcher.addClass(KEY, TemplateAction.class);
+        ActionDispatcher.addAction(KEY, new TemplateAction());
     }
 
     @Override

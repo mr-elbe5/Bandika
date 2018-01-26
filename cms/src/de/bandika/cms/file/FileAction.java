@@ -14,7 +14,7 @@ import de.bandika.base.log.Log;
 import de.bandika.base.util.StringUtil;
 import de.bandika.cms.application.AdminAction;
 import de.bandika.cms.site.SiteData;
-import de.bandika.cms.tree.ITreeAction;
+import de.bandika.cms.tree.BaseTreeAction;
 import de.bandika.cms.tree.TreeBean;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.rights.Right;
@@ -24,21 +24,35 @@ import de.bandika.webbase.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public enum FileAction implements ITreeAction {
-    /**
-     * redirects to show action
-     */
-    defaultAction {
-        @Override
-        public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-            return FileAction.show.execute(request, response);
-        }
-    }, /**
-     * shows file
-     */
-    show {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+public class FileAction extends BaseTreeAction {
+
+    public static final String show="show";
+    public static final String download="download";
+    public static final String showPreview="showPreview";
+    public static final String openReplaceFile="openReplaceFile";
+    public static final String showFileDetails="showFileDetails";
+    public static final String openEditFileSettings="openEditFileSettings";
+    public static final String openEditFileRights="openEditFileRights";
+    public static final String openCreateFile="openCreateFile";
+    public static final String createFile="createFile";
+    public static final String createFiles="createFiles";
+    public static final String saveFileSettings="saveFileSettings";
+    public static final String saveFileRights="saveFileRights";
+    public static final String replaceFile="replaceFile";
+    public static final String cloneFile="cloneFile";
+    public static final String cutFile="cutFile";
+    public static final String moveFile="moveFile";
+    public static final String publishFile="publishFile";
+    public static final String openDeleteFile="openDeleteFile";
+    public static final String deleteFile="deleteFile";
+    public static final String openFileHistory="openFileHistory";
+    public static final String showHistoryFile="showHistoryFile";
+    public static final String restoreHistoryFile="restoreHistoryFile";
+    public static final String deleteHistoryFile="deleteHistoryFile";
+
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+        switch (actionName) {
+            case show: {
                 FileData treeData, data;
                 int fileId = RequestReader.getInt(request, "fileId");
                 TreeCache tc = TreeCache.getInstance();
@@ -68,12 +82,7 @@ public enum FileAction implements ITreeAction {
                 BinaryFileStreamData streamData = FileBean.getInstance().getBinaryFileStreamData(data.getId(), fileVersion);
                 return streamData != null && sendBinaryFileResponse(request, response, streamData);
             }
-        }, /**
-     * offers file for download
-     */
-    download {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case download: {
                 FileData data;
                 int fileId = RequestReader.getInt(request, "fileId");
                 TreeCache tc = TreeCache.getInstance();
@@ -97,12 +106,7 @@ public enum FileAction implements ITreeAction {
                 BinaryFileStreamData streamData = FileBean.getInstance().getBinaryFileStreamData(data.getId(), fileVersion);
                 return streamData != null && sendBinaryFileResponse(request, response, streamData, true);
             }
-        }, /**
-     * shows preview image
-     */
-    showPreview {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case showPreview: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 TreeCache tc = TreeCache.getInstance();
                 FileData data = tc.getFile(fileId);
@@ -117,12 +121,7 @@ public enum FileAction implements ITreeAction {
                 BinaryFileData file = FileBean.getInstance().getBinaryPreview(fileId, fileVersion, fileVersion == data.getPublishedVersion());
                 return file != null && sendBinaryResponse(request, response, file.getFileName(), file.getContentType(), file.getBytes());
             }
-        }, /**
-     * opens dialog for replacing a file
-     */
-    openReplaceFile {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openReplaceFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
@@ -135,23 +134,13 @@ public enum FileAction implements ITreeAction {
                 SessionWriter.setSessionObject(request, "fileData", data);
                 return showReplaceFile(request, response);
             }
-        }, /**
-     * shows file properties
-     */
-    showFileDetails {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case showFileDetails: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
                 return showFileDetails(request, response);
             }
-        }, /**
-     * opens dialog for editing file settings
-     */
-    openEditFileSettings {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openEditFileSettings: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
@@ -164,12 +153,7 @@ public enum FileAction implements ITreeAction {
                 SessionWriter.setSessionObject(request, "fileData", data);
                 return showEditFileSettings(request, response);
             }
-        }, /**
-     * opens dialog for editing file rights
-     */
-    openEditFileRights {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openEditFileRights: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
@@ -186,23 +170,13 @@ public enum FileAction implements ITreeAction {
                 SessionWriter.setSessionObject(request, "fileData", data);
                 return showEditFileRights(request, response);
             }
-        }, /**
-     * opens dialog for creating a new file
-     */
-    openCreateFile {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openCreateFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
                 return showCreateFile(request, response);
             }
-        }, /**
-     * creates new file to database
-     */
-    createFile {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case createFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
@@ -223,12 +197,7 @@ public enum FileAction implements ITreeAction {
                 TreeCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act=openTree&fileId=" + data.getId(), "_fileCreated");
             }
-        }, /**
-     * creates several files to database
-     */
-    createFiles {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case createFiles: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
@@ -259,12 +228,7 @@ public enum FileAction implements ITreeAction {
                 }
                 return true;
             }
-        }, /**
-     * saves file settings to database
-     */
-    saveFileSettings {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case saveFileSettings: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
@@ -282,12 +246,7 @@ public enum FileAction implements ITreeAction {
                 TreeCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act=openTree&fileId=" + data.getId(), "_fileSettingsChanged");
             }
-        }, /**
-     * saves file rights to database
-     */
-    saveFileRights {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case saveFileRights: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
@@ -301,12 +260,7 @@ public enum FileAction implements ITreeAction {
                 RightsCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act=openTree&fileId=" + data.getId(), "_fileRightsChanged");
             }
-        }, /**
-     * replaces the file binary
-     */
-    replaceFile {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case replaceFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
@@ -320,12 +274,7 @@ public enum FileAction implements ITreeAction {
                 TreeCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act=openTree&fileId=" + data.getId(), "_fileReplaced");
             }
-        }, /**
-     * clones file as sibling
-     */
-    cloneFile {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case cloneFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
@@ -347,25 +296,15 @@ public enum FileAction implements ITreeAction {
                 RightsCache.getInstance().setDirty();
                 return showTree(request, response);
             }
-        }, /**
-     * cuts file mailFrom tree for pasteing somewhere else
-     */
-    cutFile {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case cutFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
                 SessionWriter.setSessionObject(request, "cutFileId", fileId);
                 RequestWriter.setMessageKey(request, "_fileCut");
-                return AdminAction.openAdministration.execute(request, response);
+                return new AdminAction().execute(request, response, AdminAction.openAdministration);
             }
-        }, /**
-     * moves file to a different place in the tree
-     */
-    moveFile {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case moveFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
@@ -382,12 +321,7 @@ public enum FileAction implements ITreeAction {
                 }
                 return true;
             }
-        }, /**
-     * publishes a file
-     */
-    publishFile {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case publishFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.APPROVE))
                     return false;
@@ -404,25 +338,15 @@ public enum FileAction implements ITreeAction {
                 if (fromAdmin) {
                     return showTree(request, response);
                 }
-                return FileAction.show.execute(request, response);
+                return new FileAction().execute(request, response, show);
             }
-        }, /**
-     * opens dialog for deleting a file
-     */
-    openDeleteFile {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openDeleteFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
                 return showDeleteFile(request, response);
             }
-        }, /**
-     * deletes a file mailFrom database
-     */
-    deleteFile {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case deleteFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
@@ -432,12 +356,7 @@ public enum FileAction implements ITreeAction {
                 TreeCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act=openTree&siteId=" + data.getParentId(), "_fileDeleted");
             }
-        }, /**
-     * opens dialog with file history
-     */
-    openFileHistory {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case openFileHistory: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
@@ -446,12 +365,7 @@ public enum FileAction implements ITreeAction {
                 request.setAttribute("fileData", data);
                 return showFileHistory(request, response);
             }
-        }, /**
-     * shows file
-     */
-    showHistoryFile {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case showHistoryFile: {
                 FileData data;
                 int fileId = RequestReader.getInt(request, "fileId");
                 int fileVersion = RequestReader.getInt(request, "version");
@@ -470,12 +384,7 @@ public enum FileAction implements ITreeAction {
                 BinaryFileStreamData streamData = FileBean.getInstance().getBinaryFileStreamData(data.getId(), fileVersion);
                 return streamData != null && sendBinaryFileResponse(request, response, streamData);
             }
-        }, /**
-     * restores a file from history a new draft
-     */
-    restoreHistoryFile {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case restoreHistoryFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
@@ -487,12 +396,7 @@ public enum FileAction implements ITreeAction {
                 RightsCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act=openTree&siteId=" + data.getParentId() + "&fileId=" + fileId, "_fileVersionRestored");
             }
-        }, /**
-     * deletes an old file version
-     */
-    deleteHistoryFile {
-            @Override
-            public boolean execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            case deleteHistoryFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
@@ -504,12 +408,16 @@ public enum FileAction implements ITreeAction {
                 RequestWriter.setMessageKey(request, "_fileVersionDeleted");
                 return showFileHistory(request, response);
             }
-        };
+            default: {
+                return new FileAction().execute(request, response,show);
+            }
+        }
+    }
 
     public static final String KEY = "file";
 
     public static void initialize() {
-        ActionDispatcher.addClass(KEY, FileAction.class);
+        ActionDispatcher.addAction(KEY, new FileAction());
     }
 
     @Override
