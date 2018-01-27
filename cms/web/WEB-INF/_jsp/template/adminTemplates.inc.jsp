@@ -17,6 +17,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="de.bandika.cms.template.TemplateAction" %>
 <%
     if (SessionReader.hasSystemRight(request, SystemZone.CONTENT, Right.EDIT)) {
         Locale locale = SessionReader.getSessionLocale(request);
@@ -28,7 +29,7 @@
     <div class="icn itemplate contextSource"><%=StringUtil.getHtml("_templates", locale)%>
     </div>
     <div class="contextMenu">
-        <div class="icn iimport" onclick="return openLayerDialog('<%=StringUtil.getHtml("_importTemplates",locale)%>', '/template.ajx?act=openImportTemplates')"><%=StringUtil.getHtml("_import", locale)%>
+        <div class="icn iimport" onclick="return openLayerDialog('<%=StringUtil.getHtml("_importTemplates",locale)%>', '/template.ajx?act=<%=TemplateAction.openImportTemplates%>')"><%=StringUtil.getHtml("_import", locale)%>
         </div>
     </div>
     <ul>
@@ -36,7 +37,7 @@
             <div class="contextSource"><%=StringUtil.getHtml("_masterTemplates", locale)%>
             </div>
             <div class="contextMenu">
-                <div class="icn inew" onclick="return openLayerDialog('<%=StringUtil.getHtml("_newMasterTemplate",locale)%>', '/template.ajx?act=openCreateTemplate&templateType=<%=TemplateType.MASTER%>')"><%=StringUtil.getHtml("_new", locale)%>
+                <div class="icn inew" onclick="return openLayerDialog('<%=StringUtil.getHtml("_newMasterTemplate",locale)%>', '/template.ajx?act=<%=TemplateAction.openCreateTemplate%>&templateType=<%=TemplateType.MASTER%>')"><%=StringUtil.getHtml("_new", locale)%>
                 </div>
             </div>
             <ul>
@@ -44,12 +45,12 @@
                     for (TemplateData template : templates.get(TemplateType.MASTER)) {
                 %>
                 <li>
-                    <div class="contextSource icn itemplate <%=templateName.equals(template.getName()) ? "selected" : ""%>" onclick="$('#details').load('/template.ajx?act=showTemplateDetails&templateType=<%=TemplateType.MASTER%>&templateName=<%=template.getName()%>')"><%=StringUtil.toHtml(template.getName())%>
+                    <div class="contextSource icn itemplate <%=templateName.equals(template.getName()) ? "selected" : ""%>" onclick="$('#details').load('/template.ajx?act=<%=TemplateAction.showTemplateDetails%>&templateType=<%=TemplateType.MASTER%>&templateName=<%=template.getName()%>')"><%=StringUtil.toHtml(template.getName())%>
                     </div>
                     <div class="contextMenu">
-                        <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editTemplate",locale)%>', '/template.ajx?act=openEditTemplate&templateType=<%=TemplateType.MASTER%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_edit", locale)%>
+                        <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editTemplate",locale)%>', '/template.ajx?act=<%=TemplateAction.openEditTemplate%>&templateType=<%=TemplateType.MASTER%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_edit", locale)%>
                         </div>
-                        <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteTemplate",locale)%>', '/template.ajx?act=openDeleteTemplate&templateType=<%=TemplateType.MASTER%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                        <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteTemplate",locale)%>', '/template.ajx?act=<%=TemplateAction.openDeleteTemplate%>&templateType=<%=TemplateType.MASTER%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                         </div>
                     </div>
                 </li>
@@ -62,7 +63,7 @@
             <div class="contextSource"><%=StringUtil.getHtml("_pageTemplates", locale)%>
             </div>
             <div class="contextMenu">
-                <div class="icn inew" onclick="return openLayerDialog('<%=StringUtil.getHtml("_newPageTemplate",locale)%>', '/template.ajx?act=openCreateTemplate&templateType=<%=TemplateType.PAGE%>')"><%=StringUtil.getHtml("_new", locale)%>
+                <div class="icn inew" onclick="return openLayerDialog('<%=StringUtil.getHtml("_newPageTemplate",locale)%>', '/template.ajx?act=<%=TemplateAction.openCreateTemplate%>&templateType=<%=TemplateType.PAGE%>')"><%=StringUtil.getHtml("_new", locale)%>
                 </div>
             </div>
             <ul>
@@ -70,12 +71,12 @@
                     for (TemplateData template : templates.get(TemplateType.PAGE)) {
                 %>
                 <li>
-                    <div class="contextSource icn itemplate <%=templateName.equals(template.getName()) ? "selected" : ""%>" onclick="$('#details').load('/template.ajx?act=showTemplateDetails&templateType=<%=TemplateType.PAGE%>&templateName=<%=template.getName()%>')"><%=StringUtil.toHtml(template.getName())%>
+                    <div class="contextSource icn itemplate <%=templateName.equals(template.getName()) ? "selected" : ""%>" onclick="$('#details').load('/template.ajx?act=<%=TemplateAction.showTemplateDetails%>&templateType=<%=TemplateType.PAGE%>&templateName=<%=template.getName()%>')"><%=StringUtil.toHtml(template.getName())%>
                     </div>
                     <div class="contextMenu">
-                        <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editTemplate",locale)%>', '/template.ajx?act=openEditTemplate&templateType=<%=TemplateType.PAGE%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_edit", locale)%>
+                        <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editTemplate",locale)%>', '/template.ajx?act=<%=TemplateAction.openEditTemplate%>&templateType=<%=TemplateType.PAGE%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_edit", locale)%>
                         </div>
-                        <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteTemplate",locale)%>', '/template.ajx?act=openDeleteTemplate&templateType=<%=TemplateType.PAGE%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                        <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteTemplate",locale)%>', '/template.ajx?act=<%=TemplateAction.openDeleteTemplate%>&templateType=<%=TemplateType.PAGE%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                         </div>
                     </div>
                 </li>
@@ -88,7 +89,7 @@
             <div class="contextSource"><%=StringUtil.getHtml("_partTemplates", locale)%>
             </div>
             <div class="contextMenu">
-                <div class="icn inew" onclick="return openLayerDialog('<%=StringUtil.getHtml("_newPartTemplate",locale)%>', '/template.ajx?act=openCreateTemplate&templateType=<%=TemplateType.PART%>')"><%=StringUtil.getHtml("_new", locale)%>
+                <div class="icn inew" onclick="return openLayerDialog('<%=StringUtil.getHtml("_newPartTemplate",locale)%>', '/template.ajx?act=<%=TemplateAction.openCreateTemplate%>&templateType=<%=TemplateType.PART%>')"><%=StringUtil.getHtml("_new", locale)%>
                 </div>
             </div>
             <ul>
@@ -96,12 +97,12 @@
                     for (TemplateData template : templates.get(TemplateType.PART)) {
                 %>
                 <li>
-                    <div class="contextSource icn itemplate <%=templateName.equals(template.getName()) ? "selected" : ""%>" onclick="$('#details').load('/template.ajx?act=showTemplateDetails&templateType=<%=TemplateType.PART%>&templateName=<%=template.getName()%>')"><%=StringUtil.toHtml(template.getName())%>
+                    <div class="contextSource icn itemplate <%=templateName.equals(template.getName()) ? "selected" : ""%>" onclick="$('#details').load('/template.ajx?act=<%=TemplateAction.showTemplateDetails%>&templateType=<%=TemplateType.PART%>&templateName=<%=template.getName()%>')"><%=StringUtil.toHtml(template.getName())%>
                     </div>
                     <div class="contextMenu">
-                        <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editTemplate",locale)%>', '/template.ajx?act=openEditTemplate&templateType=<%=TemplateType.PART%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_edit", locale)%>
+                        <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editTemplate",locale)%>', '/template.ajx?act=<%=TemplateAction.openEditTemplate%>&templateType=<%=TemplateType.PART%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_edit", locale)%>
                         </div>
-                        <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteTemplate",locale)%>', '/template.ajx?act=openDeleteTemplate&templateType=<%=TemplateType.PART%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                        <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteTemplate",locale)%>', '/template.ajx?act=<%=TemplateAction.openDeleteTemplate%>&templateType=<%=TemplateType.PART%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                         </div>
                     </div>
                 </li>
@@ -114,7 +115,7 @@
             <div class="contextSource"><%=StringUtil.getHtml("_templateSnippets", locale)%>
             </div>
             <div class="contextMenu">
-                <div class="icn inew" onclick="return openLayerDialog('<%=StringUtil.getHtml("_newTemplateSnippet",locale)%>', '/template.ajx?act=openCreateTemplate&templateType=<%=TemplateType.SNIPPET%>')"><%=StringUtil.getHtml("_new", locale)%>
+                <div class="icn inew" onclick="return openLayerDialog('<%=StringUtil.getHtml("_newTemplateSnippet",locale)%>', '/template.ajx?act=<%=TemplateAction.openCreateTemplate%>&templateType=<%=TemplateType.SNIPPET%>')"><%=StringUtil.getHtml("_new", locale)%>
                 </div>
             </div>
             <ul>
@@ -122,12 +123,12 @@
                     for (TemplateData template : templates.get(TemplateType.SNIPPET)) {
                 %>
                 <li>
-                    <div class="contextSource icn itemplate <%=templateName.equals(template.getName()) ? "selected" : ""%>" onclick="$('#details').load('/template.ajx?act=showTemplateDetails&templateType=<%=TemplateType.SNIPPET%>&templateName=<%=template.getName()%>')"><%=StringUtil.toHtml(template.getName())%>
+                    <div class="contextSource icn itemplate <%=templateName.equals(template.getName()) ? "selected" : ""%>" onclick="$('#details').load('/template.ajx?act=<%=TemplateAction.showTemplateDetails%>&templateType=<%=TemplateType.SNIPPET%>&templateName=<%=template.getName()%>')"><%=StringUtil.toHtml(template.getName())%>
                     </div>
                     <div class="contextMenu">
-                        <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editTemplateSnippet",locale)%>', '/template.ajx?act=openEditTemplate&templateType=<%=TemplateType.SNIPPET%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_edit", locale)%>
+                        <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editTemplateSnippet",locale)%>', '/template.ajx?act=<%=TemplateAction.openEditTemplate%>&templateType=<%=TemplateType.SNIPPET%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_edit", locale)%>
                         </div>
-                        <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteTemplate",locale)%>', '/template.ajx?act=openDeleteTemplate&templateType=<%=TemplateType.SNIPPET%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                        <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteTemplate",locale)%>', '/template.ajx?act=<%=TemplateAction.openDeleteTemplate%>&templateType=<%=TemplateType.SNIPPET%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                         </div>
                     </div>
                 </li>

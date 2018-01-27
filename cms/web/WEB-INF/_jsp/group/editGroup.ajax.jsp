@@ -12,13 +12,15 @@
 <%@ page import="de.bandika.webbase.rights.SystemZone" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.group.GroupAction" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     GroupData group = (GroupData) SessionReader.getSessionObject(request, "groupData");
+    assert group!=null;
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/group.ajx" method="post" id="groupform" name="groupform" accept-charset="UTF-8">
-    <input type="hidden" name="act" value="saveGroup"/>
+    <input type="hidden" name="act" value="<%=GroupAction.saveGroup%>"/>
     <fieldset>
         <table class="padded form">
             <tr>

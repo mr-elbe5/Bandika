@@ -13,6 +13,7 @@
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.group.GroupAction" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     List<Integer> ids = RequestReader.getIntegerList(request, "groupId");
@@ -37,6 +38,6 @@
 <div class="buttonset topspace">
     <button onclick="closeLayerDialog();"><%=StringUtil.getHtml("_close", locale)%>
     </button>
-    <button class="primary" onclick="post2ModalDialog('/group.ajx', {act: 'deleteGroup', groupId: '<%=StringUtil.getIntString(ids)%>'});"><%=StringUtil.getHtml("_delete", locale)%>
+    <button class="primary" onclick="post2ModalDialog('/group.ajx', {act: '<%=GroupAction.deleteGroup%>', groupId: '<%=StringUtil.getIntString(ids)%>'});"><%=StringUtil.getHtml("_delete", locale)%>
     </button>
 </div>

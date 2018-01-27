@@ -55,7 +55,7 @@ public class PageEditAction extends BaseTreeAction {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (pageId==0)
                     request.setAttribute("pageId", Integer.toString(TreeCache.getInstance().getFallbackPageId(request)));
-                return new PageAction().execute(request, response, PageAction.show);
+                return new PageAction().show(request, response);
             }
             case openEditPageContent: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -96,7 +96,7 @@ public class PageEditAction extends BaseTreeAction {
                 data.stopEditing();
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return new PageAction().execute(request, response, PageAction.show);
+                return new PageAction().show(request, response);
             }
             case savePageContentAndPublish: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -113,7 +113,7 @@ public class PageEditAction extends BaseTreeAction {
                 data.stopEditing();
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return new PageAction().execute(request, response, PageAction.show);
+                return new PageAction().show(request, response);
             }
             case publishPage: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -132,14 +132,14 @@ public class PageEditAction extends BaseTreeAction {
                 if (fromAdmin) {
                     return showTree(request, response);
                 }
-                return new PageAction().execute(request, response, PageAction.show);
+                return new PageAction().show(request, response);
             }
             case stopEditing: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
                 SessionWriter.removeSessionObject(request, "pageData");
-                return new PageAction().execute(request, response, PageAction.show);
+                return new PageAction().show(request, response);
             }
             case showPageContent: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -208,7 +208,6 @@ public class PageEditAction extends BaseTreeAction {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
-                //todo
                 PageData data = (PageData) getSessionObject(request, "pageData");
                 checkObject(data, pageId);
                 PagePartData pdata = data.getEditPagePart();
@@ -259,7 +258,7 @@ public class PageEditAction extends BaseTreeAction {
                 checkObject(part, partId);
                 part.readPagePartSettingsData(request);
                 data.setEditPagePart(null);
-                return closeLayerToUrl(request, response, "/page.srv?act=reopenEditPageContent&pageId=" + data.getId());
+                return closeLayerToUrl(request, response, "/page.srv?act="+reopenEditPageContent+"&pageId=" + data.getId());
             }
             case openEditMultiHtmlPartSettings: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -281,7 +280,7 @@ public class PageEditAction extends BaseTreeAction {
                 checkObject(part, partId);
                 part.readPagePartSettingsData(request);
                 data.setEditPagePart(null);
-                return closeLayerToUrl(request, response, "/page.srv?act=reopenEditPageContent&pageId=" + data.getId());
+                return closeLayerToUrl(request, response, "/page.srv?act="+reopenEditPageContent+"&pageId=" + data.getId());
             }
             case setVisibleContentIdx: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -317,7 +316,7 @@ public class PageEditAction extends BaseTreeAction {
                 part.setShared(true);
                 part.setPageId(0);
                 data.setEditPagePart(null);
-                return closeLayerToUrl(request, response, "/page.srv?act=reopenEditPageContent&pageId=" + data.getId());
+                return closeLayerToUrl(request, response, "/page.srv?act="+reopenEditPageContent+"&pageId=" + data.getId());
             }
             case movePagePart: {
                 int pageId = RequestReader.getInt(request, "pageId");

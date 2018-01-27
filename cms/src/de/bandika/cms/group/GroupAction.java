@@ -10,6 +10,7 @@ package de.bandika.cms.group;
 
 import de.bandika.base.data.BaseIdData;
 import de.bandika.base.util.StringUtil;
+import de.bandika.cms.application.AdminAction;
 import de.bandika.cms.servlet.CmsAction;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.RightsCache;
@@ -58,7 +59,7 @@ public class GroupAction extends CmsAction {
                 }
                 GroupBean.getInstance().saveGroupUsers(data);
                 RightsCache.getInstance().setDirty();
-                return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&groupId=" + data.getId(), "_userAdded");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+AdminAction.openAdministration+"&groupId=" + data.getId(), "_userAdded");
             }
             case openRemoveGroupUsers: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
@@ -79,7 +80,7 @@ public class GroupAction extends CmsAction {
                 }
                 GroupBean.getInstance().saveGroupUsers(data);
                 RightsCache.getInstance().setDirty();
-                return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&groupId=" + data.getId(), "_usersRemoved");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminAction.openAdministration+"&groupId=" + data.getId(), "_usersRemoved");
             }
             case showGroupDetails: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
@@ -116,7 +117,7 @@ public class GroupAction extends CmsAction {
                 }
                 GroupBean.getInstance().saveGroup(data);
                 RightsCache.getInstance().setDirty();
-                return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&groupId=" + data.getId(), "_groupSaved");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+AdminAction.openAdministration+"&groupId=" + data.getId(), "_groupSaved");
             }
             case openDeleteGroup: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
@@ -137,7 +138,7 @@ public class GroupAction extends CmsAction {
                     GroupBean.getInstance().deleteGroup(id);
                     RightsCache.getInstance().setDirty();
                 }
-                return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_groupDeleted");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+AdminAction.openAdministration, "_groupDeleted");
             }
             default: {
                 return forbidden();

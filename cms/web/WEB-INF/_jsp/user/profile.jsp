@@ -11,6 +11,7 @@
 <%@ page import="de.bandika.cms.user.UserBean" %>
 <%@ page import="de.bandika.cms.user.UserData" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.user.UserAction" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     UserData user = UserBean.getInstance().getUser(SessionReader.getSessionLoginData(request).getId());
@@ -107,11 +108,11 @@
             <nav class="section">
                 <ul class="linkList">
                     <li>
-                        <div class="icn ipassword" onclick="return openLayerDialog('<%=StringUtil.getHtml("_changePassword",locale)%>', '/user.ajx?act=openChangePassword');"><%=StringUtil.getHtml("_changePassword", locale)%>
+                        <div class="icn ipassword" onclick="return openLayerDialog('<%=StringUtil.getHtml("_changePassword",locale)%>', '/user.ajx?act=<%=UserAction.openChangePassword%>');"><%=StringUtil.getHtml("_changePassword", locale)%>
                         </div>
                     </li>
                     <li>
-                        <div class="icn iprofile" onclick="return openLayerDialog('<%=StringUtil.getHtml("_changeProfile",locale)%>', '/user.ajx?act=openChangeProfile');"><%=StringUtil.getHtml("_changeProfile", locale)%>
+                        <div class="icn iprofile" onclick="return openLayerDialog('<%=StringUtil.getHtml("_changeProfile",locale)%>', '/user.ajx?act=<%=UserAction.openChangeProfile%>');"><%=StringUtil.getHtml("_changeProfile", locale)%>
                         </div>
                     </li>
                 </ul>

@@ -13,6 +13,7 @@ import de.bandika.base.util.StringUtil;
 import de.bandika.cms.application.AdminAction;
 import de.bandika.cms.site.SiteData;
 import de.bandika.cms.tree.BaseTreeAction;
+import de.bandika.cms.tree.TreeAction;
 import de.bandika.cms.tree.TreeBean;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.rights.Right;
@@ -85,7 +86,7 @@ public class PageAdminAction extends BaseTreeAction {
                 data.prepareEditing();
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act=openTree&siteId=" + data.getParentId() + "&pageId=" + data.getId());
+                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeAction.openTree+"&siteId=" + data.getParentId() + "&pageId=" + data.getId());
             }
             case openEditPageSettings: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -119,7 +120,7 @@ public class PageAdminAction extends BaseTreeAction {
                 data.stopEditing();
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act=openTree&pageId=" + data.getId(), "_pageSettingsChanged");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree+"&pageId=" + data.getId(), "_pageSettingsChanged");
             }
             case openEditPageRights: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -150,7 +151,7 @@ public class PageAdminAction extends BaseTreeAction {
                 data.stopEditing();
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act=openTree&pageId=" + data.getId(), "_pageRightsChanged");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree+"&pageId=" + data.getId(), "_pageRightsChanged");
             }
             case clonePage: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -227,7 +228,7 @@ public class PageAdminAction extends BaseTreeAction {
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
                 request.setAttribute("siteId", Integer.toString(parentId));
-                return closeLayerToTree(request, response, "/tree.ajx?act=openTree&siteId=" + parentId, "_pageDeleted");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree+"&siteId=" + parentId, "_pageDeleted");
             }
             case openPageHistory: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -267,7 +268,7 @@ public class PageAdminAction extends BaseTreeAction {
                 PageBean.getInstance().restorePageVersion(pageId, version);
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act=openTree&siteId=" + data.getParentId() + "&pageId=" + pageId, "_pageVersionRestored");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree+"&siteId=" + data.getParentId() + "&pageId=" + pageId, "_pageVersionRestored");
             }
             case deleteHistoryPage: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -301,7 +302,7 @@ public class PageAdminAction extends BaseTreeAction {
                 if (PageBean.getInstance().deleteSharedPagePart(id)) {
                     RequestWriter.setMessageKey(request, "partDeleted");
                 }
-                return new AdminAction().execute(request, response, AdminAction.openAdministration);
+                return new AdminAction().openAdministration(request, response);
             }
             default: {
                 return forbidden();

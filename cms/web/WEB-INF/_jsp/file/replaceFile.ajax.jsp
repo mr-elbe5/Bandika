@@ -10,15 +10,17 @@
 <%@ page import="de.bandika.cms.file.FileData" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.file.FileAction" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     FileData data = (FileData) SessionReader.getSessionObject(request, "fileData");
+    assert data!=null;
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/file.srv" method="post" id="editfileform" name="editfileform" accept-charset="UTF-8" enctype="multipart/form-data">
     <fieldset>
         <input type="hidden" name="fileId" value="<%=data.getId()%>"/>
-        <input type="hidden" name="act" value="replaceFile"/>
+        <input type="hidden" name="act" value="<%=FileAction.replaceFile%>"/>
         <table class="padded form">
             <tr>
                 <td>

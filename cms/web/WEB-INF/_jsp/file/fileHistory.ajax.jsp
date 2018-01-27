@@ -7,14 +7,15 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.cms.configuration.Configuration" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.cms.file.FileData" %>
 <%@ page import="de.bandika.cms.file.FileBean" %>
+<%@ page import="de.bandika.cms.file.FileAction" %>
 <%Locale locale = SessionReader.getSessionLocale(request);
     FileData data = (FileData) request.getAttribute("fileData");
+    assert data!=null;
     List<FileData> fileVersions = FileBean.getInstance().getFileHistory(data.getId());%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <fieldset>
@@ -39,7 +40,7 @@
             <td><%=StringUtil.toHtml(data.getAuthorName())%>
             </td>
             <td>
-                <a href="/file.srv?act=show&fileId=<%=data.getId()%>&version=<%=data.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
+                <a href="/file.srv?act=<%=FileAction.show%>&fileId=<%=data.getId()%>&version=<%=data.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
                 </a>
             </td>
         </tr>
@@ -52,11 +53,11 @@
             <td><%=StringUtil.toHtml(versionData.getAuthorName())%>
             </td>
             <td>
-                <div style="margin-bottom:5px"><a href="/file.srv?act=showHistoryFile&fileId=<%=versionData.getId()%>&version=<%=versionData.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
+                <div style="margin-bottom:5px"><a href="/file.srv?act=<%=FileAction.showHistoryFile%>&fileId=<%=versionData.getId()%>&version=<%=versionData.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
                 </a></div>
-                <div style="margin-bottom:5px"><button class="primary" onclick="post2ModalDialog('/file.ajx?act=restoreHistoryFile&fileId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_restore", locale)%>
+                <div style="margin-bottom:5px"><button class="primary" onclick="post2ModalDialog('/file.ajx?act=<%=FileAction.restoreHistoryFile%>&fileId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_restore", locale)%>
                 </button></div>
-                <div><button class="primary" onclick="post2ModalDialog('/file.ajx?act=deleteHistoryFile&fileId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                <div><button class="primary" onclick="post2ModalDialog('/file.ajx?act=<%=FileAction.deleteHistoryFile%>&fileId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                 </button></div>
             </td>
         </tr>

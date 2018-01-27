@@ -27,34 +27,7 @@ public class PageAction extends BaseTreeAction {
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
             case show: {
-                PageData treeData, data;
-                int pageId = RequestReader.getInt(request, "pageId");
-                TreeCache tc = TreeCache.getInstance();
-                if (pageId == 0) {
-                    String url = request.getRequestURI();
-                    treeData = tc.getPage(url);
-                } else {
-                    treeData = tc.getPage(pageId);
-                }
-                checkObject(treeData);
-                if (pageId==0){
-                    pageId=treeData.getId();
-                    request.setAttribute("pageId", Integer.toString(pageId));
-                }
-                if (!treeData.isAnonymous() && !SessionReader.hasContentRight(request, pageId, Right.READ)) {
-                    return forbidden();
-                }
-                int pageVersion = treeData.getVersionForUser(request);
-                if (pageVersion == treeData.getPublishedVersion()) {
-                    assert (treeData.isPublishedLoaded());
-                    data=treeData;
-                } else {
-                    data = PageBean.getInstance().getPage(pageId, pageVersion);
-                    data.setPath(treeData.getPath());
-                    data.setDefaultPage(treeData.isDefaultPage());
-                    data.setParentIds(treeData.getParentIds());
-                }
-                return setPageResponse(request, response, data);
+                return show(request, response);
             }
             case executePagePartMethod: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -71,7 +44,7 @@ public class PageAction extends BaseTreeAction {
                 return pdata != null && pdata.executePagePartMethod(partMethod, request, response);
             }
             default: {
-                return new PageAction().execute(request, response, show);
+                return show(request, response);
             }
         }
     }
@@ -85,6 +58,37 @@ public class PageAction extends BaseTreeAction {
     @Override
     public String getKey() {
         return KEY;
+    }
+
+    public boolean show(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        PageData treeData, data;
+        int pageId = RequestReader.getInt(request, "pageId");
+        TreeCache tc = TreeCache.getInstance();
+        if (pageId == 0) {
+            String url = request.getRequestURI();
+            treeData = tc.getPage(url);
+        } else {
+            treeData = tc.getPage(pageId);
+        }
+        checkObject(treeData);
+        if (pageId==0){
+            pageId=treeData.getId();
+            request.setAttribute("pageId", Integer.toString(pageId));
+        }
+        if (!treeData.isAnonymous() && !SessionReader.hasContentRight(request, pageId, Right.READ)) {
+            return forbidden();
+        }
+        int pageVersion = treeData.getVersionForUser(request);
+        if (pageVersion == treeData.getPublishedVersion()) {
+            assert (treeData.isPublishedLoaded());
+            data=treeData;
+        } else {
+            data = PageBean.getInstance().getPage(pageId, pageVersion);
+            data.setPath(treeData.getPath());
+            data.setDefaultPage(treeData.isDefaultPage());
+            data.setParentIds(treeData.getParentIds());
+        }
+        return setPageResponse(request, response, data);
     }
 
     protected boolean setPageResponse(HttpServletRequest request, HttpServletResponse response, PageData data) {

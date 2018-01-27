@@ -11,6 +11,7 @@
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.cms.page.MultiHtmlPartData" %>
+<%@ page import="de.bandika.cms.page.PageEditAction" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     PageData data = (PageData) SessionReader.getSessionObject(request, "pageData");
@@ -24,7 +25,7 @@
     <fieldset>
         <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
         <input type="hidden" name="partId" value="<%=part.getId()%>"/>
-        <input type="hidden" name="act" value="saveMultiHtmlPartSettings"/>
+        <input type="hidden" name="act" value="<%=PageEditAction.saveMultiHtmlPartSettings%>"/>
         <table class="padded form">
             <tr>
                 <td>

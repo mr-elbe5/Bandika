@@ -10,6 +10,7 @@
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     CkCallbackData browseData = (CkCallbackData) SessionReader.getSessionObject(request, "browseData");
+    assert browseData!=null;
     TreeCache tc = TreeCache.getInstance();
     SiteData site = tc.getSite(browseData.getSiteId());
     List<PageData> pages = site.getPages();

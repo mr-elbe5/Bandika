@@ -86,7 +86,7 @@ public class ConfigAction extends CmsAction {
                     cache.checkDirty();
                 }
                 RequestWriter.setMessageKey(request, "_cacheCleared");
-                return AdminAction.instance.execute(request, response, AdminAction.openAdministration);
+                return new AdminAction().openAdministration(request, response);
             }
             case clearFileCache:{
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
@@ -98,7 +98,7 @@ public class ConfigAction extends CmsAction {
                     cache.checkDirty();
                 }
                 RequestWriter.setMessageKey(request, "_cacheCleared");
-                return AdminAction.instance.execute(request, response, AdminAction.openAdministration);
+                return new AdminAction().openAdministration(request, response);
             }
             default:{
                 return forbidden();

@@ -9,6 +9,7 @@
 package de.bandika.cms.template;
 
 import de.bandika.base.data.BinaryFileData;
+import de.bandika.cms.application.AdminAction;
 import de.bandika.cms.servlet.CmsAction;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.SystemZone;
@@ -52,7 +53,7 @@ public class TemplateAction extends CmsAction {
                     return showImportTemplates(request, response);
                 }
                 TemplateCache.getInstance().setDirty();
-                return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_templatesImported");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminAction.openAdministration, "_templatesImported");
             }
             case openCreateTemplate: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
@@ -103,7 +104,7 @@ public class TemplateAction extends CmsAction {
                 }
                 TemplateBean.getInstance().saveTemplate(data, true);
                 TemplateCache.getInstance().setDirty();
-                return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&templateType=" + data.getType().name() + "&templateName=" + data.getName(), "_templateSaved");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+AdminAction.openAdministration+"&templateType=" + data.getType().name() + "&templateName=" + data.getName(), "_templateSaved");
             }
             case openDeleteTemplate: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
@@ -118,7 +119,7 @@ public class TemplateAction extends CmsAction {
                 if (!TemplateBean.getInstance().deleteTemplate(templateName, templateType))
                     return false;
                 TemplateCache.getInstance().setDirty();
-                return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_templateDeleted");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+AdminAction.openAdministration, "_templateDeleted");
             }
             default: {
                 return forbidden();

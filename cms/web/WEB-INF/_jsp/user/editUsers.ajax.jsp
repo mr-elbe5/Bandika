@@ -14,7 +14,7 @@
 <%@ page import="de.bandika.cms.user.UserData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.webbase.servlet.RequestReader" %>
+<%@ page import="de.bandika.cms.user.UserAction" %>
 <%
     if (SessionReader.hasSystemRight(request, SystemZone.USER, Right.EDIT)) {
         Locale locale = SessionReader.getSessionLocale(request);
@@ -52,10 +52,10 @@
                     <div class="contextSource icn iuser"><%=StringUtil.toHtml(user.getName())%>
                     </div>
                     <div class="contextMenu">
-                        <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editUser",locale)%>', '/user.ajx?act=openEditUser&userId=<%=user.getId()%>');"><%=StringUtil.getHtml("_edit", locale)%>
+                        <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editUser",locale)%>', '/user.ajx?act=<%=UserAction.openEditUser%>&userId=<%=user.getId()%>');"><%=StringUtil.getHtml("_edit", locale)%>
                         </div>
                         <% if (user.getId() != UserData.ID_SYSTEM) {%>
-                        <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteUser",locale)%>', '/user.ajx?act=openDeleteUser&userId=<%=user.getId()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                        <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteUser",locale)%>', '/user.ajx?act=<%=UserAction.openDeleteUser%>&userId=<%=user.getId()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                         </div>
                         <%}%>
                     </div>
@@ -72,7 +72,7 @@
 </form>
 <script type="text/javascript">
     $("#usersTable").initContextMenus();
-    $('#userFilter').keyup(function (evt) {
+    $('#userFilter').keyup(function () {
         var text = $(this).val().toLowerCase();
         $.each($('.userLine'), function () {
             var lineText = this.dataset.search;

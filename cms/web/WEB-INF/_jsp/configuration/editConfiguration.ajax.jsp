@@ -20,7 +20,7 @@
     Mailer.SmtpConnectionType[] connectionTypes = Mailer.SmtpConnectionType.values();
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
-<form action="config.ajx" method="post" id="configform" name="configform" accept-charset="UTF-8">
+<form action="/config.ajx" method="post" id="configform" name="configform" accept-charset="UTF-8">
     <input type="hidden" name="act" value="<%=ConfigAction.saveConfiguration%>"/>
     <fieldset>
         <table class="padded form">

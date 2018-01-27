@@ -13,6 +13,7 @@
 <%@ page import="de.bandika.cms.user.UserData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.user.UserAction" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     List<Integer> ids = RequestReader.getIntegerList(request, "userId");
@@ -35,6 +36,6 @@
 <div class="buttonset topspace">
     <button onclick="closeLayerDialog();"><%=StringUtil.getHtml("_close", locale)%>
     </button>
-    <button class="primary" onclick="post2ModalDialog('/user.ajx', {act: 'deleteUser', userId: '<%=StringUtil.getIntString(ids)%>'});"><%=StringUtil.getHtml("_delete", locale)%>
+    <button class="primary" onclick="post2ModalDialog('/user.ajx', {act: '<%=UserAction.deleteUser%>', userId: '<%=StringUtil.getIntString(ids)%>'});"><%=StringUtil.getHtml("_delete", locale)%>
     </button>
 </div>

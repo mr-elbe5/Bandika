@@ -18,7 +18,7 @@
     Locale locale = SessionReader.getSessionLocale(request);
     TreeNode node = TreeHelper.getRequestedNode(request, locale);
     int nodeId = node == null ? 0 : node.getId();
-    List<Integer> parentIds = node == null ? new ArrayList<Integer>() : node.getParentIds();
+    List<Integer> parentIds = node == null ? new ArrayList<>() : node.getParentIds();
     TreeCache tc = TreeCache.getInstance();
 %>
 

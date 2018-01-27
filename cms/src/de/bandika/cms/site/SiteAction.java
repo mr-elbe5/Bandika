@@ -15,10 +15,7 @@ import de.bandika.cms.file.FileData;
 import de.bandika.cms.page.PageAction;
 import de.bandika.cms.page.PageBean;
 import de.bandika.cms.page.PageData;
-import de.bandika.cms.tree.BaseTreeAction;
-import de.bandika.cms.tree.TreeBean;
-import de.bandika.cms.tree.TreeCache;
-import de.bandika.cms.tree.TreeNodeSortData;
+import de.bandika.cms.tree.*;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.RightsCache;
 import de.bandika.webbase.servlet.*;
@@ -30,59 +27,38 @@ import java.util.List;
 
 public class SiteAction extends BaseTreeAction {
 
-    public static final String show="show";
-    public static final String openCreateSite="openCreateSite";
-    public static final String createSite="createSite";
-    public static final String showSiteDetails="showSiteDetails";
-    public static final String openEditSiteSettings="openEditSiteSettings";
-    public static final String openEditSiteRights="openEditSiteRights";
-    public static final String stopEditing="stopEditing";
-    public static final String saveSiteSettings="saveSiteSettings";
-    public static final String saveSiteRights="saveSiteRights";
-    public static final String publishAll="publishAll";
-    public static final String inheritAll="inheritAll";
-    public static final String cutSite="cutSite";
-    public static final String pasteSite="pasteSite";
-    public static final String pastePage="pastePage";
-    public static final String pasteFile="pasteFile";
-    public static final String moveSite="moveSite";
-    public static final String openSortSites="openSortSites";
-    public static final String changeSiteRanking="changeSiteRanking";
-    public static final String saveSortSites="saveSortSites";
-    public static final String openSortPages="openSortPages";
-    public static final String changePageRanking="changePageRanking";
-    public static final String saveSortPages="saveSortPages";
-    public static final String openSortFiles="openSortFiles";
-    public static final String changeFileRanking="changeFileRanking";
-    public static final String saveSortFiles="saveSortFiles";
-    public static final String openDeleteSite="openDeleteSite";
-    public static final String delete="delete";
+    public static final String show = "show";
+    public static final String openCreateSite = "openCreateSite";
+    public static final String createSite = "createSite";
+    public static final String showSiteDetails = "showSiteDetails";
+    public static final String openEditSiteSettings = "openEditSiteSettings";
+    public static final String openEditSiteRights = "openEditSiteRights";
+    public static final String stopEditing = "stopEditing";
+    public static final String saveSiteSettings = "saveSiteSettings";
+    public static final String saveSiteRights = "saveSiteRights";
+    public static final String publishAll = "publishAll";
+    public static final String inheritAll = "inheritAll";
+    public static final String cutSite = "cutSite";
+    public static final String pasteSite = "pasteSite";
+    public static final String pastePage = "pastePage";
+    public static final String pasteFile = "pasteFile";
+    public static final String moveSite = "moveSite";
+    public static final String openSortSites = "openSortSites";
+    public static final String changeSiteRanking = "changeSiteRanking";
+    public static final String saveSortSites = "saveSortSites";
+    public static final String openSortPages = "openSortPages";
+    public static final String changePageRanking = "changePageRanking";
+    public static final String saveSortPages = "saveSortPages";
+    public static final String openSortFiles = "openSortFiles";
+    public static final String changeFileRanking = "changeFileRanking";
+    public static final String saveSortFiles = "saveSortFiles";
+    public static final String openDeleteSite = "openDeleteSite";
+    public static final String delete = "delete";
 
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
             case show: {
-                int siteId = RequestReader.getInt(request, "siteId");
-                //if (!hasContentRight(request,siteId,Right.READ))
-                //    return false;
-                SiteData data;
-                TreeCache tc = TreeCache.getInstance();
-                if (siteId == 0) {
-                    String url = request.getRequestURI();
-                    if (StringUtil.isNullOrEmpty(url)) {
-                        url = "/";
-                    }
-                    data = tc.getSite(url);
-                } else {
-                    data = tc.getSite(siteId);
-                }
-                checkObject(data);
-                request.setAttribute("siteId", Integer.toString(data.getId()));
-                if (data.hasDefaultPage()) {
-                    int defaultPageId = data.getDefaultPageId();
-                    request.setAttribute("pageId", Integer.toString(defaultPageId));
-                    return new PageAction().execute(request, response, PageAction.show);
-                }
-                return showBlankSite(request, response);
+                return show(request, response);
             }
             case openCreateSite: {
                 int siteId = RequestReader.getInt(request, "siteId");
@@ -132,7 +108,7 @@ public class SiteAction extends BaseTreeAction {
                 }
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.srv?act=openTree&siteId=" + data.getId(), "_siteCreated");
+                return closeLayerToTree(request, response, "/tree.srv?act="+TreeAction.openTree+"&siteId=" + data.getId(), "_siteCreated");
             }
             case showSiteDetails: {
                 int siteId = RequestReader.getInt(request, "siteId");
@@ -192,7 +168,7 @@ public class SiteAction extends BaseTreeAction {
                 data.stopEditing();
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act=openTree&siteId=" + siteId, "_siteSettingsChanged");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree+"&siteId=" + siteId, "_siteSettingsChanged");
             }
             case saveSiteRights: {
                 int siteId = RequestReader.getInt(request, "siteId");
@@ -206,7 +182,7 @@ public class SiteAction extends BaseTreeAction {
                 data.stopEditing();
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act=openTree", "_siteRightsChanged");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree, "_siteRightsChanged");
             }
             case publishAll: {
                 int siteId = RequestReader.getInt(request, "siteId");
@@ -239,7 +215,7 @@ public class SiteAction extends BaseTreeAction {
                 }
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act=openTree", "_allPublished");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree, "_allPublished");
             }
             case inheritAll: {
                 int siteId = RequestReader.getInt(request, "siteId");
@@ -273,7 +249,7 @@ public class SiteAction extends BaseTreeAction {
                 }
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act=openTree", "_allInherited");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree, "_allInherited");
             }
             case cutSite: {
                 int siteId = RequestReader.getInt(request, "siteId");
@@ -390,7 +366,7 @@ public class SiteAction extends BaseTreeAction {
                 SiteBean ts = SiteBean.getInstance();
                 ts.saveSortData(sortData);
                 TreeCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act=openTree", "_childOrderSaved");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree, "_childOrderSaved");
             }
             case openSortPages: {
                 int siteId = RequestReader.getInt(request, "siteId");
@@ -420,12 +396,12 @@ public class SiteAction extends BaseTreeAction {
                 TreeNodeSortData sortData = (TreeNodeSortData) getSessionObject(request, "sortData");
                 if (siteId == 0) {
                     addError(request, StringUtil.getString("_noData", SessionReader.getSessionLocale(request)));
-                    closeLayerToTree(request, response, "/tree.ajx?act=openTree");
+                    closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree);
                 }
                 SiteBean ts = SiteBean.getInstance();
                 ts.saveSortData(sortData);
                 TreeCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act=openTree", "_childOrderSaved");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree, "_childOrderSaved");
             }
             case openSortFiles: {
                 int siteId = RequestReader.getInt(request, "siteId");
@@ -455,12 +431,12 @@ public class SiteAction extends BaseTreeAction {
                 TreeNodeSortData sortData = (TreeNodeSortData) getSessionObject(request, "sortData");
                 if (siteId == 0) {
                     addError(request, StringUtil.getString("_noData", SessionReader.getSessionLocale(request)));
-                    closeLayerToTree(request, response, "/tree.ajx?act=openTree");
+                    closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree);
                 }
                 SiteBean ts = SiteBean.getInstance();
                 ts.saveSortData(sortData);
                 TreeCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act=openTree", "_childOrderSaved");
+                return closeLayerToTree(request, response, "/tree.ajx?act=" + TreeAction.openTree, "_childOrderSaved");
             }
             case openDeleteSite: {
                 int siteId = RequestReader.getInt(request, "siteId");
@@ -486,10 +462,10 @@ public class SiteAction extends BaseTreeAction {
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
                 request.setAttribute("siteId", Integer.toString(parent));
-                return closeLayerToTree(request, response, "/tree.ajx?act=openTree", "_siteDeleted");
+                return closeLayerToTree(request, response, "/tree.ajx?act=" + TreeAction.openTree, "_siteDeleted");
             }
             default: {
-                return new SiteAction().execute(request, response, show);
+                return show(request, response);
             }
         }
     }
@@ -503,6 +479,31 @@ public class SiteAction extends BaseTreeAction {
     @Override
     public String getKey() {
         return KEY;
+    }
+
+    public boolean show(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        int siteId = RequestReader.getInt(request, "siteId");
+        //if (!hasContentRight(request,siteId,Right.READ))
+        //    return false;
+        SiteData data;
+        TreeCache tc = TreeCache.getInstance();
+        if (siteId == 0) {
+            String url = request.getRequestURI();
+            if (StringUtil.isNullOrEmpty(url)) {
+                url = "/";
+            }
+            data = tc.getSite(url);
+        } else {
+            data = tc.getSite(siteId);
+        }
+        checkObject(data);
+        request.setAttribute("siteId", Integer.toString(data.getId()));
+        if (data.hasDefaultPage()) {
+            int defaultPageId = data.getDefaultPageId();
+            request.setAttribute("pageId", Integer.toString(defaultPageId));
+            return new PageAction().execute(request, response, PageAction.show);
+        }
+        return showBlankSite(request, response);
     }
 
     protected boolean showEditSiteSettings(HttpServletRequest request, HttpServletResponse response) {

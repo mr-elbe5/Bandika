@@ -14,7 +14,7 @@
 <%Locale locale = SessionReader.getSessionLocale(request);%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/admin.ajx" method="post" id="executeDbScript" name="executeDbScript" accept-charset="UTF-8" enctype="multipart/form-data">
-    <input type="hidden" name="act" value="<%=AdminAction.executeDatabaseScript.name()%>"/>
+    <input type="hidden" name="act" value="<%=AdminAction.executeDatabaseScript%>"/>
     <fieldset>
         <table class="padded form">
             <tr>
@@ -37,7 +37,7 @@
     <div class="buttonset topspace">
         <button onclick="closeLayerDialog();"><%=StringUtil.getHtml("_close", locale)%>
         </button>
-        <button type="submit" onclick="document.executeDbScript.act.value='<%=AdminAction.loadScriptFile.name()%>';" class="primary"><%=StringUtil.getHtml("_loadFile", locale)%>
+        <button type="submit" onclick="document.executeDbScript.act.value='<%=AdminAction.loadScriptFile%>';" class="primary"><%=StringUtil.getHtml("_loadFile", locale)%>
         </button>
         <button type="submit" class="primary"><%=StringUtil.getHtml("_execute", locale)%>
         </button>

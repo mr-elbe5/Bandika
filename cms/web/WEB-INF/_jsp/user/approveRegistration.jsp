@@ -9,10 +9,12 @@
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.user.UserAction" %>
+<%@ page import="de.bandika.webbase.user.LoginAction" %>
 <%Locale locale = SessionReader.getSessionLocale(request);%>
 <div class="userForm">
     <form action="/registration.srv" method="post" name="form" accept-charset="UTF-8">
-        <input type="hidden" name="act" value="approveRegistration"/>
+        <input type="hidden" name="act" value="<%=UserAction.approveRegistration%>"/>
         
         <div class="formText"><%=StringUtil.getHtml("_approvalInfo", locale)%>
         </div>
@@ -66,7 +68,7 @@
         <div class="buttonset topspace">
             <button type="submit" class="primary"><%=StringUtil.getHtml("_approve", locale)%>
             </button>
-            <button onclick="linkTo('/login.srv?act=openLogin');"><%=StringUtil.getHtml("_cancel", locale)%>
+            <button onclick="linkTo('/login.srv?act=<%=LoginAction.openLogin%>');"><%=StringUtil.getHtml("_cancel", locale)%>
             </button>
         </div>
     </form>

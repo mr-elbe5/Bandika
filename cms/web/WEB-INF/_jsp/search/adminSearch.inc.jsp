@@ -11,18 +11,18 @@
 <%@ page import="de.bandika.webbase.rights.SystemZone" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.webbase.servlet.RequestReader" %>
+<%@ page import="de.bandika.cms.search.SearchAction" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     if (SessionReader.hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT)) {
 %><!--search-->
 <li>
-    <div class="contextSource icn isearch" onclick="$('#details').load('/search.ajx?act=showAdminSearchDetails')"><%=StringUtil.getHtml("_search", locale)%>
+    <div class="contextSource icn isearch" onclick="$('#details').load('/search.ajx?act=<%=SearchAction.showAdminSearchDetails%>')"><%=StringUtil.getHtml("_search", locale)%>
     </div>
     <div class="contextMenu">
-        <div class="icn isync" onclick="linkTo('/search.srv?act=indexAllContent');"><%=StringUtil.getHtml("_indexAllContent", locale)%>
+        <div class="icn isync" onclick="linkTo('/search.srv?act=<%=SearchAction.indexAllContent%>');"><%=StringUtil.getHtml("_indexAllContent", locale)%>
         </div>
-        <div class="icn isync" onclick="linkTo('/search.srv?act=indexAllUsers');"><%=StringUtil.getHtml("_indexAllUsers", locale)%>
+        <div class="icn isync" onclick="linkTo('/search.srv?act=<%=SearchAction.indexAllUsers%>');"><%=StringUtil.getHtml("_indexAllUsers", locale)%>
         </div>
     </div>
 </li>

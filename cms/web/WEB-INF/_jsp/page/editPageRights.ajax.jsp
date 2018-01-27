@@ -10,6 +10,7 @@
 <%@ page import="de.bandika.cms.page.PageData" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.page.PageAdminAction" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     PageData data = (PageData) SessionReader.getSessionObject(request, "pageData");
@@ -21,7 +22,7 @@
 <form action="/pageadmin.srv" method="post" id="pagerightsform" name="pagerightsform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
-        <input type="hidden" name="act" value="savePageRights"/>
+        <input type="hidden" name="act" value="<%=PageAdminAction.savePageRights%>"/>
         <table class="padded form">
             <jsp:include page="../tree/editRights.inc.jsp" flush="true"/>
         </table>
@@ -32,7 +33,7 @@
         <%if (inherited) {%>
         <span> <%=StringUtil.getHtml("_inheritedHint", locale)%></span>
         <%} else {%>
-        <button type="submit" class="primary" <%=inherited ? "disabled=\"disabled\"" : ""%>><%=StringUtil.getHtml("_save", locale)%>
+        <button type="submit" class="primary" disabled="disabled" ><%=StringUtil.getHtml("_save", locale)%>
         </button>
         <%}%>
     </div>

@@ -10,9 +10,11 @@
 <%@ page import="de.bandika.cms.file.FileData" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.file.FileAction" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     FileData data = (FileData) SessionReader.getSessionObject(request, "fileData");
+    assert data!=null;
     boolean inherited = data.inheritsRights();
     request.setAttribute("treeNode", data);
 %>
@@ -20,7 +22,7 @@
 <form action="/file.srv" method="post" id="filerightsform" name="filerightsform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="fileId" value="<%=data.getId()%>"/>
-        <input type="hidden" name="act" value="saveFileRights"/>
+        <input type="hidden" name="act" value="<%=FileAction.saveFileRights%>"/>
         <table class="padded form">
             <jsp:include page="../tree/editRights.inc.jsp" flush="true"/>
         </table>
@@ -31,7 +33,7 @@
         <%if (inherited) {%>
         <span> <%=StringUtil.getHtml("_inheritedHint", locale)%></span>
         <%} else {%>
-        <button type="submit" class="primary" <%=inherited ? "disabled=\"disabled\"" : ""%>><%=StringUtil.getHtml("_save", locale)%>
+        <button type="submit" class="primary" disabled="disabled"><%=StringUtil.getHtml("_save", locale)%>
         </button>
         <%}%>
     </div>

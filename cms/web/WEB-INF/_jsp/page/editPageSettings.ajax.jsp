@@ -14,6 +14,7 @@
 <%@ page import="de.bandika.cms.template.TemplateType" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.page.PageAdminAction" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     PageData data = (PageData) SessionReader.getSessionObject(request, "pageData");
@@ -25,7 +26,7 @@
 <form action="/pageadmin.srv" method="post" id="pagesettingsform" name="pagesettingsform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
-        <input type="hidden" name="act" value="savePageSettings"/>
+        <input type="hidden" name="act" value="<%=PageAdminAction.savePageSettings%>"/>
         <table class="padded form">
             <jsp:include page="../tree/editNode.inc.jsp" flush="true"/>
             <jsp:include page="../tree/editResource.inc.jsp" flush="true"/>

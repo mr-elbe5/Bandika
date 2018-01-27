@@ -10,6 +10,7 @@
 <%@ page import="de.bandika.webbase.servlet.RequestReader" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.template.TemplateAction" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     String templateType = RequestReader.getString(request, "templateType");
@@ -23,6 +24,6 @@
 <div class="buttonset topspace">
     <button onclick="closeLayerDialog();"><%=StringUtil.getHtml("_close", locale)%>
     </button>
-    <button class="primary" onclick="post2ModalDialog('/template.srv?act=deleteTemplate&templateType=<%=templateType%>&templateName=<%=templateName%>');"><%=StringUtil.getHtml("_delete", locale)%>
+    <button class="primary" onclick="post2ModalDialog('/template.srv?act=<%=TemplateAction.deleteTemplate%>&templateType=<%=templateType%>&templateName=<%=templateName%>');"><%=StringUtil.getHtml("_delete", locale)%>
     </button>
 </div>

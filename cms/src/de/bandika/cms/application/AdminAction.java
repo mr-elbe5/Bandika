@@ -92,16 +92,7 @@ public class AdminAction extends CmsAction {
             }
             case openAdministration:
             default:{
-                if (!SessionReader.isLoggedIn(request)) {
-                    if (!isAjaxRequest(request)) {
-                        return (new LoginAction()).execute(request, response,LoginAction.openLogin);
-                    }
-                    return forbidden();
-                }
-                if (SessionReader.hasAnySystemRight(request)) {
-                    return showAdministration(request, response);
-                }
-                return forbidden();
+                return openAdministration(request, response);
             }
         }
     }
@@ -117,6 +108,19 @@ public class AdminAction extends CmsAction {
     @Override
     public String getKey() {
         return KEY;
+    }
+
+    public boolean openAdministration(HttpServletRequest request, HttpServletResponse response) throws Exception{
+        if (!SessionReader.isLoggedIn(request)) {
+            if (!isAjaxRequest(request)) {
+                return (new LoginAction()).execute(request, response,LoginAction.openLogin);
+            }
+            return forbidden();
+        }
+        if (SessionReader.hasAnySystemRight(request)) {
+            return showAdministration(request, response);
+        }
+        return forbidden();
     }
 
     protected boolean showAdministration(HttpServletRequest request, HttpServletResponse response) throws Exception {

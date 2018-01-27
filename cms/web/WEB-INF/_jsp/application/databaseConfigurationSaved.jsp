@@ -7,6 +7,7 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.cms.application.AdminAction" %>
 <fieldset>
     <legend><%=StringUtil.getHtml("_ready")%>
     </legend>
@@ -21,7 +22,7 @@
     </table>
 </fieldset>
 <div class="buttonset topspace">
-    <button type="button" class="primary" onclick="linkTo('/admin.srv?act=openAdministration')"><%=StringUtil.getHtml("_ok")%>
+    <button type="button" class="primary" onclick="linkTo('/admin.srv?act=<%=AdminAction.openAdministration%>')"><%=StringUtil.getHtml("_ok")%>
     </button>
 </div>
 

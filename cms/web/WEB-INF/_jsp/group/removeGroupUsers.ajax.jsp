@@ -13,15 +13,17 @@
 <%@ page import="de.bandika.cms.user.UserData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.group.GroupAction" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     GroupData group = (GroupData) SessionReader.getSessionObject(request, "groupData");
+    assert group!=null;
     UserBean ubean = UserBean.getInstance();
     List<UserData> users = ubean.getAllUsers();
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/group.ajx" method="post" id="groupform" name="groupform" accept-charset="UTF-8">
-    <input type="hidden" name="act" value="removeGroupUsers"/>
+    <input type="hidden" name="act" value="<%=GroupAction.removeGroupUsers%>"/>
     <fieldset>
         <table class="padded form">
             <thead>

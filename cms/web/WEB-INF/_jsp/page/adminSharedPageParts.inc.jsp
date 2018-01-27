@@ -15,6 +15,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.cms.page.PageBean" %>
+<%@ page import="de.bandika.cms.page.PageAdminAction" %>
 <%
     if (SessionReader.hasSystemRight(request, SystemZone.CONTENT, Right.EDIT)) {
         Locale locale = SessionReader.getSessionLocale(request);
@@ -30,10 +31,10 @@
                 for (PagePartData part : parts) {
         %>
         <li>
-            <div class="contextSource icn ipart <%=partId==part.getId() ? "selected" : ""%>" onclick="$('#details').load('/pageadmin.ajx?act=showSharedPartDetails&partId=<%=part.getId()%>')"><%=StringUtil.toHtml(part.getShareName())%>
+            <div class="contextSource icn ipart <%=partId==part.getId() ? "selected" : ""%>" onclick="$('#details').load('/pageadmin.ajx?act=<%=PageAdminAction.showSharedPartDetails%>&partId=<%=part.getId()%>')"><%=StringUtil.toHtml(part.getShareName())%>
             </div>
             <div class="contextMenu">
-                <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteSharedPart",locale)%>', '/pageadmin.ajx?act=openDeleteSharedPart&partId=<%=part.getId()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteSharedPart",locale)%>', '/pageadmin.ajx?act=<%=PageAdminAction.openDeleteSharedPart%>&partId=<%=part.getId()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                 </div>
             </div>
         </li>

@@ -10,11 +10,14 @@
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.tree.TreeNodeSortData" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.site.SiteAction" %>
+<%@ page import="de.bandika.cms.tree.TreeAction" %>
 <%Locale locale = SessionReader.getSessionLocale(request);
     TreeNodeSortData data = (TreeNodeSortData) SessionReader.getSessionObject(request, "sortData");
+    assert data!=null;
     int nChildren = data.getChildren().size();%>
 <form action="/site.srv" method="post" name="rankform" id="rankform" accept-charset="UTF-8">
-    <input type="hidden" name="act" value="saveSortPages"/>
+    <input type="hidden" name="act" value="<%=SiteAction.saveSortPages%>"/>
     <input type="hidden" name="childIdx" value="0"/>
     <input type="hidden" name="childRanking" value="0"/>
     <input type="hidden" name="siteId" value="<%=data.getId()%>"/>
@@ -46,7 +49,7 @@
     <div class="buttonset topspace">
         <button type="submit" class="primary"><%=StringUtil.getHtml("_save", locale)%>
         </button>
-        <button onclick="linkToTree('/tree.srv?act=openTree&siteId=<%=data.getId()%>');"><%=StringUtil.getHtml("_back", locale)%>
+        <button onclick="linkToTree('/tree.srv?act=<%=TreeAction.openTree%>&siteId=<%=data.getId()%>');"><%=StringUtil.getHtml("_back", locale)%>
         </button>
     </div>
 </form>
@@ -62,7 +65,7 @@
         if (sel) {
             document.rankform.childIdx.value = idx;
             document.rankform.childRanking.value = sel.selectedIndex;
-            document.rankform.act.value = 'changePageRanking';
+            document.rankform.act.value = '<%=SiteAction.changePageRanking%>';
             var $form = $('#rankform');
             var params = $form.serialize();
             post2ModalDialog('/site.ajx', params);

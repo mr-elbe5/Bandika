@@ -15,6 +15,7 @@ import de.bandika.base.util.StringUtil;
 import de.bandika.cms.application.AdminAction;
 import de.bandika.cms.site.SiteData;
 import de.bandika.cms.tree.BaseTreeAction;
+import de.bandika.cms.tree.TreeAction;
 import de.bandika.cms.tree.TreeBean;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.rights.Right;
@@ -53,34 +54,7 @@ public class FileAction extends BaseTreeAction {
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
             case show: {
-                FileData treeData, data;
-                int fileId = RequestReader.getInt(request, "fileId");
-                TreeCache tc = TreeCache.getInstance();
-                if (fileId == 0) {
-                    String url = request.getRequestURI();
-                    treeData = tc.getFile(url);
-                } else {
-                    treeData = tc.getFile(fileId);
-                }
-                checkObject(treeData);
-                if (fileId==0){
-                    fileId=treeData.getId();
-                    request.setAttribute("fileId", Integer.toString(fileId));
-                }
-                if (!treeData.isAnonymous() && !SessionReader.hasContentRight(request, fileId, Right.READ)) {
-                    return false;
-                }
-                int fileVersion = treeData.getVersionForUser(request);
-                if (fileVersion == treeData.getPublishedVersion()) {
-                    assert (treeData.isPublishedLoaded());
-                    data=treeData;
-                } else {
-                    data = FileBean.getInstance().getFile(fileId, fileVersion, false);
-                    data.setPath(treeData.getPath());
-                    data.setParentIds(treeData.getParentIds());
-                }
-                BinaryFileStreamData streamData = FileBean.getInstance().getBinaryFileStreamData(data.getId(), fileVersion);
-                return streamData != null && sendBinaryFileResponse(request, response, streamData);
+                return show(request, response);
             }
             case download: {
                 FileData data;
@@ -195,7 +169,7 @@ public class FileAction extends BaseTreeAction {
                 data.setPublished(publish);
                 ts.createFile(data);
                 TreeCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act=openTree&fileId=" + data.getId(), "_fileCreated");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree+"&fileId=&fileId=" + data.getId(), "_fileCreated");
             }
             case createFiles: {
                 int fileId = RequestReader.getInt(request, "fileId");
@@ -244,7 +218,7 @@ public class FileAction extends BaseTreeAction {
                 FileBean.getInstance().saveFileSettings(data);
                 RequestWriter.setMessageKey(request, "_fileSaved");
                 TreeCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act=openTree&fileId=" + data.getId(), "_fileSettingsChanged");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree+"&fileId=" + data.getId(), "_fileSettingsChanged");
             }
             case saveFileRights: {
                 int fileId = RequestReader.getInt(request, "fileId");
@@ -258,7 +232,7 @@ public class FileAction extends BaseTreeAction {
                 data.stopEditing();
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act=openTree&fileId=" + data.getId(), "_fileRightsChanged");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree+"&fileId=" + data.getId(), "_fileRightsChanged");
             }
             case replaceFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
@@ -272,7 +246,7 @@ public class FileAction extends BaseTreeAction {
                 data.setPublished(publish);
                 FileBean.getInstance().saveFileContent(data);
                 TreeCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act=openTree&fileId=" + data.getId(), "_fileReplaced");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree+"&fileId=" + data.getId(), "_fileReplaced");
             }
             case cloneFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
@@ -302,7 +276,7 @@ public class FileAction extends BaseTreeAction {
                     return false;
                 SessionWriter.setSessionObject(request, "cutFileId", fileId);
                 RequestWriter.setMessageKey(request, "_fileCut");
-                return new AdminAction().execute(request, response, AdminAction.openAdministration);
+                return new AdminAction().openAdministration(request, response);
             }
             case moveFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
@@ -354,7 +328,7 @@ public class FileAction extends BaseTreeAction {
                 FileData data = tc.getFile(fileId);
                 FileBean.getInstance().deleteFile(fileId);
                 TreeCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act=openTree&siteId=" + data.getParentId(), "_fileDeleted");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree+"&siteId=" + data.getParentId(), "_fileDeleted");
             }
             case openFileHistory: {
                 int fileId = RequestReader.getInt(request, "fileId");
@@ -394,7 +368,7 @@ public class FileAction extends BaseTreeAction {
                 FileBean.getInstance().restoreFileVersion(fileId, version);
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act=openTree&siteId=" + data.getParentId() + "&fileId=" + fileId, "_fileVersionRestored");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeAction.openTree+"&siteId=" + data.getParentId() + "&fileId=" + fileId, "_fileVersionRestored");
             }
             case deleteHistoryFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
@@ -409,7 +383,7 @@ public class FileAction extends BaseTreeAction {
                 return showFileHistory(request, response);
             }
             default: {
-                return new FileAction().execute(request, response,show);
+                return show(request, response);
             }
         }
     }
@@ -423,6 +397,37 @@ public class FileAction extends BaseTreeAction {
     @Override
     public String getKey() {
         return KEY;
+    }
+
+    public boolean show(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        FileData treeData, data;
+        int fileId = RequestReader.getInt(request, "fileId");
+        TreeCache tc = TreeCache.getInstance();
+        if (fileId == 0) {
+            String url = request.getRequestURI();
+            treeData = tc.getFile(url);
+        } else {
+            treeData = tc.getFile(fileId);
+        }
+        checkObject(treeData);
+        if (fileId==0){
+            fileId=treeData.getId();
+            request.setAttribute("fileId", Integer.toString(fileId));
+        }
+        if (!treeData.isAnonymous() && !SessionReader.hasContentRight(request, fileId, Right.READ)) {
+            return false;
+        }
+        int fileVersion = treeData.getVersionForUser(request);
+        if (fileVersion == treeData.getPublishedVersion()) {
+            assert (treeData.isPublishedLoaded());
+            data=treeData;
+        } else {
+            data = FileBean.getInstance().getFile(fileId, fileVersion, false);
+            data.setPath(treeData.getPath());
+            data.setParentIds(treeData.getParentIds());
+        }
+        BinaryFileStreamData streamData = FileBean.getInstance().getBinaryFileStreamData(data.getId(), fileVersion);
+        return streamData != null && sendBinaryFileResponse(request, response, streamData);
     }
 
     protected boolean showEditFileSettings(HttpServletRequest request, HttpServletResponse response) {

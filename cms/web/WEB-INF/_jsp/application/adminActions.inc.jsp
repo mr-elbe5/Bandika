@@ -11,7 +11,7 @@
 <%@ page import="de.bandika.webbase.rights.SystemZone" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.webbase.servlet.RequestReader" %>
+<%@ page import="de.bandika.cms.application.AdminAction" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     if (SessionReader.hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT)) {
@@ -20,11 +20,11 @@
     <div class="contextSource icn iaction"><%=StringUtil.getHtml("_actions", locale)%>
     </div>
     <div class="contextMenu">
-        <div class="icn iaction" onclick="return openLayerDialog('<%=StringUtil.getHtml("_executeDatabaseScript",locale)%>', '/admin.ajx?act=openExecuteDatabaseScript');"><%=StringUtil.getHtml("_executeDatabaseScript", locale)%>
+        <div class="icn iaction" onclick="return openLayerDialog('<%=StringUtil.getHtml("_executeDatabaseScript",locale)%>', '/admin.ajx?act=<%=AdminAction.executeDatabaseScript%>');"><%=StringUtil.getHtml("_executeDatabaseScript", locale)%>
         </div>
-        <div class="icn isync" onclick="linkTo('/admin.srv?act=reinitialize');"><%=StringUtil.getHtml("_reinitialize", locale)%>
+        <div class="icn isync" onclick="linkTo('/admin.srv?act=<%=AdminAction.reinitialize%>');"><%=StringUtil.getHtml("_reinitialize", locale)%>
         </div>
-        <div class="icn isync" onclick="linkTo('/admin.srv?act=restart');"><%=StringUtil.getHtml("_restart", locale)%>
+        <div class="icn isync" onclick="linkTo('/admin.srv?act=<%=AdminAction.restart%>');"><%=StringUtil.getHtml("_restart", locale)%>
         </div>
     </div>
 </li>

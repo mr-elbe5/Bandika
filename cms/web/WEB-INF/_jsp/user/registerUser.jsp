@@ -11,12 +11,14 @@
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.user.UserData" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.user.UserAction" %>
+<%@ page import="de.bandika.webbase.user.LoginAction" %>
 <%
     UserData user = (UserData) SessionReader.getSessionObject(request, "userData");
     assert (user != null);
     Locale locale = SessionReader.getSessionLocale(request);%>
 <form action="/user.srv" method="post" name="form" accept-charset="UTF-8">
-    <input type="hidden" name="act" value="registerUser"/>
+    <input type="hidden" name="act" value="<%=UserAction.registerUser%>"/>
     <fieldset>
         <table class="padded form">
             <tr>
@@ -63,7 +65,7 @@
             <tr>
                 <td><label><%=StringUtil.getHtml("_captcha", locale)%>
                 </label></td>
-                <td><img src="/login.srv?act=showCaptcha" alt=""/>
+                <td><img src="/login.srv?act=<%=LoginAction.showCaptcha%>" alt=""/>
                 </td>
             </tr>
             <tr>
@@ -77,7 +79,7 @@
     <div class="buttonset topspace">
         <button type="submit" class="primary"><%=StringUtil.getHtml("_register", locale)%>
         </button>
-        <button onclick="linkTo('/login.srv?act=openLogin');"><%=StringUtil.getHtml("_back", locale)%>
+        <button onclick="linkTo('/login.srv?act=<%=LoginAction.openLogin%>');"><%=StringUtil.getHtml("_back", locale)%>
         </button>
     </div>
 </form>

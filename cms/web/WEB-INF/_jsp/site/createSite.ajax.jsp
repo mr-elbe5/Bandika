@@ -14,6 +14,7 @@
 <%@ page import="de.bandika.cms.template.TemplateType" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.site.SiteAction" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     List<TemplateData> pageTemplates = TemplateCache.getInstance().getTemplates(TemplateType.PAGE);
@@ -22,7 +23,8 @@
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/site.srv" method="post" id="layoutform" name="layoutform" accept-charset="UTF-8">
     <fieldset>
-        <input type="hidden" name="siteId" value="<%=siteId%>"/> <input type="hidden" name="act" value="createSite"/>
+        <input type="hidden" name="siteId" value="<%=siteId%>"/>
+        <input type="hidden" name="act" value="<%=SiteAction.createSite%>"/>
         <table class="padded form">
             <tr>
                 <td>

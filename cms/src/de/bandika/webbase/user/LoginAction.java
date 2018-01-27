@@ -63,7 +63,7 @@ public class LoginAction extends Action {
                 return showHome(request, response);
             }
             default: {
-                return new LoginAction().execute(request, response, login);
+                return showLogin(request, response);
             }
         }
     }

@@ -70,17 +70,17 @@ public class SearchAction extends CmsAction {
                     return false;
                 SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_CONTENT, 0, null));
                 RequestWriter.setMessageKey(request, "_indexingContentQueued");
-                return new AdminAction().execute(request, response, AdminAction.openAdministration);
+                return new AdminAction().openAdministration(request, response);
             }
             case indexAllUsers: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
                 SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_USERS, 0, null));
                 RequestWriter.setMessageKey(request, "_indexingUsersQueued");
-                return new AdminAction().execute(request, response, AdminAction.openAdministration);
+                return new AdminAction().openAdministration(request, response);
             }
             default: {
-                return new SearchAction().execute(request, response,openSearch);
+                return showSearch(request, response);
             }
         }
     }

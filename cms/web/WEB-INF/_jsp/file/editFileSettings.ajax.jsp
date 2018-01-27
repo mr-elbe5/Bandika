@@ -10,16 +10,18 @@
 <%@ page import="de.bandika.cms.file.FileData" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.file.FileAction" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     FileData data = (FileData) SessionReader.getSessionObject(request, "fileData");
+    assert data!=null;
     request.setAttribute("treeNode", data);
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/file.srv" method="post" id="filesettingsform" name="filesettingsform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="fileId" value="<%=data.getId()%>"/>
-        <input type="hidden" name="act" value="saveFileSettings"/>
+        <input type="hidden" name="act" value="<%=FileAction.saveFileSettings%>"/>
         <table class="padded form">
             <jsp:include page="../tree/editNode.inc.jsp" flush="true"/>
             <jsp:include page="../tree/editResource.inc.jsp" flush="true"/>
@@ -68,7 +70,7 @@
                 <td><label><%=StringUtil.getHtml("_preview", locale)%>
                 </label></td>
                 <td>
-          <span><img src="/file.srv?act=showPreview&fileId=<%=data.getId()%>" alt="">
+          <span><img src="/file.srv?act=<%=FileAction.showPreview%>&fileId=<%=data.getId()%>" alt="">
           </span>
                 </td>
             </tr>

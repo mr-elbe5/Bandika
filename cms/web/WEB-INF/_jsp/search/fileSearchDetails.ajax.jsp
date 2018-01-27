@@ -59,7 +59,7 @@
         <tr>
             <td><label><%=StringUtil.getHtml("_preview", locale)%>
             </label></td>
-            <td><img src="/file.srv?act=showPreview&fileId=<%=data.getId()%>" alt=""/></td>
+            <td><img src="/file.srv?act=<%=FileAction.showPreview%>&fileId=<%=data.getId()%>" alt=""/></td>
         </tr>
         <%}%>
     </table>

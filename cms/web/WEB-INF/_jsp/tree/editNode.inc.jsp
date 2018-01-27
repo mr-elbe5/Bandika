@@ -16,6 +16,7 @@
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     TreeNode data = (TreeNode) request.getAttribute("treeNode");
+    assert data!=null;
     SiteData parentSite = null;
     if (data.getParentId() != 0) {
         TreeCache tc = TreeCache.getInstance();

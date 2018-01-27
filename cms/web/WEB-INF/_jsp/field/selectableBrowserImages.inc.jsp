@@ -8,6 +8,7 @@
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     CkCallbackData browseData = (CkCallbackData) SessionReader.getSessionObject(request, "browseData");
+    assert browseData!=null;
     int siteId = browseData.getSiteId();
     TreeCache tc = TreeCache.getInstance();
     List<FileData> files = siteId == 0 ? tc.getAllFiles() : tc.getSite(siteId).getFiles();

@@ -13,7 +13,7 @@
 <%Locale locale = SessionReader.getSessionLocale(request);%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/template.ajx" method="post" id="importTemplates" name="importTemplates" accept-charset="UTF-8" enctype="multipart/form-data">
-    <input type="hidden" name="act" value="<%=TemplateAction.importTemplates.name()%>"/>
+    <input type="hidden" name="act" value="<%=TemplateAction.importTemplates%>"/>
     <fieldset>
         <table class="padded form">
             <tr>

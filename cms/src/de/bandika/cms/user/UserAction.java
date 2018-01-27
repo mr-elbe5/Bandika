@@ -13,6 +13,7 @@ import de.bandika.base.data.BinaryFileData;
 import de.bandika.base.data.Locales;
 import de.bandika.base.mail.Mailer;
 import de.bandika.base.util.StringUtil;
+import de.bandika.cms.application.AdminAction;
 import de.bandika.cms.configuration.Configuration;
 import de.bandika.cms.servlet.CmsAction;
 import de.bandika.webbase.rights.Right;
@@ -25,6 +26,7 @@ import de.bandika.webbase.user.UserSecurity;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
+import java.util.zip.Adler32;
 
 public class UserAction extends CmsAction {
 
@@ -88,7 +90,7 @@ public class UserAction extends CmsAction {
                 data.setPassword(newPassword);
                 UserBean.getInstance().saveUserPassword(data);
                 RequestWriter.setMessageKey(request, "_passwordChanged");
-                return closeLayerToUrl(request, response, "/user.srv?act=openProfile", "_passwordChanged");
+                return closeLayerToUrl(request, response, "/user.srv?act="+UserAction.openProfile, "_passwordChanged");
             }
             case openChangeProfile: {
                 return SessionReader.isLoggedIn(request) && showChangeProfile(request, response);
@@ -108,7 +110,7 @@ public class UserAction extends CmsAction {
                 UserBean.getInstance().saveUserProfile(data);
                 SessionWriter.setSessionLoginData(request, data);
                 RequestWriter.setMessageKey(request, "_profileChanged");
-                return closeLayerToUrl(request, response, "/user.srv?act=openProfile", "_profileChanged");
+                return closeLayerToUrl(request, response, "/user.srv?act="+UserAction.openProfile, "_profileChanged");
             }
             case showUserDetails: {
                 return hasSystemRight(request, SystemZone.USER, Right.EDIT) && showUserDetails(request, response);
@@ -146,7 +148,7 @@ public class UserAction extends CmsAction {
                     data.checkRights();
                     SessionWriter.setSessionLoginData(request, data);
                 }
-                return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&userId=" + data.getId(), "_userSaved");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminAction.openAdministration+"&userId=" + data.getId(), "_userSaved");
             }
             case openDeleteUser: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
@@ -169,7 +171,7 @@ public class UserAction extends CmsAction {
                 } else {
                     UserBean.getInstance().deleteUser(id);
                 }
-                return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration", "_usersDeleted");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminAction.openAdministration, "_usersDeleted");
             }
             case openEditUsers: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))

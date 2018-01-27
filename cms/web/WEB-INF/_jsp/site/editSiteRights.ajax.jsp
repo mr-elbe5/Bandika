@@ -10,9 +10,11 @@
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.site.SiteData" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.site.SiteAction" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     SiteData data = (SiteData) SessionReader.getSessionObject(request, "siteData");
+    assert data!=null;
     boolean inherited = data.inheritsRights();
     request.setAttribute("treeNode", data);
 %>
@@ -20,7 +22,7 @@
 <form action="/site.srv" method="post" id="siterightsform" name="siterightsform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="siteId" value="<%=data.getId()%>"/>
-        <input type="hidden" name="act" value="saveSiteRights"/>
+        <input type="hidden" name="act" value="<%=SiteAction.saveSiteRights%>"/>
         <table class="padded form">
             <jsp:include page="../tree/editRights.inc.jsp" flush="true"/>
         </table>
@@ -31,7 +33,7 @@
         <%if (inherited) {%>
         <span> <%=StringUtil.getHtml("_inheritedHint", locale)%></span>
         <%} else {%>
-        <button type="submit" class="primary" <%=inherited ? "disabled=\"disabled\"" : ""%>><%=StringUtil.getHtml("_save", locale)%>
+        <button type="submit" class="primary" disabled="disabled" ><%=StringUtil.getHtml("_save", locale)%>
         </button>
         <%}%>
     </div>

@@ -12,6 +12,7 @@
 <%@ page import="de.bandika.cms.user.UserData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.group.GroupAction" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     UserBean ubean = UserBean.getInstance();
@@ -30,7 +31,7 @@
         <% for (UserData udata : users) {%>
         <tr>
             <td>
-                <a href="#" onclick="return post2ModalDialog('/group.ajx?act=addGroupUser', {userAddId:<%=udata.getId()%>})"><%=StringUtil.toHtml(udata.getName())%>
+                <a href="#" onclick="return post2ModalDialog('/group.ajx?act=<%=GroupAction.addGroupUser%>', {userAddId:<%=udata.getId()%>})"><%=StringUtil.toHtml(udata.getName())%>
                 </a></td>
         </tr>
         <%}%>

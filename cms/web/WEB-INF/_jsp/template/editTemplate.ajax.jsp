@@ -10,6 +10,7 @@
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.template.TemplateData" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.cms.template.TemplateAction" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     TemplateData data = (TemplateData) SessionReader.getSessionObject(request, "templateData");
@@ -17,7 +18,7 @@
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/template.srv" method="post" id="templateform" name="templateform" accept-charset="UTF-8">
-    <input type="hidden" name="act" value="saveTemplate"/>
+    <input type="hidden" name="act" value="<%=TemplateAction.saveTemplate%>"/>
     <input type="hidden" name="templateType" value="<%=data.getType().name()%>"/>
     <input type="hidden" name="templateName" value="<%=data.getName()%>"/>
     <fieldset>

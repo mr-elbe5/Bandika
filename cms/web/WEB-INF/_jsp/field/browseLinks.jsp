@@ -11,6 +11,7 @@
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     CkCallbackData browseData = (CkCallbackData) SessionReader.getSessionObject(request, "browseData");
+    assert browseData!=null;
     int siteId = browseData.getSiteId();
     TreeCache tc = TreeCache.getInstance();
     if (siteId == 0)
@@ -30,13 +31,13 @@
             <%=StringUtil.getHtml("_structure", locale)%>
         </h3>
         <ul id="browseNavigation" class="treeRoot">
-            <%TreeHelper.addBrowserSiteNode(pageContext, out, request, tc.getRootSite(), siteId, activeIds, FieldAction.showSelectableBrowserLinks.name(), locale);%>
+            <%TreeHelper.addBrowserSiteNode(pageContext, out, request, tc.getRootSite(), siteId, activeIds, FieldAction.showSelectableBrowserLinks, locale);%>
         </ul>
     </div>
     <div id="browserView"></div>
 </section>
 <script type="text/javascript">
-    $("#browserView").load('/field.srv?act=showSelectableBrowserLinks&siteId=<%=siteId%>');
+    $("#browserView").load('/field.srv?act=<%=FieldAction.showSelectableBrowserLinks%>&siteId=<%=siteId%>');
     $("#browseNavigation").treeview({
         persist: "location", collapsed: true, unique: false
     });

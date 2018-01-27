@@ -8,6 +8,7 @@
  */
 package de.bandika.cms.timer;
 
+import de.bandika.cms.application.AdminAction;
 import de.bandika.cms.servlet.CmsAction;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.SystemZone;
@@ -50,7 +51,7 @@ public class TimerAction extends CmsAction {
                 TimerBean ts = TimerBean.getInstance();
                 ts.updateTaskData(task);
                 TimerController.getInstance().loadTask(task.getName());
-                return closeLayerToUrl(request, response, "/admin.srv?act=openAdministration&timerName=" + task.getName(), "_taskSaved");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminAction.openAdministration+"&timerName=" + task.getName(), "_taskSaved");
             }
             default: {
                 return forbidden();
