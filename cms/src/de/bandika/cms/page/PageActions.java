@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 
 public class PageActions extends BaseTreeActions {
 
-    public static final String test="test";
     public static final String show="show";
     public static final String showPageDetails="showPageDetails";
     public static final String openCreatePage="openCreatePage";
