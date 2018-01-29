@@ -19,7 +19,7 @@
     PagePartData part = data.getEditPagePart();
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
-<form action="/pageedit.srv" method="post" id="shareform" name="shareform" accept-charset="UTF-8">
+<form action="/pagepart.srv" method="post" id="shareform" name="shareform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
         <input type="hidden" name="partId" value="<%=part.getId()%>"/>
@@ -44,6 +44,6 @@
         var $this = $(this);
         event.preventDefault();
         var params = $this.serialize();
-        post2ModalDialog('/pageedit.ajx', params);
+        post2ModalDialog('/pagepart.ajx', params);
     });
 </script>

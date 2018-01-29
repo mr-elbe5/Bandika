@@ -21,7 +21,7 @@
     int siteId = RequestReader.getInt(request, "siteId");
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
-<form action="/pageadmin.ajx" method="post" id="layoutform" name="layoutform" accept-charset="UTF-8">
+<form action="/page.ajx" method="post" id="layoutform" name="layoutform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="siteId" value="<%=siteId%>"/>
         <input type="hidden" name="act" value="<%=PageActions.createPage%>"/>
@@ -71,6 +71,6 @@
     $('#layoutform').submit(function (event) {
         var $this = $(this);
         event.preventDefault();
-        post2ModalDialog('/pageadmin.ajx', $this.serialize());
+        post2ModalDialog('/page.ajx', $this.serialize());
     });
 </script>

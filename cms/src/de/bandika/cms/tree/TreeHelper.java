@@ -138,7 +138,7 @@ public class TreeHelper {
         if (SessionReader.hasContentRight(request, data.getId(), Right.EDIT)) {
             writer.write("<div class=\"contextMenu\">");
             writer.write("<div class=\"icn inew\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_createPage", locale) + "', '");
-            writer.write(StringUtil.toJs("/pageadmin.ajx?act=openCreatePage&siteId=" + data.getId()));
+            writer.write(StringUtil.toJs("/page.ajx?act=openCreatePage&siteId=" + data.getId()));
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_newPage", locale));
             writer.write("</div>");
@@ -220,7 +220,7 @@ public class TreeHelper {
         writer.write("\" data-pageid=\"");
         writer.write(Integer.toString(data.getId()));
         writer.write("\" draggable=\"true\" ondragstart=\"startPageDrag(event)\" onclick=\"$('#details').load('");
-        writer.write(StringUtil.toJs("/pageadmin.ajx?act=showPageDetails&pageId=" + data.getId()));
+        writer.write(StringUtil.toJs("/page.ajx?act=showPageDetails&pageId=" + data.getId()));
         writer.write("')\">");
         writer.write(data.getDisplayName());
         if (data.isDefaultPage()) {
@@ -237,39 +237,39 @@ public class TreeHelper {
             writer.write(StringUtil.getHtml("_view", locale));
             writer.write("</div>");
             writer.write("<div class=\"icn isetting\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_editPageSettings", locale) + "', '");
-            writer.write(StringUtil.toJs("/pageadmin.ajx?act=openEditPageSettings&pageId=" + data.getId()));
+            writer.write(StringUtil.toJs("/page.ajx?act=openEditPageSettings&pageId=" + data.getId()));
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_settings", locale));
             writer.write("</div>");
             if (data.getDraftVersion() != 0 && SessionReader.hasContentRight(request, data.getId(), Right.APPROVE)) {
                 writer.write("<div class=\"icn ipublish\" onclick=\"return linkToTree('");
-                writer.write(StringUtil.toJs("/pageedit.srv?act=publishPage&fromAdmin=true&pageId=" + data.getId()));
+                writer.write(StringUtil.toJs("/page.srv?act=publishPage&fromAdmin=true&pageId=" + data.getId()));
                 writer.write("');\">");
                 writer.write(StringUtil.getHtml("_publish", locale));
                 writer.write("</div>");
             }
             writer.write("<div class=\"icn ilock\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_editPageRights", locale) + "', '");
-            writer.write(StringUtil.toJs("/pageadmin.ajx?act=openEditPageRights&pageId=" + data.getId()));
+            writer.write(StringUtil.toJs("/page.ajx?act=openEditPageRights&pageId=" + data.getId()));
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_rights", locale));
             writer.write("</div>");
             writer.write("<div class=\"icn ihistory\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_history", locale) + "', '");
-            writer.write(StringUtil.toJs("pageadmin.ajx?act=openPageHistory&pageId=" + data.getId()));
+            writer.write(StringUtil.toJs("page.ajx?act=openPageHistory&pageId=" + data.getId()));
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_history", locale));
             writer.write("</div>");
             writer.write("<div class=\"icn icopy\" onclick=\"linkToTree('");
-            writer.write(StringUtil.toJs("/pageadmin.srv?act=clonePage&pageId=" + data.getId()));
+            writer.write(StringUtil.toJs("/page.srv?act=clonePage&pageId=" + data.getId()));
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_clone", locale));
             writer.write("</div>");
             writer.write("<div class=\"icn icut\" onclick=\"linkToTree('");
-            writer.write(StringUtil.toJs("/pageadmin.srv?act=cutPage&pageId=" + data.getId()));
+            writer.write(StringUtil.toJs("/page.srv?act=cutPage&pageId=" + data.getId()));
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_cut", locale));
             writer.write("</div>");
             writer.write("<div class=\"icn idelete\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_deletePage", locale) + "', '");
-            writer.write(StringUtil.toJs("/pageadmin.ajx?act=openDeletePage&pageId=" + data.getId()));
+            writer.write(StringUtil.toJs("/page.ajx?act=openDeletePage&pageId=" + data.getId()));
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_delete", locale));
             writer.write("</div>");

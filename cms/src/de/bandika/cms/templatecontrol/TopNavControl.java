@@ -56,19 +56,19 @@ public class TopNavControl extends TemplateControl {
 
         writer.write("<nav><ul>");
         if (pageEditMode & hasEditRight) {
-            writer.write("<li class=\"editControl\"><a href=\"/pageedit.srv?act=savePageContent&pageId=" + pageId + "\">" + getHtml("_save", locale) + "</a></li>");
+            writer.write("<li class=\"editControl\"><a href=\"/page.srv?act=savePageContent&pageId=" + pageId + "\">" + getHtml("_save", locale) + "</a></li>");
 
             if (hasApproveRight) {
-                writer.write("<li class=\"editControl\"><a href=\"/pageedit.srv?act=savePageContentAndPublish&pageId=" + pageId + "\">" + getHtml("_publish", locale) + "</a></li>");
+                writer.write("<li class=\"editControl\"><a href=\"/page.srv?act=savePageContentAndPublish&pageId=" + pageId + "\">" + getHtml("_publish", locale) + "</a></li>");
             }
-            writer.write("<li><a href=\"/pageedit.srv?act=stopEditing&pageId=" + pageId + "\">" + getHtml("_cancel", locale) + "</a></li>");
+            writer.write("<li><a href=\"/page.srv?act=stopEditing&pageId=" + pageId + "\">" + getHtml("_cancel", locale) + "</a></li>");
         } else {
             if (editMode) {
                 if (pageId != 0 && hasEditRight) {
-                    writer.write("<li><a href=\"/pageedit.srv?act=openEditPageContent&pageId=" + pageId + "\" >" + getHtml("_editPage", locale) + "</span></a></li>");
+                    writer.write("<li><a href=\"/page.srv?act=openEditPageContent&pageId=" + pageId + "\" >" + getHtml("_editPage", locale) + "</span></a></li>");
                 }
                 if (pageId != 0 && hasApproveRight && pageData.getDraftVersion() != 0) {
-                    writer.write("<li><a href=\"/pageedit.srv?act=publishPage&pageId=" + pageId + "\" >" + getHtml("_publish", locale) + "</a></li>");
+                    writer.write("<li><a href=\"/page.srv?act=publishPage&pageId=" + pageId + "\" >" + getHtml("_publish", locale) + "</a></li>");
                 }
                 if (hasAnyEditRight) {
                     writer.write("<li><a href=\"#\" onclick=\"return openTreeLayer('" + StringUtil.getHtml("_tree") + "', '" + "/tree.ajx?act=openTree&siteId=" + siteId + "&pageId=" + pageId + "');\" >" + getHtml("_tree", locale) + "</a></li>");
@@ -78,7 +78,7 @@ public class TopNavControl extends TemplateControl {
                 }
             }
             if (hasAnyEditRight || hasAdminRight){
-                writer.write("<li><a href=\"/pageedit.srv?act=toggleEditMode&pageId=" + pageId + "\" title=\""+getHtml(editMode ? "_editModeOff" : "_editModeOn", locale)+"\"><span class=\"icn " + (editMode ? "iright" : "ileft") + "\"></span></a></li>");
+                writer.write("<li><a href=\"/page.srv?act=toggleEditMode&pageId=" + pageId + "\" title=\""+getHtml(editMode ? "_editModeOff" : "_editModeOn", locale)+"\"><span class=\"icn " + (editMode ? "iright" : "ileft") + "\"></span></a></li>");
             }
             if (homeSite != null) {
                 if (otherLocales != null) {

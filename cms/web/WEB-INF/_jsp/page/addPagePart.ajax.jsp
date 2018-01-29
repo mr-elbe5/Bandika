@@ -47,7 +47,7 @@
                     <% for (TemplateData tdata : templates) {%>
                     <tr>
                         <td>
-                            <a href="#" onclick="return post2ModalDialog('/pageedit.ajx', {act: '<%=PagePartActions.addPagePart%>', pageId: '<%=pageId%>', partId: '<%=partId%>', below: '<%=below%>', sectionName: '<%=sectionName%>', templateName: '<%=tdata.getName()%>'});"><%=StringUtil.toHtml(tdata.getName())%>
+                            <a href="#" onclick="return post2ModalDialog('/pagepart.ajx', {act: '<%=PagePartActions.addPagePart%>', pageId: '<%=pageId%>', partId: '<%=partId%>', below: '<%=below%>', sectionName: '<%=sectionName%>', templateName: '<%=tdata.getName()%>'});"><%=StringUtil.toHtml(tdata.getName())%>
                         </td>
                         <td><%=StringUtil.toHtml(tdata.getDescription())%>
                         </td>
@@ -74,7 +74,7 @@
                     <% for (PagePartData data : parts) {%>
                     <tr>
                         <td>
-                            <a href="#" onclick="return post2ModalDialog('/pageedit.ajx', {act: '<%=PagePartActions.addSharedPart%>', pageId: '<%=pageId%>', partId: '<%=partId%>', below: '<%=below%>', sectionName: '<%=sectionName%>', sharedPartId: '<%=data.getId()%>'});"><%=StringUtil.toHtml(data.getShareName())%>
+                            <a href="#" onclick="return post2ModalDialog('/pagepart.ajx', {act: '<%=PagePartActions.addSharedPart%>', pageId: '<%=pageId%>', partId: '<%=partId%>', below: '<%=below%>', sectionName: '<%=sectionName%>', sharedPartId: '<%=data.getId()%>'});"><%=StringUtil.toHtml(data.getShareName())%>
                         </td>
                     </tr>
                     <%}%>

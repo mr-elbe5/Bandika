@@ -21,7 +21,7 @@
     request.setAttribute("treeNode", data);
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
-<form action="/pageedit.ajx" method="post" id="pagepartsettingsform" name="pagepartsettingsform" accept-charset="UTF-8">
+<form action="/pagepart.ajx" method="post" id="pagepartsettingsform" name="pagepartsettingsform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
         <input type="hidden" name="partId" value="<%=part.getId()%>"/>
@@ -74,7 +74,7 @@
         var $this = $(this);
         event.preventDefault();
         var params = $this.serialize();
-        post2ModalDialog('/pageedit.ajx', params);
+        post2ModalDialog('/pagepart.ajx', params);
     });
 </script>
 

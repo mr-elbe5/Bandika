@@ -19,7 +19,7 @@
     request.setAttribute("treeNode", data);
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
-<form action="/pageadmin.srv" method="post" id="pagerightsform" name="pagerightsform" accept-charset="UTF-8">
+<form action="/page.srv" method="post" id="pagerightsform" name="pagerightsform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
         <input type="hidden" name="act" value="<%=PageActions.savePageRights%>"/>
@@ -43,7 +43,7 @@
         var $this = $(this);
         event.preventDefault();
         var params = $this.serialize();
-        post2ModalDialog('/pageadmin.ajx', params);
+        post2ModalDialog('/page.ajx', params);
     });
 </script>
 

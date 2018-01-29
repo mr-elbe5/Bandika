@@ -52,11 +52,11 @@
             <td><%=StringUtil.toHtml(versionData.getAuthorName())%>
             </td>
             <td>
-                <div style="margin-bottom:5px"><a href="/pageadmin.srv?act=<%=PageActions.showHistoryPage%>&pageId=<%=versionData.getId()%>&version=<%=versionData.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
+                <div style="margin-bottom:5px"><a href="/page.srv?act=<%=PageActions.showHistoryPage%>&pageId=<%=versionData.getId()%>&version=<%=versionData.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
                 </a></div>
-                <div style="margin-bottom:5px"><button class="primary" onclick="post2ModalDialog('/pageadmin.ajx?act=<%=PageActions.restoreHistoryPage%>&pageId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_restore", locale)%>
+                <div style="margin-bottom:5px"><button class="primary" onclick="post2ModalDialog('/page.ajx?act=<%=PageActions.restoreHistoryPage%>&pageId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_restore", locale)%>
                 </button></div>
-                <div><button class="primary" onclick="post2ModalDialog('/pageadmin.ajx?act=<%=PageActions.deleteHistoryPage%>&pageId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                <div><button class="primary" onclick="post2ModalDialog('/page.ajx?act=<%=PageActions.deleteHistoryPage%>&pageId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                 </button></div>
             </td>
         </tr>
