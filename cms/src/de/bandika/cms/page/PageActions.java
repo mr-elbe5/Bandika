@@ -8,12 +8,16 @@
  */
 package de.bandika.cms.page;
 
+import de.bandika.base.data.BaseIdData;
+import de.bandika.base.util.StringUtil;
+import de.bandika.cms.site.SiteData;
 import de.bandika.cms.tree.BaseTreeActions;
+import de.bandika.cms.tree.TreeActions;
+import de.bandika.cms.tree.TreeBean;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.rights.Right;
-import de.bandika.webbase.servlet.ActionSetCache;
-import de.bandika.webbase.servlet.RequestReader;
-import de.bandika.webbase.servlet.SessionReader;
+import de.bandika.webbase.rights.RightsCache;
+import de.bandika.webbase.servlet.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,26 +26,370 @@ public class PageActions extends BaseTreeActions {
 
     public static final String test="test";
     public static final String show="show";
-    public static final String executePagePartMethod="executePagePartMethod";
+    public static final String showPageDetails="showPageDetails";
+    public static final String openCreatePage="openCreatePage";
+    public static final String createPage="createPage";
+    public static final String openEditPageSettings="openEditPageSettings";
+    public static final String savePageSettings="savePageSettings";
+    public static final String openEditPageRights="openEditPageRights";
+    public static final String savePageRights="savePageRights";
+    public static final String clonePage="clonePage";
+    public static final String cutPage="cutPage";
+    public static final String movePage="movePage";
+    public static final String openDeletePage="openDeletePage";
+    public static final String deletePage="deletePage";
+    public static final String openPageHistory="openPageHistory";
+    public static final String showHistoryPage="showHistoryPage";
+    public static final String restoreHistoryPage="restoreHistoryPage";
+    public static final String deleteHistoryPage="deleteHistoryPage";
+    public static final String toggleEditMode="toggleEditMode";
+    public static final String openEditPageContent="openEditPageContent";
+    public static final String reopenEditPageContent="reopenEditPageContent";
+    public static final String savePageContent="savePageContent";
+    public static final String savePageContentAndPublish="savePageContentAndPublish";
+    public static final String publishPage="publishPage";
+    public static final String stopEditing="stopEditing";
+    public static final String showPageContent="showPageContent";
 
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
             case show: {
                 return show(request, response);
             }
-            case executePagePartMethod: {
+            case showPageDetails: {
                 int pageId = RequestReader.getInt(request, "pageId");
-                int partId = RequestReader.getInt(request, "partId");
-                String sectionName = RequestReader.getString(request, "sectionName");
-                String partMethod = RequestReader.getString(request, "partMethod");
-                PageData data = TreeCache.getInstance().getPage(pageId);
-                if (!data.isAnonymous() && !SessionReader.hasContentRight(request, pageId, Right.READ)) {
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                return showPageDetails(request, response);
+            }
+            case openCreatePage: {
+                int siteId = RequestReader.getInt(request, "siteId");
+                if (!hasContentRight(request, siteId, Right.EDIT))
+                    return false;
+                return showCreatePage(request, response);
+            }
+            case createPage: {
+                int siteId = RequestReader.getInt(request, "siteId");
+                if (!hasContentRight(request, siteId, Right.EDIT))
+                    return false;
+                PageData data = new PageData();
+                int parentId = RequestReader.getInt(request, "siteId");
+                String templateName = RequestReader.getString(request, "templateName");
+                PageBean ts = PageBean.getInstance();
+                TreeCache tc = TreeCache.getInstance();
+                SiteData parentNode = tc.getSite(parentId);
+                data.readPageCreateRequestData(request);
+                data.setCreateValues(parentNode);
+                data.setRanking(parentNode.getPages().size());
+                data.setOwnerId(SessionReader.getLoginId(request));
+                data.setAuthorName(SessionReader.getLoginName(request));
+                data.setTemplateName(templateName);
+                if (!isDataComplete(data, request)) {
+                    request.setAttribute("siteData", parentNode);
+                    return showCreatePage(request, response);
+                }
+                data.prepareSave();
+                data.setPublished(false);
+                ts.createPage(data, false);
+                data.stopEditing();
+                data.prepareEditing();
+                TreeCache.getInstance().setDirty();
+                RightsCache.getInstance().setDirty();
+                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&siteId=" + data.getParentId() + "&pageId=" + data.getId());
+            }
+            case openEditPageSettings: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                PageData treeData=TreeCache.getInstance().getPage(pageId);
+                checkObject(treeData);
+                int pageVersion = treeData.getVersionForUser(request);
+                PageData data = PageBean.getInstance().getPage(pageId, pageVersion);
+                data.setDefaultPage(treeData.isDefaultPage());
+                data.setPath(treeData.getPath());
+                data.prepareEditing();
+                SessionWriter.setSessionObject(request, "pageData", data);
+                return showEditPageSettings(request, response);
+            }
+            case savePageSettings: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                PageData data = (PageData) getSessionObject(request, "pageData");
+                checkObject(data, pageId);
+                data.readPageSettingsRequestData(request);
+                if (!data.isComplete()) {
+                    RequestError.setError(request, new RequestError(StringUtil.getString("_notComplete", SessionReader.getSessionLocale(request))));
+                    return showEditPageSettings(request, response);
+                }
+                data.setAuthorName(SessionReader.getLoginName(request));
+                data.prepareSave();
+                PageBean.getInstance().savePageSettings(data);
+                SessionWriter.removeSessionObject(request, "pageData");
+                data.stopEditing();
+                TreeCache.getInstance().setDirty();
+                RightsCache.getInstance().setDirty();
+                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&pageId=" + data.getId(), "_pageSettingsChanged");
+            }
+            case openEditPageRights: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                TreeCache tc = TreeCache.getInstance();
+                PageData data = tc.getPage(pageId);
+                checkObject(data);
+                int pageVersion = data.getVersionForUser(request);
+                data = PageBean.getInstance().getPage(pageId, pageVersion);
+                if (data == null) {
+                    RequestError.setError(request, new RequestError(StringUtil.getString("_notComplete", SessionReader.getSessionLocale(request))));
+                    return sendForwardResponse(request, response, "/WEB-INF/_jsp/error.inc.jsp");
+                }
+                data.prepareEditing();
+                SessionWriter.setSessionObject(request, "pageData", data);
+                return showEditPageRights(request, response);
+            }
+            case savePageRights: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                PageData data = (PageData) getSessionObject(request, "pageData");
+                checkObject(data, pageId);
+                data.readTreeNodeRightsData(request);
+                PageBean.getInstance().saveRights(data);
+                SessionWriter.removeSessionObject(request, "pageData");
+                data.stopEditing();
+                TreeCache.getInstance().setDirty();
+                RightsCache.getInstance().setDirty();
+                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&pageId=" + data.getId(), "_pageRightsChanged");
+            }
+            case clonePage: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                PageBean ts = PageBean.getInstance();
+                PageData treeData = TreeCache.getInstance().getPage(pageId);
+                int pageVersion = treeData.getVersionForUser(request);
+                PageData srcData = PageBean.getInstance().getPage(pageId, pageVersion);
+                checkObject(srcData);
+                PageData data = new PageData();
+                data.cloneData(srcData);
+                checkObject(data);
+                data.setOwnerId(SessionReader.getLoginId(request));
+                data.setAuthorName(SessionReader.getLoginName(request));
+                data.setDefaultPage(false);
+                data.setPublished(false);
+                data.prepareEditing();
+                ts.createPage(data, true);
+                data.stopEditing();
+                TreeCache.getInstance().setDirty();
+                RightsCache.getInstance().setDirty();
+                return showTree(request, response);
+            }
+            case cutPage: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                SessionWriter.setSessionObject(request, "cutPageId", pageId);
+                RequestWriter.setMessageKey(request, "_pageCut");
+                return showTree(request, response);
+            }
+            case movePage: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                int parentId = RequestReader.getInt(request, "parentId");
+                TreeCache tc = TreeCache.getInstance();
+                SiteData parent = tc.getSite(parentId);
+                if (parent != null) {
+                    TreeBean.getInstance().moveTreeNode(pageId, parentId);
+                    TreeCache.getInstance().setDirty();
+                    RightsCache.getInstance().setDirty();
+                    RequestWriter.setMessageKey(request, "_pageMoved");
+                } else {
+                    return false;
+                }
+                return true;
+            }
+            case openDeletePage: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                if (pageId == 0) {
+                    addError(request, StringUtil.getString("_noSelection", SessionReader.getSessionLocale(request)));
+                    return showTree(request, response);
+                }
+                return showDeletePage(request, response);
+            }
+            case deletePage: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                if (pageId < BaseIdData.ID_MIN) {
+                    addError(request, StringUtil.getString("_notDeletable", SessionReader.getSessionLocale(request)));
+                    return showDeletePage(request, response);
+                }
+                TreeCache tc = TreeCache.getInstance();
+                int parentId = tc.getParentNodeId(pageId);
+                PageBean.getInstance().deleteTreeNode(pageId);
+                TreeCache.getInstance().setDirty();
+                RightsCache.getInstance().setDirty();
+                request.setAttribute("pageId", Integer.toString(parentId));
+                TreeCache.getInstance().setDirty();
+                RightsCache.getInstance().setDirty();
+                request.setAttribute("siteId", Integer.toString(parentId));
+                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&siteId=" + parentId, "_pageDeleted");
+            }
+            case openPageHistory: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                TreeCache tc = TreeCache.getInstance();
+                PageData data = tc.getPage(pageId);
+                request.setAttribute("pageData", data);
+                return showPageHistory(request, response);
+            }
+            case showHistoryPage: {
+                PageData data;
+                int pageId = RequestReader.getInt(request, "pageId");
+                int pageVersion = RequestReader.getInt(request, "version");
+                TreeCache tc = TreeCache.getInstance();
+                if (pageId == 0) {
+                    String url = request.getRequestURI();
+                    data = tc.getPage(url);
+                } else {
+                    data = tc.getPage(pageId);
+                }
+                checkObject(data);
+                data = PageBean.getInstance().getPage(pageId, pageVersion);
+                if (!SessionReader.hasContentRight(request, pageId, Right.READ)) {
                     return forbidden();
                 }
-                if (!data.isPublishedLoaded())
+                request.setAttribute("pageData", data);
+                return setPageResponse(request, response, data);
+            }
+            case restoreHistoryPage: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
-                PagePartData pdata = data.getPagePart(sectionName, partId);
-                return pdata != null && pdata.executePagePartMethod(partMethod, request, response);
+                TreeCache tc = TreeCache.getInstance();
+                PageData data = tc.getPage(pageId);
+                int version = RequestReader.getInt(request, "version");
+                PageBean.getInstance().restorePageVersion(pageId, version);
+                TreeCache.getInstance().setDirty();
+                RightsCache.getInstance().setDirty();
+                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&siteId=" + data.getParentId() + "&pageId=" + pageId, "_pageVersionRestored");
+            }
+            case deleteHistoryPage: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                int version = RequestReader.getInt(request, "version");
+                PageBean.getInstance().deletePageVersion(pageId, version);
+                TreeCache tc = TreeCache.getInstance();
+                PageData data = tc.getPage(pageId);
+                request.setAttribute("pageData", data);
+                RequestWriter.setMessageKey(request, "_pageVersionDeleted");
+                return showPageHistory(request, response);
+            }
+            case toggleEditMode: {
+                if (!hasAnyContentRight(request))
+                    return false;
+                SessionWriter.setEditMode(request, !SessionReader.isEditMode(request));
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (pageId==0)
+                    request.setAttribute("pageId", Integer.toString(TreeCache.getInstance().getFallbackPageId(request)));
+                return new PageActions().show(request, response);
+            }
+            case openEditPageContent: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                PageData treeData=TreeCache.getInstance().getPage(pageId);
+                PageData data = PageBean.getInstance().getPage(pageId, getEditVersion(pageId));
+                if (treeData!=null){
+                    data.setDefaultPage(treeData.isDefaultPage());
+                    data.setPath(treeData.getPath());
+                }
+                checkObject(data);
+                data.prepareEditing();
+                SessionWriter.setSessionObject(request, "pageData", data);
+                data.setEditMode(true);
+                return setPageResponse(request, response, data);
+            }
+            case reopenEditPageContent: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                PageData data = (PageData) getSessionObject(request, "pageData");
+                data.setEditMode(true);
+                return setPageResponse(request, response, data);
+            }
+            case savePageContent: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                PageData data = (PageData) getSessionObject(request, "pageData");
+                checkObject(data, pageId);
+                data.setContentChanged();
+                data.setAuthorName(SessionReader.getLoginName(request));
+                data.prepareSave();
+                data.setPublished(false);
+                PageBean.getInstance().savePageContent(data);
+                SessionWriter.removeSessionObject(request, "pageData");
+                data.stopEditing();
+                TreeCache.getInstance().setDirty();
+                RightsCache.getInstance().setDirty();
+                return new PageActions().show(request, response);
+            }
+            case savePageContentAndPublish: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.APPROVE))
+                    return false;
+                PageData data = (PageData) getSessionObject(request, "pageData");
+                checkObject(data, pageId);
+                data.setContentChanged();
+                data.setAuthorName(SessionReader.getLoginName(request));
+                data.prepareSave();
+                data.setPublished(true);
+                PageBean.getInstance().savePageContent(data);
+                SessionWriter.removeSessionObject(request, "pageData");
+                data.stopEditing();
+                TreeCache.getInstance().setDirty();
+                RightsCache.getInstance().setDirty();
+                return new PageActions().show(request, response);
+            }
+            case publishPage: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.APPROVE))
+                    return false;
+                boolean fromAdmin = RequestReader.getBoolean(request, "fromAdmin");
+                PageData data = PageBean.getInstance().getPage(pageId, getEditVersion(pageId));
+                data.setAuthorName(SessionReader.getLoginName(request));
+                data.prepareSave();
+                data.setPublished(true);
+                PageBean.getInstance().publishPage(data);
+                TreeCache.getInstance().setDirty();
+                RightsCache.getInstance().setDirty();
+                RequestWriter.setMessageKey(request, "_pagePublished");
+                request.setAttribute("siteId", Integer.toString(data.getParentId()));
+                if (fromAdmin) {
+                    return showTree(request, response);
+                }
+                return new PageActions().show(request, response);
+            }
+            case stopEditing: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                SessionWriter.removeSessionObject(request, "pageData");
+                return new PageActions().show(request, response);
+            }
+            case showPageContent: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                PageData data = (PageData) getSessionObject(request, "pageData");
+                return setEditPageContentAjaxResponse(request, response, data);
             }
             default: {
                 return show(request, response);
@@ -60,7 +408,7 @@ public class PageActions extends BaseTreeActions {
         return KEY;
     }
 
-    public boolean show(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public boolean show(HttpServletRequest request, HttpServletResponse response) {
         PageData treeData, data;
         int pageId = RequestReader.getInt(request, "pageId");
         TreeCache tc = TreeCache.getInstance();
@@ -95,5 +443,42 @@ public class PageActions extends BaseTreeActions {
         request.setAttribute("pageData", data);
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/page.jsp");
     }
+
+    protected boolean setEditPageContentAjaxResponse(HttpServletRequest request, HttpServletResponse response, PageData data) {
+        data.setEditMode(true);
+        request.setAttribute("pageData", data);
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp//page/content.ajax.jsp");
+    }
+
+    protected boolean showCreatePage(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/createPage.ajax.jsp");
+    }
+
+    protected boolean showEditPageSettings(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/editPageSettings.ajax.jsp");
+    }
+
+    protected boolean showEditPageRights(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/editPageRights.ajax.jsp");
+    }
+
+    protected boolean showDeletePage(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/deletePage.ajax.jsp");
+    }
+
+    protected boolean showPageHistory(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/pageHistory.ajax.jsp");
+    }
+
+    protected boolean showPageDetails(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/pageDetails.ajax.jsp");
+    }
+
+    protected int getEditVersion(int id) {
+        TreeCache tc = TreeCache.getInstance();
+        PageData node = tc.getPage(id);
+        return node == null ? 0 : node.getMaxVersion();
+    }
+
 
 }
