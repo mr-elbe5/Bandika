@@ -1,5 +1,5 @@
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.cms.field.FieldAction" %>
+<%@ page import="de.bandika.cms.field.FieldActions" %>
 <%@ page import="de.bandika.cms.page.CkCallbackData" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.site.SiteData" %>
@@ -31,13 +31,13 @@
             <%=StringUtil.getHtml("_structure", locale)%>
         </h3>
         <ul id="browseNavigation" class="treeRoot">
-            <%TreeHelper.addBrowserSiteNode(pageContext, out, request, tc.getRootSite(), siteId, activeIds, FieldAction.showSelectableBrowserLinks, locale);%>
+            <%TreeHelper.addBrowserSiteNode(pageContext, out, request, tc.getRootSite(), siteId, activeIds, FieldActions.showSelectableBrowserLinks, locale);%>
         </ul>
     </div>
     <div id="browserView"></div>
 </section>
 <script type="text/javascript">
-    $("#browserView").load('/field.srv?act=<%=FieldAction.showSelectableBrowserLinks%>&siteId=<%=siteId%>');
+    $("#browserView").load('/field.srv?act=<%=FieldActions.showSelectableBrowserLinks%>&siteId=<%=siteId%>');
     $("#browseNavigation").treeview({
         persist: "location", collapsed: true, unique: false
     });

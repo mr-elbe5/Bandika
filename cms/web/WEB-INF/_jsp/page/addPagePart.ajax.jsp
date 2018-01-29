@@ -16,7 +16,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.cms.page.PageBean" %>
-<%@ page import="de.bandika.cms.page.PageEditAction" %>
+<%@ page import="de.bandika.cms.page.PageEditActions" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     int pageId = RequestReader.getInt(request, "pageId");
@@ -47,7 +47,7 @@
                     <% for (TemplateData tdata : templates) {%>
                     <tr>
                         <td>
-                            <a href="#" onclick="return post2ModalDialog('/pageedit.ajx', {act: '<%=PageEditAction.addPagePart%>', pageId: '<%=pageId%>', partId: '<%=partId%>', below: '<%=below%>', sectionName: '<%=sectionName%>', templateName: '<%=tdata.getName()%>'});"><%=StringUtil.toHtml(tdata.getName())%>
+                            <a href="#" onclick="return post2ModalDialog('/pageedit.ajx', {act: '<%=PageEditActions.addPagePart%>', pageId: '<%=pageId%>', partId: '<%=partId%>', below: '<%=below%>', sectionName: '<%=sectionName%>', templateName: '<%=tdata.getName()%>'});"><%=StringUtil.toHtml(tdata.getName())%>
                         </td>
                         <td><%=StringUtil.toHtml(tdata.getDescription())%>
                         </td>
@@ -74,7 +74,7 @@
                     <% for (PagePartData data : parts) {%>
                     <tr>
                         <td>
-                            <a href="#" onclick="return post2ModalDialog('/pageedit.ajx', {act: '<%=PageEditAction.addSharedPart%>', pageId: '<%=pageId%>', partId: '<%=partId%>', below: '<%=below%>', sectionName: '<%=sectionName%>', sharedPartId: '<%=data.getId()%>'});"><%=StringUtil.toHtml(data.getShareName())%>
+                            <a href="#" onclick="return post2ModalDialog('/pageedit.ajx', {act: '<%=PageEditActions.addSharedPart%>', pageId: '<%=pageId%>', partId: '<%=partId%>', below: '<%=below%>', sectionName: '<%=sectionName%>', sharedPartId: '<%=data.getId()%>'});"><%=StringUtil.toHtml(data.getShareName())%>
                         </td>
                     </tr>
                     <%}%>

@@ -10,7 +10,7 @@
 <%@ page import="de.bandika.cms.file.FileData" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.file.FileAction" %>
+<%@ page import="de.bandika.cms.file.FileActions" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     FileData data = (FileData) SessionReader.getSessionObject(request, "fileData");
@@ -22,7 +22,7 @@
 <form action="/file.srv" method="post" id="filerightsform" name="filerightsform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="fileId" value="<%=data.getId()%>"/>
-        <input type="hidden" name="act" value="<%=FileAction.saveFileRights%>"/>
+        <input type="hidden" name="act" value="<%=FileActions.saveFileRights%>"/>
         <table class="padded form">
             <jsp:include page="../tree/editRights.inc.jsp" flush="true"/>
         </table>

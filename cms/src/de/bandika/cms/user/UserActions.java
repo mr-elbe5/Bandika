@@ -13,22 +13,21 @@ import de.bandika.base.data.BinaryFileData;
 import de.bandika.base.data.Locales;
 import de.bandika.base.mail.Mailer;
 import de.bandika.base.util.StringUtil;
-import de.bandika.cms.application.AdminAction;
+import de.bandika.cms.application.AdminActions;
 import de.bandika.cms.configuration.Configuration;
-import de.bandika.cms.servlet.CmsAction;
+import de.bandika.cms.servlet.CmsActions;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.RightsCache;
 import de.bandika.webbase.rights.SystemZone;
 import de.bandika.webbase.servlet.*;
-import de.bandika.webbase.user.LoginAction;
+import de.bandika.webbase.user.LoginActions;
 import de.bandika.webbase.user.UserSecurity;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
-import java.util.zip.Adler32;
 
-public class UserAction extends CmsAction {
+public class UserActions extends CmsActions {
 
     public static final String changeLocale="changeLocale";
     public static final String openProfile="openProfile";
@@ -90,7 +89,7 @@ public class UserAction extends CmsAction {
                 data.setPassword(newPassword);
                 UserBean.getInstance().saveUserPassword(data);
                 RequestWriter.setMessageKey(request, "_passwordChanged");
-                return closeLayerToUrl(request, response, "/user.srv?act="+UserAction.openProfile, "_passwordChanged");
+                return closeLayerToUrl(request, response, "/user.srv?act="+ UserActions.openProfile, "_passwordChanged");
             }
             case openChangeProfile: {
                 return SessionReader.isLoggedIn(request) && showChangeProfile(request, response);
@@ -110,7 +109,7 @@ public class UserAction extends CmsAction {
                 UserBean.getInstance().saveUserProfile(data);
                 SessionWriter.setSessionLoginData(request, data);
                 RequestWriter.setMessageKey(request, "_profileChanged");
-                return closeLayerToUrl(request, response, "/user.srv?act="+UserAction.openProfile, "_profileChanged");
+                return closeLayerToUrl(request, response, "/user.srv?act="+ UserActions.openProfile, "_profileChanged");
             }
             case showUserDetails: {
                 return hasSystemRight(request, SystemZone.USER, Right.EDIT) && showUserDetails(request, response);
@@ -148,7 +147,7 @@ public class UserAction extends CmsAction {
                     data.checkRights();
                     SessionWriter.setSessionLoginData(request, data);
                 }
-                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminAction.openAdministration+"&userId=" + data.getId(), "_userSaved");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration+"&userId=" + data.getId(), "_userSaved");
             }
             case openDeleteUser: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
@@ -171,7 +170,7 @@ public class UserAction extends CmsAction {
                 } else {
                     UserBean.getInstance().deleteUser(id);
                 }
-                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminAction.openAdministration, "_usersDeleted");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration, "_usersDeleted");
             }
             case openEditUsers: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
@@ -288,7 +287,7 @@ public class UserAction extends CmsAction {
                 return file != null && sendBinaryResponse(request, response, file.getFileName(), file.getContentType(), file.getBytes());
             }
             default: {
-                return new LoginAction().execute(request, response, LoginAction.login);
+                return new LoginActions().execute(request, response, LoginActions.login);
             }
         }
     }
@@ -296,7 +295,7 @@ public class UserAction extends CmsAction {
     public static final String KEY = "user";
 
     public static void initialize() {
-        ActionDispatcher.addAction(KEY, new UserAction());
+        ActionSetCache.addActionSet(KEY, new UserActions());
     }
 
     @Override

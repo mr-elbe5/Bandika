@@ -10,10 +10,10 @@ package de.bandika.cms.page;
 
 import de.bandika.base.data.BaseIdData;
 import de.bandika.base.util.StringUtil;
-import de.bandika.cms.application.AdminAction;
+import de.bandika.cms.application.AdminActions;
 import de.bandika.cms.site.SiteData;
-import de.bandika.cms.tree.BaseTreeAction;
-import de.bandika.cms.tree.TreeAction;
+import de.bandika.cms.tree.BaseTreeActions;
+import de.bandika.cms.tree.TreeActions;
 import de.bandika.cms.tree.TreeBean;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.rights.Right;
@@ -23,7 +23,7 @@ import de.bandika.webbase.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class PageAdminAction extends BaseTreeAction {
+public class PageAdminActions extends BaseTreeActions {
 
     public static final String showPageDetails="showPageDetails";
     public static final String openCreatePage="openCreatePage";
@@ -86,7 +86,7 @@ public class PageAdminAction extends BaseTreeAction {
                 data.prepareEditing();
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeAction.openTree+"&siteId=" + data.getParentId() + "&pageId=" + data.getId());
+                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&siteId=" + data.getParentId() + "&pageId=" + data.getId());
             }
             case openEditPageSettings: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -120,7 +120,7 @@ public class PageAdminAction extends BaseTreeAction {
                 data.stopEditing();
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree+"&pageId=" + data.getId(), "_pageSettingsChanged");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&pageId=" + data.getId(), "_pageSettingsChanged");
             }
             case openEditPageRights: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -151,7 +151,7 @@ public class PageAdminAction extends BaseTreeAction {
                 data.stopEditing();
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree+"&pageId=" + data.getId(), "_pageRightsChanged");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&pageId=" + data.getId(), "_pageRightsChanged");
             }
             case clonePage: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -228,7 +228,7 @@ public class PageAdminAction extends BaseTreeAction {
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
                 request.setAttribute("siteId", Integer.toString(parentId));
-                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree+"&siteId=" + parentId, "_pageDeleted");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&siteId=" + parentId, "_pageDeleted");
             }
             case openPageHistory: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -268,7 +268,7 @@ public class PageAdminAction extends BaseTreeAction {
                 PageBean.getInstance().restorePageVersion(pageId, version);
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree+"&siteId=" + data.getParentId() + "&pageId=" + pageId, "_pageVersionRestored");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&siteId=" + data.getParentId() + "&pageId=" + pageId, "_pageVersionRestored");
             }
             case deleteHistoryPage: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -302,7 +302,7 @@ public class PageAdminAction extends BaseTreeAction {
                 if (PageBean.getInstance().deleteSharedPagePart(id)) {
                     RequestWriter.setMessageKey(request, "partDeleted");
                 }
-                return new AdminAction().openAdministration(request, response);
+                return new AdminActions().openAdministration(request, response);
             }
             default: {
                 return forbidden();
@@ -313,7 +313,7 @@ public class PageAdminAction extends BaseTreeAction {
     public static final String KEY = "pageadmin";
 
     public static void initialize() {
-        ActionDispatcher.addAction(KEY, new PageAdminAction());
+        ActionSetCache.addActionSet(KEY, new PageAdminActions());
     }
 
     @Override

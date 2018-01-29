@@ -10,14 +10,14 @@ package de.bandika.cms.servlet;
 
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.SystemZone;
-import de.bandika.webbase.servlet.Action;
+import de.bandika.webbase.servlet.ActionSet;
 import de.bandika.webbase.servlet.RequestStatics;
 import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public abstract class CmsAction extends Action {
+public abstract class CmsActions extends ActionSet {
 
     protected boolean hasSystemRight(HttpServletRequest request, SystemZone zone, Right right) throws Exception {
         return SessionReader.hasSystemRight(request, zone, right) || forbidden();

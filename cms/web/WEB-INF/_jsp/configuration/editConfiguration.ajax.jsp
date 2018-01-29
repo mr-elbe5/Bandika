@@ -9,7 +9,7 @@
 <%@ page import="de.bandika.base.data.Locales" %>
 <%@ page import="de.bandika.base.mail.Mailer" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.cms.configuration.ConfigAction" %>
+<%@ page import="de.bandika.cms.configuration.ConfigActions" %>
 <%@ page import="de.bandika.cms.configuration.Configuration" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
@@ -21,7 +21,7 @@
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/config.ajx" method="post" id="configform" name="configform" accept-charset="UTF-8">
-    <input type="hidden" name="act" value="<%=ConfigAction.saveConfiguration%>"/>
+    <input type="hidden" name="act" value="<%=ConfigActions.saveConfiguration%>"/>
     <fieldset>
         <table class="padded form">
             <tr>

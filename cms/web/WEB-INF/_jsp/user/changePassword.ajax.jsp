@@ -9,14 +9,14 @@
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.user.UserAction" %>
+<%@ page import="de.bandika.cms.user.UserActions" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     int userId = SessionReader.getLoginId(request);
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/user.ajx" method="post" id="userform" name="userform" accept-charset="UTF-8">
-    <input type="hidden" name="act" value="<%=UserAction.changePassword%>">
+    <input type="hidden" name="act" value="<%=UserActions.changePassword%>">
     <input type="hidden" name="userId" value="<%=userId%>">
     <fieldset>
         <table class="padded form">

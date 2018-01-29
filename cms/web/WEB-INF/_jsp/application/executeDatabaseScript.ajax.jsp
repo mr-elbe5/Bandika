@@ -6,7 +6,7 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="de.bandika.cms.application.AdminAction" %>
+<%@ page import="de.bandika.cms.application.AdminActions" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.webbase.servlet.RequestReader" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
@@ -14,7 +14,7 @@
 <%Locale locale = SessionReader.getSessionLocale(request);%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/admin.ajx" method="post" id="executeDbScript" name="executeDbScript" accept-charset="UTF-8" enctype="multipart/form-data">
-    <input type="hidden" name="act" value="<%=AdminAction.executeDatabaseScript%>"/>
+    <input type="hidden" name="act" value="<%=AdminActions.executeDatabaseScript%>"/>
     <fieldset>
         <table class="padded form">
             <tr>
@@ -37,7 +37,7 @@
     <div class="buttonset topspace">
         <button onclick="closeLayerDialog();"><%=StringUtil.getHtml("_close", locale)%>
         </button>
-        <button type="submit" onclick="document.executeDbScript.act.value='<%=AdminAction.loadScriptFile%>';" class="primary"><%=StringUtil.getHtml("_loadFile", locale)%>
+        <button type="submit" onclick="document.executeDbScript.act.value='<%=AdminActions.loadScriptFile%>';" class="primary"><%=StringUtil.getHtml("_loadFile", locale)%>
         </button>
         <button type="submit" class="primary"><%=StringUtil.getHtml("_execute", locale)%>
         </button>

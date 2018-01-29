@@ -44,7 +44,7 @@ public abstract class WebServlet extends HttpServlet {
             String actionKey = getActionKey(request);
             if (actionKey != null) {
                 String actionName = RequestReader.getString(request, RequestStatics.PARAM_ACTION);
-                Action action = ActionDispatcher.getAction(actionKey);
+                ActionSet action = ActionSetCache.getActionSet(actionKey);
                 if (action != null && action.execute(request, response, actionName)) {
                     int responseType = action.getResponseType(request);
                     if (responseType == RequestStatics.RESPONSE_TYPE_FORWARD) {

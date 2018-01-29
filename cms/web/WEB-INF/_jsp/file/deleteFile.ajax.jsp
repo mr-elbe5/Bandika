@@ -12,7 +12,7 @@
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.tree.TreeCache" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.file.FileAction" %>
+<%@ page import="de.bandika.cms.file.FileActions" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     int fileId = RequestReader.getInt(request, "fileId");
@@ -25,7 +25,7 @@
     </div>
     <% if (data.hasPreview()) {%>
     <div>
-        <img src="/file.srv?act=<%=FileAction.showPreview%>&fileId=<%=data.getId()%>" border='0' alt=""/>
+        <img src="/file.srv?act=<%=FileActions.showPreview%>&fileId=<%=data.getId()%>" border='0' alt=""/>
     </div>
     <%}%>
     <div><%=data.getName()%>
@@ -34,6 +34,6 @@
 <div class="buttonset topspace">
     <button onclick="closeLayerDialog();"><%=StringUtil.getHtml("_close", locale)%>
     </button>
-    <button class="primary" onclick="post2ModalDialog('/file.ajx', {act: '<%=FileAction.deleteFile%>', fileId: '<%=fileId%>'});"><%=StringUtil.getHtml("_delete", locale)%>
+    <button class="primary" onclick="post2ModalDialog('/file.ajx', {act: '<%=FileActions.deleteFile%>', fileId: '<%=fileId%>'});"><%=StringUtil.getHtml("_delete", locale)%>
     </button>
 </div>

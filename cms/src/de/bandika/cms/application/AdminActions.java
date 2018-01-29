@@ -14,12 +14,12 @@ import de.bandika.base.log.Log;
 import de.bandika.base.util.FileUtil;
 import de.bandika.cms.configuration.Configuration;
 import de.bandika.cms.configuration.ConfigurationBean;
-import de.bandika.cms.servlet.CmsAction;
+import de.bandika.cms.servlet.CmsActions;
 import de.bandika.webbase.database.DbConnector;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.SystemZone;
 import de.bandika.webbase.servlet.*;
-import de.bandika.webbase.user.LoginAction;
+import de.bandika.webbase.user.LoginActions;
 import de.bandika.webbase.util.ApplicationPath;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +30,7 @@ import java.io.IOException;
 /**
  * Actions of Administrator
  */
-public class AdminAction extends CmsAction {
+public class AdminActions extends CmsActions {
 
     public static final String reinitialize="reinitialize";
     public static final String restart="restart";
@@ -39,7 +39,7 @@ public class AdminAction extends CmsAction {
     public static final String loadScriptFile="loadScriptFile";
     public static final String executeDatabaseScript="executeDatabaseScript";
 
-    public static AdminAction instance=new AdminAction();
+    public static AdminActions instance=new AdminActions();
 
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
@@ -88,7 +88,7 @@ public class AdminAction extends CmsAction {
                     addError(request, "script could not be executed");
                     return showExecuteDatabaseScript(request, response);
                 }
-                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminAction.openAdministration, "_scriptExecuted");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration, "_scriptExecuted");
             }
             case openAdministration:
             default:{
@@ -102,7 +102,7 @@ public class AdminAction extends CmsAction {
     public static final String ADMIN_MASTER = "adminMaster.jsp";
 
     public static void initialize() {
-        ActionDispatcher.addAction(KEY, new AdminAction());
+        ActionSetCache.addActionSet(KEY, new AdminActions());
     }
 
     @Override
@@ -113,7 +113,7 @@ public class AdminAction extends CmsAction {
     public boolean openAdministration(HttpServletRequest request, HttpServletResponse response) throws Exception{
         if (!SessionReader.isLoggedIn(request)) {
             if (!isAjaxRequest(request)) {
-                return (new LoginAction()).execute(request, response,LoginAction.openLogin);
+                return (new LoginActions()).execute(request, response, LoginActions.openLogin);
             }
             return forbidden();
         }

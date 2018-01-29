@@ -8,12 +8,12 @@
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
-<%@ page import="de.bandika.cms.template.TemplateAction" %>
+<%@ page import="de.bandika.cms.template.TemplateActions" %>
 <%@ page import="java.util.Locale" %>
 <%Locale locale = SessionReader.getSessionLocale(request);%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/template.ajx" method="post" id="importTemplates" name="importTemplates" accept-charset="UTF-8" enctype="multipart/form-data">
-    <input type="hidden" name="act" value="<%=TemplateAction.importTemplates%>"/>
+    <input type="hidden" name="act" value="<%=TemplateActions.importTemplates%>"/>
     <fieldset>
         <table class="padded form">
             <tr>

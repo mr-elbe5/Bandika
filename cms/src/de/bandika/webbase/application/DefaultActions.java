@@ -9,14 +9,14 @@
 package de.bandika.webbase.application;
 
 import de.bandika.base.data.Locales;
-import de.bandika.webbase.servlet.ActionDispatcher;
-import de.bandika.webbase.servlet.Action;
+import de.bandika.webbase.servlet.ActionSetCache;
+import de.bandika.webbase.servlet.ActionSet;
 import de.bandika.webbase.servlet.RequestReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class DefaultAction extends Action {
+public class DefaultActions extends ActionSet {
 
     public static final String test="test";
 
@@ -32,7 +32,7 @@ public class DefaultAction extends Action {
     public static final String KEY = "default";
 
     public static void initialize() {
-        ActionDispatcher.addAction(KEY, new DefaultAction());
+        ActionSetCache.addActionSet(KEY, new DefaultActions());
     }
 
     @Override

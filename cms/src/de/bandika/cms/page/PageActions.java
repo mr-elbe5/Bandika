@@ -8,17 +8,17 @@
  */
 package de.bandika.cms.page;
 
-import de.bandika.cms.tree.BaseTreeAction;
+import de.bandika.cms.tree.BaseTreeActions;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.rights.Right;
-import de.bandika.webbase.servlet.ActionDispatcher;
+import de.bandika.webbase.servlet.ActionSetCache;
 import de.bandika.webbase.servlet.RequestReader;
 import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class PageAction extends BaseTreeAction {
+public class PageActions extends BaseTreeActions {
 
     public static final String test="test";
     public static final String show="show";
@@ -52,7 +52,7 @@ public class PageAction extends BaseTreeAction {
     public static final String KEY = "page";
 
     public static void initialize() {
-        ActionDispatcher.addAction(KEY, new PageAction());
+        ActionSetCache.addActionSet(KEY, new PageActions());
     }
 
     @Override

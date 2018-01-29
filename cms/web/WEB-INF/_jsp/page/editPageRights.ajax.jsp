@@ -10,7 +10,7 @@
 <%@ page import="de.bandika.cms.page.PageData" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.page.PageAdminAction" %>
+<%@ page import="de.bandika.cms.page.PageAdminActions" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     PageData data = (PageData) SessionReader.getSessionObject(request, "pageData");
@@ -22,7 +22,7 @@
 <form action="/pageadmin.srv" method="post" id="pagerightsform" name="pagerightsform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
-        <input type="hidden" name="act" value="<%=PageAdminAction.savePageRights%>"/>
+        <input type="hidden" name="act" value="<%=PageAdminActions.savePageRights%>"/>
         <table class="padded form">
             <jsp:include page="../tree/editRights.inc.jsp" flush="true"/>
         </table>

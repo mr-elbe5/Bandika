@@ -13,7 +13,7 @@
 <%@ page import="de.bandika.cms.user.UserData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.group.GroupAction" %>
+<%@ page import="de.bandika.cms.group.GroupActions" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     GroupData group = (GroupData) SessionReader.getSessionObject(request, "groupData");
@@ -23,7 +23,7 @@
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/group.ajx" method="post" id="groupform" name="groupform" accept-charset="UTF-8">
-    <input type="hidden" name="act" value="<%=GroupAction.removeGroupUsers%>"/>
+    <input type="hidden" name="act" value="<%=GroupActions.removeGroupUsers%>"/>
     <fieldset>
         <table class="padded form">
             <thead>

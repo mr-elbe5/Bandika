@@ -10,7 +10,7 @@
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.site.SiteData" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.site.SiteAction" %>
+<%@ page import="de.bandika.cms.site.SiteActions" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     SiteData data = (SiteData) SessionReader.getSessionObject(request, "siteData");
@@ -22,7 +22,7 @@
 <form action="/site.srv" method="post" id="siterightsform" name="siterightsform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="siteId" value="<%=data.getId()%>"/>
-        <input type="hidden" name="act" value="<%=SiteAction.saveSiteRights%>"/>
+        <input type="hidden" name="act" value="<%=SiteActions.saveSiteRights%>"/>
         <table class="padded form">
             <jsp:include page="../tree/editRights.inc.jsp" flush="true"/>
         </table>

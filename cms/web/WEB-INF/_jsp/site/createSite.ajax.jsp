@@ -14,7 +14,7 @@
 <%@ page import="de.bandika.cms.template.TemplateType" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.site.SiteAction" %>
+<%@ page import="de.bandika.cms.site.SiteActions" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     List<TemplateData> pageTemplates = TemplateCache.getInstance().getTemplates(TemplateType.PAGE);
@@ -24,7 +24,7 @@
 <form action="/site.srv" method="post" id="layoutform" name="layoutform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="siteId" value="<%=siteId%>"/>
-        <input type="hidden" name="act" value="<%=SiteAction.createSite%>"/>
+        <input type="hidden" name="act" value="<%=SiteActions.createSite%>"/>
         <table class="padded form">
             <tr>
                 <td>

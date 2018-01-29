@@ -11,19 +11,19 @@ package de.bandika.webbase.servlet;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ActionDispatcher {
+public class ActionSetCache {
 
-    private static final Map<String, Action> actions = new HashMap<>();
+    private static final Map<String, ActionSet> actionSets = new HashMap<>();
 
-    public static void addAction(String key, Action action) {
-        actions.put(key, action);
+    public static void addActionSet(String key, ActionSet action) {
+        actionSets.put(key, action);
     }
 
-    public static Action getAction(String key) {
-        if (!actions.containsKey(key)) {
+    public static ActionSet getActionSet(String key) {
+        if (!actionSets.containsKey(key)) {
             return null;
         }
-        return actions.get(key);
+        return actionSets.get(key);
     }
 
 }

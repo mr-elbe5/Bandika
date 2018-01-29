@@ -15,7 +15,7 @@
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.group.GroupAction" %>
+<%@ page import="de.bandika.cms.group.GroupActions" %>
 <%
     if (SessionReader.hasSystemRight(request, SystemZone.USER, Right.EDIT)) {
         Locale locale = SessionReader.getSessionLocale(request);
@@ -31,7 +31,7 @@
     <div class="contextSource icn igroup"><%=StringUtil.getHtml("_groups", locale)%>
     </div>
     <div class="contextMenu">
-        <div class="icn inew" onclick="return openLayerDialog('<%=StringUtil.getHtml("_newGroup",locale)%>', '/group.ajx?act=<%=GroupAction.openCreateGroup%>')"><%=StringUtil.getHtml("_new", locale)%>
+        <div class="icn inew" onclick="return openLayerDialog('<%=StringUtil.getHtml("_newGroup",locale)%>', '/group.ajx?act=<%=GroupActions.openCreateGroup%>')"><%=StringUtil.getHtml("_new", locale)%>
         </div>
     </div>
     <ul>
@@ -40,18 +40,18 @@
                 for (GroupData group : groups) {
         %>
         <li>
-            <div class="contextSource icn igroup <%=groupId==group.getId() ? "selected" : ""%>" onclick="$('#details').load('/group.ajx?act=<%=GroupAction.showGroupDetails%>&groupId=<%=group.getId()%>')"><%=StringUtil.toHtml(group.getName())%>
+            <div class="contextSource icn igroup <%=groupId==group.getId() ? "selected" : ""%>" onclick="$('#details').load('/group.ajx?act=<%=GroupActions.showGroupDetails%>&groupId=<%=group.getId()%>')"><%=StringUtil.toHtml(group.getName())%>
             </div>
             <div class="contextMenu">
-                <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editGroup",locale)%>', '/group.ajx?act=<%=GroupAction.openEditGroup%>&groupId=<%=group.getId()%>');"><%=StringUtil.getHtml("_edit", locale)%>
+                <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editGroup",locale)%>', '/group.ajx?act=<%=GroupActions.openEditGroup%>&groupId=<%=group.getId()%>');"><%=StringUtil.getHtml("_edit", locale)%>
                 </div>
                 <% if (group.getId() != GroupData.ID_ALL) {%>
-                <div class="icn iadd" onclick="return openLayerDialog('<%=StringUtil.getHtml("_addUser",locale)%>', '/group.ajx?act=<%=GroupAction.openAddGroupUser%>&groupId=<%=group.getId()%>');"><%=StringUtil.getHtml("_addUser", locale)%>
+                <div class="icn iadd" onclick="return openLayerDialog('<%=StringUtil.getHtml("_addUser",locale)%>', '/group.ajx?act=<%=GroupActions.openAddGroupUser%>&groupId=<%=group.getId()%>');"><%=StringUtil.getHtml("_addUser", locale)%>
                 </div>
-                <div class="icn iremove" onclick="return openLayerDialog('<%=StringUtil.getHtml("_removeUsers",locale)%>', '/group.ajx?act=<%=GroupAction.openRemoveGroupUsers%>&groupId=<%=group.getId()%>');"><%=StringUtil.getHtml("_removeUsers", locale)%>
+                <div class="icn iremove" onclick="return openLayerDialog('<%=StringUtil.getHtml("_removeUsers",locale)%>', '/group.ajx?act=<%=GroupActions.openRemoveGroupUsers%>&groupId=<%=group.getId()%>');"><%=StringUtil.getHtml("_removeUsers", locale)%>
                 </div>
                 <% if (group.getId() >= GroupData.ID_MAX_FINAL) {%>
-                <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteGroup",locale)%>', '/group.ajx?act=<%=GroupAction.openDeleteGroup%>&groupId=<%=group.getId()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteGroup",locale)%>', '/group.ajx?act=<%=GroupActions.openDeleteGroup%>&groupId=<%=group.getId()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                 </div>
                 <%
                         }

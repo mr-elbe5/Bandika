@@ -12,7 +12,7 @@ import de.bandika.cms.file.FileBean;
 import de.bandika.cms.file.FileData;
 import de.bandika.cms.page.CkCallbackData;
 import de.bandika.cms.site.SiteData;
-import de.bandika.cms.tree.BaseTreeAction;
+import de.bandika.cms.tree.BaseTreeActions;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.servlet.*;
@@ -20,7 +20,7 @@ import de.bandika.webbase.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class FieldAction extends BaseTreeAction {
+public class FieldActions extends BaseTreeActions {
 
     public static final String openLinkBrowser="openLinkBrowser";
     public static final String showSelectableBrowserLinks="showSelectableBrowserLinks";
@@ -129,7 +129,7 @@ public class FieldAction extends BaseTreeAction {
     public static final String KEY = "field";
 
     public static void initialize() {
-        ActionDispatcher.addAction(KEY, new FieldAction());
+        ActionSetCache.addActionSet(KEY, new FieldActions());
     }
 
     @Override

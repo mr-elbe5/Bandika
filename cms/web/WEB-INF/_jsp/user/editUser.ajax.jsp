@@ -13,7 +13,7 @@
 <%@ page import="de.bandika.cms.user.UserData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.user.UserAction" %>
+<%@ page import="de.bandika.cms.user.UserActions" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     UserData user = (UserData) SessionReader.getSessionObject(request, "userData");
@@ -21,7 +21,7 @@
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/user.ajx" method="post" id="userform" name="userform" accept-charset="UTF-8" enctype="multipart/form-data">
-    <input type="hidden" name="act" value="<%=UserAction.saveUser%>"/>
+    <input type="hidden" name="act" value="<%=UserActions.saveUser%>"/>
     <fieldset>
         <table class="padded form">
             <tr>
@@ -150,7 +150,7 @@
                 <td>
                     <label for="portrait"><%=StringUtil.getHtml("_portrait", locale)%>
                     </label></td>
-                <td><input type="file" id="portrait" name="portrait"/><% if (!user.getPortraitName().isEmpty()){%><img src="/user.srv?act=<%=UserAction.showPortrait%>&userId=<%=user.getId()%>" alt="<%=StringUtil.toHtml(user.getName())%>" /> <%}%>
+                <td><input type="file" id="portrait" name="portrait"/><% if (!user.getPortraitName().isEmpty()){%><img src="/user.srv?act=<%=UserActions.showPortrait%>&userId=<%=user.getId()%>" alt="<%=StringUtil.toHtml(user.getName())%>" /> <%}%>
                 </td>
             </tr>
             <tr>

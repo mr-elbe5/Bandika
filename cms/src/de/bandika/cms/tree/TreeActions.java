@@ -8,16 +8,16 @@
  */
 package de.bandika.cms.tree;
 
-import de.bandika.webbase.servlet.ActionDispatcher;
-import de.bandika.webbase.servlet.Action;
+import de.bandika.webbase.servlet.ActionSetCache;
+import de.bandika.webbase.servlet.ActionSet;
 import de.bandika.webbase.servlet.RequestStatics;
 import de.bandika.webbase.servlet.SessionReader;
-import de.bandika.webbase.user.LoginAction;
+import de.bandika.webbase.user.LoginActions;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class TreeAction extends Action {
+public class TreeActions extends ActionSet {
 
     public static final String openTree="openTree";
 
@@ -27,7 +27,7 @@ public class TreeAction extends Action {
             default: {
                 if (!SessionReader.isLoggedIn(request)) {
                     if (!isAjaxRequest(request)) {
-                        return new LoginAction().execute(request, response, LoginAction.openLogin);
+                        return new LoginActions().execute(request, response, LoginActions.openLogin);
                     }
                     return forbidden();
                 }
@@ -42,7 +42,7 @@ public class TreeAction extends Action {
     public static final String KEY = "tree";
 
     public static void initialize() {
-        ActionDispatcher.addAction(KEY, new TreeAction());
+        ActionSetCache.addActionSet(KEY, new TreeActions());
     }
 
     @Override

@@ -17,7 +17,7 @@ import de.bandika.webbase.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class LoginAction extends Action {
+public class LoginActions extends ActionSet {
 
     public static final String openLogin="openLogin";
     public static final String login="login";
@@ -37,13 +37,13 @@ public class LoginAction extends Action {
                 String pwd = RequestReader.getString(request, "password");
                 if (login.length() == 0 || pwd.length() == 0) {
                     RequestError.setError(request, new RequestError(StringUtil.getString("_notComplete", SessionReader.getSessionLocale(request))));
-                    return new LoginAction().execute(request, response, openLogin);
+                    return new LoginActions().execute(request, response, openLogin);
                 }
                 LoginBean ts = LoginBean.getInstance();
                 UserLoginData data = ts.loginUser(login, pwd);
                 if (data == null) {
                     RequestError.setError(request, new RequestError(StringUtil.getString("_badLogin", SessionReader.getSessionLocale(request))));
-                    return new LoginAction().execute(request, response, openLogin);
+                    return new LoginActions().execute(request, response, openLogin);
                 }
                 SessionWriter.setSessionLoginData(request, data);
                 data.checkRights();
@@ -71,7 +71,7 @@ public class LoginAction extends Action {
     public static final String KEY = "login";
 
     public static void initialize() {
-        ActionDispatcher.addAction(KEY, new LoginAction());
+        ActionSetCache.addActionSet(KEY, new LoginActions());
     }
 
     @Override

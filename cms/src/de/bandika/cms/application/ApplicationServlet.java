@@ -11,9 +11,9 @@ package de.bandika.cms.application;
 import de.bandika.webbase.application.Initializer;
 import de.bandika.base.log.Log;
 import de.bandika.base.util.StringUtil;
-import de.bandika.cms.file.FileAction;
-import de.bandika.cms.page.PageAction;
-import de.bandika.cms.site.SiteAction;
+import de.bandika.cms.file.FileActions;
+import de.bandika.cms.page.PageActions;
+import de.bandika.cms.site.SiteActions;
 import de.bandika.webbase.servlet.RequestReader;
 import de.bandika.webbase.servlet.RequestStatics;
 import de.bandika.webbase.servlet.SessionWriter;
@@ -55,12 +55,12 @@ public class ApplicationServlet extends WebServlet {
     protected String getActionKey(HttpServletRequest request) {
         if (!Installer.getInstance().isAllInstalled()) {
             SessionWriter.setSessionLocale(request, Locale.ENGLISH);
-            InstallerAction.initialize();
-            return InstallerAction.KEY;
+            InstallerActions.initialize();
+            return InstallerActions.KEY;
         }
         if (!Initializer.getInstance().isInitialized() || !Initializer.getInstance().initialize()) {
             SessionWriter.setSessionLocale(request, Locale.ENGLISH);
-            return AdminAction.KEY;
+            return AdminActions.KEY;
         }
         String call = RequestReader.getString(request, RequestStatics.PARAM_CALL);
         String suffix = RequestReader.getString(request, RequestStatics.PARAM_SUFFIX);
@@ -70,13 +70,13 @@ public class ApplicationServlet extends WebServlet {
                 return call.substring(0, call.length() - suffix.length());
             }
             case RequestStatics.HTML_SUFFIX: {
-                return PageAction.KEY;
+                return PageActions.KEY;
             }
             case RequestStatics.NO_SUFFIX: {
-                return SiteAction.KEY;
+                return SiteActions.KEY;
             }
             default: {
-                return FileAction.KEY;
+                return FileActions.KEY;
             }
         }
     }

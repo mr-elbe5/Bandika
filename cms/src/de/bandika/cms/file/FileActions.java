@@ -12,10 +12,10 @@ import de.bandika.base.data.BinaryFileData;
 import de.bandika.base.data.BinaryFileStreamData;
 import de.bandika.base.log.Log;
 import de.bandika.base.util.StringUtil;
-import de.bandika.cms.application.AdminAction;
+import de.bandika.cms.application.AdminActions;
 import de.bandika.cms.site.SiteData;
-import de.bandika.cms.tree.BaseTreeAction;
-import de.bandika.cms.tree.TreeAction;
+import de.bandika.cms.tree.BaseTreeActions;
+import de.bandika.cms.tree.TreeActions;
 import de.bandika.cms.tree.TreeBean;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.rights.Right;
@@ -25,7 +25,7 @@ import de.bandika.webbase.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class FileAction extends BaseTreeAction {
+public class FileActions extends BaseTreeActions {
 
     public static final String show="show";
     public static final String download="download";
@@ -169,7 +169,7 @@ public class FileAction extends BaseTreeAction {
                 data.setPublished(publish);
                 ts.createFile(data);
                 TreeCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree+"&fileId=&fileId=" + data.getId(), "_fileCreated");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&fileId=&fileId=" + data.getId(), "_fileCreated");
             }
             case createFiles: {
                 int fileId = RequestReader.getInt(request, "fileId");
@@ -218,7 +218,7 @@ public class FileAction extends BaseTreeAction {
                 FileBean.getInstance().saveFileSettings(data);
                 RequestWriter.setMessageKey(request, "_fileSaved");
                 TreeCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree+"&fileId=" + data.getId(), "_fileSettingsChanged");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&fileId=" + data.getId(), "_fileSettingsChanged");
             }
             case saveFileRights: {
                 int fileId = RequestReader.getInt(request, "fileId");
@@ -232,7 +232,7 @@ public class FileAction extends BaseTreeAction {
                 data.stopEditing();
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree+"&fileId=" + data.getId(), "_fileRightsChanged");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&fileId=" + data.getId(), "_fileRightsChanged");
             }
             case replaceFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
@@ -246,7 +246,7 @@ public class FileAction extends BaseTreeAction {
                 data.setPublished(publish);
                 FileBean.getInstance().saveFileContent(data);
                 TreeCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree+"&fileId=" + data.getId(), "_fileReplaced");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&fileId=" + data.getId(), "_fileReplaced");
             }
             case cloneFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
@@ -276,7 +276,7 @@ public class FileAction extends BaseTreeAction {
                     return false;
                 SessionWriter.setSessionObject(request, "cutFileId", fileId);
                 RequestWriter.setMessageKey(request, "_fileCut");
-                return new AdminAction().openAdministration(request, response);
+                return new AdminActions().openAdministration(request, response);
             }
             case moveFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
@@ -312,7 +312,7 @@ public class FileAction extends BaseTreeAction {
                 if (fromAdmin) {
                     return showTree(request, response);
                 }
-                return new FileAction().execute(request, response, show);
+                return new FileActions().execute(request, response, show);
             }
             case openDeleteFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
@@ -328,7 +328,7 @@ public class FileAction extends BaseTreeAction {
                 FileData data = tc.getFile(fileId);
                 FileBean.getInstance().deleteFile(fileId);
                 TreeCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act="+TreeAction.openTree+"&siteId=" + data.getParentId(), "_fileDeleted");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&siteId=" + data.getParentId(), "_fileDeleted");
             }
             case openFileHistory: {
                 int fileId = RequestReader.getInt(request, "fileId");
@@ -368,7 +368,7 @@ public class FileAction extends BaseTreeAction {
                 FileBean.getInstance().restoreFileVersion(fileId, version);
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeAction.openTree+"&siteId=" + data.getParentId() + "&fileId=" + fileId, "_fileVersionRestored");
+                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&siteId=" + data.getParentId() + "&fileId=" + fileId, "_fileVersionRestored");
             }
             case deleteHistoryFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
@@ -391,7 +391,7 @@ public class FileAction extends BaseTreeAction {
     public static final String KEY = "file";
 
     public static void initialize() {
-        ActionDispatcher.addAction(KEY, new FileAction());
+        ActionSetCache.addActionSet(KEY, new FileActions());
     }
 
     @Override

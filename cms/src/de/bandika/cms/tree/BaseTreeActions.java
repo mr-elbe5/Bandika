@@ -8,13 +8,13 @@
  */
 package de.bandika.cms.tree;
 
-import de.bandika.cms.servlet.CmsAction;
+import de.bandika.cms.servlet.CmsActions;
 import de.bandika.webbase.servlet.RequestStatics;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public abstract class BaseTreeAction extends CmsAction {
+public abstract class BaseTreeActions extends CmsActions {
 
     public boolean showTree(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/tree/tree.ajax.jsp");

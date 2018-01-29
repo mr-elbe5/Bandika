@@ -7,7 +7,7 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.cms.file.FileAction" %>
+<%@ page import="de.bandika.cms.file.FileActions" %>
 <%@ page import="de.bandika.cms.file.FileBean" %>
 <%@ page import="de.bandika.cms.file.FileData" %>
 <%@ page import="de.bandika.webbase.servlet.RequestReader" %>
@@ -19,7 +19,7 @@
     int fileId = RequestReader.getInt(request, "fileId");
     TreeCache tc = TreeCache.getInstance();
     FileData data = tc.getFile(fileId);
-    FileBean.getInstance().loadFileContent(data, FileAction.getFileVersionForUser(data.getId(), request));
+    FileBean.getInstance().loadFileContent(data, FileActions.getFileVersionForUser(data.getId(), request));
 %>
 <table class="details">
     <tr>
@@ -68,7 +68,7 @@
     <tr>
         <td><label><%=StringUtil.getHtml("_preview", locale)%>
         </label></td>
-        <td><img src="/file.srv?act=<%=FileAction.showPreview%>&fileId=<%=data.getId()%>" alt=""/></td>
+        <td><img src="/file.srv?act=<%=FileActions.showPreview%>&fileId=<%=data.getId()%>" alt=""/></td>
     </tr>
     <%}%>
 </table>

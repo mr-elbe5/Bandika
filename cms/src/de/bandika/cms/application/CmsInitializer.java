@@ -8,34 +8,34 @@
  */
 package de.bandika.cms.application;
 
-import de.bandika.webbase.application.DefaultAction;
+import de.bandika.webbase.application.DefaultActions;
 import de.bandika.webbase.application.Initializer;
 import de.bandika.base.log.Log;
-import de.bandika.cms.configuration.ConfigAction;
+import de.bandika.cms.configuration.ConfigActions;
 import de.bandika.cms.configuration.Configuration;
 import de.bandika.cms.configuration.ConfigurationBean;
 import de.bandika.cms.field.*;
-import de.bandika.cms.file.FileAction;
+import de.bandika.cms.file.FileActions;
 import de.bandika.cms.file.PreviewCache;
-import de.bandika.cms.group.GroupAction;
-import de.bandika.cms.page.PageAction;
-import de.bandika.cms.page.PageAdminAction;
-import de.bandika.cms.page.PageEditAction;
+import de.bandika.cms.group.GroupActions;
+import de.bandika.cms.page.PageActions;
+import de.bandika.cms.page.PageAdminActions;
+import de.bandika.cms.page.PageEditActions;
 import de.bandika.cms.rights.CmsRightBean;
-import de.bandika.cms.search.SearchAction;
+import de.bandika.cms.search.SearchActions;
 import de.bandika.cms.search.SearchIndexTask;
-import de.bandika.cms.site.SiteAction;
-import de.bandika.cms.template.TemplateAction;
+import de.bandika.cms.site.SiteActions;
+import de.bandika.cms.template.TemplateActions;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.templatecontrol.*;
 import de.bandika.cms.timer.HeartbeatTask;
-import de.bandika.cms.timer.TimerAction;
+import de.bandika.cms.timer.TimerActions;
 import de.bandika.cms.timer.TimerController;
-import de.bandika.cms.tree.TreeAction;
+import de.bandika.cms.tree.TreeActions;
 import de.bandika.cms.tree.TreeCache;
-import de.bandika.cms.user.UserAction;
+import de.bandika.cms.user.UserActions;
 import de.bandika.webbase.rights.RightsCache;
-import de.bandika.webbase.user.LoginAction;
+import de.bandika.webbase.user.LoginActions;
 
 public class CmsInitializer extends Initializer {
 
@@ -51,23 +51,23 @@ public class CmsInitializer extends Initializer {
         if (!initialized) {
             Log.log("initializing");
             // actions
-            AdminAction.initialize();
-            DefaultAction.initialize();
-            InstallerAction.initialize();
-            ConfigAction.initialize();
-            FieldAction.initialize();
-            FileAction.initialize();
-            GroupAction.initialize();
-            PageAction.initialize();
-            PageEditAction.initialize();
-            PageAdminAction.initialize();
-            SearchAction.initialize();
-            SiteAction.initialize();
-            TemplateAction.initialize();
-            TimerAction.initialize();
-            TreeAction.initialize();
-            LoginAction.initialize();
-            UserAction.initialize();
+            AdminActions.initialize();
+            DefaultActions.initialize();
+            InstallerActions.initialize();
+            ConfigActions.initialize();
+            FieldActions.initialize();
+            FileActions.initialize();
+            GroupActions.initialize();
+            PageActions.initialize();
+            PageEditActions.initialize();
+            PageAdminActions.initialize();
+            SearchActions.initialize();
+            SiteActions.initialize();
+            TemplateActions.initialize();
+            TimerActions.initialize();
+            TreeActions.initialize();
+            LoginActions.initialize();
+            UserActions.initialize();
             // cms fields
             Fields.registerFieldType(HtmlField.FIELDTYPE_HTML, HtmlField.class);
             Fields.registerFieldType(ImageField.FIELDTYPE_IMAGE, ImageField.class);

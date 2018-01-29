@@ -11,7 +11,7 @@
 <%@ page import="de.bandika.cms.timer.TimerTask" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.cms.timer.TimerInterval" %>
-<%@ page import="de.bandika.cms.timer.TimerAction" %>
+<%@ page import="de.bandika.cms.timer.TimerActions" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     TimerTask data = (TimerTask) SessionReader.getSessionObject(request, "timerTaskData");
@@ -20,7 +20,7 @@
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/timer.ajx" method="post" id="taskform" name="taskform" accept-charset="UTF-8">
-    <input type="hidden" name="act" value="<%=TimerAction.saveTimerTask%>"/>
+    <input type="hidden" name="act" value="<%=TimerActions.saveTimerTask%>"/>
     <input type="hidden" name="timerName" value="<%=data.getName()%>"/>
     <fieldset>
         <table class="padded form">

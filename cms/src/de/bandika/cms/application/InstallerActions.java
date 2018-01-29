@@ -10,18 +10,18 @@ package de.bandika.cms.application;
 
 import de.bandika.webbase.application.Initializer;
 import de.bandika.base.util.StringUtil;
-import de.bandika.cms.servlet.CmsAction;
+import de.bandika.cms.servlet.CmsActions;
 import de.bandika.cms.user.UserBean;
 import de.bandika.cms.user.UserData;
 import de.bandika.webbase.database.DbConnector;
 import de.bandika.webbase.database.DbCreator;
-import de.bandika.webbase.servlet.ActionDispatcher;
+import de.bandika.webbase.servlet.ActionSetCache;
 import de.bandika.webbase.servlet.RequestReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class InstallerAction extends CmsAction {
+public class InstallerActions extends CmsActions {
 
     public static final String setDatabaseConfiguration="setDatabaseConfiguration";
     public static final String setSystemPassword="setSystemPassword";
@@ -102,7 +102,7 @@ public class InstallerAction extends CmsAction {
     public static final String KEY = "installer";
 
     public static void initialize() {
-        ActionDispatcher.addAction(KEY, new InstallerAction());
+        ActionSetCache.addActionSet(KEY, new InstallerActions());
     }
 
     @Override

@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.MessageFormat;
 
-public abstract class Action {
+public abstract class ActionSet {
 
     protected abstract String getKey();
 

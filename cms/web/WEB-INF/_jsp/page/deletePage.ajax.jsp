@@ -10,7 +10,7 @@
 <%@ page import="de.bandika.webbase.servlet.RequestReader" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.page.PageAdminAction" %>
+<%@ page import="de.bandika.cms.page.PageAdminActions" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     int pageId = RequestReader.getInt(request, "pageId");
@@ -23,6 +23,6 @@
 <div class="buttonset topspace">
     <button onclick="closeLayerDialog();"><%=StringUtil.getHtml("_close", locale)%>
     </button>
-    <button class="primary" onclick="post2ModalDialog('/pageadmin.ajx', {act: '<%=PageAdminAction.deletePage%>', pageId: '<%=pageId%>'});"><%=StringUtil.getHtml("_delete", locale)%>
+    <button class="primary" onclick="post2ModalDialog('/pageadmin.ajx', {act: '<%=PageAdminActions.deletePage%>', pageId: '<%=pageId%>'});"><%=StringUtil.getHtml("_delete", locale)%>
     </button>
 </div>

@@ -12,8 +12,8 @@
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.page.PageAction" %>
-<%@ page import="de.bandika.cms.page.PageAdminAction" %>
+<%@ page import="de.bandika.cms.page.PageActions" %>
+<%@ page import="de.bandika.cms.page.PageAdminActions" %>
 <%Locale locale = SessionReader.getSessionLocale(request);
     PageData data = (PageData) request.getAttribute("pageData");
     List<PageData> pageVersions = PageBean.getInstance().getPageHistory(data.getId());%>
@@ -40,7 +40,7 @@
             <td><%=StringUtil.toHtml(data.getAuthorName())%>
             </td>
             <td>
-                <a href="/page.srv?act=<%=PageAction.show%>&pageId=<%=data.getId()%>&version=<%=data.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
+                <a href="/page.srv?act=<%=PageActions.show%>&pageId=<%=data.getId()%>&version=<%=data.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
                 </a>
             </td>
         </tr>
@@ -53,11 +53,11 @@
             <td><%=StringUtil.toHtml(versionData.getAuthorName())%>
             </td>
             <td>
-                <div style="margin-bottom:5px"><a href="/pageadmin.srv?act=<%=PageAdminAction.showHistoryPage%>&pageId=<%=versionData.getId()%>&version=<%=versionData.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
+                <div style="margin-bottom:5px"><a href="/pageadmin.srv?act=<%=PageAdminActions.showHistoryPage%>&pageId=<%=versionData.getId()%>&version=<%=versionData.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
                 </a></div>
-                <div style="margin-bottom:5px"><button class="primary" onclick="post2ModalDialog('/pageadmin.ajx?act=<%=PageAdminAction.restoreHistoryPage%>&pageId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_restore", locale)%>
+                <div style="margin-bottom:5px"><button class="primary" onclick="post2ModalDialog('/pageadmin.ajx?act=<%=PageAdminActions.restoreHistoryPage%>&pageId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_restore", locale)%>
                 </button></div>
-                <div><button class="primary" onclick="post2ModalDialog('/pageadmin.ajx?act=<%=PageAdminAction.deleteHistoryPage%>&pageId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                <div><button class="primary" onclick="post2ModalDialog('/pageadmin.ajx?act=<%=PageAdminActions.deleteHistoryPage%>&pageId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                 </button></div>
             </td>
         </tr>

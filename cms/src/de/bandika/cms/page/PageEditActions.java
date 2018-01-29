@@ -11,7 +11,7 @@ package de.bandika.cms.page;
 import de.bandika.cms.template.PartTemplateData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateType;
-import de.bandika.cms.tree.BaseTreeAction;
+import de.bandika.cms.tree.BaseTreeActions;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.RightsCache;
@@ -20,7 +20,7 @@ import de.bandika.webbase.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class PageEditAction extends BaseTreeAction {
+public class PageEditActions extends BaseTreeActions {
 
     public static final String toggleEditMode="toggleEditMode";
     public static final String openEditPageContent="openEditPageContent";
@@ -55,7 +55,7 @@ public class PageEditAction extends BaseTreeAction {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (pageId==0)
                     request.setAttribute("pageId", Integer.toString(TreeCache.getInstance().getFallbackPageId(request)));
-                return new PageAction().show(request, response);
+                return new PageActions().show(request, response);
             }
             case openEditPageContent: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -96,7 +96,7 @@ public class PageEditAction extends BaseTreeAction {
                 data.stopEditing();
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return new PageAction().show(request, response);
+                return new PageActions().show(request, response);
             }
             case savePageContentAndPublish: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -113,7 +113,7 @@ public class PageEditAction extends BaseTreeAction {
                 data.stopEditing();
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
-                return new PageAction().show(request, response);
+                return new PageActions().show(request, response);
             }
             case publishPage: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -132,14 +132,14 @@ public class PageEditAction extends BaseTreeAction {
                 if (fromAdmin) {
                     return showTree(request, response);
                 }
-                return new PageAction().show(request, response);
+                return new PageActions().show(request, response);
             }
             case stopEditing: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
                 SessionWriter.removeSessionObject(request, "pageData");
-                return new PageAction().show(request, response);
+                return new PageActions().show(request, response);
             }
             case showPageContent: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -351,7 +351,7 @@ public class PageEditAction extends BaseTreeAction {
     public static final String KEY = "pageedit";
 
     public static void initialize() {
-        ActionDispatcher.addAction(KEY, new PageEditAction());
+        ActionSetCache.addActionSet(KEY, new PageEditActions());
     }
 
     @Override

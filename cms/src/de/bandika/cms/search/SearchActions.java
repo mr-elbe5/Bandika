@@ -8,18 +8,18 @@
  */
 package de.bandika.cms.search;
 
-import de.bandika.cms.application.AdminAction;
-import de.bandika.cms.servlet.CmsAction;
+import de.bandika.cms.application.AdminActions;
+import de.bandika.cms.servlet.CmsActions;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.SystemZone;
-import de.bandika.webbase.servlet.ActionDispatcher;
+import de.bandika.webbase.servlet.ActionSetCache;
 import de.bandika.webbase.servlet.RequestReader;
 import de.bandika.webbase.servlet.RequestWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class SearchAction extends CmsAction {
+public class SearchActions extends CmsActions {
 
     public static final String openSearch="openSearch";
     public static final String search="search";
@@ -70,14 +70,14 @@ public class SearchAction extends CmsAction {
                     return false;
                 SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_CONTENT, 0, null));
                 RequestWriter.setMessageKey(request, "_indexingContentQueued");
-                return new AdminAction().openAdministration(request, response);
+                return new AdminActions().openAdministration(request, response);
             }
             case indexAllUsers: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
                 SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_USERS, 0, null));
                 RequestWriter.setMessageKey(request, "_indexingUsersQueued");
-                return new AdminAction().openAdministration(request, response);
+                return new AdminActions().openAdministration(request, response);
             }
             default: {
                 return showSearch(request, response);
@@ -88,7 +88,7 @@ public class SearchAction extends CmsAction {
     public static final String KEY = "search";
 
     public static void initialize() {
-        ActionDispatcher.addAction(KEY, new SearchAction());
+        ActionSetCache.addActionSet(KEY, new SearchActions());
     }
 
     @Override

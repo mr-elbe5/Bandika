@@ -8,18 +8,18 @@
  */
 package de.bandika.cms.timer;
 
-import de.bandika.cms.application.AdminAction;
-import de.bandika.cms.servlet.CmsAction;
+import de.bandika.cms.application.AdminActions;
+import de.bandika.cms.servlet.CmsActions;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.SystemZone;
-import de.bandika.webbase.servlet.ActionDispatcher;
+import de.bandika.webbase.servlet.ActionSetCache;
 import de.bandika.webbase.servlet.RequestReader;
 import de.bandika.webbase.servlet.SessionWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class TimerAction extends CmsAction {
+public class TimerActions extends CmsActions {
 
     public static final String showTimerTaskDetails="showTimerTaskDetails";
     public static final String openEditTimerTask="openEditTimerTask";
@@ -51,7 +51,7 @@ public class TimerAction extends CmsAction {
                 TimerBean ts = TimerBean.getInstance();
                 ts.updateTaskData(task);
                 TimerController.getInstance().loadTask(task.getName());
-                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminAction.openAdministration+"&timerName=" + task.getName(), "_taskSaved");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration+"&timerName=" + task.getName(), "_taskSaved");
             }
             default: {
                 return forbidden();
@@ -62,7 +62,7 @@ public class TimerAction extends CmsAction {
     public static final String KEY = "timer";
 
     public static void initialize() {
-        ActionDispatcher.addAction(KEY, new TimerAction());
+        ActionSetCache.addActionSet(KEY, new TimerActions());
     }
 
     @Override

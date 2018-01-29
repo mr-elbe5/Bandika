@@ -9,11 +9,11 @@
 package de.bandika.cms.template;
 
 import de.bandika.base.data.BinaryFileData;
-import de.bandika.cms.application.AdminAction;
-import de.bandika.cms.servlet.CmsAction;
+import de.bandika.cms.application.AdminActions;
+import de.bandika.cms.servlet.CmsActions;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.SystemZone;
-import de.bandika.webbase.servlet.ActionDispatcher;
+import de.bandika.webbase.servlet.ActionSetCache;
 import de.bandika.webbase.servlet.RequestReader;
 import de.bandika.webbase.servlet.SessionWriter;
 import de.bandika.webbase.util.TagAttributes;
@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 
-public class TemplateAction extends CmsAction {
+public class TemplateActions extends CmsActions {
 
     public static final String openImportTemplates="openImportTemplates";
     public static final String importTemplates="importTemplates";
@@ -53,7 +53,7 @@ public class TemplateAction extends CmsAction {
                     return showImportTemplates(request, response);
                 }
                 TemplateCache.getInstance().setDirty();
-                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminAction.openAdministration, "_templatesImported");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration, "_templatesImported");
             }
             case openCreateTemplate: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
@@ -104,7 +104,7 @@ public class TemplateAction extends CmsAction {
                 }
                 TemplateBean.getInstance().saveTemplate(data, true);
                 TemplateCache.getInstance().setDirty();
-                return closeLayerToUrl(request, response, "/admin.srv?act="+AdminAction.openAdministration+"&templateType=" + data.getType().name() + "&templateName=" + data.getName(), "_templateSaved");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration+"&templateType=" + data.getType().name() + "&templateName=" + data.getName(), "_templateSaved");
             }
             case openDeleteTemplate: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
@@ -119,7 +119,7 @@ public class TemplateAction extends CmsAction {
                 if (!TemplateBean.getInstance().deleteTemplate(templateName, templateType))
                     return false;
                 TemplateCache.getInstance().setDirty();
-                return closeLayerToUrl(request, response, "/admin.srv?act="+AdminAction.openAdministration, "_templateDeleted");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration, "_templateDeleted");
             }
             default: {
                 return forbidden();
@@ -130,7 +130,7 @@ public class TemplateAction extends CmsAction {
     public static final String KEY = "template";
 
     public static void initialize() {
-        ActionDispatcher.addAction(KEY, new TemplateAction());
+        ActionSetCache.addActionSet(KEY, new TemplateActions());
     }
 
     @Override

@@ -12,7 +12,7 @@
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.cms.file.FileData" %>
 <%@ page import="de.bandika.cms.file.FileBean" %>
-<%@ page import="de.bandika.cms.file.FileAction" %>
+<%@ page import="de.bandika.cms.file.FileActions" %>
 <%Locale locale = SessionReader.getSessionLocale(request);
     FileData data = (FileData) request.getAttribute("fileData");
     assert data!=null;
@@ -40,7 +40,7 @@
             <td><%=StringUtil.toHtml(data.getAuthorName())%>
             </td>
             <td>
-                <a href="/file.srv?act=<%=FileAction.show%>&fileId=<%=data.getId()%>&version=<%=data.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
+                <a href="/file.srv?act=<%=FileActions.show%>&fileId=<%=data.getId()%>&version=<%=data.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
                 </a>
             </td>
         </tr>
@@ -53,11 +53,11 @@
             <td><%=StringUtil.toHtml(versionData.getAuthorName())%>
             </td>
             <td>
-                <div style="margin-bottom:5px"><a href="/file.srv?act=<%=FileAction.showHistoryFile%>&fileId=<%=versionData.getId()%>&version=<%=versionData.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
+                <div style="margin-bottom:5px"><a href="/file.srv?act=<%=FileActions.showHistoryFile%>&fileId=<%=versionData.getId()%>&version=<%=versionData.getLoadedVersion()%>" target="_blank"><%=StringUtil.getHtml("_view", locale)%>
                 </a></div>
-                <div style="margin-bottom:5px"><button class="primary" onclick="post2ModalDialog('/file.ajx?act=<%=FileAction.restoreHistoryFile%>&fileId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_restore", locale)%>
+                <div style="margin-bottom:5px"><button class="primary" onclick="post2ModalDialog('/file.ajx?act=<%=FileActions.restoreHistoryFile%>&fileId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_restore", locale)%>
                 </button></div>
-                <div><button class="primary" onclick="post2ModalDialog('/file.ajx?act=<%=FileAction.deleteHistoryFile%>&fileId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                <div><button class="primary" onclick="post2ModalDialog('/file.ajx?act=<%=FileActions.deleteHistoryFile%>&fileId=<%=data.getId()%>&version=<%=versionData.getLoadedVersion()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                 </button></div>
             </td>
         </tr>

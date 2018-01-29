@@ -14,7 +14,7 @@
 <%@ page import="de.bandika.cms.template.TemplateType" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.site.SiteAction" %>
+<%@ page import="de.bandika.cms.site.SiteActions" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     SiteData data = (SiteData) SessionReader.getSessionObject(request, "siteData");
@@ -26,7 +26,7 @@
 <form action="/site.srv" method="post" id="sitesettingsform" name="sitesettingsform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="siteId" value="<%=data.getId()%>"/>
-        <input type="hidden" name="act" value="<%=SiteAction.saveSiteSettings%>"/>
+        <input type="hidden" name="act" value="<%=SiteActions.saveSiteSettings%>"/>
         <table class="padded form">
             <jsp:include page="../tree/editNode.inc.jsp" flush="true"/>
             <tr>

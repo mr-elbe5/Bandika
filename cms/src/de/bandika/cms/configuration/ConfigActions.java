@@ -11,8 +11,8 @@ package de.bandika.cms.configuration;
 import de.bandika.base.cache.DataCache;
 import de.bandika.base.cache.FileCache;
 import de.bandika.base.mail.Mailer;
-import de.bandika.cms.application.AdminAction;
-import de.bandika.cms.servlet.CmsAction;
+import de.bandika.cms.application.AdminActions;
+import de.bandika.cms.servlet.CmsActions;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.SystemZone;
 import de.bandika.webbase.servlet.*;
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 
-public class ConfigAction extends CmsAction {
+public class ConfigActions extends CmsActions {
 
     public static final String showConfigurationDetails="showConfigurationDetails";
     public static final String openEditConfiguration="openEditConfiguration";
@@ -64,7 +64,7 @@ public class ConfigAction extends CmsAction {
                 }
                 SessionWriter.removeSessionObject(request, "config");
                 Configuration.getInstance().loadAppConfiguration(config);
-                return closeLayerToUrl(request, response, "/admin.srv?act="+AdminAction.openAdministration, "_configurationSaved");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration, "_configurationSaved");
             }
             case showDataCacheDetails:{
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
@@ -86,7 +86,7 @@ public class ConfigAction extends CmsAction {
                     cache.checkDirty();
                 }
                 RequestWriter.setMessageKey(request, "_cacheCleared");
-                return new AdminAction().openAdministration(request, response);
+                return new AdminActions().openAdministration(request, response);
             }
             case clearFileCache:{
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
@@ -98,7 +98,7 @@ public class ConfigAction extends CmsAction {
                     cache.checkDirty();
                 }
                 RequestWriter.setMessageKey(request, "_cacheCleared");
-                return new AdminAction().openAdministration(request, response);
+                return new AdminActions().openAdministration(request, response);
             }
             default:{
                 return forbidden();
@@ -110,7 +110,7 @@ public class ConfigAction extends CmsAction {
     public static final String KEY = "config";
 
     public static void initialize() {
-        ActionDispatcher.addAction(KEY, new ConfigAction());
+        ActionSetCache.addActionSet(KEY, new ConfigActions());
     }
 
     @Override

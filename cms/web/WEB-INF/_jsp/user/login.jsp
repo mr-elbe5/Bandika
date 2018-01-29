@@ -9,7 +9,7 @@
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
-<%@ page import="de.bandika.webbase.user.LoginAction" %>
+<%@ page import="de.bandika.webbase.user.LoginActions" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
     String title = StringUtil.getString("appTitle");
@@ -46,7 +46,7 @@
         <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
         <section class="mainSection login">
             <form action="/login.srv" method="post" name="loginForm" accept-charset="UTF-8">
-                <input type="hidden" name="act" value="<%=LoginAction.login%>">
+                <input type="hidden" name="act" value="<%=LoginActions.login%>">
                 <fieldset>
                     <legend><%=StringUtil.getHtml("_login", locale)%>
                     </legend>
