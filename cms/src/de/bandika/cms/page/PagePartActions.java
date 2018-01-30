@@ -280,7 +280,7 @@ public class PagePartActions extends BaseTreeActions {
         }
     }
 
-    public static final String KEY = "pagepart";
+    public static final String KEY = "pageedit";
 
     public static void initialize() {
         ActionSetCache.addActionSet(KEY, new PagePartActions());
