@@ -20,7 +20,7 @@
     <div class="contextSource icn iaction"><%=StringUtil.getHtml("_actions", locale)%>
     </div>
     <div class="contextMenu">
-        <div class="icn iaction" onclick="return openLayerDialog('<%=StringUtil.getHtml("_executeDatabaseScript",locale)%>', '/admin.ajx?act=<%=AdminActions.executeDatabaseScript%>');"><%=StringUtil.getHtml("_executeDatabaseScript", locale)%>
+        <div class="icn iaction" onclick="return openLayerDialog('<%=StringUtil.getHtml("_executeDatabaseScript",locale)%>', '/admin.ajx?act=<%=AdminActions.openExecuteDatabaseScript%>');"><%=StringUtil.getHtml("_executeDatabaseScript", locale)%>
         </div>
         <div class="icn isync" onclick="linkTo('/admin.srv?act=<%=AdminActions.reinitialize%>');"><%=StringUtil.getHtml("_reinitialize", locale)%>
         </div>
