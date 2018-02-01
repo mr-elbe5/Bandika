@@ -2,7 +2,7 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later pageVersion.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
@@ -67,7 +67,7 @@ public class TopNavControl extends TemplateControl {
                 if (pageId != 0 && hasEditRight) {
                     writer.write("<li><a href=\"/page.srv?act=openEditPageContent&pageId=" + pageId + "\" >" + getHtml("_editPage", locale) + "</span></a></li>");
                 }
-                if (pageId != 0 && hasApproveRight && pageData.getDraftVersion() != 0) {
+                if (pageId != 0 && hasApproveRight) {
                     writer.write("<li><a href=\"/page.srv?act=publishPage&pageId=" + pageId + "\" >" + getHtml("_publish", locale) + "</a></li>");
                 }
                 if (hasAnyEditRight) {

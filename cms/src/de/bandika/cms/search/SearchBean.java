@@ -2,7 +2,7 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later pageVersion.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
@@ -280,7 +280,9 @@ public class SearchBean extends DbBean {
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords,t3.content_type,t3.bytes " + "FROM t_treenode t1, t_resource t2, t_file_content t3 " + "WHERE t1.id=t2.id AND t1.id=t3.id AND t3.version=t2.published_version");
+            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords,t2.content_type,t2.bytes " +
+                    "FROM t_treenode t1, t_file t2 " +
+                    "WHERE t1.id=t2.id");
             ResultSet rs = pst.executeQuery();
             int count = 0;
             while (rs.next()) {
@@ -309,8 +311,11 @@ public class SearchBean extends DbBean {
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords,t3.content_type,t3.bytes " + "FROM t_treenode t1, t_resource t2, t_file_content t3 " + "WHERE t1.id=? AND t2.id=? AND t3.id=? AND t3.version=t2.published_version");
+            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords,t2.content_type,t2.bytes " +
+                    "FROM t_treenode t1, t_file t2 " +
+                    "WHERE t1.id=? AND t2.id=? ");
             pst.setInt(1, id);
+            pst.setInt(2, id);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
                 FileSearchData data = new FileSearchData();

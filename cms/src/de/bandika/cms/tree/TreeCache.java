@@ -178,11 +178,7 @@ public class TreeCache extends BaseCache {
 
     public PageData getPage(int id) {
         checkDirty();
-        PageData data = pageMap.get(id);
-        if (!data.isLoaded() && data.getPublishedVersion() != 0) {
-            PageBean.getInstance().loadPageContent(data, data.getPublishedVersion());
-        }
-        return data;
+        return pageMap.get(id);
     }
 
     public PageData getPage(String path) {
@@ -192,19 +188,14 @@ public class TreeCache extends BaseCache {
     }
 
     public List<FileData> getAllFiles() {
-        List<FileData> files = new ArrayList<>();
-        files.addAll(fileMap.values());
+        List<FileData> files = new ArrayList<>(fileMap.values());
         files.sort(new FileDataComparator());
         return files;
     }
 
     public FileData getFile(int id) {
         checkDirty();
-        FileData data = fileMap.get(id);
-        if (!data.isLoaded() && data.getPublishedVersion() != 0) {
-            FileBean.getInstance().loadFileContent(data, data.getPublishedVersion());
-        }
-        return data;
+        return fileMap.get(id);
     }
 
     public FileData getFile(String path) {

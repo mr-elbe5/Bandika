@@ -2,7 +2,7 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later pageVersion.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
@@ -47,7 +47,7 @@ public class ConfigurationBean extends WebConfigurationBean {
     public void readConfiguration(Connection con, Configuration config) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT defaultLocale, mailHost, mailPort, mailConnectionType, mailUser, mailPassword, mailSender, timerInterval, maxVersions FROM t_configuration");
+            pst = con.prepareStatement("SELECT defaultLocale, mailHost, mailPort, mailConnectionType, mailUser, mailPassword, mailSender, timerInterval FROM t_configuration");
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
@@ -58,8 +58,7 @@ public class ConfigurationBean extends WebConfigurationBean {
                     config.setSmtpUser(rs.getString(i++));
                     config.setSmtpPassword(new String(Base64.getEncoder().encode(rs.getString(i++).getBytes())));
                     config.setMailSender(rs.getString(i++));
-                    config.setTimerInterval(rs.getInt(i++));
-                    config.setMaxVersions(rs.getInt(i));
+                    config.setTimerInterval(rs.getInt(i));
                 }
             }
         } finally {
@@ -85,7 +84,7 @@ public class ConfigurationBean extends WebConfigurationBean {
     protected void writeConfiguration(Connection con, Configuration config) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("UPDATE t_configuration SET defaultLocale=?, mailHost=?, mailPort=?, mailConnectionType=?, mailUser=?, mailPassword=?, mailSender=?, timerInterval=?, maxVersions=? ");
+            pst = con.prepareStatement("UPDATE t_configuration SET defaultLocale=?, mailHost=?, mailPort=?, mailConnectionType=?, mailUser=?, mailPassword=?, mailSender=?, timerInterval=? ");
             int i = 1;
             pst.setString(i++, config.getDefaultLocale().getLanguage());
             pst.setString(i++, config.getSmtpHost());
@@ -94,8 +93,7 @@ public class ConfigurationBean extends WebConfigurationBean {
             pst.setString(i++, config.getSmtpUser());
             pst.setString(i++, new String(Base64.getDecoder().decode(config.getSmtpPassword().getBytes())));
             pst.setString(i++, config.getMailSender());
-            pst.setInt(i++, config.getTimerInterval());
-            pst.setInt(i, config.getMaxVersions());
+            pst.setInt(i, config.getTimerInterval());
             pst.executeUpdate();
         } finally {
             closeStatement(pst);

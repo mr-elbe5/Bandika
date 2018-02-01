@@ -2,7 +2,7 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later pageVersion.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
@@ -241,7 +241,7 @@ public class TreeHelper {
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_settings", locale));
             writer.write("</div>");
-            if (data.getDraftVersion() != 0 && SessionReader.hasContentRight(request, data.getId(), Right.APPROVE)) {
+            if (SessionReader.hasContentRight(request, data.getId(), Right.APPROVE)) {
                 writer.write("<div class=\"icn ipublish\" onclick=\"return linkToTree('");
                 writer.write(StringUtil.toJs("/page.srv?act=publishPage&fromAdmin=true&pageId=" + data.getId()));
                 writer.write("');\">");
@@ -252,11 +252,6 @@ public class TreeHelper {
             writer.write(StringUtil.toJs("/page.ajx?act=openEditPageRights&pageId=" + data.getId()));
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_rights", locale));
-            writer.write("</div>");
-            writer.write("<div class=\"icn ihistory\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_history", locale) + "', '");
-            writer.write(StringUtil.toJs("page.ajx?act=openPageHistory&pageId=" + data.getId()));
-            writer.write("');\">");
-            writer.write(StringUtil.getHtml("_history", locale));
             writer.write("</div>");
             writer.write("<div class=\"icn icopy\" onclick=\"linkToTree('");
             writer.write(StringUtil.toJs("/page.srv?act=clonePage&pageId=" + data.getId()));
@@ -316,7 +311,7 @@ public class TreeHelper {
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_replace", locale));
             writer.write("</div>");
-            if (data.getDraftVersion() != 0 && SessionReader.hasContentRight(request, data.getId(), Right.APPROVE)) {
+            if (SessionReader.hasContentRight(request, data.getId(), Right.APPROVE)) {
                 writer.write("<div class=\"icn ipublish\" onclick=\"return linkToTree('");
                 writer.write(StringUtil.toJs("/file.srv?act=publishFile&fromAdmin=true&fileId=" + data.getId()));
                 writer.write("');\">");
@@ -327,11 +322,6 @@ public class TreeHelper {
             writer.write(StringUtil.toJs("/file.ajx?act=openEditFileRights&fileId=" + data.getId()));
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_rights", locale));
-            writer.write("</div>");
-            writer.write("<div class=\"icn ihistory\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_history", locale) + "', '");
-            writer.write(StringUtil.toJs("file.ajx?act=openFileHistory&fileId=" + data.getId()));
-            writer.write("');\">");
-            writer.write(StringUtil.getHtml("_history", locale));
             writer.write("</div>");
             writer.write("<div class=\"icn icopy\" onclick=\"linkToTree('");
             writer.write(StringUtil.toJs("/file.srv?act=cloneFile&fileId=" + data.getId()));

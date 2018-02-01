@@ -157,8 +157,6 @@ nav li { list-style: none; }
 
 .icn.ihelp:before { content: '\E070'; }
 
-.icn.ihistory:before { content: '\E028'; }
-
 .icn.ihome:before { content: '\E072'; }
 
 .icn.iimage:before { content: '\E074'; }
@@ -376,8 +374,6 @@ table.details td, table.details th { padding: 5px; }
 table.details tr td { border-bottom: 1px solid #dddddd; }
 
 table.details tr:last-child td { border-bottom: none; }
-
-table.versions td:last-child button, table.versions td:last-child a { display: inline-block; border: 1px solid #808080; border-radius: 5px; background: #eeeeee; margin-right: 10px; padding: 2px 6px 3px; }
 
 /* admin and edit styles */
 ul.linkList { background: #ffffff; border: 1px solid #cccccc; }

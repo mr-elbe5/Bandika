@@ -2,7 +2,7 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later pageVersion.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
@@ -12,7 +12,7 @@ import de.bandika.base.data.BinaryFileData;
 import de.bandika.base.util.FileUtil;
 import de.bandika.base.util.ImageUtil;
 import de.bandika.base.util.StringUtil;
-import de.bandika.cms.tree.ResourceNode;
+import de.bandika.cms.tree.TreeNode;
 import de.bandika.webbase.servlet.RequestError;
 import de.bandika.webbase.servlet.RequestReader;
 import de.bandika.webbase.servlet.SessionReader;
@@ -28,11 +28,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class FileData extends ResourceNode {
+public class FileData extends TreeNode {
 
     public static int MAX_THUMBNAIL_WIDTH = 200;
     public static int MAX_THUMBNAIL_HEIGHT = 200;
-    protected String mediaType = null;
+
+    protected String keywords = "";
     protected String contentType = null;
     protected int fileSize = 0;
     protected int width = 0;
@@ -48,7 +49,7 @@ public class FileData extends ResourceNode {
 
     public void cloneData(FileData data) {
         super.cloneData(data);
-        setMediaType(data.getMediaType());
+        setKeywords(data.getKeywords());
         setContentType(data.getContentType());
         setFileSize(data.getFileSize());
         setWidth(data.getWidth());
@@ -81,16 +82,12 @@ public class FileData extends ResourceNode {
         return path;
     }
 
-    public String getMediaType() {
-        return mediaType == null ? "" : mediaType;
+    public String getKeywords() {
+        return keywords;
     }
 
-    public boolean isImage() {
-        return getMediaType().equals("image");
-    }
-
-    public void setMediaType(String mediaType) {
-        this.mediaType = mediaType.toLowerCase();
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
     }
 
     public String getContentType() {
@@ -99,12 +96,10 @@ public class FileData extends ResourceNode {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
-        if (mediaType == null || mediaType.isEmpty()) {
-            int pos = contentType.indexOf('/');
-            if (pos != -1) {
-                setMediaType(contentType.substring(0, pos));
-            }
-        }
+    }
+
+    public boolean isImage() {
+        return getContentType().startsWith("image");
     }
 
     public void setFileSize(int fileSize) {
@@ -153,7 +148,7 @@ public class FileData extends ResourceNode {
     }
 
     public boolean isCompleteSettings() {
-        return isComplete(name) && isComplete(mediaType) && isComplete(contentType) && isComplete(fileSize);
+        return isComplete(name) && isComplete(contentType) && isComplete(fileSize);
     }
 
     public int getWidth() {
@@ -213,7 +208,6 @@ public class FileData extends ResourceNode {
             setBytes(file.getBytes());
             setFileSize(file.getBytes().length);
             setName(file.getFileName());
-            setMediaType("");
             setContentType(file.getContentType());
             setContentChanged();
         }
@@ -221,7 +215,7 @@ public class FileData extends ResourceNode {
 
     protected void readFileRequestData(HttpServletRequest request) throws Exception {
         String oldName = getName();
-        readResourceNodeRequestData(request);
+        readTreeNodeRequestData(request);
         if (getName().indexOf('.') == -1)
             setName(getName() + FileUtil.getExtension(oldName));
         int width = RequestReader.getInt(request, "width");

@@ -2,7 +2,7 @@
   Bandika  - A Java based modular Content Management System
   Copyright (C) 2009-2017 Michael Roennau
 
-  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later pageVersion.
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
@@ -25,7 +25,7 @@
     int partId = RequestReader.getInt(request, "partId");
     boolean below = RequestReader.getBoolean(request, "below");
     List<TemplateData> templates = TemplateCache.getInstance().getTemplates(TemplateType.PART, sectionType);
-    List<PagePartData> parts = PageBean.getInstance().getAllSharedPageParts();
+    List<PagePartData> parts = PageBean.getInstance().getNamedPageParts();
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <section class="flexRow">
@@ -74,7 +74,7 @@
                     <% for (PagePartData data : parts) {%>
                     <tr>
                         <td>
-                            <a href="#" onclick="return post2ModalDialog('/pagepart.ajx', {act: '<%=PagePartActions.addSharedPart%>', pageId: '<%=pageId%>', partId: '<%=partId%>', below: '<%=below%>', sectionName: '<%=sectionName%>', sharedPartId: '<%=data.getId()%>'});"><%=StringUtil.toHtml(data.getShareName())%>
+                            <a href="#" onclick="return post2ModalDialog('/pagepart.ajx', {act: '<%=PagePartActions.addSharedPart%>', pageId: '<%=pageId%>', partId: '<%=partId%>', below: '<%=below%>', sectionName: '<%=sectionName%>', sharedPartId: '<%=data.getId()%>'});"><%=StringUtil.toHtml(data.getName())%>
                         </td>
                     </tr>
                     <%}%>

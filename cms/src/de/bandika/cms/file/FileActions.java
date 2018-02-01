@@ -2,7 +2,7 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later pageVersion.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
@@ -46,10 +46,6 @@ public class FileActions extends BaseTreeActions {
     public static final String publishFile="publishFile";
     public static final String openDeleteFile="openDeleteFile";
     public static final String deleteFile="deleteFile";
-    public static final String openFileHistory="openFileHistory";
-    public static final String showHistoryFile="showHistoryFile";
-    public static final String restoreHistoryFile="restoreHistoryFile";
-    public static final String deleteHistoryFile="deleteHistoryFile";
 
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
@@ -68,16 +64,11 @@ public class FileActions extends BaseTreeActions {
                 }
                 checkObject(data);
                 request.setAttribute("fileId", Integer.toString(data.getId()));
-                int fileVersion = data.getVersionForUser(request);
-                if (fileVersion == data.getPublishedVersion()) {
-                    assert(data.isPublishedLoaded());
-                } else {
-                    data = FileBean.getInstance().getFile(fileId, fileVersion, false);
-                }
+                data = FileBean.getInstance().getFile(fileId,false);
                 if (!SessionReader.hasContentRight(request, fileId, Right.EDIT)) {
                     return false;
                 }
-                BinaryFileStreamData streamData = FileBean.getInstance().getBinaryFileStreamData(data.getId(), fileVersion);
+                BinaryFileStreamData streamData = FileBean.getInstance().getBinaryFileStreamData(data.getId());
                 return streamData != null && sendBinaryFileResponse(request, response, streamData, true);
             }
             case showPreview: {
@@ -91,8 +82,7 @@ public class FileActions extends BaseTreeActions {
                 if (!data.isAnonymous() && !SessionReader.hasContentRight(request, fileId, Right.READ)) {
                     return false;
                 }
-                int fileVersion = data.getVersionForUser(request);
-                BinaryFileData file = FileBean.getInstance().getBinaryPreview(fileId, fileVersion, fileVersion == data.getPublishedVersion());
+                BinaryFileData file = FileBean.getInstance().getBinaryPreview(fileId);
                 return file != null && sendBinaryResponse(request, response, file.getFileName(), file.getContentType(), file.getBytes());
             }
             case openReplaceFile: {
@@ -102,8 +92,7 @@ public class FileActions extends BaseTreeActions {
                 TreeCache tc = TreeCache.getInstance();
                 FileData data = tc.getFile(fileId);
                 checkObject(data);
-                int fileVersion = data.getVersionForUser(request);
-                data = FileBean.getInstance().getFile(fileId, fileVersion, false);
+                data = FileBean.getInstance().getFile(fileId, false);
                 data.prepareEditing();
                 SessionWriter.setSessionObject(request, "fileData", data);
                 return showReplaceFile(request, response);
@@ -120,8 +109,7 @@ public class FileActions extends BaseTreeActions {
                     return false;
                 FileData treeData = TreeCache.getInstance().getFile(fileId);
                 checkObject(treeData);
-                int fileVersion = treeData.getVersionForUser(request);
-                FileData data = FileBean.getInstance().getFile(fileId, fileVersion, false);
+                FileData data = FileBean.getInstance().getFile(fileId, false);
                 data.setPath(treeData.getPath());
                 data.prepareEditing();
                 SessionWriter.setSessionObject(request, "fileData", data);
@@ -134,8 +122,7 @@ public class FileActions extends BaseTreeActions {
                 TreeCache tc = TreeCache.getInstance();
                 FileData data = tc.getFile(fileId);
                 checkObject(data);
-                int fileVersion = data.getVersionForUser(request);
-                data = FileBean.getInstance().getFile(fileId, fileVersion, false);
+                data = FileBean.getInstance().getFile(fileId, false);
                 if (data == null) {
                     RequestError.setError(request, new RequestError(StringUtil.getString("_notComplete", SessionReader.getSessionLocale(request))));
                     return sendForwardResponse(request, response, "/WEB-INF/_jsp/error.inc.jsp");
@@ -160,13 +147,11 @@ public class FileActions extends BaseTreeActions {
                 TreeCache tc = TreeCache.getInstance();
                 SiteData parentNode = tc.getSite(parentId);
                 data.readFileCreateRequestData(request);
-                boolean publish = RequestReader.getBoolean(request, "publish");
                 data.setCreateValues(parentNode);
                 data.setRanking(parentNode.getFiles().size());
                 data.setOwnerId(SessionReader.getLoginId(request));
                 data.setAuthorName(SessionReader.getLoginName(request));
                 data.prepareSave();
-                data.setPublished(publish);
                 ts.createFile(data);
                 TreeCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&fileId=&fileId=" + data.getId(), "_fileCreated");
@@ -196,7 +181,6 @@ public class FileActions extends BaseTreeActions {
                     data.setOwnerId(SessionReader.getLoginId(request));
                     data.setAuthorName(SessionReader.getLoginName(request));
                     data.prepareSave();
-                    data.setPublished(false);
                     ts.createFile(data);
                     TreeCache.getInstance().setDirty();
                 }
@@ -240,10 +224,8 @@ public class FileActions extends BaseTreeActions {
                     return false;
                 FileData data = (FileData) getSessionObject(request, "fileData");
                 data.readFileEditRequestData(request);
-                boolean publish = RequestReader.getBoolean(request, "publish");
                 data.setAuthorName(SessionReader.getLoginName(request));
                 data.prepareSave();
-                data.setPublished(publish);
                 FileBean.getInstance().saveFileContent(data);
                 TreeCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&fileId=" + data.getId(), "_fileReplaced");
@@ -254,15 +236,13 @@ public class FileActions extends BaseTreeActions {
                     return false;
                 FileBean ts = FileBean.getInstance();
                 FileData treeData = TreeCache.getInstance().getFile(fileId);
-                int fileVersion = treeData.getVersionForUser(request);
-                FileData srcData = FileBean.getInstance().getFile(fileId, fileVersion, true);
+                FileData srcData = FileBean.getInstance().getFile(fileId, true);
                 checkObject(srcData);
                 FileData data = new FileData();
                 data.cloneData(srcData);
                 checkObject(data);
                 data.setOwnerId(SessionReader.getLoginId(request));
                 data.setAuthorName(SessionReader.getLoginName(request));
-                data.setPublished(false);
                 data.prepareEditing();
                 ts.createFile(data);
                 data.stopEditing();
@@ -300,10 +280,9 @@ public class FileActions extends BaseTreeActions {
                 if (!hasContentRight(request, fileId, Right.APPROVE))
                     return false;
                 boolean fromAdmin = RequestReader.getBoolean(request, "fromAdmin");
-                FileData data = FileBean.getInstance().getFile(fileId, getEditVersion(fileId), false);
+                FileData data = FileBean.getInstance().getFile(fileId, false);
                 data.setAuthorName(SessionReader.getLoginName(request));
                 data.prepareSave();
-                data.setPublished(true);
                 FileBean.getInstance().publishFile(data);
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
@@ -329,58 +308,6 @@ public class FileActions extends BaseTreeActions {
                 FileBean.getInstance().deleteFile(fileId);
                 TreeCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&siteId=" + data.getParentId(), "_fileDeleted");
-            }
-            case openFileHistory: {
-                int fileId = RequestReader.getInt(request, "fileId");
-                if (!hasContentRight(request, fileId, Right.EDIT))
-                    return false;
-                TreeCache tc = TreeCache.getInstance();
-                FileData data = tc.getFile(fileId);
-                request.setAttribute("fileData", data);
-                return showFileHistory(request, response);
-            }
-            case showHistoryFile: {
-                FileData data;
-                int fileId = RequestReader.getInt(request, "fileId");
-                int fileVersion = RequestReader.getInt(request, "version");
-                TreeCache tc = TreeCache.getInstance();
-                if (fileId == 0) {
-                    String url = request.getRequestURI();
-                    data = tc.getFile(url);
-                } else {
-                    data = tc.getFile(fileId);
-                }
-                checkObject(data);
-                data = FileBean.getInstance().getFile(fileId, fileVersion, false);
-                if (!SessionReader.hasContentRight(request, fileId, Right.READ)) {
-                    return false;
-                }
-                BinaryFileStreamData streamData = FileBean.getInstance().getBinaryFileStreamData(data.getId(), fileVersion);
-                return streamData != null && sendBinaryFileResponse(request, response, streamData);
-            }
-            case restoreHistoryFile: {
-                int fileId = RequestReader.getInt(request, "fileId");
-                if (!hasContentRight(request, fileId, Right.EDIT))
-                    return false;
-                TreeCache tc = TreeCache.getInstance();
-                FileData data = tc.getFile(fileId);
-                int version = RequestReader.getInt(request, "version");
-                FileBean.getInstance().restoreFileVersion(fileId, version);
-                TreeCache.getInstance().setDirty();
-                RightsCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&siteId=" + data.getParentId() + "&fileId=" + fileId, "_fileVersionRestored");
-            }
-            case deleteHistoryFile: {
-                int fileId = RequestReader.getInt(request, "fileId");
-                if (!hasContentRight(request, fileId, Right.EDIT))
-                    return false;
-                int version = RequestReader.getInt(request, "version");
-                FileBean.getInstance().deleteFileVersion(fileId, version);
-                TreeCache tc = TreeCache.getInstance();
-                FileData data = tc.getFile(fileId);
-                request.setAttribute("fileData", data);
-                RequestWriter.setMessageKey(request, "_fileVersionDeleted");
-                return showFileHistory(request, response);
             }
             default: {
                 return show(request, response);
@@ -417,16 +344,10 @@ public class FileActions extends BaseTreeActions {
         if (!treeData.isAnonymous() && !SessionReader.hasContentRight(request, fileId, Right.READ)) {
             return false;
         }
-        int fileVersion = treeData.getVersionForUser(request);
-        if (fileVersion == treeData.getPublishedVersion()) {
-            assert (treeData.isPublishedLoaded());
-            data=treeData;
-        } else {
-            data = FileBean.getInstance().getFile(fileId, fileVersion, false);
-            data.setPath(treeData.getPath());
-            data.setParentIds(treeData.getParentIds());
-        }
-        BinaryFileStreamData streamData = FileBean.getInstance().getBinaryFileStreamData(data.getId(), fileVersion);
+        data = FileBean.getInstance().getFile(fileId, false);
+        data.setPath(treeData.getPath());
+        data.setParentIds(treeData.getParentIds());
+        BinaryFileStreamData streamData = FileBean.getInstance().getBinaryFileStreamData(data.getId());
         return streamData != null && sendBinaryFileResponse(request, response, streamData);
     }
 
@@ -450,24 +371,8 @@ public class FileActions extends BaseTreeActions {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/file/deleteFile.ajax.jsp");
     }
 
-    protected boolean showFileHistory(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/file/fileHistory.ajax.jsp");
-    }
-
     protected boolean showFileDetails(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/file/fileDetails.ajax.jsp");
-    }
-
-    protected int getEditVersion(int id) {
-        TreeCache tc = TreeCache.getInstance();
-        FileData node = tc.getFile(id);
-        return node == null ? 0 : node.getMaxVersion();
-    }
-
-    public static int getFileVersionForUser(int id, HttpServletRequest request) {
-        TreeCache tc = TreeCache.getInstance();
-        FileData node = tc.getFile(id);
-        return node == null ? 0 : node.getVersionForUser(request);
     }
 
 }

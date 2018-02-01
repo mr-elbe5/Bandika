@@ -2,7 +2,7 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later pageVersion.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
@@ -145,7 +145,7 @@ public class MultiHtmlPartData extends HtmlPartData {
 
     /******************* HTML part *********************************/
 
-    public void appendLivePartHtml(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData) throws IOException {
+    public void appendLivePartHtml(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData) {
         TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PART, getTemplateName());
         try {
             writer.write("<div class=\"pagePart\" id=\"" + getHtmlId() + "\" >");
@@ -163,7 +163,7 @@ public class MultiHtmlPartData extends HtmlPartData {
         }
     }
 
-    protected void appendContextCode(JspWriter writer, String sectionType, Locale locale) throws IOException {
+    protected void appendContextCode(JspWriter writer, int pageId, String sectionType, Locale locale) throws IOException {
         writer.write("<div class=\"icn isetting\" onclick = \"return openLayerDialog('" + getHtml("_settings", locale) + "', '/pagepart.ajx?act=openEditMultiHtmlPartSettings&pageId=" + pageId + "&sectionName=" + sectionName + "&partId=" + getId() + "');\">" + getHtml("_settings", locale) + "</div>\n" + "<div class=\"icn iup\" onclick = \"return linkTo('/pageedit.ajx?act=setVisibleContentIdx&pageId=" + pageId + "&sectionName=" + sectionName + "&partId=" + getId() + "&dir=-1');\">" + getHtml("_previousContent", locale) + "</div>\n" + "<div class=\"icn idown\" onclick = \"return linkTo('/pageedit.ajx?act=setVisibleContentIdx&pageId=" + pageId + "&sectionName=" + sectionName + "&partId=" + getId() + "&dir=1');\">" + getHtml("_nextContent", locale) + "</div>\n" + "<div class=\"icn inew\" onclick = \"return openLayerDialog('" + getHtml("_addPart", locale) + "', '/pageedit.ajx?act=openAddPagePart&pageId=" + pageId + "&sectionName=" + sectionName + "&sectionType=" + sectionType + "&partId=" + getId() + "');\">" + getHtml("_newAbove", locale) + "</div>\n" + "<div class=\"icn inew\" onclick = \"return openLayerDialog('" + getHtml("_addPart", locale) + "', '/pageedit.ajx?act=openAddPagePart&pageId=" + pageId + "&sectionName=" + sectionName + "&sectionType=" + sectionType + "&partId=" + getId() + "&below=true');\">" + getHtml("_newBelow", locale) + "</div>\n" + "<div class=\"icn ishare\" onclick = \"return openLayerDialog('" + getHtml("_share", locale) + "', '/pageedit.ajx?act=openSharePagePart&pageId=" + pageId + "&sectionName=" + sectionName + "&partId=" + getId() + "');\">" + getHtml("_share", locale) + "</div>\n" + "<div class=\"icn iup\" onclick = \"return linkTo('/pageedit.ajx?act=movePagePart&pageId=" + pageId + "&sectionName=" + sectionName + "&partId=" + getId() + "&dir=-1');\">" + getHtml("_up", locale) + "</div>\n" + "<div class=\"icn idown\" onclick = \"return linkTo('/pageedit.ajx?act=movePagePart&pageId=" + pageId + "&sectionName=" + sectionName + "&partId=" + getId() + "&dir=1');\">" + getHtml("_down", locale) + "</div>\n" + "<div class=\"icn idelete\" onclick = \"return post2EditPageContent('/pageedit.ajx?',{act:'deletePagePart',pageId:'" + pageId + "',sectionName:'" + sectionName + "',partId:'" + getId() + "'});\">" + getHtml("_delete", locale) + "</div>\n");
     }
 

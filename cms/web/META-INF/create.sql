@@ -87,11 +87,7 @@ CREATE TABLE IF NOT EXISTS t_configuration (
   mailUser        VARCHAR(255)  NOT NULL,
   mailPassword    VARCHAR(255)  NOT NULL,
   mailSender      VARCHAR(255)  NOT NULL,
-  timerInterval   INTEGER  NOT NULL,
-  clusterPort     INTEGER  NOT NULL,
-  clusterTimeout  INTEGER  NOT NULL,
-  maxClusterTimeouts INTEGER  NOT NULL,
-  maxVersions     INTEGER  NOT NULL
+  timerInterval   INTEGER  NOT NULL
 );
 --
 CREATE TABLE t_timer_task (
@@ -283,8 +279,8 @@ VALUES (1, 'Sys', 'Admin', 'sysadmin@localhost', 'sysadmin', '', '', '', TRUE);
 -- sysadmin is Global Administrator
 INSERT INTO t_user2group (user_id, group_id, relation) VALUES (1, 1, 'RIGHTS');
 -- configuration
-INSERT INTO t_configuration (defaultLocale, mailHost, mailPort, mailConnectionType, mailUser, mailPassword, mailSender, timerInterval, clusterPort, clusterTimeout, maxClusterTimeouts, maxVersions)
-VALUES ('en', 'localhost', 25, 'plain', '', '', 'me@myhost.tld', 30, 2555, 60, 5, 5);
+INSERT INTO t_configuration (defaultLocale, mailHost, mailPort, mailConnectionType, mailUser, mailPassword, mailSender, timerInterval)
+VALUES ('en', 'localhost', 25, 'plain', '', '', 'me@myhost.tld', 30);
 --
 INSERT INTO t_timer_task (name, display_name, interval, minute, active, note_execution)
 VALUES ('heartbeat', 'Heartbeat Task', 'CONTINOUS', 5, TRUE, FALSE);

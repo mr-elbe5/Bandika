@@ -2,7 +2,7 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later pageVersion.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
@@ -11,13 +11,13 @@ package de.bandika.cms.file;
 import de.bandika.base.data.BinaryFileData;
 import de.bandika.base.data.BinaryFileStreamData;
 import de.bandika.base.log.Log;
-import de.bandika.cms.tree.ResourceBean;
+import de.bandika.cms.tree.TreeBean;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileBean extends ResourceBean {
+public class FileBean extends TreeBean {
 
     private static FileBean instance = null;
 
@@ -34,7 +34,12 @@ public class FileBean extends ResourceBean {
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT t1.id,t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," + "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," + "t2.keywords,t2.published_version,t2.draft_version,t3.media_type " + "FROM t_treenode t1, t_resource t2, t_file t3 " + "WHERE t1.id=t2.id AND t1.id=t3.id " + "ORDER BY t1.parent_id, t1.ranking");
+            pst = con.prepareStatement("SELECT t1.id,t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
+                    "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
+                    "t2.keywords, t2.content_type " +
+                    "FROM t_treenode t1, t_file t2 " +
+                    "WHERE t1.id=t2.id " +
+                    "ORDER BY t1.parent_id, t1.ranking");
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     int i = 1;
@@ -52,9 +57,7 @@ public class FileBean extends ResourceBean {
                     data.setAnonymous(rs.getBoolean(i++));
                     data.setInheritsRights(rs.getBoolean(i++));
                     data.setKeywords(rs.getString(i++));
-                    data.setPublishedVersion(rs.getInt(i++));
-                    data.setDraftVersion(rs.getInt(i++));
-                    data.setMediaType(rs.getString(i));
+                    data.setContentType(rs.getString(i));
                     if (!data.inheritsRights()) {
                         data.setRights(getTreeNodeRights(con, data.getId()));
                     }
@@ -70,7 +73,7 @@ public class FileBean extends ResourceBean {
         return list;
     }
 
-    public FileData getFile(int id, int version, boolean withBytes) {
+    public FileData getFile(int id, boolean withBytes) {
         FileData data = null;
         Connection con = null;
         PreparedStatement pst = null;
@@ -78,13 +81,12 @@ public class FileBean extends ResourceBean {
             con = getConnection();
             pst = con.prepareStatement("SELECT t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
                 "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
-                "t2.keywords,t2.published_version,t2.draft_version,t3.media_type " +
-                "FROM t_treenode t1, t_resource t2, t_file t3 " +
-                "WHERE t1.id=? AND t2.id=? AND t3.id=? "
+                "t2.keywords,t2.content_type " +
+                "FROM t_treenode t1, t_file t2 " +
+                "WHERE t1.id=? AND t2.id=? "
             );
             pst.setInt(1, id);
             pst.setInt(2, id);
-            pst.setInt(3, id);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     int i = 1;
@@ -102,16 +104,14 @@ public class FileBean extends ResourceBean {
                     data.setAnonymous(rs.getBoolean(i++));
                     data.setInheritsRights(rs.getBoolean(i++));
                     data.setKeywords(rs.getString(i++));
-                    data.setPublishedVersion(rs.getInt(i++));
-                    data.setDraftVersion(rs.getInt(i++));
-                    data.setMediaType(rs.getString(i));
+                    data.setContentType(rs.getString(i));
                     if (!data.inheritsRights()) {
                         data.setRights(getTreeNodeRights(con, data.getId()));
                     }
                     if (withBytes)
-                        loadFileContentWithBytes(data, version);
+                        loadFileContentWithBytes(data);
                     else
-                        loadFileContent(data, version);
+                        loadFileContent(data);
                 }
             }
         } catch (SQLException se) {
@@ -123,10 +123,10 @@ public class FileBean extends ResourceBean {
         return data;
     }
 
-    public BinaryFileData getBinaryPreview(int id, int version, boolean publishedVersion) {
-        if (PreviewCache.getInstance().getMaxCount() == 0 || !publishedVersion) {
+    public BinaryFileData getBinaryPreview(int id) {
+        if (PreviewCache.getInstance().getMaxCount() == 0) {
             try {
-                return getBinaryPreviewData(id, version);
+                return getBinaryPreviewData(id);
             } catch (Exception e) {
                 return null;
             }
@@ -134,7 +134,7 @@ public class FileBean extends ResourceBean {
         BinaryFileData data = PreviewCache.getInstance().get(id);
         if (data == null) {
             try {
-                data = getBinaryPreviewData(id, version);
+                data = getBinaryPreviewData(id);
                 PreviewCache.getInstance().add(id, data);
             } catch (Exception e) {
                 return null;
@@ -143,12 +143,11 @@ public class FileBean extends ResourceBean {
         return data;
     }
 
-    public void loadFileContent(FileData data, int version) {
+    public void loadFileContent(FileData data) {
         Connection con = null;
         try {
             con = getConnection();
-            readFileContent(con, data, version);
-            data.setLoadedVersion(version);
+            readFile(con, data);
         } catch (SQLException se) {
             Log.error("sql error", se);
         } finally {
@@ -156,13 +155,12 @@ public class FileBean extends ResourceBean {
         }
     }
 
-    public void loadFileContentWithBytes(FileData data, int version) {
+    public void loadFileContentWithBytes(FileData data) {
         Connection con = null;
         try {
             con = getConnection();
-            readFileContent(con, data, version);
-            readFileBytes(con, data, version);
-            data.setLoadedVersion(version);
+            readFile(con, data);
+            readFileBytes(con, data);
         } catch (SQLException se) {
             Log.error("sql error", se);
         } finally {
@@ -170,37 +168,15 @@ public class FileBean extends ResourceBean {
         }
     }
 
-    public boolean readFile(Connection con, FileData data) throws SQLException {
-        PreparedStatement pst = null;
-        boolean success = false;
-        try {
-            pst = con.prepareStatement("SELECT media_type " + "FROM t_file " + "WHERE id=? ");
-            pst.setInt(1, data.getId());
-            try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    int i = 1;
-                    data.setMediaType(rs.getString(i));
-                    success = true;
-                }
-            }
-        } finally {
-            closeStatement(pst);
-        }
-        return success;
-    }
-
-    protected void readFileContent(Connection con, FileData data, int version) throws SQLException {
+    protected void readFile(Connection con, FileData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT change_date,published,author_name,content_type,file_size,width,height,preview_content_type,(preview_bytes IS NOT NULL) AS has_preview FROM t_file_content WHERE id=? AND version=?");
+            pst = con.prepareStatement("SELECT change_date,author_name,content_type,file_size,width,height,preview_content_type,(preview_bytes IS NOT NULL) AS has_preview FROM t_file WHERE id=?");
             pst.setInt(1, data.getId());
-            pst.setInt(2, version);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     int i = 1;
-                    data.setLoadedVersion(version);
                     data.setContentChangeDate(rs.getTimestamp(i++).toLocalDateTime());
-                    data.setPublished(rs.getBoolean(i++));
                     data.setAuthorName(rs.getString(i++));
                     data.setContentType(rs.getString(i++));
                     data.setFileSize(rs.getInt(i++));
@@ -215,13 +191,12 @@ public class FileBean extends ResourceBean {
         }
     }
 
-    protected void readFileBytes(Connection con, FileData data, int version) throws SQLException {
+    protected void readFileBytes(Connection con, FileData data) throws SQLException {
         PreparedStatement pst = null;
-        String sql = "SELECT bytes, preview_bytes FROM t_file_content WHERE id=? AND version=?";
+        String sql = "SELECT bytes, preview_bytes FROM t_file WHERE id=?";
         try {
             pst = con.prepareStatement(sql);
             pst.setInt(1, data.getId());
-            pst.setInt(2, version);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
@@ -238,15 +213,8 @@ public class FileBean extends ResourceBean {
         Connection con = startTransaction();
         try {
             data.setChangeDate(getServerTime(con));
-            data.setDraftVersion(1);
-            data.setLoadedVersion(1);
             writeTreeNode(con, data);
-            writeResourceNode(con, data);
             writeFile(con, data);
-            writeDraftFileContent(con, data);
-            if (data.isPublished()) {
-                publishFileContent(con, data);
-            }
             return commitTransaction(con);
         } catch (Exception se) {
             return rollbackTransaction(con, se);
@@ -262,7 +230,6 @@ public class FileBean extends ResourceBean {
             }
             data.setChangeDate(getServerTime(con));
             writeTreeNode(con, data);
-            writeResourceNode(con, data);
             writeFile(con, data);
             return commitTransaction(con);
         } catch (Exception se) {
@@ -279,18 +246,7 @@ public class FileBean extends ResourceBean {
             }
             if (data.isContentChanged()) {
                 data.setChangeDate(getServerTime(con));
-                data.setLoadedVersion(getNextVersion(con, data.getId()));
                 data.setContentChangeDate();
-                writeDraftFileContent(con, data);
-                if (data.isPublished()) {
-                    publishFileContent(con, data);
-                } else {
-                    updateDraftVersion(con, data.getId(), data.getLoadedVersion());
-                }
-            } else if (data.isPublished()) {
-                if (data.getDraftVersion() > data.getPublishedVersion()) {
-                    publishFileContent(con, data);
-                }
             }
             return commitTransaction(con);
         } catch (Exception se) {
@@ -307,12 +263,6 @@ public class FileBean extends ResourceBean {
             }
             data.setChangeDate(getServerTime(con));
             writeFile(con, data);
-            if (data.isPublished()) {
-                int publishedVersion = data.getPublishedVersion();
-                if (data.getLoadedVersion() > publishedVersion) {
-                    publishFileContent(con, data);
-                }
-            }
             return commitTransaction(con);
         } catch (Exception se) {
             return rollbackTransaction(con, se);
@@ -322,26 +272,12 @@ public class FileBean extends ResourceBean {
     protected void writeFile(Connection con, FileData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(data.isNew() ? "insert into t_file (media_type,id) values(?,?)" : "update t_file set media_type=? where id=?");
             int i = 1;
-            pst.setString(i++, data.getMediaType());
-            pst.setInt(i, data.getId());
-            pst.executeUpdate();
-            pst.close();
-        } finally {
-            closeStatement(pst);
-        }
-    }
-
-    protected void writeDraftFileContent(Connection con, FileData data) throws SQLException {
-        PreparedStatement pst = null;
-        try {
-            int i = 1;
-            pst = con.prepareStatement("INSERT INTO t_file_content (id,version,change_date,published,author_name,content_type,file_size,width,height,bytes,preview_content_type,preview_bytes) VALUES(?,?,?,FALSE,?,?,?,?,?,?,?,?)");
+            pst = con.prepareStatement("INSERT INTO t_file (id,change_date,author_name,keywords,content_type,file_size,width,height,bytes,preview_content_type,preview_bytes) VALUES(?,?,?,?,?,?,?,?,?,?,?)");
             pst.setInt(i++, data.getId());
-            pst.setInt(i++, data.getLoadedVersion());
             pst.setTimestamp(i++, Timestamp.valueOf(data.getContentChangeDate()));
             pst.setString(i++, data.getAuthorName());
+            pst.setString(i++, data.getKeywords());
             pst.setString(i++, data.getContentType());
             pst.setInt(i++, data.getFileSize());
             pst.setInt(i++, data.getWidth());
@@ -359,42 +295,19 @@ public class FileBean extends ResourceBean {
         }
     }
 
-    protected void publishFileContent(Connection con, FileData data) throws SQLException {
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement("UPDATE t_file_content SET published=TRUE WHERE id=? AND version=?");
-            pst.setInt(1, data.getId());
-            pst.setInt(2, data.getLoadedVersion());
-            pst.executeUpdate();
-            pst.close();
-            pst = con.prepareStatement("UPDATE t_resource SET published_version=?, draft_version=0 WHERE id=?");
-            pst.setInt(1, data.getLoadedVersion());
-            pst.setInt(2, data.getId());
-            pst.executeUpdate();
-            pst.close();
-            pst = con.prepareStatement("DELETE FROM t_file_content WHERE id=? AND published=FALSE");
-            pst.setInt(1, data.getId());
-            pst.executeUpdate();
-            pst.close();
-        } finally {
-            closeStatement(pst);
-        }
-    }
-
     /**
      * ******************************
      */
-    public BinaryFileStreamData getBinaryFileStreamData(int id, int version) throws SQLException {
+    public BinaryFileStreamData getBinaryFileStreamData(int id) throws SQLException {
         Connection con = null;
         PreparedStatement pst = null;
         BinaryFileStreamData data = null;
-        String sql = "SELECT t1.name,t2.content_type,t2.file_size,t2.bytes FROM t_treenode t1, t_file_content t2 WHERE t1.id=? AND t2.id=? AND t2.version=?";
+        String sql = "SELECT t1.name,t2.content_type,t2.file_size,t2.bytes FROM t_treenode t1, t_file t2 WHERE t1.id=? AND t2.id=?";
         try {
             con = getConnection();
             pst = con.prepareStatement(sql);
             pst.setInt(1, id);
             pst.setInt(2, id);
-            pst.setInt(3, version);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
@@ -412,17 +325,16 @@ public class FileBean extends ResourceBean {
         return data;
     }
 
-    public BinaryFileData getBinaryFileData(int id, int version) throws SQLException {
+    public BinaryFileData getBinaryFileData(int id) throws SQLException {
         Connection con = null;
         PreparedStatement pst = null;
         BinaryFileData data = null;
-        String sql = "SELECT t1.name,t2.content_type,t2.file_size,t2.bytes FROM t_treenode t1, t_file_content t2 WHERE t1.id=? AND t2.id=? AND t2.version=?";
+        String sql = "SELECT t1.name,t2.content_type,t2.file_size,t2.bytes FROM t_treenode t1, t_file t2 WHERE t1.id=? AND t2.id=?";
         try {
             con = getConnection();
             pst = con.prepareStatement(sql);
             pst.setInt(1, id);
             pst.setInt(2, id);
-            pst.setInt(3, version);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
@@ -440,17 +352,16 @@ public class FileBean extends ResourceBean {
         return data;
     }
 
-    public BinaryFileData getBinaryPreviewData(int id, int version) throws SQLException {
+    public BinaryFileData getBinaryPreviewData(int id) throws SQLException {
         Connection con = null;
         PreparedStatement pst = null;
         BinaryFileData data = null;
-        String sql = "SELECT t1.name, t2.preview_content_type, t2.preview_bytes FROM t_treenode t1, t_file_content t2 WHERE t1.id=? AND t2.id=? AND t2.version=?";
+        String sql = "SELECT t1.name, t2.preview_content_type, t2.preview_bytes FROM t_treenode t1, t_file t2 WHERE t1.id=? AND t2.id=?";
         try {
             con = getConnection();
             pst = con.prepareStatement(sql);
             pst.setInt(1, id);
             pst.setInt(2, id);
-            pst.setInt(3, version);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
@@ -472,7 +383,7 @@ public class FileBean extends ResourceBean {
         List<Integer> ids = new ArrayList<>();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT DISTINCT t1.page_id FROM t_file_usage t1, t_resource t2 " + "WHERE t1.file_id=? AND t1.page_id=t2.id AND (t1.page_version=t2.published_version OR t1.page_version=t2.draft_version)");
+            pst = con.prepareStatement("SELECT DISTINCT t1.page_id FROM t_node_usage t1, t_file t2 " + "WHERE t1.linked_node_id=? AND t1.page_id=t2.id");
             pst.setInt(1, data.getId());
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
@@ -491,7 +402,7 @@ public class FileBean extends ResourceBean {
         boolean inUse = false;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT page_id FROM t_file_usage WHERE file_id=?");
+            pst = con.prepareStatement("SELECT page_id FROM t_node_usage WHERE linked_node_id=?");
             pst.setInt(1, id);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
@@ -508,94 +419,5 @@ public class FileBean extends ResourceBean {
     public void deleteFile(int id) throws SQLException {
         deleteTreeNode(id);
         PreviewCache.getInstance().remove(id);
-    }
-
-    /**
-     * **********
-     * history ***********
-     */
-    public List<FileData> getFileHistory(int id) {
-        List<FileData> list = new ArrayList<>();
-        Connection con = null;
-        try {
-            con = getConnection();
-            readFileVersions(con, id, list);
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeConnection(con);
-        }
-        return list;
-    }
-
-    protected void readFileVersions(Connection con, int id, List<FileData> list) throws SQLException {
-        PreparedStatement pst = null;
-        FileData data;
-        try {
-            pst = con.prepareStatement("SELECT t1.version,t1.change_date,t1.published,t1.author_name FROM t_file_content t1 WHERE t1.id=? AND NOT exists(SELECT 'x' FROM t_resource t2 WHERE t2.id=? AND (t2.published_version=t1.version OR t2.draft_version=t1.version))ORDER BY t1.version");
-            pst.setInt(1, id);
-            pst.setInt(2, id);
-            try (ResultSet rs = pst.executeQuery()) {
-                while (rs.next()) {
-                    int i = 1;
-                    data = new FileData();
-                    data.setId(id);
-                    readTreeNode(con, data);
-                    readResourceNode(con, data);
-                    data.setLoadedVersion(rs.getInt(i++));
-                    readFile(con, data);
-                    data.setContentChangeDate(rs.getTimestamp(i++).toLocalDateTime());
-                    data.setPublished(rs.getBoolean(i++));
-                    data.setAuthorName(rs.getString(i));
-                    list.add(data);
-                }
-            }
-        } finally {
-            closeStatement(pst);
-        }
-    }
-
-    public boolean restoreFileVersion(int id, int version) {
-        FileData data;
-        Connection con = startTransaction();
-        try {
-            if (version == 0) {
-                return false;
-            }
-            data = new FileData();
-            data.setId(id);
-            readTreeNode(con, data);
-            readResourceNode(con, data);
-            readFile(con, data);
-            readFileContent(con, data, version);
-            readFileBytes(con, data, version);
-            data.setLoadedVersion(version);
-            data.setChangeDate(getServerTime(con));
-            writeFile(con, data);
-            data.setLoadedVersion(getNextVersion(con, data.getId()));
-            data.setContentChangeDate();
-            writeDraftFileContent(con, data);
-            updateDraftVersion(con, data.getId(), data.getLoadedVersion());
-            return commitTransaction(con);
-        } catch (Exception se) {
-            return rollbackTransaction(con, se);
-        }
-    }
-
-    public void deleteFileVersion(int id, int version) {
-        Connection con = null;
-        PreparedStatement pst = null;
-        try {
-            con = getConnection();
-            pst = con.prepareStatement("DELETE FROM t_file_content WHERE id=? AND version=?");
-            pst.setInt(1, id);
-            pst.setInt(2, version);
-            pst.executeUpdate();
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
     }
 }
