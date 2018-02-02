@@ -12,6 +12,8 @@ import de.bandika.base.data.BaseData;
 import de.bandika.base.log.Log;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.page.PagePartData;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -22,21 +24,21 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class TemplateData extends BaseData implements Serializable {
+
+    public static final String MASTER = "MASTER";
+    public static final String PAGE = "PAGE";
+    public static final String PART = "PART";
+    public static final String SNIPPET = "SNIPPET";
 
     public static final String USAGE_ALL = "all";
 
-    public static final String PLACEHOLDER_CONTAINERID = "<cid/>";
-
-    public static final String DEFAULT_DATA_TYPE = "DEFAULT";
-
-    protected TemplateType type = TemplateType.NONE;
+    protected String type = "";
     protected String name = "";
     protected String displayName = "";
     protected String description = "";
     protected String usage = "";
-    protected boolean editable = false;
-    protected boolean dynamic = false;
     protected String code = "";
 
     protected List<TemplatePart> templateParts = null;
@@ -44,15 +46,12 @@ public class TemplateData extends BaseData implements Serializable {
     public TemplateData() {
     }
 
-    public TemplateType getType() {
+    public String getType() {
         return type;
     }
 
-    public String getDataTypeName() {
-        return DEFAULT_DATA_TYPE;
-    }
-
-    public void setDataTypeName(String dataTypeName) {
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getName() {
@@ -100,22 +99,6 @@ public class TemplateData extends BaseData implements Serializable {
         }
     }
 
-    public boolean isEditable() {
-        return editable;
-    }
-
-    public void setEditable(boolean editable) {
-        this.editable = editable;
-    }
-
-    public boolean isDynamic() {
-        return dynamic;
-    }
-
-    public void setDynamic(boolean dynamic) {
-        this.dynamic = dynamic;
-    }
-
     public String getCode() {
         return code;
     }
@@ -127,6 +110,8 @@ public class TemplateData extends BaseData implements Serializable {
     /****** parser part ****/
 
     public boolean parseTemplate() {
+        Document doc=Jsoup.parse(code);
+
         try {
             if (templateParts == null)
                 templateParts = new ArrayList<>();

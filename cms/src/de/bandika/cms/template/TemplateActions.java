@@ -58,9 +58,8 @@ public class TemplateActions extends CmsActions {
             case openCreateTemplate: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
-                TemplateType type = TemplateType.valueOf(RequestReader.getString(request, "templateType"));
-                TemplateData data = type.getNewTemplateData();
-                data.setDataTypeName(RequestReader.getString(request, "dataType"));
+                TemplateData data = new TemplateData();
+                data.setType(RequestReader.getString(request, "templateType"));
                 data.setNew(true);
                 data.prepareEditing();
                 SessionWriter.setSessionObject(request, "templateData", data);
@@ -74,7 +73,7 @@ public class TemplateActions extends CmsActions {
             case openEditTemplate: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
-                TemplateType templateType = TemplateType.valueOf(RequestReader.getString(request, "templateType"));
+                String templateType = RequestReader.getString(request, "templateType");
                 String templateName = RequestReader.getString(request, "templateName");
                 TemplateData data = TemplateCache.getInstance().getTemplate(templateType, templateName);
                 if (data == null) {
@@ -94,8 +93,6 @@ public class TemplateActions extends CmsActions {
                 data.setDescription(RequestReader.getString(request, "description"));
                 data.setCode(RequestReader.getString(request, "code"));
                 data.setUsage(RequestReader.getString(request, "usage"));
-                data.setEditable(RequestReader.getBoolean(request, "editable"));
-                data.setDynamic(RequestReader.getBoolean(request, "dynamic"));
                 if (!isDataComplete(data, request)) {
                     return showEditTemplate(request, response);
                 }
@@ -104,7 +101,7 @@ public class TemplateActions extends CmsActions {
                 }
                 TemplateBean.getInstance().saveTemplate(data, true);
                 TemplateCache.getInstance().setDirty();
-                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration+"&templateType=" + data.getType().name() + "&templateName=" + data.getName(), "_templateSaved");
+                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration+"&templateType=" + data.getType() + "&templateName=" + data.getName(), "_templateSaved");
             }
             case openDeleteTemplate: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
@@ -114,7 +111,7 @@ public class TemplateActions extends CmsActions {
             case deleteTemplate: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
-                TemplateType templateType = TemplateType.valueOf(RequestReader.getString(request, "templateType"));
+                String templateType = RequestReader.getString(request, "templateType");
                 String templateName = RequestReader.getString(request, "templateName");
                 if (!TemplateBean.getInstance().deleteTemplate(templateName, templateType))
                     return false;
@@ -172,15 +169,11 @@ public class TemplateActions extends CmsActions {
     }
 
     protected boolean importTemplate(TagAttributes attributes, String code) {
-        TemplateType type = TemplateType.valueOf(attributes.getString("type"));
-        TemplateData data = type.getNewTemplateData();
-        String dataTypeName = attributes.getString("dataType");
-        data.setDataTypeName(dataTypeName.isEmpty() ? TemplateData.DEFAULT_DATA_TYPE : dataTypeName);
+        TemplateData data = new TemplateData();
+        data.setType(attributes.getString("type"));
         data.setName(attributes.getString("name"));
         data.setDisplayName(attributes.getString("displayName"));
         data.setUsage(attributes.getString("usage"));
-        data.setEditable(attributes.getBoolean("editable"));
-        data.setDynamic(attributes.getBoolean("dynamic"));
         data.setCode(code);
         if (TemplateCache.getInstance().getTemplate(data.getType(), data.getName()) == null)
             data.setNew(true);

@@ -12,7 +12,6 @@
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.template.TemplateCache" %>
 <%@ page import="de.bandika.cms.template.TemplateData" %>
-<%@ page import="de.bandika.cms.template.TemplateType" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.cms.page.PageBean" %>
@@ -24,7 +23,7 @@
     String sectionType = RequestReader.getString(request, "sectionType");
     int partId = RequestReader.getInt(request, "partId");
     boolean below = RequestReader.getBoolean(request, "below");
-    List<TemplateData> templates = TemplateCache.getInstance().getTemplates(TemplateType.PART, sectionType);
+    List<TemplateData> templates = TemplateCache.getInstance().getTemplates(TemplateData.PART, sectionType);
     List<PagePartData> parts = PageBean.getInstance().getNamedPageParts();
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>

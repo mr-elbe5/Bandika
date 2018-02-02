@@ -11,7 +11,6 @@
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.template.TemplateCache" %>
 <%@ page import="de.bandika.cms.template.TemplateData" %>
-<%@ page import="de.bandika.cms.template.TemplateType" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.cms.page.PageActions" %>
@@ -20,7 +19,7 @@
     PageData data = (PageData) SessionReader.getSessionObject(request, "pageData");
     assert(data!=null);
     request.setAttribute("treeNode", data);
-    List<TemplateData> pageTemplates = TemplateCache.getInstance().getTemplates(TemplateType.PAGE);
+    List<TemplateData> pageTemplates = TemplateCache.getInstance().getTemplates(TemplateData.PAGE);
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/page.srv" method="post" id="pagesettingsform" name="pagesettingsform" accept-charset="UTF-8">

@@ -37,7 +37,7 @@ public class TemplateBean extends DbBean {
         try {
             pst = con.prepareStatement("SELECT change_date FROM t_template WHERE name=? AND type=?");
             pst.setString(1, data.getName());
-            pst.setString(2, data.getType().name());
+            pst.setString(2, data.getType());
             rs = pst.executeQuery();
             if (rs.next()) {
                 LocalDateTime date = rs.getTimestamp(1).toLocalDateTime();
@@ -51,15 +51,15 @@ public class TemplateBean extends DbBean {
         return result;
     }
 
-    public Map<TemplateType, List<TemplateData>> getAllTemplates() {
-        Map<TemplateType, List<TemplateData>> templates = new HashMap<>();
+    public Map<String, List<TemplateData>> getAllTemplates() {
+        Map<String, List<TemplateData>> templates = new HashMap<>();
         Connection con = null;
         try {
             con = getConnection();
-            templates.put(TemplateType.MASTER, getAllTemplates(con, TemplateType.MASTER));
-            templates.put(TemplateType.PAGE, getAllTemplates(con, TemplateType.PAGE));
-            templates.put(TemplateType.PART, getAllTemplates(con, TemplateType.PART));
-            templates.put(TemplateType.SNIPPET, getAllTemplates(con, TemplateType.SNIPPET));
+            templates.put(TemplateData.MASTER, getAllTemplates(con, TemplateData.MASTER));
+            templates.put(TemplateData.PAGE, getAllTemplates(con, TemplateData.PAGE));
+            templates.put(TemplateData.PART, getAllTemplates(con, TemplateData.PART));
+            templates.put(TemplateData.SNIPPET, getAllTemplates(con, TemplateData.SNIPPET));
         } catch (SQLException se) {
             se.printStackTrace();
         } finally {
@@ -68,25 +68,23 @@ public class TemplateBean extends DbBean {
         return templates;
     }
 
-    protected List<TemplateData> getAllTemplates(Connection con, TemplateType type) throws SQLException {
+    protected List<TemplateData> getAllTemplates(Connection con, String type) throws SQLException {
         List<TemplateData> list = new ArrayList<>();
         PreparedStatement pst = null;
         TemplateData data;
         try {
-            pst = con.prepareStatement("SELECT data_type,name,change_date,display_name,description,usage,editable,dynamic,code FROM t_template WHERE type=? ORDER BY name");
-            pst.setString(1, type.name());
+            pst = con.prepareStatement("SELECT name,change_date,display_name,description,usage,code FROM t_template WHERE type=? ORDER BY name");
+            pst.setString(1, type);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 int i = 1;
-                data = type.getNewTemplateData();
-                data.setDataTypeName(rs.getString(i++));
+                data = new TemplateData();
+                data.setType(type);
                 data.setName(rs.getString(i++));
                 data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                 data.setDisplayName(rs.getString(i++));
                 data.setDescription(rs.getString(i++));
                 data.setUsage(rs.getString(i++));
-                data.setEditable(rs.getBoolean(i++));
-                data.setDynamic(rs.getBoolean(i++));
                 data.setCode(rs.getString(i));
                 if (data.parseTemplate())
                     list.add(data);
@@ -116,18 +114,15 @@ public class TemplateBean extends DbBean {
     protected void writeTemplate(Connection con, TemplateData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(data.isNew() ? "insert into t_template (change_date,display_name,description,usage,editable,dynamic,code,data_type,name,type) values(?,?,?,?,?,?,?,?,?,?)" : "update t_template set change_date=?, display_name=?, description=?, usage=?, editable=?, dynamic=?, code=?, data_type=? where name=? and type=?");
+            pst = con.prepareStatement(data.isNew() ? "insert into t_template (change_date,display_name,description,usage,code,name,type) values(?,?,?,?,?,?,?)" : "update t_template set change_date=?, display_name=?, description=?, usage=?, code=? where name=? and type=?");
             int i = 1;
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getDisplayName());
             pst.setString(i++, data.getDescription());
             pst.setString(i++, data.getUsage());
-            pst.setBoolean(i++, data.isEditable());
-            pst.setBoolean(i++, data.isDynamic());
             pst.setString(i++, data.getCode());
-            pst.setString(i++, data.getDataTypeName());
             pst.setString(i++, data.getName());
-            pst.setString(i, data.getType().name());
+            pst.setString(i, data.getType());
             pst.executeUpdate();
             pst.close();
         } finally {
@@ -135,14 +130,14 @@ public class TemplateBean extends DbBean {
         }
     }
 
-    public boolean deleteTemplate(String name, TemplateType type) {
+    public boolean deleteTemplate(String name, String type) {
         Connection con = null;
         PreparedStatement pst = null;
         try {
             con = getConnection();
             pst = con.prepareStatement("DELETE FROM t_template WHERE name=? AND type=?");
             pst.setString(1, name);
-            pst.setString(2, type.name());
+            pst.setString(2, type);
             pst.executeUpdate();
         } catch (SQLException se) {
             se.printStackTrace();

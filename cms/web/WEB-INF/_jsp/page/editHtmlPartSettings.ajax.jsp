@@ -10,13 +10,13 @@
 <%@ page import="de.bandika.cms.page.PageData" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.page.HtmlPartData" %>
 <%@ page import="de.bandika.cms.page.PagePartActions" %>
+<%@ page import="de.bandika.cms.page.PagePartData" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     PageData data = (PageData) SessionReader.getSessionObject(request, "pageData");
     assert(data!=null);
-    HtmlPartData part = (HtmlPartData)data.getEditPagePart();
+    PagePartData part = data.getEditPagePart();
     request.setAttribute("treeNode", data);
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>

@@ -9,9 +9,8 @@
 package de.bandika.cms.page;
 
 import de.bandika.base.log.Log;
-import de.bandika.cms.template.PartTemplateData;
 import de.bandika.cms.template.TemplateCache;
-import de.bandika.cms.template.TemplateType;
+import de.bandika.cms.template.TemplateData;
 import de.bandika.cms.tree.TreeBean;
 
 import java.sql.*;
@@ -284,8 +283,8 @@ public class PageBean extends TreeBean {
                 if (rs.next()) {
                     int i = 1;
                     String templateName = rs.getString(i++);
-                    PartTemplateData template = (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART, templateName);
-                    partData = template.getDataType().getNewPagePartData();
+                    TemplateData template = TemplateCache.getInstance().getTemplate(TemplateData.PART, templateName);
+                    partData = new PagePartData();
                     partData.setTemplateData(template);
                     partData.setId(rs.getInt(i++));
                     partData.setName(rs.getString(i++));
@@ -310,8 +309,8 @@ public class PageBean extends TreeBean {
                 while (rs.next()) {
                     int i = 1;
                     String templateName = rs.getString(i++);
-                    PartTemplateData template = (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART, templateName);
-                    partData = template.getDataType().getNewPagePartData();
+                    TemplateData template = TemplateCache.getInstance().getTemplate(TemplateData.PART, templateName);
+                    partData = new PagePartData();
                     partData.setTemplateData(template);
                     partData.setId(rs.getInt(i++));
                     partData.setName(rs.getString(i++));
@@ -339,8 +338,8 @@ public class PageBean extends TreeBean {
                 while (rs.next()) {
                     int i = 1;
                     String templateName = rs.getString(i++);
-                    PartTemplateData template = (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART, templateName);
-                    partData = template.getDataType().getNewPagePartData();
+                    TemplateData template = TemplateCache.getInstance().getTemplate(TemplateData.PART, templateName);
+                    partData = new PagePartData();
                     partData.setTemplateData(template);
                     partData.setId(rs.getInt(i++));
                     partData.setName(rs.getString(i++));

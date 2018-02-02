@@ -27,7 +27,7 @@ public class TemplateCache extends BaseCache {
         return instance;
     }
 
-    protected Map<TemplateType, List<TemplateData>> templates = new HashMap<>();
+    protected Map<String, List<TemplateData>> templates = new HashMap<>();
 
     public void initialize() {
         checkDirty();
@@ -39,12 +39,12 @@ public class TemplateCache extends BaseCache {
         templates = TemplateBean.getInstance().getAllTemplates();
     }
 
-    public List<TemplateData> getTemplates(TemplateType type) {
+    public List<TemplateData> getTemplates(String type) {
         checkDirty();
         return templates.get(type);
     }
 
-    public TemplateData getTemplate(TemplateType type, String name) {
+    public TemplateData getTemplate(String type, String name) {
         for (TemplateData data : getTemplates(type)) {
             if (data.getName().equals(name))
                 return data;
@@ -52,7 +52,7 @@ public class TemplateCache extends BaseCache {
         return null;
     }
 
-    public List<TemplateData> getTemplates(TemplateType type, String parentType) {
+    public List<TemplateData> getTemplates(String type, String parentType) {
         checkDirty();
         List<TemplateData> templates = new ArrayList<>();
         for (TemplateData template : getTemplates(type)) {

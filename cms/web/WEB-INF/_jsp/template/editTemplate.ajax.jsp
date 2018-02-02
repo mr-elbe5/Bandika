@@ -19,7 +19,7 @@
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <form action="/template.srv" method="post" id="templateform" name="templateform" accept-charset="UTF-8">
     <input type="hidden" name="act" value="<%=TemplateActions.saveTemplate%>"/>
-    <input type="hidden" name="templateType" value="<%=data.getType().name()%>"/>
+    <input type="hidden" name="templateType" value="<%=data.getType()%>"/>
     <input type="hidden" name="templateName" value="<%=data.getName()%>"/>
     <fieldset>
         <table class="padded form">
@@ -50,13 +50,6 @@
             </tr>
             <tr>
                 <td>
-                    <label for="dataType"><%=StringUtil.getHtml("_dataType", locale)%>&nbsp</label></td>
-                <td>
-                    <input type="text" id="dataType" name="dataType" value="<%=StringUtil.toHtml(data.getDataTypeName())%>" maxlength="20"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <label for="description"><%=StringUtil.getHtml("_description", locale)%>&nbsp;*</label></td>
                 <td>
           <textarea id="description" name="description" rows="3" cols=""><%=StringUtil.toHtmlInput(data.getDescription())%>
@@ -76,22 +69,6 @@
                     <label for="usage"><%=StringUtil.getHtml("_usage", locale)%>&nbsp;*</label></td>
                 <td>
                     <input type="text" id="usage" name="usage" value="<%=StringUtil.toHtml(data.getUsage())%>" maxlength="120"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="editable"><%=StringUtil.getHtml("_editable", locale)%>
-                    </label></td>
-                <td>
-                    <input type="checkbox" id="editable" name="editable" value="true" <%=data.isEditable() ? "checked" : ""%>/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="dynamic"><%=StringUtil.getHtml("_dynamic", locale)%>
-                    </label></td>
-                <td>
-                    <input type="checkbox" id="dynamic" name="dynamic" value="true" <%=data.isDynamic() ? "checked" : ""%>/>
                 </td>
             </tr>
         </table>

@@ -12,7 +12,6 @@ import de.bandika.base.log.Log;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
-import de.bandika.cms.template.TemplateType;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.servlet.SessionReader;
 
@@ -27,7 +26,7 @@ public class PageTag extends BaseTag {
             PageData pageData = (PageData) request.getAttribute("pageData");
             int siteId = pageData==null ? TreeCache.getInstance().getLanguageRootId(SessionReader.getSessionLocale(request)) : pageData.getParentId();
             String templateName = TreeCache.getInstance().getSite(siteId).getTemplateName();
-            TemplateData masterTemplate = TemplateCache.getInstance().getTemplate(TemplateType.MASTER, templateName);
+            TemplateData masterTemplate = TemplateCache.getInstance().getTemplate(TemplateData.MASTER, templateName);
             try {
                 masterTemplate.writeTemplate(context, getWriter(), request, pageData, null);
             } catch (Exception e) {

@@ -9,9 +9,8 @@
 package de.bandika.cms.page;
 
 import de.bandika.base.util.StringUtil;
-import de.bandika.cms.template.PartTemplateData;
 import de.bandika.cms.template.TemplateCache;
-import de.bandika.cms.template.TemplateType;
+import de.bandika.cms.template.TemplateData;
 import de.bandika.webbase.servlet.SessionReader;
 import de.bandika.webbase.util.TagAttributes;
 
@@ -38,7 +37,7 @@ public class SectionData {
     public void cloneData(SectionData data) {
         setName(data.getName());
         for (PagePartData srcPart : data.parts) {
-            PagePartData part = srcPart.getDataType().getNewPagePartData();
+            PagePartData part = new PagePartData();
             part.setSectionName(getName());
             part.cloneData(srcPart);
             parts.add(part);
@@ -92,8 +91,8 @@ public class SectionData {
                 return ppd;
             }
         }
-        PartTemplateData template = (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART, templateName);
-        part = template.getDataType().getNewPagePartData();
+        TemplateData template = TemplateCache.getInstance().getTemplate(TemplateData.PART, templateName);
+        part = new PagePartData();
         part.setTemplateData(template);
         part.setId(PageBean.getInstance().getNextId());
         part.setSectionName(getName());
@@ -167,7 +166,7 @@ public class SectionData {
     public void shareChanges(PagePartData part) {
         for (PagePartData ppd : parts) {
             if (ppd.getId() == part.getId() && part != ppd) {
-                ppd.copyContent(part);
+                ppd.setContent(part.getContent());
                 return;
             }
         }

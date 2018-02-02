@@ -12,7 +12,6 @@ import de.bandika.base.log.Log;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
-import de.bandika.cms.template.TemplateType;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -24,7 +23,7 @@ public class ContentTag extends BaseTag {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
             PageData pageData = (PageData) request.getAttribute("pageData");
-            TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PAGE, pageData.getTemplateName());
+            TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateData.PAGE, pageData.getTemplateName());
             JspWriter writer = getWriter();
             pageTemplate.writeTemplate(context, writer, request, pageData, null);
             if (pageData.getEditPagePart() != null) {

@@ -11,7 +11,6 @@
 <%@ page import="de.bandika.cms.site.SiteData" %>
 <%@ page import="de.bandika.cms.template.TemplateCache" %>
 <%@ page import="de.bandika.cms.template.TemplateData" %>
-<%@ page import="de.bandika.cms.template.TemplateType" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.cms.site.SiteActions" %>
@@ -19,7 +18,7 @@
     Locale locale = SessionReader.getSessionLocale(request);
     SiteData data = (SiteData) SessionReader.getSessionObject(request, "siteData");
     assert data!=null;
-    List<TemplateData> masterTemplates = TemplateCache.getInstance().getTemplates(TemplateType.MASTER);
+    List<TemplateData> masterTemplates = TemplateCache.getInstance().getTemplates(TemplateData.MASTER);
     request.setAttribute("treeNode", data);
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>

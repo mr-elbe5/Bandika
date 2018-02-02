@@ -11,11 +11,10 @@
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.template.TemplateCache" %>
 <%@ page import="de.bandika.cms.template.TemplateData" %>
-<%@ page import="de.bandika.cms.template.TemplateType" %>
 <%@ page import="java.util.Locale" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
-    TemplateType templateType = TemplateType.valueOf(RequestReader.getString(request, "templateType"));
+    String templateType = RequestReader.getString(request, "templateType");
     String templateName = RequestReader.getString(request, "templateName");
     TemplateData data = TemplateCache.getInstance().getTemplate(templateType, templateName);
     if (data != null) {

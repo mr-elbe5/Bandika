@@ -37,7 +37,7 @@ public enum TemplateTagType {
                 } else {
                     writer.write("<div id=\"pageContent\" class=\"viewArea\">");
                 }
-                TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PAGE, pageData.getTemplateName());
+                TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateData.PAGE, pageData.getTemplateName());
                 pageTemplate.writeTemplate(context, writer, request, pageData, partData);
                 if (pageData.getEditPagePart() != null) {
                     writer.write("<script>$('.editControl').hide();</script>");
@@ -98,7 +98,7 @@ public enum TemplateTagType {
         }
     }, SNIPPET("snippet") {
         public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, TagAttributes attributes) throws IOException {
-            TemplateData snippet = TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, attributes.getString("name"));
+            TemplateData snippet = TemplateCache.getInstance().getTemplate(TemplateData.SNIPPET, attributes.getString("name"));
             if (snippet != null) {
                 try {
                     snippet.writeTemplate(context, writer, request, pageData, null);

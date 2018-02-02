@@ -11,13 +11,12 @@
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.template.TemplateCache" %>
 <%@ page import="de.bandika.cms.template.TemplateData" %>
-<%@ page import="de.bandika.cms.template.TemplateType" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.cms.page.PageActions" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
-    List<TemplateData> pageTemplates = TemplateCache.getInstance().getTemplates(TemplateType.PAGE);
+    List<TemplateData> pageTemplates = TemplateCache.getInstance().getTemplates(TemplateData.PAGE);
     int siteId = RequestReader.getInt(request, "siteId");
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>

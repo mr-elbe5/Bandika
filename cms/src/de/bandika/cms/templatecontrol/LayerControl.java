@@ -10,7 +10,7 @@ package de.bandika.cms.templatecontrol;
 
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.template.TemplateCache;
-import de.bandika.cms.template.TemplateType;
+import de.bandika.cms.template.TemplateData;
 import de.bandika.webbase.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,11 +31,11 @@ public class LayerControl extends TemplateControl {
     }
 
     public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException {
-        writer.write(TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, "treeLayer").getCode());
-        writer.write(TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, "dialogLayer").getCode());
+        writer.write(TemplateCache.getInstance().getTemplate(TemplateData.SNIPPET, "treeLayer").getCode());
+        writer.write(TemplateCache.getInstance().getTemplate(TemplateData.SNIPPET, "dialogLayer").getCode());
         if (pageData!=null && pageData.isEditMode()) {
-            writer.write(TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, "browserLayer").getCode());
-            writer.write(TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, "browserDialogLayer").getCode());
+            writer.write(TemplateCache.getInstance().getTemplate(TemplateData.SNIPPET, "browserLayer").getCode());
+            writer.write(TemplateCache.getInstance().getTemplate(TemplateData.SNIPPET, "browserDialogLayer").getCode());
         }
     }
 

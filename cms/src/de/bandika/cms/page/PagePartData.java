@@ -8,16 +8,17 @@
  */
 package de.bandika.cms.page;
 
+import com.drew.lang.annotations.NotNull;
 import de.bandika.base.data.BaseIdData;
 import de.bandika.base.data.XmlData;
 import de.bandika.base.log.Log;
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.field.Field;
-import de.bandika.cms.template.PartTemplateDataType;
+import de.bandika.cms.field.Fields;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
-import de.bandika.cms.template.TemplateType;
+import de.bandika.webbase.servlet.RequestReader;
 import de.bandika.webbase.servlet.SessionReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -27,8 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 public class PagePartData extends BaseIdData implements Comparable<PagePartData>, XmlData {
 
@@ -38,18 +38,13 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
     protected String templateName;
     protected boolean editable = false;
     protected boolean dynamic = false;
+    protected String cssClass = "";
     protected String content = "";
     protected Set<Integer> pageIds = null;
 
+    protected Map<String, Field> fields = new HashMap<>();
+
     public PagePartData() {
-    }
-
-    public PartTemplateDataType getDataType() {
-        return null;
-    }
-
-    public String getDataTypeName() {
-        return getDataType() == null ? "" : getDataType().name();
     }
 
     public void cloneData(PagePartData data) {
@@ -57,14 +52,12 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         setTemplateName(data.getTemplateName());
         setEditable((data.isEditable()));
         setDynamic(data.isDynamic());
-        content = data.content;
-    }
-
-    public void copyContent(PagePartData part) {
+        setCssClass(data.getCssClass());
+        setContent(data.getContent());
     }
 
     @Override
-    public int compareTo(PagePartData data) {
+    public int compareTo(@NotNull PagePartData data) {
         int val = ranking - data.ranking;
         if (val != 0) {
             return val;
@@ -124,10 +117,70 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         this.dynamic = dynamic;
     }
 
+    public String getCssClass() {
+        return cssClass;
+    }
+
+    public void setCssClass(String cssClass) {
+        this.cssClass = cssClass;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     public void setTemplateData(TemplateData data) {
         setTemplateName(data.getName());
-        setEditable(data.isEditable());
-        setDynamic(data.isDynamic());
+    }
+
+    public Map<String, Field> getFields() {
+        return fields;
+    }
+
+    public Field getField(String name) {
+        return fields.get(name);
+    }
+
+    public Field ensureField(String name, String fieldType) {
+        Field field = fields.get(name);
+        if (field == null) {
+            field = Fields.getNewField(fieldType);
+            assert field != null;
+            field.setName(name);
+            field.setPagePartId(getId());
+            fields.put(name, field);
+        }
+        return field;
+    }
+
+    public void getNodeUsage(Set<Integer> list) {
+        for (Field field : fields.values()) {
+            field.getNodeUsage(list);
+        }
+    }
+
+    public void setPageIds(Set<Integer> pageIds) {
+        this.pageIds = pageIds;
+    }
+
+    public boolean executePagePartMethod(String method, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return true;
+    }
+
+    public boolean readPagePartRequestData(HttpServletRequest request) {
+        boolean complete = true;
+        for (Field field : getFields().values()) {
+            complete &= field.readPagePartRequestData(request);
+        }
+        return complete;
+    }
+
+    public void readPagePartSettingsData(HttpServletRequest request) {
+        setCssClass(RequestReader.getString(request, "cssClass"));
     }
 
     public void prepareCopy() throws Exception {
@@ -135,17 +188,16 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         setId(PageBean.getInstance().getNextId());
     }
 
-    public Field ensureField(String name, String fieldType) {
-        return null;
-    }
-
     @Override
     public void prepareSave() throws Exception {
         generateXmlContent();
     }
 
+    /******************* XML part *********************************/
+
     public void generateXmlContent() {
         Document xmlDoc = XmlUtil.createXmlDocument();
+        assert xmlDoc!=null;
         XmlUtil.createRootNode(xmlDoc, "part");
         toXml(xmlDoc, null);
         content = XmlUtil.xmlToString(xmlDoc);
@@ -171,31 +223,46 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         fromXml(root);
     }
 
+    public void addXmlAttributes(Document xmlDoc, Element node) {
+    }
+
     public Element toXml(Document xmlDoc, Element parentNode) {
         Element node = parentNode == null ? XmlUtil.getRootNode(xmlDoc) : XmlUtil.addNode(xmlDoc, parentNode, "part");
+        Element partNode = XmlUtil.addNode(xmlDoc, node, "partContent");
+        addXmlAttributes(xmlDoc, partNode);
+        for (Field field : fields.values()) {
+            field.toXml(xmlDoc, partNode);
+        }
         return node;
     }
 
+    public void getXmlAttributes(Element node) {
+    }
+
     public void fromXml(Element node) {
+        if (node == null)
+            return;
+        List<Element> children = XmlUtil.getChildElements(node);
+        for (Element child : children) {
+            if (child.getTagName().equals("partContent")) {
+                fields.clear();
+                List<Element> partChildren = XmlUtil.getChildElements(node);
+                for (Element partChild : partChildren) {
+                    if (partChild.getTagName().equals("field")) {
+                        String fieldType = XmlUtil.getStringAttribute(partChild, "fieldType");
+                        Field field = Fields.getNewField(fieldType);
+                        if (field != null) {
+                            field.fromXml(partChild);
+                            fields.put(field.getName(), field);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public String getXmlContent() {
         return content;
-    }
-
-    public void setPageIds(Set<Integer> pageIds) {
-        this.pageIds = pageIds;
-    }
-
-    public void getNodeUsage(Set<Integer> list) {
-    }
-
-    public boolean readPagePartRequestData(HttpServletRequest request) {
-        return true;
-    }
-
-    public boolean executePagePartMethod(String method, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return true;
     }
 
     /******************* HTML part *********************************/
@@ -210,7 +277,7 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
     public void appendEditPartHtml(PageContext context, JspWriter writer, HttpServletRequest request, String sectionType, PageData pageData) throws IOException {
         Locale locale = SessionReader.getSessionLocale(request);
         writeEditPartStart(context, writer, request, pageData.getEditPagePart(), getSectionName(), pageData.getId(), locale);
-        TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PART, getTemplateName());
+        TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateData.PART, getTemplateName());
         try {
             partTemplate.writeTemplate(context, writer, request, pageData, this);
         } catch (Exception e) {
@@ -220,7 +287,7 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
     }
 
     public void appendLivePartHtml(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData)  {
-        TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PART, getTemplateName());
+        TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateData.PART, getTemplateName());
         try {
             writer.write("<div class=\"pagePart\" id=\"" + getHtmlId() + "\" >");
             partTemplate.writeTemplate(context, writer, request, pageData, this);

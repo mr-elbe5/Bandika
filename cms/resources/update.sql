@@ -129,6 +129,15 @@ ALTER TABLE t_node_usage ADD CONSTRAINT t_page_usage_pk PRIMARY KEY (linked_node
 ALTER TABLE t_node_usage ADD CONSTRAINT t_page_usage_fk1 FOREIGN KEY (linked_node_id) REFERENCES t_treenode (id) ON DELETE CASCADE;
 ALTER TABLE t_node_usage ADD CONSTRAINT t_page_usage_fk2 FOREIGN KEY (page_id) REFERENCES t_page (id) ON DELETE CASCADE;
 
+ALTER TABLE t_template DROP COLUMN data_type;
+ALTER TABLE t_template DROP COLUMN dynamic;
+ALTER TABLE t_template DROP COLUMN editable;
+
+ALTER TABLE t_configuration DROP COLUMN clusterport;
+ALTER TABLE t_configuration DROP COLUMN clustertimeout;
+ALTER TABLE t_configuration DROP COLUMN maxclustertimeouts;
+ALTER TABLE t_configuration DROP COLUMN maxversions;
+
 CREATE OR REPLACE FUNCTION addPage (parentId INTEGER, pageId INTEGER, rank INTEGER, nodeName VARCHAR(100), displayName VARCHAR(100), pageTemplate VARCHAR(255)) RETURNS INTEGER AS $$
 BEGIN
   INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, in_navigation, anonymous, inherits_rights)
