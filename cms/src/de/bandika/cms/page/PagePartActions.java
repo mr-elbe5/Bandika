@@ -203,6 +203,18 @@ public class PagePartActions extends BaseTreeActions {
                 data.removePagePart(sectionName, partId);
                 return setEditPageContentAjaxResponse(request, response, data);
             }
+            case PagePartActions.showSharedPartDetails: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                return showSharedPartDetails(request, response);
+            }
+            case PagePartActions.openDeleteSharedPart: {
+                int pageId = RequestReader.getInt(request, "pageId");
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                return showDeleteSharedPart(request, response);
+            }
             default: {
                 return forbidden();
             }

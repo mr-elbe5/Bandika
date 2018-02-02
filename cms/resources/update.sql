@@ -116,7 +116,7 @@ ALTER TABLE t_page_part DROP COLUMN page_id;
 ALTER TABLE t_page_part DROP COLUMN section;
 ALTER TABLE t_page_part DROP COLUMN ranking;
 
-ALTER TABLE t_page_part DROP t_page_part_fk2;
+ALTER TABLE t_page_part DROP CONSTRAINT t_page_part_fk2;
 ALTER TABLE t_page_part ADD CONSTRAINT t_page_part_fk1 FOREIGN KEY (template, template_type) REFERENCES t_template (name, type);
 
 DROP TABLE t_shared_node_usage;

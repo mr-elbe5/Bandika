@@ -48,12 +48,12 @@ public class TemplateActions extends CmsActions {
                 if (file != null && file.getBytes() != null) {
                     html = new String(file.getBytes());
                 }
-                TemplateParser.parseTemplates(html);
-                /*if (!importTemplates(html)) {
+                //TemplateParser.parseTemplates(html);
+                if (!importTemplates(html)) {
                     addError(request, "could not import templates");
                     return showImportTemplates(request, response);
                 }
-                TemplateCache.getInstance().setDirty();*/
+                TemplateCache.getInstance().setDirty();
                 return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration, "_templatesImported");
             }
             case openCreateTemplate: {

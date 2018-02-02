@@ -256,7 +256,7 @@ public class FileActions extends BaseTreeActions {
                     return false;
                 SessionWriter.setSessionObject(request, "cutFileId", fileId);
                 RequestWriter.setMessageKey(request, "_fileCut");
-                return new AdminActions().openAdministration(request, response);
+                return AdminActions.instance.openAdministration(request, response);
             }
             case moveFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
