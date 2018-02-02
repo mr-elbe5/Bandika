@@ -2,7 +2,7 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
@@ -277,7 +277,7 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
     public void appendEditPartHtml(PageContext context, JspWriter writer, HttpServletRequest request, String sectionType, PageData pageData) throws IOException {
         Locale locale = SessionReader.getSessionLocale(request);
         writeEditPartStart(context, writer, request, pageData.getEditPagePart(), getSectionName(), pageData.getId(), locale);
-        TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateData.PART, getTemplateName());
+        TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PART, getTemplateName());
         try {
             partTemplate.writeTemplate(context, writer, request, pageData, this);
         } catch (Exception e) {
@@ -287,7 +287,7 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
     }
 
     public void appendLivePartHtml(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData)  {
-        TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateData.PART, getTemplateName());
+        TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PART, getTemplateName());
         try {
             writer.write("<div class=\"pagePart\" id=\"" + getHtmlId() + "\" >");
             partTemplate.writeTemplate(context, writer, request, pageData, this);

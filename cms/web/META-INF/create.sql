@@ -163,7 +163,7 @@ CREATE TABLE IF NOT EXISTS t_treenode2group (
 --
 CREATE TABLE IF NOT EXISTS t_site (
   id              INTEGER      NOT NULL,
-  template_type   VARCHAR(20)  NOT NULL DEFAULT 'MASTER',
+  template_type   VARCHAR(20)  NOT NULL DEFAULT 'TYPE_MASTER',
   template        VARCHAR(255) NULL,
   inherits_master BOOLEAN      NOT NULL DEFAULT TRUE,
   CONSTRAINT t_site_pk PRIMARY KEY (id),
@@ -194,7 +194,7 @@ CREATE TABLE IF NOT EXISTS t_file (
 --
 CREATE TABLE IF NOT EXISTS t_page (
   id            INTEGER      NOT NULL,
-  template_type VARCHAR(20)  NOT NULL DEFAULT 'PAGE',
+  template_type VARCHAR(20)  NOT NULL DEFAULT 'TYPE_PAGE',
   template      VARCHAR(255) NOT NULL,
   keywords      VARCHAR(500) NOT NULL DEFAULT '',
   change_date TIMESTAMP    NOT NULL DEFAULT now(),
@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS t_page_part (
   id            INTEGER      NOT NULL,
   name          VARCHAR(60)  NOT NULL DEFAULT '',
   change_date   TIMESTAMP    NOT NULL DEFAULT now(),
-  template_type VARCHAR(20)  NOT NULL DEFAULT 'PART',
+  template_type VARCHAR(20)  NOT NULL DEFAULT 'TYPE_PART',
   template      VARCHAR(255) NOT NULL,
   content       TEXT         NOT NULL DEFAULT '',
   CONSTRAINT t_page_part_pk PRIMARY KEY (id),
@@ -289,7 +289,7 @@ INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description,
 VALUES (0, NULL, 0, '', 'ALL-NODE', 'Virtual Node for all IDs', 1, 'System', FALSE, FALSE, FALSE);
 --
 INSERT INTO t_template (name, type, display_name, code)
-VALUES ('pageMaster', 'MASTER', 'Default Page Master',
+VALUES ('pageMaster', 'TYPE_MASTER', 'Default Page Master',
 '<!DOCTYPE html>
 <html>
   <head>

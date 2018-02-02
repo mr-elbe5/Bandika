@@ -2,7 +2,7 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
@@ -12,8 +12,7 @@ import de.bandika.base.data.BaseData;
 import de.bandika.base.log.Log;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.page.PagePartData;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import de.bandika.cms.templateinclude.TemplateInclude;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -27,10 +26,10 @@ import java.util.List;
 
 public class TemplateData extends BaseData implements Serializable {
 
-    public static final String MASTER = "MASTER";
-    public static final String PAGE = "PAGE";
-    public static final String PART = "PART";
-    public static final String SNIPPET = "SNIPPET";
+    public static final String TYPE_MASTER = "MASTER";
+    public static final String TYPE_PAGE = "PAGE";
+    public static final String TYPE_PART = "PART";
+    public static final String TYPE_SNIPPET = "SNIPPET";
 
     public static final String USAGE_ALL = "all";
 
@@ -42,6 +41,7 @@ public class TemplateData extends BaseData implements Serializable {
     protected String code = "";
 
     protected List<TemplatePart> templateParts = null;
+    protected List<TemplateInclude> templateIncludes = new ArrayList<>();
 
     public TemplateData() {
     }
@@ -107,11 +107,13 @@ public class TemplateData extends BaseData implements Serializable {
         this.code = code;
     }
 
+    public List<TemplateInclude> getTemplateIncludes() {
+        return templateIncludes;
+    }
+
     /****** parser part ****/
 
     public boolean parseTemplate() {
-        Document doc=Jsoup.parse(code);
-
         try {
             if (templateParts == null)
                 templateParts = new ArrayList<>();

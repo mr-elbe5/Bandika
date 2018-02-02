@@ -2,7 +2,7 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
@@ -56,10 +56,10 @@ public class TemplateBean extends DbBean {
         Connection con = null;
         try {
             con = getConnection();
-            templates.put(TemplateData.MASTER, getAllTemplates(con, TemplateData.MASTER));
-            templates.put(TemplateData.PAGE, getAllTemplates(con, TemplateData.PAGE));
-            templates.put(TemplateData.PART, getAllTemplates(con, TemplateData.PART));
-            templates.put(TemplateData.SNIPPET, getAllTemplates(con, TemplateData.SNIPPET));
+            templates.put(TemplateData.TYPE_MASTER, getAllTemplates(con, TemplateData.TYPE_MASTER));
+            templates.put(TemplateData.TYPE_PAGE, getAllTemplates(con, TemplateData.TYPE_PAGE));
+            templates.put(TemplateData.TYPE_PART, getAllTemplates(con, TemplateData.TYPE_PART));
+            templates.put(TemplateData.TYPE_SNIPPET, getAllTemplates(con, TemplateData.TYPE_SNIPPET));
         } catch (SQLException se) {
             se.printStackTrace();
         } finally {
