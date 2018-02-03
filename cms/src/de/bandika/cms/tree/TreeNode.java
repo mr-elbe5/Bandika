@@ -350,7 +350,7 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
 
 
     public boolean isVisibleToUser(HttpServletRequest request) {
-        return SessionReader.isEditMode(request) && (isAnonymous() || SessionReader.hasContentRight(request, getId(), Right.READ));
+        return isAnonymous() || SessionReader.hasContentRight(request, getId(), Right.READ);
     }
 
     @Override

@@ -246,7 +246,7 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         for (Element child : children) {
             if (child.getTagName().equals("partContent")) {
                 fields.clear();
-                List<Element> partChildren = XmlUtil.getChildElements(node);
+                List<Element> partChildren = XmlUtil.getChildElements(child);
                 for (Element partChild : partChildren) {
                     if (partChild.getTagName().equals("field")) {
                         String fieldType = XmlUtil.getStringAttribute(partChild, "fieldType");

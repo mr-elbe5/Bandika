@@ -123,8 +123,6 @@ DROP TABLE t_shared_node_usage;
 DROP TABLE t_shared_part_usage;
 DROP TABLE t_shared_page_part;
 
-ALTER TABLE t_node_usage DROP COLUMN page_version;
-
 ALTER TABLE t_node_usage ADD CONSTRAINT t_page_usage_pk PRIMARY KEY (linked_node_id, page_id);
 ALTER TABLE t_node_usage ADD CONSTRAINT t_page_usage_fk1 FOREIGN KEY (linked_node_id) REFERENCES t_treenode (id) ON DELETE CASCADE;
 ALTER TABLE t_node_usage ADD CONSTRAINT t_page_usage_fk2 FOREIGN KEY (page_id) REFERENCES t_page (id) ON DELETE CASCADE;
