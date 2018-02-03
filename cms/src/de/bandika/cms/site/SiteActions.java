@@ -2,7 +2,7 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
@@ -36,7 +36,6 @@ public class SiteActions extends BaseTreeActions {
     public static final String stopEditing = "stopEditing";
     public static final String saveSiteSettings = "saveSiteSettings";
     public static final String saveSiteRights = "saveSiteRights";
-    public static final String publishAll = "publishAll";
     public static final String inheritAll = "inheritAll";
     public static final String cutSite = "cutSite";
     public static final String pasteSite = "pasteSite";
@@ -102,7 +101,6 @@ public class SiteActions extends BaseTreeActions {
                     page.setAuthorName(data.getAuthorName());
                     page.setTemplateName(defaultTemplateName);
                     page.prepareSave();
-                    page.setPublished(false);
                     pageBean.createPage(page, false);
                     page.stopEditing();
                 }
@@ -183,39 +181,6 @@ public class SiteActions extends BaseTreeActions {
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree, "_siteRightsChanged");
-            }
-            case publishAll: {
-                int siteId = RequestReader.getInt(request, "siteId");
-                if (!hasContentRight(request, siteId, Right.APPROVE))
-                    return false;
-                SiteData data = TreeCache.getInstance().getSite(siteId);
-                checkObject(data, siteId);
-                List<SiteData> sites = new ArrayList<>();
-                data.getAllSites(sites);
-                for (SiteData site : sites) {
-                    for (PageData page : site.getPages()) {
-                        if (page.getDraftVersion() > page.getPublishedVersion()) {
-                            PageData draft = PageBean.getInstance().getPage(page.getId(), page.getDraftVersion());
-                            PageBean.getInstance().loadPageContent(draft, page.getDraftVersion());
-                            draft.setAuthorName(SessionReader.getLoginName(request));
-                            draft.prepareSave();
-                            draft.setPublished(true);
-                            PageBean.getInstance().publishPage(draft);
-                        }
-                    }
-                    for (FileData file : site.getFiles()) {
-                        if (file.getDraftVersion() > file.getPublishedVersion()) {
-                            FileData draft = FileBean.getInstance().getFile(file.getId(), file.getDraftVersion(), false);
-                            draft.setAuthorName(SessionReader.getLoginName(request));
-                            draft.prepareSave();
-                            draft.setPublished(true);
-                            FileBean.getInstance().publishFile(draft);
-                        }
-                    }
-                }
-                TreeCache.getInstance().setDirty();
-                RightsCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree, "_allPublished");
             }
             case inheritAll: {
                 int siteId = RequestReader.getInt(request, "siteId");

@@ -161,19 +161,6 @@ table.details tr:last-child td {
   border-bottom: none;
 }
 
-table.versions {
-}
-
-table.versions td:last-child button,
-table.versions td:last-child a {
-  display: inline-block;
-  border: 1px solid $color-dark;
-  border-radius: 5px;
-  background: $color-lightgrey;
-  margin-right: 10px;
-  padding: 2px 6px 3px;
-}
-
 /* admin and edit styles */
 
 ul.linkList {

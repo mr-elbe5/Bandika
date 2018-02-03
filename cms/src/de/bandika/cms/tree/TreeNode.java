@@ -8,6 +8,7 @@ import de.bandika.cms.group.GroupBean;
 import de.bandika.cms.group.GroupData;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.servlet.RequestReader;
+import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -34,6 +35,9 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
     protected Locale locale = null;
     protected Map<Integer, Right> rights = new HashMap<>();
     protected List<Integer> parentIds = new ArrayList<>();
+
+    protected boolean contentChanged = false;
+    protected LocalDateTime contentChangeDate = LocalDateTime.now();
 
     public TreeNode() {
     }
@@ -277,6 +281,30 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
         this.parentIds = parentIds;
     }
 
+    public void setContentChanged() {
+        this.contentChanged = true;
+    }
+
+    public boolean isContentChanged() {
+        return contentChanged;
+    }
+
+    public LocalDateTime getContentChangeDate() {
+        return contentChangeDate;
+    }
+
+    public void setContentChangeDate(LocalDateTime contentChangeDate) {
+        this.contentChangeDate = contentChangeDate;
+    }
+
+    public void setContentChangeDate() {
+        this.contentChangeDate = getChangeDate();
+    }
+
+    public void clearContent() {
+    }
+
+
     public void setCreateValues(TreeNode parent) {
         setNew(true);
         setId(TreeBean.getInstance().getNextId());
@@ -321,7 +349,9 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
     }
 
 
-    public abstract boolean isVisibleToUser(HttpServletRequest request);
+    public boolean isVisibleToUser(HttpServletRequest request) {
+        return SessionReader.isEditMode(request) && (isAnonymous() || SessionReader.hasContentRight(request, getId(), Right.READ));
+    }
 
     @Override
     public int compareTo(TreeNode node) {

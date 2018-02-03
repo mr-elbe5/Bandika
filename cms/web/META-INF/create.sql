@@ -87,19 +87,7 @@ CREATE TABLE IF NOT EXISTS t_configuration (
   mailUser        VARCHAR(255)  NOT NULL,
   mailPassword    VARCHAR(255)  NOT NULL,
   mailSender      VARCHAR(255)  NOT NULL,
-  timerInterval   INTEGER  NOT NULL,
-  clusterPort     INTEGER  NOT NULL,
-  clusterTimeout  INTEGER  NOT NULL,
-  maxClusterTimeouts INTEGER  NOT NULL,
-  maxVersions     INTEGER  NOT NULL
-);
---
-CREATE TABLE t_cluster (
-  ipaddress   VARCHAR(30) NOT NULL,
-  port        INTEGER     NOT NULL DEFAULT 0,
-  active      BOOLEAN     NOT NULL DEFAULT FALSE,
-  change_date TIMESTAMP   NOT NULL DEFAULT now(),
-  CONSTRAINT t_cluster_pk PRIMARY KEY (ipaddress)
+  timerInterval   INTEGER  NOT NULL
 );
 --
 CREATE TABLE t_timer_task (
@@ -118,13 +106,10 @@ CREATE TABLE t_timer_task (
 CREATE TABLE t_template (
   name         VARCHAR(60)  NOT NULL,
   type         VARCHAR(20)  NOT NULL,
-  data_type    VARCHAR(20)  NOT NULL DEFAULT 'DEFAULT',
   change_date  TIMESTAMP    NOT NULL DEFAULT now(),
   display_name VARCHAR(100) NOT NULL DEFAULT '',
   description  VARCHAR(255) NOT NULL DEFAULT '',
   usage        VARCHAR(100) NOT NULL DEFAULT '',
-  editable     BOOLEAN      NOT NULL DEFAULT TRUE,
-  dynamic      BOOLEAN      NOT NULL DEFAULT FALSE,
   code         TEXT         NOT NULL DEFAULT '',
   CONSTRAINT t_template_pk PRIMARY KEY (name, type)
 );
@@ -178,7 +163,7 @@ CREATE TABLE IF NOT EXISTS t_treenode2group (
 --
 CREATE TABLE IF NOT EXISTS t_site (
   id              INTEGER      NOT NULL,
-  template_type   VARCHAR(20)  NOT NULL DEFAULT 'MASTER',
+  template_type   VARCHAR(20)  NOT NULL DEFAULT 'TYPE_MASTER',
   template        VARCHAR(255) NULL,
   inherits_master BOOLEAN      NOT NULL DEFAULT TRUE,
   CONSTRAINT t_site_pk PRIMARY KEY (id),
@@ -186,30 +171,12 @@ CREATE TABLE IF NOT EXISTS t_site (
   CONSTRAINT t_site_fk2 FOREIGN KEY (template, template_type) REFERENCES t_template (name, type)
 );
 --
--- resource ------------------
---
-CREATE TABLE IF NOT EXISTS t_resource (
-  id                INTEGER      NOT NULL,
-  keywords          VARCHAR(500) NOT NULL DEFAULT '',
-  published_version INTEGER      NOT NULL DEFAULT 0,
-  draft_version     INTEGER      NOT NULL DEFAULT 0,
-  CONSTRAINT t_resource_pk PRIMARY KEY (id),
-  CONSTRAINT t_resource_fk1 FOREIGN KEY (id) REFERENCES t_treenode (id) ON DELETE CASCADE
-);
---
 -- file ------------------
 --
 CREATE TABLE IF NOT EXISTS t_file (
-  id         INTEGER     NOT NULL,
-  media_type VARCHAR(60) NOT NULL DEFAULT '',
-  CONSTRAINT t_file_pk PRIMARY KEY (id),
-  CONSTRAINT t_file_fk1 FOREIGN KEY (id) REFERENCES t_resource (id) ON DELETE CASCADE
-);
---
-CREATE TABLE IF NOT EXISTS t_file_content (
   id                   INTEGER      NOT NULL,
-  version              INTEGER      NOT NULL DEFAULT 1,
   change_date          TIMESTAMP    NOT NULL DEFAULT now(),
+  keywords             VARCHAR(500) NOT NULL DEFAULT '',
   published            BOOLEAN      NOT NULL DEFAULT FALSE,
   author_name          VARCHAR(255) NOT NULL,
   content_type         VARCHAR(255) NOT NULL DEFAULT '',
@@ -219,98 +186,52 @@ CREATE TABLE IF NOT EXISTS t_file_content (
   bytes                BYTEA        NOT NULL,
   preview_content_type VARCHAR(255) NOT NULL DEFAULT '',
   preview_bytes        BYTEA        NULL,
-  CONSTRAINT t_file_content_pk PRIMARY KEY (id, version),
-  CONSTRAINT t_file_content_fk1 FOREIGN KEY (id) REFERENCES t_file (id) ON DELETE CASCADE
+  CONSTRAINT t_file_pk PRIMARY KEY (id),
+  CONSTRAINT t_file_fk1 FOREIGN KEY (id) REFERENCES t_treenode (id) ON DELETE CASCADE
 );
 --
 -- page ------------------
 --
 CREATE TABLE IF NOT EXISTS t_page (
   id            INTEGER      NOT NULL,
-  template_type VARCHAR(20)  NOT NULL DEFAULT 'PAGE',
+  template_type VARCHAR(20)  NOT NULL DEFAULT 'TYPE_PAGE',
   template      VARCHAR(255) NOT NULL,
-  CONSTRAINT t_page_pk PRIMARY KEY (id),
-  CONSTRAINT t_page_fk1 FOREIGN KEY (id) REFERENCES t_resource (id) ON DELETE CASCADE,
-  CONSTRAINT t_page_fk2 FOREIGN KEY (template, template_type) REFERENCES t_template (name, type)
-);
---
-CREATE TABLE IF NOT EXISTS t_page_content (
-  id          INTEGER      NOT NULL,
-  version     INTEGER      NOT NULL DEFAULT 1,
+  keywords      VARCHAR(500) NOT NULL DEFAULT '',
   change_date TIMESTAMP    NOT NULL DEFAULT now(),
-  published   BOOLEAN      NOT NULL DEFAULT FALSE,
   author_name VARCHAR(255) NOT NULL,
-  CONSTRAINT t_page_content_pk PRIMARY KEY (id, version),
-  CONSTRAINT t_page_content_fk1 FOREIGN KEY (id) REFERENCES t_page (id) ON DELETE CASCADE
+  CONSTRAINT t_page_pk PRIMARY KEY (id),
+  CONSTRAINT t_page_fk1 FOREIGN KEY (id) REFERENCES t_treenode (id) ON DELETE CASCADE,
+  CONSTRAINT t_page_fk2 FOREIGN KEY (template, template_type) REFERENCES t_template (name, type)
 );
 --
 CREATE TABLE IF NOT EXISTS t_page_part (
   id            INTEGER      NOT NULL,
-  version       INTEGER      NOT NULL DEFAULT 1,
-  page_id       INTEGER      NULL,
+  name          VARCHAR(60)  NOT NULL DEFAULT '',
   change_date   TIMESTAMP    NOT NULL DEFAULT now(),
-  section       VARCHAR(60)  NOT NULL,
-  ranking       INTEGER      NOT NULL DEFAULT 0,
-  template_type VARCHAR(20)  NOT NULL DEFAULT 'PART',
+  template_type VARCHAR(20)  NOT NULL DEFAULT 'TYPE_PART',
   template      VARCHAR(255) NOT NULL,
   content       TEXT         NOT NULL DEFAULT '',
-  CONSTRAINT t_page_part_pk PRIMARY KEY (id, version),
-  CONSTRAINT t_page_part_fk1 FOREIGN KEY (page_id, version) REFERENCES t_page_content (id, version) ON DELETE CASCADE,
-  CONSTRAINT t_page_part_fk2 FOREIGN KEY (template, template_type) REFERENCES t_template (name, type)
+  CONSTRAINT t_page_part_pk PRIMARY KEY (id),
+  CONSTRAINT t_page_part_fk1 FOREIGN KEY (template, template_type) REFERENCES t_template (name, type)
 );
 --
-CREATE TABLE IF NOT EXISTS t_shared_page_part (
-  id            INTEGER      NOT NULL,
-  change_date   TIMESTAMP    NOT NULL DEFAULT now(),
-  share_name    VARCHAR(60)  NOT NULL DEFAULT '',
-  template_type VARCHAR(20)  NOT NULL DEFAULT 'PART',
-  template      VARCHAR(255) NOT NULL,
-  content       TEXT         NULL,
-  CONSTRAINT t_shared_page_part_pk PRIMARY KEY (id),
-  CONSTRAINT t_shared_page_part_fk1 FOREIGN KEY (template, template_type) REFERENCES t_template (name, type)
-);
---
-CREATE TABLE IF NOT EXISTS t_shared_part_usage (
+CREATE TABLE IF NOT EXISTS t_page_part2page (
   part_id     INTEGER     NOT NULL,
   page_id     INTEGER     NULL,
-  version     INTEGER     NOT NULL DEFAULT 1,
   section     VARCHAR(60) NOT NULL,
   ranking     INTEGER     NOT NULL DEFAULT 0,
   change_date TIMESTAMP   NOT NULL DEFAULT now(),
-  CONSTRAINT t_shared_part_usage_pk PRIMARY KEY (part_id, page_id, version, section, ranking),
-  CONSTRAINT t_shared_part_usage_fk1 FOREIGN KEY (part_id) REFERENCES t_shared_page_part (id) ON DELETE CASCADE,
-  CONSTRAINT t_shared_part_usage_fk2 FOREIGN KEY (page_id, version) REFERENCES t_page_content (id, version) ON DELETE CASCADE
+  CONSTRAINT t_page_part2page_pk PRIMARY KEY (part_id, page_id, section, ranking),
+  CONSTRAINT t_page_part2page_fk1 FOREIGN KEY (part_id) REFERENCES t_page_part (id) ON DELETE CASCADE,
+  CONSTRAINT t_page_part2page_fk2 FOREIGN KEY (page_id) REFERENCES t_page (id) ON DELETE CASCADE
 );
 --
 CREATE TABLE IF NOT EXISTS t_node_usage (
   linked_node_id INTEGER NOT NULL,
   page_id        INTEGER NOT NULL,
-  page_version   INTEGER NOT NULL,
-  CONSTRAINT t_page_usage_pk PRIMARY KEY (linked_node_id, page_id, page_version),
+  CONSTRAINT t_page_usage_pk PRIMARY KEY (linked_node_id, page_id),
   CONSTRAINT t_page_usage_fk1 FOREIGN KEY (linked_node_id) REFERENCES t_treenode (id) ON DELETE CASCADE,
-  CONSTRAINT t_page_usage_fk2 FOREIGN KEY (page_id, page_version) REFERENCES t_page_content (id, version) ON DELETE CASCADE
-);
---
-CREATE TABLE IF NOT EXISTS t_shared_node_usage (
-  linked_node_id INTEGER NOT NULL,
-  part_id        INTEGER NOT NULL,
-  CONSTRAINT t_shared_page_usage_pk PRIMARY KEY (linked_node_id, part_id),
-  CONSTRAINT t_shared_page_usage_fk1 FOREIGN KEY (linked_node_id) REFERENCES t_treenode (id) ON DELETE CASCADE,
-  CONSTRAINT t_shared_page_usage_fk2 FOREIGN KEY (part_id) REFERENCES t_shared_page_part (id) ON DELETE CASCADE
-);
---
-CREATE TABLE IF NOT EXISTS t_teamblog_entry (
-  id             INTEGER      NOT NULL,
-  change_date    TIMESTAMP    NOT NULL DEFAULT now(),
-  pagepart_id    INTEGER      NOT NULL,
-  title          VARCHAR(255) NOT NULL DEFAULT '',
-  author_id      INTEGER      NOT NULL DEFAULT 1,
-  author_name    VARCHAR(255) NOT NULL,
-  email          VARCHAR(255) NOT NULL DEFAULT '',
-  entry          TEXT         NOT NULL DEFAULT '',
-  search_content TEXT         NOT NULL DEFAULT '',
-  CONSTRAINT t_teamblog_entry_pk PRIMARY KEY (id),
-  CONSTRAINT t_teamblog_entry_fk1 FOREIGN KEY (author_id) REFERENCES t_user (id) ON DELETE SET DEFAULT
+  CONSTRAINT t_page_usage_fk2 FOREIGN KEY (page_id) REFERENCES t_page (id) ON DELETE CASCADE
 );
 -- inserts
 -- std locale
@@ -355,8 +276,8 @@ VALUES (1, 'Sys', 'Admin', 'sysadmin@localhost', 'sysadmin', '', '', '', TRUE);
 -- sysadmin is Global Administrator
 INSERT INTO t_user2group (user_id, group_id, relation) VALUES (1, 1, 'RIGHTS');
 -- configuration
-INSERT INTO t_configuration (defaultLocale, mailHost, mailPort, mailConnectionType, mailUser, mailPassword, mailSender, timerInterval, clusterPort, clusterTimeout, maxClusterTimeouts, maxVersions)
-VALUES ('en', 'localhost', 25, 'plain', '', '', 'me@myhost.tld', 30, 2555, 60, 5, 5);
+INSERT INTO t_configuration (defaultLocale, mailHost, mailPort, mailConnectionType, mailUser, mailPassword, mailSender, timerInterval)
+VALUES ('en', 'localhost', 25, 'plain', '', '', 'me@myhost.tld', 30);
 --
 INSERT INTO t_timer_task (name, display_name, interval, minute, active, note_execution)
 VALUES ('heartbeat', 'Heartbeat Task', 'CONTINOUS', 5, TRUE, FALSE);
@@ -368,7 +289,7 @@ INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description,
 VALUES (0, NULL, 0, '', 'ALL-NODE', 'Virtual Node for all IDs', 1, 'System', FALSE, FALSE, FALSE);
 --
 INSERT INTO t_template (name, type, display_name, code)
-VALUES ('pageMaster', 'MASTER', 'Default Page Master',
+VALUES ('pageMaster', 'TYPE_MASTER', 'Default Page Master',
 '<!DOCTYPE html>
 <html>
   <head>
@@ -416,12 +337,8 @@ CREATE OR REPLACE FUNCTION addPage (parentId INTEGER, pageId INTEGER, rank INTEG
 BEGIN
   INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, in_navigation, anonymous, inherits_rights)
   VALUES (pageId, parentId, rank, nodeName, displayName, '', 1, 'System', TRUE, TRUE, TRUE);
-  INSERT INTO t_resource (id, published_version, draft_version)
-  VALUES (pageId, 1, 0);
-  INSERT INTO t_page (id, template)
-  VALUES (pageId, pageTemplate);
-  INSERT INTO t_page_content (id, version, author_name)
-  VALUES (pageId, 1, 'Sytem');
+  INSERT INTO t_page (id, template, author_name)
+  VALUES (pageId, pageTemplate, 'System');
   RETURN pageId;
 END;
 $$ LANGUAGE plpgsql;
@@ -438,12 +355,8 @@ BEGIN
   VALUES (siteId, TRUE);
   INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, in_navigation, anonymous, inherits_rights)
   VALUES (pageId, siteId, 0, 'default', displayName, '', 1, 'System', TRUE, TRUE, TRUE);
-  INSERT INTO t_resource (id, published_version, draft_version)
-  VALUES (pageId, 1, 0);
-  INSERT INTO t_page (id, template)
-  VALUES (pageId, pageTemplate);
-  INSERT INTO t_page_content (id, version, author_name)
-  VALUES (pageId, 1, 'System');
+  INSERT INTO t_page (id, template, author_name)
+  VALUES (pageId, pageTemplate, 'System');
   RETURN siteId;
 END;
 $$ LANGUAGE plpgsql;

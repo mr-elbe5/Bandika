@@ -2,7 +2,7 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,7 +27,7 @@ public class TemplateCache extends BaseCache {
         return instance;
     }
 
-    protected Map<TemplateType, List<TemplateData>> templates = new HashMap<>();
+    protected Map<String, List<TemplateData>> templates = new HashMap<>();
 
     public void initialize() {
         checkDirty();
@@ -39,12 +39,12 @@ public class TemplateCache extends BaseCache {
         templates = TemplateBean.getInstance().getAllTemplates();
     }
 
-    public List<TemplateData> getTemplates(TemplateType type) {
+    public List<TemplateData> getTemplates(String type) {
         checkDirty();
         return templates.get(type);
     }
 
-    public TemplateData getTemplate(TemplateType type, String name) {
+    public TemplateData getTemplate(String type, String name) {
         for (TemplateData data : getTemplates(type)) {
             if (data.getName().equals(name))
                 return data;
@@ -52,7 +52,7 @@ public class TemplateCache extends BaseCache {
         return null;
     }
 
-    public List<TemplateData> getTemplates(TemplateType type, String parentType) {
+    public List<TemplateData> getTemplates(String type, String parentType) {
         checkDirty();
         List<TemplateData> templates = new ArrayList<>();
         for (TemplateData template : getTemplates(type)) {

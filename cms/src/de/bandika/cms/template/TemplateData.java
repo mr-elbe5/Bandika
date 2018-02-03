@@ -2,7 +2,7 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
@@ -12,6 +12,7 @@ import de.bandika.base.data.BaseData;
 import de.bandika.base.log.Log;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.page.PagePartData;
+import de.bandika.cms.templateinclude.TemplateInclude;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -22,37 +23,35 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class TemplateData extends BaseData implements Serializable {
+
+    public static final String TYPE_MASTER = "MASTER";
+    public static final String TYPE_PAGE = "PAGE";
+    public static final String TYPE_PART = "PART";
+    public static final String TYPE_SNIPPET = "SNIPPET";
 
     public static final String USAGE_ALL = "all";
 
-    public static final String PLACEHOLDER_CONTAINERID = "<cid/>";
-
-    public static final String DEFAULT_DATA_TYPE = "DEFAULT";
-
-    protected TemplateType type = TemplateType.NONE;
+    protected String type = "";
     protected String name = "";
     protected String displayName = "";
     protected String description = "";
     protected String usage = "";
-    protected boolean editable = false;
-    protected boolean dynamic = false;
     protected String code = "";
 
     protected List<TemplatePart> templateParts = null;
+    protected List<TemplateInclude> templateIncludes = new ArrayList<>();
 
     public TemplateData() {
     }
 
-    public TemplateType getType() {
+    public String getType() {
         return type;
     }
 
-    public String getDataTypeName() {
-        return DEFAULT_DATA_TYPE;
-    }
-
-    public void setDataTypeName(String dataTypeName) {
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getName() {
@@ -100,28 +99,16 @@ public class TemplateData extends BaseData implements Serializable {
         }
     }
 
-    public boolean isEditable() {
-        return editable;
-    }
-
-    public void setEditable(boolean editable) {
-        this.editable = editable;
-    }
-
-    public boolean isDynamic() {
-        return dynamic;
-    }
-
-    public void setDynamic(boolean dynamic) {
-        this.dynamic = dynamic;
-    }
-
     public String getCode() {
         return code;
     }
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public List<TemplateInclude> getTemplateIncludes() {
+        return templateIncludes;
     }
 
     /****** parser part ****/

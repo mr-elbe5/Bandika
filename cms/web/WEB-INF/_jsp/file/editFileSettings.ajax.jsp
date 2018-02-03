@@ -2,7 +2,7 @@
   Bandika  - A Java based modular Content Management System
   Copyright (C) 2009-2017 Michael Roennau
 
-  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
@@ -24,13 +24,14 @@
         <input type="hidden" name="act" value="<%=FileActions.saveFileSettings%>"/>
         <table class="padded form">
             <jsp:include page="../tree/editNode.inc.jsp" flush="true"/>
-            <jsp:include page="../tree/editResource.inc.jsp" flush="true"/>
             <tr>
-                <td><label><%=StringUtil.getHtml("_mediaType", locale)%>
-                </label></td>
                 <td>
-          <span><%=StringUtil.toHtml(data.getMediaType())%>
-          </span>
+                    <label for="keywords"><%=StringUtil.getHtml("_keywords", locale)%>
+                    </label></td>
+                <td>
+                    <div>
+                        <input type="text" id="keywords" name="keywords" value="<%=StringUtil.toHtml(data.getKeywords())%>" maxlength="200"/>
+                    </div>
                 </td>
             </tr>
             <tr>

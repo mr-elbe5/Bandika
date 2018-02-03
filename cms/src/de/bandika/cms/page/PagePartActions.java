@@ -2,16 +2,14 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 package de.bandika.cms.page;
 
-import de.bandika.cms.application.AdminActions;
-import de.bandika.cms.template.PartTemplateData;
 import de.bandika.cms.template.TemplateCache;
-import de.bandika.cms.template.TemplateType;
+import de.bandika.cms.template.TemplateData;
 import de.bandika.cms.tree.BaseTreeActions;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.rights.Right;
@@ -31,9 +29,6 @@ public class PagePartActions extends BaseTreeActions {
     public static final String savePagePart="savePagePart";
     public static final String openEditHtmlPartSettings="openEditHtmlPartSettings";
     public static final String saveHtmlPartSettings="saveHtmlPartSettings";
-    public static final String openEditMultiHtmlPartSettings="openEditMultiHtmlPartSettings";
-    public static final String saveMultiHtmlPartSettings="saveMultiHtmlPartSettings";
-    public static final String setVisibleContentIdx="setVisibleContentIdx";
     public static final String openSharePagePart="openSharePagePart";
     public static final String sharePagePart="sharePagePart";
     public static final String movePagePart="movePagePart";
@@ -53,8 +48,6 @@ public class PagePartActions extends BaseTreeActions {
                 if (!data.isAnonymous() && !SessionReader.hasContentRight(request, pageId, Right.READ)) {
                     return forbidden();
                 }
-                if (!data.isPublishedLoaded())
-                    return false;
                 PagePartData pdata = data.getPagePart(sectionName, partId);
                 return pdata != null && pdata.executePagePartMethod(partMethod, request, response);
             }
@@ -74,12 +67,10 @@ public class PagePartActions extends BaseTreeActions {
                 boolean below = RequestReader.getBoolean(request, "below");
                 String sectionName = RequestReader.getString(request, "sectionName");
                 String templateName = RequestReader.getString(request, "templateName");
-                PartTemplateData template = (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART, templateName);
-                PagePartData pdata = template.getDataType().getNewPagePartData();
+                TemplateData template = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PART, templateName);
+                PagePartData pdata = new PagePartData();
                 pdata.setTemplateData(template);
                 pdata.setId(PageBean.getInstance().getNextId());
-                pdata.setPageId(data.getId());
-                pdata.setVersion(data.getLoadedVersion());
                 pdata.setSectionName(sectionName);
                 pdata.setNew(true);
                 data.addPagePart(pdata, fromPartId, below, true);
@@ -90,17 +81,16 @@ public class PagePartActions extends BaseTreeActions {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
-                PageData data = (PageData) getSessionObject(request, "pageData");
+                /*PageData data = (PageData) getSessionObject(request, "pageData");
                 int fromPartId = RequestReader.getInt(request, "partId", -1);
                 boolean below = RequestReader.getBoolean(request, "below");
                 int partId = RequestReader.getInt(request, "sharedPartId");
                 String sectionName = RequestReader.getString(request, "sectionName");
                 PagePartData pdata = PageBean.getInstance().getSharedPagePart(partId);
                 checkObject(pdata);
-                pdata.setPageId(data.getId());
                 pdata.setVersion(data.getLoadedVersion());
                 pdata.setSectionName(sectionName);
-                data.addPagePart(pdata, fromPartId, below, true);
+                data.addPagePart(pdata, fromPartId, below, true);*/
                 return closeLayer(request, response, "replacePageContent();");
             }
             case editPagePart: {
@@ -142,9 +132,6 @@ public class PagePartActions extends BaseTreeActions {
                 if (!pdata.readPagePartRequestData(request)) {
                     return setPageResponse(request, response, data);
                 }
-                if (pdata.isShared()) {
-                    data.shareChanges(pdata);
-                }
                 data.setEditPagePart(null);
                 return setEditPageContentAjaxResponse(request, response, data);
             }
@@ -164,45 +151,11 @@ public class PagePartActions extends BaseTreeActions {
                     return false;
                 PageData data = (PageData) getSessionObject(request, "pageData");
                 int partId = RequestReader.getInt(request, "partId");
-                HtmlPartData part = (HtmlPartData) data.getEditPagePart();
+                PagePartData part = data.getEditPagePart();
                 checkObject(part, partId);
                 part.readPagePartSettingsData(request);
                 data.setEditPagePart(null);
                 return closeLayerToUrl(request, response, "/page.srv?act="+PageActions.reopenEditPageContent+"&pageId=" + data.getId());
-            }
-            case openEditMultiHtmlPartSettings: {
-                int pageId = RequestReader.getInt(request, "pageId");
-                if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                PageData data = (PageData) getSessionObject(request, "pageData");
-                int partId = RequestReader.getInt(request, "partId");
-                String sectionName = RequestReader.getString(request, "sectionName");
-                data.setEditPagePart(sectionName, partId);
-                return showEditMultiHtmlPartSettings(request, response);
-            }
-            case saveMultiHtmlPartSettings: {
-                int pageId = RequestReader.getInt(request, "pageId");
-                if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                PageData data = (PageData) getSessionObject(request, "pageData");
-                int partId = RequestReader.getInt(request, "partId");
-                MultiHtmlPartData part = (MultiHtmlPartData) data.getEditPagePart();
-                checkObject(part, partId);
-                part.readPagePartSettingsData(request);
-                data.setEditPagePart(null);
-                return closeLayerToUrl(request, response, "/page.srv?act="+PageActions.reopenEditPageContent+"&pageId=" + data.getId());
-            }
-            case setVisibleContentIdx: {
-                int pageId = RequestReader.getInt(request, "pageId");
-                if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                PageData data = (PageData) getSessionObject(request, "pageData");
-                int partId = RequestReader.getInt(request, "partId");
-                String sectionName = RequestReader.getString(request, "sectionName");
-                MultiHtmlPartData partData = (MultiHtmlPartData) data.getPagePart(sectionName, partId);
-                partData.readPagePartVisibilityData(request);
-                data.setEditMode(true);
-                return setPageResponse(request, response, data);
             }
             case openSharePagePart: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -222,9 +175,7 @@ public class PagePartActions extends BaseTreeActions {
                 int partId = RequestReader.getInt(request, "partId");
                 PagePartData part = data.getEditPagePart();
                 checkObject(part, partId);
-                part.setShareName(RequestReader.getString(request, "name"));
-                part.setShared(true);
-                part.setPageId(0);
+                part.setName(RequestReader.getString(request, "name"));
                 data.setEditPagePart(null);
                 return closeLayerToUrl(request, response, "/page.srv?act="+PageActions.reopenEditPageContent+"&pageId=" + data.getId());
             }
@@ -264,16 +215,6 @@ public class PagePartActions extends BaseTreeActions {
                     return false;
                 return showDeleteSharedPart(request, response);
             }
-            case PagePartActions.deleteSharedPart: {
-                int pageId = RequestReader.getInt(request, "pageId");
-                if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                int id = RequestReader.getInt(request, "partId");
-                if (PageBean.getInstance().deleteSharedPagePart(id)) {
-                    RequestWriter.setMessageKey(request, "partDeleted");
-                }
-                return new AdminActions().openAdministration(request, response);
-            }
             default: {
                 return forbidden();
             }
@@ -308,10 +249,6 @@ public class PagePartActions extends BaseTreeActions {
 
     protected boolean showEditHtmlPartSettings(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/editHtmlPartSettings.ajax.jsp");
-    }
-
-    protected boolean showEditMultiHtmlPartSettings(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/editMultiHtmlPartSettings.ajax.jsp");
     }
 
     protected boolean showSharePagePart(HttpServletRequest request, HttpServletResponse response) {

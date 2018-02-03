@@ -2,7 +2,7 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
@@ -70,14 +70,14 @@ public class SearchActions extends CmsActions {
                     return false;
                 SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_CONTENT, 0, null));
                 RequestWriter.setMessageKey(request, "_indexingContentQueued");
-                return new AdminActions().openAdministration(request, response);
+                return AdminActions.instance.openAdministration(request, response);
             }
             case indexAllUsers: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
                 SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_USERS, 0, null));
                 RequestWriter.setMessageKey(request, "_indexingUsersQueued");
-                return new AdminActions().openAdministration(request, response);
+                return AdminActions.instance.openAdministration(request, response);
             }
             default: {
                 return showSearch(request, response);

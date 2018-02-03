@@ -2,7 +2,7 @@
   Bandika  - A Java based modular Content Management System
   Copyright (C) 2009-2017 Michael Roennau
 
-  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
@@ -19,7 +19,7 @@
     request.setAttribute("treeNode", data);
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
-<form action="/pageadmin.srv" method="post" id="pagerightsform" name="pagerightsform" accept-charset="UTF-8">
+<form action="/page.srv" method="post" id="pagerightsform" name="pagerightsform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
         <input type="hidden" name="act" value="<%=PageActions.savePageRights%>"/>
@@ -43,7 +43,7 @@
         var $this = $(this);
         event.preventDefault();
         var params = $this.serialize();
-        post2ModalDialog('/pageadmin.ajx', params);
+        post2ModalDialog('/page.ajx', params);
     });
 </script>
 

@@ -2,7 +2,7 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
@@ -75,7 +75,7 @@ public class CmsInitializer extends Initializer {
             TemplateControls.addPageControlClass(BreadcrumbControl.KEY, BreadcrumbControl.class);
             TemplateControls.addPageControlClass(TopNavControl.KEY, TopNavControl.class);
             TemplateControls.addPageControlClass(MessageControl.KEY, MessageControl.class);
-            TemplateControls.addPageControlClass(KeywordsControl.KEY, KeywordsControl.class);
+            TemplateControls.addPageControlClass(HeadControl.KEY, HeadControl.class);
             TemplateControls.addPageControlClass(LayerControl.KEY, LayerControl.class);
             TemplateControls.addPageControlClass(DocumentListControl.KEY, DocumentListControl.class);
             TemplateControls.addPageControlClass(SubMenuControl.KEY, SubMenuControl.class);

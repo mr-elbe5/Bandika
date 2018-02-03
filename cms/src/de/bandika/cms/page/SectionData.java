@@ -2,16 +2,15 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 package de.bandika.cms.page;
 
 import de.bandika.base.util.StringUtil;
-import de.bandika.cms.template.PartTemplateData;
 import de.bandika.cms.template.TemplateCache;
-import de.bandika.cms.template.TemplateType;
+import de.bandika.cms.template.TemplateData;
 import de.bandika.webbase.servlet.SessionReader;
 import de.bandika.webbase.util.TagAttributes;
 
@@ -38,8 +37,7 @@ public class SectionData {
     public void cloneData(SectionData data) {
         setName(data.getName());
         for (PagePartData srcPart : data.parts) {
-            PagePartData part = srcPart.getDataType().getNewPagePartData();
-            part.setPageId(getPageId());
+            PagePartData part = new PagePartData();
             part.setSectionName(getName());
             part.cloneData(srcPart);
             parts.add(part);
@@ -93,8 +91,8 @@ public class SectionData {
                 return ppd;
             }
         }
-        PartTemplateData template = (PartTemplateData) TemplateCache.getInstance().getTemplate(TemplateType.PART, templateName);
-        part = template.getDataType().getNewPagePartData();
+        TemplateData template = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PART, templateName);
+        part = new PagePartData();
         part.setTemplateData(template);
         part.setId(PageBean.getInstance().getNextId());
         part.setSectionName(getName());
@@ -168,7 +166,7 @@ public class SectionData {
     public void shareChanges(PagePartData part) {
         for (PagePartData ppd : parts) {
             if (ppd.getId() == part.getId() && part != ppd) {
-                ppd.copyContent(part);
+                ppd.setContent(part.getContent());
                 return;
             }
         }
@@ -180,9 +178,9 @@ public class SectionData {
         }
     }
 
-    public void prepareCopy(int pageId) throws Exception {
+    public void prepareCopy() throws Exception {
         for (PagePartData part : parts) {
-            part.prepareCopy(pageId);
+            part.prepareCopy();
         }
     }
 
@@ -205,7 +203,7 @@ public class SectionData {
                 writer.write("<div class = \"editSectionHeader\">Section " + getName() + "</div>");
             } else {
                 writer.write("<div class = \"editSectionHeader empty contextSource\" title=\"" + StringUtil.getHtml("_rightClickEditHint") + "\">Section " + getName() + "</div>");
-                writer.write("<div class = \"contextMenu\"><div class=\"icn inew\" onclick = \"return openLayerDialog('" + StringUtil.getHtml("_addPart", locale) + "', '/pageedit.ajx?act=openAddPagePart&pageId=" + pageData.getId() + "&sectionName=" + getName() + "&sectionType=" + attributes.getString("type") + "&partId=-1');\">" + StringUtil.getHtml("_new", locale) + "\n</div>\n</div>");
+                writer.write("<div class = \"contextMenu\"><div class=\"icn inew\" onclick = \"return openLayerDialog('" + StringUtil.getHtml("_addPart", locale) + "', '/pagepart.ajx?act=openAddPagePart&pageId=" + pageData.getId() + "&sectionName=" + getName() + "&sectionType=" + attributes.getString("type") + "&partId=-1');\">" + StringUtil.getHtml("_new", locale) + "\n</div>\n</div>");
             }
         }
         if (!getParts().isEmpty()) {

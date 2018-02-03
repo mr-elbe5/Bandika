@@ -2,7 +2,7 @@
   Bandika  - A Java based modular Content Management System
   Copyright (C) 2009-2017 Michael Roennau
 
-  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
@@ -11,17 +11,16 @@
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.template.TemplateCache" %>
 <%@ page import="de.bandika.cms.template.TemplateData" %>
-<%@ page import="de.bandika.cms.template.TemplateType" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.cms.page.PageActions" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
-    List<TemplateData> pageTemplates = TemplateCache.getInstance().getTemplates(TemplateType.PAGE);
+    List<TemplateData> pageTemplates = TemplateCache.getInstance().getTemplates(TemplateData.TYPE_PAGE);
     int siteId = RequestReader.getInt(request, "siteId");
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
-<form action="/pageadmin.ajx" method="post" id="layoutform" name="layoutform" accept-charset="UTF-8">
+<form action="/page.ajx" method="post" id="layoutform" name="layoutform" accept-charset="UTF-8">
     <fieldset>
         <input type="hidden" name="siteId" value="<%=siteId%>"/>
         <input type="hidden" name="act" value="<%=PageActions.createPage%>"/>
@@ -71,6 +70,6 @@
     $('#layoutform').submit(function (event) {
         var $this = $(this);
         event.preventDefault();
-        post2ModalDialog('/pageadmin.ajx', $this.serialize());
+        post2ModalDialog('/page.ajx', $this.serialize());
     });
 </script>

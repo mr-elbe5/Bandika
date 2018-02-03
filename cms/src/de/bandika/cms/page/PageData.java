@@ -2,13 +2,13 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 package de.bandika.cms.page;
 
-import de.bandika.cms.tree.ResourceNode;
+import de.bandika.cms.tree.TreeNode;
 import de.bandika.webbase.servlet.RequestReader;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,8 +16,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class PageData extends ResourceNode {
+public class PageData extends TreeNode {
 
+    protected String keywords = "";
     protected String templateName = "";
     protected boolean isDefaultPage = false;
     protected Map<String, SectionData> sections = new HashMap<>();
@@ -30,6 +31,7 @@ public class PageData extends ResourceNode {
 
     public void cloneData(PageData data) {
         super.cloneData(data);
+        setKeywords(data.getKeywords());
         setTemplateName(data.getTemplateName());
         setDefaultPage(false);
         for (String sectionName : data.sections.keySet()) {
@@ -45,6 +47,22 @@ public class PageData extends ResourceNode {
         return path + ".html";
     }
 
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
+    }
+
     public boolean isDefaultPage() {
         return isDefaultPage;
     }
@@ -55,14 +73,6 @@ public class PageData extends ResourceNode {
 
     public int getSiteId() {
         return getParentId();
-    }
-
-    public String getTemplateName() {
-        return templateName;
-    }
-
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
     }
 
     public HashSet<Integer> getNodeUsage() {
@@ -126,7 +136,7 @@ public class PageData extends ResourceNode {
     }
 
     public void readPageSettingsRequestData(HttpServletRequest request) {
-        readResourceNodeRequestData(request);
+        readTreeNodeRequestData(request);
         setTemplateName(RequestReader.getString(request, "templateName"));
     }
 
@@ -183,7 +193,7 @@ public class PageData extends ResourceNode {
 
     public void prepareCopy() throws Exception {
         for (SectionData section : sections.values()) {
-            section.prepareCopy(getId());
+            section.prepareCopy();
         }
     }
 

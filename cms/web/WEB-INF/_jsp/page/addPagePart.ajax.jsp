@@ -2,7 +2,7 @@
   Bandika  - A Java based modular Content Management System
   Copyright (C) 2009-2017 Michael Roennau
 
-  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
@@ -12,7 +12,6 @@
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.template.TemplateCache" %>
 <%@ page import="de.bandika.cms.template.TemplateData" %>
-<%@ page import="de.bandika.cms.template.TemplateType" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.cms.page.PageBean" %>
@@ -24,8 +23,8 @@
     String sectionType = RequestReader.getString(request, "sectionType");
     int partId = RequestReader.getInt(request, "partId");
     boolean below = RequestReader.getBoolean(request, "below");
-    List<TemplateData> templates = TemplateCache.getInstance().getTemplates(TemplateType.PART, sectionType);
-    List<PagePartData> parts = PageBean.getInstance().getAllSharedPageParts();
+    List<TemplateData> templates = TemplateCache.getInstance().getTemplates(TemplateData.TYPE_PART, sectionType);
+    List<PagePartData> parts = PageBean.getInstance().getNamedPageParts();
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <section class="flexRow">
@@ -47,7 +46,7 @@
                     <% for (TemplateData tdata : templates) {%>
                     <tr>
                         <td>
-                            <a href="#" onclick="return post2ModalDialog('/pageedit.ajx', {act: '<%=PagePartActions.addPagePart%>', pageId: '<%=pageId%>', partId: '<%=partId%>', below: '<%=below%>', sectionName: '<%=sectionName%>', templateName: '<%=tdata.getName()%>'});"><%=StringUtil.toHtml(tdata.getName())%>
+                            <a href="#" onclick="return post2ModalDialog('/pagepart.ajx', {act: '<%=PagePartActions.addPagePart%>', pageId: '<%=pageId%>', partId: '<%=partId%>', below: '<%=below%>', sectionName: '<%=sectionName%>', templateName: '<%=tdata.getName()%>'});"><%=StringUtil.toHtml(tdata.getName())%>
                         </td>
                         <td><%=StringUtil.toHtml(tdata.getDescription())%>
                         </td>
@@ -74,7 +73,7 @@
                     <% for (PagePartData data : parts) {%>
                     <tr>
                         <td>
-                            <a href="#" onclick="return post2ModalDialog('/pageedit.ajx', {act: '<%=PagePartActions.addSharedPart%>', pageId: '<%=pageId%>', partId: '<%=partId%>', below: '<%=below%>', sectionName: '<%=sectionName%>', sharedPartId: '<%=data.getId()%>'});"><%=StringUtil.toHtml(data.getShareName())%>
+                            <a href="#" onclick="return post2ModalDialog('/pagepart.ajx', {act: '<%=PagePartActions.addSharedPart%>', pageId: '<%=pageId%>', partId: '<%=partId%>', below: '<%=below%>', sectionName: '<%=sectionName%>', sharedPartId: '<%=data.getId()%>'});"><%=StringUtil.toHtml(data.getName())%>
                         </td>
                     </tr>
                     <%}%>

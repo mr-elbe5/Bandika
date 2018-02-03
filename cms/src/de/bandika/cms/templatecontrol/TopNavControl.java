@@ -2,7 +2,7 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,7 +26,7 @@ import java.util.Locale;
 
 public class TopNavControl extends TemplateControl {
 
-    public static String KEY = "topNav";
+    public static final String KEY = "topNav";
 
     private static TopNavControl instance = null;
 
@@ -56,19 +56,19 @@ public class TopNavControl extends TemplateControl {
 
         writer.write("<nav><ul>");
         if (pageEditMode & hasEditRight) {
-            writer.write("<li class=\"editControl\"><a href=\"/pageedit.srv?act=savePageContent&pageId=" + pageId + "\">" + getHtml("_save", locale) + "</a></li>");
+            writer.write("<li class=\"editControl\"><a href=\"/page.srv?act=savePageContent&pageId=" + pageId + "\">" + getHtml("_save", locale) + "</a></li>");
 
             if (hasApproveRight) {
-                writer.write("<li class=\"editControl\"><a href=\"/pageedit.srv?act=savePageContentAndPublish&pageId=" + pageId + "\">" + getHtml("_publish", locale) + "</a></li>");
+                writer.write("<li class=\"editControl\"><a href=\"/page.srv?act=savePageContentAndPublish&pageId=" + pageId + "\">" + getHtml("_publish", locale) + "</a></li>");
             }
-            writer.write("<li><a href=\"/pageedit.srv?act=stopEditing&pageId=" + pageId + "\">" + getHtml("_cancel", locale) + "</a></li>");
+            writer.write("<li><a href=\"/page.srv?act=stopEditing&pageId=" + pageId + "\">" + getHtml("_cancel", locale) + "</a></li>");
         } else {
             if (editMode) {
                 if (pageId != 0 && hasEditRight) {
-                    writer.write("<li><a href=\"/pageedit.srv?act=openEditPageContent&pageId=" + pageId + "\" >" + getHtml("_editPage", locale) + "</span></a></li>");
+                    writer.write("<li><a href=\"/page.srv?act=openEditPageContent&pageId=" + pageId + "\" >" + getHtml("_editPage", locale) + "</span></a></li>");
                 }
-                if (pageId != 0 && hasApproveRight && pageData.getDraftVersion() != 0) {
-                    writer.write("<li><a href=\"/pageedit.srv?act=publishPage&pageId=" + pageId + "\" >" + getHtml("_publish", locale) + "</a></li>");
+                if (pageId != 0 && hasApproveRight) {
+                    writer.write("<li><a href=\"/page.srv?act=publishPage&pageId=" + pageId + "\" >" + getHtml("_publish", locale) + "</a></li>");
                 }
                 if (hasAnyEditRight) {
                     writer.write("<li><a href=\"#\" onclick=\"return openTreeLayer('" + StringUtil.getHtml("_tree") + "', '" + "/tree.ajx?act=openTree&siteId=" + siteId + "&pageId=" + pageId + "');\" >" + getHtml("_tree", locale) + "</a></li>");
@@ -78,7 +78,7 @@ public class TopNavControl extends TemplateControl {
                 }
             }
             if (hasAnyEditRight || hasAdminRight){
-                writer.write("<li><a href=\"/pageedit.srv?act=toggleEditMode&pageId=" + pageId + "\" title=\""+getHtml(editMode ? "_editModeOff" : "_editModeOn", locale)+"\"><span class=\"icn " + (editMode ? "iright" : "ileft") + "\"></span></a></li>");
+                writer.write("<li><a href=\"/page.srv?act=toggleEditMode&pageId=" + pageId + "\" title=\""+getHtml(editMode ? "_editModeOff" : "_editModeOn", locale)+"\"><span class=\"icn " + (editMode ? "iright" : "ileft") + "\"></span></a></li>");
             }
             if (homeSite != null) {
                 if (otherLocales != null) {

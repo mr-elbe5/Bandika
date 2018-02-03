@@ -5,10 +5,7 @@
     <html>
     <head>
         <meta charset="utf-8"/>
-        <title>
-            <cms-res key="appTitle"/>
-        </title>
-        <cms-control type="keywords"/>
+        <cms-control type="head"/>
         <link rel="shortcut icon" href="/favicon.ico">
         <link rel="stylesheet" href="/_statics/css/style.css">
         <script type="text/javascript" src="/_statics/js/jquery-1.12.4.min.js"></script>
@@ -94,38 +91,38 @@
     </section>
 </cms-template>
 <!-- general parts -->
-<cms-template type="PART" dataType="HTML" name="Script" displayName="JavaScript" usage="all" editable="true" dynamic="false">
+<cms-template type="PART" name="Script" displayName="JavaScript" usage="all" >
     <cms-field type="script" name="script"/>
 </cms-template>
 <!-- content parts -->
-<cms-template type="PART" dataType="HTML" name="Header" displayName="Header" usage="content" editable="true" dynamic="false">
+<cms-template type="PART" name="Header" displayName="Header" usage="content" >
     <div class="textBox">
         <h1>
             <cms-field type="text" name="text">Lorem ipsum</cms-field>
         </h1>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="SubHeader" displayName="Sub-Header" usage="content" editable="true" dynamic="false">
+<cms-template type="PART" name="SubHeader" displayName="Sub-Header" usage="content" >
     <div class="textBox">
         <h2>
             <cms-field type="text" name="text">Lorem ipsum</cms-field>
         </h2>
     </div>
 </cms-template>
-<cms-template type="PART" name="Separator" displayName="Separator Line" usage="content" editable="false" dynamic="false">
+<cms-template type="PART" name="Separator" displayName="Separator Line" usage="content" >
     <div class="separator">&nbsp;</div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="Text" displayName="Text" usage="content" editable="true" dynamic="false">
+<cms-template type="PART" name="Text" displayName="Text" usage="content" >
     <div class="textBox">
         <cms-field type="html" name="text">Lorem ipsum</cms-field>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="Image" displayName="Full Image" usage="content" editable="true" dynamic="false">
+<cms-template type="PART" name="Image" displayName="Full Image" usage="content" >
     <div class="imageBox">
         <cms-field type="image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="ImageText21" displayName="Image+Text 2:1" usage="content" editable="true" dynamic="false">
+<cms-template type="PART" name="ImageText21" displayName="Image+Text 2:1" usage="content" >
     <div class="flexRow three">
         <div class="imageBox flexItem two">
             <cms-field type="image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
@@ -138,7 +135,7 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="ImageText12" displayName="Image+Text 1:2" usage="content" editable="true" dynamic="false">
+<cms-template type="PART" name="ImageText12" displayName="Image+Text 1:2" usage="content" >
     <div class="flexRow three">
         <div class="imageBox flexItem one">
             <cms-field type="image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
@@ -151,7 +148,7 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="TextImage21" displayName="Text+Image 2:1" usage="content" editable="true" dynamic="false">
+<cms-template type="PART" name="TextImage21" displayName="Text+Image 2:1" usage="content" >
     <div class="flexRow three">
         <div class="textBox flexItem two">
             <h3 class="bottomSpace">
@@ -164,7 +161,7 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="TextImage12" displayName="Text+Image 1:2" usage="content" editable="true" dynamic="false">
+<cms-template type="PART" name="TextImage12" displayName="Text+Image 1:2" usage="content" >
     <div class="flexRow three">
         <div class="textBox flexItem one">
             <h3 class="bottomSpace">
@@ -178,7 +175,7 @@
     </div>
 </cms-template>
 
-<cms-template type="PART" dataType="HTML" name="ImageTextTeaserHorz" displayName="Teaser Image+Text Horizontal" usage="flex" editable="true" dynamic="false">
+<cms-template type="PART" name="ImageTextTeaserHorz" displayName="Teaser Image+Text Horizontal" usage="flex" >
     <div class="teaser horz">
         <div class="imageBox">
             <cms-field type="image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
@@ -188,7 +185,7 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="ImageTextTeaserVertical" displayName="Teaser Image+Text Vertical" usage="flex" editable="true" dynamic="false">
+<cms-template type="PART" name="ImageTextTeaserVertical" displayName="Teaser Image+Text Vertical" usage="flex" >
     <div class="teaser vert">
         <div class="imageBox">
             <cms-field type="image" name="image"><img src="/_statics/img/dummy.gif" alt=""/></cms-field>
@@ -200,7 +197,7 @@
 </cms-template>
 
 <!-- aside parts -->
-<cms-template type="PART" dataType="HTML" name="ImageAside" displayName="Image" usage="aside" editable="true" dynamic="false">
+<cms-template type="PART" name="ImageAside" displayName="Image" usage="aside" >
     <div class="aside">
         <h3>
             <cms-field type="text" name="header">Lorem ipsum</cms-field>
@@ -210,7 +207,7 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="PART" dataType="HTML" name="TextAside" displayName="Text" usage="aside" editable="true" dynamic="false">
+<cms-template type="PART" name="TextAside" displayName="Text" usage="aside" >
     <div class="aside">
         <h3>
             <cms-field type="text" name="header">Lorem ipsum</cms-field>
@@ -222,7 +219,7 @@
 </cms-template>
 
 <!-- snippets -->
-<cms-template type="SNIPPET" name="searchBox" displayName="Search Box" usage="SearchBoxModule" editable="false" dynamic="false">
+<cms-template type="SNIPPET" name="searchBox" displayName="Search Box" usage="SearchBoxModule" >
     <div class="searchBox flexItem one">
         <form action="/search.srv" method="post" id="searchboxform" name="searchboxform" accept-charset="UTF-8">
             <input type="hidden" name="act" value="search"/>
@@ -231,12 +228,12 @@
         </form>
     </div>
 </cms-template>
-<cms-template type="SNIPPET" name="footer" displayName="Footer" usage="Page" editable="false" dynamic="false">
+<cms-template type="SNIPPET" name="footer" displayName="Footer" usage="Page" >
     <a href="/imprint.html">
         <cms-res key="_imprint"/>
     </a>
 </cms-template>
-<cms-template type="SNIPPET" name="dialogLayer" displayName="Dialog Layer" usage="Page" editable="false" dynamic="false">
+<cms-template type="SNIPPET" name="dialogLayer" displayName="Dialog Layer" usage="Page" >
     <div id="dialogLayer" class="layeroverlay dialog" data-hidden="true">
         <div class="layercontent">
             <div class="layerheadbox"><span>&nbsp;</span>
@@ -246,7 +243,7 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="SNIPPET" name="treeLayer" displayName="Tree Layer" usage="Page" editable="false" dynamic="false">
+<cms-template type="SNIPPET" name="treeLayer" displayName="Tree Layer" usage="Page" >
     <div id="treeLayer" class="layeroverlay tree" data-hidden="true">
         <div class="layercontent">
             <div class="treeContainer">
@@ -262,7 +259,7 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="SNIPPET" name="browserLayer" displayName="Browser Layer" usage="Page" editable="false" dynamic="false">
+<cms-template type="SNIPPET" name="browserLayer" displayName="Browser Layer" usage="Page" >
     <div id="browserLayer" class="layeroverlay browser" data-hidden="true">
         <div class="layercontent">
             <div class="layerheadbox"><span>&nbsp;</span>
@@ -272,7 +269,7 @@
         </div>
     </div>
 </cms-template>
-<cms-template type="SNIPPET" name="browserDialogLayer" displayName="Browser Dialog Layer" usage="Page" editable="false" dynamic="false">
+<cms-template type="SNIPPET" name="browserDialogLayer" displayName="Browser Dialog Layer" usage="Page" >
     <div id="browserDialogLayer" class="layeroverlay browser dialog" data-hidden="true">
         <div class="layercontent">
             <div class="layerheadbox"><span>&nbsp;</span>

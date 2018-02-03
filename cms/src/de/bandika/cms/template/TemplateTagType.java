@@ -2,7 +2,7 @@
  Bandika  - A Java based modular Content Management System
  Copyright (C) 2009-2017 Michael Roennau
 
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
@@ -37,7 +37,7 @@ public enum TemplateTagType {
                 } else {
                     writer.write("<div id=\"pageContent\" class=\"viewArea\">");
                 }
-                TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateType.PAGE, pageData.getTemplateName());
+                TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PAGE, pageData.getTemplateName());
                 pageTemplate.writeTemplate(context, writer, request, pageData, partData);
                 if (pageData.getEditPagePart() != null) {
                     writer.write("<script>$('.editControl').hide();</script>");
@@ -98,7 +98,7 @@ public enum TemplateTagType {
         }
     }, SNIPPET("snippet") {
         public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, TagAttributes attributes) throws IOException {
-            TemplateData snippet = TemplateCache.getInstance().getTemplate(TemplateType.SNIPPET, attributes.getString("name"));
+            TemplateData snippet = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, attributes.getString("name"));
             if (snippet != null) {
                 try {
                     snippet.writeTemplate(context, writer, request, pageData, null);
