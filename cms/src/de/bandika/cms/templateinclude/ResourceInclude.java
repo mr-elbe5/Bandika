@@ -24,11 +24,7 @@ public class ResourceInclude extends TemplateInclude{
 
     public static final String KEY = "resource";
 
-    public void setAttributes(Element element){
-
-    }
-
-    public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, TagAttributes attributes) throws IOException {
+    public void writeTemplateInclude(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException {
         writer.write(StringUtil.getHtml(attributes.get("key"), SessionReader.getSessionLocale(request)));
     }
 

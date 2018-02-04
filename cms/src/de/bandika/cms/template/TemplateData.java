@@ -9,7 +9,6 @@
 package de.bandika.cms.template;
 
 import de.bandika.base.data.BaseData;
-import de.bandika.base.log.Log;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.page.PagePartData;
 import de.bandika.cms.templateinclude.TemplateInclude;
@@ -19,7 +18,6 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,8 +37,8 @@ public class TemplateData extends BaseData implements Serializable {
     protected String description = "";
     protected String usage = "";
     protected String code = "";
+    protected String parsedCode = "";
 
-    protected List<TemplatePart> templateParts = null;
     protected List<TemplateInclude> templateIncludes = new ArrayList<>();
 
     public TemplateData() {
@@ -107,69 +105,28 @@ public class TemplateData extends BaseData implements Serializable {
         this.code = code;
     }
 
+    public void setParsedCode(String parsedCode) {
+        this.parsedCode = parsedCode;
+    }
+
     public List<TemplateInclude> getTemplateIncludes() {
         return templateIncludes;
     }
 
-    /****** parser part ****/
-
-    public boolean parseTemplate() {
-        try {
-            if (templateParts == null)
-                templateParts = new ArrayList<>();
-            else
-                templateParts.clear();
-            int pos1;
-            int pos2 = 0;
-            boolean shortTag;
-            while (true) {
-                pos1 = code.indexOf(TemplateTagType.TAG_START, pos2);
-                if (pos1 == -1) {
-                    templateParts.add(new TemplateHtmlPart(code.substring(pos2)));
-                    break;
-                }
-                templateParts.add(new TemplateHtmlPart(code.substring(pos2, pos1)));
-                pos2 = code.indexOf('>', pos1 + 5);
-                if (pos2 == -1)
-                    throw new ParseException("no cms tag end", pos1);
-                String startTag = code.substring(pos1, pos2);
-                shortTag = false;
-                if (startTag.endsWith("/")) {
-                    startTag = startTag.substring(0, startTag.length() - 1);
-                    shortTag = true;
-                }
-                TemplateTagType tagType = TemplateTagType.getTagType(startTag);
-                String attributesString = startTag.substring(tagType.getStartTag().length()).trim();
-                //no content
-                if (shortTag) {
-                    templateParts.add(getNewTemplateTagPart(tagType, "", attributesString));
-                    pos2++;
-                    continue;
-                }
-                pos2++;
-                pos1 = code.indexOf(tagType.getEndTag(), pos2);
-                if (pos1 == -1)
-                    throw new ParseException("no cms end tag ", pos2);
-                String content = code.substring(pos2, pos1).trim();
-                pos2 = pos1 + tagType.getEndTag().length();
-                templateParts.add(getNewTemplateTagPart(tagType, content, attributesString));
-            }
-        } catch (ParseException e) {
-            templateParts.clear();
-            Log.error("parse error for template " + getName(), e);
-            return false;
-        }
-        return true;
-    }
-
-    protected TemplateTagPart getNewTemplateTagPart(TemplateTagType tagType, String content, String attributeString) {
-        return new TemplateTagPart(tagType, content, attributeString);
-    }
-
     public void writeTemplate(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException {
-        for (TemplatePart templatePart : templateParts) {
-            templatePart.writeTemplatePart(context, writer, request, pageData, partData);
+        int start=0;
+        int end;
+        String placeholder;
+        for (int i =0; i< templateIncludes.size(); i++) {
+            TemplateInclude templatePart=templateIncludes.get(i);
+            placeholder="{{"+i+"}}";
+            end=parsedCode.indexOf(placeholder,start);
+            if (end==-1) throw new IOException("missing placeholder");
+            writer.write(parsedCode.substring(start,end));
+            templatePart.writeTemplateInclude(context, writer, request, pageData, partData);
+            start=end+placeholder.length();
         }
+        writer.write(parsedCode.substring(start));
     }
 
 }

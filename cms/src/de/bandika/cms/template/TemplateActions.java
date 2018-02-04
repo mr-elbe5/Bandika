@@ -16,11 +16,11 @@ import de.bandika.webbase.rights.SystemZone;
 import de.bandika.webbase.servlet.ActionSetCache;
 import de.bandika.webbase.servlet.RequestReader;
 import de.bandika.webbase.servlet.SessionWriter;
-import de.bandika.webbase.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
+import java.util.List;
 
 public class TemplateActions extends CmsActions {
 
@@ -48,7 +48,6 @@ public class TemplateActions extends CmsActions {
                 if (file != null && file.getBytes() != null) {
                     html = new String(file.getBytes());
                 }
-                //TemplateParser.parseTemplates(html);
                 if (!importTemplates(html)) {
                     addError(request, "could not import templates");
                     return showImportTemplates(request, response);
@@ -97,7 +96,7 @@ public class TemplateActions extends CmsActions {
                 if (!isDataComplete(data, request)) {
                     return showEditTemplate(request, response);
                 }
-                if (!data.parseTemplate()) {
+                if (!TemplateParser.parseTemplate(data)) {
                     return showEditTemplate(request, response);
                 }
                 TemplateBean.getInstance().saveTemplate(data, true);
@@ -136,51 +135,14 @@ public class TemplateActions extends CmsActions {
         return KEY;
     }
 
-    public static final String TAG_START = "<cms-template";
-    public static final String TAG_END = "</cms-template>";
-
     public boolean importTemplates(String src) throws ParseException {
-        int pos1;
-        int pos2 = 0;
-        try {
-            while (true) {
-                pos1 = src.indexOf(TAG_START, pos2);
-                if (pos1 == -1) {
-                    break;
-                }
-                pos1 += TAG_START.length();
-                pos2 = src.indexOf('>', pos1);
-                if (pos2 == -1)
-                    throw new ParseException("no cms tag end", pos1);
-                TagAttributes attributes = new TagAttributes();
-                attributes.setAttributes(src.substring(pos1, pos2).trim());
-                pos2++;
-                pos1 = src.indexOf(TAG_END, pos2);
-                if (pos1 == -1)
-                    throw new ParseException("no cms end tag ", pos2);
-                String content = src.substring(pos2, pos1).trim();
-                pos2 = pos1 + TAG_END.length();
-                if (!importTemplate(attributes, content))
-                    return false;
-            }
-        } catch (ParseException e) {
-            return false;
+        List<TemplateData> templates =  TemplateParser.parseTemplates(src);
+        for (TemplateData template : templates){
+            if (TemplateCache.getInstance().getTemplate(template.getType(), template.getName()) == null)
+                template.setNew(true);
+            TemplateBean.getInstance().saveTemplate(template, false);
         }
         return true;
-    }
-
-    protected boolean importTemplate(TagAttributes attributes, String code) {
-        TemplateData data = new TemplateData();
-        data.setType(attributes.getString("type"));
-        data.setName(attributes.getString("name"));
-        data.setDisplayName(attributes.getString("displayName"));
-        data.setUsage(attributes.getString("usage"));
-        data.setCode(code);
-        if (TemplateCache.getInstance().getTemplate(data.getType(), data.getName()) == null)
-            data.setNew(true);
-        if (!data.parseTemplate())
-            return false;
-        return TemplateBean.getInstance().saveTemplate(data, false);
     }
 
     public boolean showImportTemplates(HttpServletRequest request, HttpServletResponse response) {

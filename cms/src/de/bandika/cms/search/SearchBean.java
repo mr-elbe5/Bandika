@@ -118,10 +118,12 @@ public class SearchBean extends DbBean {
         }
     }
 
-    protected void ensureDirectory(String path) {
+    protected void ensureDirectory(String path) throws Exception{
         File f = new File(path);
-        if (!f.exists())
-            f.mkdir();
+        if (!f.exists()) {
+            if (!f.mkdir())
+                throw new Exception("could not create directory");
+        }
     }
 
     protected IndexWriter openContentIndexWriter(boolean create) throws Exception {
@@ -181,7 +183,9 @@ public class SearchBean extends DbBean {
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name FROM t_treenode t1, t_site t2 WHERE t1.id=? AND t2.id=?");
+            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name " +
+                    "FROM t_treenode t1, t_site t2 " +
+                    "WHERE t1.id=? AND t2.id=?");
             pst.setInt(1, id);
             pst.setInt(2, id);
             ResultSet rs = pst.executeQuery();
@@ -215,7 +219,9 @@ public class SearchBean extends DbBean {
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords " + "FROM t_treenode t1, t_resource t2 " + "WHERE t1.id=t2.id ");
+            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords " +
+                    "FROM t_treenode t1, t_page t2 " +
+                    "WHERE t1.id=t2.id ");
             ResultSet rs = pst.executeQuery();
             int count = 0;
             while (rs.next()) {
@@ -244,7 +250,9 @@ public class SearchBean extends DbBean {
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords " + "FROM t_treenode t1, t_resource t2 " + "WHERE t1.id=? AND t2.id=? ");
+            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords " +
+                    "FROM t_treenode t1, t_page t2 " +
+                    "WHERE t1.id=? AND t2.id=? ");
             pst.setInt(1, id);
             pst.setInt(2, id);
             ResultSet rs = pst.executeQuery();
@@ -343,7 +351,7 @@ public class SearchBean extends DbBean {
         data.setKeywords(rs.getString(i++));
         String contentType = rs.getString(i++);
         byte[] bytes = rs.getBytes(i);
-        //todo
+        SearchHelper.getSearchContent(bytes,data.getName(),contentType);
     }
 
     protected void indexUsers(IndexWriter writer) throws Exception {

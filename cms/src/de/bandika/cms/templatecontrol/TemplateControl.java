@@ -10,9 +10,9 @@ package de.bandika.cms.templatecontrol;
 
 import de.bandika.base.util.StringUtil;
 import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.PagePartData;
 import de.bandika.cms.templateinclude.TemplateInclude;
 import de.bandika.webbase.util.TagAttributes;
-import org.jsoup.nodes.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -20,12 +20,7 @@ import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.Locale;
 
-public class TemplateControl extends TemplateInclude{
-
-    @Override
-    public void setAttributes(Element element) {
-
-    }
+public abstract class TemplateControl extends TemplateInclude{
 
     public String toHtml(String src) {
         return StringUtil.toHtml(src);
@@ -35,7 +30,10 @@ public class TemplateControl extends TemplateInclude{
         return StringUtil.getHtml(key, locale);
     }
 
-    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException {
+    public void writeTemplateInclude(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException {
+        appendHtml(context, writer, request, attributes, getContent(), pageData);
     }
+
+    public abstract void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException;
 
 }

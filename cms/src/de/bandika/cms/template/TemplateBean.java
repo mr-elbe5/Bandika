@@ -86,7 +86,7 @@ public class TemplateBean extends DbBean {
                 data.setDescription(rs.getString(i++));
                 data.setUsage(rs.getString(i++));
                 data.setCode(rs.getString(i));
-                if (data.parseTemplate())
+                if (TemplateParser.parseTemplate(data))
                     list.add(data);
             }
             rs.close();

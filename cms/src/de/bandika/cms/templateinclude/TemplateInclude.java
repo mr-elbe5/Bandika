@@ -8,17 +8,37 @@
  */
 package de.bandika.cms.templateinclude;
 
-import org.jsoup.nodes.Element;
+import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.PagePartData;
+import de.bandika.webbase.util.TagAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
+import java.io.IOException;
 import java.io.Serializable;
 
 public abstract class TemplateInclude implements Serializable {
 
     protected String content="";
+    protected TagAttributes attributes;
 
-    public abstract void setAttributes(Element element);
-    public void setContent(Element element){
-        content=element.html();
+    public String getContent() {
+        return content;
     }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public TagAttributes getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(TagAttributes attributes) {
+        this.attributes = attributes;
+    }
+
+    public abstract void writeTemplateInclude(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException;
 
 }

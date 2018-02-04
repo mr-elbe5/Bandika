@@ -23,14 +23,8 @@ public class FieldInclude extends TemplateInclude{
 
     public static final String KEY = "field";
 
-    public void setAttributes(Element element){
-
-    }
-
-    public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, TagAttributes attributes) throws IOException {
-        String fieldType = attributes.getString("type");
-        String fieldName = attributes.getString("name");
-        Field field = partData.ensureField(fieldName, fieldType);
+    public void writeTemplateInclude(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException {
+        Field field = partData.ensureField(getAttributes().get("name"), getAttributes().get("fieldType"));
         field.appendFieldHtml(context, writer, request, attributes, content, partData, pageData);
     }
 

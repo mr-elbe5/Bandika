@@ -11,11 +11,12 @@ package de.bandika.cms.template;
 import de.bandika.base.log.Log;
 import de.bandika.cms.templatecontrol.*;
 import de.bandika.cms.templateinclude.*;
+import de.bandika.webbase.util.TagAttributes;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.parser.Tag;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 import java.text.ParseException;
@@ -32,16 +33,19 @@ public class TemplateParser {
     public static final String TEMPLATE_ATTR_DISPLAYNAME = "displayName";
     public static final String TEMPLATE_ATTR_USAGE = "usage";
 
+    public static final String PLACEHOLDER_START = "{{";
+    public static final String PLACEHOLDER_END = "}}";
+
     public static List<TemplateData> parseTemplates(String code) throws ParseException{
         List<TemplateData> templates=new ArrayList<>();
-        Document doc=Jsoup.parse(code);
+        Document doc=Jsoup.parse(code,"", Parser.xmlParser());
         Elements elements = doc.getElementsByTag(TEMPLATE_TAG);
         for (Element element : elements){
             TemplateData template=new TemplateData();
             template.setType(element.attr(TEMPLATE_ATTR_TYPE));
             template.setName(element.attr(TEMPLATE_ATTR_NAME));
             template.setDisplayName(element.attr(TEMPLATE_ATTR_DISPLAYNAME));
-            template.setType(element.attr(TEMPLATE_ATTR_USAGE));
+            template.setUsage(element.attr(TEMPLATE_ATTR_USAGE));
             template.setCode(element.html());
             if (parseTemplate(template))
                 templates.add(template);
@@ -49,9 +53,10 @@ public class TemplateParser {
         return templates;
     }
 
-    public static boolean parseTemplate(TemplateData data) throws ParseException{
-        data.getTemplateIncludes().clear();
-        Document doc=Jsoup.parse(data.getCode());
+    public static boolean parseTemplate(TemplateData data){
+        List<TemplateInclude> list=data.getTemplateIncludes();
+        list.clear();
+        Document doc=Jsoup.parse(data.getCode(),"",Parser.xmlParser());
         Elements elements = doc.getElementsByTag(INCLUDE_TAG);
         for (Element element : elements){
             TemplateInclude include=getTemplateInclude(element);
@@ -59,19 +64,20 @@ public class TemplateParser {
                 Log.warn("element without type");
                 continue;
             }
-            include.setAttributes(element);
-            include.setContent(element);
-            data.getTemplateIncludes().add(include);
-            element.replaceWith(new Element(Tag.valueOf("include"),"", new Attributes()));
+            include.setAttributes(new TagAttributes(element.attributes()));
+            include.setContent(element.html());
+            list.add(include);
+            TextNode placeholder=new TextNode(PLACEHOLDER_START+(list.size()-1)+PLACEHOLDER_END);
+            element.replaceWith(placeholder);
         }
-        System.out.println(doc.html());
+        data.setParsedCode(doc.html());
         return true;
     }
 
     private static TemplateInclude getTemplateInclude(Element element){
         String type=element.attr(TEMPLATE_ATTR_TYPE);
         if (type.isEmpty()) {
-            Log.warn("element without type");
+            Log.warn("element without type: "+type);
             return null;
         }
         switch (type){
@@ -107,6 +113,7 @@ public class TemplateParser {
             case TopNavControl.KEY :
                 return TopNavControl.getInstance();
         }
+        Log.warn("element without valid type: "+type);
         return null;
     }
 

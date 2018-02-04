@@ -24,11 +24,7 @@ public class JspInclude extends TemplateInclude{
 
     public static final String KEY = "jsp";
 
-    public void setAttributes(Element element){
-
-    }
-
-    public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, TagAttributes attributes) throws IOException {
+    public void writeTemplateInclude(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException {
         String url = attributes.getString("url");
         request.setAttribute("pageData", pageData);
         if (partData != null) {

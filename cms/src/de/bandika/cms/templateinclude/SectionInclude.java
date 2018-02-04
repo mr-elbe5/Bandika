@@ -23,11 +23,7 @@ public class SectionInclude extends TemplateInclude{
 
     public static final String KEY = "section";
 
-    public void setAttributes(Element element){
-
-    }
-
-    public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, TagAttributes attributes) throws IOException {
+    public void writeTemplateInclude(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException {
         String sectionName = attributes.getString("name");
         SectionData section = pageData.getSection(sectionName);
         if (section == null) {
@@ -35,7 +31,7 @@ public class SectionInclude extends TemplateInclude{
         }
         if (section != null) {
             section.setClassName(attributes.getString("class"));
-            section.setType(attributes.getString("type"));
+            section.setType(attributes.getString("sectionType"));
             section.appendSectionHtml(context, writer, request, attributes, pageData);
         }
     }

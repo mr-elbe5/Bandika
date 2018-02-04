@@ -22,13 +22,9 @@ public class PartInclude extends TemplateInclude{
 
     public static final String KEY = "part";
 
-    public void setAttributes(Element element){
-
-    }
-
-    public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, TagAttributes attributes) throws IOException {
+    public void writeTemplateInclude(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException {
         //todo
-        String templateName = attributes.getString("template");
+        String templateName = attributes.get("template");
         int idx = attributes.getInt("id");
         //PagePartData data = pageData.ensureStaticPart(templateName, idx);
         //data.appendPartHtml(context, writer, request, "", pageData);

@@ -15,8 +15,6 @@ import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
 import de.bandika.webbase.servlet.RequestReader;
 import de.bandika.webbase.servlet.RequestStatics;
-import de.bandika.webbase.util.TagAttributes;
-import org.jsoup.nodes.Element;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -28,11 +26,7 @@ public class ContentInclude extends TemplateInclude{
 
     public static final String KEY = "content";
 
-    public void setAttributes(Element element){
-
-    }
-
-    public void writeTemplatePart(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData, String content, TagAttributes attributes) throws IOException {
+    public void writeTemplateInclude(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException {
         if (pageData!=null) {
             if (pageData.isEditMode()) {
                 writer.write("<div id=\"pageContent\" class=\"editArea\">");
