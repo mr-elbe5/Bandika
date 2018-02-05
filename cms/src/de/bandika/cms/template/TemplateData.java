@@ -9,14 +9,9 @@
 package de.bandika.cms.template;
 
 import de.bandika.base.data.BaseData;
-import de.bandika.cms.page.PageData;
 import de.bandika.cms.page.PageOutputData;
-import de.bandika.cms.page.PagePartData;
 import de.bandika.cms.templateinclude.TemplateInclude;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
