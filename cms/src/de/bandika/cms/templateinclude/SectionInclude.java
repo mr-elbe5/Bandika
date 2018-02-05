@@ -8,29 +8,25 @@
  */
 package de.bandika.cms.templateinclude;
 
-import de.bandika.cms.page.PageData;
-import de.bandika.cms.page.PagePartData;
+import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.page.SectionData;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 
 public class SectionInclude extends TemplateInclude{
 
     public static final String KEY = "section";
 
-    public void writeTemplateInclude(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException {
+    public void writeTemplateInclude(PageOutputData outputData) throws IOException {
         String sectionName = attributes.getString("name");
-        SectionData section = pageData.getSection(sectionName);
+        SectionData section = outputData.pageData.getSection(sectionName);
         if (section == null) {
-            section = pageData.ensureSection(sectionName);
+            section = outputData.pageData.ensureSection(sectionName);
         }
         if (section != null) {
             section.setClassName(attributes.getString("class"));
             section.setType(attributes.getString("sectionType"));
-            section.appendSectionHtml(context, writer, request, attributes, pageData);
+            section.appendSectionHtml(outputData);
         }
     }
 

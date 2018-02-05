@@ -266,31 +266,34 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
 
     /******************* HTML part *********************************/
 
-    public void appendPartHtml(PageContext context, JspWriter writer, HttpServletRequest request, String sectionType, PageData pageData) throws IOException {
-        if (pageData.isEditMode())
-            appendEditPartHtml(context, writer, request, sectionType, pageData);
+    public void appendPartHtml(PageOutputData outputData) throws IOException {
+        if (outputData.pageData.isEditMode())
+            appendEditPartHtml(outputData);
         else
-            appendLivePartHtml(context, writer, request, pageData);
+            appendLivePartHtml(outputData);
     }
 
-    public void appendEditPartHtml(PageContext context, JspWriter writer, HttpServletRequest request, String sectionType, PageData pageData) throws IOException {
-        Locale locale = SessionReader.getSessionLocale(request);
-        writeEditPartStart(context, writer, request, pageData.getEditPagePart(), getSectionName(), pageData.getId(), locale);
+    public void appendEditPartHtml(PageOutputData outputData) throws IOException {
+        Locale locale = SessionReader.getSessionLocale(outputData.request);
+        String sectionType=outputData.attributes.getString("type");
+        writeEditPartStart(outputData.context, outputData.writer, outputData.request, outputData.pageData.getEditPagePart(), getSectionName(), outputData.pageData.getId(), locale);
         TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PART, getTemplateName());
         try {
-            partTemplate.writeTemplate(context, writer, request, pageData, this);
+            outputData.partData=this;
+            partTemplate.writeTemplate(outputData);
         } catch (Exception e) {
             Log.error("error in part template", e);
         }
-        writeEditPartEnd(context, writer, request, pageData.getEditPagePart(), getSectionName(), sectionType, pageData.getId(), locale);
+        writeEditPartEnd(outputData.context, outputData.writer, outputData.request, outputData.pageData.getEditPagePart(), getSectionName(), sectionType, outputData.pageData.getId(), locale);
     }
 
-    public void appendLivePartHtml(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData)  {
+    public void appendLivePartHtml(PageOutputData outputData)  {
         TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PART, getTemplateName());
         try {
-            writer.write("<div class=\"pagePart\" id=\"" + getHtmlId() + "\" >");
-            partTemplate.writeTemplate(context, writer, request, pageData, this);
-            writer.write("</div>");
+            outputData.writer.write("<div class=\"pagePart\" id=\"" + getHtmlId() + "\" >");
+            outputData.partData=this;
+            partTemplate.writeTemplate(outputData);
+            outputData.writer.write("</div>");
         } catch (Exception e) {
             Log.error("error in part template", e);
         }

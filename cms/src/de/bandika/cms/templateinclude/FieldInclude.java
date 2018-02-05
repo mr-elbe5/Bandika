@@ -10,6 +10,7 @@ package de.bandika.cms.templateinclude;
 
 import de.bandika.cms.field.Field;
 import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.page.PagePartData;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,9 +22,11 @@ public class FieldInclude extends TemplateInclude{
 
     public static final String KEY = "field";
 
-    public void writeTemplateInclude(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException {
-        Field field = partData.ensureField(getAttributes().get("name"), getAttributes().get("fieldType"));
-        field.appendFieldHtml(context, writer, request, attributes, content, partData, pageData);
+    public void writeTemplateInclude(PageOutputData outputData) throws IOException {
+        Field field = outputData.partData.ensureField(getAttributes().get("name"), getAttributes().get("fieldType"));
+        outputData.attributes=attributes;
+        outputData.content=content;
+        field.appendFieldHtml(outputData);
     }
 
 }

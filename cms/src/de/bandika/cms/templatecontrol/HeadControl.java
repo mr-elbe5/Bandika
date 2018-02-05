@@ -9,13 +9,8 @@
 package de.bandika.cms.templatecontrol;
 
 import de.bandika.base.util.StringUtil;
-import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.PageOutputData;
 import de.bandika.webbase.servlet.SessionReader;
-import de.bandika.webbase.util.TagAttributes;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.Locale;
 
@@ -31,15 +26,15 @@ public class HeadControl extends TemplateControl {
         return instance;
     }
 
-    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException {
-        if (pageData==null)
+    public void appendHtml(PageOutputData outputData) throws IOException {
+        if (outputData.pageData==null)
             return;
-        Locale locale = SessionReader.getSessionLocale(request);
-        writer.write("<title>" +
+        Locale locale = SessionReader.getSessionLocale(outputData.request);
+        outputData.writer.write("<title>" +
                 StringUtil.getHtml("appTitle", locale) +
                 "</title>\n");
-        writer.write("<meta name=\"keywords\" content=\"" +
-                StringUtil.toHtml(pageData.getKeywords()) +
+        outputData.writer.write("<meta name=\"keywords\" content=\"" +
+                StringUtil.toHtml(outputData.pageData.getKeywords()) +
                 "\">\n");
     }
 

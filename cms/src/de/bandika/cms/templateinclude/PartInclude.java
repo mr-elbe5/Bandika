@@ -9,6 +9,7 @@
 package de.bandika.cms.templateinclude;
 
 import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.page.PagePartData;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +21,7 @@ public class PartInclude extends TemplateInclude{
 
     public static final String KEY = "part";
 
-    public void writeTemplateInclude(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException {
+    public void writeTemplateInclude(PageOutputData outputData) throws IOException {
         //todo
         String templateName = attributes.get("template");
         int idx = attributes.getInt("id");

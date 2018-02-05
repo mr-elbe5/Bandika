@@ -8,14 +8,9 @@
  */
 package de.bandika.cms.templatecontrol;
 
-import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.PageOutputData;
 import de.bandika.webbase.servlet.RequestError;
 import de.bandika.webbase.servlet.RequestReader;
-import de.bandika.webbase.util.TagAttributes;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 
 public class MessageControl extends TemplateControl {
@@ -30,13 +25,13 @@ public class MessageControl extends TemplateControl {
         return instance;
     }
 
-    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException {
-        RequestError error = RequestError.getError(request);
-        String message = RequestReader.getMessage(request);
+    public void appendHtml(PageOutputData outputData) throws IOException {
+        RequestError error = RequestError.getError(outputData.request);
+        String message = RequestReader.getMessage(outputData.request);
         if (error != null) {
-            writer.write("<div class=\"error\">" + toHtml(error.getErrorString()) + "<button type=\"button\" class=\"close\" onclick=\"$(this).closest('.error').hide();\">&times;</button></div>");
+            outputData.writer.write("<div class=\"error\">" + toHtml(error.getErrorString()) + "<button type=\"button\" class=\"close\" onclick=\"$(this).closest('.error').hide();\">&times;</button></div>");
         } else if (message != null && message.length() > 0) {
-            writer.write("<div class=\"message\">" + toHtml(message) + "<button type=\"button\" class=\"close\" onclick=\"$(this).closest('.message').hide();\">&times;</button></div>");
+            outputData.writer.write("<div class=\"message\">" + toHtml(message) + "<button type=\"button\" class=\"close\" onclick=\"$(this).closest('.message').hide();\">&times;</button></div>");
         }
     }
 

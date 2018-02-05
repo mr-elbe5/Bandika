@@ -10,18 +10,14 @@ package de.bandika.cms.field;
 
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
-import de.bandika.cms.page.PageData;
-import de.bandika.cms.page.PagePartData;
+import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.cms.tree.TreeNode;
 import de.bandika.webbase.servlet.RequestReader;
-import de.bandika.webbase.util.TagAttributes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.Set;
 
@@ -83,19 +79,19 @@ public abstract class HtmlBaseField extends Field {
     protected abstract String getCKCODE();
 
     @Override
-    public void appendFieldHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String defaultContent, PagePartData partData, PageData pageData) throws IOException {
-        boolean partEditMode = pageData.isEditMode() && partData == pageData.getEditPagePart();
-        int siteId = pageData.getParentId();
-        int pageId = pageData.getId();
+    public void appendFieldHtml(PageOutputData outputData) throws IOException {
+        boolean partEditMode = outputData.pageData.isEditMode() && outputData.partData == outputData.pageData.getEditPagePart();
+        int siteId = outputData.pageData.getParentId();
+        int pageId = outputData.pageData.getId();
         String html = getHtml().trim();
         if (partEditMode) {
-            writer.write(String.format(getCKCODE(), getIdentifier(), html.isEmpty() ? defaultContent : html, getIdentifier(), StringUtil.toHtml(html), getIdentifier(), siteId, pageId, siteId, pageId));
+            outputData.writer.write(String.format(getCKCODE(), getIdentifier(), html.isEmpty() ? outputData.content : html, getIdentifier(), StringUtil.toHtml(html), getIdentifier(), siteId, pageId, siteId, pageId));
         } else {
             try {
                 if (html.isEmpty()) {
-                    writer.write("");
+                    outputData.writer.write("");
                 } else {
-                    writer.write(getHtmlForOutput());
+                    outputData.writer.write(getHtmlForOutput());
                 }
             } catch (Exception ignored) {
             }

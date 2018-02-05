@@ -9,10 +9,10 @@
 package de.bandika.cms.templatecontrol;
 
 import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.site.SiteData;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.servlet.SessionReader;
-import de.bandika.webbase.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -33,20 +33,20 @@ public class MainMenuControl extends TemplateControl {
         return instance;
     }
 
-    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException {
+    public void appendHtml(PageOutputData outputData) throws IOException {
         TreeCache tc = TreeCache.getInstance();
-        SiteData homeSite = tc.getLanguageRootSite(SessionReader.getSessionLocale(request));
+        SiteData homeSite = tc.getLanguageRootSite(SessionReader.getSessionLocale(outputData.request));
         List<Integer> activeIds = new ArrayList<>();
         int pageId = 0;
-        if (pageData != null) {
-            pageId = pageData.getId();
-            activeIds.addAll(pageData.getParentIds());
+        if (outputData.pageData != null) {
+            pageId = outputData.pageData.getId();
+            activeIds.addAll(outputData.pageData.getParentIds());
             activeIds.add(pageId);
         }
-        writer.write("<nav class=\"mainNav\"><ul>");
+        outputData.writer.write("<nav class=\"mainNav\"><ul>");
         if (homeSite != null)
-            addNodes(context, writer, request, homeSite, pageId, activeIds);
-        writer.write("</ul></nav>");
+            addNodes(outputData.context, outputData.writer, outputData.request, homeSite, pageId, activeIds);
+        outputData.writer.write("</ul></nav>");
     }
 
     public void addNodes(PageContext context, JspWriter writer, HttpServletRequest request, SiteData parentSite, int currentId, List<Integer> activeIds) throws IOException {

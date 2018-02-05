@@ -12,15 +12,11 @@ import de.bandika.base.data.BaseData;
 import de.bandika.base.data.XmlData;
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
-import de.bandika.cms.page.PageData;
-import de.bandika.cms.page.PagePartData;
-import de.bandika.webbase.util.TagAttributes;
+import de.bandika.cms.page.PageOutputData;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Set;
@@ -85,7 +81,7 @@ public abstract class Field implements Cloneable, XmlData {
 
     /******************* HTML part *********************************/
 
-    public abstract void appendFieldHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PagePartData partData, PageData pageData) throws IOException;
+    public abstract void appendFieldHtml(PageOutputData outputData) throws IOException;
 
     /******************* XML part *********************************/
 

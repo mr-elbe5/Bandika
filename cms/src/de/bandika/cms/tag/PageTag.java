@@ -10,6 +10,7 @@ package de.bandika.cms.tag;
 
 import de.bandika.base.log.Log;
 import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
 import de.bandika.cms.tree.TreeCache;
@@ -26,8 +27,14 @@ public class PageTag extends BaseTag {
             int siteId = pageData==null ? TreeCache.getInstance().getLanguageRootId(SessionReader.getSessionLocale(request)) : pageData.getParentId();
             String templateName = TreeCache.getInstance().getSite(siteId).getTemplateName();
             TemplateData masterTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_MASTER, templateName);
+
+            PageOutputData outputData=new PageOutputData();
+            outputData.context=context;
+            outputData.writer=getWriter();
+            outputData.request=request;
+            outputData.pageData=pageData;
             try {
-                masterTemplate.writeTemplate(context, getWriter(), request, pageData, null);
+                masterTemplate.writeTemplate(outputData);
             } catch (Exception e) {
                 Log.error("could not write page html", e);
             }

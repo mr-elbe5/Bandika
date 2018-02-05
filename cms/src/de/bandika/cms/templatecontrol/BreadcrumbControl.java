@@ -9,14 +9,10 @@
 package de.bandika.cms.templatecontrol;
 
 import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.cms.tree.TreeNode;
 import de.bandika.webbase.servlet.SessionReader;
-import de.bandika.webbase.util.TagAttributes;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,29 +29,29 @@ public class BreadcrumbControl extends TemplateControl {
         return instance;
     }
 
-    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException {
+    public void appendHtml(PageOutputData outputData) throws IOException {
         TreeCache tc = TreeCache.getInstance();
         List<Integer> activeIds = new ArrayList<>();
-        if (pageData != null) {
-            activeIds.addAll(pageData.getParentIds());
-            activeIds.add(pageData.getId());
+        if (outputData.pageData != null) {
+            activeIds.addAll(outputData.pageData.getParentIds());
+            activeIds.add(outputData.pageData.getId());
         }
         else {
-            int homeId=TreeCache.getInstance().getLanguageRootSiteId(SessionReader.getSessionLocale(request));
+            int homeId=TreeCache.getInstance().getLanguageRootSiteId(SessionReader.getSessionLocale(outputData.request));
             if (homeId!=0) {
                 activeIds.add(TreeNode.ID_ROOT);
                 activeIds.add(homeId);
             }
         }
-        writer.write("<nav class=\"breadcrumb\"><ul>");
+        outputData.writer.write("<nav class=\"breadcrumb\"><ul>");
         for (int i = 1; i < activeIds.size(); i++) {
             TreeNode bcnode = tc.getNode(activeIds.get(i));
             if (bcnode == null || ((bcnode instanceof PageData) && ((PageData) bcnode).isDefaultPage())) {
                 continue;
             }
-            writer.write("<li><a href=\"" + bcnode.getUrl() + "\">" + toHtml(bcnode.getDisplayName()) + "</a></li>");
+            outputData.writer.write("<li><a href=\"" + bcnode.getUrl() + "\">" + toHtml(bcnode.getDisplayName()) + "</a></li>");
         }
-        writer.write("</ul></nav>");
+        outputData.writer.write("</ul></nav>");
     }
 
 }

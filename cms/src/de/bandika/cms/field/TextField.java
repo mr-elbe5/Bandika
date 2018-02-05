@@ -10,16 +10,12 @@ package de.bandika.cms.field;
 
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
-import de.bandika.cms.page.PageData;
-import de.bandika.cms.page.PagePartData;
+import de.bandika.cms.page.PageOutputData;
 import de.bandika.webbase.servlet.RequestReader;
-import de.bandika.webbase.util.TagAttributes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 
 public class TextField extends Field {
@@ -50,22 +46,22 @@ public class TextField extends Field {
     }
 
     @Override
-    public void appendFieldHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String defaultContent, PagePartData partData, PageData pageData) throws IOException {
-        boolean partEditMode = pageData.isEditMode() && partData == pageData.getEditPagePart();
-        int rows = attributes.getInt("rows");
+    public void appendFieldHtml(PageOutputData outputData) throws IOException {
+        boolean partEditMode = outputData.pageData.isEditMode() && outputData.partData == outputData.pageData.getEditPagePart();
+        int rows = outputData.attributes.getInt("rows");
         if (partEditMode) {
             String content = getText();
             if (content.isEmpty())
-                content = defaultContent;
+                content = outputData.content;
             if (rows > 1)
-                writer.write("<textarea class=\"editField\" name=\"" + getIdentifier() + "\" rows=\"" + rows + "\" >" + StringUtil.toHtmlInput(content) + "</textarea>");
+                outputData.writer.write("<textarea class=\"editField\" name=\"" + getIdentifier() + "\" rows=\"" + rows + "\" >" + StringUtil.toHtmlInput(content) + "</textarea>");
             else
-                writer.write("<input type=\"text\" class=\"editField\" name=\"" + getIdentifier() + "\" value=\"" + StringUtil.toHtmlInput(content) + "\" />");
+                outputData.writer.write("<input type=\"text\" class=\"editField\" name=\"" + getIdentifier() + "\" value=\"" + StringUtil.toHtmlInput(content) + "\" />");
         } else {
             if (getText().length() == 0) {
-                writer.write("&nbsp;");
+                outputData.writer.write("&nbsp;");
             } else {
-                writer.write(StringUtil.toHtmlText(getText()));
+                outputData.writer.write(StringUtil.toHtmlText(getText()));
             }
         }
     }

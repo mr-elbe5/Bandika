@@ -10,6 +10,7 @@ package de.bandika.cms.tag;
 
 import de.bandika.base.log.Log;
 import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
 
@@ -25,7 +26,12 @@ public class ContentTag extends BaseTag {
             PageData pageData = (PageData) request.getAttribute("pageData");
             TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PAGE, pageData.getTemplateName());
             JspWriter writer = getWriter();
-            pageTemplate.writeTemplate(context, writer, request, pageData, null);
+            PageOutputData outputData=new PageOutputData();
+            outputData.context=context;
+            outputData.writer=writer;
+            outputData.request=request;
+            outputData.pageData=pageData;
+            pageTemplate.writeTemplate(outputData);
             if (pageData.getEditPagePart() != null) {
                 writer.write("<script>$('.editControl').hide();</script>");
             } else {

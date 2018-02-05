@@ -9,11 +9,11 @@
 package de.bandika.cms.templatecontrol;
 
 import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.site.SiteData;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.servlet.SessionReader;
-import de.bandika.webbase.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -32,14 +32,14 @@ public class SubMenuControl extends TemplateControl {
         return instance;
     }
 
-    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException {
-        if (pageData == null)
+    public void appendHtml(PageOutputData outputData) throws IOException {
+        if (outputData.pageData == null)
             return;
         TreeCache tc = TreeCache.getInstance();
-        SiteData parentSite = tc.getSite(pageData.getParentId());
-        writer.write("<nav class=\"subNav links\"><ul>");
-        addNodes(context, writer, request, parentSite, pageData.getId());
-        writer.write("</ul></nav>");
+        SiteData parentSite = tc.getSite(outputData.pageData.getParentId());
+        outputData.writer.write("<nav class=\"subNav links\"><ul>");
+        addNodes(outputData.context, outputData.writer, outputData.request, parentSite, outputData.pageData.getId());
+        outputData.writer.write("</ul></nav>");
     }
 
     public void addNodes(PageContext context, JspWriter writer, HttpServletRequest request, SiteData parentSite, int currentId) throws IOException {

@@ -9,21 +9,17 @@
 package de.bandika.cms.templateinclude;
 
 import de.bandika.base.util.StringUtil;
-import de.bandika.cms.page.PageData;
-import de.bandika.cms.page.PagePartData;
+import de.bandika.cms.page.PageOutputData;
 import de.bandika.webbase.servlet.SessionReader;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 
 public class ResourceInclude extends TemplateInclude{
 
     public static final String KEY = "resource";
 
-    public void writeTemplateInclude(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException {
-        writer.write(StringUtil.getHtml(attributes.get("key"), SessionReader.getSessionLocale(request)));
+    public void writeTemplateInclude(PageOutputData outputData) throws IOException {
+        outputData.writer.write(StringUtil.getHtml(attributes.get("key"), SessionReader.getSessionLocale(outputData.request)));
     }
 
 }

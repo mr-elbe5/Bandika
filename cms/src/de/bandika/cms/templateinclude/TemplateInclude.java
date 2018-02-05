@@ -8,13 +8,9 @@
  */
 package de.bandika.cms.templateinclude;
 
-import de.bandika.cms.page.PageData;
-import de.bandika.cms.page.PagePartData;
+import de.bandika.cms.page.PageOutputData;
 import de.bandika.webbase.util.TagAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -39,6 +35,11 @@ public abstract class TemplateInclude implements Serializable {
         this.attributes = attributes;
     }
 
-    public abstract void writeTemplateInclude(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException;
+    public abstract void writeTemplateInclude(PageOutputData outputData) throws IOException;
+
+    public void completeOutputData(PageOutputData outputData){
+        outputData.attributes=attributes;
+        outputData.content=content;
+    }
 
 }

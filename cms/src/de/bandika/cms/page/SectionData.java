@@ -12,11 +12,6 @@ import de.bandika.base.util.StringUtil;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
 import de.bandika.webbase.servlet.SessionReader;
-import de.bandika.webbase.util.TagAttributes;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.*;
 
@@ -192,29 +187,47 @@ public class SectionData {
 
     /******************* HTML part *********************************/
 
-    public void appendSectionHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, PageData pageData) throws IOException {
-        boolean editMode = pageData.isEditMode();
-        Locale locale = SessionReader.getSessionLocale(request);
-        String cls = attributes.getString("class");
+    public void appendSectionHtml(PageOutputData outputData) throws IOException {
+        boolean editMode = outputData.pageData.isEditMode();
+        Locale locale = SessionReader.getSessionLocale(outputData.request);
+        String cls = outputData.attributes.getString("class");
         boolean hasParts = getParts().size() > 0;
         if (editMode) {
-            writer.write("<div class = \"editSection\">");
+            outputData.writer.write("<div class = \"editSection\">");
             if (hasParts) {
-                writer.write("<div class = \"editSectionHeader\">Section " + getName() + "</div>");
+                outputData.writer.write("<div class = \"editSectionHeader\">Section " +
+                        getName() +
+                        "</div>");
             } else {
-                writer.write("<div class = \"editSectionHeader empty contextSource\" title=\"" + StringUtil.getHtml("_rightClickEditHint") + "\">Section " + getName() + "</div>");
-                writer.write("<div class = \"contextMenu\"><div class=\"icn inew\" onclick = \"return openLayerDialog('" + StringUtil.getHtml("_addPart", locale) + "', '/pagepart.ajx?act=openAddPagePart&pageId=" + pageData.getId() + "&sectionName=" + getName() + "&sectionType=" + attributes.getString("type") + "&partId=-1');\">" + StringUtil.getHtml("_new", locale) + "\n</div>\n</div>");
+                outputData.writer.write("<div class = \"editSectionHeader empty contextSource\" title=\"" +
+                        StringUtil.getHtml("_rightClickEditHint") +
+                        "\">Section " +
+                        getName() +
+                        "</div>");
+                outputData.writer.write("<div class = \"contextMenu\"><div class=\"icn inew\" onclick = \"return openLayerDialog('" +
+                        StringUtil.getHtml("_addPart", locale) +
+                        "', '/pagepart.ajx?act=openAddPagePart&pageId=" +
+                        outputData.pageData.getId() +
+                        "&sectionName=" +
+                        getName() +
+                        "&sectionType=" +
+                        outputData.attributes.getString("type") +
+                        "&partId=-1');\">" +
+                        StringUtil.getHtml("_new", locale) +
+                        "\n</div>\n</div>");
             }
         }
         if (!getParts().isEmpty()) {
-            writer.write("<div class = \"section " + cls + "\">");
+            outputData.writer.write("<div class = \"section " +
+                    cls +
+                    "\">");
             for (PagePartData pdata : getParts()) {
-                pdata.appendPartHtml(context, writer, request, attributes.getString("type"), pageData);
+                pdata.appendPartHtml(outputData);
             }
-            writer.write("</div>");
+            outputData.writer.write("</div>");
         }
         if (editMode) {
-            writer.write("</div>");
+            outputData.writer.write("</div>");
         }
     }
 

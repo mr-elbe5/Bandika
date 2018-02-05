@@ -10,16 +10,12 @@ package de.bandika.cms.field;
 
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
-import de.bandika.cms.page.PageData;
-import de.bandika.cms.page.PagePartData;
+import de.bandika.cms.page.PageOutputData;
 import de.bandika.webbase.servlet.RequestReader;
-import de.bandika.webbase.util.TagAttributes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 
 public class ScriptField extends Field {
@@ -50,20 +46,20 @@ public class ScriptField extends Field {
     }
 
     @Override
-    public void appendFieldHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String defaultContent, PagePartData partData, PageData pageData) throws IOException {
-        boolean partEditMode = pageData.isEditMode() && partData == pageData.getEditPagePart();
-        int height = attributes.getInt("height");
+    public void appendFieldHtml(PageOutputData outputData) throws IOException {
+        boolean partEditMode = outputData.pageData.isEditMode() && outputData.partData == outputData.pageData.getEditPagePart();
+        int height = outputData.attributes.getInt("height");
         if (partEditMode) {
-            writer.write("<textarea class=\"editField\" name=\"" + getIdentifier() + "\" rows=\"5\" ");
+            outputData.writer.write("<textarea class=\"editField\" name=\"" + getIdentifier() + "\" rows=\"5\" ");
             if (height == -1) {
-                writer.write("style=\"height:" + height + "\"");
+                outputData.writer.write("style=\"height:" + height + "\"");
             }
-            writer.write(" >" + StringUtil.toHtmlInput(getCode()) + "</textarea>");
+            outputData.writer.write(" >" + StringUtil.toHtmlInput(getCode()) + "</textarea>");
         } else {
             if (getCode().length() == 0) {
-                writer.write(defaultContent);
+                outputData.writer.write(outputData.content);
             } else {
-                writer.write("<script type=\"text/javascript\">" + getCode() + "</script>");
+                outputData.writer.write("<script type=\"text/javascript\">" + getCode() + "</script>");
             }
         }
     }

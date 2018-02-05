@@ -10,6 +10,7 @@ package de.bandika.cms.template;
 
 import de.bandika.base.data.BaseData;
 import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.page.PagePartData;
 import de.bandika.cms.templateinclude.TemplateInclude;
 
@@ -113,7 +114,7 @@ public class TemplateData extends BaseData implements Serializable {
         return templateIncludes;
     }
 
-    public void writeTemplate(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException {
+    public void writeTemplate(PageOutputData outputData) throws IOException {
         int start=0;
         int end;
         String placeholder;
@@ -122,11 +123,12 @@ public class TemplateData extends BaseData implements Serializable {
             placeholder="{{"+i+"}}";
             end=parsedCode.indexOf(placeholder,start);
             if (end==-1) throw new IOException("missing placeholder");
-            writer.write(parsedCode.substring(start,end));
-            templatePart.writeTemplateInclude(context, writer, request, pageData, partData);
+            outputData.writer.write(parsedCode.substring(start,end));
+            templatePart.completeOutputData(outputData);
+            templatePart.writeTemplateInclude(outputData);
             start=end+placeholder.length();
         }
-        writer.write(parsedCode.substring(start));
+        outputData.writer.write(parsedCode.substring(start));
     }
 
 }

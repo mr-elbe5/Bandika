@@ -10,16 +10,11 @@ package de.bandika.cms.templatecontrol;
 
 import de.bandika.base.util.StringUtil;
 import de.bandika.cms.file.FileData;
-import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.site.SiteData;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.servlet.SessionReader;
-import de.bandika.webbase.util.TagAttributes;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -36,17 +31,17 @@ public class DocumentListControl extends TemplateControl {
         return instance;
     }
 
-    public void appendHtml(PageContext context, JspWriter writer, HttpServletRequest request, TagAttributes attributes, String content, PageData pageData) throws IOException {
-        if (pageData==null)
+    public void appendHtml(PageOutputData outputData) throws IOException {
+        if (outputData.pageData==null)
             return;
-        int siteId = pageData.getParentId();
+        int siteId = outputData.pageData.getParentId();
         SiteData site = TreeCache.getInstance().getSite(siteId);
-        Locale locale = SessionReader.getSessionLocale(request);
+        Locale locale = SessionReader.getSessionLocale(outputData.request);
         List<FileData> files = site.getFiles();
         for (FileData file : files) {
-            if (!file.isAnonymous() && !SessionReader.hasContentRight(request, file.getId(), Right.READ))
+            if (!file.isAnonymous() && !SessionReader.hasContentRight(outputData.request, file.getId(), Right.READ))
                 continue;
-            writer.write("<div class=\"documentListLine icn ifile\"><a href=\"" +
+            outputData.writer.write("<div class=\"documentListLine icn ifile\"><a href=\"" +
                     file.getUrl() +
                     "\" target=\"_blank\" title=\"" +
                     StringUtil.getHtml("_show", locale) +
