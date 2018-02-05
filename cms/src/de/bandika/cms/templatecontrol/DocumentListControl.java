@@ -46,7 +46,13 @@ public class DocumentListControl extends TemplateControl {
         for (FileData file : files) {
             if (!file.isAnonymous() && !SessionReader.hasContentRight(request, file.getId(), Right.READ))
                 continue;
-            writer.write("<div class=\"documentListLine icn ifile\"><a href=\"" + file.getUrl() + "\" target=\"_blank\" title=\"" + StringUtil.getHtml("_show", locale) + "\">" + StringUtil.toHtml(file.getDisplayName()) + "</a></div>");
+            writer.write("<div class=\"documentListLine icn ifile\"><a href=\"" +
+                    file.getUrl() +
+                    "\" target=\"_blank\" title=\"" +
+                    StringUtil.getHtml("_show", locale) +
+                    "\">" +
+                    StringUtil.toHtml(file.getDisplayName()) +
+                    "</a></div>");
         }
     }
 

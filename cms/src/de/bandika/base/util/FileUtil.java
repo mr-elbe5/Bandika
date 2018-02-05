@@ -84,7 +84,7 @@ public class FileUtil {
 
     public static String getFileNameFromPath(String path) {
         if (path == null) {
-            return path;
+            return null;
         }
         String uri = path.replace('\\', '/');
         int pos = uri.lastIndexOf('/');
@@ -107,7 +107,7 @@ public class FileUtil {
 
     public static String getFileNameWithoutExtension(String fileName) {
         if (fileName == null) {
-            return fileName;
+            return null;
         }
         int pos = fileName.lastIndexOf('.');
         if (pos == -1) {

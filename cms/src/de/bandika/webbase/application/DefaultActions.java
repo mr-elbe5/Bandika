@@ -20,7 +20,7 @@ public class DefaultActions extends ActionSet {
 
     public static final String test="test";
 
-    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) {
         switch (actionName) {
             default: {
                 String home = Locales.getInstance().getLocaleRoot(RequestReader.getSessionLocale(request));

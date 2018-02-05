@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 
 public class TimerThread extends BaseThread {
 
-    protected int interval = 60;
+    protected int interval;
 
     public TimerThread(int interval) {
         super("CMSTaskTimer");

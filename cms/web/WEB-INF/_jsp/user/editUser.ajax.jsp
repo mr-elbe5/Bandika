@@ -17,6 +17,7 @@
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     UserData user = (UserData) SessionReader.getSessionObject(request, "userData");
+    assert user!=null;
     List<GroupData> groups = GroupBean.getInstance().getAllGroups();
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>

@@ -8,12 +8,10 @@
  */
 package de.bandika.webbase.servlet;
 
-import javax.servlet.http.HttpServletResponse;
-
 public class HttpException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
-    public int errorCode = HttpServletResponse.SC_ACCEPTED;
+    public int errorCode;
 
     public HttpException(int code) {
         errorCode = code;

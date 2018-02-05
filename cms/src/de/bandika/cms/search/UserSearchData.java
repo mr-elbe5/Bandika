@@ -32,7 +32,11 @@ public class UserSearchData extends SearchData {
     }
 
     public String getInfoSpan(Locale locale) {
-        return "<span class=\"searchInfo\"><a class=\"icn iinfo\" href=\"\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_user", locale) + "', '/search.ajx?act=showUserSearchDetails&userId=" + getId() + "');\">&nbsp;</a></span>";
+        return "<span class=\"searchInfo\"><a class=\"icn iinfo\" href=\"\" onclick=\"return openLayerDialog('" +
+                StringUtil.getHtml("_user", locale) +
+                "', '/search.ajx?act=showUserSearchDetails&userId=" +
+                getId() +
+                "');\">&nbsp;</a></span>";
     }
 
     public void setDoc() {

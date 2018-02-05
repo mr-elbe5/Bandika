@@ -35,7 +35,12 @@ public class SiteBean extends TreeBean {
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT t1.id,t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," + "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," + "t2.template " + "FROM t_treenode t1, t_site t2 " + "WHERE t1.id=t2.id " + "ORDER BY t1.parent_id NULLS FIRST, t1.ranking");
+            pst = con.prepareStatement("SELECT t1.id,t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
+                    "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
+                    "t2.template " +
+                    "FROM t_treenode t1, t_site t2 " +
+                    "WHERE t1.id=t2.id " +
+                    "ORDER BY t1.parent_id NULLS FIRST, t1.ranking");
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     int i = 1;
@@ -94,7 +99,9 @@ public class SiteBean extends TreeBean {
         PreparedStatement pst = null;
         boolean success = false;
         try {
-            pst = con.prepareStatement("SELECT inherits_master, template " + "FROM t_site " + "WHERE id=?");
+            pst = con.prepareStatement("SELECT inherits_master, template " +
+                    "FROM t_site " +
+                    "WHERE id=?");
             pst.setInt(1, data.getId());
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
@@ -132,7 +139,9 @@ public class SiteBean extends TreeBean {
     protected void writeSite(Connection con, SiteData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(data.isNew() ? "insert into t_site (inherits_master, template, id) " + "values(?,?,?)" : "update t_site set inherits_master=?, template=? where id=?");
+            pst = con.prepareStatement(data.isNew() ?
+                    "insert into t_site (inherits_master, template, id) values(?,?,?)" :
+                    "update t_site set inherits_master=?, template=? where id=?");
             int i = 1;
             pst.setBoolean(i++, data.inheritsMaster());
             if (data.getTemplateName().isEmpty()) {
@@ -145,6 +154,16 @@ public class SiteBean extends TreeBean {
             pst.close();
         } finally {
             closeStatement(pst);
+        }
+    }
+
+    private void addSortData(ResultSet rs, TreeNodeSortData sortData) throws SQLException{
+        while (rs.next()) {
+            int i = 1;
+            TreeNodeSortData child = new TreeNodeSortData();
+            child.setId(rs.getInt(i++));
+            child.setName(rs.getString(i));
+            sortData.getChildren().add(child);
         }
     }
 
@@ -163,16 +182,13 @@ public class SiteBean extends TreeBean {
             sortData.setName(rs.getString(1));
             rs.close();
             pst.close();
-            pst = con.prepareStatement("SELECT t1.id,t1.name FROM t_treenode t1, t_site t2 WHERE t1.parent_id=? AND t2.id=t1.id ORDER BY t1.ranking");
+            pst = con.prepareStatement("SELECT t1.id,t1.name " +
+                    "FROM t_treenode t1, t_site t2 " +
+                    "WHERE t1.parent_id=? AND t2.id=t1.id " +
+                    "ORDER BY t1.ranking");
             pst.setInt(1, nodeId);
             rs = pst.executeQuery();
-            while (rs.next()) {
-                int i = 1;
-                child = new TreeNodeSortData();
-                child.setId(rs.getInt(i++));
-                child.setName(rs.getString(i));
-                sortData.getChildren().add(child);
-            }
+            addSortData(rs, sortData);
             rs.close();
         } catch (SQLException se) {
             Log.error("sql error", se);
@@ -198,16 +214,13 @@ public class SiteBean extends TreeBean {
             sortData.setName(rs.getString(1));
             rs.close();
             pst.close();
-            pst = con.prepareStatement("SELECT t1.id,t1.name FROM t_treenode t1, t_page t2 WHERE t1.parent_id=? AND t2.id=t1.id ORDER BY t1.ranking");
+            pst = con.prepareStatement("SELECT t1.id,t1.name " +
+                    "FROM t_treenode t1, t_page t2 " +
+                    "WHERE t1.parent_id=? AND t2.id=t1.id " +
+                    "ORDER BY t1.ranking");
             pst.setInt(1, nodeId);
             rs = pst.executeQuery();
-            while (rs.next()) {
-                int i = 1;
-                child = new TreeNodeSortData();
-                child.setId(rs.getInt(i++));
-                child.setName(rs.getString(i));
-                sortData.getChildren().add(child);
-            }
+            addSortData(rs, sortData);
             rs.close();
         } catch (SQLException se) {
             Log.error("sql error", se);
@@ -233,16 +246,13 @@ public class SiteBean extends TreeBean {
             sortData.setName(rs.getString(1));
             rs.close();
             pst.close();
-            pst = con.prepareStatement("SELECT t1.id,t1.name FROM t_treenode t1, t_file t2 WHERE t1.parent_id=? AND t2.id=t1.id ORDER BY t1.ranking");
+            pst = con.prepareStatement("SELECT t1.id,t1.name " +
+                    "FROM t_treenode t1, t_file t2 " +
+                    "WHERE t1.parent_id=? AND t2.id=t1.id " +
+                    "ORDER BY t1.ranking");
             pst.setInt(1, nodeId);
             rs = pst.executeQuery();
-            while (rs.next()) {
-                int i = 1;
-                child = new TreeNodeSortData();
-                child.setId(rs.getInt(i++));
-                child.setName(rs.getString(i));
-                sortData.getChildren().add(child);
-            }
+            addSortData(rs, sortData);
             rs.close();
         } catch (SQLException se) {
             Log.error("sql error", se);

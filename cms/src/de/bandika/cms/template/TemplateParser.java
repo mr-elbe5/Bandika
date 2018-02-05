@@ -19,7 +19,6 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class TemplateParser {
     public static final String PLACEHOLDER_START = "{{";
     public static final String PLACEHOLDER_END = "}}";
 
-    public static List<TemplateData> parseTemplates(String code) throws ParseException{
+    public static List<TemplateData> parseTemplates(String code){
         List<TemplateData> templates=new ArrayList<>();
         Document doc=Jsoup.parse(code,"", Parser.xmlParser());
         Elements elements = doc.getElementsByTag(TEMPLATE_TAG);

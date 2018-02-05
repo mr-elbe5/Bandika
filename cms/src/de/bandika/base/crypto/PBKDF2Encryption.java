@@ -15,7 +15,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
-import java.util.Arrays;
 
 public class PBKDF2Encryption {
 
@@ -47,14 +46,4 @@ public class PBKDF2Encryption {
         return DatatypeConverter.printBase64Binary(getEncryptedPassword(password, salt));
     }
 
-    public static boolean authenticate(String attemptedPassword, byte[] encryptedPassword, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        byte[] encryptedAttemptedPassword = getEncryptedPassword(attemptedPassword, salt);
-        return Arrays.equals(encryptedPassword, encryptedAttemptedPassword);
-    }
-
-    public static boolean authenticateBase64(String attemptedPassword, String passwordBase64, String saltBase64) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        byte[] encryptedPassword = DatatypeConverter.parseBase64Binary(passwordBase64);
-        byte[] salt = DatatypeConverter.parseBase64Binary(saltBase64);
-        return authenticate(attemptedPassword, encryptedPassword, salt);
-    }
 }

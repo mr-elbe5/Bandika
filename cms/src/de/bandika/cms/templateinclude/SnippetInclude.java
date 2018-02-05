@@ -13,19 +13,16 @@ import de.bandika.cms.page.PageData;
 import de.bandika.cms.page.PagePartData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
-import de.bandika.webbase.util.TagAttributes;
-import org.jsoup.nodes.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
-import java.io.IOException;
 
 public class SnippetInclude extends TemplateInclude{
 
     public static final String KEY = "snippet";
 
-    public void writeTemplateInclude(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) throws IOException {
+    public void writeTemplateInclude(PageContext context, JspWriter writer, HttpServletRequest request, PageData pageData, PagePartData partData) {
         TemplateData snippet = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, attributes.getString("name"));
         if (snippet != null) {
             try {

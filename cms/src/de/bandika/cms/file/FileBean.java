@@ -416,7 +416,7 @@ public class FileBean extends TreeBean {
         return inUse;
     }
 
-    public void deleteFile(int id) throws SQLException {
+    public void deleteFile(int id) {
         deleteTreeNode(id);
         PreviewCache.getInstance().remove(id);
     }

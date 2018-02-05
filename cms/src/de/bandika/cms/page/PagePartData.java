@@ -8,7 +8,6 @@
  */
 package de.bandika.cms.page;
 
-import com.drew.lang.annotations.NotNull;
 import de.bandika.base.data.BaseIdData;
 import de.bandika.base.data.XmlData;
 import de.bandika.base.log.Log;
@@ -57,7 +56,7 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
     }
 
     @Override
-    public int compareTo(@NotNull PagePartData data) {
+    public int compareTo(@org.jetbrains.annotations.NotNull PagePartData data) {
         int val = ranking - data.ranking;
         if (val != 0) {
             return val;
@@ -167,7 +166,7 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         this.pageIds = pageIds;
     }
 
-    public boolean executePagePartMethod(String method, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public boolean executePagePartMethod(String method, HttpServletRequest request, HttpServletResponse response) {
         return true;
     }
 
@@ -183,13 +182,13 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         setCssClass(RequestReader.getString(request, "cssClass"));
     }
 
-    public void prepareCopy() throws Exception {
+    public void prepareCopy() {
         setNew(true);
         setId(PageBean.getInstance().getNextId());
     }
 
     @Override
-    public void prepareSave() throws Exception {
+    public void prepareSave() {
         generateXmlContent();
     }
 

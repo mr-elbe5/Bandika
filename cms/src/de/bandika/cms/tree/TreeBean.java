@@ -89,7 +89,10 @@ public class TreeBean extends DbBean {
         PreparedStatement pst = null;
         boolean success = false;
         try {
-            pst = con.prepareStatement("SELECT creation_date,change_date,parent_id,ranking,name,display_name,description,owner_id,author_name,in_navigation,anonymous,inherits_rights FROM t_treenode WHERE id=?");
+            pst = con.prepareStatement("SELECT creation_date,change_date,parent_id,ranking,name,display_name," +
+                    "description,owner_id,author_name,in_navigation,anonymous,inherits_rights " +
+                    "FROM t_treenode " +
+                    "WHERE id=?");
             pst.setInt(1, data.getId());
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
@@ -123,7 +126,12 @@ public class TreeBean extends DbBean {
         }
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(data.isNew() ? "insert into t_treenode (creation_date,change_date,parent_id,ranking,name,display_name,description,owner_id,author_name,in_navigation,anonymous,inherits_rights,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?)" : "update t_treenode set creation_date=?,change_date=?,parent_id=?,ranking=?,name=?,display_name=?,description=?,owner_id=?,author_name=?,in_navigation=?,anonymous=?,inherits_rights=? where id=?");
+            pst = con.prepareStatement(data.isNew() ? "insert into t_treenode (creation_date,change_date,parent_id," +
+                    "ranking,name,display_name,description,owner_id,author_name,in_navigation,anonymous,inherits_rights,id) " +
+                    "values(?,?,?,?,?,?,?,?,?,?,?,?,?)" :
+                    "update t_treenode set creation_date=?,change_date=?,parent_id=?," +
+                            "ranking=?,name=?,display_name=?,description=?,owner_id=?,author_name=?,in_navigation=?,anonymous=?,inherits_rights=? " +
+                            "where id=?");
             int i = 1;
             pst.setTimestamp(i++, Timestamp.valueOf(data.getCreationDate()));
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));

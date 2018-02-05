@@ -15,7 +15,7 @@ import java.text.ParseException;
 
 public interface XmlData {
 
-    public Element toXml(Document xmlDoc, Element parentNode);
+    Element toXml(Document xmlDoc, Element parentNode);
 
-    public void fromXml(Element node) throws ParseException;
+    void fromXml(Element node) throws ParseException;
 }

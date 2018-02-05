@@ -51,7 +51,7 @@ public class TreeHelper {
             writer.write(" class=\"open\"");
         }
         writer.write(">");
-        /************************** site ********************************/
+        /* ************************* site ********************************/
         writer.write("<div class=\"contextSource icn isite");
         if (currentId == data.getId()) {
             writer.write(" selected");
@@ -129,7 +129,7 @@ public class TreeHelper {
             writer.write(" class=\"open\"");
         }
         writer.write(">");
-        /************************** pages ********************************/
+        /* ************************* pages ********************************/
         writer.write("<div class=\"contextSource icn ipages\" data-siteid=\"");
         writer.write(Integer.toString(data.getId()));
         writer.write("\" >");
@@ -168,7 +168,7 @@ public class TreeHelper {
             writer.write(" class=\"open\"");
         }
         writer.write(">");
-        /************************** files ********************************/
+        /* ************************* files ********************************/
         writer.write("<div class=\"contextSource icn ifiles\" data-siteid=\"");
         writer.write(Integer.toString(data.getId()));
         writer.write("\" >");

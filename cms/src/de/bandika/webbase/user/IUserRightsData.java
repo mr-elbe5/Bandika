@@ -13,18 +13,18 @@ import de.bandika.webbase.rights.SystemZone;
 
 public interface IUserRightsData {
 
-    public boolean hasAnySystemRight();
+    boolean hasAnySystemRight();
 
-    public boolean hasAnyElevatedSystemRight();
+    boolean hasAnyElevatedSystemRight();
 
-    public boolean hasSystemRight(SystemZone zone, Right right);
+    boolean hasSystemRight(SystemZone zone, Right right);
 
-    public boolean hasAnyContentRight();
+    boolean hasAnyContentRight();
 
-    public boolean hasContentRight(int id, Right right);
+    boolean hasContentRight(int id, Right right);
 
-    public int getVersion();
+    int getVersion();
 
-    public void setVersion(int version);
+    void setVersion(int version);
 
 }

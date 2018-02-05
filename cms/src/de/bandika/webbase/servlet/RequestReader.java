@@ -151,9 +151,7 @@ public class RequestReader {
     }
 
     public static Set<Integer> getIntegerSet(HttpServletRequest request, String key) {
-        Set<Integer> set = new HashSet<>();
-        set.addAll(getIntegerList(request, key));
-        return set;
+        return new HashSet<>(getIntegerList(request, key));
     }
 
     public static BinaryFileData getFile(HttpServletRequest request, String key) {

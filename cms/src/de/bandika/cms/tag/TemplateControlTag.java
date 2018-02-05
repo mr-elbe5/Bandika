@@ -37,7 +37,8 @@ public class TemplateControlTag extends BaseTag {
         this.pageKey = pageKey;
     }
 
-    public int doStartTag() throws JspException {
+    @Override
+    public int doStartTag() {
         HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
         PageData pageData = null;
         try {

@@ -20,7 +20,7 @@ import java.net.Socket;
 public class PortListener extends BaseThread {
 
     protected ServerSocket listener = null;
-    protected int port = 5000;
+    protected int port;
     protected IPortObjectProcessor processor;
 
     public PortListener(String name, int port, IPortObjectProcessor processor) {

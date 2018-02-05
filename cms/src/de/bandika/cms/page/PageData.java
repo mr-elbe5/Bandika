@@ -140,11 +140,11 @@ public class PageData extends TreeNode {
         setTemplateName(RequestReader.getString(request, "templateName"));
     }
 
-    public void prepareEditing() throws Exception {
+    public void prepareEditing() {
         setEditMode(true);
     }
 
-    public void stopEditing() throws Exception {
+    public void stopEditing() {
         setEditMode(false);
         setEditPagePart(null);
     }

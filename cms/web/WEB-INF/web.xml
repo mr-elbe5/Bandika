@@ -28,6 +28,8 @@
     <servlet-mapping>
         <servlet-name>applicationServlet</servlet-name>
         <url-pattern>/</url-pattern>
+        <url-pattern>*.srv</url-pattern>
+        <url-pattern>*.ajx</url-pattern>
     </servlet-mapping>
     <listener>
         <listener-class>de.bandika.webbase.application.AppContextListener</listener-class>

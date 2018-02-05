@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public abstract class BaseTreeActions extends CmsActions {
 
-    public boolean showTree(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public boolean showTree(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/tree/tree.ajax.jsp");
     }
 

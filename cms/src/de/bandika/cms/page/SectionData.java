@@ -178,13 +178,13 @@ public class SectionData {
         }
     }
 
-    public void prepareCopy() throws Exception {
+    public void prepareCopy() {
         for (PagePartData part : parts) {
             part.prepareCopy();
         }
     }
 
-    public void prepareSave() throws Exception {
+    public void prepareSave() {
         for (PagePartData part : parts) {
             part.prepareSave();
         }

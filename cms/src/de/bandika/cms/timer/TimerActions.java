@@ -25,7 +25,7 @@ public class TimerActions extends CmsActions {
     public static final String openEditTimerTask="openEditTimerTask";
     public static final String saveTimerTask="saveTimerTask";
 
-    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) {
         switch (actionName) {
             case showTimerTaskDetails: {
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))

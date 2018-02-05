@@ -16,9 +16,9 @@ public class SearchQueueAction {
     public static final int ACTION_UPDATE_ID = 4;
     public static final int ACTION_DELETE_ID = 5;
 
-    protected int actionId = 0;
-    protected int id = 0;
-    protected String dataType = "";
+    protected int actionId;
+    protected int id;
+    protected String dataType;
 
     public SearchQueueAction(int actionId, int id, String type) {
         this.actionId = actionId;

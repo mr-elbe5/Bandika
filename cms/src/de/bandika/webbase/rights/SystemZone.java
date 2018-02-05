@@ -9,7 +9,7 @@
 package de.bandika.webbase.rights;
 
 public enum SystemZone {
-    APPLICATION, USER, CONTENT;
+    APPLICATION, USER, CONTENT
 }
 
 

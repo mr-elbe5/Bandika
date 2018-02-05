@@ -39,7 +39,7 @@ public class TimerBean extends DbBean {
                 }
             }
             if (!found) {
-                pst2 = con.prepareStatement("INSERT INTO t_timer_task (name, display_name, interval, active) VALUES(?,?,'CONTINOUS', FALSE)");
+                pst2 = con.prepareStatement("INSERT INTO t_timer_task (name, display_name, execution_interval, active) VALUES(?,?,'CONTINOUS', FALSE)");
                 pst2.setString(1, task.getName());
                 pst2.setString(2, task.getName());
                 pst2.executeUpdate();
@@ -58,7 +58,7 @@ public class TimerBean extends DbBean {
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT display_name,interval,day,hour,minute,note_execution,last_execution,active FROM t_timer_task WHERE name=?");
+            pst = con.prepareStatement("SELECT display_name,execution_interval,day,hour,minute,note_execution,last_execution,active FROM t_timer_task WHERE name=?");
             pst.setString(1, task.getName());
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
@@ -108,7 +108,7 @@ public class TimerBean extends DbBean {
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("UPDATE t_timer_task SET display_name=?,interval=?,day=?,hour=?,minute=?,active=? WHERE name=?");
+            pst = con.prepareStatement("UPDATE t_timer_task SET display_name=?,execution_interval=?,day=?,hour=?,minute=?,active=? WHERE name=?");
             int i = 1;
             pst.setString(i++, task.getDisplayName());
             pst.setString(i++, task.getInterval().name());

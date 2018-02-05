@@ -13,7 +13,7 @@
 %>
 <html>
 <head></head>
-<body style="background: #333 url(/_statics/css/img/carbon.png);">
+<body style="background: #333 url(/_statics/img/carbon.png);">
 &nbsp;
 </body>
 </html>

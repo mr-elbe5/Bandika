@@ -12,8 +12,6 @@ import de.bandika.base.log.Log;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
 
-import javax.servlet.jsp.JspException;
-
 public class SnippetTag extends BaseTag {
     private String name = "";
 
@@ -25,7 +23,8 @@ public class SnippetTag extends BaseTag {
         this.name = name;
     }
 
-    public int doStartTag() throws JspException {
+    @Override
+    public int doStartTag() {
         try {
             TemplateData snippet = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, name);
             getWriter().print(snippet == null ? "" : snippet.getCode());

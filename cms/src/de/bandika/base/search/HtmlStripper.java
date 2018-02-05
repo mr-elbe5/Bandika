@@ -42,7 +42,7 @@ public class HtmlStripper {
         return html;
     }
 
-    public static String stripComments(String html) throws ParseException {
+    public static String stripComments(String html) {
         if (html == null)
             return null;
         int start;
@@ -65,7 +65,7 @@ public class HtmlStripper {
         return buffer.toString();
     }
 
-    public static String stripScripts(String html) throws ParseException {
+    public static String stripScripts(String html) {
         if (html == null)
             return null;
         String lowHtml = html.toLowerCase();

@@ -10,6 +10,7 @@ package de.bandika.cms.tree;
 
 import de.bandika.base.data.BaseIdData;
 import de.bandika.webbase.servlet.RequestReader;
+import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class TreeNodeSortData extends BaseIdData implements Comparable<TreeNodeS
     }
 
     @Override
-    public int compareTo(TreeNodeSortData node) {
+    public int compareTo(@NotNull TreeNodeSortData node) {
         return ranking - node.ranking;
     }
 

@@ -16,11 +16,10 @@ import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspException;
 
 public class PageTag extends BaseTag {
 
-    public int doStartTag() throws JspException {
+    public int doStartTag() {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
             PageData pageData = (PageData) request.getAttribute("pageData");

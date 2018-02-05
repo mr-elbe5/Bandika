@@ -11,8 +11,6 @@ package de.bandika.cms.templateinclude;
 import de.bandika.cms.field.Field;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.page.PagePartData;
-import de.bandika.webbase.util.TagAttributes;
-import org.jsoup.nodes.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;

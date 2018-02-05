@@ -10,7 +10,7 @@ package de.bandika.base.thread;
 
 public interface IStoppable {
 
-    public String getName();
+    String getName();
 
-    public void stop();
+    void stop();
 }

@@ -41,10 +41,9 @@ public class XmlUtil {
         }
     }
 
-    public static Element createRootNode(Document doc, String rootName) {
+    public static void createRootNode(Document doc, String rootName) {
         Element rootNode = doc.createElement(rootName);
         doc.appendChild(rootNode);
-        return rootNode;
     }
 
     public static Element addNode(Document doc, Element parentNode, String name) {

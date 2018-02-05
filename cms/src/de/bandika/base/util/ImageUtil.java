@@ -61,13 +61,7 @@ public class ImageUtil {
         float hfactor = maxHeight == 0 ? 0 : ((float) maxHeight) / source.getHeight();
         float factor = 1;
         if (wfactor != 0 && hfactor != 0) {
-            if (wfactor == 0) {
-                factor = hfactor;
-            } else if (hfactor == 0) {
-                factor = wfactor;
-            } else {
-                factor = Math.min(1, Math.min(wfactor, hfactor));
-            }
+           factor = Math.min(1, Math.min(wfactor, hfactor));
         }
         return factor;
     }

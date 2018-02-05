@@ -87,9 +87,7 @@ public class SearchQueue {
     }
 
     public List<SearchQueueAction> getActions() {
-        ArrayList<SearchQueueAction> lst = new ArrayList<SearchQueueAction>();
-        lst.addAll(actionList);
-        return lst;
+        return new ArrayList<>(actionList);
     }
 
     public void stop() {

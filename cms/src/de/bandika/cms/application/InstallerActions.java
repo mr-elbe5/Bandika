@@ -95,7 +95,7 @@ public class InstallerActions extends CmsActions {
 
     private static final String MASTER_INSTALL = "installMaster.jsp";
 
-    public boolean isAllInstalled() throws Exception {
+    public boolean isAllInstalled()  {
         return Installer.getInstance().isAllInstalled() && badRequest();
     }
 

@@ -123,16 +123,16 @@ public class AdminActions extends CmsActions {
         return forbidden();
     }
 
-    protected boolean showAdministration(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected boolean showAdministration(HttpServletRequest request, HttpServletResponse response)  {
         return sendJspResponse(request, response, "/WEB-INF/_jsp/application/administration.jsp", ADMIN_MASTER);
     }
 
-    protected boolean showAdministration(HttpServletRequest request, HttpServletResponse response, String messageKey) throws Exception {
+    protected boolean showAdministration(HttpServletRequest request, HttpServletResponse response, String messageKey)  {
         request.setAttribute(RequestStatics.KEY_MESSAGEKEY, messageKey);
         return sendJspResponse(request, response, "/WEB-INF/_jsp/application/administration.jsp", ADMIN_MASTER);
     }
 
-    protected boolean showExecuteDatabaseScript(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected boolean showExecuteDatabaseScript(HttpServletRequest request, HttpServletResponse response)  {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/application/executeDatabaseScript.ajax.jsp");
     }
 }

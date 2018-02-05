@@ -17,6 +17,7 @@ public class BaseTag implements Tag {
     protected Tag parent = null;
     protected PageContext context = null;
 
+    @Override
     public void setPageContext(PageContext pageContext) {
         context = pageContext;
     }
@@ -29,22 +30,27 @@ public class BaseTag implements Tag {
         return context.getOut();
     }
 
+    @Override
     public void setParent(Tag tag) {
         parent = tag;
     }
 
+    @Override
     public Tag getParent() {
         return parent;
     }
 
+    @Override
     public int doStartTag() throws JspException {
         return EVAL_BODY_INCLUDE;
     }
 
-    public int doEndTag() throws JspException {
+    @Override
+    public int doEndTag() {
         return 0;
     }
 
+    @Override
     public void release() {
     }
 

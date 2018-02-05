@@ -25,9 +25,7 @@ public class DataCache extends BaseCache{
     }
 
     public static List<DataCache> getAllCaches() {
-        List<DataCache> list = new ArrayList<>();
-        list.addAll(cacheMap.values());
-        return list;
+        return new ArrayList<>(cacheMap.values());
     }
 
     protected String name = "";

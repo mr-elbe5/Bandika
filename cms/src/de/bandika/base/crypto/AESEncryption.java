@@ -21,15 +21,6 @@ public class AESEncryption {
 
     private static final byte[] NULLBYTES = CodecSupport.toBytes("NULL.0000.NULL");
 
-    public static byte[] generateKey() {
-        AesCipherService service = new AesCipherService();
-        return service.generateNewKey(128).getEncoded();
-    }
-
-    public static String generateKeyBase64() {
-        return Base64.encodeToString(generateKey());
-    }
-
     public static String adjustKey(String key) {
         char[] chars = new char[24];
         System.arraycopy(key.toCharArray(), 0, chars, 0, key.length());
@@ -37,17 +28,6 @@ public class AESEncryption {
             chars[i] = '=';
         }
         return new String(chars);
-    }
-
-    public static byte[] encrypt(byte[] data, byte[] key) {
-        CipherService service = new AesCipherService();
-        byte[] original = (data == null) ? NULLBYTES : data;
-        return service.encrypt(original, key).getBytes();
-    }
-
-    public static byte[] encrypt(byte[] data, String keyBase64) {
-        byte[] key = Base64.decode(keyBase64);
-        return encrypt(data, key);
     }
 
     public static String encryptBytes(byte[] data, String keyBase64) {
@@ -60,27 +40,6 @@ public class AESEncryption {
     public static String encryptString(String source, String keyBase64) {
         byte[] original = (source == null) ? null : CodecSupport.toBytes(source);
         return encryptBytes(original, keyBase64);
-    }
-
-    public static String encryptDate(LocalDateTime date, String keyBase64) {
-        String original = (date == null) ? null : date.toString();
-        return encryptString(original, keyBase64);
-    }
-
-    public static String encryptNumber(Number number, String keyBase64) {
-        String original = (number == null) ? null : number.toString();
-        return encryptString(original, keyBase64);
-    }
-
-    public static byte[] decrypt(byte[] cipherText, byte[] key) {
-        CipherService service = new AesCipherService();
-        byte[] original = service.decrypt(cipherText, key).getBytes();
-        return Arrays.equals(original, NULLBYTES) ? null : original;
-    }
-
-    public static byte[] decrypt(byte[] cipherText, String keyBase64) {
-        byte[] key = Base64.decode(keyBase64);
-        return decrypt(cipherText, key);
     }
 
     public static byte[] decryptBytes(String cipherTextBase64, String keyBase64) {
@@ -100,13 +59,4 @@ public class AESEncryption {
         return (original == null) ? null : CodecSupport.toString(original);
     }
 
-    public static LocalDateTime decryptDate(String cipherTextBase64, String keyBase64) {
-        String dateString = decryptString(cipherTextBase64, keyBase64);
-        return (dateString == null) ? null : LocalDateTime.parse(dateString);
-    }
-
-    public static Number decryptNumber(String cipherTextBase64, String keyBase64) {
-        String numString = decryptString(cipherTextBase64, keyBase64);
-        return (numString == null) ? null : Double.valueOf(numString);
-    }
 }

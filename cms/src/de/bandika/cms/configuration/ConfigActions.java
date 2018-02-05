@@ -41,7 +41,7 @@ public class ConfigActions extends CmsActions {
             case openEditConfiguration:{
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
                     return false;
-                Configuration config = null;
+                Configuration config;
                 try {
                     config = (Configuration) Configuration.getInstance().clone();
                 } catch (CloneNotSupportedException ignore) {

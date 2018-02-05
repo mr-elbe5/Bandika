@@ -84,6 +84,10 @@ public abstract class ActionSet {
         return sendBinaryResponse(request, response, fileName, contentType, bytes, false);
     }
 
+    protected boolean sendBinaryDownloadResponse(HttpServletRequest request, HttpServletResponse response, String fileName, String contentType, byte[] bytes) throws IOException {
+        return sendBinaryResponse(request, response, fileName, contentType, bytes, true);
+    }
+
     protected boolean sendBinaryResponse(HttpServletRequest request, HttpServletResponse response, String fileName, String contentType, byte[] bytes, boolean forceDownload) throws IOException {
         setResponseType(request, RequestStatics.RESPONSE_TYPE_STREAM);
         if (contentType != null && !contentType.isEmpty()) {
@@ -218,7 +222,7 @@ public abstract class ActionSet {
         return closeLayer(request, response, "linkTo('" + url + "&" + RequestStatics.KEY_MESSAGEKEY + "=" + messageKey + "');");
     }
 
-    protected boolean showHome(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected boolean showHome(HttpServletRequest request, HttpServletResponse response) {
         return sendRedirect(request, response, "/default.srv");
     }
 

@@ -35,8 +35,12 @@ public class HeadControl extends TemplateControl {
         if (pageData==null)
             return;
         Locale locale = SessionReader.getSessionLocale(request);
-        writer.write("<title>" + StringUtil.getHtml("appTitle", locale) + "</title>\n");
-        writer.write("<meta name=\"keywords\" content=\"" + StringUtil.toHtml(pageData.getKeywords()) + "\">\n");
+        writer.write("<title>" +
+                StringUtil.getHtml("appTitle", locale) +
+                "</title>\n");
+        writer.write("<meta name=\"keywords\" content=\"" +
+                StringUtil.toHtml(pageData.getKeywords()) +
+                "\">\n");
     }
 
 }

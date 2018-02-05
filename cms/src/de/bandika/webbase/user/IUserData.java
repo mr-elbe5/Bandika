@@ -12,36 +12,34 @@ import java.util.Locale;
 
 public interface IUserData {
 
-    public static final int ID_SYSTEM = 1;
+    int getId();
 
-    public int getId();
+    String getTitle();
 
-    public String getTitle();
+    void setTitle(String title);
 
-    public void setTitle(String title);
+    String getName();
 
-    public String getName();
+    Locale getLocale();
 
-    public Locale getLocale();
+    void setLocale(Locale locale);
 
-    public void setLocale(Locale locale);
+    void setLocale(String localeName);
 
-    public void setLocale(String localeName);
+    String getEmail();
 
-    public String getEmail();
+    void setEmail(String email);
 
-    public void setEmail(String email);
+    String getLogin();
 
-    public String getLogin();
+    void setLogin(String login);
 
-    public void setLogin(String login);
+    String getPassword();
 
-    public String getPassword();
+    void setPassword(String password);
 
-    public void setPassword(String password);
+    IUserRightsData getRights();
 
-    public IUserRightsData getRights();
-
-    public boolean checkRights();
+    boolean checkRights();
 
 }

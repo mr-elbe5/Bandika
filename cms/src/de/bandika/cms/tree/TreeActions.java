@@ -50,7 +50,7 @@ public class TreeActions extends ActionSet {
         return KEY;
     }
 
-    public boolean showTree(HttpServletRequest request, HttpServletResponse response, String messageKey) throws Exception {
+    public boolean showTree(HttpServletRequest request, HttpServletResponse response, String messageKey) {
         request.setAttribute(RequestStatics.KEY_MESSAGEKEY, messageKey);
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/tree/tree.ajax.jsp");
     }

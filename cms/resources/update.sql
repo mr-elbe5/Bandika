@@ -164,6 +164,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+alter table t_timer_task RENAME COLUMN interval to execution_interval;
+
 
 
 

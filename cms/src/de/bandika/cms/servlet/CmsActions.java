@@ -19,15 +19,15 @@ import javax.servlet.http.HttpServletResponse;
 
 public abstract class CmsActions extends ActionSet {
 
-    protected boolean hasSystemRight(HttpServletRequest request, SystemZone zone, Right right) throws Exception {
+    protected boolean hasSystemRight(HttpServletRequest request, SystemZone zone, Right right) {
         return SessionReader.hasSystemRight(request, zone, right) || forbidden();
     }
 
-    protected boolean hasContentRight(HttpServletRequest request, int id, Right right) throws Exception {
+    protected boolean hasContentRight(HttpServletRequest request, int id, Right right) {
         return SessionReader.hasContentRight(request, id, right) || forbidden();
     }
 
-    protected boolean hasAnyContentRight(HttpServletRequest request) throws Exception {
+    protected boolean hasAnyContentRight(HttpServletRequest request) {
         return SessionReader.hasAnyContentRight(request) || forbidden();
     }
 

@@ -7,7 +7,6 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.cms.configuration.Configuration" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.cms.site.SiteData" %>
 <%@ page import="de.bandika.cms.tree.TreeCache" %>

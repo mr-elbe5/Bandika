@@ -27,9 +27,7 @@ public class FileCache<T extends BinaryFileBaseData> extends BaseCache{
     }
 
     public static List<FileCache> getAllCaches() {
-        List<FileCache> list = new ArrayList<>();
-        list.addAll(cacheMap.values());
-        return list;
+        return new ArrayList<>(cacheMap.values());
     }
 
     protected String name = "";

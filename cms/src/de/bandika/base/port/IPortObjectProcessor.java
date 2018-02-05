@@ -10,5 +10,5 @@ package de.bandika.base.port;
 
 public interface IPortObjectProcessor {
 
-    public Object processObject(Object obj);
+    Object processObject(Object obj);
 }
