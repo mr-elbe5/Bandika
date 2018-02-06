@@ -26,7 +26,6 @@ import de.bandika.cms.search.SearchIndexTask;
 import de.bandika.cms.site.SiteActions;
 import de.bandika.cms.template.TemplateActions;
 import de.bandika.cms.template.TemplateCache;
-import de.bandika.cms.templatecontrol.*;
 import de.bandika.cms.timer.HeartbeatTask;
 import de.bandika.cms.timer.TimerActions;
 import de.bandika.cms.timer.TimerController;
@@ -71,14 +70,6 @@ public class CmsInitializer extends Initializer {
             Fields.registerFieldType(ImageField.FIELDTYPE_IMAGE, ImageField.class);
             Fields.registerFieldType(TextField.FIELDTYPE_TEXT, TextField.class);
             Fields.registerFieldType(ScriptField.FIELDTYPE_SCRIPT, ScriptField.class);
-            TemplateControls.addPageControlClass(MainMenuControl.KEY, MainMenuControl.class);
-            TemplateControls.addPageControlClass(BreadcrumbControl.KEY, BreadcrumbControl.class);
-            TemplateControls.addPageControlClass(TopNavControl.KEY, TopNavControl.class);
-            TemplateControls.addPageControlClass(MessageControl.KEY, MessageControl.class);
-            TemplateControls.addPageControlClass(HeadControl.KEY, HeadControl.class);
-            TemplateControls.addPageControlClass(LayerControl.KEY, LayerControl.class);
-            TemplateControls.addPageControlClass(DocumentListControl.KEY, DocumentListControl.class);
-            TemplateControls.addPageControlClass(SubMenuControl.KEY, SubMenuControl.class);
 
             Configuration config = ConfigurationBean.getInstance().getConfiguration();
             Configuration.getInstance().loadAppConfiguration(config);

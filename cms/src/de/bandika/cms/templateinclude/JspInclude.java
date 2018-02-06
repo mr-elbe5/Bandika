@@ -21,7 +21,7 @@ public class JspInclude extends TemplateInclude{
 
     public static final String KEY = "jsp";
 
-    public void writeTemplateInclude(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+    public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         Writer writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
         String url = attributes.getString("url");

@@ -20,7 +20,7 @@ public class SectionInclude extends TemplateInclude{
 
     public static final String KEY = "section";
 
-    public void writeTemplateInclude(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+    public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         Writer writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
         String sectionName = attributes.getString("name");

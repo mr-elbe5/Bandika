@@ -123,7 +123,7 @@ public class TemplateData extends BaseData implements Serializable {
             if (end==-1) throw new IOException("missing placeholder");
             writer.write(parsedCode.substring(start,end));
             templatePart.completeOutputData(outputData);
-            templatePart.writeTemplateInclude(outputContext, outputData);
+            templatePart.writeHtml(outputContext, outputData);
             start=end+placeholder.length();
         }
         writer.write(parsedCode.substring(start));

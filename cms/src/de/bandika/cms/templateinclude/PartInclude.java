@@ -16,7 +16,7 @@ public class PartInclude extends TemplateInclude{
 
     public static final String KEY = "part";
 
-    public void writeTemplateInclude(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+    public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         //todo
         String templateName = attributes.get("template");
         int idx = attributes.getInt("id");

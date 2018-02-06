@@ -18,7 +18,7 @@ public class SnippetInclude extends TemplateInclude{
 
     public static final String KEY = "snippet";
 
-    public void writeTemplateInclude(PageOutputContext outputContext, PageOutputData outputData) {
+    public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) {
         TemplateData snippet = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, attributes.getString("name"));
         if (snippet != null) {
             try {

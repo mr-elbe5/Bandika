@@ -6,7 +6,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.cms.templatecontrol;
+package de.bandika.cms.templateinclude;
 
 import de.bandika.base.util.StringUtil;
 import de.bandika.cms.page.PageOutputContext;
@@ -23,7 +23,7 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Locale;
 
-public class TopNavControl extends TemplateControl {
+public class TopNavControl extends TemplateInclude {
 
     public static final String KEY = "topNav";
 
@@ -35,7 +35,7 @@ public class TopNavControl extends TemplateControl {
         return instance;
     }
 
-    public void appendHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+    public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         Writer writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
         Locale locale = SessionReader.getSessionLocale(request);

@@ -9,7 +9,6 @@
 package de.bandika.cms.template;
 
 import de.bandika.base.log.Log;
-import de.bandika.cms.templatecontrol.*;
 import de.bandika.cms.templateinclude.*;
 import de.bandika.webbase.util.TagAttributes;
 import org.jsoup.Jsoup;

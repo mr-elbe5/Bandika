@@ -17,7 +17,7 @@ public class FieldInclude extends TemplateInclude{
 
     public static final String KEY = "field";
 
-    public void writeTemplateInclude(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+    public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         Field field = outputData.partData.ensureField(getAttributes().get("name"), getAttributes().get("fieldType"));
         outputData.attributes=attributes;
         outputData.content=content;

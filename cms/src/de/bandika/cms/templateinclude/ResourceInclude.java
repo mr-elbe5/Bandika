@@ -21,7 +21,7 @@ public class ResourceInclude extends TemplateInclude{
 
     public static final String KEY = "resource";
 
-    public void writeTemplateInclude(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+    public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         Writer writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
         writer.write(StringUtil.getHtml(attributes.get("key"), SessionReader.getSessionLocale(request)));

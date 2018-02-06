@@ -6,7 +6,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.cms.templatecontrol;
+package de.bandika.cms.templateinclude;
 
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.page.PageOutputContext;
@@ -21,7 +21,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainMenuControl extends TemplateControl {
+public class MainMenuControl extends TemplateInclude {
 
     public static final String KEY = "mainMenu";
 
@@ -33,7 +33,7 @@ public class MainMenuControl extends TemplateControl {
         return instance;
     }
 
-    public void appendHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+    public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         Writer writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
         TreeCache tc = TreeCache.getInstance();

@@ -8,12 +8,14 @@
  */
 package de.bandika.cms.templateinclude;
 
+import de.bandika.base.util.StringUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.webbase.util.TagAttributes;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Locale;
 
 public abstract class TemplateInclude implements Serializable {
 
@@ -36,11 +38,21 @@ public abstract class TemplateInclude implements Serializable {
         this.attributes = attributes;
     }
 
-    public abstract void writeTemplateInclude(PageOutputContext outputContext, PageOutputData outputData) throws IOException;
+    public abstract void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException;
 
     public void completeOutputData(PageOutputData outputData){
         outputData.attributes=attributes;
         outputData.content=content;
+    }
+
+    // conveniance methods
+
+    protected String toHtml(String src) {
+        return StringUtil.toHtml(src);
+    }
+
+    protected String getHtml(String key, Locale locale) {
+        return StringUtil.getHtml(key, locale);
     }
 
 }
