@@ -10,6 +10,7 @@ package de.bandika.cms.field;
 
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
+import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.webbase.servlet.RequestReader;
 import org.w3c.dom.Document;
@@ -17,6 +18,7 @@ import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.Writer;
 
 public class ScriptField extends Field {
 
@@ -46,20 +48,22 @@ public class ScriptField extends Field {
     }
 
     @Override
-    public void appendFieldHtml(PageOutputData outputData) throws IOException {
+    public void appendFieldHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+        Writer writer=outputContext.getWriter();
+        HttpServletRequest request=outputContext.getRequest();
         boolean partEditMode = outputData.pageData.isEditMode() && outputData.partData == outputData.pageData.getEditPagePart();
         int height = outputData.attributes.getInt("height");
         if (partEditMode) {
-            outputData.writer.write("<textarea class=\"editField\" name=\"" + getIdentifier() + "\" rows=\"5\" ");
+            writer.write("<textarea class=\"editField\" name=\"" + getIdentifier() + "\" rows=\"5\" ");
             if (height == -1) {
-                outputData.writer.write("style=\"height:" + height + "\"");
+                writer.write("style=\"height:" + height + "\"");
             }
-            outputData.writer.write(" >" + StringUtil.toHtmlInput(getCode()) + "</textarea>");
+            writer.write(" >" + StringUtil.toHtmlInput(getCode()) + "</textarea>");
         } else {
             if (getCode().length() == 0) {
-                outputData.writer.write(outputData.content);
+                writer.write(outputData.content);
             } else {
-                outputData.writer.write("<script type=\"text/javascript\">" + getCode() + "</script>");
+                writer.write("<script type=\"text/javascript\">" + getCode() + "</script>");
             }
         }
     }

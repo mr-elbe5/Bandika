@@ -9,11 +9,13 @@
 package de.bandika.cms.template;
 
 import de.bandika.base.data.BaseData;
+import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.templateinclude.TemplateInclude;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,7 +111,8 @@ public class TemplateData extends BaseData implements Serializable {
         return templateIncludes;
     }
 
-    public void writeTemplate(PageOutputData outputData) throws IOException {
+    public void writeTemplate(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+        Writer writer=outputContext.getWriter();
         int start=0;
         int end;
         String placeholder;
@@ -118,12 +121,12 @@ public class TemplateData extends BaseData implements Serializable {
             placeholder="{{"+i+"}}";
             end=parsedCode.indexOf(placeholder,start);
             if (end==-1) throw new IOException("missing placeholder");
-            outputData.writer.write(parsedCode.substring(start,end));
+            writer.write(parsedCode.substring(start,end));
             templatePart.completeOutputData(outputData);
-            templatePart.writeTemplateInclude(outputData);
+            templatePart.writeTemplateInclude(outputContext, outputData);
             start=end+placeholder.length();
         }
-        outputData.writer.write(parsedCode.substring(start));
+        writer.write(parsedCode.substring(start));
     }
 
 }

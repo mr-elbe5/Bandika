@@ -10,16 +10,13 @@ package de.bandika.cms.page;
 
 import de.bandika.webbase.util.TagAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
-
 public class PageOutputData {
 
-    public PageContext context=null;
-    public JspWriter writer=null;
-    public HttpServletRequest request=null;
-    public PageData pageData=null;
+    public PageOutputData(PageData data){
+        pageData=data;
+    }
+
+    public PageData pageData;
     public PagePartData partData=null;
     public TagAttributes attributes=null;
     public String content="";

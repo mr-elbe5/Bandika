@@ -6,22 +6,26 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.cms.templateinclude;
+package de.bandika.cms.page;
 
-import de.bandika.cms.page.PageOutputContext;
-import de.bandika.cms.page.PageOutputData;
-import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.PageContext;
+import java.io.Writer;
 
-public class PartInclude extends TemplateInclude{
+public class PageOutputContext {
 
-    public static final String KEY = "part";
+    public PageContext context;
 
-    public void writeTemplateInclude(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        //todo
-        String templateName = attributes.get("template");
-        int idx = attributes.getInt("id");
-        //PagePartData data = pageData.ensureStaticPart(templateName, idx);
-        //data.appendPartHtml(context, writer, request, "", pageData);
+    public PageOutputContext(PageContext context){
+        this.context=context;
+    }
+
+    public Writer getWriter(){
+        return context!=null ? context.getOut() : null;
+    }
+
+    public HttpServletRequest getRequest(){
+        return context!=null ? (HttpServletRequest) context.getRequest() : null;
     }
 
 }

@@ -10,6 +10,7 @@ package de.bandika.cms.field;
 
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
+import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.webbase.servlet.RequestReader;
 import org.w3c.dom.Document;
@@ -17,6 +18,7 @@ import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.Writer;
 
 public class TextField extends Field {
 
@@ -46,7 +48,9 @@ public class TextField extends Field {
     }
 
     @Override
-    public void appendFieldHtml(PageOutputData outputData) throws IOException {
+    public void appendFieldHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+        Writer writer=outputContext.getWriter();
+        HttpServletRequest request=outputContext.getRequest();
         boolean partEditMode = outputData.pageData.isEditMode() && outputData.partData == outputData.pageData.getEditPagePart();
         int rows = outputData.attributes.getInt("rows");
         if (partEditMode) {
@@ -54,14 +58,14 @@ public class TextField extends Field {
             if (content.isEmpty())
                 content = outputData.content;
             if (rows > 1)
-                outputData.writer.write("<textarea class=\"editField\" name=\"" + getIdentifier() + "\" rows=\"" + rows + "\" >" + StringUtil.toHtmlInput(content) + "</textarea>");
+                writer.write("<textarea class=\"editField\" name=\"" + getIdentifier() + "\" rows=\"" + rows + "\" >" + StringUtil.toHtmlInput(content) + "</textarea>");
             else
-                outputData.writer.write("<input type=\"text\" class=\"editField\" name=\"" + getIdentifier() + "\" value=\"" + StringUtil.toHtmlInput(content) + "\" />");
+                writer.write("<input type=\"text\" class=\"editField\" name=\"" + getIdentifier() + "\" value=\"" + StringUtil.toHtmlInput(content) + "\" />");
         } else {
             if (getText().length() == 0) {
-                outputData.writer.write("&nbsp;");
+                writer.write("&nbsp;");
             } else {
-                outputData.writer.write(StringUtil.toHtmlText(getText()));
+                writer.write(StringUtil.toHtmlText(getText()));
             }
         }
     }

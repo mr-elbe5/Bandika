@@ -12,6 +12,7 @@ import de.bandika.base.data.BaseData;
 import de.bandika.base.data.XmlData;
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
+import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -81,7 +82,7 @@ public abstract class Field implements Cloneable, XmlData {
 
     /******************* HTML part *********************************/
 
-    public abstract void appendFieldHtml(PageOutputData outputData) throws IOException;
+    public abstract void appendFieldHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException;
 
     /******************* XML part *********************************/
 

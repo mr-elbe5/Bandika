@@ -32,7 +32,7 @@
                         <%=StringUtil.getString("_structure", SessionReader.getSessionLocale(request))%>
                     </h3>
                     <ul id="structure" class="treeRoot">
-                        <%TreeHelper.addAdminSiteNode(pageContext, out, request, tc.getRootSite(), nodeId, parentIds, locale);%>
+                        <%TreeHelper.addAdminSiteNode(out, request, tc.getRootSite(), nodeId, parentIds, locale);%>
                     </ul>
                     <%}%>
                 </div>

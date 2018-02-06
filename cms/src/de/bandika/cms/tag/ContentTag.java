@@ -10,13 +10,14 @@ package de.bandika.cms.tag;
 
 import de.bandika.base.log.Log;
 import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspWriter;
+import java.io.Writer;
 
 public class ContentTag extends BaseTag {
 
@@ -25,13 +26,10 @@ public class ContentTag extends BaseTag {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
             PageData pageData = (PageData) request.getAttribute("pageData");
             TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PAGE, pageData.getTemplateName());
-            JspWriter writer = getWriter();
-            PageOutputData outputData=new PageOutputData();
-            outputData.context=context;
-            outputData.writer=writer;
-            outputData.request=request;
-            outputData.pageData=pageData;
-            pageTemplate.writeTemplate(outputData);
+            Writer writer = getWriter();
+            PageOutputContext outputContext=new PageOutputContext(context);
+            PageOutputData outputData=new PageOutputData(pageData);
+            pageTemplate.writeTemplate(outputContext, outputData);
             if (pageData.getEditPagePart() != null) {
                 writer.write("<script>$('.editControl').hide();</script>");
             } else {

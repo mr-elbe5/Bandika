@@ -9,9 +9,13 @@
 package de.bandika.cms.templatecontrol;
 
 import de.bandika.base.util.StringUtil;
+import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.webbase.servlet.SessionReader;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Locale;
 
 public class HeadControl extends TemplateControl {
@@ -26,14 +30,16 @@ public class HeadControl extends TemplateControl {
         return instance;
     }
 
-    public void appendHtml(PageOutputData outputData) throws IOException {
+    public void appendHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+        Writer writer=outputContext.getWriter();
+        HttpServletRequest request=outputContext.getRequest();
         if (outputData.pageData==null)
             return;
-        Locale locale = SessionReader.getSessionLocale(outputData.request);
-        outputData.writer.write("<title>" +
+        Locale locale = SessionReader.getSessionLocale(request);
+        writer.write("<title>" +
                 StringUtil.getHtml("appTitle", locale) +
                 "</title>\n");
-        outputData.writer.write("<meta name=\"keywords\" content=\"" +
+        writer.write("<meta name=\"keywords\" content=\"" +
                 StringUtil.toHtml(outputData.pageData.getKeywords()) +
                 "\">\n");
     }

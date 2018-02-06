@@ -9,9 +9,9 @@
 package de.bandika.cms.tag;
 
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
+import java.io.Writer;
 
 public class BaseTag implements Tag {
     protected Tag parent = null;
@@ -26,7 +26,7 @@ public class BaseTag implements Tag {
         return context;
     }
 
-    public JspWriter getWriter() {
+    public Writer getWriter() {
         return context.getOut();
     }
 

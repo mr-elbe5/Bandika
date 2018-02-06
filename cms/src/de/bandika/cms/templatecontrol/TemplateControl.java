@@ -9,6 +9,7 @@
 package de.bandika.cms.templatecontrol;
 
 import de.bandika.base.util.StringUtil;
+import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.templateinclude.TemplateInclude;
 import java.io.IOException;
@@ -24,10 +25,10 @@ public abstract class TemplateControl extends TemplateInclude{
         return StringUtil.getHtml(key, locale);
     }
 
-    public void writeTemplateInclude(PageOutputData outputData) throws IOException {
-        appendHtml(outputData);
+    public void writeTemplateInclude(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+        appendHtml(outputContext, outputData);
     }
 
-    public abstract void appendHtml(PageOutputData outputData) throws IOException;
+    public abstract void appendHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException;
 
 }

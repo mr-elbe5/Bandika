@@ -10,12 +10,16 @@ package de.bandika.cms.templatecontrol;
 
 import de.bandika.base.util.StringUtil;
 import de.bandika.cms.file.FileData;
+import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.site.SiteData;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.servlet.SessionReader;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,17 +35,19 @@ public class DocumentListControl extends TemplateControl {
         return instance;
     }
 
-    public void appendHtml(PageOutputData outputData) throws IOException {
+    public void appendHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+        Writer writer=outputContext.getWriter();
+        HttpServletRequest request=outputContext.getRequest();
         if (outputData.pageData==null)
             return;
         int siteId = outputData.pageData.getParentId();
         SiteData site = TreeCache.getInstance().getSite(siteId);
-        Locale locale = SessionReader.getSessionLocale(outputData.request);
+        Locale locale = SessionReader.getSessionLocale(request);
         List<FileData> files = site.getFiles();
         for (FileData file : files) {
-            if (!file.isAnonymous() && !SessionReader.hasContentRight(outputData.request, file.getId(), Right.READ))
+            if (!file.isAnonymous() && !SessionReader.hasContentRight(request, file.getId(), Right.READ))
                 continue;
-            outputData.writer.write("<div class=\"documentListLine icn ifile\"><a href=\"" +
+            writer.write("<div class=\"documentListLine icn ifile\"><a href=\"" +
                     file.getUrl() +
                     "\" target=\"_blank\" title=\"" +
                     StringUtil.getHtml("_show", locale) +

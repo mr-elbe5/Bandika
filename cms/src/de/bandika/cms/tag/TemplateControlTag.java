@@ -10,6 +10,7 @@ package de.bandika.cms.tag;
 
 import de.bandika.base.log.Log;
 import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.templatecontrol.TemplateControl;
 import de.bandika.cms.templatecontrol.TemplateControls;
@@ -46,13 +47,10 @@ public class TemplateControlTag extends BaseTag {
                 pageData = (PageData) request.getAttribute(pageKey);
             TemplateControl control = TemplateControls.getControl(name);
             if (control != null) {
-                PageOutputData outputData=new PageOutputData();
-                outputData.context=context;
-                outputData.writer=getWriter();
-                outputData.request=request;
-                outputData.pageData=pageData;
+                PageOutputContext outputContext=new PageOutputContext(context);
+                PageOutputData outputData=new PageOutputData(pageData);
                 outputData.content=content;
-                control.appendHtml(outputData);
+                control.appendHtml(outputContext, outputData);
             }
         } catch (Exception e) {
             Log.error("could not write control tag", e);

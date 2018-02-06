@@ -9,6 +9,7 @@
 package de.bandika.cms.templateinclude;
 
 import de.bandika.base.log.Log;
+import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
@@ -16,40 +17,44 @@ import de.bandika.webbase.servlet.RequestReader;
 import de.bandika.webbase.servlet.RequestStatics;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.Writer;
 
 public class ContentInclude extends TemplateInclude{
 
     public static final String KEY = "content";
 
-    public void writeTemplateInclude(PageOutputData outputData) throws IOException {
+    public void writeTemplateInclude(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+        Writer writer=outputContext.getWriter();
+        HttpServletRequest request=outputContext.getRequest();
         if (outputData.pageData!=null) {
             if (outputData.pageData.isEditMode()) {
-                outputData.writer.write("<div id=\"pageContent\" class=\"editArea\">");
+                writer.write("<div id=\"pageContent\" class=\"editArea\">");
             } else {
-                outputData.writer.write("<div id=\"pageContent\" class=\"viewArea\">");
+                writer.write("<div id=\"pageContent\" class=\"viewArea\">");
             }
             TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PAGE, outputData.pageData.getTemplateName());
-            pageTemplate.writeTemplate(outputData);
+            pageTemplate.writeTemplate(outputContext, outputData);
             if (outputData.pageData.getEditPagePart() != null) {
-                outputData.writer.write("<script>$('.editControl').hide();</script>");
+                writer.write("<script>$('.editControl').hide();</script>");
             } else {
-                outputData.writer.write("<script>$('.editControl').show();</script>");
+                writer.write("<script>$('.editControl').show();</script>");
             }
             if (outputData.pageData.isEditMode()) {
-                outputData.writer.write("</div><script>$('#pageContent').initEditArea();</script>");
+                writer.write("</div><script>$('#pageContent').initEditArea();</script>");
             } else {
-                outputData.writer.write("</div>");
+                writer.write("</div>");
             }
         }
         else{
-            String jsp = RequestReader.getString(outputData.request, RequestStatics.KEY_JSP);
+            String jsp = RequestReader.getString(request, RequestStatics.KEY_JSP);
             if (!jsp.isEmpty()){
                 try {
-                    outputData.context.include(jsp);
+                    outputContext.context.include(jsp);
                 } catch (ServletException e) {
                     Log.error("could not include jsp:" + jsp, e);
-                    outputData.writer.write("<div>JSP missing</div>");
+                    writer.write("<div>JSP missing</div>");
                 }
             }
         }

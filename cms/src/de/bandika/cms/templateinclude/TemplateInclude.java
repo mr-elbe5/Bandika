@@ -8,6 +8,7 @@
  */
 package de.bandika.cms.templateinclude;
 
+import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.webbase.util.TagAttributes;
 
@@ -35,7 +36,7 @@ public abstract class TemplateInclude implements Serializable {
         this.attributes = attributes;
     }
 
-    public abstract void writeTemplateInclude(PageOutputData outputData) throws IOException;
+    public abstract void writeTemplateInclude(PageOutputContext outputContext, PageOutputData outputData) throws IOException;
 
     public void completeOutputData(PageOutputData outputData){
         outputData.attributes=attributes;

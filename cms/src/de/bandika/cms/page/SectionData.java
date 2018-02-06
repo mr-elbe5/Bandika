@@ -12,7 +12,10 @@ import de.bandika.base.util.StringUtil;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
 import de.bandika.webbase.servlet.SessionReader;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.*;
 
 public class SectionData {
@@ -187,24 +190,26 @@ public class SectionData {
 
     /******************* HTML part *********************************/
 
-    public void appendSectionHtml(PageOutputData outputData) throws IOException {
+    public void appendSectionHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+        Writer writer=outputContext.getWriter();
+        HttpServletRequest request=outputContext.getRequest();
         boolean editMode = outputData.pageData.isEditMode();
-        Locale locale = SessionReader.getSessionLocale(outputData.request);
+        Locale locale = SessionReader.getSessionLocale(request);
         String cls = outputData.attributes.getString("class");
         boolean hasParts = getParts().size() > 0;
         if (editMode) {
-            outputData.writer.write("<div class = \"editSection\">");
+            writer.write("<div class = \"editSection\">");
             if (hasParts) {
-                outputData.writer.write("<div class = \"editSectionHeader\">Section " +
+                writer.write("<div class = \"editSectionHeader\">Section " +
                         getName() +
                         "</div>");
             } else {
-                outputData.writer.write("<div class = \"editSectionHeader empty contextSource\" title=\"" +
+                writer.write("<div class = \"editSectionHeader empty contextSource\" title=\"" +
                         StringUtil.getHtml("_rightClickEditHint") +
                         "\">Section " +
                         getName() +
                         "</div>");
-                outputData.writer.write("<div class = \"contextMenu\"><div class=\"icn inew\" onclick = \"return openLayerDialog('" +
+                writer.write("<div class = \"contextMenu\"><div class=\"icn inew\" onclick = \"return openLayerDialog('" +
                         StringUtil.getHtml("_addPart", locale) +
                         "', '/pagepart.ajx?act=openAddPagePart&pageId=" +
                         outputData.pageData.getId() +
@@ -218,16 +223,16 @@ public class SectionData {
             }
         }
         if (!getParts().isEmpty()) {
-            outputData.writer.write("<div class = \"section " +
+            writer.write("<div class = \"section " +
                     cls +
                     "\">");
             for (PagePartData pdata : getParts()) {
-                pdata.appendPartHtml(outputData);
+                pdata.appendPartHtml(outputContext, outputData);
             }
-            outputData.writer.write("</div>");
+            writer.write("</div>");
         }
         if (editMode) {
-            outputData.writer.write("</div>");
+            writer.write("</div>");
         }
     }
 

@@ -9,25 +9,20 @@
 package de.bandika.cms.templateinclude;
 
 import de.bandika.base.log.Log;
-import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
-import de.bandika.cms.page.PagePartData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 
 public class SnippetInclude extends TemplateInclude{
 
     public static final String KEY = "snippet";
 
-    public void writeTemplateInclude(PageOutputData outputData) {
+    public void writeTemplateInclude(PageOutputContext outputContext, PageOutputData outputData) {
         TemplateData snippet = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, attributes.getString("name"));
         if (snippet != null) {
             try {
-                snippet.writeTemplate(outputData);
+                snippet.writeTemplate(outputContext, outputData);
             } catch (Exception e) {
                 Log.error("error in snippet template", e);
             }

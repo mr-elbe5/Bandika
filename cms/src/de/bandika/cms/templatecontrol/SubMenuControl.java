@@ -9,6 +9,7 @@
 package de.bandika.cms.templatecontrol;
 
 import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.site.SiteData;
 import de.bandika.cms.tree.TreeCache;
@@ -16,9 +17,8 @@ import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
+import java.io.Writer;
 
 public class SubMenuControl extends TemplateControl {
 
@@ -32,17 +32,19 @@ public class SubMenuControl extends TemplateControl {
         return instance;
     }
 
-    public void appendHtml(PageOutputData outputData) throws IOException {
+    public void appendHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+        Writer writer=outputContext.getWriter();
+        HttpServletRequest request=outputContext.getRequest();
         if (outputData.pageData == null)
             return;
         TreeCache tc = TreeCache.getInstance();
         SiteData parentSite = tc.getSite(outputData.pageData.getParentId());
-        outputData.writer.write("<nav class=\"subNav links\"><ul>");
-        addNodes(outputData.context, outputData.writer, outputData.request, parentSite, outputData.pageData.getId());
-        outputData.writer.write("</ul></nav>");
+        writer.write("<nav class=\"subNav links\"><ul>");
+        addNodes(writer, request, parentSite, outputData.pageData.getId());
+        writer.write("</ul></nav>");
     }
 
-    public void addNodes(PageContext context, JspWriter writer, HttpServletRequest request, SiteData parentSite, int currentId) throws IOException {
+    public void addNodes(Writer writer, HttpServletRequest request, SiteData parentSite, int currentId) throws IOException {
         for (SiteData site : parentSite.getSites()) {
             if (site.isInNavigation() && (site.isAnonymous() || SessionReader.hasContentRight(request, site.getId(), Right.READ))) {
                 writer.write("<li><a class=\"active\"");

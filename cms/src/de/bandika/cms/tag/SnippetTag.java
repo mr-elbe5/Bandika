@@ -27,7 +27,7 @@ public class SnippetTag extends BaseTag {
     public int doStartTag() {
         try {
             TemplateData snippet = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, name);
-            getWriter().print(snippet == null ? "" : snippet.getCode());
+            getWriter().write(snippet == null ? "" : snippet.getCode());
         } catch (Exception e) {
             Log.error("could not write snippet tag", e);
         }

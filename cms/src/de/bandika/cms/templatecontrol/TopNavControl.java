@@ -9,12 +9,15 @@
 package de.bandika.cms.templatecontrol;
 
 import de.bandika.base.util.StringUtil;
+import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.site.SiteData;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.cms.tree.TreeNode;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.servlet.SessionReader;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
@@ -32,24 +35,25 @@ public class TopNavControl extends TemplateControl {
         return instance;
     }
 
-    public void appendHtml(PageOutputData outputData) throws IOException {
-        Locale locale = SessionReader.getSessionLocale(outputData.request);
+    public void appendHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+        Writer writer=outputContext.getWriter();
+        HttpServletRequest request=outputContext.getRequest();
+        Locale locale = SessionReader.getSessionLocale(request);
         List<Locale> otherLocales = null;
         SiteData homeSite = null;
         int pageId = outputData.pageData == null ? 0 : outputData.pageData.getId();
         int siteId = outputData.pageData == null ? 0 : outputData.pageData.getParentId();
-        boolean editMode = SessionReader.isEditMode(outputData.request);
+        boolean editMode = SessionReader.isEditMode(request);
         boolean pageEditMode = outputData.pageData != null && outputData.pageData.isEditMode();
-        boolean hasAnyEditRight = SessionReader.hasAnyContentRight(outputData.request);
-        boolean hasEditRight = SessionReader.hasContentRight(outputData.request, pageId, Right.EDIT);
-        boolean hasAdminRight = SessionReader.hasAnyElevatedSystemRight(outputData.request) || SessionReader.hasContentRight(outputData.request, TreeNode.ID_ALL, Right.EDIT);
-        boolean hasApproveRight = SessionReader.hasContentRight(outputData.request, pageId, Right.APPROVE);
+        boolean hasAnyEditRight = SessionReader.hasAnyContentRight(request);
+        boolean hasEditRight = SessionReader.hasContentRight(request, pageId, Right.EDIT);
+        boolean hasAdminRight = SessionReader.hasAnyElevatedSystemRight(request) || SessionReader.hasContentRight(request, TreeNode.ID_ALL, Right.EDIT);
+        boolean hasApproveRight = SessionReader.hasContentRight(request, pageId, Right.APPROVE);
         try {
             homeSite = TreeCache.getInstance().getLanguageRootSite(locale);
             otherLocales = TreeCache.getInstance().getOtherLocales(locale);
         } catch (Exception ignore) {
         }
-        Writer writer=outputData.writer;
 
         writer.write("<nav><ul>");
         if (pageEditMode & hasEditRight) {
@@ -85,7 +89,7 @@ public class TopNavControl extends TemplateControl {
                 }
             }
             writer.write("<li><a href=\"javascript:window.print();\" >" + getHtml("_print", locale) + "</a></li>");
-            if (SessionReader.isLoggedIn(outputData.request)) {
+            if (SessionReader.isLoggedIn(request)) {
                 writer.write("<li><a href=\"/user.srv?act=openProfile\">" + getHtml("_profile", locale) + "</a></li>");
                 writer.write("<li><a href=\"/login.srv?act=logout\">" + getHtml("_logout", locale) + "</a></li>");
             } else {

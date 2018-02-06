@@ -9,24 +9,19 @@
 package de.bandika.cms.templateinclude;
 
 import de.bandika.cms.field.Field;
-import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
-import de.bandika.cms.page.PagePartData;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 
 public class FieldInclude extends TemplateInclude{
 
     public static final String KEY = "field";
 
-    public void writeTemplateInclude(PageOutputData outputData) throws IOException {
+    public void writeTemplateInclude(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         Field field = outputData.partData.ensureField(getAttributes().get("name"), getAttributes().get("fieldType"));
         outputData.attributes=attributes;
         outputData.content=content;
-        field.appendFieldHtml(outputData);
+        field.appendFieldHtml(outputContext, outputData);
     }
 
 }

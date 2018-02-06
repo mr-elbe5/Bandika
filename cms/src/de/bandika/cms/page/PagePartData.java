@@ -24,9 +24,9 @@ import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.*;
 
 public class PagePartData extends BaseIdData implements Comparable<PagePartData>, XmlData {
@@ -266,40 +266,43 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
 
     /******************* HTML part *********************************/
 
-    public void appendPartHtml(PageOutputData outputData) throws IOException {
+    public void appendPartHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         if (outputData.pageData.isEditMode())
-            appendEditPartHtml(outputData);
+            appendEditPartHtml(outputContext, outputData);
         else
-            appendLivePartHtml(outputData);
+            appendLivePartHtml(outputContext, outputData);
     }
 
-    public void appendEditPartHtml(PageOutputData outputData) throws IOException {
-        Locale locale = SessionReader.getSessionLocale(outputData.request);
+    public void appendEditPartHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+        Writer writer=outputContext.getWriter();
+        HttpServletRequest request=outputContext.getRequest();
+        Locale locale = SessionReader.getSessionLocale(request);
         String sectionType=outputData.attributes.getString("type");
-        writeEditPartStart(outputData.context, outputData.writer, outputData.request, outputData.pageData.getEditPagePart(), getSectionName(), outputData.pageData.getId(), locale);
+        writeEditPartStart(writer, request, outputData.pageData.getEditPagePart(), getSectionName(), outputData.pageData.getId(), locale);
         TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PART, getTemplateName());
         try {
             outputData.partData=this;
-            partTemplate.writeTemplate(outputData);
+            partTemplate.writeTemplate(outputContext, outputData);
         } catch (Exception e) {
             Log.error("error in part template", e);
         }
-        writeEditPartEnd(outputData.context, outputData.writer, outputData.request, outputData.pageData.getEditPagePart(), getSectionName(), sectionType, outputData.pageData.getId(), locale);
+        writeEditPartEnd(writer, request, outputData.pageData.getEditPagePart(), getSectionName(), sectionType, outputData.pageData.getId(), locale);
     }
 
-    public void appendLivePartHtml(PageOutputData outputData)  {
+    public void appendLivePartHtml(PageOutputContext outputContext, PageOutputData outputData)  {
+        Writer writer=outputContext.getWriter();
         TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PART, getTemplateName());
         try {
-            outputData.writer.write("<div class=\"pagePart\" id=\"" + getHtmlId() + "\" >");
+            writer.write("<div class=\"pagePart\" id=\"" + getHtmlId() + "\" >");
             outputData.partData=this;
-            partTemplate.writeTemplate(outputData);
-            outputData.writer.write("</div>");
+            partTemplate.writeTemplate(outputContext, outputData);
+            writer.write("</div>");
         } catch (Exception e) {
             Log.error("error in part template", e);
         }
     }
 
-    protected void writeEditPartStart(PageContext context, JspWriter writer, HttpServletRequest request, PagePartData editPagePart, String sectionName, int pageId, Locale locale) throws IOException {
+    protected void writeEditPartStart(Writer writer, HttpServletRequest request, PagePartData editPagePart, String sectionName, int pageId, Locale locale) throws IOException {
         if (editPagePart == null) {
             // nothing currently edited
             writer.write("<div title=\"" + StringUtil.toHtml(getTemplateName()) + "(ID=" + getId() + ") - " + StringUtil.getHtml("_rightClickEditHint") + "\" id=\"part_" + getId() + "\" class = \"pagePart viewPagePart contextSource\">\n");
@@ -312,7 +315,7 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         }
     }
 
-    public void writeEditPartEnd(PageContext context, JspWriter writer, HttpServletRequest request, PagePartData editPagePart, String sectionName, String sectionType, int pageId, Locale locale) throws IOException {
+    public void writeEditPartEnd(Writer writer, HttpServletRequest request, PagePartData editPagePart, String sectionName, String sectionType, int pageId, Locale locale) throws IOException {
         boolean staticSection = sectionType.equals(SectionData.TYPE_STATIC);
         // end of pagePart div of any kind
         writer.write("</div>");
@@ -332,7 +335,7 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         }
     }
 
-    protected void appendContextCode(JspWriter writer, int pageId, String sectionType, Locale locale) throws IOException {
+    protected void appendContextCode(Writer writer, int pageId, String sectionType, Locale locale) throws IOException {
         writer.write("<div class=\"icn isetting\" onclick = \"return openLayerDialog('" + getHtml("_settings", locale) + "', '/pagepart.ajx?act=openEditHtmlPartSettings&pageId=" + pageId + "&sectionName=" + sectionName + "&partId=" + getId() + "');\">" + getHtml("_settings", locale) + "</div>\n" + "<div class=\"icn inew\" onclick = \"return openLayerDialog('" + getHtml("_addPart", locale) + "', '/pageedit.ajx?act=openAddPagePart&pageId=" + pageId + "&sectionName=" + sectionName + "&sectionType=" + sectionType + "&partId=" + getId() + "');\">" + getHtml("_newAbove", locale) + "</div>\n" + "<div class=\"icn inew\" onclick = \"return openLayerDialog('" + getHtml("_addPart", locale) + "', '/pageedit.ajx?act=openAddPagePart&pageId=" + pageId + "&sectionName=" + sectionName + "&sectionType=" + sectionType + "&partId=" + getId() + "&below=true');\">" + getHtml("_newBelow", locale) + "</div>\n" + "<div class=\"icn ishare\" onclick = \"return openLayerDialog('" + getHtml("_share", locale) + "', '/pageedit.ajx?act=openSharePagePart&pageId=" + pageId + "&sectionName=" + sectionName + "&partId=" + getId() + "');\">" + getHtml("_share", locale) + "</div>\n" + "<div class=\"icn iup\" onclick = \"return linkTo('/pageedit.ajx?act=movePagePart&pageId=" + pageId + "&sectionName=" + sectionName + "&partId=" + getId() + "&dir=-1');\">" + getHtml("_up", locale) + "</div>\n" + "<div class=\"icn idown\" onclick = \"return linkTo('/pageedit.ajx?act=movePagePart&pageId=" + pageId + "&sectionName=" + sectionName + "&partId=" + getId() + "&dir=1');\">" + getHtml("_down", locale) + "</div>\n" + "<div class=\"icn idelete\" onclick = \"return post2EditPageContent('/pageedit.ajx?',{act:'deletePagePart',pageId:'" + pageId + "',sectionName:'" + sectionName + "',partId:'" + getId() + "'});\">" + getHtml("_delete", locale) + "</div>\n");
     }
 

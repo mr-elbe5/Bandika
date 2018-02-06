@@ -9,26 +9,31 @@
 package de.bandika.cms.templateinclude;
 
 import de.bandika.base.log.Log;
+import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.Writer;
 
 public class JspInclude extends TemplateInclude{
 
     public static final String KEY = "jsp";
 
-    public void writeTemplateInclude(PageOutputData outputData) throws IOException {
+    public void writeTemplateInclude(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+        Writer writer=outputContext.getWriter();
+        HttpServletRequest request=outputContext.getRequest();
         String url = attributes.getString("url");
-        outputData.request.setAttribute("pageData", outputData.pageData);
+        request.setAttribute("pageData", outputData.pageData);
         if (outputData.partData != null) {
-            outputData.request.setAttribute("partData", outputData.partData);
+            request.setAttribute("partData", outputData.partData);
         }
         try {
-            outputData.context.include(url);
+            outputContext.context.include(url);
         } catch (ServletException e) {
             Log.error("could not include jsp:" + url, e);
-            outputData.writer.write("<div>JSP missing</div>");
+            writer.write("<div>JSP missing</div>");
         }
     }
 

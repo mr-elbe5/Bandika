@@ -9,15 +9,15 @@
 package de.bandika.cms.templatecontrol;
 
 import de.bandika.cms.page.PageData;
+import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.site.SiteData;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +33,11 @@ public class MainMenuControl extends TemplateControl {
         return instance;
     }
 
-    public void appendHtml(PageOutputData outputData) throws IOException {
+    public void appendHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+        Writer writer=outputContext.getWriter();
+        HttpServletRequest request=outputContext.getRequest();
         TreeCache tc = TreeCache.getInstance();
-        SiteData homeSite = tc.getLanguageRootSite(SessionReader.getSessionLocale(outputData.request));
+        SiteData homeSite = tc.getLanguageRootSite(SessionReader.getSessionLocale(request));
         List<Integer> activeIds = new ArrayList<>();
         int pageId = 0;
         if (outputData.pageData != null) {
@@ -43,13 +45,13 @@ public class MainMenuControl extends TemplateControl {
             activeIds.addAll(outputData.pageData.getParentIds());
             activeIds.add(pageId);
         }
-        outputData.writer.write("<nav class=\"mainNav\"><ul>");
+        writer.write("<nav class=\"mainNav\"><ul>");
         if (homeSite != null)
-            addNodes(outputData.context, outputData.writer, outputData.request, homeSite, pageId, activeIds);
-        outputData.writer.write("</ul></nav>");
+            addNodes(writer, request, homeSite, pageId, activeIds);
+        writer.write("</ul></nav>");
     }
 
-    public void addNodes(PageContext context, JspWriter writer, HttpServletRequest request, SiteData parentSite, int currentId, List<Integer> activeIds) throws IOException {
+    public void addNodes(Writer writer, HttpServletRequest request, SiteData parentSite, int currentId, List<Integer> activeIds) throws IOException {
         for (SiteData site : parentSite.getSites()) {
             if (site.isInNavigation() && site.isVisibleToUser(request)) {
                 boolean hasSubSites = site.getSites().size() > 0;
@@ -61,7 +63,7 @@ public class MainMenuControl extends TemplateControl {
                 writer.write(" href=\"" + site.getUrl() + "\">" + toHtml(site.getDisplayName()) + "</a>");
                 if (hasSubSites || hasSubPages) {
                     writer.write("<ul>");
-                    addNodes(context, writer, request, site, currentId, activeIds);
+                    addNodes(writer, request, site, currentId, activeIds);
                     writer.write("</ul>");
                 }
                 writer.write("</li>");
