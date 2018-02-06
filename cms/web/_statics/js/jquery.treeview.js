@@ -40,7 +40,7 @@
             return this.filter(":has(>ul)");
         }, applyClasses: function (settings, toggler) {
             this.filter(":has(>ul):not(:has(>a))").find(">span").unbind("click.treeview").bind("click.treeview", function (event) {
-                if (this == event.target)
+                if (this === event.target)
                     toggler.apply($(this).next());
             }).add($("a", this)).hoverClass();
 
@@ -129,7 +129,7 @@
                     break;
                 case "location":
                     var current = this.find("a").filter(function () {
-                        return this.href.toLowerCase() == location.href.toLowerCase();
+                        return this.href.toLowerCase() === location.href.toLowerCase();
                     });
                     if (current.length) {
                         var items = current.addClass("selected").parents("ul, li").add(current.next()).show();

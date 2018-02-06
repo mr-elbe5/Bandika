@@ -304,7 +304,8 @@ public class PageBean extends TreeBean {
         try {
             pst = con.prepareStatement("SELECT template,id,name,change_date,content " +
                     "FROM t_page_part " +
-                    "WHERE name='' ");
+                    "WHERE length(name)>0 " +
+                    "ORDER BY template, name");
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     int i = 1;

@@ -31,7 +31,7 @@
                 for (PagePartData part : parts) {
         %>
         <li>
-            <div class="contextSource icn ipart <%=partId==part.getId() ? "selected" : ""%>" onclick="return openLayerDialog('<%=StringUtil.getHtml("_details",locale)%>', '/pagepart.ajx?act=<%=PagePartActions.showSharedPartDetails%>&partId=<%=part.getId()%>')"><%=StringUtil.toHtml(part.getName())%>
+            <div class="contextSource icn ipart <%=partId==part.getId() ? "selected" : ""%>" onclick="return openLayerDialog('<%=StringUtil.getHtml("_details",locale)%>', '/pagepart.ajx?act=<%=PagePartActions.showSharedPartDetails%>&partId=<%=part.getId()%>')"><%=StringUtil.toHtml(part.getName())%>&nbsp;(<%=StringUtil.toHtml(part.getTemplateName())%>)
             </div>
             <div class="contextMenu">
                 <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteSharedPart",locale)%>', '/pagepart.ajx?act=<%=PagePartActions.openDeleteSharedPart%>&partId=<%=part.getId()%>');"><%=StringUtil.getHtml("_delete", locale)%>
