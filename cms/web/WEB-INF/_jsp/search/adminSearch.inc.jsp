@@ -17,7 +17,7 @@
     if (SessionReader.hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT)) {
 %><!--search-->
 <li>
-    <div class="contextSource icn isearch" onclick="$('#details').load('/search.ajx?act=<%=SearchActions.showAdminSearchDetails%>')"><%=StringUtil.getHtml("_search", locale)%>
+    <div class="contextSource icn isearch" onclick="return openLayerDialog('<%=StringUtil.getHtml("_details",locale)%>', '/search.ajx?act=<%=SearchActions.showAdminSearchDetails%>')"><%=StringUtil.getHtml("_search", locale)%>
     </div>
     <div class="contextMenu">
         <div class="icn isync" onclick="linkTo('/search.srv?act=<%=SearchActions.indexAllContent%>');"><%=StringUtil.getHtml("_indexAllContent", locale)%>

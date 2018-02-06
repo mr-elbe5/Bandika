@@ -40,7 +40,7 @@
                 for (GroupData group : groups) {
         %>
         <li>
-            <div class="contextSource icn igroup <%=groupId==group.getId() ? "selected" : ""%>" onclick="$('#details').load('/group.ajx?act=<%=GroupActions.showGroupDetails%>&groupId=<%=group.getId()%>')"><%=StringUtil.toHtml(group.getName())%>
+            <div class="contextSource icn igroup <%=groupId==group.getId() ? "selected" : ""%>" onclick="return openLayerDialog('<%=StringUtil.getHtml("_details",locale)%>', '/group.ajx?act=<%=GroupActions.showGroupDetails%>&groupId=<%=group.getId()%>')"><%=StringUtil.toHtml(group.getName())%>
             </div>
             <div class="contextMenu">
                 <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editGroup",locale)%>', '/group.ajx?act=<%=GroupActions.openEditGroup%>&groupId=<%=group.getId()%>');"><%=StringUtil.getHtml("_edit", locale)%>

@@ -43,7 +43,7 @@
                 for (UserData user : users) {
         %>
         <li>
-            <div class="contextSource icn iuser <%=userId==user.getId() ? "selected" : ""%>" onclick="$('#details').load('/user.ajx?act=<%=UserActions.showUserDetails%>&userId=<%=user.getId()%>')"><%=StringUtil.toHtml(user.getName())%>
+            <div class="contextSource icn iuser <%=userId==user.getId() ? "selected" : ""%>" onclick="return openLayerDialog('<%=StringUtil.getHtml("_details",locale)%>', '/user.ajx?act=<%=UserActions.showUserDetails%>&userId=<%=user.getId()%>')"><%=StringUtil.toHtml(user.getName())%>
             </div>
             <div class="contextMenu">
                 <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editUser",locale)%>', '/user.ajx?act=<%=UserActions.openEditUser%>&userId=<%=user.getId()%>');"><%=StringUtil.getHtml("_edit", locale)%>

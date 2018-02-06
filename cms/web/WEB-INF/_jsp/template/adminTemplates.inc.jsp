@@ -44,7 +44,7 @@
                     for (TemplateData template : templates.get(TemplateData.TYPE_MASTER)) {
                 %>
                 <li>
-                    <div class="contextSource icn itemplate <%=templateName.equals(template.getName()) ? "selected" : ""%>" onclick="$('#details').load('/template.ajx?act=<%=TemplateActions.showTemplateDetails%>&templateType=<%=TemplateData.TYPE_MASTER%>&templateName=<%=template.getName()%>')"><%=StringUtil.toHtml(template.getName())%>
+                    <div class="contextSource icn itemplate <%=templateName.equals(template.getName()) ? "selected" : ""%>" onclick="return openLayerDialog('<%=StringUtil.getHtml("_details",locale)%>', '/template.ajx?act=<%=TemplateActions.showTemplateDetails%>&templateType=<%=TemplateData.TYPE_MASTER%>&templateName=<%=template.getName()%>')"><%=StringUtil.toHtml(template.getName())%>
                     </div>
                     <div class="contextMenu">
                         <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editTemplate",locale)%>', '/template.ajx?act=<%=TemplateActions.openEditTemplate%>&templateType=<%=TemplateData.TYPE_MASTER%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_edit", locale)%>
@@ -70,7 +70,7 @@
                     for (TemplateData template : templates.get(TemplateData.TYPE_PAGE)) {
                 %>
                 <li>
-                    <div class="contextSource icn itemplate <%=templateName.equals(template.getName()) ? "selected" : ""%>" onclick="$('#details').load('/template.ajx?act=<%=TemplateActions.showTemplateDetails%>&templateType=<%=TemplateData.TYPE_PAGE%>&templateName=<%=template.getName()%>')"><%=StringUtil.toHtml(template.getName())%>
+                    <div class="contextSource icn itemplate <%=templateName.equals(template.getName()) ? "selected" : ""%>" onclick="return openLayerDialog('<%=StringUtil.getHtml("_details",locale)%>', '/template.ajx?act=<%=TemplateActions.showTemplateDetails%>&templateType=<%=TemplateData.TYPE_PAGE%>&templateName=<%=template.getName()%>')"><%=StringUtil.toHtml(template.getName())%>
                     </div>
                     <div class="contextMenu">
                         <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editTemplate",locale)%>', '/template.ajx?act=<%=TemplateActions.openEditTemplate%>&templateType=<%=TemplateData.TYPE_PAGE%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_edit", locale)%>
@@ -96,7 +96,7 @@
                     for (TemplateData template : templates.get(TemplateData.TYPE_PART)) {
                 %>
                 <li>
-                    <div class="contextSource icn itemplate <%=templateName.equals(template.getName()) ? "selected" : ""%>" onclick="$('#details').load('/template.ajx?act=<%=TemplateActions.showTemplateDetails%>&templateType=<%=TemplateData.TYPE_PART%>&templateName=<%=template.getName()%>')"><%=StringUtil.toHtml(template.getName())%>
+                    <div class="contextSource icn itemplate <%=templateName.equals(template.getName()) ? "selected" : ""%>" onclick="return openLayerDialog('<%=StringUtil.getHtml("_details",locale)%>', '/template.ajx?act=<%=TemplateActions.showTemplateDetails%>&templateType=<%=TemplateData.TYPE_PART%>&templateName=<%=template.getName()%>')"><%=StringUtil.toHtml(template.getName())%>
                     </div>
                     <div class="contextMenu">
                         <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editTemplate",locale)%>', '/template.ajx?act=<%=TemplateActions.openEditTemplate%>&templateType=<%=TemplateData.TYPE_PART%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_edit", locale)%>
@@ -122,7 +122,7 @@
                     for (TemplateData template : templates.get(TemplateData.TYPE_SNIPPET)) {
                 %>
                 <li>
-                    <div class="contextSource icn itemplate <%=templateName.equals(template.getName()) ? "selected" : ""%>" onclick="$('#details').load('/template.ajx?act=<%=TemplateActions.showTemplateDetails%>&templateType=<%=TemplateData.TYPE_SNIPPET%>&templateName=<%=template.getName()%>')"><%=StringUtil.toHtml(template.getName())%>
+                    <div class="contextSource icn itemplate <%=templateName.equals(template.getName()) ? "selected" : ""%>" onclick="return openLayerDialog('<%=StringUtil.getHtml("_details",locale)%>', '/template.ajx?act=<%=TemplateActions.showTemplateDetails%>&templateType=<%=TemplateData.TYPE_SNIPPET%>&templateName=<%=template.getName()%>')"><%=StringUtil.toHtml(template.getName())%>
                     </div>
                     <div class="contextMenu">
                         <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editTemplateSnippet",locale)%>', '/template.ajx?act=<%=TemplateActions.openEditTemplate%>&templateType=<%=TemplateData.TYPE_SNIPPET%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_edit", locale)%>

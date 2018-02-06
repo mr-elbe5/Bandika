@@ -43,7 +43,7 @@
         String cacheName = RequestReader.getString(request, "cacheName");
 %><!--general-->
 <li>
-    <div class="contextSource icn isetting" onclick="$('#details').load('/config.ajx?act=<%=ConfigActions.showConfigurationDetails%>')"><%=StringUtil.getHtml("_generalSettings", locale)%>
+    <div class="contextSource icn isetting" onclick="return openLayerDialog('<%=StringUtil.getHtml("_details",locale)%>', '/config.ajx?act=<%=ConfigActions.showConfigurationDetails%>')"><%=StringUtil.getHtml("_generalSettings", locale)%>
     </div>
     <div class="contextMenu">
         <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_generalSettings",locale)%>', '/config.ajx?act=<%=ConfigActions.openEditConfiguration%>')"><%=StringUtil.getHtml("_edit", locale)%>
@@ -60,7 +60,7 @@
                 for (DataCache cache : dataCaches) {
         %>
         <li>
-            <div class="contextSource icn icache <%=cacheName.equals(cache.getName()) ? "selected" : ""%>" onclick="$('#details').load('/config.ajx?act=<%=ConfigActions.showDataCacheDetails%>&cacheName=<%=StringUtil.toUrl(cache.getName())%>')"><%=StringUtil.toHtml(cache.getName())%>
+            <div class="contextSource icn icache <%=cacheName.equals(cache.getName()) ? "selected" : ""%>" onclick="return openLayerDialog('<%=StringUtil.getHtml("_details",locale)%>', '/config.ajx?act=<%=ConfigActions.showDataCacheDetails%>&cacheName=<%=StringUtil.toUrl(cache.getName())%>')"><%=StringUtil.toHtml(cache.getName())%>
             </div>
             <div class="contextMenu">
                 <div class="icn iclear" onclick="linkTo('/config.srv?act=<%=ConfigActions.clearDataCache%>&cacheName=<%=StringUtil.toUrl(cache.getName())%>');"><%=StringUtil.getHtml("_clear", locale)%>
@@ -76,7 +76,7 @@
                 for (FileCache cache : fileCaches) {
         %>
         <li>
-            <div class="contextSource icn icache <%=cacheName.equals(cache.getName()) ? "selected" : ""%>" onclick="$('#details').load('/config.ajx?act=<%=ConfigActions.showFileCacheDetails%>&cacheName=<%=StringUtil.toUrl(cache.getName())%>')"><%=StringUtil.toHtml(cache.getName())%>
+            <div class="contextSource icn icache <%=cacheName.equals(cache.getName()) ? "selected" : ""%>" onclick="return openLayerDialog('<%=StringUtil.getHtml("_details",locale)%>', '/config.ajx?act=<%=ConfigActions.showFileCacheDetails%>&cacheName=<%=StringUtil.toUrl(cache.getName())%>')"><%=StringUtil.toHtml(cache.getName())%>
             </div>
             <div class="contextMenu">
                 <div class="icn iclear" onclick="linkTo('/config.srv?act=<%=ConfigActions.clearFileCache%>&cacheName=<%=StringUtil.toUrl(cache.getName())%>');"><%=StringUtil.getHtml("_clear", locale)%>
@@ -99,7 +99,7 @@
                 for (TimerTask task : tasks.values()) {
         %>
         <li>
-            <div class="contextSource icn itimer <%=timerName.equals(task.getName()) ? "selected" : ""%>" onclick="$('#details').load('/timer.ajx?act=<%=TimerActions.showTimerTaskDetails%>&timerName=<%=task.getName()%>')"><%=StringUtil.toHtml(task.getDisplayName())%>
+            <div class="contextSource icn itimer <%=timerName.equals(task.getName()) ? "selected" : ""%>" onclick="return openLayerDialog('<%=StringUtil.getHtml("_details",locale)%>', '/timer.ajx?act=<%=TimerActions.showTimerTaskDetails%>&timerName=<%=task.getName()%>')"><%=StringUtil.toHtml(task.getDisplayName())%>
             </div>
             <div class="contextMenu">
                 <div class="icn isetting" onclick="return openLayerDialog('<%=StringUtil.getHtml("_taskSettings",locale)%>', '/timer.ajx?act=<%=TimerActions.openEditTimerTask%>&timerName=<%=task.getName()%>');"><%=StringUtil.getHtml("_edit", locale)%>

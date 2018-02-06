@@ -11,35 +11,40 @@
 <%@ page import="java.util.Locale" %>
 <% Locale locale = SessionReader.getSessionLocale(request);
 %>
-<section class="mainSection flexRow">
-    <section class="contentSection flexItem two">
+<section class="mainSection flexRow two">
+    <section class="halfSection flexItem">
         <div class="adminTree">
             <h3 class="treeHeader">
                 <%=StringUtil.getString("_administration", SessionReader.getSessionLocale(request))%>
             </h3>
-            <ul id="settings" class="treeRoot">
+            <ul id="adminsettings" class="treeRoot">
                 <jsp:include page="/WEB-INF/_jsp/application/adminActions.inc.jsp"/>
                 <jsp:include page="/WEB-INF/_jsp/application/adminSettings.inc.jsp"/>
                 <jsp:include page="/WEB-INF/_jsp/search/adminSearch.inc.jsp"/>
-                <jsp:include page="/WEB-INF/_jsp/template/adminTemplates.inc.jsp"/>
-                <jsp:include page="/WEB-INF/_jsp/page/adminNamedPageParts.inc.jsp"/>
                 <jsp:include page="/WEB-INF/_jsp/group/admingroups.inc.jsp"/>
                 <jsp:include page="/WEB-INF/_jsp/user/adminusers.inc.jsp"/>
             </ul>
         </div>
     </section>
-    <aside class="asideSection flexItem one">
-        <div class="details">
-            <h3><%=StringUtil.getString("_details", locale)%>
+    <section class="halfSection flexItem">
+        <div class="adminTree">
+            <h3 class="treeHeader">
+                <%=StringUtil.getString("_editorialItems", SessionReader.getSessionLocale(request))%>
             </h3>
-            <div id="details"></div>
+            <ul id="editsettings" class="treeRoot">
+                <jsp:include page="/WEB-INF/_jsp/template/adminTemplates.inc.jsp"/>
+                <jsp:include page="/WEB-INF/_jsp/page/adminNamedPageParts.inc.jsp"/>
+            </ul>
         </div>
-    </aside>
+    </section>
 </section>
 <script type="text/javascript">
-    $("#settings").treeview({
+    $("#adminsettings").treeview({
         persist: "location", collapsed: true, unique: false
     });
-    $(".contentSection").initContextMenus();
+    $("#editsettings").treeview({
+        persist: "location", collapsed: true, unique: false
+    });
+    $(".halfSection").initContextMenus();
 </script>
     
