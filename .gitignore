@@ -1,12 +1,6 @@
-/.idea/dictionaries
-/.idea/dataSources.ids
-/.idea/dataSources.local.xml
-/.idea/dataSources.xml
-/.idea/uiDesigner.xml
-/.idea/workspace.xml
-/.idea/inspectionProfiles
+
 /out
-/.idea/dataSources
+/.idea
 /.sass-cache
 *.scssc
-/.idea/libraries/compass_library4.xml
+*.iml
