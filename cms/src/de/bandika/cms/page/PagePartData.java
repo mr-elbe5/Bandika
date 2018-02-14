@@ -275,9 +275,8 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
     public void appendEditPartHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         Writer writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
-        Locale locale = SessionReader.getSessionLocale(request);
         String sectionType=outputData.attributes.getString("type");
-        writeEditPartStart(writer, request, outputData.pageData.getEditPagePart(), getSectionName(), outputData.pageData.getId(), locale);
+        writeEditPartStart(writer, request, outputData.pageData.getEditPagePart(), getSectionName(), outputData.pageData.getId(), outputData.locale);
         TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PART, getTemplateName());
         try {
             outputData.partData=this;
@@ -285,7 +284,7 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         } catch (Exception e) {
             Log.error("error in part template", e);
         }
-        writeEditPartEnd(writer, request, outputData.pageData.getEditPagePart(), getSectionName(), sectionType, outputData.pageData.getId(), locale);
+        writeEditPartEnd(writer, request, outputData.pageData.getEditPagePart(), getSectionName(), sectionType, outputData.pageData.getId(), outputData.locale);
     }
 
     public void appendLivePartHtml(PageOutputContext outputContext, PageOutputData outputData)  {

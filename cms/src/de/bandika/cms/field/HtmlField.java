@@ -8,8 +8,7 @@
  */
 package de.bandika.cms.field;
 
-import de.bandika.base.search.HtmlStripper;
-import java.text.ParseException;
+import de.bandika.cms.search.SearchHelper;
 
 public class HtmlField extends HtmlBaseField {
 
@@ -39,10 +38,7 @@ public class HtmlField extends HtmlBaseField {
     /******************* search part *********************************/
 
     public void appendSearchText(StringBuilder sb) {
-        try {
-            sb.append(" ").append(HtmlStripper.stripHtml(html));
-        } catch (ParseException ignore) {
-        }
+        sb.append(" ").append(SearchHelper.getSearchContentFromHtml(html));
     }
 
 }

@@ -32,6 +32,10 @@ public class SubMenuControl extends TemplateInclude {
         return instance;
     }
 
+    public boolean isDynamic(){
+        return true;
+    }
+
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         Writer writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();

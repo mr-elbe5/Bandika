@@ -16,6 +16,10 @@ public class PartInclude extends TemplateInclude{
 
     public static final String KEY = "part";
 
+    public boolean isDynamic(){
+        return false;
+    }
+
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         //todo
         String templateName = attributes.get("template");

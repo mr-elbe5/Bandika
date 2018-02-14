@@ -18,6 +18,10 @@ public class SnippetInclude extends TemplateInclude{
 
     public static final String KEY = "snippet";
 
+    public boolean isDynamic(){
+        return false;
+    }
+
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) {
         TemplateData snippet = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, attributes.getString("name"));
         if (snippet != null) {

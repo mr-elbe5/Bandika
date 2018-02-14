@@ -22,6 +22,8 @@ public abstract class TemplateInclude implements Serializable {
     protected String content="";
     protected TagAttributes attributes;
 
+    public abstract boolean isDynamic();
+
     public String getContent() {
         return content;
     }

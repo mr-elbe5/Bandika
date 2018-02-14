@@ -13,7 +13,6 @@ import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.cms.tree.TreeNode;
-import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -33,6 +32,10 @@ public class BreadcrumbControl extends TemplateInclude {
         return instance;
     }
 
+    public boolean isDynamic(){
+        return false;
+    }
+
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         Writer writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
@@ -43,7 +46,7 @@ public class BreadcrumbControl extends TemplateInclude {
             activeIds.add(outputData.pageData.getId());
         }
         else {
-            int homeId=TreeCache.getInstance().getLanguageRootSiteId(SessionReader.getSessionLocale(request));
+            int homeId=TreeCache.getInstance().getLanguageRootSiteId(outputData.locale);
             if (homeId!=0) {
                 activeIds.add(TreeNode.ID_ROOT);
                 activeIds.add(homeId);

@@ -25,6 +25,10 @@ public class ContentInclude extends TemplateInclude{
 
     public static final String KEY = "content";
 
+    public boolean isDynamic(){
+        return true;
+    }
+
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         Writer writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();

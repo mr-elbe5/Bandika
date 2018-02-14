@@ -29,7 +29,7 @@ public class PageTag extends BaseTag {
             String templateName = TreeCache.getInstance().getSite(siteId).getTemplateName();
             TemplateData masterTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_MASTER, templateName);
             PageOutputContext outputContext=new PageOutputContext(context);
-            PageOutputData outputData=new PageOutputData(pageData);
+            PageOutputData outputData=new PageOutputData(pageData, SessionReader.getSessionLocale(request));
             try {
                 masterTemplate.writeTemplate(outputContext, outputData);
             } catch (Exception e) {

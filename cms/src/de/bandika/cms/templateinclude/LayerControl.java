@@ -28,6 +28,10 @@ public class LayerControl extends TemplateInclude {
         return instance;
     }
 
+    public boolean isDynamic(){
+        return false;
+    }
+
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         Writer writer=outputContext.getWriter();
         writer.write(TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, "treeLayer").getCode());

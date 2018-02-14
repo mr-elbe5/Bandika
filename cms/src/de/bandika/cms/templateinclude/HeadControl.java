@@ -11,12 +11,10 @@ package de.bandika.cms.templateinclude;
 import de.bandika.base.util.StringUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
-import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Locale;
 
 public class HeadControl extends TemplateInclude {
 
@@ -30,14 +28,17 @@ public class HeadControl extends TemplateInclude {
         return instance;
     }
 
+    public boolean isDynamic(){
+        return false;
+    }
+
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         Writer writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
         if (outputData.pageData==null)
             return;
-        Locale locale = SessionReader.getSessionLocale(request);
         writer.write("<title>" +
-                StringUtil.getHtml("appTitle", locale) +
+                StringUtil.getHtml("appTitle", outputData.locale) +
                 "</title>\n");
         writer.write("<meta name=\"keywords\" content=\"" +
                 StringUtil.toHtml(outputData.pageData.getKeywords()) +

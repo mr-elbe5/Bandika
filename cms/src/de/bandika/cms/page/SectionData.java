@@ -194,7 +194,6 @@ public class SectionData {
         Writer writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
         boolean editMode = outputData.pageData.isEditMode();
-        Locale locale = SessionReader.getSessionLocale(request);
         String cls = outputData.attributes.getString("class");
         boolean hasParts = getParts().size() > 0;
         if (editMode) {
@@ -210,7 +209,7 @@ public class SectionData {
                         getName() +
                         "</div>");
                 writer.write("<div class = \"contextMenu\"><div class=\"icn inew\" onclick = \"return openLayerDialog('" +
-                        StringUtil.getHtml("_addPart", locale) +
+                        StringUtil.getHtml("_addPart", outputData.locale) +
                         "', '/pagepart.ajx?act=openAddPagePart&pageId=" +
                         outputData.pageData.getId() +
                         "&sectionName=" +
@@ -218,7 +217,7 @@ public class SectionData {
                         "&sectionType=" +
                         outputData.attributes.getString("type") +
                         "&partId=-1');\">" +
-                        StringUtil.getHtml("_new", locale) +
+                        StringUtil.getHtml("_new", outputData.locale) +
                         "\n</div>\n</div>");
             }
         }

@@ -14,6 +14,7 @@ import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
+import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -28,7 +29,7 @@ public class ContentTag extends BaseTag {
             TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PAGE, pageData.getTemplateName());
             Writer writer = getWriter();
             PageOutputContext outputContext=new PageOutputContext(context);
-            PageOutputData outputData=new PageOutputData(pageData);
+            PageOutputData outputData=new PageOutputData(pageData, SessionReader.getSessionLocale(request));
             pageTemplate.writeTemplate(outputContext, outputData);
             if (pageData.getEditPagePart() != null) {
                 writer.write("<script>$('.editControl').hide();</script>");

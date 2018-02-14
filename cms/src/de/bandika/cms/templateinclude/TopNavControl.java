@@ -35,10 +35,13 @@ public class TopNavControl extends TemplateInclude {
         return instance;
     }
 
+    public boolean isDynamic(){
+        return true;
+    }
+
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         Writer writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
-        Locale locale = SessionReader.getSessionLocale(request);
         List<Locale> otherLocales = null;
         SiteData homeSite = null;
         int pageId = outputData.pageData == null ? 0 : outputData.pageData.getId();
@@ -50,36 +53,36 @@ public class TopNavControl extends TemplateInclude {
         boolean hasAdminRight = SessionReader.hasAnyElevatedSystemRight(request) || SessionReader.hasContentRight(request, TreeNode.ID_ALL, Right.EDIT);
         boolean hasApproveRight = SessionReader.hasContentRight(request, pageId, Right.APPROVE);
         try {
-            homeSite = TreeCache.getInstance().getLanguageRootSite(locale);
-            otherLocales = TreeCache.getInstance().getOtherLocales(locale);
+            homeSite = TreeCache.getInstance().getLanguageRootSite(outputData.locale);
+            otherLocales = TreeCache.getInstance().getOtherLocales(outputData.locale);
         } catch (Exception ignore) {
         }
 
         writer.write("<nav><ul>");
         if (pageEditMode & hasEditRight) {
-            writer.write("<li class=\"editControl\"><a href=\"/page.srv?act=savePageContent&pageId=" + pageId + "\">" + getHtml("_save", locale) + "</a></li>");
+            writer.write("<li class=\"editControl\"><a href=\"/page.srv?act=savePageContent&pageId=" + pageId + "\">" + getHtml("_save", outputData.locale) + "</a></li>");
 
             if (hasApproveRight) {
-                writer.write("<li class=\"editControl\"><a href=\"/page.srv?act=savePageContentAndPublish&pageId=" + pageId + "\">" + getHtml("_publish", locale) + "</a></li>");
+                writer.write("<li class=\"editControl\"><a href=\"/page.srv?act=savePageContentAndPublish&pageId=" + pageId + "\">" + getHtml("_publish", outputData.locale) + "</a></li>");
             }
-            writer.write("<li><a href=\"/page.srv?act=stopEditing&pageId=" + pageId + "\">" + getHtml("_cancel", locale) + "</a></li>");
+            writer.write("<li><a href=\"/page.srv?act=stopEditing&pageId=" + pageId + "\">" + getHtml("_cancel", outputData.locale) + "</a></li>");
         } else {
             if (editMode) {
                 if (pageId != 0 && hasEditRight) {
-                    writer.write("<li><a href=\"/page.srv?act=openEditPageContent&pageId=" + pageId + "\" >" + getHtml("_editPage", locale) + "</span></a></li>");
+                    writer.write("<li><a href=\"/page.srv?act=openEditPageContent&pageId=" + pageId + "\" >" + getHtml("_editPage", outputData.locale) + "</span></a></li>");
                 }
                 if (pageId != 0 && hasApproveRight) {
-                    writer.write("<li><a href=\"/page.srv?act=publishPage&pageId=" + pageId + "\" >" + getHtml("_publish", locale) + "</a></li>");
+                    writer.write("<li><a href=\"/page.srv?act=publishPage&pageId=" + pageId + "\" >" + getHtml("_publish", outputData.locale) + "</a></li>");
                 }
                 if (hasAnyEditRight) {
-                    writer.write("<li><a href=\"#\" onclick=\"return openTreeLayer('" + StringUtil.getHtml("_tree") + "', '" + "/tree.ajx?act=openTree&siteId=" + siteId + "&pageId=" + pageId + "');\" >" + getHtml("_tree", locale) + "</a></li>");
+                    writer.write("<li><a href=\"#\" onclick=\"return openTreeLayer('" + StringUtil.getHtml("_tree") + "', '" + "/tree.ajx?act=openTree&siteId=" + siteId + "&pageId=" + pageId + "');\" >" + getHtml("_tree", outputData.locale) + "</a></li>");
                 }
                 if (hasAdminRight) {
-                    writer.write("<li><a href=\"/admin.srv?act=openAdministration&siteId=" + siteId + "&pageId=" + pageId + "\" >" + getHtml("_administration", locale) + "</a></li>");
+                    writer.write("<li><a href=\"/admin.srv?act=openAdministration&siteId=" + siteId + "&pageId=" + pageId + "\" >" + getHtml("_administration", outputData.locale) + "</a></li>");
                 }
             }
             if (hasAnyEditRight || hasAdminRight){
-                writer.write("<li><a href=\"/page.srv?act=toggleEditMode&pageId=" + pageId + "\" title=\""+getHtml(editMode ? "_editModeOff" : "_editModeOn", locale)+"\"><span class=\"icn " + (editMode ? "iright" : "ileft") + "\"></span></a></li>");
+                writer.write("<li><a href=\"/page.srv?act=toggleEditMode&pageId=" + pageId + "\" title=\""+getHtml(editMode ? "_editModeOff" : "_editModeOn", outputData.locale)+"\"><span class=\"icn " + (editMode ? "iright" : "ileft") + "\"></span></a></li>");
             }
             if (homeSite != null) {
                 if (otherLocales != null) {
@@ -88,12 +91,12 @@ public class TopNavControl extends TemplateInclude {
                     }
                 }
             }
-            writer.write("<li><a href=\"javascript:window.print();\" >" + getHtml("_print", locale) + "</a></li>");
+            writer.write("<li><a href=\"javascript:window.print();\" >" + getHtml("_print", outputData.locale) + "</a></li>");
             if (SessionReader.isLoggedIn(request)) {
-                writer.write("<li><a href=\"/user.srv?act=openProfile\">" + getHtml("_profile", locale) + "</a></li>");
-                writer.write("<li><a href=\"/login.srv?act=logout\">" + getHtml("_logout", locale) + "</a></li>");
+                writer.write("<li><a href=\"/user.srv?act=openProfile\">" + getHtml("_profile", outputData.locale) + "</a></li>");
+                writer.write("<li><a href=\"/login.srv?act=logout\">" + getHtml("_logout", outputData.locale) + "</a></li>");
             } else {
-                writer.write("<li><a href=\"/login.srv?act=openLogin\">" + getHtml("_login", locale) + "</a></li>");
+                writer.write("<li><a href=\"/login.srv?act=openLogin\">" + getHtml("_login", outputData.locale) + "</a></li>");
             }
         }
         writer.write("</ul></nav>");

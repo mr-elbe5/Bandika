@@ -10,14 +10,18 @@ package de.bandika.cms.page;
 
 import de.bandika.webbase.util.TagAttributes;
 
+import java.util.Locale;
+
 public class PageOutputData {
 
-    public PageOutputData(PageData data){
+    public PageOutputData(PageData data, Locale locale){
         pageData=data;
+        this.locale=locale;
     }
 
     public PageData pageData;
     public PagePartData partData=null;
+    public Locale locale;
     public TagAttributes attributes=null;
     public String content="";
 

@@ -8,6 +8,10 @@
  */
 package de.bandika.cms.search;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.parser.Parser;
+
 public class SearchHelper {
 
     public static String getSearchContent(byte[] bytes, String name, String contentType) {
@@ -17,9 +21,8 @@ public class SearchHelper {
     }
 
     public static String getSearchContentFromHtml(String html) {
-        //todo
-        String searchContent = "";
-        return searchContent;
+        Document doc= Jsoup.parse(html,"", Parser.htmlParser());
+        return doc.text();
     }
 
 }

@@ -13,7 +13,6 @@ import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.site.SiteData;
 import de.bandika.cms.tree.TreeCache;
-import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -33,11 +32,15 @@ public class MainMenuControl extends TemplateInclude {
         return instance;
     }
 
+    public boolean isDynamic(){
+        return true;
+    }
+
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         Writer writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
         TreeCache tc = TreeCache.getInstance();
-        SiteData homeSite = tc.getLanguageRootSite(SessionReader.getSessionLocale(request));
+        SiteData homeSite = tc.getLanguageRootSite(outputData.locale);
         List<Integer> activeIds = new ArrayList<>();
         int pageId = 0;
         if (outputData.pageData != null) {
