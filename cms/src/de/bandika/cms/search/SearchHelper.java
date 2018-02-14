@@ -8,56 +8,17 @@
  */
 package de.bandika.cms.search;
 
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.AutoDetectParser;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.parser.Parser;
-import org.apache.tika.parser.html.BoilerpipeContentHandler;
-import org.apache.tika.sax.BodyContentHandler;
-import org.xml.sax.ContentHandler;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.StringWriter;
-
 public class SearchHelper {
 
     public static String getSearchContent(byte[] bytes, String name, String contentType) {
+        //todo
         String searchContent = "";
-        Parser parser = new AutoDetectParser();
-        try {
-            InputStream in = new ByteArrayInputStream(bytes);
-            StringWriter writer = new StringWriter();
-            ContentHandler handler = new BoilerpipeContentHandler(writer);
-            Metadata metaData = new Metadata();
-            metaData.set(Metadata.RESOURCE_NAME_KEY, name);
-            metaData.set(Metadata.CONTENT_TYPE, contentType);
-            parser.parse(in, handler, metaData, new ParseContext());
-            in.close();
-            writer.flush();
-            searchContent = writer.toString().trim();
-            searchContent = searchContent.replaceAll("\\s+", " ");
-        } catch (Exception ignore) {
-        }
         return searchContent;
     }
 
     public static String getSearchContentFromHtml(String html) {
+        //todo
         String searchContent = "";
-        Parser parser = new AutoDetectParser();
-        try {
-            InputStream in = new ByteArrayInputStream(html.getBytes("UTF-8"));
-            StringWriter writer = new StringWriter();
-            ContentHandler handler = new BodyContentHandler(writer);
-            Metadata metaData = new Metadata();
-            metaData.set(Metadata.CONTENT_TYPE, "text/html");
-            parser.parse(in, handler, metaData, new ParseContext());
-            in.close();
-            writer.flush();
-            searchContent = writer.toString().trim();
-            searchContent = searchContent.replaceAll("\\s+", " ");
-        } catch (Exception ignore) {
-        }
         return searchContent;
     }
 

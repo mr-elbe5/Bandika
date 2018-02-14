@@ -24,7 +24,6 @@ import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
@@ -56,7 +55,7 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
     }
 
     @Override
-    public int compareTo(@org.jetbrains.annotations.NotNull PagePartData data) {
+    public int compareTo(PagePartData data) {
         int val = ranking - data.ranking;
         if (val != 0) {
             return val;

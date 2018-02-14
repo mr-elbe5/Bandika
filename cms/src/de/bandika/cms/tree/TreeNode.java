@@ -9,7 +9,6 @@ import de.bandika.cms.group.GroupData;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.servlet.RequestReader;
 import de.bandika.webbase.servlet.SessionReader;
-import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -355,7 +354,7 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
     }
 
     @Override
-    public int compareTo(@NotNull TreeNode node) {
+    public int compareTo(TreeNode node) {
         int val = ranking - node.ranking;
         if (val != 0) {
             return val;
