@@ -81,16 +81,15 @@ public class PagePartActions extends BaseTreeActions {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
-                /*PageData data = (PageData) getSessionObject(request, "pageData");
+                PageData data = (PageData) getSessionObject(request, "pageData");
                 int fromPartId = RequestReader.getInt(request, "partId", -1);
                 boolean below = RequestReader.getBoolean(request, "below");
                 int partId = RequestReader.getInt(request, "sharedPartId");
                 String sectionName = RequestReader.getString(request, "sectionName");
-                PagePartData pdata = PageBean.getInstance().getSharedPagePart(partId);
+                PagePartData pdata = PageBean.getInstance().getPagePart(partId);
                 checkObject(pdata);
-                pdata.setVersion(data.getLoadedVersion());
                 pdata.setSectionName(sectionName);
-                data.addPagePart(pdata, fromPartId, below, true);*/
+                data.addPagePart(pdata, fromPartId, below, true);
                 return closeLayer(request, response, "replacePageContent();");
             }
             case editPagePart: {

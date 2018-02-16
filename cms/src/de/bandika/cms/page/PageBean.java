@@ -212,10 +212,13 @@ public class PageBean extends TreeBean {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(data.isNew() ?
-                    "insert into t_page (template,id) values(?,?)" :
-                    "update t_page set template=? where id=?");
+                    "insert into t_page (template,keywords,change_date,author_name,id) values(?,?,?,?,?)" :
+                    "update t_page set template=?,keywords=?,change_date=?,author_name=? where id=?");
             int i = 1;
             pst.setString(i++, data.getTemplateName());
+            pst.setString(i++, data.getKeywords());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
+            pst.setString(i++, data.getAuthorName());
             pst.setInt(i, data.getId());
             pst.executeUpdate();
             pst.close();
@@ -357,6 +360,15 @@ public class PageBean extends TreeBean {
     }
 
     public void writeAllPageParts(Connection con, PageData page) throws Exception {
+        PreparedStatement pst = null;
+        try{
+            pst = con.prepareStatement("DELETE FROM t_page_part2page WHERE page_id=?");
+            pst.setInt(1, page.getId());
+            pst.executeUpdate();
+            pst.close();
+        } finally {
+            closeStatement(pst);
+        }
         for (SectionData section : page.getSections().values()) {
             for (PagePartData part : section.getParts()) {
                 part.setChangeDate(page.getChangeDate());
@@ -368,9 +380,11 @@ public class PageBean extends TreeBean {
     protected void writePagePart(Connection con, PagePartData data, PageData page) throws SQLException {
         PreparedStatement pst = null;
         try {
+            String sql=data.isNew() ?
+                    "INSERT INTO t_page_part (change_date,template,name,content,id) VALUES(?,?,?,?,?)" :
+                    "UPDATE t_page_part SET change_date=?,template=?,name=?,content=? WHERE id=?";
             int i = 1;
-            pst = con.prepareStatement("INSERT INTO t_page_part (change_date,template,name,content,id) " +
-                    "VALUES(?,?,?,?,?)");
+            pst = con.prepareStatement(sql);
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getTemplateName());
             pst.setString(i++, data.getName());
@@ -378,8 +392,8 @@ public class PageBean extends TreeBean {
             pst.setInt(i, data.getId());
             pst.executeUpdate();
             pst.close();
-            pst = con.prepareStatement("INSERT INTO t_page_part2page (part_id,page_id,section,ranking,change_date) " +
-                    "VALUES(?,?,?,?,?)");
+            pst = con.prepareStatement("INSERT INTO t_page_part2page (part_id,page_id,section,ranking,change_date) VALUES(?,?,?,?,?)");
+            i = 1;
             pst.setInt(i++, data.getId());
             pst.setInt(i++, page.getId());
             pst.setString(i++, data.getSectionName());

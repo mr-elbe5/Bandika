@@ -68,6 +68,7 @@ public class PageActions extends BaseTreeActions {
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
                 PageData data = new PageData();
+                data.setNew(true);
                 int parentId = RequestReader.getInt(request, "siteId");
                 String templateName = RequestReader.getString(request, "templateName");
                 PageBean ts = PageBean.getInstance();
