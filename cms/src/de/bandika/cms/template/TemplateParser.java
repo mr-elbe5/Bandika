@@ -85,8 +85,6 @@ public class TemplateParser {
                 return new FieldInclude();
             case JspInclude.KEY :
                 return new JspInclude();
-            case PartInclude.KEY :
-                return new PartInclude();
             case ResourceInclude.KEY :
                 return new ResourceInclude();
             case SectionInclude.KEY :

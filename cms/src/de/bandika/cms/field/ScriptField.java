@@ -49,8 +49,7 @@ public class ScriptField extends Field {
 
     @Override
     public void appendFieldHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        StringWriteUtil writer=outputContext.writer;
-        HttpServletRequest request=outputContext.getRequest();
+        StringWriteUtil writer=outputContext.getWriter();
         boolean partEditMode = outputData.pageData.isEditMode() && outputData.partData == outputData.pageData.getEditPagePart();
         int height = outputData.attributes.getInt("height");
         if (partEditMode) {

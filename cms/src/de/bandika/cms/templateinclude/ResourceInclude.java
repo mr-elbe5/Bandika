@@ -13,7 +13,6 @@ import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public class ResourceInclude extends TemplateInclude{
@@ -25,8 +24,7 @@ public class ResourceInclude extends TemplateInclude{
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        StringWriteUtil writer=outputContext.writer;
-        HttpServletRequest request=outputContext.getRequest();
+        StringWriteUtil writer=outputContext.getWriter();
         writer.write(StringUtil.getHtml(attributes.get("key"), outputData.locale));
     }
 

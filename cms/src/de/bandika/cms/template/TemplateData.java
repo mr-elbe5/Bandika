@@ -113,18 +113,23 @@ public class TemplateData extends BaseData implements Serializable {
     }
 
     public void writeTemplate(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        StringWriteUtil writer=outputContext.writer;
+        StringWriteUtil writer=outputContext.getWriter();
         int start=0;
         int end;
         String placeholder;
         for (int i =0; i< templateIncludes.size(); i++) {
-            TemplateInclude templatePart=templateIncludes.get(i);
+            TemplateInclude templateInclude=templateIncludes.get(i);
             placeholder="{{"+i+"}}";
             end=parsedCode.indexOf(placeholder,start);
             if (end==-1) throw new IOException("missing placeholder");
             writer.write(parsedCode.substring(start,end));
-            templatePart.completeOutputData(outputData);
-            templatePart.writeHtml(outputContext, outputData);
+            templateInclude.completeOutputData(outputData);
+            if (templateInclude.isDynamic() && outputContext.getRequest()==null){
+                writer.write("-----------------dynamic------------");
+            }
+            else {
+                templateInclude.writeHtml(outputContext, outputData);
+            }
             start=end+placeholder.length();
         }
         writer.write(parsedCode.substring(start));

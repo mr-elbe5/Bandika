@@ -37,7 +37,7 @@ public class SubMenuControl extends TemplateInclude {
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        StringWriteUtil writer=outputContext.writer;
+        StringWriteUtil writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
         if (outputData.pageData == null)
             return;

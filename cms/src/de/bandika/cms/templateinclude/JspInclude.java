@@ -26,7 +26,7 @@ public class JspInclude extends TemplateInclude{
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        StringWriteUtil writer=outputContext.writer;
+        StringWriteUtil writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
         String url = attributes.getString("url");
         request.setAttribute("pageData", outputData.pageData);
@@ -34,7 +34,7 @@ public class JspInclude extends TemplateInclude{
             request.setAttribute("partData", outputData.partData);
         }
         try {
-            outputContext.context.include(url);
+            outputContext.includeJsp(url);
         } catch (ServletException e) {
             Log.error("could not include jsp:" + url, e);
             writer.write("<div>JSP missing</div>");

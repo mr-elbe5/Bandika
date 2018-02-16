@@ -19,7 +19,6 @@ import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.Writer;
 
 public class TextField extends Field {
 
@@ -50,8 +49,7 @@ public class TextField extends Field {
 
     @Override
     public void appendFieldHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        StringWriteUtil writer=outputContext.writer;
-        HttpServletRequest request=outputContext.getRequest();
+        StringWriteUtil writer=outputContext.getWriter();
         boolean partEditMode = outputData.pageData.isEditMode() && outputData.partData == outputData.pageData.getEditPagePart();
         int rows = outputData.attributes.getInt("rows");
         if (partEditMode) {

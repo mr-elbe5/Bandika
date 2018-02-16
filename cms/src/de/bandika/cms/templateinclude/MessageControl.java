@@ -34,7 +34,7 @@ public class MessageControl extends TemplateInclude {
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        StringWriteUtil writer=outputContext.writer;
+        StringWriteUtil writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
         RequestError error = RequestError.getError(request);
         String message = RequestReader.getMessage(request);

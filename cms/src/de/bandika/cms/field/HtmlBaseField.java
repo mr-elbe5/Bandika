@@ -21,7 +21,6 @@ import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.Set;
 
 public abstract class HtmlBaseField extends Field {
@@ -83,8 +82,7 @@ public abstract class HtmlBaseField extends Field {
 
     @Override
     public void appendFieldHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        StringWriteUtil writer=outputContext.writer;
-        HttpServletRequest request=outputContext.getRequest();
+        StringWriteUtil writer=outputContext.getWriter();
         boolean partEditMode = outputData.pageData.isEditMode() && outputData.partData == outputData.pageData.getEditPagePart();
         int siteId = outputData.pageData.getParentId();
         int pageId = outputData.pageData.getId();

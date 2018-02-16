@@ -9,8 +9,11 @@
 package de.bandika.cms.page;
 
 import de.bandika.base.data.BaseIdData;
+import de.bandika.base.log.Log;
 import de.bandika.base.util.StringUtil;
 import de.bandika.cms.site.SiteData;
+import de.bandika.cms.template.TemplateCache;
+import de.bandika.cms.template.TemplateData;
 import de.bandika.cms.tree.BaseTreeActions;
 import de.bandika.cms.tree.TreeActions;
 import de.bandika.cms.tree.TreeBean;
@@ -21,6 +24,8 @@ import de.bandika.webbase.servlet.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.StringWriter;
+import java.util.Locale;
 
 public class PageActions extends BaseTreeActions {
 
@@ -284,10 +289,7 @@ public class PageActions extends BaseTreeActions {
                 boolean fromAdmin = RequestReader.getBoolean(request, "fromAdmin");
                 PageData data = PageBean.getInstance().getPage(pageId);
                 data.setAuthorName(SessionReader.getLoginName(request));
-                data.prepareSave();
-                //PageBean.getInstance().publishPage(data);
-                TreeCache.getInstance().setDirty();
-                RightsCache.getInstance().setDirty();
+                publish(data, SessionReader.getSessionLocale(request));
                 RequestWriter.setMessageKey(request, "_pagePublished");
                 request.setAttribute("siteId", Integer.toString(data.getParentId()));
                 if (fromAdmin) {
@@ -326,7 +328,7 @@ public class PageActions extends BaseTreeActions {
         return KEY;
     }
 
-    public boolean show(HttpServletRequest request, HttpServletResponse response) {
+    private PageData getPageData(HttpServletRequest request) {
         PageData treeData, data;
         int pageId = RequestReader.getInt(request, "pageId");
         TreeCache tc = TreeCache.getInstance();
@@ -341,14 +343,34 @@ public class PageActions extends BaseTreeActions {
             pageId=treeData.getId();
             request.setAttribute("pageId", Integer.toString(pageId));
         }
-        if (!treeData.isAnonymous() && !SessionReader.hasContentRight(request, pageId, Right.READ)) {
-            return forbidden();
-        }
         data = PageBean.getInstance().getPage(pageId);
         data.setPath(treeData.getPath());
         data.setDefaultPage(treeData.isDefaultPage());
         data.setParentIds(treeData.getParentIds());
+        return data;
+    }
+
+    public boolean show(HttpServletRequest request, HttpServletResponse response) {
+        PageData data = getPageData(request);
+        if (!data.isAnonymous() && !SessionReader.hasContentRight(request, data.getId(), Right.READ)) {
+            return forbidden();
+        }
         return setPageResponse(request, response, data);
+    }
+
+    public boolean publish(PageData data, Locale locale) {
+        String templateName = TreeCache.getInstance().getSite(data.getParentId()).getTemplateName();
+        TemplateData masterTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_MASTER, templateName);
+        StringWriter writer=new StringWriter();
+        PageOutputContext outputContext=new PageOutputContext(writer);
+        PageOutputData outputData=new PageOutputData(data, locale);
+        try {
+            masterTemplate.writeTemplate(outputContext, outputData);
+        } catch (Exception e) {
+            Log.error("could not write page html", e);
+        }
+        System.out.println(writer.getBuffer().toString());
+        return true;
     }
 
     protected boolean setPageResponse(HttpServletRequest request, HttpServletResponse response, PageData data) {

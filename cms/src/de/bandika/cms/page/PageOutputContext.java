@@ -9,16 +9,18 @@
 package de.bandika.cms.page;
 
 import de.bandika.base.util.StringWriteUtil;
+import de.bandika.webbase.servlet.RequestReader;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
+import java.io.IOException;
 import java.io.StringWriter;
-import java.io.Writer;
 
 public class PageOutputContext {
 
-    public PageContext context;
-    public StringWriteUtil writer;
+    private PageContext context;
+    private StringWriteUtil writer;
 
     public PageOutputContext(PageContext context){
         this.context=context;
@@ -30,8 +32,26 @@ public class PageOutputContext {
         writer=new StringWriteUtil(stringWriter);
     }
 
+    // consumer should declare itself as dynamic
+    public void includeJsp(String jsp) throws ServletException, IOException {
+        if (context!=null)
+            context.include(jsp);
+    }
+
+    // consumer should (probably) declare itself as dynamic
+    public String getParamString(String key){
+        if (context!=null)
+            return RequestReader.getString((HttpServletRequest) context.getRequest(), key);
+        return "";
+    }
+
+    // consumer should declare itself as dynamic
     public HttpServletRequest getRequest(){
         return context!=null ? (HttpServletRequest) context.getRequest() : null;
+    }
+
+    public StringWriteUtil getWriter() {
+        return writer;
     }
 
 }

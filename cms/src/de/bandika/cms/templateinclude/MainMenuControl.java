@@ -37,7 +37,7 @@ public class MainMenuControl extends TemplateInclude {
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        StringWriteUtil writer=outputContext.writer;
+        StringWriteUtil writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
         TreeCache tc = TreeCache.getInstance();
         SiteData homeSite = tc.getLanguageRootSite(outputData.locale);

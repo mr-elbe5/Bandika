@@ -14,25 +14,21 @@ import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
-import de.bandika.webbase.servlet.RequestReader;
 import de.bandika.webbase.servlet.RequestStatics;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.Writer;
 
 public class ContentInclude extends TemplateInclude{
 
     public static final String KEY = "content";
 
     public boolean isDynamic(){
-        return true;
+        return false;
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        StringWriteUtil writer=outputContext.writer;
-        HttpServletRequest request=outputContext.getRequest();
+        StringWriteUtil writer=outputContext.getWriter();
         if (outputData.pageData!=null) {
             if (outputData.pageData.isEditMode()) {
                 writer.write("<div id=\"pageContent\" class=\"editArea\">");
@@ -53,10 +49,10 @@ public class ContentInclude extends TemplateInclude{
             }
         }
         else{
-            String jsp = RequestReader.getString(request, RequestStatics.KEY_JSP);
+            String jsp = outputContext.getParamString(RequestStatics.KEY_JSP);
             if (!jsp.isEmpty()){
                 try {
-                    outputContext.context.include(jsp);
+                    outputContext.includeJsp(jsp);
                 } catch (ServletException e) {
                     Log.error("could not include jsp:" + jsp, e);
                     writer.write("<div>JSP missing</div>");

@@ -13,7 +13,6 @@ import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public class HeadControl extends TemplateInclude {
@@ -33,8 +32,7 @@ public class HeadControl extends TemplateInclude {
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        StringWriteUtil writer=outputContext.writer;
-        HttpServletRequest request=outputContext.getRequest();
+        StringWriteUtil writer=outputContext.getWriter();
         if (outputData.pageData==null)
             return;
         writer.write("<title>{1}</title>\n" +
