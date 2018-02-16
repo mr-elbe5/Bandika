@@ -382,7 +382,7 @@ function postMulti2ModalBrowserDialog(url, params) {
 
 function replacePageContent() {
     $.ajax({
-        url: '/pageedit.ajx?', type: 'POST', data: {act: 'showPageContent'}, cache: false, dataType: 'html'
+        url: '/page.ajx?', type: 'POST', data: {act: 'showPageContent'}, cache: false, dataType: 'html'
     }).success(function (html, textStatus) {
         closeLayerDialog();
         var $pageContent = $('#pageContent');

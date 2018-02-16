@@ -8,20 +8,26 @@
  */
 package de.bandika.cms.page;
 
+import de.bandika.base.util.StringWriteUtil;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
+import java.io.StringWriter;
 import java.io.Writer;
 
 public class PageOutputContext {
 
     public PageContext context;
+    public StringWriteUtil writer;
 
     public PageOutputContext(PageContext context){
         this.context=context;
+        writer=context!=null ? new StringWriteUtil(context.getOut()) : null;
     }
 
-    public Writer getWriter(){
-        return context!=null ? context.getOut() : null;
+    public PageOutputContext(StringWriter stringWriter){
+        this.context=null;
+        writer=new StringWriteUtil(stringWriter);
     }
 
     public HttpServletRequest getRequest(){

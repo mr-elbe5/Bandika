@@ -8,13 +8,13 @@
  */
 package de.bandika.cms.templateinclude;
 
+import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
 
 import java.io.IOException;
-import java.io.Writer;
 
 public class LayerControl extends TemplateInclude {
 
@@ -33,7 +33,7 @@ public class LayerControl extends TemplateInclude {
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        Writer writer=outputContext.getWriter();
+        StringWriteUtil writer=outputContext.writer;
         writer.write(TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, "treeLayer").getCode());
         writer.write(TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, "dialogLayer").getCode());
         if (outputData.pageData!=null && outputData.pageData.isEditMode()) {

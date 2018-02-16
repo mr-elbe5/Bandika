@@ -9,6 +9,7 @@
 package de.bandika.cms.template;
 
 import de.bandika.base.data.BaseData;
+import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.templateinclude.TemplateInclude;
@@ -112,7 +113,7 @@ public class TemplateData extends BaseData implements Serializable {
     }
 
     public void writeTemplate(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        Writer writer=outputContext.getWriter();
+        StringWriteUtil writer=outputContext.writer;
         int start=0;
         int end;
         String placeholder;

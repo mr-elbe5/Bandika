@@ -9,6 +9,7 @@
 package de.bandika.cms.field;
 
 import de.bandika.base.util.StringUtil;
+import de.bandika.base.util.StringWriteUtil;
 import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
@@ -49,7 +50,7 @@ public class TextField extends Field {
 
     @Override
     public void appendFieldHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        Writer writer=outputContext.getWriter();
+        StringWriteUtil writer=outputContext.writer;
         HttpServletRequest request=outputContext.getRequest();
         boolean partEditMode = outputData.pageData.isEditMode() && outputData.partData == outputData.pageData.getEditPagePart();
         int rows = outputData.attributes.getInt("rows");

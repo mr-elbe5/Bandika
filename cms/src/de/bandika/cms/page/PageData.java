@@ -191,7 +191,7 @@ public class PageData extends TreeNode {
         }
     }
 
-    public void prepareCopy() throws Exception {
+    public void prepareCopy() {
         for (SectionData section : sections.values()) {
             section.prepareCopy();
         }

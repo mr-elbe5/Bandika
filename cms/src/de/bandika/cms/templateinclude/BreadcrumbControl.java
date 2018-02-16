@@ -8,6 +8,7 @@
  */
 package de.bandika.cms.templateinclude;
 
+import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
@@ -16,7 +17,6 @@ import de.bandika.cms.tree.TreeNode;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class BreadcrumbControl extends TemplateInclude {
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        Writer writer=outputContext.getWriter();
+        StringWriteUtil writer=outputContext.writer;
         HttpServletRequest request=outputContext.getRequest();
         TreeCache tc = TreeCache.getInstance();
         List<Integer> activeIds = new ArrayList<>();
@@ -58,7 +58,9 @@ public class BreadcrumbControl extends TemplateInclude {
             if (bcnode == null || ((bcnode instanceof PageData) && ((PageData) bcnode).isDefaultPage())) {
                 continue;
             }
-            writer.write("<li><a href=\"" + bcnode.getUrl() + "\">" + toHtml(bcnode.getDisplayName()) + "</a></li>");
+            writer.write("<li><a href=\"{1}\">{2}</a></li>",
+                    bcnode.getUrl(),
+                    toHtml(bcnode.getDisplayName()));
         }
         writer.write("</ul></nav>");
     }

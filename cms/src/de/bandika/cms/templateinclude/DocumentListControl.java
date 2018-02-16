@@ -9,6 +9,7 @@
 package de.bandika.cms.templateinclude;
 
 import de.bandika.base.util.StringUtil;
+import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.file.FileData;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
@@ -19,7 +20,6 @@ import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.List;
 
 public class DocumentListControl extends TemplateInclude {
@@ -39,7 +39,7 @@ public class DocumentListControl extends TemplateInclude {
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        Writer writer=outputContext.getWriter();
+        StringWriteUtil writer=outputContext.writer;
         HttpServletRequest request=outputContext.getRequest();
         if (outputData.pageData==null)
             return;
@@ -49,13 +49,10 @@ public class DocumentListControl extends TemplateInclude {
         for (FileData file : files) {
             if (!file.isAnonymous() && !SessionReader.hasContentRight(request, file.getId(), Right.READ))
                 continue;
-            writer.write("<div class=\"documentListLine icn ifile\"><a href=\"" +
-                    file.getUrl() +
-                    "\" target=\"_blank\" title=\"" +
-                    StringUtil.getHtml("_show", outputData.locale) +
-                    "\">" +
-                    StringUtil.toHtml(file.getDisplayName()) +
-                    "</a></div>");
+            writer.write("<div class=\"documentListLine icn ifile\"><a href=\"{1}\" target=\"_blank\" title=\"{2}\">{3}</a></div>",
+                    file.getUrl(),
+                    StringUtil.getHtml("_show", outputData.locale),
+                    StringUtil.toHtml(file.getDisplayName()));
         }
     }
 

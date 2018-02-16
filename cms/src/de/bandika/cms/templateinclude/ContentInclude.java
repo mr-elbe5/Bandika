@@ -9,6 +9,7 @@
 package de.bandika.cms.templateinclude;
 
 import de.bandika.base.log.Log;
+import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.template.TemplateCache;
@@ -30,7 +31,7 @@ public class ContentInclude extends TemplateInclude{
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        Writer writer=outputContext.getWriter();
+        StringWriteUtil writer=outputContext.writer;
         HttpServletRequest request=outputContext.getRequest();
         if (outputData.pageData!=null) {
             if (outputData.pageData.isEditMode()) {

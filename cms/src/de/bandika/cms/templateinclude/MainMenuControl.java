@@ -8,6 +8,7 @@
  */
 package de.bandika.cms.templateinclude;
 
+import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
@@ -16,7 +17,6 @@ import de.bandika.cms.tree.TreeCache;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class MainMenuControl extends TemplateInclude {
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        Writer writer=outputContext.getWriter();
+        StringWriteUtil writer=outputContext.writer;
         HttpServletRequest request=outputContext.getRequest();
         TreeCache tc = TreeCache.getInstance();
         SiteData homeSite = tc.getLanguageRootSite(outputData.locale);
@@ -54,16 +54,16 @@ public class MainMenuControl extends TemplateInclude {
         writer.write("</ul></nav>");
     }
 
-    public void addNodes(Writer writer, HttpServletRequest request, SiteData parentSite, int currentId, List<Integer> activeIds) throws IOException {
+    public void addNodes(StringWriteUtil writer, HttpServletRequest request, SiteData parentSite, int currentId, List<Integer> activeIds) throws IOException {
         for (SiteData site : parentSite.getSites()) {
             if (site.isInNavigation() && site.isVisibleToUser(request)) {
                 boolean hasSubSites = site.getSites().size() > 0;
                 boolean hasSubPages = site.getPages().size() > 1;
                 boolean active = site.getId() == currentId || activeIds.contains(site.getId());
-                writer.write("<li><a");
-                if (active)
-                    writer.write(" class=\"active\"");
-                writer.write(" href=\"" + site.getUrl() + "\">" + toHtml(site.getDisplayName()) + "</a>");
+                writer.write("<li><a {1} href=\"{2}\">{3}</a>",
+                        active?"class=\"active\"":"",
+                        site.getUrl(),
+                        toHtml(site.getDisplayName()));
                 if (hasSubSites || hasSubPages) {
                     writer.write("<ul>");
                     addNodes(writer, request, site, currentId, activeIds);
@@ -75,10 +75,10 @@ public class MainMenuControl extends TemplateInclude {
         for (PageData page : parentSite.getPages()) {
             if (page.isInNavigation() && page.isVisibleToUser(request) && !page.isDefaultPage()) {
                 boolean active = page.getId() == currentId || activeIds.contains(page.getId());
-                writer.write("<li><a");
-                if (active)
-                    writer.write(" class=\"active\"");
-                writer.write(" href=\"" + page.getUrl() + "\">" + toHtml(page.getDisplayName()) + "</a></li>");
+                writer.write("<li><a {1} href=\"{2}\">{3}</a></li>",
+                        active?"class=\"active\"":"",
+                        page.getUrl(),
+                        toHtml(page.getDisplayName()));
             }
         }
     }

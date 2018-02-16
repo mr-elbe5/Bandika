@@ -8,13 +8,13 @@
  */
 package de.bandika.cms.templateinclude;
 
+import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.page.SectionData;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.Writer;
 
 public class SectionInclude extends TemplateInclude{
 
@@ -25,7 +25,7 @@ public class SectionInclude extends TemplateInclude{
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        Writer writer=outputContext.getWriter();
+        StringWriteUtil writer=outputContext.writer;
         HttpServletRequest request=outputContext.getRequest();
         String sectionName = attributes.getString("name");
         SectionData section = outputData.pageData.getSection(sectionName);

@@ -8,6 +8,7 @@
  */
 package de.bandika.cms.templateinclude;
 
+import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
@@ -18,7 +19,6 @@ import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.Writer;
 
 public class SubMenuControl extends TemplateInclude {
 
@@ -37,7 +37,7 @@ public class SubMenuControl extends TemplateInclude {
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        Writer writer=outputContext.getWriter();
+        StringWriteUtil writer=outputContext.writer;
         HttpServletRequest request=outputContext.getRequest();
         if (outputData.pageData == null)
             return;
@@ -48,20 +48,21 @@ public class SubMenuControl extends TemplateInclude {
         writer.write("</ul></nav>");
     }
 
-    public void addNodes(Writer writer, HttpServletRequest request, SiteData parentSite, int currentId) throws IOException {
+    public void addNodes(StringWriteUtil writer, HttpServletRequest request, SiteData parentSite, int currentId) throws IOException {
         for (SiteData site : parentSite.getSites()) {
             if (site.isInNavigation() && (site.isAnonymous() || SessionReader.hasContentRight(request, site.getId(), Right.READ))) {
-                writer.write("<li><a class=\"active\"");
-                writer.write(" href=\"" + site.getUrl() + "\">" + toHtml(site.getDisplayName()) + "</a></li>");
+                writer.write("<li><a class=\"active\" href=\"{1}\">{2}</a></li>",
+                        site.getUrl(),
+                        toHtml(site.getDisplayName()));
             }
         }
         for (PageData page : parentSite.getPages()) {
             if (page.isInNavigation() && (page.isAnonymous() || SessionReader.hasContentRight(request, page.getId(), Right.READ)) && !page.isDefaultPage()) {
                 boolean active = page.getId() == currentId;
-                writer.write("<li><a");
-                if (active)
-                    writer.write(" class=\"active\"");
-                writer.write(" href=\"" + page.getUrl() + "\">" + toHtml(page.getDisplayName()) + "</a></li>");
+                writer.write("<li><a {1} href=\"{2}\">{3}</a></li>",
+                        active?"class=\"active\"" : "",
+                        page.getUrl(),
+                        toHtml(page.getDisplayName()));
             }
         }
     }

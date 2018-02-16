@@ -9,12 +9,12 @@
 package de.bandika.cms.templateinclude;
 
 import de.bandika.base.util.StringUtil;
+import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.Writer;
 
 public class HeadControl extends TemplateInclude {
 
@@ -33,16 +33,14 @@ public class HeadControl extends TemplateInclude {
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        Writer writer=outputContext.getWriter();
+        StringWriteUtil writer=outputContext.writer;
         HttpServletRequest request=outputContext.getRequest();
         if (outputData.pageData==null)
             return;
-        writer.write("<title>" +
-                StringUtil.getHtml("appTitle", outputData.locale) +
-                "</title>\n");
-        writer.write("<meta name=\"keywords\" content=\"" +
-                StringUtil.toHtml(outputData.pageData.getKeywords()) +
-                "\">\n");
+        writer.write("<title>{1}</title>\n" +
+                        "<meta name=\"keywords\" content=\"{2}\">\n",
+                StringUtil.getHtml("appTitle", outputData.locale),
+                StringUtil.toHtml(outputData.pageData.getKeywords()));
     }
 
 }
