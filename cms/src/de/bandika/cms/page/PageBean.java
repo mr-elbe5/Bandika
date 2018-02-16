@@ -42,7 +42,7 @@ public class PageBean extends TreeBean {
             con = getConnection();
             pst = con.prepareStatement("SELECT t1.id,t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
                     "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
-                    "t2.keywords,t2.template " + "FROM t_treenode t1, t_page t2 " +
+                    "t2.template " + "FROM t_treenode t1, t_page t2 " +
                     "WHERE t1.id=t2.id AND t1.id=t2.id " +
                     "ORDER BY t1.parent_id, t1.ranking");
             try (ResultSet rs = pst.executeQuery()) {
@@ -61,7 +61,6 @@ public class PageBean extends TreeBean {
                     data.setInNavigation(rs.getBoolean(i++));
                     data.setAnonymous(rs.getBoolean(i++));
                     data.setInheritsRights(rs.getBoolean(i++));
-                    data.setKeywords(rs.getString(i++));
                     data.setTemplateName(rs.getString(i));
                     if (!data.inheritsRights()) {
                         data.setRights(getTreeNodeRights(con, data.getId()));
@@ -86,7 +85,7 @@ public class PageBean extends TreeBean {
             con = getConnection();
             pst = con.prepareStatement("SELECT t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
                     "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
-                    "t2.keywords,t2.template " +
+                    "t2.template " +
                     "FROM t_treenode t1, t_page t2 " +
                     "WHERE t1.id=? AND t2.id=?");
             pst.setInt(1, id);
@@ -107,7 +106,6 @@ public class PageBean extends TreeBean {
                     data.setInNavigation(rs.getBoolean(i++));
                     data.setAnonymous(rs.getBoolean(i++));
                     data.setInheritsRights(rs.getBoolean(i++));
-                    data.setKeywords(rs.getString(i++));
                     data.setTemplateName(rs.getString(i));
                     if (!data.inheritsRights()) {
                         data.setRights(getTreeNodeRights(con, data.getId()));
@@ -154,53 +152,17 @@ public class PageBean extends TreeBean {
         }
     }
 
-    public boolean createPage(PageData data, boolean withContent) {
+    public boolean savePage(PageData data) {
         Connection con = startTransaction();
         try {
-            if (!unchangedNode(con, data)) {
+            if (!data.isNew() && !unchangedNode(con, data)) {
                 rollbackTransaction(con);
                 return false;
             }
             data.setChangeDate(getServerTime(con));
             writeTreeNode(con, data);
             writePage(con, data);
-            if (withContent)
-                writeAllPageParts(con, data);
-            return commitTransaction(con);
-        } catch (Exception se) {
-            return rollbackTransaction(con, se);
-        }
-    }
-
-    public boolean savePageSettings(PageData data) {
-        Connection con = startTransaction();
-        try {
-            if (!unchangedNode(con, data)) {
-                rollbackTransaction(con);
-                return false;
-            }
-            data.setChangeDate(getServerTime(con));
-            writeTreeNode(con, data);
-            writePage(con, data);
-            return commitTransaction(con);
-        } catch (Exception se) {
-            return rollbackTransaction(con, se);
-        }
-    }
-
-    public boolean savePageContent(PageData data) {
-        Connection con = startTransaction();
-        try {
-            if (!unchangedNode(con, data)) {
-                rollbackTransaction(con);
-                return false;
-            }
-            data.setChangeDate(getServerTime(con));
-            if (data.isContentChanged()) {
-                data.setContentChangeDate();
-                writeAllPageParts(con, data);
-                writeUsagesByPage(con, data);
-            }
+            writeAllPageParts(con, data);
             return commitTransaction(con);
         } catch (Exception se) {
             return rollbackTransaction(con, se);
@@ -212,13 +174,10 @@ public class PageBean extends TreeBean {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(data.isNew() ?
-                    "insert into t_page (template,keywords,change_date,author_name,id) values(?,?,?,?,?)" :
-                    "update t_page set template=?,keywords=?,change_date=?,author_name=? where id=?");
+                    "insert into t_page (template,id) values(?,?)" :
+                    "update t_page set template=? where id=?");
             int i = 1;
             pst.setString(i++, data.getTemplateName());
-            pst.setString(i++, data.getKeywords());
-            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
-            pst.setString(i++, data.getAuthorName());
             pst.setInt(i, data.getId());
             pst.executeUpdate();
             pst.close();
@@ -392,13 +351,12 @@ public class PageBean extends TreeBean {
             pst.setInt(i, data.getId());
             pst.executeUpdate();
             pst.close();
-            pst = con.prepareStatement("INSERT INTO t_page_part2page (part_id,page_id,section,ranking,change_date) VALUES(?,?,?,?,?)");
+            pst = con.prepareStatement("INSERT INTO t_page_part2page (part_id,page_id,section,ranking) VALUES(?,?,?,?)");
             i = 1;
             pst.setInt(i++, data.getId());
             pst.setInt(i++, page.getId());
             pst.setString(i++, data.getSectionName());
-            pst.setInt(i++, data.getRanking());
-            pst.setTimestamp(i, Timestamp.valueOf(data.getChangeDate()));
+            pst.setInt(i, data.getRanking());
             pst.executeUpdate();
             pst.close();
         } finally {

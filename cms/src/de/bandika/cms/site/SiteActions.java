@@ -101,7 +101,7 @@ public class SiteActions extends BaseTreeActions {
                     page.setAuthorName(data.getAuthorName());
                     page.setTemplateName(defaultTemplateName);
                     page.prepareSave();
-                    pageBean.createPage(page, false);
+                    pageBean.savePage(page);
                     page.stopEditing();
                 }
                 TreeCache.getInstance().setDirty();
@@ -202,14 +202,14 @@ public class SiteActions extends BaseTreeActions {
                         page.setAnonymous(anonymous);
                         page.setInheritsRights(true);
                         page.prepareSave();
-                        PageBean.getInstance().savePageSettings(page);
+                        PageBean.getInstance().saveNodeSettings(page);
                     }
                     for (FileData file : site.getFiles()) {
                         file.setAuthorName(SessionReader.getLoginName(request));
                         file.setAnonymous(anonymous);
                         file.setInheritsRights(true);
                         file.prepareSave();
-                        FileBean.getInstance().saveFileSettings(file);
+                        FileBean.getInstance().saveNodeSettings(file);
                     }
                 }
                 TreeCache.getInstance().setDirty();

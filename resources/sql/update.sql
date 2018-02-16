@@ -166,6 +166,25 @@ $$ LANGUAGE plpgsql;
 
 alter table t_timer_task RENAME COLUMN interval to execution_interval;
 
+--2018-02-16
+
+ALTER TABLE t_treenode ADD keywords VARCHAR(500) NOT NULL DEFAULT '';
+UPDATE t_treenode t1 SET keywords=(select keywords from t_file t2 WHERE t1.id=t2.id) where exists(select 'x' from t_file t2 WHERE t1.id=t2.id);
+UPDATE t_treenode t1 SET keywords=(select keywords from t_page t2 WHERE t1.id=t2.id) where exists(select 'x' from t_page t2 WHERE t1.id=t2.id);
+
+
+ALTER TABLE t_file DROP COLUMN change_date;
+ALTER TABLE t_file DROP COLUMN author_name;
+ALTER TABLE t_file DROP COLUMN keywords;
+
+ALTER TABLE t_page DROP COLUMN change_date;
+ALTER TABLE t_page DROP COLUMN author_name;
+ALTER TABLE t_page DROP COLUMN keywords;
+
+ALTER TABLE t_page_part2page DROP COLUMN change_date;
+
+ALTER TABLE t_page_part ADD creation_date   TIMESTAMP    NOT NULL DEFAULT now();
+
 
 
 

@@ -41,7 +41,6 @@ public class PageActions extends BaseTreeActions {
     public static final String openEditPageContent="openEditPageContent";
     public static final String reopenEditPageContent="reopenEditPageContent";
     public static final String savePageContent="savePageContent";
-    public static final String savePageContentAndPublish="savePageContentAndPublish";
     public static final String publishPage="publishPage";
     public static final String stopEditing="stopEditing";
     public static final String showPageContent="showPageContent";
@@ -85,7 +84,7 @@ public class PageActions extends BaseTreeActions {
                     return showCreatePage(request, response);
                 }
                 data.prepareSave();
-                ts.createPage(data, false);
+                ts.savePage(data);
                 data.stopEditing();
                 data.prepareEditing();
                 TreeCache.getInstance().setDirty();
@@ -118,7 +117,7 @@ public class PageActions extends BaseTreeActions {
                 }
                 data.setAuthorName(SessionReader.getLoginName(request));
                 data.prepareSave();
-                PageBean.getInstance().savePageSettings(data);
+                PageBean.getInstance().saveNodeSettings(data);
                 SessionWriter.removeSessionObject(request, "pageData");
                 data.stopEditing();
                 TreeCache.getInstance().setDirty();
@@ -170,7 +169,7 @@ public class PageActions extends BaseTreeActions {
                 data.setAuthorName(SessionReader.getLoginName(request));
                 data.setDefaultPage(false);
                 data.prepareEditing();
-                ts.createPage(data, true);
+                ts.savePage(data);
                 data.stopEditing();
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
@@ -269,26 +268,9 @@ public class PageActions extends BaseTreeActions {
                     return false;
                 PageData data = (PageData) getSessionObject(request, "pageData");
                 checkObject(data, pageId);
-                data.setContentChanged();
                 data.setAuthorName(SessionReader.getLoginName(request));
                 data.prepareSave();
-                PageBean.getInstance().savePageContent(data);
-                SessionWriter.removeSessionObject(request, "pageData");
-                data.stopEditing();
-                TreeCache.getInstance().setDirty();
-                RightsCache.getInstance().setDirty();
-                return new PageActions().show(request, response);
-            }
-            case savePageContentAndPublish: {
-                int pageId = RequestReader.getInt(request, "pageId");
-                if (!hasContentRight(request, pageId, Right.APPROVE))
-                    return false;
-                PageData data = (PageData) getSessionObject(request, "pageData");
-                checkObject(data, pageId);
-                data.setContentChanged();
-                data.setAuthorName(SessionReader.getLoginName(request));
-                data.prepareSave();
-                PageBean.getInstance().savePageContent(data);
+                PageBean.getInstance().savePage(data);
                 SessionWriter.removeSessionObject(request, "pageData");
                 data.stopEditing();
                 TreeCache.getInstance().setDirty();

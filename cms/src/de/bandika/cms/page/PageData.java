@@ -18,7 +18,6 @@ import java.util.Map;
 
 public class PageData extends TreeNode {
 
-    protected String keywords = "";
     protected String templateName = "";
     protected boolean isDefaultPage = false;
     protected Map<String, SectionData> sections = new HashMap<>();
@@ -45,14 +44,6 @@ public class PageData extends TreeNode {
     @Override
     public String getUrl() {
         return path + ".html";
-    }
-
-    public String getKeywords() {
-        return keywords;
-    }
-
-    public void setKeywords(String keywords) {
-        this.keywords = keywords;
     }
 
     public String getTemplateName() {

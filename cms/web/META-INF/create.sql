@@ -123,6 +123,7 @@ CREATE TABLE IF NOT EXISTS t_treenode (
   name            VARCHAR(100) NOT NULL,
   display_name    VARCHAR(100) NOT NULL DEFAULT '',
   description     VARCHAR(200) NOT NULL DEFAULT '',
+  keywords        VARCHAR(500) NOT NULL DEFAULT '',
   owner_id        INTEGER      NOT NULL DEFAULT 1,
   author_name     VARCHAR(255) NOT NULL,
   in_navigation   BOOLEAN      NOT NULL DEFAULT TRUE,
@@ -175,10 +176,6 @@ CREATE TABLE IF NOT EXISTS t_site (
 --
 CREATE TABLE IF NOT EXISTS t_file (
   id                   INTEGER      NOT NULL,
-  change_date          TIMESTAMP    NOT NULL DEFAULT now(),
-  keywords             VARCHAR(500) NOT NULL DEFAULT '',
-  published            BOOLEAN      NOT NULL DEFAULT FALSE,
-  author_name          VARCHAR(255) NOT NULL,
   content_type         VARCHAR(255) NOT NULL DEFAULT '',
   file_size            INTEGER      NOT NULL DEFAULT 0,
   width                INTEGER      NOT NULL DEFAULT 0,
@@ -196,9 +193,6 @@ CREATE TABLE IF NOT EXISTS t_page (
   id            INTEGER      NOT NULL,
   template_type VARCHAR(20)  NOT NULL DEFAULT 'TYPE_PAGE',
   template      VARCHAR(255) NOT NULL,
-  keywords      VARCHAR(500) NOT NULL DEFAULT '',
-  change_date TIMESTAMP    NOT NULL DEFAULT now(),
-  author_name VARCHAR(255) NOT NULL,
   CONSTRAINT t_page_pk PRIMARY KEY (id),
   CONSTRAINT t_page_fk1 FOREIGN KEY (id) REFERENCES t_treenode (id) ON DELETE CASCADE,
   CONSTRAINT t_page_fk2 FOREIGN KEY (template, template_type) REFERENCES t_template (name, type)
@@ -207,6 +201,7 @@ CREATE TABLE IF NOT EXISTS t_page (
 CREATE TABLE IF NOT EXISTS t_page_part (
   id            INTEGER      NOT NULL,
   name          VARCHAR(60)  NOT NULL DEFAULT '',
+  creation_date   TIMESTAMP  NOT NULL DEFAULT now(),
   change_date   TIMESTAMP    NOT NULL DEFAULT now(),
   template_type VARCHAR(20)  NOT NULL DEFAULT 'TYPE_PART',
   template      VARCHAR(255) NOT NULL,
@@ -220,7 +215,6 @@ CREATE TABLE IF NOT EXISTS t_page_part2page (
   page_id     INTEGER     NULL,
   section     VARCHAR(60) NOT NULL,
   ranking     INTEGER     NOT NULL DEFAULT 0,
-  change_date TIMESTAMP   NOT NULL DEFAULT now(),
   CONSTRAINT t_page_part2page_pk PRIMARY KEY (part_id, page_id, section, ranking),
   CONSTRAINT t_page_part2page_fk1 FOREIGN KEY (part_id) REFERENCES t_page_part (id) ON DELETE CASCADE,
   CONSTRAINT t_page_part2page_fk2 FOREIGN KEY (page_id) REFERENCES t_page (id) ON DELETE CASCADE

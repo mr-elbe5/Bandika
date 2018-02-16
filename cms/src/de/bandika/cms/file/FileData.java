@@ -33,7 +33,6 @@ public class FileData extends TreeNode {
     public static int MAX_THUMBNAIL_WIDTH = 200;
     public static int MAX_THUMBNAIL_HEIGHT = 200;
 
-    protected String keywords = "";
     protected String contentType = null;
     protected int fileSize = 0;
     protected int width = 0;
@@ -49,7 +48,6 @@ public class FileData extends TreeNode {
 
     public void cloneData(FileData data) {
         super.cloneData(data);
-        setKeywords(data.getKeywords());
         setContentType(data.getContentType());
         setFileSize(data.getFileSize());
         setWidth(data.getWidth());
@@ -80,14 +78,6 @@ public class FileData extends TreeNode {
     @Override
     public String getUrl() {
         return path;
-    }
-
-    public String getKeywords() {
-        return keywords;
-    }
-
-    public void setKeywords(String keywords) {
-        this.keywords = keywords;
     }
 
     public String getContentType() {
@@ -194,7 +184,6 @@ public class FileData extends TreeNode {
             setFileSize(file.getBytes().length);
             setName(file.getFileName());
             setContentType(file.getContentType());
-            setContentChanged();
             String name = RequestReader.getString(request, "displayName").trim();
             setDisplayName(name.isEmpty() ? getName() : name);
             name = RequestReader.getString(request, "name").trim();
@@ -209,7 +198,6 @@ public class FileData extends TreeNode {
             setFileSize(file.getBytes().length);
             setName(file.getFileName());
             setContentType(file.getContentType());
-            setContentChanged();
         }
     }
 

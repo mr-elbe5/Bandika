@@ -142,6 +142,7 @@ public class FileActions extends BaseTreeActions {
                 if (!hasContentRight(request, fileId, Right.EDIT))
                     return false;
                 FileData data = new FileData();
+                data.setNew(true);
                 int parentId = RequestReader.getInt(request, "siteId");
                 FileBean ts = FileBean.getInstance();
                 TreeCache tc = TreeCache.getInstance();
@@ -152,7 +153,7 @@ public class FileActions extends BaseTreeActions {
                 data.setOwnerId(SessionReader.getLoginId(request));
                 data.setAuthorName(SessionReader.getLoginName(request));
                 data.prepareSave();
-                ts.createFile(data);
+                ts.saveFile(data);
                 TreeCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&fileId=&fileId=" + data.getId(), "_fileCreated");
             }
@@ -174,14 +175,13 @@ public class FileActions extends BaseTreeActions {
                         data.setName(file.getFileName());
                         data.setName(file.getFileName());
                         data.setContentType(file.getContentType());
-                        data.setContentChanged();
                     }
                     data.setCreateValues(parentNode);
                     data.setRanking(parentNode.getFiles().size());
                     data.setOwnerId(SessionReader.getLoginId(request));
                     data.setAuthorName(SessionReader.getLoginName(request));
                     data.prepareSave();
-                    ts.createFile(data);
+                    ts.saveFile(data);
                     TreeCache.getInstance().setDirty();
                 }
                 return true;
@@ -199,7 +199,7 @@ public class FileActions extends BaseTreeActions {
                 }
                 data.setAuthorName(SessionReader.getLoginName(request));
                 data.prepareSave();
-                FileBean.getInstance().saveFileSettings(data);
+                FileBean.getInstance().saveNodeSettings(data);
                 RequestWriter.setMessageKey(request, "_fileSaved");
                 TreeCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&fileId=" + data.getId(), "_fileSettingsChanged");
@@ -226,7 +226,7 @@ public class FileActions extends BaseTreeActions {
                 data.readFileEditRequestData(request);
                 data.setAuthorName(SessionReader.getLoginName(request));
                 data.prepareSave();
-                FileBean.getInstance().saveFileContent(data);
+                FileBean.getInstance().saveFile(data);
                 TreeCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&fileId=" + data.getId(), "_fileReplaced");
             }
@@ -244,7 +244,7 @@ public class FileActions extends BaseTreeActions {
                 data.setOwnerId(SessionReader.getLoginId(request));
                 data.setAuthorName(SessionReader.getLoginName(request));
                 data.prepareEditing();
-                ts.createFile(data);
+                ts.saveFile(data);
                 data.stopEditing();
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
@@ -276,6 +276,7 @@ public class FileActions extends BaseTreeActions {
                 return true;
             }
             case publishFile: {
+                //todo
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.APPROVE))
                     return false;
@@ -283,7 +284,7 @@ public class FileActions extends BaseTreeActions {
                 FileData data = FileBean.getInstance().getFile(fileId, false);
                 data.setAuthorName(SessionReader.getLoginName(request));
                 data.prepareSave();
-                FileBean.getInstance().publishFile(data);
+                FileBean.getInstance().saveFile(data);
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
                 RequestWriter.setMessageKey(request, "_filePublished");

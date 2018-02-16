@@ -90,7 +90,7 @@ public class TreeBean extends DbBean {
         boolean success = false;
         try {
             pst = con.prepareStatement("SELECT creation_date,change_date,parent_id,ranking,name,display_name," +
-                    "description,owner_id,author_name,in_navigation,anonymous,inherits_rights " +
+                    "description,keywords,owner_id,author_name,in_navigation,anonymous,inherits_rights " +
                     "FROM t_treenode " +
                     "WHERE id=?");
             pst.setInt(1, data.getId());
@@ -104,6 +104,7 @@ public class TreeBean extends DbBean {
                     data.setName(rs.getString(i++));
                     data.setDisplayName(rs.getString(i++));
                     data.setDescription(rs.getString(i++));
+                    data.setKeywords(rs.getString(i++));
                     data.setOwnerId(rs.getInt(i++));
                     data.setAuthorName(rs.getString(i++));
                     data.setInNavigation(rs.getBoolean(i++));
@@ -116,6 +117,21 @@ public class TreeBean extends DbBean {
             closeStatement(pst);
         }
         return success;
+    }
+
+    public boolean saveNodeSettings(TreeNode data) {
+        Connection con = startTransaction();
+        try {
+            if (!unchangedNode(con, data)) {
+                rollbackTransaction(con);
+                return false;
+            }
+            data.setChangeDate(getServerTime(con));
+            writeTreeNode(con, data);
+            return commitTransaction(con);
+        } catch (Exception se) {
+            return rollbackTransaction(con, se);
+        }
     }
 
     protected void writeTreeNode(Connection con, TreeNode data) throws SQLException {

@@ -27,6 +27,7 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
     protected String path = "";
     protected String displayName = "";
     protected String description = "";
+    protected String keywords = "";
     protected int ownerId = 1;
     protected String authorName = "";
     protected boolean inNavigation = true;
@@ -35,9 +36,6 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
     protected Locale locale = null;
     protected Map<Integer, Right> rights = new HashMap<>();
     protected List<Integer> parentIds = new ArrayList<>();
-
-    protected boolean contentChanged = false;
-    protected LocalDateTime contentChangeDate = LocalDateTime.now();
 
     public TreeNode() {
     }
@@ -53,6 +51,7 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
         setPath(data.getPath());
         setDisplayName(data.getDisplayName());
         setDescription(data.getDescription());
+        setKeywords(data.getKeywords());
         setOwnerId(data.getOwnerId());
         setAuthorName(data.getAuthorName());
         setInNavigation(data.isInNavigation());
@@ -197,6 +196,14 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
         this.description = description;
     }
 
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
     public int getOwnerId() {
         return ownerId;
     }
@@ -279,26 +286,6 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
 
     public void setParentIds(List<Integer> parentIds) {
         this.parentIds = parentIds;
-    }
-
-    public void setContentChanged() {
-        this.contentChanged = true;
-    }
-
-    public boolean isContentChanged() {
-        return contentChanged;
-    }
-
-    public LocalDateTime getContentChangeDate() {
-        return contentChangeDate;
-    }
-
-    public void setContentChangeDate(LocalDateTime contentChangeDate) {
-        this.contentChangeDate = contentChangeDate;
-    }
-
-    public void setContentChangeDate() {
-        this.contentChangeDate = getChangeDate();
     }
 
     public void clearContent() {

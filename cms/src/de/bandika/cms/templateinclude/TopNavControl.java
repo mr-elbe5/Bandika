@@ -64,11 +64,6 @@ public class TopNavControl extends TemplateInclude {
                     String.valueOf(pageId),
                     getHtml("_save", outputData.locale));
 
-            if (hasApproveRight) {
-                writer.write("<li class=\"editControl\"><a href=\"/page.srv?act=savePageContentAndPublish&pageId={1}\">{2}</a></li>",
-                        String.valueOf(pageId),
-                        getHtml("_publish", outputData.locale));
-            }
             writer.write("<li><a href=\"/page.srv?act=stopEditing&pageId={1}\">{2}</a></li>",
                     String.valueOf(pageId),
                     getHtml("_cancel", outputData.locale));

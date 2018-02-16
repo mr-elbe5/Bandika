@@ -36,7 +36,7 @@ public class FileBean extends TreeBean {
             con = getConnection();
             pst = con.prepareStatement("SELECT t1.id,t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
                     "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
-                    "t2.keywords, t2.content_type " +
+                    "t2.content_type " +
                     "FROM t_treenode t1, t_file t2 " +
                     "WHERE t1.id=t2.id " +
                     "ORDER BY t1.parent_id, t1.ranking");
@@ -56,7 +56,6 @@ public class FileBean extends TreeBean {
                     data.setInNavigation(rs.getBoolean(i++));
                     data.setAnonymous(rs.getBoolean(i++));
                     data.setInheritsRights(rs.getBoolean(i++));
-                    data.setKeywords(rs.getString(i++));
                     data.setContentType(rs.getString(i));
                     if (!data.inheritsRights()) {
                         data.setRights(getTreeNodeRights(con, data.getId()));
@@ -81,7 +80,7 @@ public class FileBean extends TreeBean {
             con = getConnection();
             pst = con.prepareStatement("SELECT t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
                 "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
-                "t2.keywords,t2.content_type " +
+                "t2.content_type " +
                 "FROM t_treenode t1, t_file t2 " +
                 "WHERE t1.id=? AND t2.id=? "
             );
@@ -103,7 +102,6 @@ public class FileBean extends TreeBean {
                     data.setInNavigation(rs.getBoolean(i++));
                     data.setAnonymous(rs.getBoolean(i++));
                     data.setInheritsRights(rs.getBoolean(i++));
-                    data.setKeywords(rs.getString(i++));
                     data.setContentType(rs.getString(i));
                     if (!data.inheritsRights()) {
                         data.setRights(getTreeNodeRights(con, data.getId()));
@@ -171,13 +169,11 @@ public class FileBean extends TreeBean {
     protected void readFile(Connection con, FileData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT change_date,author_name,content_type,file_size,width,height,preview_content_type,(preview_bytes IS NOT NULL) AS has_preview FROM t_file WHERE id=?");
+            pst = con.prepareStatement("SELECT content_type,file_size,width,height,preview_content_type,(preview_bytes IS NOT NULL) AS has_preview FROM t_file WHERE id=?");
             pst.setInt(1, data.getId());
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     int i = 1;
-                    data.setContentChangeDate(rs.getTimestamp(i++).toLocalDateTime());
-                    data.setAuthorName(rs.getString(i++));
                     data.setContentType(rs.getString(i++));
                     data.setFileSize(rs.getInt(i++));
                     data.setWidth(rs.getInt(i++));
@@ -209,59 +205,15 @@ public class FileBean extends TreeBean {
         }
     }
 
-    public boolean createFile(FileData data) {
+    public boolean saveFile(FileData data) {
         Connection con = startTransaction();
         try {
-            data.setChangeDate(getServerTime(con));
-            writeTreeNode(con, data);
-            writeFile(con, data);
-            return commitTransaction(con);
-        } catch (Exception se) {
-            return rollbackTransaction(con, se);
-        }
-    }
-
-    public boolean saveFileSettings(FileData data) {
-        Connection con = startTransaction();
-        try {
-            if (!unchangedNode(con, data)) {
+            if (!data.isNew() && !unchangedNode(con, data)) {
                 rollbackTransaction(con);
                 return false;
             }
             data.setChangeDate(getServerTime(con));
             writeTreeNode(con, data);
-            writeFile(con, data);
-            return commitTransaction(con);
-        } catch (Exception se) {
-            return rollbackTransaction(con, se);
-        }
-    }
-
-    public boolean saveFileContent(FileData data) {
-        Connection con = startTransaction();
-        try {
-            if (!unchangedNode(con, data)) {
-                rollbackTransaction(con);
-                return false;
-            }
-            if (data.isContentChanged()) {
-                data.setChangeDate(getServerTime(con));
-                data.setContentChangeDate();
-            }
-            return commitTransaction(con);
-        } catch (Exception se) {
-            return rollbackTransaction(con, se);
-        }
-    }
-
-    public boolean publishFile(FileData data) {
-        Connection con = startTransaction();
-        try {
-            if (!unchangedNode(con, data)) {
-                rollbackTransaction(con);
-                return false;
-            }
-            data.setChangeDate(getServerTime(con));
             writeFile(con, data);
             return commitTransaction(con);
         } catch (Exception se) {
@@ -273,11 +225,8 @@ public class FileBean extends TreeBean {
         PreparedStatement pst = null;
         try {
             int i = 1;
-            pst = con.prepareStatement("INSERT INTO t_file (id,change_date,author_name,keywords,content_type,file_size,width,height,bytes,preview_content_type,preview_bytes) VALUES(?,?,?,?,?,?,?,?,?,?,?)");
+            pst = con.prepareStatement("INSERT INTO t_file (id,content_type,file_size,width,height,bytes,preview_content_type,preview_bytes) VALUES(?,?,?,?,?,?,?,?)");
             pst.setInt(i++, data.getId());
-            pst.setTimestamp(i++, Timestamp.valueOf(data.getContentChangeDate()));
-            pst.setString(i++, data.getAuthorName());
-            pst.setString(i++, data.getKeywords());
             pst.setString(i++, data.getContentType());
             pst.setInt(i++, data.getFileSize());
             pst.setInt(i++, data.getWidth());

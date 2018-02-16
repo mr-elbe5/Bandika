@@ -115,7 +115,7 @@ public class FieldActions extends BaseTreeActions {
                 data.setRanking(parentNode.getSites().size());
                 data.setAuthorName(SessionReader.getLoginName(request));
                 data.prepareSave();
-                ts.createFile(data);
+                ts.saveFile(data);
                 TreeCache.getInstance().setDirty();
                 return closeLayer(request, response, "closeLayerToBrowserLayer('/field.srv?act="+reopenImageBrowser+"&siteId=" + parentId + "&" + RequestStatics.KEY_MESSAGEKEY + "=_fileCreated');");
             }
