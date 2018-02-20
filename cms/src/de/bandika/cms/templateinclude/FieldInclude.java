@@ -17,6 +17,10 @@ public class FieldInclude extends TemplateInclude{
 
     public static final String KEY = "field";
 
+    public String getKey(){
+        return KEY;
+    }
+
     public boolean isDynamic(){
         return false;
     }

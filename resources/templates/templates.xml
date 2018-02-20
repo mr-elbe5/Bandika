@@ -96,6 +96,9 @@
     <cms-template type="PART" name="Script" displayName="JavaScript" sectionTypes="all">
         <cms-include type="field" fieldType="script" name="script"></cms-include>
     </cms-template>
+    <cms-template type="PART" name="DocumentList" displayName="Document List" sectionTypes="all">
+        <cms-include type="documents" name="documents" test="all"></cms-include>
+    </cms-template>
     <!-- content parts -->
     <cms-template type="PART" name="Header" displayName="Header" sectionTypes="content">
         <div class="textBox">

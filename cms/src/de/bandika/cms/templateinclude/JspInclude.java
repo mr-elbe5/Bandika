@@ -21,6 +21,10 @@ public class JspInclude extends TemplateInclude{
 
     public static final String KEY = "jsp";
 
+    public String getKey(){
+        return KEY;
+    }
+
     public boolean isDynamic(){
         return true;
     }

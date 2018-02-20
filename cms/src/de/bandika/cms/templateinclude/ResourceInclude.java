@@ -19,6 +19,10 @@ public class ResourceInclude extends TemplateInclude{
 
     public static final String KEY = "resource";
 
+    public String getKey(){
+        return KEY;
+    }
+
     public boolean isDynamic(){
         return false;
     }

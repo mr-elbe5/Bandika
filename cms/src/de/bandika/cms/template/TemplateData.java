@@ -34,7 +34,6 @@ public class TemplateData extends BaseData implements Serializable {
     protected String displayName = "";
     protected String description = "";
     protected String sectionTypes = "";
-    protected boolean dynamic=false;
     protected String code = "";
     protected String parsedCode = "";
 
@@ -96,14 +95,6 @@ public class TemplateData extends BaseData implements Serializable {
         }
     }
 
-    public boolean isDynamic() {
-        return dynamic;
-    }
-
-    public void setDynamic(boolean dynamic) {
-        this.dynamic = dynamic;
-    }
-
     public String getCode() {
         return code;
     }
@@ -133,7 +124,7 @@ public class TemplateData extends BaseData implements Serializable {
             writer.write(parsedCode.substring(start,end));
             templateInclude.completeOutputData(outputData);
             if (templateInclude.isDynamic() && outputContext.getRequest()==null){
-                writer.write("-----------------dynamic------------");
+                writer.write(templateInclude.getPlaceholder());
             }
             else {
                 templateInclude.writeHtml(outputContext, outputData);

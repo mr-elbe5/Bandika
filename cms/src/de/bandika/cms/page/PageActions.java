@@ -358,7 +358,7 @@ public class PageActions extends BaseTreeActions {
         return setPageResponse(request, response, data);
     }
 
-    public boolean publish(PageData data, Locale locale) {
+    public static boolean publish(PageData data, Locale locale) {
         TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PAGE, data.getTemplateName());
         StringWriter writer=new StringWriter();
         PageOutputContext outputContext=new PageOutputContext(writer);
@@ -368,7 +368,8 @@ public class PageActions extends BaseTreeActions {
         } catch (Exception e) {
             Log.error("could not write page html", e);
         }
-        System.out.println(writer.getBuffer().toString());
+        data.setPublishedContent(writer.getBuffer().toString());
+        PageBean.getInstance().publishPage(data);
         return true;
     }
 

@@ -27,6 +27,7 @@ public class PageData extends TreeNode {
     protected PagePartData editPagePart = null;
 
     protected LocalDateTime publishDate = null;
+    protected String publishedContent = "";
 
     public PageData() {
     }
@@ -159,8 +160,20 @@ public class PageData extends TreeNode {
         return publishDate;
     }
 
+    public boolean isPublished(){
+        return publishDate!=null;
+    }
+
     public void setPublishDate(LocalDateTime publishDate) {
         this.publishDate = publishDate;
+    }
+
+    public String getPublishedContent() {
+        return publishedContent;
+    }
+
+    public void setPublishedContent(String publishedContent) {
+        this.publishedContent = publishedContent;
     }
 
     public void addPagePart(PagePartData part, int fromPartId, boolean below, boolean setRanking) {

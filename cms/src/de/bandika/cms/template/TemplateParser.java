@@ -30,7 +30,6 @@ public class TemplateParser {
     public static final String TEMPLATE_ATTR_NAME = "name";
     public static final String TEMPLATE_ATTR_DISPLAYNAME = "displayName";
     public static final String TEMPLATE_ATTR_SECTION_TYPES = "sectionTypes";
-    public static final String TEMPLATE_ATTR_DYNAMIC = "sectionTypes";
 
     public static final String PLACEHOLDER_START = "{{";
     public static final String PLACEHOLDER_END = "}}";
@@ -45,7 +44,6 @@ public class TemplateParser {
             template.setName(element.attr(TEMPLATE_ATTR_NAME));
             template.setDisplayName(element.attr(TEMPLATE_ATTR_DISPLAYNAME));
             template.setSectionTypes(element.attr(TEMPLATE_ATTR_SECTION_TYPES));
-            template.setDynamic(element.attr(TEMPLATE_ATTR_DYNAMIC).equals("true"));
             template.setCode(element.html());
             if (parseTemplate(template))
                 templates.add(template);

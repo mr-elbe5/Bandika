@@ -35,6 +35,10 @@ public class TopNavInclude extends TemplateInclude {
         return instance;
     }
 
+    public String getKey(){
+        return KEY;
+    }
+
     public boolean isDynamic(){
         return true;
     }

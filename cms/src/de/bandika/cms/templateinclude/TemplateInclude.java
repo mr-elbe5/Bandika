@@ -15,12 +15,21 @@ import de.bandika.webbase.util.TagAttributes;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Locale;
+import java.util.*;
 
 public abstract class TemplateInclude implements Serializable {
 
+    public static Set<String> IGNORE_ATTRIBUTES = new HashSet<>();
+
+    static{
+        IGNORE_ATTRIBUTES.add("type");
+        IGNORE_ATTRIBUTES.add("name");
+    }
+
     protected String content="";
     protected TagAttributes attributes;
+
+    public abstract String getKey();
 
     public abstract boolean isDynamic();
 
@@ -41,6 +50,18 @@ public abstract class TemplateInclude implements Serializable {
     }
 
     public abstract void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException;
+
+    public String getPlaceholder(){
+        StringBuilder sb=new StringBuilder();
+        sb.append("{<include type=\"").append(getKey()).append("\"");
+        for (String key : attributes.keySet()){
+            if (IGNORE_ATTRIBUTES.contains(key))
+                continue;
+            sb.append(" ").append(key).append("=\"").append(attributes.getString(key)).append("\"");
+        }
+        sb.append(" />}");
+        return sb.toString();
+    }
 
     public void completeOutputData(PageOutputData outputData){
         outputData.attributes=attributes;

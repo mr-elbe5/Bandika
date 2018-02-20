@@ -187,13 +187,11 @@ ALTER TABLE t_page_part ADD creation_date   TIMESTAMP    NOT NULL DEFAULT now();
 
 --2018-02-19
 
-ALTER TABLE t_page_part ADD published_content TEXT     NOT NULL DEFAULT '';
-ALTER TABLE t_page_part ADD publish_date TIMESTAMP    NULL;
-
 ALTER TABLE t_page ADD publish_date TIMESTAMP    NULL;
+ALTER TABLE t_page ADD published_content TEXT     NOT NULL DEFAULT '';
 
 ALTER TABLE t_template rename usage to section_types;
-ALTER TABLE t_template ADD dynamic      BOOLEAN      NOT NULL DEFAULT FALSE;
+
 
 
 

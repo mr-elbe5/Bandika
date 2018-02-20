@@ -18,6 +18,10 @@ public class SnippetInclude extends TemplateInclude{
 
     public static final String KEY = "snippet";
 
+    public String getKey(){
+        return KEY;
+    }
+
     public boolean isDynamic(){
         return false;
     }

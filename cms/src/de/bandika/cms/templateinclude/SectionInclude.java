@@ -25,6 +25,10 @@ public class SectionInclude extends TemplateInclude{
 
     public static final String KEY = "section";
 
+    public String getKey(){
+        return KEY;
+    }
+
     public boolean isDynamic(){
         return false;
     }

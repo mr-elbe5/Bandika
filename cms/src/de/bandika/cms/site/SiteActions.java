@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class SiteActions extends BaseTreeActions {
 
@@ -36,6 +37,7 @@ public class SiteActions extends BaseTreeActions {
     public static final String stopEditing = "stopEditing";
     public static final String saveSiteSettings = "saveSiteSettings";
     public static final String saveSiteRights = "saveSiteRights";
+    public static final String publishAll = "publishAll";
     public static final String inheritAll = "inheritAll";
     public static final String cutSite = "cutSite";
     public static final String pasteSite = "pasteSite";
@@ -181,6 +183,17 @@ public class SiteActions extends BaseTreeActions {
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree, "_siteRightsChanged");
+            }
+            case publishAll: {
+                int siteId = RequestReader.getInt(request, "siteId");
+                if (!hasContentRight(request, siteId, Right.APPROVE))
+                    return false;
+                SiteData data = TreeCache.getInstance().getSite(siteId);
+                checkObject(data, siteId);
+                publishSite(data,SessionReader.getLoginName(request),SessionReader.getSessionLocale(request));
+                TreeCache.getInstance().setDirty();
+                RightsCache.getInstance().setDirty();
+                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree, "_allPublished");
             }
             case inheritAll: {
                 int siteId = RequestReader.getInt(request, "siteId");
@@ -469,6 +482,18 @@ public class SiteActions extends BaseTreeActions {
             return new PageActions().execute(request, response, PageActions.show);
         }
         return showBlankSite(request, response);
+    }
+
+    public static void publishSite(SiteData data, String authorName, Locale locale) throws Exception{
+        for (PageData page : data.getPages()) {
+            PageData draft = PageBean.getInstance().getPage(page.getId());
+            draft.setAuthorName(authorName);
+            draft.prepareSave();
+            PageActions.publish(draft, locale);
+        }
+        for (SiteData site : data.getSites()) {
+            publishSite(site, authorName, locale);
+        }
     }
 
     protected boolean showEditSiteSettings(HttpServletRequest request, HttpServletResponse response) {

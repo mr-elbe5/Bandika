@@ -10,11 +10,13 @@ package de.bandika.cms.templateinclude;
 
 import de.bandika.base.log.Log;
 import de.bandika.base.util.StringWriteUtil;
+import de.bandika.cms.page.PageData;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
 import de.bandika.webbase.servlet.RequestStatics;
+import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
@@ -23,28 +25,40 @@ public class PageContentInclude extends TemplateInclude{
 
     public static final String KEY = "content";
 
+    public String getKey(){
+        return KEY;
+    }
+
     public boolean isDynamic(){
         return false;
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
+        PageData page=outputData.pageData;
         if (outputData.pageData!=null) {
-            if (outputData.pageData.isEditMode()) {
-                writer.write("<div id=\"pageContent\" class=\"editArea\">");
-            } else {
+            if (SessionReader.isEditMode(outputContext.getRequest())) {
+                if (page.isEditMode()) {
+                    writer.write("<div id=\"pageContent\" class=\"editArea\">");
+                } else {
+                    writer.write("<div id=\"pageContent\" class=\"viewArea\">");
+                }
+                TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PAGE, page.getTemplateName());
+                pageTemplate.writeTemplate(outputContext, outputData);
+                if (page.getEditPagePart() != null) {
+                    writer.write("<script>$('.editControl').hide();</script>");
+                } else {
+                    writer.write("<script>$('.editControl').show();</script>");
+                }
+                if (page.isEditMode()) {
+                    writer.write("</div><script>$('#pageContent').initEditArea();</script>");
+                } else {
+                    writer.write("</div>");
+                }
+            }
+            else{
                 writer.write("<div id=\"pageContent\" class=\"viewArea\">");
-            }
-            TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PAGE, outputData.pageData.getTemplateName());
-            pageTemplate.writeTemplate(outputContext, outputData);
-            if (outputData.pageData.getEditPagePart() != null) {
-                writer.write("<script>$('.editControl').hide();</script>");
-            } else {
-                writer.write("<script>$('.editControl').show();</script>");
-            }
-            if (outputData.pageData.isEditMode()) {
-                writer.write("</div><script>$('#pageContent').initEditArea();</script>");
-            } else {
+                writer.write(page.getPublishedContent());
                 writer.write("</div>");
             }
         }
