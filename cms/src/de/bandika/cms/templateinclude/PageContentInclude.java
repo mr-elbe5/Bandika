@@ -58,7 +58,7 @@ public class PageContentInclude extends TemplateInclude{
             }
             else{
                 writer.write("<div id=\"pageContent\" class=\"viewArea\">");
-                writer.write(page.getPublishedContent());
+                page.writePublishedContent(outputContext);
                 writer.write("</div>");
             }
         }
