@@ -21,6 +21,7 @@ import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class PagePartData extends BaseIdData implements Comparable<PagePartData>, XmlData {
@@ -33,6 +34,8 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
     protected boolean dynamic = false;
     protected String cssClass = "";
     protected String content = "";
+    protected String publishedContent = "";
+    protected LocalDateTime publishDate=null;
     protected Set<Integer> pageIds = null;
 
     protected Map<String, Field> fields = new HashMap<>();
@@ -124,6 +127,22 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getPublishedContent() {
+        return publishedContent;
+    }
+
+    public void setPublishedContent(String publishedContent) {
+        this.publishedContent = publishedContent;
+    }
+
+    public LocalDateTime getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(LocalDateTime publishDate) {
+        this.publishDate = publishDate;
     }
 
     public void setTemplateData(TemplateData data) {

@@ -219,9 +219,8 @@ public class SearchBean extends DbBean {
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords " +
-                    "FROM t_treenode t1, t_page t2 " +
-                    "WHERE t1.id=t2.id ");
+            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t1.keywords " +
+                    "FROM t_treenode t1 ");
             ResultSet rs = pst.executeQuery();
             int count = 0;
             while (rs.next()) {
@@ -250,11 +249,10 @@ public class SearchBean extends DbBean {
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords " +
-                    "FROM t_treenode t1, t_page t2 " +
-                    "WHERE t1.id=? AND t2.id=? ");
+            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t1.keywords " +
+                    "FROM t_treenode t1 " +
+                    "WHERE t1.id=? ");
             pst.setInt(1, id);
-            pst.setInt(2, id);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
                 PageSearchData data = new PageSearchData();
@@ -288,7 +286,7 @@ public class SearchBean extends DbBean {
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords,t2.content_type,t2.bytes " +
+            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t1.keywords,t2.content_type,t2.bytes " +
                     "FROM t_treenode t1, t_file t2 " +
                     "WHERE t1.id=t2.id");
             ResultSet rs = pst.executeQuery();
@@ -319,7 +317,7 @@ public class SearchBean extends DbBean {
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t2.keywords,t2.content_type,t2.bytes " +
+            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t1.keywords,t2.content_type,t2.bytes " +
                     "FROM t_treenode t1, t_file t2 " +
                     "WHERE t1.id=? AND t2.id=? ");
             pst.setInt(1, id);

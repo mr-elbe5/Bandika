@@ -9,8 +9,6 @@
 package de.bandika.cms.page;
 
 import de.bandika.base.log.Log;
-import de.bandika.cms.template.TemplateCache;
-import de.bandika.cms.template.TemplateData;
 import de.bandika.cms.tree.TreeBean;
 
 import java.sql.*;
@@ -169,15 +167,35 @@ public class PageBean extends TreeBean {
         }
     }
 
+    public boolean publishPage(PageData data) {
+        Connection con = startTransaction();
+        try {
+            if (!data.isNew() && !unchangedNode(con, data)) {
+                rollbackTransaction(con);
+                return false;
+            }
+            data.setPublishDate(getServerTime(con));
+            publishPage(con, data);
+            publishAllPageParts(con, data);
+            return commitTransaction(con);
+        } catch (Exception se) {
+            return rollbackTransaction(con, se);
+        }
+    }
+
     // public for SiteBean
     public void writePage(Connection con, PageData data) throws SQLException {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(data.isNew() ?
-                    "insert into t_page (template,id) values(?,?)" :
-                    "update t_page set template=? where id=?");
+                    "insert into t_page (template,publish_date,id) values(?,?,?)" :
+                    "update t_page set template=?,publish_date=? where id=?");
             int i = 1;
             pst.setString(i++, data.getTemplateName());
+            if (data.getPublishDate()==null)
+                pst.setNull(i++,Types.TIMESTAMP);
+            else
+                pst.setTimestamp(i++, Timestamp.valueOf(data.getPublishDate()));
             pst.setInt(i, data.getId());
             pst.executeUpdate();
             pst.close();
@@ -186,10 +204,20 @@ public class PageBean extends TreeBean {
         }
     }
 
-    /**
-     * *********
-     * usages *************
-     */
+    public void publishPage(Connection con, PageData data) throws SQLException {
+        PreparedStatement pst = null;
+        try {
+            pst = con.prepareStatement("update t_page set publish_date=? where id=?");
+            int i = 1;
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getPublishDate()));
+            pst.setInt(i, data.getId());
+            pst.executeUpdate();
+            pst.close();
+        } finally {
+            closeStatement(pst);
+        }
+    }
+
     protected void writeUsagesByPage(Connection con, PageData data) throws SQLException {
         PreparedStatement pst = null;
         try {
@@ -219,12 +247,12 @@ public class PageBean extends TreeBean {
         return part;
     }
 
-    public List<PagePartData> getNamedPageParts() {
+    public List<PagePartData> getSharedPageParts() {
         Connection con = null;
         List<PagePartData> list = new ArrayList<>();
         try {
             con = getConnection();
-            readNamedPageParts(con, list);
+            readSharedPageParts(con, list);
         } catch (SQLException se) {
             Log.error("sql error", se);
         } finally {
@@ -237,21 +265,21 @@ public class PageBean extends TreeBean {
         PreparedStatement pst = null;
         PagePartData partData=null;
         try {
-            pst = con.prepareStatement("SELECT template,id,name,change_date,content " +
+            pst = con.prepareStatement("SELECT id,name,change_date,template,content,published_content " +
                     "FROM t_page_part " +
                     "WHERE id=? ");
             pst.setInt(1,id);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
-                    String templateName = rs.getString(i++);
-                    TemplateData template = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PART, templateName);
+                    String partType = rs.getString(i++);
                     partData = new PagePartData();
-                    partData.setTemplateData(template);
                     partData.setId(rs.getInt(i++));
                     partData.setName(rs.getString(i++));
                     partData.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
-                    partData.setXmlContent(rs.getString(i));
+                    partData.setTemplateName(rs.getString(i++));
+                    partData.setXmlContent(rs.getString(i++));
+                    partData.setPublishedContent(rs.getString(i));
                 }
             }
         } finally {
@@ -260,25 +288,24 @@ public class PageBean extends TreeBean {
         return partData;
     }
 
-    public void readNamedPageParts(Connection con, List<PagePartData> list) throws SQLException {
+    public void readSharedPageParts(Connection con, List<PagePartData> list) throws SQLException {
         PreparedStatement pst = null;
         PagePartData partData;
         try {
-            pst = con.prepareStatement("SELECT template,id,name,change_date,content " +
+            pst = con.prepareStatement("SELECT id,name,change_date,template,content,published_content " +
                     "FROM t_page_part " +
                     "WHERE length(name)>0 " +
                     "ORDER BY template, name");
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     int i = 1;
-                    String templateName = rs.getString(i++);
-                    TemplateData template = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PART, templateName);
                     partData = new PagePartData();
-                    partData.setTemplateData(template);
                     partData.setId(rs.getInt(i++));
                     partData.setName(rs.getString(i++));
                     partData.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
-                    partData.setXmlContent(rs.getString(i));
+                    partData.setTemplateName(rs.getString(i++));
+                    partData.setXmlContent(rs.getString(i++));
+                    partData.setPublishedContent(rs.getString(i));
                     list.add(partData);
                 }
             }
@@ -287,29 +314,29 @@ public class PageBean extends TreeBean {
         }
     }
 
-
     public void readAllPageParts(Connection con, PageData pageData) throws SQLException {
         PreparedStatement pst = null;
         PagePartData partData;
         pageData.clearContent();
         try {
-            pst = con.prepareStatement("SELECT t1.template,t1.id,t1.name,t1.change_date,t2.section,t2.ranking,t1.content " +
+            pst = con.prepareStatement("SELECT t1.id,t1.name,t1.change_date,t1.publish_date,t1.template,t2.section,t2.ranking,t1.content,t1.published_content " +
                     "FROM t_page_part t1, t_page_part2page t2 " +
                     "WHERE t1.id=t2.part_id AND t2.page_id=? ORDER BY t2.ranking");
             pst.setInt(1, pageData.getId());
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     int i = 1;
-                    String templateName = rs.getString(i++);
-                    TemplateData template = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PART, templateName);
                     partData = new PagePartData();
-                    partData.setTemplateData(template);
                     partData.setId(rs.getInt(i++));
                     partData.setName(rs.getString(i++));
                     partData.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
+                    Timestamp ts=rs.getTimestamp(i++);
+                    partData.setPublishDate(ts==null ? null : ts.toLocalDateTime());
+                    partData.setTemplateName(rs.getString(i++));
                     partData.setSectionName(rs.getString(i++));
                     partData.setRanking(rs.getInt(i++));
-                    partData.setXmlContent(rs.getString(i));
+                    partData.setXmlContent(rs.getString(i++));
+                    partData.setPublishedContent(rs.getString(i));
                     pageData.addPagePart(partData, -1, false, false);
                 }
             }
@@ -359,6 +386,31 @@ public class PageBean extends TreeBean {
             pst.setInt(i, data.getRanking());
             pst.executeUpdate();
             pst.close();
+        } finally {
+            closeStatement(pst);
+        }
+    }
+
+    public void publishAllPageParts(Connection con, PageData page) throws Exception {
+        PreparedStatement pst = null;
+        for (SectionData section : page.getSections().values()) {
+            for (PagePartData part : section.getParts()) {
+                part.setPublishDate(page.getChangeDate());
+                publishPagePart(con, part, page);
+            }
+        }
+    }
+
+    protected void publishPagePart(Connection con, PagePartData data, PageData page) throws SQLException {
+        PreparedStatement pst = null;
+        try {
+            String sql="UPDATE t_page_part SET publish_date=?,published_content=? WHERE id=?";
+            int i = 1;
+            pst = con.prepareStatement(sql);
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getPublishDate()));
+            pst.setString(i++, data.getPublishedContent());
+            pst.setInt(i, data.getId());
+            pst.executeUpdate();
         } finally {
             closeStatement(pst);
         }

@@ -56,7 +56,7 @@ public class TemplateCache extends BaseCache {
         checkDirty();
         List<TemplateData> templates = new ArrayList<>();
         for (TemplateData template : getTemplates(type)) {
-            if (template.hasUsage(parentType)) {
+            if (template.hasSectionType(parentType)) {
                 templates.add(template);
             }
         }

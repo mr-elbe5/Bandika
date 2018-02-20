@@ -19,15 +19,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BreadcrumbControl extends TemplateInclude {
+public class BreadcrumbInclude extends TemplateInclude {
 
     public static final String KEY = "breadcrumb";
 
-    private static BreadcrumbControl instance = null;
+    private static BreadcrumbInclude instance = null;
 
-    public static BreadcrumbControl getInstance() {
+    public static BreadcrumbInclude getInstance() {
         if (instance == null)
-            instance = new BreadcrumbControl();
+            instance = new BreadcrumbInclude();
         return instance;
     }
 

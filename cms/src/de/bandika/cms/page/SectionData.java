@@ -77,23 +77,6 @@ public class SectionData {
         this.pageId = pageId;
     }
 
-    public PagePartData ensurePart(String templateName, int ranking) {
-        PagePartData part;
-        for (PagePartData ppd : parts) {
-            if (ppd.getRanking() == ranking && ppd.getTemplateName().equals(templateName)) {
-                return ppd;
-            }
-        }
-        TemplateData template = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PART, templateName);
-        part = new PagePartData();
-        part.setTemplateData(template);
-        part.setId(PageBean.getInstance().getNextId());
-        part.setSectionName(getName());
-        part.setRanking(ranking);
-        parts.add(part);
-        return part;
-    }
-
     public PagePartData getPart(int pid) {
         for (PagePartData pdata : parts) {
             if (pdata.getId() == pid) {

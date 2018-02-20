@@ -109,7 +109,8 @@ CREATE TABLE t_template (
   change_date  TIMESTAMP    NOT NULL DEFAULT now(),
   display_name VARCHAR(100) NOT NULL DEFAULT '',
   description  VARCHAR(255) NOT NULL DEFAULT '',
-  usage        VARCHAR(100) NOT NULL DEFAULT '',
+  section_types VARCHAR(100) NOT NULL DEFAULT '',
+  dynamic      BOOLEAN      NOT NULL DEFAULT FALSE,
   code         TEXT         NOT NULL DEFAULT '',
   CONSTRAINT t_template_pk PRIMARY KEY (name, type)
 );
@@ -164,7 +165,7 @@ CREATE TABLE IF NOT EXISTS t_treenode2group (
 --
 CREATE TABLE IF NOT EXISTS t_site (
   id              INTEGER      NOT NULL,
-  template_type   VARCHAR(20)  NOT NULL DEFAULT 'TYPE_MASTER',
+  template_type   VARCHAR(20)  NOT NULL DEFAULT 'MASTER',
   template        VARCHAR(255) NULL,
   inherits_master BOOLEAN      NOT NULL DEFAULT TRUE,
   CONSTRAINT t_site_pk PRIMARY KEY (id),
@@ -191,8 +192,9 @@ CREATE TABLE IF NOT EXISTS t_file (
 --
 CREATE TABLE IF NOT EXISTS t_page (
   id            INTEGER      NOT NULL,
-  template_type VARCHAR(20)  NOT NULL DEFAULT 'TYPE_PAGE',
+  template_type VARCHAR(20)  NOT NULL DEFAULT 'PAGE',
   template      VARCHAR(255) NOT NULL,
+  publish_date  TIMESTAMP    NULL,
   CONSTRAINT t_page_pk PRIMARY KEY (id),
   CONSTRAINT t_page_fk1 FOREIGN KEY (id) REFERENCES t_treenode (id) ON DELETE CASCADE,
   CONSTRAINT t_page_fk2 FOREIGN KEY (template, template_type) REFERENCES t_template (name, type)
@@ -203,10 +205,12 @@ CREATE TABLE IF NOT EXISTS t_page_part (
   name          VARCHAR(60)  NOT NULL DEFAULT '',
   creation_date   TIMESTAMP  NOT NULL DEFAULT now(),
   change_date   TIMESTAMP    NOT NULL DEFAULT now(),
-  template_type VARCHAR(20)  NOT NULL DEFAULT 'TYPE_PART',
+  publish_date  TIMESTAMP    NULL,
+  template_type VARCHAR(20)  NOT NULL DEFAULT 'PART',
   template      VARCHAR(255) NOT NULL,
   content       TEXT         NOT NULL DEFAULT '',
-  CONSTRAINT t_page_part_pk PRIMARY KEY (id),
+  published_content TEXT     NOT NULL DEFAULT '',
+  CONSTRAINT t_page_part_pk  PRIMARY KEY (id),
   CONSTRAINT t_page_part_fk1 FOREIGN KEY (template, template_type) REFERENCES t_template (name, type)
 );
 --

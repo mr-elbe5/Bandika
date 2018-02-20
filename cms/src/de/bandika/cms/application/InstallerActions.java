@@ -26,7 +26,7 @@ public class InstallerActions extends CmsActions {
     public static final String setDatabaseConfiguration="setDatabaseConfiguration";
     public static final String setSystemPassword="setSystemPassword";
 
-    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) {
         switch (actionName) {
             case setDatabaseConfiguration:{
                 if (isAllInstalled())

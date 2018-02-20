@@ -29,7 +29,8 @@ public class TemplateParser {
     public static final String TEMPLATE_ATTR_TYPE = "type";
     public static final String TEMPLATE_ATTR_NAME = "name";
     public static final String TEMPLATE_ATTR_DISPLAYNAME = "displayName";
-    public static final String TEMPLATE_ATTR_USAGE = "usage";
+    public static final String TEMPLATE_ATTR_SECTION_TYPES = "sectionTypes";
+    public static final String TEMPLATE_ATTR_DYNAMIC = "sectionTypes";
 
     public static final String PLACEHOLDER_START = "{{";
     public static final String PLACEHOLDER_END = "}}";
@@ -43,7 +44,8 @@ public class TemplateParser {
             template.setType(element.attr(TEMPLATE_ATTR_TYPE));
             template.setName(element.attr(TEMPLATE_ATTR_NAME));
             template.setDisplayName(element.attr(TEMPLATE_ATTR_DISPLAYNAME));
-            template.setUsage(element.attr(TEMPLATE_ATTR_USAGE));
+            template.setSectionTypes(element.attr(TEMPLATE_ATTR_SECTION_TYPES));
+            template.setDynamic(element.attr(TEMPLATE_ATTR_DYNAMIC).equals("true"));
             template.setCode(element.html());
             if (parseTemplate(template))
                 templates.add(template);
@@ -79,35 +81,51 @@ public class TemplateParser {
             return null;
         }
         switch (type){
-            case ContentInclude.KEY :
-                 return new ContentInclude();
+            /* master includes */
+            case HeadInclude.KEY :
+                //page static
+                return HeadInclude.getInstance();
+            case TopNavInclude.KEY :
+                //user dynamic
+                return TopNavInclude.getInstance();
+            case MainMenuInclude.KEY :
+                //user dynamic
+                return MainMenuInclude.getInstance();
+            case BreadcrumbInclude.KEY :
+                //page static
+                return BreadcrumbInclude.getInstance();
+            case MessageInclude.KEY :
+                //dynamic (?)
+                return MessageInclude.getInstance();
+            case PageContentInclude.KEY :
+                //page static (template)
+                return new PageContentInclude();
+            case LayerInclude.KEY :
+                //page static
+                return LayerInclude.getInstance();
+            /* page includes */
+            case SectionInclude.KEY :
+                //page static (parts)
+                return new SectionInclude();
             case FieldInclude.KEY :
+                //page static (cms)
                 return new FieldInclude();
             case JspInclude.KEY :
+                //full dynamic
                 return new JspInclude();
+            case SubMenuInclude.KEY :
+                //user dynamic
+                return SubMenuInclude.getInstance();
+            case DocumentListInclude.KEY :
+                //user dynamic
+                return DocumentListInclude.getInstance();
+            /* static includes */
             case ResourceInclude.KEY :
+                //code static
                 return new ResourceInclude();
-            case SectionInclude.KEY :
-                return new SectionInclude();
             case SnippetInclude.KEY :
+                //code static
                 return new SnippetInclude();
-            //controls
-            case BreadcrumbControl.KEY :
-                return BreadcrumbControl.getInstance();
-            case DocumentListControl.KEY :
-                return DocumentListControl.getInstance();
-            case HeadControl.KEY :
-                return HeadControl.getInstance();
-            case LayerControl.KEY :
-                return LayerControl.getInstance();
-            case MainMenuControl.KEY :
-                return MainMenuControl.getInstance();
-            case MessageControl.KEY :
-                return MessageControl.getInstance();
-            case SubMenuControl.KEY :
-                return SubMenuControl.getInstance();
-            case TopNavControl.KEY :
-                return TopNavControl.getInstance();
         }
         Log.warn("element without valid type: "+type);
         return null;

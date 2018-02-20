@@ -9,7 +9,8 @@
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<% Locale locale = SessionReader.getSessionLocale(request);
+<%
+    Locale locale = SessionReader.getSessionLocale(request);
 %>
 <section class="mainSection flexRow two">
     <section class="halfSection flexItem">

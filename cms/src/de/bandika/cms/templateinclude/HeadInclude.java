@@ -15,15 +15,15 @@ import de.bandika.cms.page.PageOutputData;
 
 import java.io.IOException;
 
-public class HeadControl extends TemplateInclude {
+public class HeadInclude extends TemplateInclude {
 
     public static final String KEY = "head";
 
-    private static HeadControl instance = null;
+    private static HeadInclude instance = null;
 
-    public static HeadControl getInstance() {
+    public static HeadInclude getInstance() {
         if (instance == null)
-            instance = new HeadControl();
+            instance = new HeadInclude();
         return instance;
     }
 

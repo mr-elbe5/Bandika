@@ -19,7 +19,7 @@ import de.bandika.webbase.servlet.RequestStatics;
 import javax.servlet.ServletException;
 import java.io.IOException;
 
-public class ContentInclude extends TemplateInclude{
+public class PageContentInclude extends TemplateInclude{
 
     public static final String KEY = "content";
 
@@ -51,6 +51,7 @@ public class ContentInclude extends TemplateInclude{
         else{
             String jsp = outputContext.getParamString(RequestStatics.KEY_JSP);
             if (!jsp.isEmpty()){
+                Log.info("writing dynamic jsp");
                 try {
                     outputContext.includeJsp(jsp);
                 } catch (ServletException e) {

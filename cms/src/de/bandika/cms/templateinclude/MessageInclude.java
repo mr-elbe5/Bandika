@@ -11,34 +11,39 @@ package de.bandika.cms.templateinclude;
 import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
-import de.bandika.cms.template.TemplateCache;
-import de.bandika.cms.template.TemplateData;
+import de.bandika.webbase.servlet.RequestError;
+import de.bandika.webbase.servlet.RequestReader;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-public class LayerControl extends TemplateInclude {
+public class MessageInclude extends TemplateInclude {
 
-    public static final String KEY = "layer";
+    public static final String KEY = "message";
 
-    private static LayerControl instance = null;
+    private static MessageInclude instance = null;
 
-    public static LayerControl getInstance() {
+    public static MessageInclude getInstance() {
         if (instance == null)
-            instance = new LayerControl();
+            instance = new MessageInclude();
         return instance;
     }
 
     public boolean isDynamic(){
-        return false;
+        return true;
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
-        writer.write(TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, "treeLayer").getCode());
-        writer.write(TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, "dialogLayer").getCode());
-        if (outputData.pageData!=null && outputData.pageData.isEditMode()) {
-            writer.write(TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, "browserLayer").getCode());
-            writer.write(TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, "browserDialogLayer").getCode());
+        HttpServletRequest request=outputContext.getRequest();
+        RequestError error = RequestError.getError(request);
+        String message = RequestReader.getMessage(request);
+        if (error != null) {
+            writer.write("<div class=\"error\">{1}<button type=\"button\" class=\"close\" onclick=\"$(this).closest('.error').hide();\">&times;</button></div>",
+                    toHtml(error.getErrorString()));
+        } else if (message != null && message.length() > 0) {
+            writer.write("<div class=\"message\">{1}<button type=\"button\" class=\"close\" onclick=\"$(this).closest('.message').hide();\">&times;</button></div>",
+                    toHtml(message));
         }
     }
 

@@ -19,7 +19,7 @@
 <%
     if (SessionReader.hasSystemRight(request, SystemZone.CONTENT, Right.EDIT)) {
         Locale locale = SessionReader.getSessionLocale(request);
-        List<PagePartData> parts = PageBean.getInstance().getNamedPageParts();
+        List<PagePartData> parts = PageBean.getInstance().getSharedPageParts();
         int partId = RequestReader.getInt(request, "partId");
 %>
 <li<%=partId != 0 ? " class=\"open\"" : ""%>>

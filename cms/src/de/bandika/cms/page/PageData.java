@@ -12,6 +12,7 @@ import de.bandika.cms.tree.TreeNode;
 import de.bandika.webbase.servlet.RequestReader;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -24,6 +25,8 @@ public class PageData extends TreeNode {
 
     protected boolean editMode = false;
     protected PagePartData editPagePart = null;
+
+    protected LocalDateTime publishDate = null;
 
     public PageData() {
     }
@@ -150,6 +153,14 @@ public class PageData extends TreeNode {
 
     public void setEditPagePart(String sectionName, int id) {
         setEditPagePart(getPagePart(sectionName, id));
+    }
+
+    public LocalDateTime getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(LocalDateTime publishDate) {
+        this.publishDate = publishDate;
     }
 
     public void addPagePart(PagePartData part, int fromPartId, boolean below, boolean setRanking) {

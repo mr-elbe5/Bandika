@@ -7,8 +7,11 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%><!DOCTYPE html><%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.bandika.webbase.servlet.RequestStatics" %>
+<%@ page import="de.bandika.webbase.servlet.RequestReader" %>
 <%
     String title = StringUtil.getString("appTitle");
+    String jsp = RequestReader.getString(request, RequestStatics.KEY_JSP);
 %>
 <html>
 <head>
@@ -36,7 +39,10 @@
         <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
         <section class="mainSection flexRow">
             <section class="contentSection flexItem two padded">
-                <jsp:include page="/WEB-INF/_jsp/_master/content.inc.jsp"/>
+                <% if (!jsp.isEmpty()) {
+                    try {%>
+                <jsp:include page="<%=jsp%>"/>
+                <% } catch (Exception e) { %>Jsp error:&nbsp;<%=e.getMessage()%><% } }%>
             </section>
             <aside class="asideSection flexItemOne padded">
                 <jsp:include page="/WEB-INF/_jsp/application/databaseStatus.jsp"/>
@@ -44,7 +50,7 @@
         </section>
     </div>
     <div class="footer">
-        &copy; 2017 Bandika
+        &copy; 2018 Bandika
     </div>
 </div>
 </body>

@@ -9,9 +9,13 @@
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.bandika.webbase.servlet.RequestStatics" %>
+<%@ page import="de.bandika.webbase.servlet.RequestReader" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     String title = StringUtil.getString("appTitle");
+    String jsp = RequestReader.getString(request, RequestStatics.KEY_JSP);
+%>
 %>
 <html>
 <head>
@@ -52,7 +56,10 @@
     </section>
     <div id="main" class="main carbon-light">
         <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
-        <jsp:include page="/WEB-INF/_jsp/_master/content.inc.jsp"/>
+        <% if (!jsp.isEmpty()) {
+            try {%>
+        <jsp:include page="<%=jsp%>"/>
+        <% } catch (Exception e) { %>Jsp error:&nbsp;<%=e.getMessage()%><% } }%>
     </div>
     <div class="footer">
         &copy; 2017 Bandika

@@ -359,13 +359,12 @@ public class PageActions extends BaseTreeActions {
     }
 
     public boolean publish(PageData data, Locale locale) {
-        String templateName = TreeCache.getInstance().getSite(data.getParentId()).getTemplateName();
-        TemplateData masterTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_MASTER, templateName);
+        TemplateData pageTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PAGE, data.getTemplateName());
         StringWriter writer=new StringWriter();
         PageOutputContext outputContext=new PageOutputContext(writer);
         PageOutputData outputData=new PageOutputData(data, locale);
         try {
-            masterTemplate.writeTemplate(outputContext, outputData);
+            pageTemplate.writeTemplate(outputContext, outputData);
         } catch (Exception e) {
             Log.error("could not write page html", e);
         }
@@ -381,7 +380,7 @@ public class PageActions extends BaseTreeActions {
     protected boolean setEditPageContentAjaxResponse(HttpServletRequest request, HttpServletResponse response, PageData data) {
         data.setEditMode(true);
         request.setAttribute("pageData", data);
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp//page/content.ajax.jsp");
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/content.ajax.jsp");
     }
 
     protected boolean showCreatePage(HttpServletRequest request, HttpServletResponse response) {

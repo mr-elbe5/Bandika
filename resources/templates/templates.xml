@@ -79,7 +79,7 @@
             </aside>
         </section>
     </cms-template>
-    <cms-template type="PAGE" name="articlePage" displayName="Article Page Layout" usage="" editable="true">
+    <cms-template type="PAGE" name="articlePage" displayName="Article Page Layout" editable="true">
         <section class="contentTop">
             <cms-include type="section" name="top" sectionType="content"></cms-include>
         </section>
@@ -93,40 +93,40 @@
         </section>
     </cms-template>
     <!-- general parts -->
-    <cms-template type="PART" name="Script" displayName="JavaScript" usage="all">
+    <cms-template type="PART" name="Script" displayName="JavaScript" sectionTypes="all">
         <cms-include type="field" fieldType="script" name="script"></cms-include>
     </cms-template>
     <!-- content parts -->
-    <cms-template type="PART" name="Header" displayName="Header" usage="content">
+    <cms-template type="PART" name="Header" displayName="Header" sectionTypes="content">
         <div class="textBox">
             <h1>
                 <cms-include type="field" fieldType="text" name="text">Lorem ipsum</cms-include>
             </h1>
         </div>
     </cms-template>
-    <cms-template type="PART" name="SubHeader" displayName="Sub-Header" usage="content">
+    <cms-template type="PART" name="SubHeader" displayName="Sub-Header" sectionTypes="content">
         <div class="textBox">
             <h2>
                 <cms-include type="field" fieldType="text" name="text">Lorem ipsum</cms-include>
             </h2>
         </div>
     </cms-template>
-    <cms-template type="PART" name="Separator" displayName="Separator Line" usage="content">
+    <cms-template type="PART" name="Separator" displayName="Separator Line" sectionTypes="content">
         <div class="separator">&nbsp;</div>
     </cms-template>
-    <cms-template type="PART" name="Text" displayName="Text" usage="content">
+    <cms-template type="PART" name="Text" displayName="Text" sectionTypes="content">
         <div class="textBox">
             <cms-include type="field" fieldType="html" name="text">Lorem ipsum</cms-include>
         </div>
     </cms-template>
-    <cms-template type="PART" name="Image" displayName="Full Image" usage="content">
+    <cms-template type="PART" name="Image" displayName="Full Image" sectionTypes="content">
         <div class="imageBox">
             <cms-include type="field" fieldType="image" name="image">
                 <img src="/_statics/img/dummy.gif" alt=""/>
             </cms-include>
         </div>
     </cms-template>
-    <cms-template type="PART" name="ImageText21" displayName="Image+Text 2:1" usage="content">
+    <cms-template type="PART" name="ImageText21" displayName="Image+Text 2:1" sectionTypes="content">
         <div class="flexRow three">
             <div class="imageBox flexItem two">
                 <cms-include type="field" fieldType="image" name="image">
@@ -141,7 +141,7 @@
             </div>
         </div>
     </cms-template>
-    <cms-template type="PART" name="ImageText12" displayName="Image+Text 1:2" usage="content">
+    <cms-template type="PART" name="ImageText12" displayName="Image+Text 1:2" sectionTypes="content">
         <div class="flexRow three">
             <div class="imageBox flexItem one">
                 <cms-include type="field" fieldType="image" name="image">
@@ -156,7 +156,7 @@
             </div>
         </div>
     </cms-template>
-    <cms-template type="PART" name="TextImage21" displayName="Text+Image 2:1" usage="content">
+    <cms-template type="PART" name="TextImage21" displayName="Text+Image 2:1" sectionTypes="content">
         <div class="flexRow three">
             <div class="textBox flexItem two">
                 <h3 class="bottomSpace">
@@ -171,7 +171,7 @@
             </div>
         </div>
     </cms-template>
-    <cms-template type="PART" name="TextImage12" displayName="Text+Image 1:2" usage="content">
+    <cms-template type="PART" name="TextImage12" displayName="Text+Image 1:2" sectionTypes="content">
         <div class="flexRow three">
             <div class="textBox flexItem one">
                 <h3 class="bottomSpace">
@@ -187,7 +187,7 @@
         </div>
     </cms-template>
 
-    <cms-template type="PART" name="ImageTextTeaserHorz" displayName="Teaser Image+Text Horizontal" usage="flex">
+    <cms-template type="PART" name="ImageTextTeaserHorz" displayName="Teaser Image+Text Horizontal" sectionTypes="flex">
         <div class="teaser horz">
             <div class="imageBox">
                 <cms-include type="field" fieldType="image" name="image">
@@ -199,7 +199,7 @@
             </div>
         </div>
     </cms-template>
-    <cms-template type="PART" name="ImageTextTeaserVertical" displayName="Teaser Image+Text Vertical" usage="flex">
+    <cms-template type="PART" name="ImageTextTeaserVertical" displayName="Teaser Image+Text Vertical" sectionTypes="flex">
         <div class="teaser vert">
             <div class="imageBox">
                 <cms-include type="field" fieldType="image" name="image">
@@ -213,7 +213,7 @@
     </cms-template>
 
     <!-- aside parts -->
-    <cms-template type="PART" name="ImageAside" displayName="Image" usage="aside">
+    <cms-template type="PART" name="ImageAside" displayName="Image" sectionTypes="aside">
         <div class="aside">
             <h3>
                 <cms-include type="field" fieldType="text" name="header">Lorem ipsum</cms-include>
@@ -225,7 +225,7 @@
             </div>
         </div>
     </cms-template>
-    <cms-template type="PART" name="TextAside" displayName="Text" usage="aside">
+    <cms-template type="PART" name="TextAside" displayName="Text" sectionTypes="aside">
         <div class="aside">
             <h3>
                 <cms-include type="field" fieldType="text" name="header">Lorem ipsum</cms-include>
@@ -237,7 +237,7 @@
     </cms-template>
 
     <!-- snippets -->
-    <cms-template type="SNIPPET" name="searchBox" displayName="Search Box" usage="SearchBoxModule">
+    <cms-template type="SNIPPET" name="searchBox" displayName="Search Box" sectionTypes="SearchBoxModule">
         <div class="searchBox flexItem one">
             <form action="/search.srv" method="post" id="searchboxform" name="searchboxform" accept-charset="UTF-8">
                 <input type="hidden" name="act" value="search"/>
@@ -248,12 +248,12 @@
             </form>
         </div>
     </cms-template>
-    <cms-template type="SNIPPET" name="footer" displayName="Footer" usage="Page">
+    <cms-template type="SNIPPET" name="footer" displayName="Footer">
         <a href="/imprint.html">
             <cms-include type="resource" key="_imprint"></cms-include>
         </a>
     </cms-template>
-    <cms-template type="SNIPPET" name="dialogLayer" displayName="Dialog Layer" usage="Page">
+    <cms-template type="SNIPPET" name="dialogLayer" displayName="Dialog Layer">
         <div id="dialogLayer" class="layeroverlay dialog" data-hidden="true">
             <div class="layercontent">
                 <div class="layerheadbox">
@@ -264,7 +264,7 @@
             </div>
         </div>
     </cms-template>
-    <cms-template type="SNIPPET" name="treeLayer" displayName="Tree Layer" usage="Page">
+    <cms-template type="SNIPPET" name="treeLayer" displayName="Tree Layer">
         <div id="treeLayer" class="layeroverlay tree" data-hidden="true">
             <div class="layercontent">
                 <div class="treeContainer">
@@ -281,7 +281,7 @@
             </div>
         </div>
     </cms-template>
-    <cms-template type="SNIPPET" name="browserLayer" displayName="Browser Layer" usage="Page">
+    <cms-template type="SNIPPET" name="browserLayer" displayName="Browser Layer">
         <div id="browserLayer" class="layeroverlay browser" data-hidden="true">
             <div class="layercontent">
                 <div class="layerheadbox">
@@ -292,7 +292,7 @@
             </div>
         </div>
     </cms-template>
-    <cms-template type="SNIPPET" name="browserDialogLayer" displayName="Browser Dialog Layer" usage="Page">
+    <cms-template type="SNIPPET" name="browserDialogLayer" displayName="Browser Dialog Layer">
         <div id="browserDialogLayer" class="layeroverlay browser dialog" data-hidden="true">
             <div class="layercontent">
                 <div class="layerheadbox">

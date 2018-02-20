@@ -24,7 +24,7 @@
     int partId = RequestReader.getInt(request, "partId");
     boolean below = RequestReader.getBoolean(request, "below");
     List<TemplateData> templates = TemplateCache.getInstance().getTemplates(TemplateData.TYPE_PART, sectionType);
-    List<PagePartData> parts = PageBean.getInstance().getNamedPageParts();
+    List<PagePartData> parts = PageBean.getInstance().getSharedPageParts();
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <section class="flexRow">

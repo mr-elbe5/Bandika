@@ -16,7 +16,6 @@ import de.bandika.cms.templateinclude.TemplateInclude;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,13 +27,14 @@ public class TemplateData extends BaseData implements Serializable {
     public static final String TYPE_PART = "PART";
     public static final String TYPE_SNIPPET = "SNIPPET";
 
-    public static final String USAGE_ALL = "all";
+    public static final String SECTION_TYPES_ALL = "all";
 
     protected String type = "";
     protected String name = "";
     protected String displayName = "";
     protected String description = "";
-    protected String usage = "";
+    protected String sectionTypes = "";
+    protected boolean dynamic=false;
     protected String code = "";
     protected String parsedCode = "";
 
@@ -75,25 +75,33 @@ public class TemplateData extends BaseData implements Serializable {
         this.description = description;
     }
 
-    protected List<String> usageList = new ArrayList<>();
+    protected List<String> sectionTypeList = new ArrayList<>();
 
-    public String getUsage() {
-        return usage;
+    public String getSectionTypes() {
+        return sectionTypes;
     }
 
-    public boolean hasUsage(String usage) {
-        return usageList.contains(USAGE_ALL) || usageList.contains(usage);
+    public boolean hasSectionType(String sectionType) {
+        return sectionTypeList.contains(SECTION_TYPES_ALL) || sectionTypeList.contains(sectionType);
     }
 
-    public void setUsage(String usage) {
-        this.usage = usage;
-        usageList.clear();
-        String[] arr = usage.split(",");
-        for (String usageName : arr) {
-            if (!usageName.isEmpty()) {
-                usageList.add(usageName);
+    public void setSectionTypes(String sectionTypes) {
+        this.sectionTypes = sectionTypes;
+        sectionTypeList.clear();
+        String[] arr = sectionTypes.split(",");
+        for (String sectionType : arr) {
+            if (!sectionType.isEmpty()) {
+                sectionTypeList.add(sectionType);
             }
         }
+    }
+
+    public boolean isDynamic() {
+        return dynamic;
+    }
+
+    public void setDynamic(boolean dynamic) {
+        this.dynamic = dynamic;
     }
 
     public String getCode() {

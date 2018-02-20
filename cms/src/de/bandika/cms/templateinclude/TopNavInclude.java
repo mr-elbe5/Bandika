@@ -23,15 +23,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class TopNavControl extends TemplateInclude {
+public class TopNavInclude extends TemplateInclude {
 
     public static final String KEY = "topNav";
 
-    private static TopNavControl instance = null;
+    private static TopNavInclude instance = null;
 
-    public static TopNavControl getInstance() {
+    public static TopNavInclude getInstance() {
         if (instance == null)
-            instance = new TopNavControl();
+            instance = new TopNavInclude();
         return instance;
     }
 

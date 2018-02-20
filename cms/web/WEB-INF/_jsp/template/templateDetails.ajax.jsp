@@ -41,7 +41,7 @@
     <tr>
         <td><label><%=StringUtil.getHtml("_usage", locale)%>
         </label></td>
-        <td><%=StringUtil.toHtml(data.getUsage())%>
+        <td><%=StringUtil.toHtml(data.getSectionTypes())%>
         </td>
     </tr>
 </table>

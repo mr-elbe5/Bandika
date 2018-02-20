@@ -8,8 +8,6 @@
  */
 package de.bandika.cms.page;
 
-import de.bandika.cms.template.TemplateCache;
-import de.bandika.cms.template.TemplateData;
 import de.bandika.cms.tree.BaseTreeActions;
 import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.rights.Right;
@@ -37,7 +35,7 @@ public class PagePartActions extends BaseTreeActions {
     public static final String openDeleteSharedPart="openDeleteSharedPart";
     public static final String deleteSharedPart="deleteSharedPart";
 
-    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) {
         switch (actionName) {
             case executePagePartMethod: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -67,11 +65,10 @@ public class PagePartActions extends BaseTreeActions {
                 boolean below = RequestReader.getBoolean(request, "below");
                 String sectionName = RequestReader.getString(request, "sectionName");
                 String templateName = RequestReader.getString(request, "templateName");
-                TemplateData template = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PART, templateName);
                 PagePartData pdata = new PagePartData();
-                pdata.setTemplateData(template);
-                pdata.setId(PageBean.getInstance().getNextId());
                 pdata.setSectionName(sectionName);
+                pdata.setTemplateName(templateName);
+                pdata.setId(PageBean.getInstance().getNextId());
                 pdata.setNew(true);
                 data.addPagePart(pdata, fromPartId, below, true);
                 data.setEditPagePart(pdata);
