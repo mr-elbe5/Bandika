@@ -43,7 +43,6 @@ public class FileActions extends BaseTreeActions {
     public static final String cloneFile="cloneFile";
     public static final String cutFile="cutFile";
     public static final String moveFile="moveFile";
-    public static final String publishFile="publishFile";
     public static final String openDeleteFile="openDeleteFile";
     public static final String deleteFile="deleteFile";
 
@@ -274,25 +273,6 @@ public class FileActions extends BaseTreeActions {
                     return false;
                 }
                 return true;
-            }
-            case publishFile: {
-                //todo
-                int fileId = RequestReader.getInt(request, "fileId");
-                if (!hasContentRight(request, fileId, Right.APPROVE))
-                    return false;
-                boolean fromAdmin = RequestReader.getBoolean(request, "fromAdmin");
-                FileData data = FileBean.getInstance().getFile(fileId, false);
-                data.setAuthorName(SessionReader.getLoginName(request));
-                data.prepareSave();
-                FileBean.getInstance().saveFile(data);
-                TreeCache.getInstance().setDirty();
-                RightsCache.getInstance().setDirty();
-                RequestWriter.setMessageKey(request, "_filePublished");
-                request.setAttribute("siteId", Integer.toString(data.getParentId()));
-                if (fromAdmin) {
-                    return showTree(request, response);
-                }
-                return new FileActions().execute(request, response, show);
             }
             case openDeleteFile: {
                 int fileId = RequestReader.getInt(request, "fileId");

@@ -310,13 +310,6 @@ public class TreeHelper {
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_replace", locale));
             writer.write("</div>");
-            if (SessionReader.hasContentRight(request, data.getId(), Right.APPROVE)) {
-                writer.write("<div class=\"icn ipublish\" onclick=\"return linkToTree('");
-                writer.write(StringUtil.toJs("/file.srv?act=publishFile&fromAdmin=true&fileId=" + data.getId()));
-                writer.write("');\">");
-                writer.write(StringUtil.getHtml("_publish", locale));
-                writer.write("</div>");
-            }
             writer.write("<div class=\"icn ilock\" onclick=\"return openLayerDialog('" + StringUtil.getHtml("_editFileRights", locale) + "', '");
             writer.write(StringUtil.toJs("/file.ajx?act=openEditFileRights&fileId=" + data.getId()));
             writer.write("');\">");

@@ -9,7 +9,6 @@
 package de.bandika.cms.page;
 
 import de.bandika.base.data.BaseIdData;
-import de.bandika.base.data.XmlData;
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.field.Field;
@@ -24,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class PagePartData extends BaseIdData implements Comparable<PagePartData>, XmlData {
+public class PagePartData extends BaseIdData implements Comparable<PagePartData> {
 
     protected String name = "";
     protected String sectionName = "";

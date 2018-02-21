@@ -8,9 +8,6 @@
  */
 package de.bandika.cms.page;
 
-import de.bandika.cms.template.TemplateCache;
-import de.bandika.cms.template.TemplateData;
-
 import java.util.*;
 
 public class SectionData {

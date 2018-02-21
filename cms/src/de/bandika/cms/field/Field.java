@@ -9,7 +9,6 @@
 package de.bandika.cms.field;
 
 import de.bandika.base.data.BaseData;
-import de.bandika.base.data.XmlData;
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.page.PageOutputContext;
@@ -27,7 +26,7 @@ import java.util.Set;
  * content <br>
  * Usage:
  */
-public abstract class Field implements Cloneable, XmlData {
+public abstract class Field implements Cloneable {
 
     protected int pagePartId = 0;
     protected String name = "";
