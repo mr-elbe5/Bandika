@@ -15,6 +15,7 @@ import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
+import de.bandika.cms.template.TemplateParser;
 import de.bandika.webbase.servlet.RequestStatics;
 import de.bandika.webbase.servlet.SessionReader;
 
@@ -58,7 +59,7 @@ public class PageContentInclude extends TemplateInclude{
             }
             else{
                 writer.write("<div id=\"pageContent\" class=\"viewArea\">");
-                page.writePublishedContent(outputContext, outputData);
+                writePublishedContent(page, outputContext, outputData);
                 writer.write("</div>");
             }
         }
@@ -73,6 +74,32 @@ public class PageContentInclude extends TemplateInclude{
                     writer.write("<div>JSP missing</div>");
                 }
             }
+        }
+    }
+
+    private void writePublishedContent(PageData page, PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+        StringWriteUtil writer=outputContext.getWriter();
+        int start=0;
+        int end;
+        String src=page.getPublishedContent();
+        while (true) {
+            end=src.indexOf("{<include",start);
+            if (end==-1){
+                writer.write(src.substring(start));
+                break;
+            }
+            writer.write(src.substring(start,end));
+            start=end;
+            end=src.indexOf("/>}",start);
+            if (end==-1){
+                writer.write(src.substring(start));
+                break;
+            }
+            String tag=src.substring(start+1,end+2);
+            TemplateInclude include = TemplateParser.parseIncludeTag(tag);
+            if (include!=null)
+                include.writeHtml(outputContext,outputData);
+            start=end+3;
         }
     }
 

@@ -8,15 +8,10 @@
  */
 package de.bandika.cms.page;
 
-import de.bandika.base.util.StringWriteUtil;
-import de.bandika.cms.template.TemplateParser;
-import de.bandika.cms.templateinclude.TemplateInclude;
 import de.bandika.cms.tree.TreeNode;
 import de.bandika.webbase.servlet.RequestReader;
-import de.bandika.webbase.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -221,32 +216,6 @@ public class PageData extends TreeNode {
         super.prepareSave();
         for (SectionData section : sections.values()) {
             section.prepareSave();
-        }
-    }
-
-    public void writePublishedContent(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        StringWriteUtil writer=outputContext.getWriter();
-        int start=0;
-        int end;
-        String src=getPublishedContent();
-        while (true) {
-            end=src.indexOf("{<include",start);
-            if (end==-1){
-                writer.write(src.substring(start));
-                break;
-            }
-            writer.write(src.substring(start,end));
-            start=end;
-            end=src.indexOf("/>}",start);
-            if (end==-1){
-                writer.write(src.substring(start));
-                break;
-            }
-            String tag=src.substring(start+1,end+2);
-            TemplateInclude include = TemplateParser.parseIncludeTag(tag);
-            if (include!=null)
-                include.writeHtml(outputContext,outputData);
-            start=end+3;
         }
     }
 

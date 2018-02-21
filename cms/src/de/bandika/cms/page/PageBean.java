@@ -275,7 +275,6 @@ public class PageBean extends TreeBean {
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
-                    String partType = rs.getString(i++);
                     partData = new PagePartData();
                     partData.setId(rs.getInt(i++));
                     partData.setName(rs.getString(i++));
@@ -344,48 +343,43 @@ public class PageBean extends TreeBean {
     }
 
     public void writeAllPageParts(Connection con, PageData page) throws Exception {
-        PreparedStatement pst = null;
+        PreparedStatement pstDelP2P = null;
+        PreparedStatement pstIns = null;
+        PreparedStatement pstUpd = null;
+        PreparedStatement pst;
+        PreparedStatement pstInsP2P = null;
         try{
-            pst = con.prepareStatement("DELETE FROM t_page_part2page WHERE page_id=?");
-            pst.setInt(1, page.getId());
-            pst.executeUpdate();
-            pst.close();
-        } finally {
-            closeStatement(pst);
-        }
-        for (SectionData section : page.getSections().values()) {
-            for (PagePartData part : section.getParts()) {
-                part.setChangeDate(page.getChangeDate());
-                writePagePart(con, part, page);
+            pstDelP2P = con.prepareStatement("DELETE FROM t_page_part2page WHERE page_id=?");
+            pstDelP2P.setInt(1, page.getId());
+            pstDelP2P.executeUpdate();
+            pstDelP2P.close();
+            pstIns = con.prepareStatement("INSERT INTO t_page_part (change_date,template,name,content,id) VALUES(?,?,?,?,?)");
+            pstUpd = con.prepareStatement("UPDATE t_page_part SET change_date=?,template=?,name=?,content=? WHERE id=?");
+            pstInsP2P = con.prepareStatement("INSERT INTO t_page_part2page (part_id,page_id,section,ranking) VALUES(?,?,?,?)");
+            for (SectionData section : page.getSections().values()) {
+                for (PagePartData part : section.getParts()) {
+                    part.setChangeDate(page.getChangeDate());
+                    pst = part.isNew() ? pstIns : pstUpd;
+                    int i=1;
+                    pst.setTimestamp(i++, Timestamp.valueOf(part.getChangeDate()));
+                    pst.setString(i++, part.getTemplateName());
+                    pst.setString(i++, part.getName());
+                    pst.setString(i++, part.getXmlContent());
+                    pst.setInt(i, part.getId());
+                    pst.executeUpdate();
+                    i=1;
+                    pstInsP2P.setInt(i++, part.getId());
+                    pstInsP2P.setInt(i++, page.getId());
+                    pstInsP2P.setString(i++, part.getSectionName());
+                    pstInsP2P.setInt(i, part.getRanking());
+                    pstInsP2P.executeUpdate();
+                }
             }
-        }
-    }
-
-    protected void writePagePart(Connection con, PagePartData data, PageData page) throws SQLException {
-        PreparedStatement pst = null;
-        try {
-            String sql=data.isNew() ?
-                    "INSERT INTO t_page_part (change_date,template,name,content,id) VALUES(?,?,?,?,?)" :
-                    "UPDATE t_page_part SET change_date=?,template=?,name=?,content=? WHERE id=?";
-            int i = 1;
-            pst = con.prepareStatement(sql);
-            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
-            pst.setString(i++, data.getTemplateName());
-            pst.setString(i++, data.getName());
-            pst.setString(i++, data.getXmlContent());
-            pst.setInt(i, data.getId());
-            pst.executeUpdate();
-            pst.close();
-            pst = con.prepareStatement("INSERT INTO t_page_part2page (part_id,page_id,section,ranking) VALUES(?,?,?,?)");
-            i = 1;
-            pst.setInt(i++, data.getId());
-            pst.setInt(i++, page.getId());
-            pst.setString(i++, data.getSectionName());
-            pst.setInt(i, data.getRanking());
-            pst.executeUpdate();
-            pst.close();
         } finally {
-            closeStatement(pst);
+            closeStatement(pstDelP2P);
+            closeStatement(pstIns);
+            closeStatement(pstUpd);
+            closeStatement(pstInsP2P);
         }
     }
 

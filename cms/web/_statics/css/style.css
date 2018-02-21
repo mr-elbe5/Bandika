@@ -482,7 +482,7 @@ nav.mainNav li a { text-decoration: none; color: #eeeeee; display: block; white-
 
 nav.mainNav li a:hover { color: #f0f0f0; }
 
-nav.mainNav li ul { position: absolute; display: none; width: inherit; background: #aaaaaa url('/_statics/img/carbon.png?1518426654'); border: 1px solid #cccccc; z-index: 9999; }
+nav.mainNav li ul { position: absolute; display: none; width: inherit; min-width: 120px; background: #aaaaaa url('/_statics/img/carbon.png?1518426654'); border: 1px solid #cccccc; z-index: 9999; }
 
 nav.mainNav li:hover ul { display: block; }
 
@@ -525,7 +525,7 @@ nav.mainNav li li li a { padding: 7px 14px 6px 24px; }
 
 .searchBox input[type="text"] { color: #404040; border: none; margin-right: 5px; }
 
-.searchBox button[type="submit"] { border: none; background: transparent; }
+.searchBox button { border: none; background: transparent; }
 
 .searchBox button[type="submit"] span.icn::before { color: #b0b0b0; }
 

@@ -92,7 +92,7 @@ public class TemplateActions extends CmsActions {
                 data.setDisplayName(RequestReader.getString(request, "displayName"));
                 data.setDescription(RequestReader.getString(request, "description"));
                 data.setCode(RequestReader.getString(request, "code"));
-                data.setSectionTypes(RequestReader.getString(request, "usage"));
+                data.setSectionTypes(RequestReader.getString(request, "sectionTypes"));
                 if (!isDataComplete(data, request)) {
                     return showEditTemplate(request, response);
                 }

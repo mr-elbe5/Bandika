@@ -67,7 +67,7 @@ public class SectionInclude extends TemplateInclude{
                         StringUtil.getHtml("_addPart", outputData.locale),
                         String.valueOf(outputData.pageData.getId()),
                         data.getName(),
-                        outputData.attributes.getString("type"),
+                        outputData.attributes.getString("sectionType"),
                         StringUtil.getHtml("_new", outputData.locale));
             }
         }
@@ -93,7 +93,7 @@ public class SectionInclude extends TemplateInclude{
 
     public void appendEditPartHtml(PagePartData data, PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
-        String sectionType=outputData.attributes.getString("type");
+        String sectionType=outputData.attributes.getString("sectionType");
         writeEditPartStart(data, writer, outputData.pageData.getEditPagePart(), outputData.pageData.getId(), outputData.locale);
         TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PART, data.getTemplateName());
         try {

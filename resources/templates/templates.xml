@@ -96,9 +96,6 @@
     <cms-template type="PART" name="Script" displayName="JavaScript" sectionTypes="all">
         <cms-include type="field" fieldType="script" name="script"></cms-include>
     </cms-template>
-    <cms-template type="PART" name="DocumentList" displayName="Document List" sectionTypes="all">
-        <cms-include type="documents" name="documents" test="all"></cms-include>
-    </cms-template>
     <!-- content parts -->
     <cms-template type="PART" name="Header" displayName="Header" sectionTypes="content">
         <div class="textBox">
@@ -235,6 +232,16 @@
             </h3>
             <div class="textBox">
                 <cms-include type="field" fieldType="html" name="text">Lorem ipsum</cms-include>
+            </div>
+        </div>
+    </cms-template>
+    <cms-template type="PART" name="DocumentList" displayName="Document List" sectionTypes="aside">
+        <div class="aside">
+            <h3>
+                <cms-include type="field" fieldType="text" name="header">Lorem ipsum</cms-include>
+            </h3>
+            <div class="textBox">
+                <cms-include type="documents" name="documents" ></cms-include>
             </div>
         </div>
     </cms-template>

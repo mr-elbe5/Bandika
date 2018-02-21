@@ -134,6 +134,7 @@ nav.mainNav li ul {
     position: absolute;
     display: none;
     width: inherit;
+    min-width: 120px;
     background: $color-darkgrey image-url("carbon.png");
     border: 1px solid $color-midgrey;
     z-index: 9999;
@@ -237,7 +238,7 @@ nav.mainNav li li li a {
     margin-right: $space_one;
 }
 
-.searchBox button[type="submit"] {
+.searchBox button {
     border: none;
     background: transparent;
 }

@@ -52,11 +52,11 @@ public class TemplateCache extends BaseCache {
         return null;
     }
 
-    public List<TemplateData> getTemplates(String type, String parentType) {
+    public List<TemplateData> getTemplates(String type, String sectionType) {
         checkDirty();
         List<TemplateData> templates = new ArrayList<>();
         for (TemplateData template : getTemplates(type)) {
-            if (template.hasSectionType(parentType)) {
+            if (template.hasSectionType(sectionType)) {
                 templates.add(template);
             }
         }

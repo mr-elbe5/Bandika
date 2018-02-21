@@ -66,9 +66,9 @@
             </tr>
             <tr>
                 <td>
-                    <label for="usage"><%=StringUtil.getHtml("_usage", locale)%>&nbsp;*</label></td>
+                    <label for="sectionTypes"><%=StringUtil.getHtml("_sectionTypes", locale)%>&nbsp;*</label></td>
                 <td>
-                    <input type="text" id="usage" name="usage" value="<%=StringUtil.toHtml(data.getSectionTypes())%>" maxlength="120"/>
+                    <input type="text" id="sectionTypes" name="sectionTypes" value="<%=StringUtil.toHtml(data.getSectionTypes())%>" maxlength="120"/>
                 </td>
             </tr>
         </table>
