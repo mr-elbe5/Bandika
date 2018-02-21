@@ -12,9 +12,7 @@ import de.bandika.base.log.Log;
 import de.bandika.cms.templateinclude.*;
 import de.bandika.webbase.util.TagAttributes;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.TextNode;
+import org.jsoup.nodes.*;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
@@ -127,6 +125,19 @@ public class TemplateParser {
         }
         Log.warn("element without valid type: "+type);
         return null;
+    }
+
+    public static TemplateInclude parseIncludeTag(String tag) {
+        TagAttributes tagAttributes=new TagAttributes();
+        Document doc= Jsoup.parse(tag,"", Parser.xmlParser());
+        Element element=doc.getElementsByTag("include").first();
+        if (element==null)
+            return null;
+        TemplateInclude include=getTemplateInclude(element);
+        if (include==null)
+            return null;
+        include.setAttributes(new TagAttributes(element.attributes()));
+        return include;
     }
 
 }

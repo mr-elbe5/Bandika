@@ -9,9 +9,11 @@
 package de.bandika.cms.page;
 
 import de.bandika.base.util.StringWriteUtil;
+import de.bandika.cms.template.TemplateParser;
 import de.bandika.cms.templateinclude.TemplateInclude;
 import de.bandika.cms.tree.TreeNode;
 import de.bandika.webbase.servlet.RequestReader;
+import de.bandika.webbase.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -222,7 +224,7 @@ public class PageData extends TreeNode {
         }
     }
 
-    public void writePublishedContent(PageOutputContext outputContext) throws IOException {
+    public void writePublishedContent(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
         int start=0;
         int end;
@@ -241,7 +243,9 @@ public class PageData extends TreeNode {
                 break;
             }
             String tag=src.substring(start+1,end+2);
-            System.out.println(tag);
+            TemplateInclude include = TemplateParser.parseIncludeTag(tag);
+            if (include!=null)
+                include.writeHtml(outputContext,outputData);
             start=end+3;
         }
     }
