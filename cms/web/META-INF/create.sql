@@ -333,8 +333,8 @@ CREATE OR REPLACE FUNCTION addPage (parentId INTEGER, pageId INTEGER, rank INTEG
 BEGIN
   INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, in_navigation, anonymous, inherits_rights)
   VALUES (pageId, parentId, rank, nodeName, displayName, '', 1, 'System', TRUE, TRUE, TRUE);
-  INSERT INTO t_page (id, template, author_name)
-  VALUES (pageId, pageTemplate, 'System');
+  INSERT INTO t_page (id, template)
+  VALUES (pageId, pageTemplate);
   RETURN pageId;
 END;
 $$ LANGUAGE plpgsql;
@@ -351,8 +351,8 @@ BEGIN
   VALUES (siteId, TRUE);
   INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, in_navigation, anonymous, inherits_rights)
   VALUES (pageId, siteId, 0, 'default', displayName, '', 1, 'System', TRUE, TRUE, TRUE);
-  INSERT INTO t_page (id, template, author_name)
-  VALUES (pageId, pageTemplate, 'System');
+  INSERT INTO t_page (id, template)
+  VALUES (pageId, pageTemplate);
   RETURN siteId;
 END;
 $$ LANGUAGE plpgsql;

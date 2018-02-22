@@ -1,4 +1,4 @@
-<%@ page import="de.bandika.base.util.StringWriteUtil" %><%--
+<%--
   Bandika  - A Java based modular Content Management System
   Copyright (C) 2009-2017 Michael Roennau
 

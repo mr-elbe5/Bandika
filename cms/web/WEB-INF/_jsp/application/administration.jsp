@@ -34,7 +34,7 @@
             </h3>
             <ul id="editsettings" class="treeRoot">
                 <jsp:include page="/WEB-INF/_jsp/template/adminTemplates.inc.jsp"/>
-                <jsp:include page="/WEB-INF/_jsp/page/adminNamedPageParts.inc.jsp"/>
+                <jsp:include page="/WEB-INF/_jsp/page/adminSharedPageParts.inc.jsp"/>
             </ul>
         </div>
     </section>

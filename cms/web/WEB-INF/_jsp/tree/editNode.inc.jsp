@@ -131,10 +131,3 @@
         </div>
     </td>
 </tr>
-<tr>
-    <td><label><%=StringUtil.getHtml("_contentChangeDate", locale)%>
-    </label></td>
-    <td>
-        <div><%=StringUtil.toHtmlDateTime(data.getContentChangeDate(), locale)%>
-        </div>
-</tr>
