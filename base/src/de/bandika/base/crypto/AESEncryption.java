@@ -14,7 +14,6 @@ import de.bandika.base.crypto.shirocodec.Base64;
 import de.bandika.base.crypto.shirocodec.CodecSupport;
 import de.bandika.base.log.Log;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 
 public class AESEncryption {

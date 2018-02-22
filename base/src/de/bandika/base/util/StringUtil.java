@@ -10,13 +10,12 @@ package de.bandika.base.util;
 
 import de.bandika.base.data.Locales;
 import de.bandika.base.log.Log;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import static org.apache.commons.lang3.StringEscapeUtils.*;
 
 public class StringUtil {
 
@@ -36,7 +35,7 @@ public class StringUtil {
         if (src == null) {
             return "";
         }
-        return escapeHtml4(src);
+        return StringEscapeUtils.escapeHtml4(src);
     }
 
     public static String toHtmlText(String src) {
@@ -44,7 +43,7 @@ public class StringUtil {
             return "";
         }
         if (src.indexOf('\n') == -1)
-            return escapeHtml4(src);
+            return StringEscapeUtils.escapeHtml4(src);
 
         StringTokenizer stk = new StringTokenizer(src, "\n", true);
         if (stk.countTokens() == 0)
@@ -56,7 +55,7 @@ public class StringUtil {
             if (token.equals("\n"))
                 sb.append("\n<br/>\n");
             else
-                sb.append(escapeHtml4(token));
+                sb.append(StringEscapeUtils.escapeHtml4(token));
         }
         return sb.toString();
     }
@@ -65,7 +64,7 @@ public class StringUtil {
         if (src == null) {
             return "";
         }
-        return escapeHtml4(src);
+        return StringEscapeUtils.escapeHtml4(src);
     }
 
     public static String toHtml(String[] strings) {
@@ -107,14 +106,14 @@ public class StringUtil {
         if (src == null) {
             return "";
         }
-        return escapeXml(src);
+        return StringEscapeUtils.escapeXml(src);
     }
 
     public static String toJs(String src) {
         if (src == null) {
             return "";
         }
-        return escapeEcmaScript(src);
+        return StringEscapeUtils.escapeEcmaScript(src);
     }
 
     public static String toUrl(String src) {

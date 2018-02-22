@@ -19,7 +19,6 @@ import de.bandika.webbase.servlet.SessionWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.ParseException;
 import java.util.List;
 
 public class TemplateActions extends CmsActions {
