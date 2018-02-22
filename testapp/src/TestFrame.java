@@ -1,9 +1,6 @@
-import de.bandika.base.util.FileUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
 public class TestFrame extends JFrame{
@@ -56,9 +53,7 @@ public class TestFrame extends JFrame{
     public void button_actionPerformed() {
         String pwd=input.getText();
         try{
-            String src=FileUtil.readTextFile("/temp/templates.xml");
-            //XmlData data=XmlData.create(src);
-            output.setText(src);
+
         }
         catch (Exception e){
             output.setText(e.getMessage());
