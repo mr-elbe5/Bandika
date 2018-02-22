@@ -135,7 +135,7 @@ public class TemplateActions extends CmsActions {
         return KEY;
     }
 
-    public boolean importTemplates(String src) throws ParseException {
+    public boolean importTemplates(String src) {
         List<TemplateData> templates =  TemplateParser.parseTemplates(src);
         for (TemplateData template : templates){
             if (TemplateCache.getInstance().getTemplate(template.getType(), template.getName()) == null)

@@ -91,6 +91,15 @@ public class XmlData {
         return rootNode;
     }
 
+    public Element setRootNode(Element rootNode) {
+        doc.appendChild(rootNode);
+        return rootNode;
+    }
+
+    public Element importElement(Element externalNode, boolean deep) {
+        return (Element) doc.importNode(externalNode, deep);
+    }
+
     public Element addNode(Element parentNode, String name) {
         Element childNode = doc.createElement(name);
         parentNode.appendChild(childNode);
