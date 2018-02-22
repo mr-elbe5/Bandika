@@ -8,13 +8,12 @@
  */
 package de.bandika.cms.field;
 
+import de.bandika.base.data.XmlData;
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.StringWriteUtil;
-import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.webbase.servlet.RequestReader;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
@@ -71,17 +70,16 @@ public class TextField extends Field {
 
     /******************* XML part *********************************/
 
-    @Override
-    public Element toXml(Document xmlDoc, Element parentNode) {
-        Element node = super.toXml(xmlDoc, parentNode);
-        XmlUtil.addCDATA(xmlDoc, node, text);
-        return node;
+    public void createXml(XmlData data, Element parentNode) {
+        Element node = data.addNode(parentNode, "field");
+        data.addAttribute(node, "fieldType", getFieldType());
+        data.addAttribute(node, "name", StringUtil.toXml(getName()));
+        data.addCDATA(node, text);
     }
 
-    @Override
-    public void fromXml(Element node) {
-        super.fromXml(node);
-        text = XmlUtil.getCData(node);
+    public void parseXml(XmlData data, Element node) {
+        name = data.getStringAttribute(node, "name");
+        text = data.getCData(node);
     }
 
     /******************* search part *********************************/

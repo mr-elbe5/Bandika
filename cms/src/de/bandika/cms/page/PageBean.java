@@ -280,7 +280,8 @@ public class PageBean extends TreeBean {
                     partData.setName(rs.getString(i++));
                     partData.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     partData.setTemplateName(rs.getString(i++));
-                    partData.setXmlContent(rs.getString(i));
+                    partData.setContent(rs.getString(i));
+                    partData.parseXml();
                 }
             }
         } finally {
@@ -305,7 +306,8 @@ public class PageBean extends TreeBean {
                     partData.setName(rs.getString(i++));
                     partData.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     partData.setTemplateName(rs.getString(i++));
-                    partData.setXmlContent(rs.getString(i));
+                    partData.setContent(rs.getString(i));
+                    partData.parseXml();
                     list.add(partData);
                 }
             }
@@ -333,7 +335,8 @@ public class PageBean extends TreeBean {
                     partData.setTemplateName(rs.getString(i++));
                     partData.setSectionName(rs.getString(i++));
                     partData.setRanking(rs.getInt(i++));
-                    partData.setXmlContent(rs.getString(i));
+                    partData.setContent(rs.getString(i));
+                    partData.parseXml();
                     pageData.addPagePart(partData, -1, false, false);
                 }
             }
@@ -364,7 +367,7 @@ public class PageBean extends TreeBean {
                     pst.setTimestamp(i++, Timestamp.valueOf(part.getChangeDate()));
                     pst.setString(i++, part.getTemplateName());
                     pst.setString(i++, part.getName());
-                    pst.setString(i++, part.getXmlContent());
+                    pst.setString(i++, part.getContent());
                     pst.setInt(i, part.getId());
                     pst.executeUpdate();
                     i=1;

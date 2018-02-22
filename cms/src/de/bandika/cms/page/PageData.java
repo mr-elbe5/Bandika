@@ -200,7 +200,7 @@ public class PageData extends TreeNode {
     }
 
     public void shareChanges(PagePartData part) {
-        part.generateXmlContent();
+        part.createXml();
         for (SectionData section : sections.values()) {
             section.shareChanges(part);
         }

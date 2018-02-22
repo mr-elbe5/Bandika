@@ -9,13 +9,11 @@
 package de.bandika.cms.page;
 
 import de.bandika.base.data.BaseIdData;
-import de.bandika.base.util.StringUtil;
-import de.bandika.base.util.XmlUtil;
+import de.bandika.base.data.XmlData;
 import de.bandika.cms.field.Field;
 import de.bandika.cms.field.Fields;
 import de.bandika.cms.template.TemplateData;
 import de.bandika.webbase.servlet.RequestReader;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
@@ -201,79 +199,35 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
 
     @Override
     public void prepareSave() {
-        generateXmlContent();
+        createXml();
     }
 
     /******************* XML part *********************************/
 
-    public void generateXmlContent() {
-        Document xmlDoc = XmlUtil.createXmlDocument();
-        assert xmlDoc!=null;
-        XmlUtil.createRootNode(xmlDoc, "part");
-        toXml(xmlDoc, null);
-        content = XmlUtil.xmlToString(xmlDoc);
-    }
-
-    public void setXmlContent(String content) {
-        this.content = content == null ? "" : content;
-        evaluateXmlContent();
-    }
-
-    public void evaluateXmlContent() {
-        if (StringUtil.isNullOrEmpty(content)) {
-            return;
-        }
-        Document doc = XmlUtil.getXmlDocument(content, "UTF-8");
-        if (doc == null) {
-            return;
-        }
-        Element root = XmlUtil.getRootNode(doc);
-        if (root == null) {
-            return;
-        }
-        fromXml(root);
-    }
-
-    public void addXmlAttributes(Document xmlDoc, Element node) {
-    }
-
-    public Element toXml(Document xmlDoc, Element parentNode) {
-        Element node = parentNode == null ? XmlUtil.getRootNode(xmlDoc) : XmlUtil.addNode(xmlDoc, parentNode, "part");
-        Element partNode = XmlUtil.addNode(xmlDoc, node, "partContent");
-        addXmlAttributes(xmlDoc, partNode);
+    public void createXml(){
+        XmlData data=XmlData.create();
+        assert data!=null;
+        Element root=data.createRootNode("part");
         for (Field field : fields.values()) {
-            field.toXml(xmlDoc, partNode);
+            field.createXml(data, root);
         }
-        return node;
+        content = data.toString();
     }
 
-    public void getXmlAttributes(Element node) {
-    }
-
-    public void fromXml(Element node) {
-        if (node == null)
+    public void parseXml(){
+        XmlData data=XmlData.create(content);
+        if (data==null)
             return;
-        List<Element> children = XmlUtil.getChildElements(node);
+        Element root=data.getRootNode();
+        List<Element> children = data.findChildElements(root, "field");
         for (Element child : children) {
-            if (child.getTagName().equals("partContent")) {
-                fields.clear();
-                List<Element> partChildren = XmlUtil.getChildElements(child);
-                for (Element partChild : partChildren) {
-                    if (partChild.getTagName().equals("field")) {
-                        String fieldType = XmlUtil.getStringAttribute(partChild, "fieldType");
-                        Field field = Fields.getNewField(fieldType);
-                        if (field != null) {
-                            field.fromXml(partChild);
-                            fields.put(field.getName(), field);
-                        }
-                    }
-                }
+            String fieldType = data.getStringAttribute(child, "fieldType");
+            Field field = Fields.getNewField(fieldType);
+            if (field != null) {
+                field.parseXml(data, child);
+                fields.put(field.getName(), field);
             }
         }
-    }
-
-    public String getXmlContent() {
-        return content;
     }
 
 }

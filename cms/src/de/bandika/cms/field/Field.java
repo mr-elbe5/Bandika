@@ -9,11 +9,10 @@
 package de.bandika.cms.field;
 
 import de.bandika.base.data.BaseData;
+import de.bandika.base.data.XmlData;
 import de.bandika.base.util.StringUtil;
-import de.bandika.base.util.XmlUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
@@ -85,19 +84,14 @@ public abstract class Field implements Cloneable {
 
     /******************* XML part *********************************/
 
-    public Element toXml(Document xmlDoc, Element parentNode) {
-        Element node = XmlUtil.addNode(xmlDoc, parentNode, "field");
-        addXmlAttributes(xmlDoc, node);
-        return node;
+    public void createXml(XmlData data, Element parentNode) {
+        Element node = data.addNode(parentNode, "field");
+        data.addAttribute(node, "fieldType", getFieldType());
+        data.addAttribute(node, "name", StringUtil.toXml(getName()));
     }
 
-    public void addXmlAttributes(Document xmlDoc, Element node) {
-        XmlUtil.addAttribute(xmlDoc, node, "fieldType", getFieldType());
-        XmlUtil.addAttribute(xmlDoc, node, "name", StringUtil.toXml(getName()));
-    }
-
-    public void fromXml(Element node) {
-        name = XmlUtil.getStringAttribute(node, "name");
+    public void parseXml(XmlData data, Element node) {
+        name = data.getStringAttribute(node, "name");
     }
 
     /******************* search part *********************************/
