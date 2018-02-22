@@ -26,7 +26,7 @@
                                 <a class="logo" href="/">
                                     <img src="/_statics/img/logo.png" alt=""/>
                                 </a>
-                                <a class="navBtn" onclick="toggleMenu();">&nbsp;
+                                <a class="navBtn" onclick="toggleMenu();">&#160;
                                 </a>
                             </div>
                             <div class="menu">
@@ -112,7 +112,7 @@
         </div>
     </cms-template>
     <cms-template type="PART" name="Separator" displayName="Separator Line" sectionTypes="content">
-        <div class="separator">&nbsp;</div>
+        <div class="separator">&#160;</div>
     </cms-template>
     <cms-template type="PART" name="Text" displayName="Text" sectionTypes="content">
         <div class="textBox">
@@ -267,8 +267,8 @@
         <div id="dialogLayer" class="layeroverlay dialog" data-hidden="true">
             <div class="layercontent">
                 <div class="layerheadbox">
-                    <span>&nbsp;</span>
-                    <div class="closeLayer" onclick="closeLayerDialog()">&times;</div>
+                    <span>&#160;</span>
+                    <div class="closeLayer" onclick="closeLayerDialog()">&#215;</div>
                 </div>
                 <div class="layermainbox"></div>
             </div>
@@ -281,7 +281,7 @@
                     <div class="treeMainCell">
                         <div class="layerheadbox">
                             <cms-include type="resource" key="tree"></cms-include>
-                            <div class="closeLayer" onclick="closeTreeLayer();">&times;</div>
+                            <div class="closeLayer" onclick="closeTreeLayer();">&#215;</div>
                         </div>
                         <div class="layermainbox"></div>
                     </div>
@@ -295,8 +295,8 @@
         <div id="browserLayer" class="layeroverlay browser" data-hidden="true">
             <div class="layercontent">
                 <div class="layerheadbox">
-                    <span>&nbsp;</span>
-                    <div class="closeLayer" onclick="closeBrowserLayer();">&times;</div>
+                    <span>&#160;</span>
+                    <div class="closeLayer" onclick="closeBrowserLayer();">&#215;</div>
                 </div>
                 <div class="layermainbox"></div>
             </div>
@@ -306,8 +306,8 @@
         <div id="browserDialogLayer" class="layeroverlay browser dialog" data-hidden="true">
             <div class="layercontent">
                 <div class="layerheadbox">
-                    <span>&nbsp;</span>
-                    <div class="closeLayer" onclick="closeBrowserDialogLayer();">&times;</div>
+                    <span>&#160;</span>
+                    <div class="closeLayer" onclick="closeBrowserDialogLayer();">&#215;</div>
                 </div>
                 <div class="layermainbox"></div>
             </div>
