@@ -22,6 +22,22 @@
     </tag>
 
     <tag>
+        <name>include</name>
+        <tag-class>de.bandika.cms.tag.IncludeTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <name>type</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>name</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
         <name>snippet</name>
         <tag-class>de.bandika.cms.tag.SnippetTag</tag-class>
         <body-content>JSP</body-content>

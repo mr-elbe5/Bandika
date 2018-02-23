@@ -21,8 +21,8 @@ import java.util.List;
 
 public class TemplateParser {
 
-    public static final String TEMPLATE_TAG = "cms-template";
-    public static final String INCLUDE_TAG = "cms-include";
+    public static final String TEMPLATE_TAG = "cms:template";
+    public static final String INCLUDE_TAG = "cms:include";
 
     public static final String TEMPLATE_ATTR_TYPE = "type";
     public static final String TEMPLATE_ATTR_NAME = "name";
@@ -72,6 +72,10 @@ public class TemplateParser {
 
     private static TemplateInclude getTemplateInclude(Element element){
         String type=element.attr(TEMPLATE_ATTR_TYPE);
+        return getTemplateInclude(type);
+    }
+
+    public static TemplateInclude getTemplateInclude(String type){
         if (type.isEmpty()) {
             Log.warn("element without type: "+type);
             return null;
@@ -128,7 +132,6 @@ public class TemplateParser {
     }
 
     public static TemplateInclude parseIncludeTag(String tag) {
-        TagAttributes tagAttributes=new TagAttributes();
         Document doc= Jsoup.parse(tag,"", Parser.xmlParser());
         Element element=doc.getElementsByTag("include").first();
         if (element==null)

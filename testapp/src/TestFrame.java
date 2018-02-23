@@ -1,4 +1,7 @@
 
+import de.bandika.base.data.XmlData;
+import de.bandika.base.util.FileUtil;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
@@ -51,9 +54,11 @@ public class TestFrame extends JFrame{
     }
 
     public void button_actionPerformed() {
-        String pwd=input.getText();
+        String path=input.getText();
         try{
-
+            String code= FileUtil.readTextFile(path);
+            XmlData data=XmlData.create(code);
+            output.setText(data.toString());
         }
         catch (Exception e){
             output.setText(e.getMessage());

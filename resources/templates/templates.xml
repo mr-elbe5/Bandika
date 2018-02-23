@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<templates>
-    <cms-template type="MASTER" name="pageMaster" displayName="Page Master">
-        <!DOCTYPE html>
+<cms:templates xmlns:cms="http://elbe5.de">
+    <cms:template type="MASTER" name="pageMaster" displayName="Page Master">
         <html>
             <head>
                 <meta charset="utf-8"/>
-                <cms-include type="head"></cms-include>
+                <cms:include type="head"></cms:include>
                 <link rel="shortcut icon" href="/favicon.ico"/>
                 <link rel="stylesheet" href="/_statics/css/style.css"/>
                 <script type="text/javascript" src="/_statics/js/jquery-1.12.4.min.js"></script>
@@ -18,7 +17,7 @@
             <body class="carbon">
                 <div class="viewport">
                     <section class="topNavSection">
-                        <cms-include type="topNav"></cms-include>
+                        <cms:include type="topNav"></cms:include>
                     </section>
                     <section class="headerSection">
                         <section class="headerMain">
@@ -30,224 +29,225 @@
                                 </a>
                             </div>
                             <div class="menu">
-                                <cms-include type="mainMenu"></cms-include>
+                                <cms:include type="mainMenu"></cms:include>
                             </div>
                         </section>
                         <section class="searchSection">
-                            <cms-include type="breadcrumb"></cms-include>
-                            <cms-include type="snippet" name="searchBox"></cms-include>
+                            <cms:include type="breadcrumb"></cms:include>
+                            <cms:include type="snippet" name="searchBox"></cms:include>
                         </section>
                     </section>
                     <div id="main" class="main">
-                        <cms-include type="message"></cms-include>
-                        <cms-include type="content">content</cms-include>
+                        <cms:include type="message"></cms:include>
+                        <cms:include type="content">content</cms:include>
                     </div>
                     <div class="footer">
-                        <cms-include type="snippet" name="footer"></cms-include>
+                        <cms:include type="snippet" name="footer"></cms:include>
                     </div>
                 </div>
-                <cms-include type="layer"></cms-include>
+                <cms:include type="layer"></cms:include>
             </body>
         </html>
-    </cms-template>
+    </cms:template>
     <!-- pages -->
-    <cms-template type="PAGE" name="homePage" displayName="Home Page Layout">
+    <cms:template type="PAGE" name="homePage" displayName="Home Page Layout">
         <section class="contentTop">
-            <cms-include type="section" name="top" sectionType="content"></cms-include>
+            <cms:include type="section" name="top" sectionType="content"></cms:include>
         </section>
         <section class="mainSection">
             <section class="contentSection">
-                <cms-include type="section" class="fullWidth" name="overview" sectionType="content"></cms-include>
-                <cms-include type="section" class="flexRow" name="teasers" sectionType="flex"></cms-include>
+                <cms:include type="section" class="fullWidth" name="overview" sectionType="content"></cms:include>
+                <cms:include type="section" class="flexRow" name="teasers" sectionType="flex"></cms:include>
             </section>
             <aside class="asideSection">
-                <cms-include type="section" name="aside" sectionType="aside"></cms-include>
+                <cms:include type="section" name="aside" sectionType="aside"></cms:include>
             </aside>
         </section>
-    </cms-template>
-    <cms-template type="PAGE" name="areaPage" displayName="Area Page Layout">
+    </cms:template>
+    <cms:template type="PAGE" name="areaPage" displayName="Area Page Layout">
         <section class="contentTop">
-            <cms-include type="section" name="top" sectionType="content"></cms-include>
+            <cms:include type="section" name="top" sectionType="content"></cms:include>
         </section>
         <section class="mainSection">
             <section class="contentSection">
-                <cms-include type="section" class="fullWidth" name="overview" sectionType="content"></cms-include>
-                <cms-include type="section" class="flexRow" name="teasers" sectionType="flex"></cms-include>
+                <cms:include type="section" class="fullWidth" name="overview" sectionType="content"></cms:include>
+                <cms:include type="section" class="flexRow" name="teasers" sectionType="flex"></cms:include>
             </section>
             <aside class="asideSection">
-                <cms-include type="section" name="aside" sectionType="aside"></cms-include>
+                <cms:include type="section" name="aside" sectionType="aside"></cms:include>
             </aside>
         </section>
-    </cms-template>
-    <cms-template type="PAGE" name="articlePage" displayName="Article Page Layout" editable="true">
+    </cms:template>
+    <cms:template type="PAGE" name="articlePage" displayName="Article Page Layout" editable="true">
         <section class="contentTop">
-            <cms-include type="section" name="top" sectionType="content"></cms-include>
+            <cms:include type="section" name="top" sectionType="content"></cms:include>
         </section>
         <section class="mainSection">
             <section class="contentSection">
-                <cms-include type="section" class="fullWidth" name="article" sectionType="content"></cms-include>
+                <cms:include type="section" class="fullWidth" name="article" sectionType="content"></cms:include>
             </section>
             <aside class="asideSection">
-                <cms-include type="section" name="aside" sectionType="aside"></cms-include>
+                <cms:include type="section" name="aside" sectionType="aside"></cms:include>
             </aside>
         </section>
-    </cms-template>
+    </cms:template>
     <!-- general parts -->
-    <cms-template type="PART" name="Script" displayName="JavaScript" sectionTypes="all">
-        <cms-include type="field" fieldType="script" name="script"></cms-include>
-    </cms-template>
+    <cms:template type="PART" name="Script" displayName="JavaScript" sectionTypes="all">
+        <cms:include type="field" fieldType="script" name="script"></cms:include>
+    </cms:template>
     <!-- content parts -->
-    <cms-template type="PART" name="Header" displayName="Header" sectionTypes="content">
+    <cms:template type="PART" name="Header" displayName="Header" sectionTypes="content">
         <div class="textBox">
             <h1>
-                <cms-include type="field" fieldType="text" name="text">Lorem ipsum</cms-include>
+                <cms:include type="field" fieldType="text" name="text">Lorem ipsum</cms:include>
             </h1>
         </div>
-    </cms-template>
-    <cms-template type="PART" name="SubHeader" displayName="Sub-Header" sectionTypes="content">
+    </cms:template>
+    <cms:template type="PART" name="SubHeader" displayName="Sub-Header" sectionTypes="content">
         <div class="textBox">
             <h2>
-                <cms-include type="field" fieldType="text" name="text">Lorem ipsum</cms-include>
+                <cms:include type="field" fieldType="text" name="text">Lorem ipsum</cms:include>
             </h2>
         </div>
-    </cms-template>
-    <cms-template type="PART" name="Separator" displayName="Separator Line" sectionTypes="content">
+    </cms:template>
+    <cms:template type="PART" name="Separator" displayName="Separator Line" sectionTypes="content">
         <div class="separator">&#160;</div>
-    </cms-template>
-    <cms-template type="PART" name="Text" displayName="Text" sectionTypes="content">
+    </cms:template>
+    <cms:template type="PART" name="Text" displayName="Text" sectionTypes="content">
         <div class="textBox">
-            <cms-include type="field" fieldType="html" name="text">Lorem ipsum</cms-include>
+            <cms:include type="field" fieldType="html" name="text">Lorem ipsum</cms:include>
         </div>
-    </cms-template>
-    <cms-template type="PART" name="Image" displayName="Full Image" sectionTypes="content">
+    </cms:template>
+    <cms:template type="PART" name="Image" displayName="Full Image" sectionTypes="content">
         <div class="imageBox">
-            <cms-include type="field" fieldType="image" name="image">
+            <cms:include type="field" fieldType="image" name="image">
                 <img src="/_statics/img/dummy.gif" alt=""/>
-            </cms-include>
+            </cms:include>
         </div>
-    </cms-template>
-    <cms-template type="PART" name="ImageText21" displayName="Image+Text 2:1" sectionTypes="content">
+    </cms:template>
+    <cms:template type="PART" name="ImageText21" displayName="Image+Text 2:1" sectionTypes="content">
         <div class="flexRow three">
             <div class="imageBox flexItem two">
-                <cms-include type="field" fieldType="image" name="image">
+                <cms:include type="field" fieldType="image" name="image">
                     <img src="/_statics/img/dummy.gif" alt=""/>
-                </cms-include>
+                </cms:include>
             </div>
             <div class="textBox flexItem one">
                 <h3 class="bottomSpace">
-                    <cms-include type="field" fieldType="text" name="header">Lorem ipsum</cms-include>
+                    <cms:include type="field" fieldType="text" name="header">Lorem ipsum</cms:include>
                 </h3>
-                <cms-include type="field" fieldType="html" name="text">Lorem ipsum</cms-include>
+                <cms:include type="field" fieldType="html" name="text">Lorem ipsum</cms:include>
             </div>
         </div>
-    </cms-template>
-    <cms-template type="PART" name="ImageText12" displayName="Image+Text 1:2" sectionTypes="content">
+    </cms:template>
+    <cms:template type="PART" name="ImageText12" displayName="Image+Text 1:2" sectionTypes="content">
         <div class="flexRow three">
             <div class="imageBox flexItem one">
-                <cms-include type="field" fieldType="image" name="image">
+                <cms:include type="field" fieldType="image" name="image">
                     <img src="/_statics/img/dummy.gif" alt=""/>
-                </cms-include>
+                </cms:include>
             </div>
             <div class="textBox flexItem two">
                 <h3 class="bottomSpace">
-                    <cms-include type="field" fieldType="text" name="header">Lorem ipsum</cms-include>
+                    <cms:include type="field" fieldType="text" name="header">Lorem ipsum</cms:include>
                 </h3>
-                <cms-include type="field" fieldType="html" name="text">Lorem ipsum</cms-include>
+                <cms:include type="field" fieldType="html" name="text">Lorem ipsum</cms:include>
             </div>
         </div>
-    </cms-template>
-    <cms-template type="PART" name="TextImage21" displayName="Text+Image 2:1" sectionTypes="content">
+    </cms:template>
+    <cms:template type="PART" name="TextImage21" displayName="Text+Image 2:1" sectionTypes="content">
         <div class="flexRow three">
             <div class="textBox flexItem two">
                 <h3 class="bottomSpace">
-                    <cms-include type="field" fieldType="text" name="header">Lorem ipsum</cms-include>
+                    <cms:include type="field" fieldType="text" name="header">Lorem ipsum</cms:include>
                 </h3>
-                <cms-include type="field" fieldType="html" name="text">Lorem ipsum</cms-include>
+                <cms:include type="field" fieldType="html" name="text">Lorem ipsum</cms:include>
             </div>
             <div class="imageBox flexItem one">
-                <cms-include type="field" fieldType="image" name="image">
+                <cms:include type="field" fieldType="image" name="image">
                     <img src="/_statics/img/dummy.gif" alt=""/>
-                </cms-include>
+                </cms:include>
             </div>
         </div>
-    </cms-template>
-    <cms-template type="PART" name="TextImage12" displayName="Text+Image 1:2" sectionTypes="content">
+    </cms:template>
+    <cms:template type="PART" name="TextImage12" displayName="Text+Image 1:2" sectionTypes="content">
         <div class="flexRow three">
             <div class="textBox flexItem one">
                 <h3 class="bottomSpace">
-                    <cms-include type="field" fieldType="text" name="header">Lorem ipsum</cms-include>
+                    <cms:include type="field" fieldType="text" name="header">Lorem ipsum</cms:include>
                 </h3>
-                <cms-include type="field" fieldType="html" name="text">Lorem ipsum</cms-include>
+                <cms:include type="field" fieldType="html" name="text">Lorem ipsum</cms:include>
             </div>
             <div class="imageBox flexItem two">
-                <cms-include type="field" fieldType="image" name="image">
+                <cms:include type="field" fieldType="image" name="image">
                     <img src="/_statics/img/dummy.gif" alt=""/>
-                </cms-include>
+                </cms:include>
             </div>
         </div>
-    </cms-template>
+    </cms:template>
 
-    <cms-template type="PART" name="ImageTextTeaserHorz" displayName="Teaser Image+Text Horizontal" sectionTypes="flex">
+    <cms:template type="PART" name="ImageTextTeaserHorz" displayName="Teaser Image+Text Horizontal" sectionTypes="flex">
         <div class="teaser horz">
             <div class="imageBox">
-                <cms-include type="field" fieldType="image" name="image">
+                <cms:include type="field" fieldType="image" name="image">
                     <img src="/_statics/img/dummy.gif" alt=""/>
-                </cms-include>
+                </cms:include>
             </div>
             <div class="textBox">
-                <cms-include type="field" fieldType="html" name="text">Lorem ipsum</cms-include>
+                <cms:include type="field" fieldType="html" name="text">Lorem ipsum</cms:include>
             </div>
         </div>
-    </cms-template>
-    <cms-template type="PART" name="ImageTextTeaserVertical" displayName="Teaser Image+Text Vertical" sectionTypes="flex">
+    </cms:template>
+    <cms:template type="PART" name="ImageTextTeaserVertical" displayName="Teaser Image+Text Vertical"
+                  sectionTypes="flex">
         <div class="teaser vert">
             <div class="imageBox">
-                <cms-include type="field" fieldType="image" name="image">
+                <cms:include type="field" fieldType="image" name="image">
                     <img src="/_statics/img/dummy.gif" alt=""/>
-                </cms-include>
+                </cms:include>
             </div>
             <div class="textBox">
-                <cms-include type="field" fieldType="html" name="text">Lorem ipsum</cms-include>
+                <cms:include type="field" fieldType="html" name="text">Lorem ipsum</cms:include>
             </div>
         </div>
-    </cms-template>
+    </cms:template>
 
     <!-- aside parts -->
-    <cms-template type="PART" name="ImageAside" displayName="Image" sectionTypes="aside">
+    <cms:template type="PART" name="ImageAside" displayName="Image" sectionTypes="aside">
         <div class="aside">
             <h3>
-                <cms-include type="field" fieldType="text" name="header">Lorem ipsum</cms-include>
+                <cms:include type="field" fieldType="text" name="header">Lorem ipsum</cms:include>
             </h3>
             <div class="imageBox">
-                <cms-include type="field" fieldType="image" name="image">
+                <cms:include type="field" fieldType="image" name="image">
                     <img src="/_statics/img/dummy.gif" alt=""/>
-                </cms-include>
+                </cms:include>
             </div>
         </div>
-    </cms-template>
-    <cms-template type="PART" name="TextAside" displayName="Text" sectionTypes="aside">
+    </cms:template>
+    <cms:template type="PART" name="TextAside" displayName="Text" sectionTypes="aside">
         <div class="aside">
             <h3>
-                <cms-include type="field" fieldType="text" name="header">Lorem ipsum</cms-include>
+                <cms:include type="field" fieldType="text" name="header">Lorem ipsum</cms:include>
             </h3>
             <div class="textBox">
-                <cms-include type="field" fieldType="html" name="text">Lorem ipsum</cms-include>
+                <cms:include type="field" fieldType="html" name="text">Lorem ipsum</cms:include>
             </div>
         </div>
-    </cms-template>
-    <cms-template type="PART" name="DocumentList" displayName="Document List" sectionTypes="aside">
+    </cms:template>
+    <cms:template type="PART" name="DocumentList" displayName="Document List" sectionTypes="aside">
         <div class="aside">
             <h3>
-                <cms-include type="field" fieldType="text" name="header">Lorem ipsum</cms-include>
+                <cms:include type="field" fieldType="text" name="header">Lorem ipsum</cms:include>
             </h3>
             <div class="textBox">
-                <cms-include type="documents" name="documents" ></cms-include>
+                <cms:include type="documents" name="documents"></cms:include>
             </div>
         </div>
-    </cms-template>
+    </cms:template>
 
     <!-- snippets -->
-    <cms-template type="SNIPPET" name="searchBox" displayName="Search Box" sectionTypes="SearchBoxModule">
+    <cms:template type="SNIPPET" name="searchBox" displayName="Search Box" sectionTypes="SearchBoxModule">
         <div class="searchBox flexItem one">
             <form action="/search.srv" method="post" id="searchboxform" name="searchboxform" accept-charset="UTF-8">
                 <input type="hidden" name="act" value="search"/>
@@ -257,13 +257,13 @@
                 </button>
             </form>
         </div>
-    </cms-template>
-    <cms-template type="SNIPPET" name="footer" displayName="Footer">
+    </cms:template>
+    <cms:template type="SNIPPET" name="footer" displayName="Footer">
         <a href="/imprint.html">
-            <cms-include type="resource" key="_imprint"></cms-include>
+            <cms:include type="resource" key="_imprint"></cms:include>
         </a>
-    </cms-template>
-    <cms-template type="SNIPPET" name="dialogLayer" displayName="Dialog Layer">
+    </cms:template>
+    <cms:template type="SNIPPET" name="dialogLayer" displayName="Dialog Layer">
         <div id="dialogLayer" class="layeroverlay dialog" data-hidden="true">
             <div class="layercontent">
                 <div class="layerheadbox">
@@ -273,14 +273,14 @@
                 <div class="layermainbox"></div>
             </div>
         </div>
-    </cms-template>
-    <cms-template type="SNIPPET" name="treeLayer" displayName="Tree Layer">
+    </cms:template>
+    <cms:template type="SNIPPET" name="treeLayer" displayName="Tree Layer">
         <div id="treeLayer" class="layeroverlay tree" data-hidden="true">
             <div class="layercontent">
                 <div class="treeContainer">
                     <div class="treeMainCell">
                         <div class="layerheadbox">
-                            <cms-include type="resource" key="tree"></cms-include>
+                            <cms:include type="resource" key="tree"></cms:include>
                             <div class="closeLayer" onclick="closeTreeLayer();">&#215;</div>
                         </div>
                         <div class="layermainbox"></div>
@@ -290,8 +290,8 @@
                 </div>
             </div>
         </div>
-    </cms-template>
-    <cms-template type="SNIPPET" name="browserLayer" displayName="Browser Layer">
+    </cms:template>
+    <cms:template type="SNIPPET" name="browserLayer" displayName="Browser Layer">
         <div id="browserLayer" class="layeroverlay browser" data-hidden="true">
             <div class="layercontent">
                 <div class="layerheadbox">
@@ -301,8 +301,8 @@
                 <div class="layermainbox"></div>
             </div>
         </div>
-    </cms-template>
-    <cms-template type="SNIPPET" name="browserDialogLayer" displayName="Browser Dialog Layer">
+    </cms:template>
+    <cms:template type="SNIPPET" name="browserDialogLayer" displayName="Browser Dialog Layer">
         <div id="browserDialogLayer" class="layeroverlay browser dialog" data-hidden="true">
             <div class="layercontent">
                 <div class="layerheadbox">
@@ -312,6 +312,6 @@
                 <div class="layermainbox"></div>
             </div>
         </div>
-    </cms-template>
-</templates>
+    </cms:template>
+</cms:templates>
 
