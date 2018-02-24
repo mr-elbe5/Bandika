@@ -219,7 +219,7 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         if (data==null)
             return;
         Element root=data.getRootNode();
-        List<Element> children = data.findChildElements(root, "field");
+        List<Element> children = data.findChildElements(root, "field", true);
         for (Element child : children) {
             String fieldType = data.getStringAttribute(child, "fieldType");
             Field field = Fields.getNewField(fieldType);

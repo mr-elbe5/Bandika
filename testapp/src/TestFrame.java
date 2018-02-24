@@ -10,7 +10,7 @@ public class TestFrame extends JFrame{
 
     JPanel contentPane;
 
-    JTextField input =new JTextField();
+    JTextField input =new JTextField("c:/Source/Bandika/resources/templates/templates.xml");
     JButton button =new JButton();
     JTextArea output = new JTextArea();
     JLabel resultLabel=new JLabel();
@@ -57,8 +57,7 @@ public class TestFrame extends JFrame{
         String path=input.getText();
         try{
             String code= FileUtil.readTextFile(path);
-            XmlData data=XmlData.create(code);
-            output.setText(data.toString());
+            output.setText(code);
         }
         catch (Exception e){
             output.setText(e.getMessage());
