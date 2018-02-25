@@ -110,7 +110,7 @@ nav li { list-style: none; }
 
 .bottomDoubleSpace { padding-bottom: 10px; }
 
-@font-face { font-family: "LigatureSymbols"; src: url('/_statics/fonts/LigatureSymbols-2.11.eot?1518426654'); src: url('/_statics/fonts/LigatureSymbols-2.11.eot?&1518426654#iefix') format('embedded-opentype'), url('/_statics/fonts/LigatureSymbols-2.11.eot?1518426654') format('embedded-opentype'), url('/_statics/fonts/LigatureSymbols-2.11.woff?1518426654') format('woff'), url('/_statics/fonts/LigatureSymbols-2.11.ttf?1518426654') format('truetype'), url('/_statics/fonts/LigatureSymbols-2.11.svg?1518426654') format('svg'); font-weight: normal; font-style: normal; }
+@font-face { font-family: "LigatureSymbols"; src: url('/_statics/fonts/LigatureSymbols-2.11.eot?1518204536'); src: url('/_statics/fonts/LigatureSymbols-2.11.eot?&1518204536#iefix') format('embedded-opentype'), url('/_statics/fonts/LigatureSymbols-2.11.eot?1518204536') format('embedded-opentype'), url('/_statics/fonts/LigatureSymbols-2.11.woff?1518204536') format('woff'), url('/_statics/fonts/LigatureSymbols-2.11.ttf?1518204536') format('truetype'), url('/_statics/fonts/LigatureSymbols-2.11.svg?1518204536') format('svg'); font-weight: normal; font-style: normal; }
 .icn:before { font-family: 'LigatureSymbols', fantasy; -webkit-text-rendering: optimizeLegibility; -moz-text-rendering: optimizeLegibility; -ms-text-rendering: optimizeLegibility; -o-text-rendering: optimizeLegibility; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-font-smoothing: antialiased; -ms-font-smoothing: antialiased; -o-font-smoothing: antialiased; font-smoothing: antialiased; margin-right: 0.3em; font-size: 130%; color: #aaaaaa; }
 
 .icn.disabled:before { color: #cccccc; }
@@ -236,9 +236,9 @@ nav li { list-style: none; }
 
 .treeview ul { margin-top: 4px; }
 
-.treeview .hitarea { background: url('/_statics/img/treeview-default.gif?1518426654') -64px -25px no-repeat; height: 16px; width: 16px; margin-left: -19px; float: left; cursor: pointer; }
+.treeview .hitarea { background: url('/_statics/img/treeview-default.gif?1518204536') -64px -25px no-repeat; height: 16px; width: 16px; margin-left: -19px; float: left; cursor: pointer; }
 
-.treeview li { margin: 0; padding: 3px 3px 3px 19px; line-height: 12px; background: url('/_statics/img/treeview-default-line.gif?1518426654') no-repeat; }
+.treeview li { margin: 0; padding: 3px 3px 3px 19px; line-height: 12px; background: url('/_statics/img/treeview-default-line.gif?1518204536') no-repeat; }
 
 .treeview li.collapsable, .treeview li.expandable { background-position: 0 -176px; }
 
@@ -246,7 +246,7 @@ nav li { list-style: none; }
 
 .treeview li.last { background-position: 0 -1766px; }
 
-.treeview li.lastCollapsable, .treeview li.lastExpandable { background-image: url('/_statics/img/treeview-default.gif?1518426654'); }
+.treeview li.lastCollapsable, .treeview li.lastExpandable { background-image: url('/_statics/img/treeview-default.gif?1518204536'); }
 
 .treeview li.lastCollapsable { background-position: 0 -111px; }
 
@@ -286,7 +286,7 @@ nav li { list-style: none; }
 
 .layeroverlay.tree .treeMainCell { float: left; width: calc(100% - 5px); height: 100%; }
 
-.layeroverlay.tree .treeResizeCell { float: right; width: 5px; height: 100%; background: #eeeeee; cursor: ew-resize; }
+.layeroverlay.tree .treeResizeCell { float: right; width: 5px; height: 100%; background: #dddddd; cursor: ew-resize; }
 
 .layeroverlay.tree .contentSection { width: 60%; }
 
@@ -294,7 +294,7 @@ nav li { list-style: none; }
 
 .layeroverlay.browser .layercontent { max-width: 800px; width: 100%; height: 600px; }
 
-.layerheadbox { color: #404040; background: #f0f0f0; height: 35px; padding: 8px; border-bottom: 1px solid #eeeeee; }
+.layerheadbox { color: #404040; background: #f0f0f0; height: 35px; padding: 8px; border-bottom: 1px solid #dddddd; }
 
 .layerheadbox span { font-size: 14px; }
 
@@ -380,7 +380,7 @@ ul.linkList { background: #ffffff; border: 1px solid #cccccc; }
 
 ul.linkList li { padding: 5px; border-bottom: 1px solid #cccccc; cursor: pointer; }
 
-ul.linkList li:hover { background: #eeeeee; }
+ul.linkList li:hover { background: #dddddd; }
 
 div.contextSource, div.selectable { cursor: pointer; }
 
@@ -388,7 +388,7 @@ div.contextMenu { background: #ffffff; border: 1px solid #cccccc; position: abso
 
 div.contextMenu div { padding: 5px; border-bottom: 1px solid #ccc; cursor: pointer; }
 
-div.contextMenu div:hover { background: #eeeeee; }
+div.contextMenu div:hover { background: #dddddd; }
 
 h3.treeHeader { color: #404040; }
 
@@ -442,7 +442,7 @@ h3.treeHeader { color: #404040; }
 .selectorMain .tree { width: 40%; }
 .selectorMain #browserView { width: 60%; }
 
-.carbon { background: #404040 url('/_statics/img/carbon.png?1518426654'); }
+.carbon { background: #404040 url('/_statics/img/carbon.png?1518204536'); }
 
 /********** body and main sections *************/
 /* Structure:
@@ -472,17 +472,17 @@ body { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; colo
 
 a.navBtn { display: none; }
 
-nav.mainNav { border-bottom: 1px solid #eeeeee; margin-top: 15px; }
+nav.mainNav { border-bottom: 1px solid #dddddd; margin-top: 15px; }
 
 nav.mainNav ul { list-style: none; text-align: left; padding: 0; margin: 0; }
 
 nav.mainNav li { text-align: left; font-size: 15.96px; display: inline-block; }
 
-nav.mainNav li a { text-decoration: none; color: #eeeeee; display: block; white-space: nowrap; padding-left: 15px; transition: .3s background-color; }
+nav.mainNav li a { text-decoration: none; color: #dddddd; display: block; white-space: nowrap; padding-left: 15px; transition: .3s background-color; }
 
 nav.mainNav li a:hover { color: #f0f0f0; }
 
-nav.mainNav li ul { position: absolute; display: none; width: inherit; min-width: 120px; background: #aaaaaa url('/_statics/img/carbon.png?1518426654'); border: 1px solid #cccccc; z-index: 9999; }
+nav.mainNav li ul { position: absolute; display: none; width: inherit; min-width: 120px; background: #aaaaaa url('/_statics/img/carbon.png?1518204536'); border: 1px solid #cccccc; z-index: 9999; }
 
 nav.mainNav li:hover ul { display: block; }
 
@@ -602,8 +602,8 @@ h2.block { margin: 0 0 10px 0; }
 .mainSection .halfSection { flex: 1 1 600px; padding: 10px 5px; }
 
 .asideSection { flex: 1 1 300px; padding: 10px 10px; }
-.asideSection .aside { border: 1px solid #eeeeee; margin-bottom: 20px; }
-.asideSection h3 { background: #eeeeee; padding: 5px; }
+.asideSection .aside { border: 1px solid #dddddd; margin-bottom: 20px; }
+.asideSection h3 { background: #dddddd; padding: 5px; }
 .asideSection .imageBox { padding: 0; }
 .asideSection .textBox { padding: 5px; }
 
@@ -621,7 +621,7 @@ body.mobile { height: auto; overflow: auto; }
 
 .mobile a.logo { display: inline-block; }
 
-.mobile a.navBtn { display: block; float: right; width: 33px; height: 24px; margin-top: 15px; background: url('/_statics/img/navbtn.png?1518426654') no-repeat; cursor: pointer; }
+.mobile a.navBtn { display: block; float: right; width: 33px; height: 24px; margin-top: 15px; background: url('/_statics/img/navbtn.png?1518204536') no-repeat; cursor: pointer; }
 
 .mobile .menu { display: block; margin: 10px 0; border: 1px solid #aaaaaa; background: rgba(255, 255, 255, 0.1); }
 
