@@ -8,4 +8,5 @@
 --%>
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
+<!DOCTYPE html>
 <cms:page />

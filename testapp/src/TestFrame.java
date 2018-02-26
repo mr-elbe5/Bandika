@@ -1,4 +1,7 @@
 
+import de.bandika.base.data.XmlData;
+import de.bandika.base.util.FileUtil;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
@@ -7,7 +10,7 @@ public class TestFrame extends JFrame{
 
     JPanel contentPane;
 
-    JTextField input =new JTextField();
+    JTextField input =new JTextField("c:/Source/Bandika/resources/templates/templates.xml");
     JButton button =new JButton();
     JTextArea output = new JTextArea();
     JLabel resultLabel=new JLabel();
@@ -51,9 +54,10 @@ public class TestFrame extends JFrame{
     }
 
     public void button_actionPerformed() {
-        String pwd=input.getText();
+        String path=input.getText();
         try{
-
+            String code= FileUtil.readTextFile(path);
+            output.setText(code);
         }
         catch (Exception e){
             output.setText(e.getMessage());

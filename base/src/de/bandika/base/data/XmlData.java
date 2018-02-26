@@ -28,6 +28,8 @@ import java.util.*;
 public class XmlData {
 
     public static String STD_ENCODING = "UTF-8";
+    public static String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+    public static String XML_HEADER_START = "<?xml ";
 
     private static DateTimeFormatter datetimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -44,7 +46,7 @@ public class XmlData {
     }
 
     public static XmlData create(String xml, String encoding){
-        if (xml == null || !xml.startsWith("<?xml")) {
+        if (xml == null || !xml.startsWith(XML_HEADER_START)) {
             return null;
         }
         XmlData data= new XmlData();
@@ -106,9 +108,21 @@ public class XmlData {
         return childNode;
     }
 
+    public Element replaceNode(Element oldNode, String name) {
+        Element newNode = doc.createElement(name);
+        oldNode.getParentNode().replaceChild(newNode, oldNode);
+        return newNode;
+    }
+
     public void addText(Element parentNode, String name, String text) {
         Element childNode = addNode(parentNode, name);
         childNode.appendChild(doc.createTextNode(StringUtil.toXml(text)));
+    }
+
+    public Text replaceWithText(Element oldNode, String text) {
+        Text newNode = doc.createTextNode(StringUtil.toXml(text));
+        oldNode.getParentNode().replaceChild(newNode, oldNode);
+        return newNode;
     }
 
     public void addCDATA(Element parentNode, String content) {
@@ -171,20 +185,22 @@ public class XmlData {
         return list;
     }
 
-    public List<Element> findChildElements(Element parent, String tagName) {
+    public List<Element> findChildElements(Element parent, String tagName, boolean recursive) {
         ArrayList<Element> list = new ArrayList<>();
-        findChildElements(parent, tagName, list);
+        findChildElements(parent, tagName, recursive, list);
         return list;
     }
 
-    private void findChildElements(Node parent, String tagName, List<Element> list) {
+    private void findChildElements(Node parent, String tagName, boolean recursive, List<Element> list) {
         if (parent.hasChildNodes()) {
             NodeList childNodes = parent.getChildNodes();
             for (int i = 0; i < childNodes.getLength(); i++) {
                 Node node = childNodes.item(i);
                 if ((node instanceof Element) && ((Element) node).getTagName().equals(tagName))
                     list.add((Element) node);
-                findChildElements(node, tagName, list);
+                if (recursive) {
+                    findChildElements(node, tagName, true, list);
+                }
             }
         }
     }
@@ -340,6 +356,21 @@ public class XmlData {
             }
         }
         return properties;
+    }
+
+    public String getContent(Element element) {
+        try {
+            Source source = new DOMSource(element);
+            StringWriter stringWriter = new StringWriter();
+            Result result = new StreamResult(stringWriter);
+            TransformerFactory factory = TransformerFactory.newInstance();
+            Transformer transformer = factory.newTransformer();
+            transformer.transform(source, result);
+            return stringWriter.getBuffer().toString();
+        } catch (TransformerException e) {
+            Log.error("xml error", e);
+        }
+        return "";
     }
 
     public String toString() {
