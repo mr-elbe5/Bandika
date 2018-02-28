@@ -39,7 +39,7 @@ public class PageContentInclude extends TemplateInclude{
         PageData page=outputData.pageData;
         if (outputData.pageData!=null) {
             if (SessionReader.isEditMode(outputContext.getRequest())) {
-                if (page.isEditMode()) {
+                if (page.isPageEditMode()) {
                     writer.write("<div id=\"pageContent\" class=\"editArea\">");
                 } else {
                     writer.write("<div id=\"pageContent\" class=\"viewArea\">");
@@ -51,7 +51,7 @@ public class PageContentInclude extends TemplateInclude{
                 } else {
                     writer.write("<script>$('.editControl').show();</script>");
                 }
-                if (page.isEditMode()) {
+                if (page.isPageEditMode()) {
                     writer.write("</div><script>$('#pageContent').initEditArea();</script>");
                 } else {
                     writer.write("</div>");

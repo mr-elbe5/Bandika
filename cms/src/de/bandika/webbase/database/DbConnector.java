@@ -114,7 +114,8 @@ public class DbConnector {
             Log.log("database url is: " + dbProperties.getProperty(KEY_DBURL));
             try {
                 PoolProperties p = new PoolProperties();
-                p.setJdbcInterceptors("org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;" + "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
+                p.setJdbcInterceptors("org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;" +
+                        "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
                 p.setValidationQuery("SELECT 1");
                 p.setDriverClassName(dbProperties.getProperty(DbConnector.KEY_DBCLASS));
                 p.setUrl(dbProperties.getProperty(DbConnector.KEY_DBURL));

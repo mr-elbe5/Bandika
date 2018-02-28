@@ -82,7 +82,7 @@ public abstract class HtmlBaseField extends Field {
     @Override
     public void appendFieldHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
-        boolean partEditMode = outputData.pageData.isEditMode() && outputData.partData == outputData.pageData.getEditPagePart();
+        boolean partEditMode = outputData.pageData.isPageEditMode() && outputData.partData == outputData.pageData.getEditPagePart();
         int siteId = outputData.pageData.getParentId();
         int pageId = outputData.pageData.getId();
         String html = getHtml().trim();

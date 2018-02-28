@@ -49,7 +49,7 @@ public class SectionInclude extends TemplateInclude{
 
     public void appendSectionHtml(SectionData data, PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
-        boolean editMode = outputData.pageData.isEditMode();
+        boolean editMode = outputData.pageData.isPageEditMode();
         String cls = outputData.attributes.getString("class");
         boolean hasParts = data.getParts().size() > 0;
         if (editMode) {
@@ -85,7 +85,7 @@ public class SectionInclude extends TemplateInclude{
     }
 
     public void appendPartHtml(PagePartData data, PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        if (outputData.pageData.isEditMode())
+        if (outputData.pageData.isPageEditMode())
             appendEditPartHtml(data, outputContext, outputData);
         else
             appendLivePartHtml(data, outputContext, outputData);

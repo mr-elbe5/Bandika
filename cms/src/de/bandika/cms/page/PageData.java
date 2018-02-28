@@ -23,7 +23,7 @@ public class PageData extends TreeNode {
     protected boolean isDefaultPage = false;
     protected Map<String, SectionData> sections = new HashMap<>();
 
-    protected boolean editMode = false;
+    protected boolean pageEditMode = false;
     protected PagePartData editPagePart = null;
 
     protected LocalDateTime publishDate = null;
@@ -108,12 +108,12 @@ public class PageData extends TreeNode {
         return section.getPart(pid);
     }
 
-    public boolean isEditMode() {
-        return editMode;
+    public boolean isPageEditMode() {
+        return pageEditMode;
     }
 
-    public void setEditMode(boolean editMode) {
-        this.editMode = editMode;
+    public void setPageEditMode(boolean pageEditMode) {
+        this.pageEditMode = pageEditMode;
     }
 
     public void readPageCreateRequestData(HttpServletRequest request) {
@@ -136,11 +136,11 @@ public class PageData extends TreeNode {
     }
 
     public void prepareEditing() {
-        setEditMode(true);
+        setPageEditMode(true);
     }
 
     public void stopEditing() {
-        setEditMode(false);
+        setPageEditMode(false);
         setEditPagePart(null);
     }
 

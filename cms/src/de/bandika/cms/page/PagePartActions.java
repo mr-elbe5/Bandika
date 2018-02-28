@@ -185,7 +185,7 @@ public class PagePartActions extends BaseTreeActions {
                 String sectionName = RequestReader.getString(request, "sectionName");
                 int dir = RequestReader.getInt(request, "dir");
                 data.movePagePart(sectionName, partId, dir);
-                data.setEditMode(true);
+                data.setPageEditMode(true);
                 return setPageResponse(request, response, data);
             }
             case deletePagePart: {
@@ -234,7 +234,7 @@ public class PagePartActions extends BaseTreeActions {
     }
 
     protected boolean setEditPageContentAjaxResponse(HttpServletRequest request, HttpServletResponse response, PageData data) {
-        data.setEditMode(true);
+        data.setPageEditMode(true);
         request.setAttribute("pageData", data);
         return sendForwardResponse(request, response, "/WEB-INF/_jsp//page/content.ajax.jsp");
     }

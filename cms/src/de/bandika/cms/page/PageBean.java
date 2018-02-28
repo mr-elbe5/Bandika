@@ -49,21 +49,7 @@ public class PageBean extends TreeBean {
                     int i = 1;
                     PageData data = new PageData();
                     data.setId(rs.getInt(i++));
-                    data.setCreationDate(rs.getTimestamp(i++).toLocalDateTime());
-                    data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
-                    data.setParentId(rs.getInt(i++));
-                    data.setRanking(rs.getInt(i++));
-                    data.setName(rs.getString(i++));
-                    data.setDisplayName(rs.getString(i++));
-                    data.setDescription(rs.getString(i++));
-                    data.setAuthorName(rs.getString(i++));
-                    data.setInNavigation(rs.getBoolean(i++));
-                    data.setAnonymous(rs.getBoolean(i++));
-                    data.setInheritsRights(rs.getBoolean(i++));
-                    data.setTemplateName(rs.getString(i++));
-                    Timestamp ts=rs.getTimestamp(i++);
-                    data.setPublishDate(ts==null ? null : ts.toLocalDateTime());
-                    data.setPublishedContent(rs.getString(i));
+                    readPageResult(rs,i,data);
                     if (!data.inheritsRights()) {
                         data.setRights(getTreeNodeRights(con, data.getId()));
                     }
@@ -97,21 +83,7 @@ public class PageBean extends TreeBean {
                     int i = 1;
                     data = new PageData();
                     data.setId(id);
-                    data.setCreationDate(rs.getTimestamp(i++).toLocalDateTime());
-                    data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
-                    data.setParentId(rs.getInt(i++));
-                    data.setRanking(rs.getInt(i++));
-                    data.setName(rs.getString(i++));
-                    data.setDisplayName(rs.getString(i++));
-                    data.setDescription(rs.getString(i++));
-                    data.setAuthorName(rs.getString(i++));
-                    data.setInNavigation(rs.getBoolean(i++));
-                    data.setAnonymous(rs.getBoolean(i++));
-                    data.setInheritsRights(rs.getBoolean(i++));
-                    data.setTemplateName(rs.getString(i++));
-                    Timestamp ts=rs.getTimestamp(i++);
-                    data.setPublishDate(ts==null ? null : ts.toLocalDateTime());
-                    data.setPublishedContent(rs.getString(i));
+                    readPageResult(rs,i,data);
                     if (!data.inheritsRights()) {
                         data.setRights(getTreeNodeRights(con, data.getId()));
                     }
@@ -126,6 +98,24 @@ public class PageBean extends TreeBean {
             closeConnection(con);
         }
         return data;
+    }
+
+    private void readPageResult(ResultSet rs, int i, PageData data) throws SQLException{
+        data.setCreationDate(rs.getTimestamp(i++).toLocalDateTime());
+        data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
+        data.setParentId(rs.getInt(i++));
+        data.setRanking(rs.getInt(i++));
+        data.setName(rs.getString(i++));
+        data.setDisplayName(rs.getString(i++));
+        data.setDescription(rs.getString(i++));
+        data.setAuthorName(rs.getString(i++));
+        data.setInNavigation(rs.getBoolean(i++));
+        data.setAnonymous(rs.getBoolean(i++));
+        data.setInheritsRights(rs.getBoolean(i++));
+        data.setTemplateName(rs.getString(i++));
+        Timestamp ts=rs.getTimestamp(i++);
+        data.setPublishDate(ts==null ? null : ts.toLocalDateTime());
+        data.setPublishedContent(rs.getString(i));
     }
 
     public void loadPageContent(PageData data) {
@@ -276,12 +266,7 @@ public class PageBean extends TreeBean {
                 if (rs.next()) {
                     int i = 1;
                     partData = new PagePartData();
-                    partData.setId(rs.getInt(i++));
-                    partData.setName(rs.getString(i++));
-                    partData.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
-                    partData.setTemplateName(rs.getString(i++));
-                    partData.setContent(rs.getString(i));
-                    partData.parseXml();
+                    readPagePartResult(rs, i, partData);
                 }
             }
         } finally {
@@ -302,12 +287,7 @@ public class PageBean extends TreeBean {
                 while (rs.next()) {
                     int i = 1;
                     partData = new PagePartData();
-                    partData.setId(rs.getInt(i++));
-                    partData.setName(rs.getString(i++));
-                    partData.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
-                    partData.setTemplateName(rs.getString(i++));
-                    partData.setContent(rs.getString(i));
-                    partData.parseXml();
+                    readPagePartResult(rs, i, partData);
                     list.add(partData);
                 }
             }
@@ -321,7 +301,7 @@ public class PageBean extends TreeBean {
         PagePartData partData;
         pageData.clearContent();
         try {
-            pst = con.prepareStatement("SELECT t1.id,t1.name,t1.change_date,t1.template,t2.section,t2.ranking,t1.content " +
+            pst = con.prepareStatement("SELECT t2.section,t2.ranking,t1.id,t1.name,t1.change_date,t1.template,t1.content " +
                     "FROM t_page_part t1, t_page_part2page t2 " +
                     "WHERE t1.id=t2.part_id AND t2.page_id=? ORDER BY t2.ranking");
             pst.setInt(1, pageData.getId());
@@ -329,20 +309,24 @@ public class PageBean extends TreeBean {
                 while (rs.next()) {
                     int i = 1;
                     partData = new PagePartData();
-                    partData.setId(rs.getInt(i++));
-                    partData.setName(rs.getString(i++));
-                    partData.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
-                    partData.setTemplateName(rs.getString(i++));
                     partData.setSectionName(rs.getString(i++));
                     partData.setRanking(rs.getInt(i++));
-                    partData.setContent(rs.getString(i));
-                    partData.parseXml();
+                    readPagePartResult(rs, i, partData);
                     pageData.addPagePart(partData, -1, false, false);
                 }
             }
         } finally {
             closeStatement(pst);
         }
+    }
+
+    private void readPagePartResult(ResultSet rs, int i, PagePartData partData) throws SQLException{
+        partData.setId(rs.getInt(i++));
+        partData.setName(rs.getString(i++));
+        partData.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
+        partData.setTemplateName(rs.getString(i++));
+        partData.setContent(rs.getString(i));
+        partData.parseXml();
     }
 
     public void writeAllPageParts(Connection con, PageData page) throws Exception {

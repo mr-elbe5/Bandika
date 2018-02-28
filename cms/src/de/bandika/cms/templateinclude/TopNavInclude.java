@@ -10,6 +10,7 @@ package de.bandika.cms.templateinclude;
 
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.StringWriteUtil;
+import de.bandika.cms.application.ApplicationActions;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.site.SiteData;
@@ -51,7 +52,7 @@ public class TopNavInclude extends TemplateInclude {
         int pageId = outputData.pageData == null ? 0 : outputData.pageData.getId();
         int siteId = outputData.pageData == null ? 0 : outputData.pageData.getParentId();
         boolean editMode = SessionReader.isEditMode(request);
-        boolean pageEditMode = outputData.pageData != null && outputData.pageData.isEditMode();
+        boolean pageEditMode = outputData.pageData != null && outputData.pageData.isPageEditMode();
         boolean hasAnyEditRight = SessionReader.hasAnyContentRight(request);
         boolean hasEditRight = SessionReader.hasContentRight(request, pageId, Right.EDIT);
         boolean hasAdminRight = SessionReader.hasAnyElevatedSystemRight(request) || SessionReader.hasContentRight(request, TreeNode.ID_ALL, Right.EDIT);
@@ -98,7 +99,8 @@ public class TopNavInclude extends TemplateInclude {
                 }
             }
             if (hasAnyEditRight || hasAdminRight){
-                writer.write("<li><a href=\"/page.srv?act=toggleEditMode&pageId={1}\" title=\"{2}\"><span class=\"icn {3}\"></span></a></li>",
+                writer.write("<li><a href=\"/application.srv?act={1}&pageId={2}\" title=\"{3}\"><span class=\"icn {4}\"></span></a></li>",
+                        ApplicationActions.toggleEditMode,
                         String.valueOf(pageId),
                         getHtml(editMode ? "_editModeOff" : "_editModeOn", outputData.locale),
                         editMode ? "iright" : "ileft");

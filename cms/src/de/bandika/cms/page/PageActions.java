@@ -42,7 +42,6 @@ public class PageActions extends BaseTreeActions {
     public static final String movePage="movePage";
     public static final String openDeletePage="openDeletePage";
     public static final String deletePage="deletePage";
-    public static final String toggleEditMode="toggleEditMode";
     public static final String openEditPageContent="openEditPageContent";
     public static final String reopenEditPageContent="reopenEditPageContent";
     public static final String savePageContent="savePageContent";
@@ -234,15 +233,6 @@ public class PageActions extends BaseTreeActions {
                 request.setAttribute("siteId", Integer.toString(parentId));
                 return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&siteId=" + parentId, "_pageDeleted");
             }
-            case toggleEditMode: {
-                if (!hasAnyContentRight(request))
-                    return false;
-                SessionWriter.setEditMode(request, !SessionReader.isEditMode(request));
-                int pageId = RequestReader.getInt(request, "pageId");
-                if (pageId==0)
-                    request.setAttribute("pageId", Integer.toString(TreeCache.getInstance().getFallbackPageId(request)));
-                return new PageActions().show(request, response);
-            }
             case openEditPageContent: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
@@ -256,7 +246,7 @@ public class PageActions extends BaseTreeActions {
                 checkObject(data);
                 data.prepareEditing();
                 SessionWriter.setSessionObject(request, "pageData", data);
-                data.setEditMode(true);
+                data.setPageEditMode(true);
                 return setPageResponse(request, response, data);
             }
             case reopenEditPageContent: {
@@ -264,7 +254,7 @@ public class PageActions extends BaseTreeActions {
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
                 PageData data = (PageData) getSessionObject(request, "pageData");
-                data.setEditMode(true);
+                data.setPageEditMode(true);
                 return setPageResponse(request, response, data);
             }
             case savePageContent: {
@@ -379,7 +369,7 @@ public class PageActions extends BaseTreeActions {
     }
 
     protected boolean setEditPageContentAjaxResponse(HttpServletRequest request, HttpServletResponse response, PageData data) {
-        data.setEditMode(true);
+        data.setPageEditMode(true);
         request.setAttribute("pageData", data);
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/content.ajax.jsp");
     }

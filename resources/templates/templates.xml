@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cms:templates xmlns:cms="http://elbe5.de">
+<cms:templates xmlns:cms="http://elbe5.de" >
     <cms:template type="MASTER" name="pageMaster" displayName="Page Master">
         <html>
             <head>

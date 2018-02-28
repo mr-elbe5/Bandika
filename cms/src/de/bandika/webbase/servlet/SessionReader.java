@@ -80,6 +80,6 @@ public class SessionReader {
     }
 
     public static boolean isEditMode(HttpServletRequest request){
-        return getSessionObject(request, RequestStatics.KEY_EDITMODE) != null;
+        return request!=null && getSessionObject(request, RequestStatics.KEY_EDITMODE) != null;
     }
 }
