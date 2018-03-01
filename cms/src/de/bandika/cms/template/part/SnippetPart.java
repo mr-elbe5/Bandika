@@ -6,16 +6,17 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.cms.templateinclude;
+package de.bandika.cms.template.part;
 
-import de.bandika.cms.field.Field;
+import de.bandika.base.log.Log;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
-import java.io.IOException;
+import de.bandika.cms.template.TemplateCache;
+import de.bandika.cms.template.TemplateData;
 
-public class FieldInclude extends TemplateInclude{
+public class SnippetPart extends TemplatePart {
 
-    public static final String KEY = "field";
+    public static final String KEY = "snippet";
 
     public String getKey(){
         return KEY;
@@ -25,11 +26,15 @@ public class FieldInclude extends TemplateInclude{
         return false;
     }
 
-    public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        Field field = outputData.partData.ensureField(getAttributes().get("name"), getAttributes().get("fieldType"));
-        outputData.attributes=attributes;
-        outputData.content=content;
-        field.appendFieldHtml(outputContext, outputData);
+    public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) {
+        TemplateData snippet = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, attributes.getString("name"));
+        if (snippet != null) {
+            try {
+                snippet.writeTemplate(outputContext, outputData);
+            } catch (Exception e) {
+                Log.error("error in snippet template", e);
+            }
+        }
     }
 
 }

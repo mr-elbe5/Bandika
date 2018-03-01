@@ -6,17 +6,20 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.cms.templateinclude;
+package de.bandika.cms.template.part;
 
-import de.bandika.base.log.Log;
+import de.bandika.base.util.StringUtil;
+import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
-import de.bandika.cms.template.TemplateCache;
-import de.bandika.cms.template.TemplateData;
+import de.bandika.cms.template.TemplateInclude;
+import de.bandika.cms.template.part.TemplatePart;
 
-public class SnippetInclude extends TemplateInclude{
+import java.io.IOException;
 
-    public static final String KEY = "snippet";
+public class ResourcePart extends TemplatePart {
+
+    public static final String KEY = "resource";
 
     public String getKey(){
         return KEY;
@@ -26,15 +29,9 @@ public class SnippetInclude extends TemplateInclude{
         return false;
     }
 
-    public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) {
-        TemplateData snippet = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, attributes.getString("name"));
-        if (snippet != null) {
-            try {
-                snippet.writeTemplate(outputContext, outputData);
-            } catch (Exception e) {
-                Log.error("error in snippet template", e);
-            }
-        }
+    public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+        StringWriteUtil writer=outputContext.getWriter();
+        writer.write(StringUtil.getHtml(attributes.get("key"), outputData.locale));
     }
 
 }

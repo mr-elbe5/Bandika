@@ -6,27 +6,35 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.cms.templateinclude;
+package de.bandika.cms.template.control;
 
+import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.StringWriteUtil;
+import de.bandika.cms.file.FileData;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
-import de.bandika.webbase.servlet.RequestError;
-import de.bandika.webbase.servlet.RequestReader;
+import de.bandika.cms.site.SiteData;
+import de.bandika.cms.tree.TreeCache;
+import de.bandika.webbase.rights.Right;
+import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
-public class MessageInclude extends TemplateInclude {
+public class DocumentListControl extends TemplateControl {
 
-    public static final String KEY = "message";
+    public static final String KEY = "documents";
 
-    private static MessageInclude instance = null;
+    private static DocumentListControl instance = null;
 
-    public static MessageInclude getInstance() {
+    public static DocumentListControl getInstance() {
         if (instance == null)
-            instance = new MessageInclude();
+            instance = new DocumentListControl();
         return instance;
+    }
+
+    private DocumentListControl(){
     }
 
     public String getKey(){
@@ -40,14 +48,18 @@ public class MessageInclude extends TemplateInclude {
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
-        RequestError error = RequestError.getError(request);
-        String message = RequestReader.getMessage(request);
-        if (error != null) {
-            writer.write("<div class=\"error\">{1}<button type=\"button\" class=\"close\" onclick=\"$(this).closest('.error').hide();\">&times;</button></div>",
-                    toHtml(error.getErrorString()));
-        } else if (message != null && message.length() > 0) {
-            writer.write("<div class=\"message\">{1}<button type=\"button\" class=\"close\" onclick=\"$(this).closest('.message').hide();\">&times;</button></div>",
-                    toHtml(message));
+        if (outputData.pageData==null)
+            return;
+        int siteId = outputData.pageData.getParentId();
+        SiteData site = TreeCache.getInstance().getSite(siteId);
+        List<FileData> files = site.getFiles();
+        for (FileData file : files) {
+            if (!file.isAnonymous() && !SessionReader.hasContentRight(request, file.getId(), Right.READ))
+                continue;
+            writer.write("<div class=\"documentListLine icn ifile\"><a href=\"{1}\" target=\"_blank\" title=\"{2}\">{3}</a></div>",
+                    file.getUrl(),
+                    StringUtil.getHtml("_show", outputData.locale),
+                    StringUtil.toHtml(file.getDisplayName()));
         }
     }
 

@@ -6,27 +6,30 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.cms.templateinclude;
+package de.bandika.cms.template.control;
 
 import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
-import de.bandika.cms.template.TemplateCache;
-import de.bandika.cms.template.TemplateData;
-import de.bandika.webbase.servlet.SessionReader;
+import de.bandika.webbase.servlet.RequestError;
+import de.bandika.webbase.servlet.RequestReader;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-public class LayerInclude extends TemplateInclude {
+public class MessageControl extends TemplateControl {
 
-    public static final String KEY = "layer";
+    public static final String KEY = "message";
 
-    private static LayerInclude instance = null;
+    private static MessageControl instance = null;
 
-    public static LayerInclude getInstance() {
+    public static MessageControl getInstance() {
         if (instance == null)
-            instance = new LayerInclude();
+            instance = new MessageControl();
         return instance;
+    }
+
+    private MessageControl(){
     }
 
     public String getKey(){
@@ -34,19 +37,21 @@ public class LayerInclude extends TemplateInclude {
     }
 
     public boolean isDynamic(){
-        return false;
+        return true;
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
-        if (SessionReader.isEditMode(outputContext.getRequest())) {
-            writer.write(TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, "treeLayer").getCode());
-            if (outputData.pageData != null && outputData.pageData.isPageEditMode()) {
-                writer.write(TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, "browserLayer").getCode());
-                writer.write(TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, "browserDialogLayer").getCode());
-            }
+        HttpServletRequest request=outputContext.getRequest();
+        RequestError error = RequestError.getError(request);
+        String message = RequestReader.getMessage(request);
+        if (error != null) {
+            writer.write("<div class=\"error\">{1}<button type=\"button\" class=\"close\" onclick=\"$(this).closest('.error').hide();\">&times;</button></div>",
+                    toHtml(error.getErrorString()));
+        } else if (message != null && message.length() > 0) {
+            writer.write("<div class=\"message\">{1}<button type=\"button\" class=\"close\" onclick=\"$(this).closest('.message').hide();\">&times;</button></div>",
+                    toHtml(message));
         }
-        writer.write(TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, "dialogLayer").getCode());
     }
 
 }

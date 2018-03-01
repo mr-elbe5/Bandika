@@ -6,25 +6,30 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.cms.templateinclude;
+package de.bandika.cms.template.control;
 
-import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
+import de.bandika.cms.template.TemplateCache;
+import de.bandika.cms.template.TemplateData;
+import de.bandika.webbase.servlet.SessionReader;
 
 import java.io.IOException;
 
-public class HeadInclude extends TemplateInclude {
+public class LayerControl extends TemplateControl {
 
-    public static final String KEY = "head";
+    public static final String KEY = "layer";
 
-    private static HeadInclude instance = null;
+    private static LayerControl instance = null;
 
-    public static HeadInclude getInstance() {
+    public static LayerControl getInstance() {
         if (instance == null)
-            instance = new HeadInclude();
+            instance = new LayerControl();
         return instance;
+    }
+
+    private LayerControl(){
     }
 
     public String getKey(){
@@ -37,12 +42,14 @@ public class HeadInclude extends TemplateInclude {
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
-        if (outputData.pageData==null)
-            return;
-        writer.write("<title>{1}</title>\n" +
-                        "<meta name=\"keywords\" content=\"{2}\">\n",
-                StringUtil.getHtml("appTitle", outputData.locale),
-                StringUtil.toHtml(outputData.pageData.getKeywords()));
+        if (SessionReader.isEditMode(outputContext.getRequest())) {
+            writer.write(TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, "treeLayer").getCode());
+            if (outputData.pageData != null && outputData.pageData.isPageEditMode()) {
+                writer.write(TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, "browserLayer").getCode());
+                writer.write(TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, "browserDialogLayer").getCode());
+            }
+        }
+        writer.write(TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, "dialogLayer").getCode());
     }
 
 }

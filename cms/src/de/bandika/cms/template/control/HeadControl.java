@@ -6,7 +6,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.cms.templateinclude;
+package de.bandika.cms.template.control;
 
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.StringWriteUtil;
@@ -15,9 +15,20 @@ import de.bandika.cms.page.PageOutputData;
 
 import java.io.IOException;
 
-public class ResourceInclude extends TemplateInclude{
+public class HeadControl extends TemplateControl {
 
-    public static final String KEY = "resource";
+    public static final String KEY = "head";
+
+    private static HeadControl instance = null;
+
+    public static HeadControl getInstance() {
+        if (instance == null)
+            instance = new HeadControl();
+        return instance;
+    }
+
+    private HeadControl(){
+    }
 
     public String getKey(){
         return KEY;
@@ -29,7 +40,12 @@ public class ResourceInclude extends TemplateInclude{
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
-        writer.write(StringUtil.getHtml(attributes.get("key"), outputData.locale));
+        if (outputData.pageData==null)
+            return;
+        writer.write("<title>{1}</title>\n" +
+                        "<meta name=\"keywords\" content=\"{2}\">\n",
+                StringUtil.getHtml("appTitle", outputData.locale),
+                StringUtil.toHtml(outputData.pageData.getKeywords()));
     }
 
 }

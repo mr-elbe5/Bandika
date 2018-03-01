@@ -6,7 +6,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.cms.templateinclude;
+package de.bandika.cms.template.control;
 
 import de.bandika.base.log.Log;
 import de.bandika.base.util.StringWriteUtil;
@@ -15,6 +15,7 @@ import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
+import de.bandika.cms.template.TemplateInclude;
 import de.bandika.cms.template.TemplateParser;
 import de.bandika.webbase.servlet.RequestStatics;
 import de.bandika.webbase.servlet.SessionReader;
@@ -22,9 +23,20 @@ import de.bandika.webbase.servlet.SessionReader;
 import javax.servlet.ServletException;
 import java.io.IOException;
 
-public class PageContentInclude extends TemplateInclude{
+public class PageContentControl extends TemplateControl {
 
     public static final String KEY = "content";
+
+    private static PageContentControl instance = null;
+
+    public static PageContentControl getInstance() {
+        if (instance == null)
+            instance = new PageContentControl();
+        return instance;
+    }
+
+    private PageContentControl(){
+    }
 
     public String getKey(){
         return KEY;

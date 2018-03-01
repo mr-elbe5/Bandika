@@ -6,7 +6,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.cms.templateinclude;
+package de.bandika.cms.template.control;
 
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.StringWriteUtil;
@@ -24,16 +24,19 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class TopNavInclude extends TemplateInclude {
+public class TopNavControl extends TemplateControl {
 
     public static final String KEY = "topNav";
 
-    private static TopNavInclude instance = null;
+    private static TopNavControl instance = null;
 
-    public static TopNavInclude getInstance() {
+    public static TopNavControl getInstance() {
         if (instance == null)
-            instance = new TopNavInclude();
+            instance = new TopNavControl();
         return instance;
+    }
+
+    private TopNavControl(){
     }
 
     public String getKey(){

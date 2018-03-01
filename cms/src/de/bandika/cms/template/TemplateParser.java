@@ -9,7 +9,7 @@
 package de.bandika.cms.template;
 
 import de.bandika.base.log.Log;
-import de.bandika.cms.templateinclude.*;
+import de.bandika.cms.template.part.*;
 import de.bandika.webbase.util.TagAttributes;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
@@ -60,8 +60,10 @@ public class TemplateParser {
                 Log.warn("element without type");
                 continue;
             }
-            include.setAttributes(new TagAttributes(element.attributes()));
-            include.setContent(element.html());
+            if (include instanceof TemplatePart) {
+                ((TemplatePart)include).setAttributes(new TagAttributes(element.attributes()));
+                ((TemplatePart)include).setContent(element.html());
+            }
             list.add(include);
             TextNode placeholder=new TextNode(PLACEHOLDER_START+(list.size()-1)+PLACEHOLDER_END);
             element.replaceWith(placeholder);
@@ -72,63 +74,7 @@ public class TemplateParser {
 
     private static TemplateInclude getTemplateInclude(Element element){
         String type=element.attr(TEMPLATE_ATTR_TYPE);
-        return getTemplateInclude(type);
-    }
-
-    public static TemplateInclude getTemplateInclude(String type){
-        if (type.isEmpty()) {
-            Log.warn("element without type: "+type);
-            return null;
-        }
-        switch (type){
-            /* master includes */
-            case HeadInclude.KEY :
-                //page static
-                return HeadInclude.getInstance();
-            case TopNavInclude.KEY :
-                //user dynamic
-                return TopNavInclude.getInstance();
-            case MainMenuInclude.KEY :
-                //user dynamic
-                return MainMenuInclude.getInstance();
-            case BreadcrumbInclude.KEY :
-                //page static
-                return BreadcrumbInclude.getInstance();
-            case MessageInclude.KEY :
-                //dynamic (?)
-                return MessageInclude.getInstance();
-            case PageContentInclude.KEY :
-                //page static (template)
-                return new PageContentInclude();
-            case LayerInclude.KEY :
-                //page static
-                return LayerInclude.getInstance();
-            /* page includes */
-            case SectionInclude.KEY :
-                //page static (parts)
-                return new SectionInclude();
-            case FieldInclude.KEY :
-                //page static (cms)
-                return new FieldInclude();
-            case JspInclude.KEY :
-                //full dynamic
-                return new JspInclude();
-            case SubMenuInclude.KEY :
-                //user dynamic
-                return SubMenuInclude.getInstance();
-            case DocumentListInclude.KEY :
-                //user dynamic
-                return DocumentListInclude.getInstance();
-            /* static includes */
-            case ResourceInclude.KEY :
-                //code static
-                return new ResourceInclude();
-            case SnippetInclude.KEY :
-                //code static
-                return new SnippetInclude();
-        }
-        Log.warn("element without valid type: "+type);
-        return null;
+        return TemplateCache.getTemplateInclude(type);
     }
 
     public static TemplateInclude parseIncludeTag(String tag) {
@@ -139,7 +85,9 @@ public class TemplateParser {
         TemplateInclude include=getTemplateInclude(element);
         if (include==null)
             return null;
-        include.setAttributes(new TagAttributes(element.attributes()));
+        if (include instanceof TemplatePart) {
+            ((TemplatePart) include).setAttributes(new TagAttributes(element.attributes()));
+        }
         return include;
     }
 

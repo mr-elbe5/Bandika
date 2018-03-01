@@ -6,7 +6,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.cms.templateinclude;
+package de.bandika.cms.template.control;
 
 import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageData;
@@ -19,16 +19,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BreadcrumbInclude extends TemplateInclude {
+public class BreadcrumbControl extends TemplateControl {
 
     public static final String KEY = "breadcrumb";
 
-    private static BreadcrumbInclude instance = null;
+    private static BreadcrumbControl instance = null;
 
-    public static BreadcrumbInclude getInstance() {
+    public static BreadcrumbControl getInstance() {
         if (instance == null)
-            instance = new BreadcrumbInclude();
+            instance = new BreadcrumbControl();
         return instance;
+    }
+
+    private BreadcrumbControl(){
     }
 
     public String getKey(){

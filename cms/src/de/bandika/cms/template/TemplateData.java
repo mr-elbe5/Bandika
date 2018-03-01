@@ -12,7 +12,6 @@ import de.bandika.base.data.BaseData;
 import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
-import de.bandika.cms.templateinclude.TemplateInclude;
 
 import java.io.IOException;
 import java.io.Serializable;

@@ -10,6 +10,8 @@ package de.bandika.cms.template;
 
 import de.bandika.base.cache.BaseCache;
 import de.bandika.base.log.Log;
+import de.bandika.cms.template.control.*;
+import de.bandika.cms.template.part.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +27,47 @@ public class TemplateCache extends BaseCache {
             instance = new TemplateCache();
         }
         return instance;
+    }
+
+    public static TemplateInclude getTemplateInclude(String type){
+        if (type.isEmpty()) {
+            Log.warn("element without type: "+type);
+            return null;
+        }
+        switch (type){
+            /* controls return instance */
+            case HeadControl.KEY :
+                return HeadControl.getInstance();
+            case TopNavControl.KEY :
+                return TopNavControl.getInstance();
+            case MainMenuControl.KEY :
+                return MainMenuControl.getInstance();
+            case BreadcrumbControl.KEY :
+                return BreadcrumbControl.getInstance();
+            case MessageControl.KEY :
+                return MessageControl.getInstance();
+            case PageContentControl.KEY :
+                return PageContentControl.getInstance();
+            case LayerControl.KEY :
+                return LayerControl.getInstance();
+            case SubMenuControl.KEY :
+                return SubMenuControl.getInstance();
+            case DocumentListControl.KEY :
+                return DocumentListControl.getInstance();
+            /* parts return new */
+            case SectionPart.KEY :
+                return new SectionPart();
+            case FieldPart.KEY :
+                return new FieldPart();
+            case JspPart.KEY :
+                return new JspPart();
+            case ResourcePart.KEY :
+                return new ResourcePart();
+            case SnippetPart.KEY :
+                return new SnippetPart();
+        }
+        Log.warn("element without valid type: "+type);
+        return null;
     }
 
     protected Map<String, List<TemplateData>> templates = new HashMap<>();
