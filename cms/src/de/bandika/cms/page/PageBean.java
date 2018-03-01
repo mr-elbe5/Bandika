@@ -34,10 +34,9 @@ public class PageBean extends TreeBean {
 
     public List<PageData> getAllPages() {
         List<PageData> list = new ArrayList<>();
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT t1.id,t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
                     "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
                     "t2.template,t2.publish_date,t2.published_content " +
@@ -67,10 +66,9 @@ public class PageBean extends TreeBean {
 
     public PageData getPage(int id) {
         PageData data = null;
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
                     "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
                     "t2.template,t2.publish_date,t2.published_content " +
@@ -119,9 +117,8 @@ public class PageBean extends TreeBean {
     }
 
     public void loadPageContent(PageData data) {
-        Connection con = null;
+        Connection con = getConnection();
         try {
-            con = getConnection();
             readAllPageParts(con, data);
             data.sortPageParts();
         } catch (SQLException se) {
@@ -227,10 +224,9 @@ public class PageBean extends TreeBean {
     }
 
     public PagePartData getPagePart(int id) {
-        Connection con = null;
+        Connection con = getConnection();
         PagePartData part = null;
         try {
-            con = getConnection();
             part=readPagePart(con, id);
         } catch (SQLException se) {
             Log.error("sql error", se);
@@ -241,10 +237,9 @@ public class PageBean extends TreeBean {
     }
 
     public List<PagePartData> getSharedPageParts() {
-        Connection con = null;
+        Connection con = getConnection();
         List<PagePartData> list = new ArrayList<>();
         try {
-            con = getConnection();
             readSharedPageParts(con, list);
         } catch (SQLException se) {
             Log.error("sql error", se);

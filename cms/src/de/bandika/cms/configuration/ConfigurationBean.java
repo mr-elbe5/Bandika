@@ -31,10 +31,9 @@ public class ConfigurationBean extends WebConfigurationBean {
     }
 
     public Configuration getConfiguration() {
-        Connection con = null;
+        Connection con = getConnection();
         Configuration config = new Configuration();
         try {
-            con = getConnection();
             readConfiguration(con, config);
         } catch (SQLException se) {
             Log.error("sql error", se);

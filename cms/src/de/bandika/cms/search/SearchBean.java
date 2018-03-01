@@ -150,10 +150,9 @@ public class SearchBean extends DbBean {
     }
 
     protected void indexSites(IndexWriter writer) throws Exception {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name FROM t_treenode t1, t_site t2 WHERE t1.id=t2.id");
             ResultSet rs = pst.executeQuery();
             int count = 0;
@@ -179,10 +178,9 @@ public class SearchBean extends DbBean {
     }
 
     protected void indexSite(IndexWriter writer, int id) throws Exception {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name " +
                     "FROM t_treenode t1, t_site t2 " +
                     "WHERE t1.id=? AND t2.id=?");
@@ -215,10 +213,9 @@ public class SearchBean extends DbBean {
     }
 
     protected void indexPages(IndexWriter writer) throws Exception {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t1.keywords " +
                     "FROM t_treenode t1 ");
             ResultSet rs = pst.executeQuery();
@@ -245,10 +242,9 @@ public class SearchBean extends DbBean {
     }
 
     protected void indexPage(IndexWriter writer, int id) throws Exception {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t1.keywords " +
                     "FROM t_treenode t1 " +
                     "WHERE t1.id=? ");
@@ -282,10 +278,9 @@ public class SearchBean extends DbBean {
     }
 
     protected void indexFiles(IndexWriter writer) throws Exception {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t1.keywords,t2.content_type,t2.bytes " +
                     "FROM t_treenode t1, t_file t2 " +
                     "WHERE t1.id=t2.id");
@@ -313,10 +308,9 @@ public class SearchBean extends DbBean {
     }
 
     protected void indexFile(IndexWriter writer, int id) throws Exception {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t1.keywords,t2.content_type,t2.bytes " +
                     "FROM t_treenode t1, t_file t2 " +
                     "WHERE t1.id=? AND t2.id=? ");
@@ -353,11 +347,10 @@ public class SearchBean extends DbBean {
     }
 
     protected void indexUsers(IndexWriter writer) throws Exception {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
             int count = 0;
-            con = getConnection();
             pst = con.prepareStatement("SELECT id,first_name,last_name,email FROM t_user");
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
@@ -380,10 +373,9 @@ public class SearchBean extends DbBean {
     }
 
     protected void indexUser(IndexWriter writer, int id) throws Exception {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT id, first_name,last_name FROM t_user WHERE id=?");
             pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();

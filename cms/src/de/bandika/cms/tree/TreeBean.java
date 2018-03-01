@@ -59,10 +59,9 @@ public class TreeBean extends DbBean {
 
     public Map<Locale, Integer> readLanguageRootIds() {
         Map<Locale, Integer> map = new HashMap<>();
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT t1.id,t2.locale FROM t_treenode t1, t_locale t2 WHERE t1.id=t2.tree_id");
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
@@ -191,11 +190,10 @@ public class TreeBean extends DbBean {
     }
 
     public Map<Integer, Integer> getGroupRights(int groupId) {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         Map<Integer, Integer> map = new HashMap<>();
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT value FROM t_treenode_right WHERE group_id=?");
             pst.setInt(1, groupId);
             ResultSet rs = pst.executeQuery();
@@ -252,10 +250,9 @@ public class TreeBean extends DbBean {
     }
 
     public boolean deleteTreeNode(int id) {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("DELETE FROM t_treenode WHERE id=?");
             pst.setInt(1, id);
             pst.executeUpdate();

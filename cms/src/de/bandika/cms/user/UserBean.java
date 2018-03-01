@@ -36,11 +36,10 @@ public class UserBean extends LoginBean {
 
     public List<UserData> getAllUsers() {
         List<UserData> list = new ArrayList<>();
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         UserData data;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT id,change_date,first_name,last_name,street,zipCode,city,country,locale,email,phone,mobile,notes,portrait_name,login,approval_code,approved,failed_login_count,locked FROM t_user WHERE deleted=FALSE");
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
@@ -81,11 +80,10 @@ public class UserBean extends LoginBean {
     }
 
     public UserData getUser(int id) {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         UserData data = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT change_date,title,first_name,last_name,street,zipCode,city,country,locale,email,phone,mobile,notes,portrait_name,login,approval_code,approved,failed_login_count,locked,deleted FROM t_user WHERE id=?");
             pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();
@@ -126,12 +124,11 @@ public class UserBean extends LoginBean {
     }
 
     public BinaryFileData getBinaryPortraitData(int id) throws SQLException {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         BinaryFileData data = null;
         String sql = "SELECT portrait_name, portrait FROM t_user WHERE id=?";
         try {
-            con = getConnection();
             pst = con.prepareStatement(sql);
             pst.setInt(1, id);
             try (ResultSet rs = pst.executeQuery()) {
@@ -297,10 +294,9 @@ public class UserBean extends LoginBean {
     }
 
     public void deleteUser(int id) {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("UPDATE t_user SET deleted=TRUE WHERE id=?");
             pst.setInt(1, id);
             pst.executeUpdate();

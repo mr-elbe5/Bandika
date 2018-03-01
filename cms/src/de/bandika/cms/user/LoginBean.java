@@ -55,12 +55,11 @@ public class LoginBean extends DbBean {
     }
 
     public UserLoginData getLogin(String login, String approvalCode, String pwd) {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         UserLoginData data = null;
         boolean passed = false;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT id,change_date,pwd,pkey,first_name,last_name,email FROM t_user WHERE login=? AND approval_code=?");
             pst.setString(1, login);
             pst.setString(2, approvalCode);
@@ -90,11 +89,10 @@ public class LoginBean extends DbBean {
     }
 
     public boolean isSystemPasswordEmpty() {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         boolean empty = true;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT pwd FROM t_user WHERE id=?");
             pst.setInt(1, UserLoginData.ID_SYSTEM);
             try (ResultSet rs = pst.executeQuery()) {
@@ -113,11 +111,10 @@ public class LoginBean extends DbBean {
     }
 
     public boolean doesLoginExist(String login) {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         boolean exists = false;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT 'x' FROM t_user WHERE login=?");
             pst.setString(1, login);
             try (ResultSet rs = pst.executeQuery()) {
@@ -135,11 +132,10 @@ public class LoginBean extends DbBean {
     }
 
     public UserLoginData loginUser(String login, String pwd) {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         UserLoginData data = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT id,pwd,pkey,change_date,first_name,last_name,locale,email,failed_login_count FROM t_user WHERE login=? AND approved=TRUE AND locked=FALSE AND deleted=FALSE");
             pst.setString(1, login);
             boolean passed;

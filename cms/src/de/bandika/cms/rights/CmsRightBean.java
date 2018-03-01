@@ -34,10 +34,9 @@ public class CmsRightBean extends RightBean {
     }
 
     public UserRightsData getUserRights(int userId) {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             List<Integer> groupIds = new ArrayList<>();
             pst = con.prepareStatement("SELECT group_id FROM t_user2group WHERE user_id=? AND relation=?");
             pst.setInt(1, userId);
@@ -103,11 +102,10 @@ public class CmsRightBean extends RightBean {
     }
 
     public GroupRightsData getGroupRights(int groupId) {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         GroupRightsData rights = new GroupRightsData();
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT name, value FROM t_system_right WHERE group_id=?");
             pst.setInt(1, groupId);
             ResultSet rs = pst.executeQuery();

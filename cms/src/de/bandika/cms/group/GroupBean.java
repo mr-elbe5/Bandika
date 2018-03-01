@@ -58,11 +58,10 @@ public class GroupBean extends DbBean {
 
     public List<GroupData> getAllGroups() {
         List<GroupData> list = new ArrayList<>();
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         GroupData data;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT id,name,notes FROM t_group ORDER BY name");
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
@@ -84,12 +83,11 @@ public class GroupBean extends DbBean {
     }
 
     public GroupData getGroup(int id) {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         ResultSet rs;
         GroupData data = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT change_date,name,notes FROM t_group WHERE id=? ORDER BY name");
             pst.setInt(1, id);
             rs = pst.executeQuery();
@@ -200,10 +198,9 @@ public class GroupBean extends DbBean {
     }
 
     public void deleteGroup(int id) {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("DELETE FROM t_group WHERE id=?");
             pst.setInt(1, id);
             pst.executeUpdate();

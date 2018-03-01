@@ -30,10 +30,9 @@ public class FileBean extends TreeBean {
 
     public List<FileData> getAllFiles() {
         List<FileData> list = new ArrayList<>();
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT t1.id,t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
                     "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
                     "t2.content_type " +
@@ -74,10 +73,9 @@ public class FileBean extends TreeBean {
 
     public FileData getFile(int id, boolean withBytes) {
         FileData data = null;
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
                 "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
                 "t2.content_type " +
@@ -142,9 +140,8 @@ public class FileBean extends TreeBean {
     }
 
     public void loadFileContent(FileData data) {
-        Connection con = null;
+        Connection con = getConnection();
         try {
-            con = getConnection();
             readFile(con, data);
         } catch (SQLException se) {
             Log.error("sql error", se);
@@ -154,9 +151,8 @@ public class FileBean extends TreeBean {
     }
 
     public void loadFileContentWithBytes(FileData data) {
-        Connection con = null;
+        Connection con = getConnection();
         try {
-            con = getConnection();
             readFile(con, data);
             readFileBytes(con, data);
         } catch (SQLException se) {
@@ -248,12 +244,11 @@ public class FileBean extends TreeBean {
      * ******************************
      */
     public BinaryFileStreamData getBinaryFileStreamData(int id) throws SQLException {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         BinaryFileStreamData data = null;
         String sql = "SELECT t1.name,t2.content_type,t2.file_size,t2.bytes FROM t_treenode t1, t_file t2 WHERE t1.id=? AND t2.id=?";
         try {
-            con = getConnection();
             pst = con.prepareStatement(sql);
             pst.setInt(1, id);
             pst.setInt(2, id);
@@ -275,12 +270,11 @@ public class FileBean extends TreeBean {
     }
 
     public BinaryFileData getBinaryFileData(int id) throws SQLException {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         BinaryFileData data = null;
         String sql = "SELECT t1.name,t2.content_type,t2.file_size,t2.bytes FROM t_treenode t1, t_file t2 WHERE t1.id=? AND t2.id=?";
         try {
-            con = getConnection();
             pst = con.prepareStatement(sql);
             pst.setInt(1, id);
             pst.setInt(2, id);
@@ -302,12 +296,11 @@ public class FileBean extends TreeBean {
     }
 
     public BinaryFileData getBinaryPreviewData(int id) throws SQLException {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         BinaryFileData data = null;
         String sql = "SELECT t1.name, t2.preview_content_type, t2.preview_bytes FROM t_treenode t1, t_file t2 WHERE t1.id=? AND t2.id=?";
         try {
-            con = getConnection();
             pst = con.prepareStatement(sql);
             pst.setInt(1, id);
             pst.setInt(2, id);
@@ -346,11 +339,10 @@ public class FileBean extends TreeBean {
     }
 
     public boolean isFileInUse(int id) throws SQLException {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         boolean inUse = false;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT page_id FROM t_node_usage WHERE linked_node_id=?");
             pst.setInt(1, id);
             try (ResultSet rs = pst.executeQuery()) {

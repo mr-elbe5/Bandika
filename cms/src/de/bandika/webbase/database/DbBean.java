@@ -18,7 +18,7 @@ public abstract class DbBean {
     public DbBean() {
     }
 
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection() {
         return DbConnector.getInstance().getConnection();
     }
 
@@ -49,9 +49,8 @@ public abstract class DbBean {
 
     public int getNextId() {
         int id = 0;
-        Connection con = null;
+        Connection con = getConnection();
         try {
-            con = getConnection();
             id = getNextId(con);
         } catch (Exception ignored) {
         } finally {
@@ -81,9 +80,8 @@ public abstract class DbBean {
 
     public LocalDateTime getServerTime() {
         LocalDateTime now = null;
-        Connection con = null;
+        Connection con = getConnection();
         try {
-            con = getConnection();
             now = getServerTime(con);
         } catch (Exception ignored) {
         } finally {

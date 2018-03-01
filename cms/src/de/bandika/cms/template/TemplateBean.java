@@ -53,9 +53,8 @@ public class TemplateBean extends DbBean {
 
     public Map<String, List<TemplateData>> getAllTemplates() {
         Map<String, List<TemplateData>> templates = new HashMap<>();
-        Connection con = null;
+        Connection con = getConnection();
         try {
-            con = getConnection();
             templates.put(TemplateData.TYPE_MASTER, getAllTemplates(con, TemplateData.TYPE_MASTER));
             templates.put(TemplateData.TYPE_PAGE, getAllTemplates(con, TemplateData.TYPE_PAGE));
             templates.put(TemplateData.TYPE_PART, getAllTemplates(con, TemplateData.TYPE_PART));
@@ -132,10 +131,9 @@ public class TemplateBean extends DbBean {
     }
 
     public boolean deleteTemplate(String name, String type) {
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("DELETE FROM t_template WHERE name=? AND type=?");
             pst.setString(1, name);
             pst.setString(2, type);

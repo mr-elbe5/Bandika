@@ -21,9 +21,8 @@ import java.util.Map;
 public class WebConfigurationBean extends DbBean {
 
     public void setLocales(Map<Locale, String> locales) {
-        Connection con = null;
+        Connection con = getConnection();
         try {
-            con = getConnection();
             readLocales(con, locales);
         } catch (SQLException se) {
             Log.error("sql error", se);

@@ -210,11 +210,15 @@ public class DbConnector {
         }
     }
 
-    public Connection getConnection() throws SQLException {
-        if (dataSource == null) {
+    public Connection getConnection() {
+        try {
+            if (dataSource == null) {
+                return null;
+            }
+            return dataSource.getConnection();
+        } catch (Exception e) {
             return null;
         }
-        return dataSource.getConnection();
     }
 
     public Connection startTransaction() {
@@ -374,8 +378,6 @@ public class DbConnector {
             if (con != null) {
                 result = checkSelect(con, sql);
             }
-        } catch (SQLException e) {
-            Log.error("error on sql command", e);
         } finally {
             closeConnection(con);
         }

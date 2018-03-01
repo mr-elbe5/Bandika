@@ -31,10 +31,9 @@ public class SiteBean extends TreeBean {
 
     public List<SiteData> getAllSites() {
         List<SiteData> list = new ArrayList<>();
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT t1.id,t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
                     "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
                     "t2.template " +
@@ -76,9 +75,8 @@ public class SiteBean extends TreeBean {
     public SiteData getSite(int id) {
         SiteData data = new SiteData();
         data.setId(id);
-        Connection con = null;
+        Connection con = getConnection();
         try {
-            con = getConnection();
             if (!readTreeNode(con, data) || !readSite(con, data)) {
                 return null;
             }
@@ -171,10 +169,9 @@ public class SiteBean extends TreeBean {
         TreeNodeSortData sortData = new TreeNodeSortData();
         sortData.setId(nodeId);
         TreeNodeSortData child;
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT name FROM t_treenode WHERE id=?");
             pst.setInt(1, nodeId);
             ResultSet rs = pst.executeQuery();
@@ -203,10 +200,9 @@ public class SiteBean extends TreeBean {
         TreeNodeSortData sortData = new TreeNodeSortData();
         sortData.setId(nodeId);
         TreeNodeSortData child;
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT name FROM t_treenode WHERE id=?");
             pst.setInt(1, nodeId);
             ResultSet rs = pst.executeQuery();
@@ -235,10 +231,9 @@ public class SiteBean extends TreeBean {
         TreeNodeSortData sortData = new TreeNodeSortData();
         sortData.setId(nodeId);
         TreeNodeSortData child;
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("SELECT name FROM t_treenode WHERE id=?");
             pst.setInt(1, nodeId);
             ResultSet rs = pst.executeQuery();
@@ -265,10 +260,9 @@ public class SiteBean extends TreeBean {
 
     public void saveSortData(TreeNodeSortData data) {
         TreeNodeSortData child;
-        Connection con = null;
+        Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            con = getConnection();
             pst = con.prepareStatement("UPDATE t_treenode SET ranking=? WHERE id=?");
             for (int i = 0; i < data.getChildren().size(); i++) {
                 child = data.getChildren().get(i);
