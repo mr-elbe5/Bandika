@@ -11,7 +11,6 @@ package de.bandika.cms.template.part;
 import de.bandika.cms.field.Field;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
-import de.bandika.cms.template.part.TemplatePart;
 
 import java.io.IOException;
 

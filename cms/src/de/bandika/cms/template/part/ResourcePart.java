@@ -12,8 +12,6 @@ import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
-import de.bandika.cms.template.TemplateInclude;
-import de.bandika.cms.template.part.TemplatePart;
 
 import java.io.IOException;
 
