@@ -145,18 +145,18 @@ CREATE TABLE IF NOT EXISTS t_treenode_right (
 );
 --
 CREATE TABLE IF NOT EXISTS t_treenode2user (
-  id  INTEGER NOT NULL,
-  user_id INTEGER NOT NULL,
-  relation VARCHAR(20) NOT NULL,
+  id  INTEGER           NOT NULL,
+  user_id INTEGER       NOT NULL,
+  relation VARCHAR(20)  NOT NULL,
   CONSTRAINT t_treenode2user_pk PRIMARY KEY (id, user_id),
   CONSTRAINT t_treenode2user_fk1 FOREIGN KEY (id) REFERENCES t_treenode (id) ON DELETE CASCADE,
   CONSTRAINT t_treenode2user_fk2 FOREIGN KEY (user_id) REFERENCES t_user (id) ON DELETE CASCADE
 );
 --
 CREATE TABLE IF NOT EXISTS t_treenode2group (
-  id  INTEGER NOT NULL,
-  group_id INTEGER NOT NULL,
-  relation VARCHAR(20) NOT NULL,
+  id  INTEGER           NOT NULL,
+  group_id INTEGER      NOT NULL,
+  relation VARCHAR(20)  NOT NULL,
   CONSTRAINT t_treenode2group_pk PRIMARY KEY (id, group_id),
   CONSTRAINT t_treenode2group_fk1 FOREIGN KEY (id) REFERENCES t_treenode (id) ON DELETE CASCADE,
   CONSTRAINT t_treenode2group_fk2 FOREIGN KEY (group_id) REFERENCES t_group (id) ON DELETE CASCADE
@@ -228,6 +228,32 @@ CREATE TABLE IF NOT EXISTS t_node_usage (
   CONSTRAINT t_page_usage_pk PRIMARY KEY (linked_node_id, page_id),
   CONSTRAINT t_page_usage_fk1 FOREIGN KEY (linked_node_id) REFERENCES t_treenode (id) ON DELETE CASCADE,
   CONSTRAINT t_page_usage_fk2 FOREIGN KEY (page_id) REFERENCES t_page (id) ON DELETE CASCADE
+);
+--
+CREATE TABLE IF NOT EXISTS t_shared_item (
+  id              INTEGER      NOT NULL,
+  creation_date   TIMESTAMP    NOT NULL DEFAULT now(),
+  change_date     TIMESTAMP    NOT NULL DEFAULT now(),
+  ranking         INTEGER      NOT NULL DEFAULT 0,
+  name            VARCHAR(100) NOT NULL,
+  display_name    VARCHAR(100) NOT NULL DEFAULT '',
+  description     VARCHAR(200) NOT NULL DEFAULT '',
+  keywords        VARCHAR(500) NOT NULL DEFAULT '',
+  owner_id        INTEGER      NOT NULL DEFAULT 1,
+  author_name     VARCHAR(255) NOT NULL,
+  CONSTRAINT t_shared_item_pk PRIMARY KEY (id),
+  CONSTRAINT t_shared_item_fk1 FOREIGN KEY (owner_id) REFERENCES t_user (id) ON DELETE SET DEFAULT
+);
+--
+CREATE TABLE IF NOT EXISTS t_shared_item_usage (
+  id         INTEGER      NOT NULL,
+  user_id    INTEGER      NOT NULL,
+  start_date TIMESTAMP    NULL,
+  end_date   TIMESTAMP    NULL,
+  relation   VARCHAR(20)  NOT NULL,
+  CONSTRAINT t_shared_item_usage_pk PRIMARY KEY (id, user_id, start_date),
+  CONSTRAINT t_shared_item_usage_fk1 FOREIGN KEY (id) REFERENCES t_shared_item (id) ON DELETE CASCADE,
+  CONSTRAINT t_shared_item_usage_fk2 FOREIGN KEY (user_id) REFERENCES t_user (id) ON DELETE CASCADE
 );
 -- inserts
 -- std locale
