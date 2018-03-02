@@ -142,7 +142,8 @@ div.details {
 }
 
 div.details h3 {
-  color: $color-dark;
+  color: $color-selected;
+  background: none;
   margin-bottom: 10px;
 }
 
@@ -214,7 +215,7 @@ h3.treeHeader {
 
 .treeRoot div.contextSource.selected,
 .treeRoot div.selectable.selected {
-  color: $color-dark;
+  color: $color-selected;
 }
 
 .treeRoot div.contextMenu {

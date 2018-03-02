@@ -28,7 +28,7 @@
             <td class="contentSection">
                 <div class="siteTree topSpace">
                     <% if (SessionReader.hasAnyContentRight(request)) { %>
-                    <h3 class="treeHeader">
+                    <h3 class="treeHeader" style="cursor: pointer">
                         <%=StringUtil.getString("_structure", SessionReader.getSessionLocale(request))%>
                     </h3>
                     <ul id="structure" class="treeRoot">
@@ -39,7 +39,7 @@
             </td>
             <td class="asideSection">
                 <div class="details">
-                    <h3><%=StringUtil.getString("_details", locale)%>
+                    <h3 class="details"><%=StringUtil.getString("_details", locale)%>
                     </h3>
                     <div id="details"></div>
                 </div>
@@ -51,6 +51,15 @@
 <script type="text/javascript">
     $("#structure").treeview({
         persist: "location", collapsed: true, unique: false
+    });
+    $(".treeHeader").click(function(){
+        var $items=$("#structure").find('.hitarea');
+        $items.each(function(){
+            var $this=$(this);
+            if ($this.hasClass('expandable-hitarea')){
+                $this.click();
+            }
+        });
     });
     $(".contentSection").initContextMenus($('.layermainbox'));
     $.each($(".isite"), function (i, val) {

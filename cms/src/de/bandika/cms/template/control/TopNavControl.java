@@ -53,7 +53,6 @@ public class TopNavControl extends TemplateControl {
         HttpServletRequest request=outputContext.getRequest();
         boolean editMode = SessionReader.isEditMode(request);
         PageData page=outputData.pageData;
-        List<Locale> otherLocales = null;
         int pageId = page == null ? 0 : page.getId();
         int siteId = page == null ? 0 : page.getParentId();
         boolean pageEditMode = page != null && page.isPageEditMode();
@@ -62,6 +61,7 @@ public class TopNavControl extends TemplateControl {
         boolean hasAdminRight = SessionReader.hasAnyElevatedSystemRight(request) || SessionReader.hasContentRight(request, TreeNode.ID_ALL, Right.EDIT);
         boolean hasApproveRight = SessionReader.hasContentRight(request, pageId, Right.APPROVE);
         SiteData homeSite = null;
+        List<Locale> otherLocales = null;
         try {
             homeSite = TreeCache.getInstance().getLanguageRootSite(outputData.locale);
             otherLocales = TreeCache.getInstance().getOtherLocales(outputData.locale);

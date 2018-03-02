@@ -21,6 +21,14 @@
     color: $color-darkgrey;
 }
 
+.icn.published:before {
+    color: $color-published;
+}
+
+.icn.unpublished:before {
+  color: $color-unpublished;
+}
+
 .icn.disabled:before {
     color: $color-midgrey;
 }

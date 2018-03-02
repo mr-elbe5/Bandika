@@ -282,6 +282,8 @@ public class PageActions extends BaseTreeActions {
                 publish(data, SessionReader.getSessionLocale(request));
                 RequestWriter.setMessageKey(request, "_pagePublished");
                 request.setAttribute("siteId", Integer.toString(data.getParentId()));
+                TreeCache.getInstance().setDirty();
+                RightsCache.getInstance().setDirty();
                 if (fromAdmin) {
                     return showTree(request, response);
                 }

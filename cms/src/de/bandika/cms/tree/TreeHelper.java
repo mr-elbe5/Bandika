@@ -216,6 +216,12 @@ public class TreeHelper {
         if (currentId == data.getId()) {
             writer.write(" selected");
         }
+        if (data.hasUnpublishedDraft()) {
+            writer.write(" unpublished");
+        }
+        else {
+            writer.write(" published");
+        }
         writer.write("\" data-pageid=\"");
         writer.write(Integer.toString(data.getId()));
         writer.write("\" draggable=\"true\" ondragstart=\"startPageDrag(event)\" onclick=\"$('#details').load('");
@@ -240,7 +246,7 @@ public class TreeHelper {
             writer.write("');\">");
             writer.write(StringUtil.getHtml("_settings", locale));
             writer.write("</div>");
-            if (SessionReader.hasContentRight(request, data.getId(), Right.APPROVE)) {
+            if (SessionReader.hasContentRight(request, data.getId(), Right.APPROVE) && data.hasUnpublishedDraft()) {
                 writer.write("<div class=\"icn ipublish\" onclick=\"return linkToTree('");
                 writer.write(StringUtil.toJs("/page.srv?act=publishPage&fromAdmin=true&pageId=" + data.getId()));
                 writer.write("');\">");
