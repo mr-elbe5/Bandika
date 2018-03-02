@@ -160,6 +160,10 @@ public class PageData extends TreeNode {
         return publishDate;
     }
 
+    public boolean hasUnpublishedDraft(){
+        return publishDate==null || publishDate.isBefore(getChangeDate());
+    }
+
     public boolean isPublished(){
         return publishDate!=null;
     }

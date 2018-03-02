@@ -11,6 +11,7 @@ package de.bandika.cms.template.control;
 import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.application.ApplicationActions;
+import de.bandika.cms.page.PageData;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.site.SiteData;
@@ -50,16 +51,17 @@ public class TopNavControl extends TemplateControl {
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
-        List<Locale> otherLocales = null;
-        SiteData homeSite = null;
-        int pageId = outputData.pageData == null ? 0 : outputData.pageData.getId();
-        int siteId = outputData.pageData == null ? 0 : outputData.pageData.getParentId();
         boolean editMode = SessionReader.isEditMode(request);
-        boolean pageEditMode = outputData.pageData != null && outputData.pageData.isPageEditMode();
+        PageData page=outputData.pageData;
+        List<Locale> otherLocales = null;
+        int pageId = page == null ? 0 : page.getId();
+        int siteId = page == null ? 0 : page.getParentId();
+        boolean pageEditMode = page != null && page.isPageEditMode();
         boolean hasAnyEditRight = SessionReader.hasAnyContentRight(request);
         boolean hasEditRight = SessionReader.hasContentRight(request, pageId, Right.EDIT);
         boolean hasAdminRight = SessionReader.hasAnyElevatedSystemRight(request) || SessionReader.hasContentRight(request, TreeNode.ID_ALL, Right.EDIT);
         boolean hasApproveRight = SessionReader.hasContentRight(request, pageId, Right.APPROVE);
+        SiteData homeSite = null;
         try {
             homeSite = TreeCache.getInstance().getLanguageRootSite(outputData.locale);
             otherLocales = TreeCache.getInstance().getOtherLocales(outputData.locale);
@@ -77,12 +79,12 @@ public class TopNavControl extends TemplateControl {
                     getHtml("_cancel", outputData.locale));
         } else {
             if (editMode) {
-                if (pageId != 0 && hasEditRight) {
+                if (page!=null && hasEditRight) {
                     writer.write("<li><a href=\"/page.srv?act=openEditPageContent&pageId={1}\" >{2}</span></a></li>",
                             String.valueOf(pageId),
                             getHtml("_editPage", outputData.locale));
                 }
-                if (pageId != 0 && hasApproveRight) {
+                if (page!=null && hasApproveRight && page.hasUnpublishedDraft()) {
                     writer.write("<li><a href=\"/page.srv?act=publishPage&pageId={1}\" >{2}</a></li>",
                             String.valueOf(pageId),
                             getHtml("_publish", outputData.locale));
