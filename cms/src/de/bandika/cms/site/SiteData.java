@@ -77,6 +77,24 @@ public class SiteData extends TreeNode {
         return files;
     }
 
+    public List<FileData> getDocuments() {
+        List<FileData> list=new ArrayList<>();
+        for (FileData file : files){
+            if (!file.isImage())
+                list.add(file);
+        }
+        return list;
+    }
+
+    public List<FileData> getImages() {
+        List<FileData> list=new ArrayList<>();
+        for (FileData file : files){
+            if (file.isImage())
+                list.add(file);
+        }
+        return list;
+    }
+
     public void addFile(FileData node) {
         files.add(node);
     }

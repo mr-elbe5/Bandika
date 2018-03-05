@@ -226,6 +226,28 @@ nav.mainNav li li li a {
     font-size: $size_txt;
 }
 
+nav.subNav {
+}
+
+nav.subNav ul {
+  list-style: none;
+  text-align: left;
+  padding: 0;
+  margin: 0;
+}
+
+nav.subNav li {
+  text-align: left;
+}
+
+nav.subNav li a {
+  text-decoration: none;
+}
+
+nav.subNav li ul li {
+  padding-left: 10px;
+}
+
 .searchBox {
     display: table-cell;
     min-width: 200px;

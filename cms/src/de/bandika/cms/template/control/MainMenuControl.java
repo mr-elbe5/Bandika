@@ -39,10 +39,6 @@ public class MainMenuControl extends TemplateControl {
         return KEY;
     }
 
-    public boolean isDynamic(){
-        return true;
-    }
-
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();

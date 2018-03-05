@@ -36,10 +36,6 @@ public class LayerControl extends TemplateControl {
         return KEY;
     }
 
-    public boolean isDynamic(){
-        return false;
-    }
-
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
         if (SessionReader.isEditMode(outputContext.getRequest())) {

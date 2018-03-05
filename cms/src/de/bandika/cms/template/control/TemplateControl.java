@@ -12,4 +12,8 @@ import de.bandika.cms.template.TemplateInclude;
 
 public abstract class TemplateControl extends TemplateInclude {
 
+    public boolean isDynamic(){
+        return true;
+    }
+
 }

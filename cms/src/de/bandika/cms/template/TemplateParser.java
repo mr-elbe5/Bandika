@@ -9,7 +9,6 @@
 package de.bandika.cms.template;
 
 import de.bandika.base.log.Log;
-import de.bandika.cms.template.part.*;
 import de.bandika.webbase.util.TagAttributes;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
@@ -60,10 +59,8 @@ public class TemplateParser {
                 Log.warn("element without type");
                 continue;
             }
-            if (include instanceof TemplatePart) {
-                ((TemplatePart)include).setAttributes(new TagAttributes(element.attributes()));
-                ((TemplatePart)include).setContent(element.html());
-            }
+            include.setAttributes(new TagAttributes(element.attributes()));
+            include.setContent(element.html());
             list.add(include);
             TextNode placeholder=new TextNode(PLACEHOLDER_START+(list.size()-1)+PLACEHOLDER_END);
             element.replaceWith(placeholder);
@@ -85,9 +82,7 @@ public class TemplateParser {
         TemplateInclude include=getTemplateInclude(element);
         if (include==null)
             return null;
-        if (include instanceof TemplatePart) {
-            ((TemplatePart) include).setAttributes(new TagAttributes(element.attributes()));
-        }
+        include.setAttributes(new TagAttributes(element.attributes()));
         return include;
     }
 

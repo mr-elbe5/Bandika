@@ -6,43 +6,43 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.cms.template.part;
+package de.bandika.cms.template;
 
-import de.bandika.base.log.Log;
+import de.bandika.base.util.StringUtil;
 import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
+import de.bandika.cms.template.control.TemplateControl;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-public class JspPart extends TemplatePart {
+public class HeadInclude extends TemplateControl {
 
-    public static final String KEY = "jsp";
+    public static final String KEY = "head";
+
+    private static HeadInclude instance = null;
+
+    public static HeadInclude getInstance() {
+        if (instance == null)
+            instance = new HeadInclude();
+        return instance;
+    }
+
+    private HeadInclude(){
+    }
 
     public String getKey(){
         return KEY;
     }
 
-    public boolean isDynamic(){
-        return true;
-    }
-
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
-        HttpServletRequest request=outputContext.getRequest();
-        String url = attributes.getString("url");
-        request.setAttribute("pageData", outputData.pageData);
-        if (outputData.partData != null) {
-            request.setAttribute("partData", outputData.partData);
-        }
-        try {
-            outputContext.includeJsp(url);
-        } catch (ServletException e) {
-            Log.error("could not include jsp:" + url, e);
-            writer.write("<div>JSP missing</div>");
-        }
+        if (outputData.pageData==null)
+            return;
+        writer.write("<title>{1}</title>\n" +
+                        "<meta name=\"keywords\" content=\"{2}\">\n",
+                StringUtil.getHtml("appTitle", outputData.locale),
+                StringUtil.toHtml(outputData.pageData.getKeywords()));
     }
 
 }

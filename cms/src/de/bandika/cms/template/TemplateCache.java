@@ -11,7 +11,6 @@ package de.bandika.cms.template;
 import de.bandika.base.cache.BaseCache;
 import de.bandika.base.log.Log;
 import de.bandika.cms.template.control.*;
-import de.bandika.cms.template.part.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,9 +34,9 @@ public class TemplateCache extends BaseCache {
             return null;
         }
         switch (type){
-            /* controls return instance */
-            case HeadControl.KEY :
-                return HeadControl.getInstance();
+            /* not parameterized return instance */
+            case HeadInclude.KEY :
+                return HeadInclude.getInstance();
             case TopNavControl.KEY :
                 return TopNavControl.getInstance();
             case MainMenuControl.KEY :
@@ -50,21 +49,21 @@ public class TemplateCache extends BaseCache {
                 return PageContentControl.getInstance();
             case LayerControl.KEY :
                 return LayerControl.getInstance();
-            case SubMenuControl.KEY :
-                return SubMenuControl.getInstance();
-            case DocumentListControl.KEY :
-                return DocumentListControl.getInstance();
-            /* parts return new */
-            case SectionPart.KEY :
-                return new SectionPart();
-            case FieldPart.KEY :
-                return new FieldPart();
-            case JspPart.KEY :
-                return new JspPart();
-            case ResourcePart.KEY :
-                return new ResourcePart();
-            case SnippetPart.KEY :
-                return new SnippetPart();
+            case SubNaviControl.KEY :
+                return SubNaviControl.getInstance();
+            /* parameterized return new */
+            case FileListControl.KEY :
+                return new FileListControl();
+            case SectionInclude.KEY :
+                return new SectionInclude();
+            case FieldInclude.KEY :
+                return new FieldInclude();
+            case JspControl.KEY :
+                return new JspControl();
+            case ResourceInclude.KEY :
+                return new ResourceInclude();
+            case SnippetInclude.KEY :
+                return new SnippetInclude();
         }
         Log.warn("element without valid type: "+type);
         return null;

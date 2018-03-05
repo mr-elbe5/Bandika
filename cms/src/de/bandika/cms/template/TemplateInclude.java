@@ -11,6 +11,7 @@ package de.bandika.cms.template;
 import de.bandika.base.util.StringUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
+import de.bandika.webbase.util.TagAttributes;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -18,15 +19,53 @@ import java.util.*;
 
 public abstract class TemplateInclude implements Serializable {
 
+    public static Set<String> IGNORE_ATTRIBUTES = new HashSet<>();
+
+    static{
+        IGNORE_ATTRIBUTES.add("type");
+        IGNORE_ATTRIBUTES.add("name");
+    }
+
+    protected String content="";
+    protected TagAttributes attributes;
+
     public abstract String getKey();
 
-    public abstract boolean isDynamic();
+    public boolean isDynamic(){
+        return false;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public TagAttributes getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(TagAttributes attributes) {
+        this.attributes = attributes;
+    }
 
     public String getPlaceholder(){
-        return "{<include type=\"" + getKey() + "\" />";
+        StringBuilder sb=new StringBuilder();
+        sb.append("{<include type=\"").append(getKey()).append("\"");
+        for (String key : attributes.keySet()){
+            if (IGNORE_ATTRIBUTES.contains(key))
+                continue;
+            sb.append(" ").append(key).append("=\"").append(attributes.getString(key)).append("\"");
+        }
+        sb.append(" />}");
+        return sb.toString();
     }
 
     public void completeOutputData(PageOutputData outputData){
+        outputData.attributes=attributes;
+        outputData.content=content;
     }
 
     public abstract void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException;

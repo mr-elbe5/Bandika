@@ -13,7 +13,6 @@ import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateInclude;
-import de.bandika.cms.template.part.TemplatePart;
 import de.bandika.webbase.util.TagAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,9 +40,7 @@ public class IncludeTag extends BaseTag {
             if (include!=null) {
                 TagAttributes attributes = new TagAttributes();
                 attributes.put("name", name);
-                if (include instanceof TemplatePart) {
-                    ((TemplatePart) include).setAttributes(attributes);
-                }
+                include.setAttributes(attributes);
                 try {
                     include.writeHtml(outputContext, outputData);
                 } catch (Exception e) {

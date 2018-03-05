@@ -6,31 +6,39 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.cms.template.part;
+package de.bandika.cms.template.control;
 
-import de.bandika.cms.field.Field;
+import de.bandika.base.log.Log;
+import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-public class FieldPart extends TemplatePart {
+public class JspControl extends TemplateControl {
 
-    public static final String KEY = "field";
+    public static final String KEY = "jsp";
 
     public String getKey(){
         return KEY;
     }
 
-    public boolean isDynamic(){
-        return false;
-    }
-
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        Field field = outputData.partData.ensureField(getAttributes().get("name"), getAttributes().get("fieldType"));
-        outputData.attributes=attributes;
-        outputData.content=content;
-        field.appendFieldHtml(outputContext, outputData);
+        StringWriteUtil writer=outputContext.getWriter();
+        HttpServletRequest request=outputContext.getRequest();
+        String url = attributes.getString("url");
+        request.setAttribute("pageData", outputData.pageData);
+        if (outputData.partData != null) {
+            request.setAttribute("partData", outputData.partData);
+        }
+        try {
+            outputContext.includeJsp(url);
+        } catch (ServletException e) {
+            Log.error("could not include jsp:" + url, e);
+            writer.write("<div>JSP missing</div>");
+        }
     }
 
 }

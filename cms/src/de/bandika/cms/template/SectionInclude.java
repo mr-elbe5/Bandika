@@ -6,7 +6,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.bandika.cms.template.part;
+package de.bandika.cms.template;
 
 import de.bandika.base.log.Log;
 import de.bandika.base.util.StringUtil;
@@ -17,20 +17,17 @@ import de.bandika.cms.page.PagePartData;
 import de.bandika.cms.page.SectionData;
 import de.bandika.cms.template.TemplateCache;
 import de.bandika.cms.template.TemplateData;
+import de.bandika.cms.template.TemplateInclude;
 
 import java.io.IOException;
 import java.util.Locale;
 
-public class SectionPart extends TemplatePart {
+public class SectionInclude extends TemplateInclude {
 
     public static final String KEY = "section";
 
     public String getKey(){
         return KEY;
-    }
-
-    public boolean isDynamic(){
-        return false;
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {

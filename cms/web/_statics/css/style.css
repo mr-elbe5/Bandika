@@ -371,7 +371,7 @@ table.listTable .selected { background: #f0f0f0; }
 
 div.details { border: 1px solid #cccccc; background: #ffffff; padding: 10px; }
 
-div.details h3 { color: #3040d0; background: none; margin-bottom: 10px; }
+div.details h3 { color: #5060c0; background: none; margin-bottom: 10px; }
 
 table.details td, table.details th { padding: 5px; }
 
@@ -524,6 +524,14 @@ nav.mainNav li li li a { padding: 7px 14px 6px 24px; }
 .breadcrumb li a:hover, .breadcrumb li:last-child a { color: #e0e0e0; }
 
 .breadcrumb li a:before { content: "\2192\00A0"; font-size: 12px; }
+
+nav.subNav ul { list-style: none; text-align: left; padding: 0; margin: 0; }
+
+nav.subNav li { text-align: left; }
+
+nav.subNav li a { text-decoration: none; }
+
+nav.subNav li ul li { padding-left: 10px; }
 
 .searchBox { display: table-cell; min-width: 200px; text-align: right; }
 

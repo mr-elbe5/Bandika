@@ -22,27 +22,15 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
-public class DocumentListControl extends TemplateControl {
+public class FileListControl extends TemplateControl {
 
-    public static final String KEY = "documents";
+    public static final String KEY = "files";
 
-    private static DocumentListControl instance = null;
-
-    public static DocumentListControl getInstance() {
-        if (instance == null)
-            instance = new DocumentListControl();
-        return instance;
-    }
-
-    private DocumentListControl(){
+    public FileListControl(){
     }
 
     public String getKey(){
         return KEY;
-    }
-
-    public boolean isDynamic(){
-        return true;
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
@@ -52,7 +40,19 @@ public class DocumentListControl extends TemplateControl {
             return;
         int siteId = outputData.pageData.getParentId();
         SiteData site = TreeCache.getInstance().getSite(siteId);
-        List<FileData> files = site.getFiles();
+        List<FileData> files;
+        String filter=attributes.getString("filter");
+        switch (filter){
+            case "documents":
+                files=site.getDocuments();
+                break;
+            case "images":
+                files=site.getImages();
+                break;
+            default:
+                files=site.getFiles();
+                break;
+        }
         for (FileData file : files) {
             if (!file.isAnonymous() && !SessionReader.hasContentRight(request, file.getId(), Right.READ))
                 continue;
