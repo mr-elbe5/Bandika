@@ -230,30 +230,53 @@ CREATE TABLE IF NOT EXISTS t_node_usage (
   CONSTRAINT t_page_usage_fk2 FOREIGN KEY (page_id) REFERENCES t_page (id) ON DELETE CASCADE
 );
 --
-CREATE TABLE IF NOT EXISTS t_shared_item (
-  id              INTEGER      NOT NULL,
-  creation_date   TIMESTAMP    NOT NULL DEFAULT now(),
-  change_date     TIMESTAMP    NOT NULL DEFAULT now(),
-  ranking         INTEGER      NOT NULL DEFAULT 0,
-  name            VARCHAR(100) NOT NULL,
-  display_name    VARCHAR(100) NOT NULL DEFAULT '',
-  description     VARCHAR(200) NOT NULL DEFAULT '',
-  keywords        VARCHAR(500) NOT NULL DEFAULT '',
-  owner_id        INTEGER      NOT NULL DEFAULT 1,
-  author_name     VARCHAR(255) NOT NULL,
-  CONSTRAINT t_shared_item_pk PRIMARY KEY (id),
-  CONSTRAINT t_shared_item_fk1 FOREIGN KEY (owner_id) REFERENCES t_user (id) ON DELETE SET DEFAULT
+--team
+CREATE TABLE IF NOT EXISTS t_teamfile(
+  id integer not null,
+  change_date timestamp not null default now(),
+  teampart_id integer not  null,
+  owner_id integer null,
+  owner_name varchar(255) not null,
+  checkout_id integer null,
+  checkout_name varchar(255) not null default '',
+  constraint t_teamfile_pk primary key (id)
 );
 --
-CREATE TABLE IF NOT EXISTS t_shared_item_usage (
-  id         INTEGER      NOT NULL,
-  user_id    INTEGER      NOT NULL,
-  start_date TIMESTAMP    NULL,
-  end_date   TIMESTAMP    NULL,
-  relation   VARCHAR(20)  NOT NULL,
-  CONSTRAINT t_shared_item_usage_pk PRIMARY KEY (id, user_id, start_date),
-  CONSTRAINT t_shared_item_usage_fk1 FOREIGN KEY (id) REFERENCES t_shared_item (id) ON DELETE CASCADE,
-  CONSTRAINT t_shared_item_usage_fk2 FOREIGN KEY (user_id) REFERENCES t_user (id) ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS t_teamfile_version(
+  id integer not null,
+  version integer not null default 1,
+  change_date timestamp not null default now(),
+  file_name varchar(100) not null,
+  name varchar(255) not null default '',
+  description text not null default '',
+  content_type varchar(255),
+  size integer not null default 0,
+  author_id integer null,
+  author_name varchar(255) not null,
+  bytes bytea not null,
+  constraint t_teamfile_version_pk primary key (id,version)
+);
+--
+CREATE TABLE IF NOT EXISTS t_teamfile_current(
+  id integer not null,
+  change_date timestamp not null default now(),
+  current_version integer null,
+  checkout_version integer null,
+  constraint t_teamfile_current_pk primary key (id),
+  constraint t_teamfile_current_fk1 foreign key (id,current_version) references t_teamfile_version(id, version) on delete cascade,
+  constraint t_teamfile_current_fk2 foreign key (id,checkout_version) references t_teamfile_version(id, version) on delete cascade
+);
+--
+CREATE TABLE IF NOT EXISTS t_teamblogentry(
+  id integer not null,
+  change_date timestamp not null default now(),
+  teampart_id integer not  null,
+  title varchar(255) not null default '',
+  author_id integer null,
+  author_name varchar(255) not null,
+  email varchar(255) not null default '',
+  entry text not null default '',
+  constraint t_teamblogentry_pk primary key (id)
 );
 -- inserts
 -- std locale

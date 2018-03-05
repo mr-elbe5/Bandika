@@ -8,6 +8,8 @@
  */
 package de.bandika.cms.application;
 
+import de.bandika.cms.team.TeamBlogActions;
+import de.bandika.cms.team.TeamFileActions;
 import de.bandika.webbase.application.DefaultActions;
 import de.bandika.webbase.application.Initializer;
 import de.bandika.base.log.Log;
@@ -61,6 +63,8 @@ public class CmsInitializer extends Initializer {
             PagePartActions.initialize();
             SearchActions.initialize();
             SiteActions.initialize();
+            TeamBlogActions.initialize();
+            TeamFileActions.initialize();
             TemplateActions.initialize();
             TimerActions.initialize();
             TreeActions.initialize();
