@@ -8,16 +8,16 @@
 --%>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
-<%@ page import="de.bandika.cms.team.TeamBlogPartData" %>
 <%@ page import="de.bandika.cms.team.TeamBlogEntryData" %>
 <%@ page import="de.bandika.cms.team.TeamBlogBean" %>
 <%@ page import="java.util.List" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.cms.page.PageData" %>
+<%@ page import="de.bandika.cms.page.PagePartData" %>
 <%
     Locale locale= SessionReader.getSessionLocale(request);
     PageData data=(PageData) request.getAttribute("pageData");
-    TeamBlogPartData cpdata = (TeamBlogPartData) request.getAttribute("pagePartData");
+    PagePartData cpdata = (PagePartData) request.getAttribute("pagePartData");
     TeamBlogEntryData editEntry = (TeamBlogEntryData) SessionReader.getSessionObject(request, "entry");
     List<TeamBlogEntryData> entries = TeamBlogBean.getInstance().getEntryList(cpdata.getId());
 %>
@@ -27,8 +27,6 @@
     <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
     <input type="hidden" name="pid" value="<%=cpdata.getId()%>"/>
     <input type="hidden" name="eid" value="<%=editEntry.getId()%>"/>
-    <legend><%=StringUtil.toHtml(cpdata.getTitle())%>
-    </legend>
     <% for (TeamBlogEntryData entryData : entries) {%>
     <div class="blogEntry">
         <div class="blogEntryTitle"><%=StringUtil.toHtml(entryData.getTitle())%>

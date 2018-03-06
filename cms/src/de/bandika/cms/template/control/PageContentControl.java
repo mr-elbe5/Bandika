@@ -76,6 +76,7 @@ public class PageContentControl extends TemplateControl {
             if (!jsp.isEmpty()){
                 Log.info("writing dynamic jsp");
                 try {
+                    outputContext.getRequest().setAttribute(RequestStatics.KEY_OUTPUTDATA,outputData);
                     outputContext.includeJsp(jsp);
                 } catch (ServletException e) {
                     Log.error("could not include jsp:" + jsp, e);

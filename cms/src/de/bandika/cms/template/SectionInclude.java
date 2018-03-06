@@ -15,9 +15,6 @@ import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
 import de.bandika.cms.page.PagePartData;
 import de.bandika.cms.page.SectionData;
-import de.bandika.cms.template.TemplateCache;
-import de.bandika.cms.template.TemplateData;
-import de.bandika.cms.template.TemplateInclude;
 
 import java.io.IOException;
 import java.util.Locale;

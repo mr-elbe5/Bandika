@@ -123,7 +123,7 @@ public class TemplateData extends BaseData implements Serializable {
             writer.write(parsedCode.substring(start,end));
             templateInclude.completeOutputData(outputData);
             if (templateInclude.isDynamic() && outputContext.getRequest()==null){
-                writer.write(templateInclude.getPlaceholder());
+                writer.write(templateInclude.getPlaceholder(outputData));
             }
             else {
                 templateInclude.writeHtml(outputContext, outputData);

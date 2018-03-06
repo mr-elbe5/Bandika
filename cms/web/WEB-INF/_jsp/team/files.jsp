@@ -7,16 +7,16 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="java.util.Locale" %>
-<%@ page import="java.util.List" %>
-<%@ page import="de.bandika.webbase.servlet.RequestReader" %>
 <%@ page import="de.bandika.cms.team.TeamFileData" %>
 <%@ page import="de.bandika.cms.team.TeamFileBean" %>
+<%@ page import="java.util.List" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
+<%@ page import="de.bandika.webbase.servlet.RequestReader" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%
     int partId = RequestReader.getInt(request,"partId");
     int fileId = RequestReader.getInt(request,"fileId");
-    List<TeamFileData> files = TeamFileBean.getInstance().getFileHistory(fileId);
+    List<TeamFileData> files = TeamFileBean.getInstance().getFileList(partId, SessionReader.getLoginId(request));
     Locale locale = SessionReader.getSessionLocale(request);
     String tableId="table"+partId;
 %>
@@ -27,7 +27,8 @@
             <th width="5%"><%=StringUtil.getHtml("team_version",locale)%></th>
             <th width="15%"><%=StringUtil.getHtml("team_owner",locale)%></th>
             <th width="15%"><%=StringUtil.getHtml("team_author",locale)%></th>
-            <th width="50%"></th>
+            <th width="15%"><%=StringUtil.getHtml("team_checkedoutby",locale)%></th>
+            <th width="35%"></th>
         </tr>
         <% for (TeamFileData fileData : files) {%>
         <tr>
@@ -44,22 +45,27 @@
             <td><%=StringUtil.toHtml(fileData.getCheckoutName())%>
             </td>
             <td class="pullRight">
-                <a class="icn irestore" title="<%=StringUtil.getHtml("team_restore", locale)%>" href="" onclick="return sendFileAction('restoreHistoryFile',<%=fileData.getId()%>,<%=fileData.getVersion()%>);">&nbsp;</a>
-                <a class="icn idelete" title="<%=StringUtil.getHtml("_delete", locale)%>" href="" onclick="return sendFileAction('deleteHistoryFile',<%=fileData.getId()%>,<%=fileData.getVersion()%>);">&nbsp;</a>
+                <a class="icn icheckout" title="<%=StringUtil.getHtml("team_checkout", locale)%>" href="" onclick="return sendFileAction('checkoutFile',<%=fileData.getId()%>);">&nbsp;</a>
+                <a class="icn icheckin" title="<%=StringUtil.getHtml("team_checkin", locale)%>" href="" onclick="return sendFileAction('checkinFile',<%=fileData.getId()%>);">&nbsp;</a>
+                <a class="icn iundocheckout" title="<%=StringUtil.getHtml("team_undoCheckout", locale)%>" href="" onclick="return sendFileAction('undoCheckoutFile',<%=fileData.getId()%>);">&nbsp;</a>
+                <a class="icn iedit" title="<%=StringUtil.getHtml("team_edit", locale)%>" href="" onclick="return sendFileAction('openEditFile',<%=fileData.getId()%>);">&nbsp;</a>
+                <a class="icn ihistory" title="<%=StringUtil.getHtml("team_previousVersions", locale)%>" href="" onclick="return sendFileAction('openFileHistory',<%=fileData.getId()%>);">&nbsp;</a>
+                <a class="icn idelete" title="<%=StringUtil.getHtml("_delete", locale)%>" href="" onclick="return sendFileAction('deleteFile',<%=fileData.getId()%>);">&nbsp;</a>
             </td>
         </tr>
         <%}%>
     </table>
 </fieldset>
 <div class="buttonset topspace">
-    <button onclick="return sendFileAction('showList',0,0);"><%=StringUtil.getHtml("_back", locale)%>
+    <button class="primary" onclick="return sendFileAction('openCreateFile',0);"><%=StringUtil.getHtml("_new", locale)%>
     </button>
 </div>
 <script type="text/javascript">
-    function sendFileAction(action, fileId, version) {
-        var params = {act:action,partId: <%=partId%>,fileId:fileId,version:version};
+    function sendFileAction(action, fileId) {
+        var params = {act:action,partId: <%=partId%>,fileId:fileId};
         post2Target('/teamfile.ajx', params, $('#<%=tableId%>').closest('.teamdocs'));
         return false;
     }
 </script>
+
 

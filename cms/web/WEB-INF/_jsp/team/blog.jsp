@@ -7,21 +7,19 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.team.TeamBlogPartData" %>
 <%@ page import="de.bandika.cms.team.TeamBlogEntryData" %>
 <%@ page import="de.bandika.cms.team.TeamBlogBean" %>
 <%@ page import="java.util.List" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.cms.page.PageData" %>
+<%@ page import="de.bandika.cms.page.PagePartData" %>
 <%
     PageData data=(PageData) request.getAttribute("pageData");
-    TeamBlogPartData cpdata = (TeamBlogPartData) request.getAttribute("pagePartData");
+    PagePartData cpdata = (PagePartData) request.getAttribute("pagePartData");
     List<TeamBlogEntryData> entries = TeamBlogBean.getInstance().getEntryList(cpdata.getId());
     Locale locale = SessionReader.getSessionLocale(request);
 %>
-<legend><%=StringUtil.toHtml(cpdata.getTitle())%>
-</legend>
 <% for (TeamBlogEntryData entryData : entries) {%>
 <div class="blogEntry">
     <div class="blogEntryTitle"><%=StringUtil.toHtml(entryData.getTitle())%>

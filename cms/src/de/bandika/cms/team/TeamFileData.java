@@ -147,7 +147,7 @@ public class TeamFileData extends FileData {
             setName(file.getFileName());
             setContentType(file.getContentType());
         }
-        setName(RequestReader.getString(request,"name"));
+        setName(RequestReader.getString(request,"name",getName()));
         setDescription(RequestReader.getString(request,"description"));
         if (isNew()) {
             setOwnerId(SessionReader.getLoginId(request));
@@ -162,13 +162,6 @@ public class TeamFileData extends FileData {
             setAuthorName(SessionReader.getLoginName(request));
         }
         return true;
-    }
-
-    public void prepareSave(HttpServletRequest request) throws Exception {
-        //todo
-        super.prepareSave();
-        if (name.length() == 0)
-            name = getName();
     }
 
 }

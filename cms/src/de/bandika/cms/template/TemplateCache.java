@@ -64,6 +64,10 @@ public class TemplateCache extends BaseCache {
                 return new ResourceInclude();
             case SnippetInclude.KEY :
                 return new SnippetInclude();
+            case TeamDocsControl.KEY :
+                return new TeamDocsControl();
+            case TeamBlogControl.KEY :
+                return new TeamBlogControl();
         }
         Log.warn("element without valid type: "+type);
         return null;

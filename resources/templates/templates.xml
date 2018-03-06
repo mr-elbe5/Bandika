@@ -211,6 +211,22 @@
             </div>
         </div>
     </cms:template>
+    <cms:template type="PART" name="TeamDocuments" displayName="Team Documents" sectionTypes="content">
+        <div class="textBox">
+            <h2>
+                <cms:include type="field" fieldType="text" name="text">Lorem ipsum</cms:include>
+            </h2>
+            <cms:include type="teamdocs" name="teamdocs"></cms:include>
+        </div>
+    </cms:template>
+    <cms:template type="PART" name="TeamBlog" displayName="Team Blog" sectionTypes="content">
+        <div class="textBox">
+            <h2>
+                <cms:include type="field" fieldType="text" name="text">Lorem ipsum</cms:include>
+            </h2>
+            <cms:include type="teamblog" name="teamblog"></cms:include>
+        </div>
+    </cms:template>
 
     <!-- aside parts -->
     <cms:template type="PART" name="ImageAside" displayName="Image" sectionTypes="aside">
@@ -265,7 +281,6 @@
             </div>
         </div>
     </cms:template>
-
     <!-- snippets -->
     <cms:template type="SNIPPET" name="searchBox" displayName="Search Box" sectionTypes="SearchBoxModule">
         <div class="searchBox flexItem one">

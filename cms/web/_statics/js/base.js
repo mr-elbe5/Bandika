@@ -432,6 +432,24 @@ function postMulti2ModalDialog(url, params) {
     return false;
 }
 
+function post2Target(url, params, target) {
+    $.ajax({
+        url: url, type: 'POST', data: params, cache: false, dataType: 'html'
+    }).success(function (html, textStatus) {
+        $(target).html(html);
+    });
+    return false;
+}
+
+function postMulti2Target(url, params, target) {
+    $.ajax({
+        url: url, type: 'POST', data: params, cache: false, dataType: 'html', contentType: false, processData: false
+    }).success(function (html, textStatus) {
+        $(target).html(html);
+    });
+    return false;
+}
+
 
 
 

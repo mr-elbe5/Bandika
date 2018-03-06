@@ -34,5 +34,6 @@ public final class RequestStatics {
     public static final String KEY_LOGIN = "$LOGIN";
     public static final String KEY_LOCALE = "$LOCALE";
     public static final String KEY_EDITMODE = "$EDITMODE";
+    public static final String KEY_OUTPUTDATA = "$OUTPUTDATA";
 
 }

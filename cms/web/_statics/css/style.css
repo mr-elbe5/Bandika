@@ -135,6 +135,10 @@ nav li { list-style: none; }
 
 .icn.icancel:before { content: '\E012'; }
 
+.icn.icheckin:before { content: '\E087'; }
+
+.icn.icheckout:before { content: '\E088'; }
+
 .icn.iclear:before { content: '\E148'; }
 
 .icn.icode:before { content: '\E032'; }
@@ -160,6 +164,8 @@ nav li { list-style: none; }
 .icn.igroup:before { content: '\E051'; }
 
 .icn.ihelp:before { content: '\E070'; }
+
+.icn.ihistory:before { content: '\E12b'; }
 
 .icn.ihome:before { content: '\E072'; }
 
@@ -207,6 +213,8 @@ nav li { list-style: none; }
 
 .icn.iremove:before { content: '\E08f'; }
 
+.icn.irestore:before { content: '\E133'; }
+
 .icn.ilock:before { content: '\E086'; }
 
 .icn.iright:before { content: '\E112'; }
@@ -226,6 +234,8 @@ nav li { list-style: none; }
 .icn.itemplate:before { content: '\E095'; }
 
 .icn.itimer:before { content: '\E12b'; }
+
+.icn.iundocheckout:before { content: '\E133'; }
 
 .icn.iup:before { content: '\E135'; }
 

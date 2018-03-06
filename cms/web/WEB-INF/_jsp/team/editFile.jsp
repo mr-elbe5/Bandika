@@ -7,65 +7,124 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.team.TeamFilePartData" %>
 <%@ page import="de.bandika.cms.team.TeamFileData" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.cms.page.PageData" %>
+<%@ page import="de.bandika.webbase.servlet.RequestReader" %>
 <%
-    PageData data=(PageData) request.getAttribute("pageData");
-    TeamFilePartData cpdata = (TeamFilePartData) request.getAttribute("pagePartData");
-    TeamFileData fileData = (TeamFileData) SessionReader.getSessionObject(request, "file");
+    int partId = RequestReader.getInt(request,"partId");
+    TeamFileData fileData = (TeamFileData) SessionReader.getSessionObject(request, "fileData");
+    assert fileData!=null;
     Locale locale = SessionReader.getSessionLocale(request);
 %>
-<form class="form-horizontal" action="/teamfile.srv" method="post" name="teamfileform" accept-charset="UTF-8"
-      enctype="multipart/form-data">
-    <input type="hidden" name="act" value="saveFile"/>
-    <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
-    <input type="hidden" name="pid" value="<%=cpdata.getId()%>"/>
-    <input type="hidden" name="fid" value="<%=data.getId()%>"/>
-    <legend><%=StringUtil.toHtml(cpdata.getTitle())%>
-    </legend>
-    <div>
-        <% if (!data.isNew()) {%>
-        <bandika:controlGroup labelKey="team_fileName" locale="<%=locale.getLanguage()%>"
-                              padded="true"><%=StringUtil.toHtml(fileData.getShortName())%>
-        </bandika:controlGroup>
-        <bandika:controlGroup labelKey="team_owner" locale="<%=locale.getLanguage()%>"
-                              padded="true"><%=StringUtil.toHtml(fileData.getOwnerName())%>
-        </bandika:controlGroup>
-        <bandika:controlGroup labelKey="team_author" locale="<%=locale.getLanguage()%>"
-                              padded="true"><%=StringUtil.toHtml(fileData.getAuthorName())%>
-        </bandika:controlGroup>
-        <bandika:controlGroup labelKey="team_checkedoutby" locale="<%=locale.getLanguage()%>"
-                              padded="true"><%=StringUtil.toHtml(fileData.getCheckoutName())%>
-        </bandika:controlGroup>
-        <bandika:controlGroup labelKey="team_changeDate" locale="<%=locale.getLanguage()%>"
-                              padded="true"><%=StringUtil.toHtmlDateTime(fileData.getChangeDate(),locale)%>
-        </bandika:controlGroup>
-        <bandika:controlGroup labelKey="team_size" locale="<%=locale.getLanguage()%>"
-                              padded="true"><%=String.valueOf(fileData.getSize() / 1024)%>&nbsp;kB</bandika:controlGroup>
-        <%}%>
-        <bandika:controlGroup labelKey="team_file" locale="<%=locale.getLanguage()%>" name="file" mandatory="true">
-            <!--<fileUpload name="file"/>-->
-        </bandika:controlGroup>
-        <bandika:controlGroup labelKey="team_name" locale="<%=locale.getLanguage()%>" name="name" mandatory="false">
-            <input class="input-block-level" type="text" id="name" name="name"
-                   value="<%=StringUtil.toHtml(fileData.getDisplayName())%>" maxlength="255"/>
-        </bandika:controlGroup>
-        <bandika:controlGroup labelKey="team_description" locale="<%=locale.getLanguage()%>" name="description"
-                              mandatory="false">
-            <textarea class="input-block-level" id="description" name="description" rows="5"
-                      cols=""><%=StringUtil.toHtml(fileData.getDescription())%>
-            </textarea>
-        </bandika:controlGroup>
-    </div>
-    <div class="btn-toolbar">
-        <button type="submit" class="btn btn-primary" ><%=StringUtil.getHtml("webapp_save", locale)%>
-        </button>
-        <button class="btn"
-                onclick="return linkTo('/page.srv?act=show&pageId=<%=data.getId()%>&fid=<%=data.getId()%>');"><%=StringUtil.getHtml("webapp_back", locale)%>
+<form action="/teamfile.srv" method="post" id="teamfileform" name="teamfileform" accept-charset="UTF-8" enctype="multipart/form-data">
+    <fieldset>
+        <input type="hidden" name="act" value="saveFile"/>
+        <input type="hidden" name="partId" value="<%=partId%>"/>
+        <input type="hidden" name="fileId" value="<%=fileData.getId()%>"/>
+        <table class="padded form">
+            <tr>
+                <td>
+                    <label><%=StringUtil.getHtml("team_fileName", locale)%>
+                    </label></td>
+                <td>
+                    <div>
+                        <%=StringUtil.toHtml(fileData.getShortName())%>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label><%=StringUtil.getHtml("team_owner", locale)%>
+                    </label></td>
+                <td>
+                    <div>
+                        <%=StringUtil.toHtml(fileData.getOwnerName())%>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label><%=StringUtil.getHtml("team_author", locale)%>
+                    </label></td>
+                <td>
+                    <div>
+                        <%=StringUtil.toHtml(fileData.getAuthorName())%>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label><%=StringUtil.getHtml("team_checkedoutby", locale)%>
+                    </label></td>
+                <td>
+                    <div>
+                        <%=StringUtil.toHtml(fileData.getCheckoutName())%>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label><%=StringUtil.getHtml("team_changeDate", locale)%>
+                    </label></td>
+                <td>
+                    <div>
+                        <%=StringUtil.toHtmlDateTime(fileData.getChangeDate(),locale)%>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label><%=StringUtil.getHtml("team_size", locale)%>
+                    </label></td>
+                <td>
+                    <div>
+                        <%=String.valueOf(fileData.getSize() / 1024)%>&nbsp;kB
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="file"><%=StringUtil.getHtml("team_file", locale)%>
+                    </label></td>
+                <td>
+                    <div>
+                        <input type="file" id="file" name="file" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="name"><%=StringUtil.getHtml("team_name", locale)%>
+                    </label></td>
+                <td>
+                    <div>
+                        <input type="text" id="name" name="name" value="<%=StringUtil.toHtml(fileData.getDisplayName())%>" maxlength="255"/>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="description"><%=StringUtil.getHtml("team_description", locale)%>
+                    </label></td>
+                <td>
+                    <div>
+                        <textarea id="description" name="description"><%=StringUtil.toHtml(fileData.getDescription())%></textarea>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <div class="buttonset topspace">
+        <button class="primary" type="submit"><%=StringUtil.getHtml("_save", locale)%>
         </button>
     </div>
 </form>
-
+<script type="text/javascript">
+    $('#teamfileform').submit(function (event) {
+        var $this = $(this);
+        event.preventDefault();
+        var params = $this.serializeFiles();
+        postMulti2Target('/teamfile.ajx', params, $this.closest('.teamdocs'));
+    });
+</script>

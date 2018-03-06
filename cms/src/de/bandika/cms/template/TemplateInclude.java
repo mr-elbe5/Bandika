@@ -51,13 +51,17 @@ public abstract class TemplateInclude implements Serializable {
         this.attributes = attributes;
     }
 
-    public String getPlaceholder(){
+    public String getPlaceholder(PageOutputData outputData){
         StringBuilder sb=new StringBuilder();
         sb.append("{<include type=\"").append(getKey()).append("\"");
         for (String key : attributes.keySet()){
             if (IGNORE_ATTRIBUTES.contains(key))
                 continue;
             sb.append(" ").append(key).append("=\"").append(attributes.getString(key)).append("\"");
+        }
+        if (outputData.partData!=null){
+            sb.append(" section=\"").append(outputData.partData.getSectionName()).append("\"");
+            sb.append(" partId=\"").append(outputData.partData.getId()).append("\"");
         }
         sb.append(" />}");
         return sb.toString();

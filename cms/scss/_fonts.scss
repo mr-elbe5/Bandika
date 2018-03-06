@@ -65,6 +65,14 @@
     content: '\E012';
 }
 
+.icn.icheckin:before {
+  content: '\E087';
+}
+
+.icn.icheckout:before {
+  content: '\E088';
+}
+
 .icn.iclear:before {
     content: '\E148';
 }
@@ -115,6 +123,10 @@
 
 .icn.ihelp:before {
     content: '\E070';
+}
+
+.icn.ihistory:before {
+  content: '\E12b';
 }
 
 .icn.ihome:before {
@@ -209,6 +221,10 @@
     content: '\E08f';
 }
 
+.icn.irestore:before {
+  content: '\E133';
+}
+
 .icn.ilock:before {
     content: '\E086';
 }
@@ -247,6 +263,10 @@
 
 .icn.itimer:before {
     content: '\E12b';
+}
+
+.icn.iundocheckout:before {
+  content: '\E133';
 }
 
 .icn.iup:before {

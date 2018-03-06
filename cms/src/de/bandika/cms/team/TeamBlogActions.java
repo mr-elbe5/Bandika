@@ -28,6 +28,10 @@ public class TeamBlogActions extends CmsActions {
     public static final String openDeleteEntry="openDeleteEntry";
     public static final String deleteEntry="deleteEntry";
 
+    public final static int MODE_LIST = 0;
+    public final static int MODE_EDIT = 1;
+    public final static int MODE_DELETE = 2;
+
     public static final String KEY = "teamblog";
 
     public static void initialize() {
@@ -48,7 +52,7 @@ public class TeamBlogActions extends CmsActions {
                 data.setId(TeamBlogBean.getInstance().getNextId());
                 data.setNew(true);
                 request.setAttribute("entry", data);
-                request.setAttribute("viewMode", Integer.toString(TeamBlogPartData.MODE_EDIT));
+                request.setAttribute("viewMode", Integer.toString(MODE_EDIT));
                 return showPage(request, response, data, RequestReader.getInt(request,"id"));
             }
             case openEditEntry: {
@@ -57,7 +61,7 @@ public class TeamBlogActions extends CmsActions {
                 int id = RequestReader.getInt(request,"eid");
                 TeamBlogEntryData data = TeamBlogBean.getInstance().getEntryData(id);
                 SessionWriter.setSessionObject(request, "entry", data);
-                request.setAttribute("viewMode", Integer.toString(TeamBlogPartData.MODE_EDIT));
+                request.setAttribute("viewMode", Integer.toString(MODE_EDIT));
                 return showPage(request, response, data, RequestReader.getInt(request,"id"));
             }
             case saveEntry: {
@@ -67,25 +71,25 @@ public class TeamBlogActions extends CmsActions {
                 if (data == null || data.getId() != RequestReader.getInt(request,"eid"))
                     return false;
                 if (!data.readRequestData(request)) {
-                    request.setAttribute("viewMode", Integer.toString(TeamBlogPartData.MODE_EDIT));
+                    request.setAttribute("viewMode", Integer.toString(MODE_EDIT));
                     return showPage(request, response, data, RequestReader.getInt(request,"id"));
                 }
                 data.prepareSave();
                 TeamBlogBean.getInstance().saveEntryData(data);
-                request.setAttribute("viewMode", Integer.toString(TeamBlogPartData.MODE_LIST));
+                request.setAttribute("viewMode", Integer.toString(MODE_LIST));
                 return showPage(request, response, data, RequestReader.getInt(request,"id"));
             }
             case openDeleteEntry: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
-                request.setAttribute("viewMode", Integer.toString(TeamBlogPartData.MODE_DELETE));
+                request.setAttribute("viewMode", Integer.toString(MODE_DELETE));
                 return showPage(request, response, null, RequestReader.getInt(request,"id"));
             }
             case deleteEntry: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
                 TeamBlogBean.getInstance().deleteEntry(RequestReader.getInt(request,"eid"));
-                request.setAttribute("viewMode", Integer.toString(TeamBlogPartData.MODE_LIST));
+                request.setAttribute("viewMode", Integer.toString(MODE_LIST));
                 return showPage(request, response, null, RequestReader.getInt(request,"id"));
             }
         }
