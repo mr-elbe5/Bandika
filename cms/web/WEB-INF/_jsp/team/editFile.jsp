@@ -11,18 +11,20 @@
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.webbase.servlet.RequestReader" %>
+<%@ page import="de.bandika.cms.team.TeamFileActions" %>
 <%
     int partId = RequestReader.getInt(request,"partId");
     TeamFileData fileData = (TeamFileData) SessionReader.getSessionObject(request, "fileData");
     assert fileData!=null;
+    String tableId="table"+partId;
     Locale locale = SessionReader.getSessionLocale(request);
 %>
-<form action="/teamfile.srv" method="post" id="teamfileform" name="teamfileform" accept-charset="UTF-8" enctype="multipart/form-data">
+<form action="/teamfile.ajx" method="post" id="teamfileform" name="teamfileform" accept-charset="UTF-8" enctype="multipart/form-data">
     <fieldset>
-        <input type="hidden" name="act" value="saveFile"/>
+        <input type="hidden" name="act" value="checkinFile"/>
         <input type="hidden" name="partId" value="<%=partId%>"/>
         <input type="hidden" name="fileId" value="<%=fileData.getId()%>"/>
-        <table class="padded form">
+        <table class="padded form" id="<%=tableId%>">
             <tr>
                 <td>
                     <label><%=StringUtil.getHtml("team_fileName", locale)%>
@@ -105,11 +107,11 @@
             </tr>
             <tr>
                 <td>
-                    <label for="description"><%=StringUtil.getHtml("team_description", locale)%>
+                    <label for="notes"><%=StringUtil.getHtml("team_notes", locale)%>
                     </label></td>
                 <td>
                     <div>
-                        <textarea id="description" name="description"><%=StringUtil.toHtml(fileData.getDescription())%></textarea>
+                        <textarea id="notes" name="notes"><%=StringUtil.toHtml(fileData.getNotes())%></textarea>
                     </div>
                 </td>
             </tr>
@@ -118,6 +120,8 @@
     <div class="buttonset topspace">
         <button class="primary" type="submit"><%=StringUtil.getHtml("_save", locale)%>
         </button>
+        <button onclick="return sendFileAction('<%=TeamFileActions.showList%>');"><%=StringUtil.getHtml("_cancel", locale)%>
+        </button>
     </div>
 </form>
 <script type="text/javascript">
@@ -125,6 +129,11 @@
         var $this = $(this);
         event.preventDefault();
         var params = $this.serializeFiles();
-        postMulti2Target('/teamfile.ajx', params, $this.closest('.teamdocs'));
+        postMulti2Target('/teamfile.ajx', params, $('#<%=tableId%>').closest('.teamdocs'));
     });
+    function sendFileAction(action) {
+        var params = {act:action,partId: <%=partId%>};
+        post2Target('/teamfile.ajx', params, $('#<%=tableId%>').closest('.teamdocs'));
+        return false;
+    }
 </script>

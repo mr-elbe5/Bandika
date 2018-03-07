@@ -1,10 +1,10 @@
 /*
-  Bandika! - A Java based modular Framework
-  Copyright (C) 2009-2014 Michael Roennau
+ Bandika  - A Java based modular Content Management System
+ Copyright (C) 2009-2017 Michael Roennau
 
-  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
-  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 package de.bandika.cms.team;
 
@@ -30,10 +30,6 @@ public class TeamFileActions extends CmsActions {
     public static final String undoCheckoutFile="undoCheckoutFile";
     public static final String checkinFile="checkinFile";
     public static final String openEditFile="openEditFile";
-    public static final String saveFile="saveFile";
-    public static final String openFileHistory="openFileHistory";
-    public static final String restoreHistoryFile="restoreHistoryFile";
-    public static final String deleteHistoryFile="deleteHistoryFile";
     public static final String deleteFile="deleteFile";
 
     public static final String KEY = "teamfile";
@@ -52,11 +48,8 @@ public class TeamFileActions extends CmsActions {
                 return showFiles(request, response);
             }
             case showFile: {
-                int version = RequestReader.getInt(request,"version");
                 int fileId = RequestReader.getInt(request,"fileId");
-                FileData data = (version == 0) ?
-                        TeamFileBean.getInstance().getFileForUser(fileId, SessionReader.getLoginId(request)) :
-                        TeamFileBean.getInstance().getFile(fileId, version);
+                FileData data = TeamFileBean.getInstance().getFile(fileId);
                 if (data == null) {
                     Log.error( "Error delivering unknown file - id: " + fileId);
                     return false;
@@ -66,7 +59,7 @@ public class TeamFileActions extends CmsActions {
             case openCreateFile: {
                 TeamFileData data = new TeamFileData();
                 data.setId(TeamFileBean.getInstance().getNextId());
-                data.setTeamPartId(RequestReader.getInt(request,"partId"));
+                data.setPartId(RequestReader.getInt(request,"partId"));
                 data.setOwnerId(SessionReader.getLoginId(request));
                 data.setOwnerName(SessionReader.getLoginName(request));
                 data.setAuthorId(SessionReader.getLoginId(request));
@@ -79,62 +72,45 @@ public class TeamFileActions extends CmsActions {
             }
             case checkoutFile: {
                 int fid = RequestReader.getInt(request,"fileId");
-                TeamFileData data = TeamFileBean.getInstance().getFileDataForUser(fid, SessionReader.getLoginId(request));
+                int userId=SessionReader.getLoginId(request);
+                TeamFileData data = TeamFileBean.getInstance().getFileData(fid);
                 if (data.getCheckoutId() != 0) {
                     addError(request, StringUtil.getHtml("team_alreadyCheckedout",SessionReader.getSessionLocale(request)));
                     return showFiles(request, response);
                 }
-                data.increaseVersion();
-                data.setCheckoutId(SessionReader.getLoginId(request));
+                data.setCheckoutId(userId);
                 data.setCheckoutName(SessionReader.getLoginName(request));
-                TeamFileBean.getInstance().checkoutFileData(data);
-                SessionWriter.setSessionObject(request,"fileData", data);
+                TeamFileBean.getInstance().updateCheckout(data);
                 return showFiles(request, response);
             }
             case undoCheckoutFile: {
                 int fid = RequestReader.getInt(request,"fileId");
-                TeamFileData data = TeamFileBean.getInstance().getFileDataForUser(fid, SessionReader.getLoginId(request));
-                if (data.getCheckoutId() != SessionReader.getLoginId(request)) {
+                int userId=SessionReader.getLoginId(request);
+                TeamFileData data = TeamFileBean.getInstance().getFileData(fid);
+                if (data.getCheckoutId() != userId) {
                     addError(request, StringUtil.getHtml("team_notCheckedoutByYou",SessionReader.getSessionLocale(request)));
                     return showFiles(request, response);
                 }
                 data.setCheckoutId(0);
                 data.setCheckoutName("");
-                TeamFileBean.getInstance().undoCheckoutFileData(data);
-                SessionWriter.setSessionObject(request,"fileData", data);
-                return showFiles(request, response);
-            }
-            case checkinFile: {
-                int fid = RequestReader.getInt(request,"fileId");
-                TeamFileData data = TeamFileBean.getInstance().getFileDataForUser(fid, SessionReader.getLoginId(request));
-                if (data.getCheckoutId() != SessionReader.getLoginId(request)) {
-                    addError(request, StringUtil.getHtml("team_notCheckedoutByYou",SessionReader.getSessionLocale(request)));
-                    request.setAttribute("fileData", data);
-                    return showFiles(request, response);
-                }
-                data.setCheckoutId(0);
-                data.setCheckoutName("");
-                data.setAuthorId(SessionReader.getLoginId(request));
-                data.setAuthorName(SessionReader.getLoginName(request));
-                TeamFileBean.getInstance().checkinFileData(data);
-                request.setAttribute("fileData", data);
+                TeamFileBean.getInstance().updateCheckout(data);
                 return showFiles(request, response);
             }
             case openEditFile: {
                 int fid = RequestReader.getInt(request,"fileId");
-                TeamFileData data = TeamFileBean.getInstance().getFileDataForUser(fid, SessionReader.getLoginId(request));
+                TeamFileData data = TeamFileBean.getInstance().getFileData(fid);
                 if (data.getCheckoutId() != SessionReader.getLoginId(request)) {
                     addError(request, StringUtil.getHtml("team_notCheckedoutByYou",SessionReader.getSessionLocale(request)));
-                    request.setAttribute("fileData", data);
                     return showFiles(request, response);
                 }
                 SessionWriter.setSessionObject(request, "fileData", data);
                 return showEditFile(request, response);
             }
-            case saveFile: {
+            case checkinFile: {
                 TeamFileData data = (TeamFileData) SessionReader.getSessionObject(request, "fileData");
                 int fid=RequestReader.getInt(request,"fileId");
-                if (data == null || data.getId() != fid)
+                int userId=SessionReader.getLoginId(request);
+                if (data == null || data.getId() != fid || userId!=data.getCheckoutId())
                     return false;
                 if (data.getCheckoutId() != SessionReader.getLoginId(request)) {
                     addError(request, StringUtil.getHtml("team_notCheckedoutByYou",SessionReader.getSessionLocale(request)));
@@ -143,32 +119,21 @@ public class TeamFileActions extends CmsActions {
                 if (!data.readRequestData(request)) {
                     return showEditFile(request, response);
                 }
+                data.setCheckoutId(0);
+                data.setCheckoutName("");
+                data.setAuthorId(SessionReader.getLoginId(request));
+                data.setAuthorName(SessionReader.getLoginName(request));
                 TeamFileBean.getInstance().saveFileData(data);
                 return showFiles(request, response);
             }
-            case openFileHistory: {
-                int fid = RequestReader.getInt(request,"fileId");
-                request.setAttribute("fileId", Integer.toString(fid));
-                return showFileHistory(request, response);
-            }
-            case restoreHistoryFile: {
-                int fid = RequestReader.getInt(request,"fileId");
-                int version = RequestReader.getInt(request,"version");
-                TeamFileData data = TeamFileBean.getInstance().getFileData(fid, version);
-                data.setCheckoutId(SessionReader.getLoginId(request));
-                data.setCheckoutName(SessionReader.getLoginName(request));
-                TeamFileBean.getInstance().restoreFileData(data);
-                request.setAttribute("fileData", data);
-                return showFiles(request, response);
-            }
-            case deleteHistoryFile: {
-                int fid = RequestReader.getInt(request,"fileId");
-                int version = RequestReader.getInt(request,"version");
-                TeamFileBean.getInstance().deleteHistoryFile(fid, version);
-                return showFileHistory(request, response);
-            }
             case deleteFile: {
                 int fid = RequestReader.getInt(request,"fileId");
+                int userId=SessionReader.getLoginId(request);
+                if (userId==0)
+                    return false;
+                TeamFileData fileData = TeamFileBean.getInstance().getFileData(fid);
+                if (fileData.getOwnerId()!=userId && fileData.getAuthorId()!=userId)
+                    return false;
                 TeamFileBean.getInstance().deleteFile(fid);
                 return showFiles(request, response);
             }
@@ -182,10 +147,6 @@ public class TeamFileActions extends CmsActions {
 
     protected boolean showEditFile(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/team/editFile.jsp");
-    }
-
-    protected boolean showFileHistory(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/team/fileHistory.jsp");
     }
 
 }

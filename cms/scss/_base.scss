@@ -183,6 +183,10 @@ th {
     vertical-align: top;
 }
 
+table.blockheader th{
+  background-color: $color-lightgrey;
+}
+
 li {
     list-style-position: inside;
 }
@@ -275,8 +279,16 @@ nav li {
   display: inline-block;
 }
 
+.leftAlign {
+  text-align: left;
+}
+
 .centerAlign {
   text-align: center;
+}
+
+.rightAlign {
+  text-align: right;
 }
 
 .padded {

@@ -16,41 +16,42 @@
 <%
     int partId = RequestReader.getInt(request,"partId");
     int fileId = RequestReader.getInt(request,"fileId");
+    int userId = SessionReader.getLoginId(request);
     List<TeamFileData> files = TeamFileBean.getInstance().getFileList(partId, SessionReader.getLoginId(request));
     Locale locale = SessionReader.getSessionLocale(request);
     String tableId="table"+partId;
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <fieldset>
-    <table id="<%=tableId%>" class="padded form">
+    <table id="<%=tableId%>" class="padded blockheader">
         <tr><th width="15%"><%=StringUtil.getHtml("team_name",locale)%></th>
-            <th width="5%"><%=StringUtil.getHtml("team_version",locale)%></th>
             <th width="15%"><%=StringUtil.getHtml("team_owner",locale)%></th>
             <th width="15%"><%=StringUtil.getHtml("team_author",locale)%></th>
             <th width="15%"><%=StringUtil.getHtml("team_checkedoutby",locale)%></th>
-            <th width="35%"></th>
+            <th width="40%"></th>
         </tr>
         <% for (TeamFileData fileData : files) {%>
         <tr>
             <td>
-                <a href="/teamfile.srv?act=showFile&fileId=<%=fileData.getId()%>&version=<%=fileData.getVersion()%>"
-                   target="_blank"><%=StringUtil.toHtml(fileData.getShortName())%>
+                <a href="/teamfile.srv?act=showFile&fileId=<%=fileData.getId()%>" target="_blank"><%=StringUtil.toHtml(fileData.getShortName())%>
                 </a></td>
-            <td><%=fileData.getVersion()%>
-            </td>
             <td><%=StringUtil.toHtml(fileData.getOwnerName())%>
             </td>
             <td><%=StringUtil.toHtml(fileData.getAuthorName())%>
             </td>
             <td><%=StringUtil.toHtml(fileData.getCheckoutName())%>
             </td>
-            <td class="pullRight">
+            <td>
+                <% if (userId!=0){
+                if (fileData.getCheckoutId()==0){%>
                 <a class="icn icheckout" title="<%=StringUtil.getHtml("team_checkout", locale)%>" href="" onclick="return sendFileAction('checkoutFile',<%=fileData.getId()%>);">&nbsp;</a>
-                <a class="icn icheckin" title="<%=StringUtil.getHtml("team_checkin", locale)%>" href="" onclick="return sendFileAction('checkinFile',<%=fileData.getId()%>);">&nbsp;</a>
-                <a class="icn iundocheckout" title="<%=StringUtil.getHtml("team_undoCheckout", locale)%>" href="" onclick="return sendFileAction('undoCheckoutFile',<%=fileData.getId()%>);">&nbsp;</a>
+                <%}else if (fileData.getCheckoutId()==userId){%>
+                <a class="icn icheckin" title="<%=StringUtil.getHtml("team_undoCheckout", locale)%>" href="" onclick="return sendFileAction('undoCheckoutFile',<%=fileData.getId()%>);">&nbsp;</a>
                 <a class="icn iedit" title="<%=StringUtil.getHtml("team_edit", locale)%>" href="" onclick="return sendFileAction('openEditFile',<%=fileData.getId()%>);">&nbsp;</a>
-                <a class="icn ihistory" title="<%=StringUtil.getHtml("team_previousVersions", locale)%>" href="" onclick="return sendFileAction('openFileHistory',<%=fileData.getId()%>);">&nbsp;</a>
+                <%}
+                if (fileData.getOwnerId()==userId || fileData.getAuthorId()==userId){%>
                 <a class="icn idelete" title="<%=StringUtil.getHtml("_delete", locale)%>" href="" onclick="return sendFileAction('deleteFile',<%=fileData.getId()%>);">&nbsp;</a>
+                <%}}%>
             </td>
         </tr>
         <%}%>

@@ -1,47 +1,40 @@
 /*
-  Bandika! - A Java based modular Framework
-  Copyright (C) 2009-2014 Michael Roennau
+ Bandika  - A Java based modular Content Management System
+ Copyright (C) 2009-2017 Michael Roennau
 
-  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either pageVersion 3 of the License, or (at your option) any later pageVersion.
-  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 package de.bandika.cms.team;
 
-import de.bandika.base.data.BinaryFileData;
-import de.bandika.base.util.StringUtil;
 import de.bandika.cms.file.FileData;
 import de.bandika.webbase.servlet.RequestReader;
 import de.bandika.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 
 public class TeamFileData extends FileData {
 
-    public final static String DATAKEY = "data|teamfile";
-
     public static int MAX_SHORTNAME_LENGTH = 50;
 
-    protected int teamPartId = 0;
+    protected int partId = 0;
     protected int ownerId = 0;
     protected String ownerName = "";
+    protected int authorId = 0;
+    protected String authorName = "";
     protected int checkoutId = 0;
     protected String checkoutName = "";
 
-    protected int version = 1;
     protected String name = "";
-    protected String description = "";
-    protected LocalDateTime versionChangeDate = LocalDateTime.now();
-    protected int authorId = 0;
-    protected String authorName = "";
+    protected String notes = "";
 
-    public int getTeamPartId() {
-        return teamPartId;
+    public int getPartId() {
+        return partId;
     }
 
-    public void setTeamPartId(int teamPartId) {
-        this.teamPartId = teamPartId;
+    public void setPartId(int partId) {
+        this.partId = partId;
     }
 
     public int getOwnerId() {
@@ -60,66 +53,6 @@ public class TeamFileData extends FileData {
         this.ownerName = ownerName;
     }
 
-    public int getCheckoutId() {
-        return checkoutId;
-    }
-
-    public void setCheckoutId(int checkoutId) {
-        this.checkoutId = checkoutId;
-    }
-
-    public String getCheckoutName() {
-        return checkoutName;
-    }
-
-    public void setCheckoutName(String checkoutName) {
-        this.checkoutName = checkoutName;
-    }
-
-    //********* version *************/
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
-    public void increaseVersion() {
-        version++;
-    }
-
-    public String getShortName() {
-        if (name.length() <= MAX_SHORTNAME_LENGTH)
-            return name;
-        return name.substring(0, MAX_SHORTNAME_LENGTH);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDateTime getVersionChangeDate() {
-        return versionChangeDate;
-    }
-
-    public void setVersionChangeDate(LocalDateTime versionChangeDate) {
-        this.versionChangeDate = versionChangeDate;
-    }
-
     public int getAuthorId() {
         return authorId;
     }
@@ -136,19 +69,48 @@ public class TeamFileData extends FileData {
         this.authorName = authorName;
     }
 
+    public int getCheckoutId() {
+        return checkoutId;
+    }
+
+    public void setCheckoutId(int checkoutId) {
+        this.checkoutId = checkoutId;
+    }
+
+    public String getCheckoutName() {
+        return checkoutName;
+    }
+
+    public void setCheckoutName(String checkoutName) {
+        this.checkoutName = checkoutName;
+    }
+
+    public String getShortName() {
+        if (name.length() <= MAX_SHORTNAME_LENGTH)
+            return name;
+        return name.substring(0, MAX_SHORTNAME_LENGTH);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 
     public boolean readRequestData(HttpServletRequest request) {
-        BinaryFileData file = RequestReader.getFile(request,"file");
-        if (file != null && file.getBytes() != null
-                && file.getFileName().length() > 0
-                && !StringUtil.isNullOrEmpty(file.getContentType())) {
-            setBytes(file.getBytes());
-            setFileSize(getBytes().length);
-            setName(file.getFileName());
-            setContentType(file.getContentType());
-        }
+        readFileEditRequestData(request);
         setName(RequestReader.getString(request,"name",getName()));
-        setDescription(RequestReader.getString(request,"description"));
+        setNotes(RequestReader.getString(request,"notes"));
         if (isNew()) {
             setOwnerId(SessionReader.getLoginId(request));
             setOwnerName(SessionReader.getLoginName(request));

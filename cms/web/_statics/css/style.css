@@ -55,6 +55,8 @@ table { border-spacing: 0; border-collapse: collapse; width: 100%; }
 
 td, th { padding: 0; text-align: left; vertical-align: top; }
 
+table.blockheader th { background-color: #dddddd; }
+
 li { list-style-position: inside; }
 
 nav li { list-style: none; }
@@ -96,7 +98,11 @@ nav li { list-style: none; }
 
 .inline { display: inline-block; }
 
+.leftAlign { text-align: left; }
+
 .centerAlign { text-align: center; }
+
+.rightAlign { text-align: right; }
 
 .padded { padding: 10px; }
 
@@ -135,9 +141,9 @@ nav li { list-style: none; }
 
 .icn.icancel:before { content: '\E012'; }
 
-.icn.icheckin:before { content: '\E087'; }
+.icn.icheckin:before { content: '\E134'; }
 
-.icn.icheckout:before { content: '\E088'; }
+.icn.icheckout:before { content: '\E086'; }
 
 .icn.iclear:before { content: '\E148'; }
 
@@ -234,8 +240,6 @@ nav li { list-style: none; }
 .icn.itemplate:before { content: '\E095'; }
 
 .icn.itimer:before { content: '\E12b'; }
-
-.icn.iundocheckout:before { content: '\E133'; }
 
 .icn.iup:before { content: '\E135'; }
 
