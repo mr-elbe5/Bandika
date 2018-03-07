@@ -8,10 +8,7 @@
  */
 package de.bandika.cms.tree;
 
-import de.bandika.webbase.servlet.ActionSetCache;
-import de.bandika.webbase.servlet.ActionSet;
-import de.bandika.webbase.servlet.RequestStatics;
-import de.bandika.webbase.servlet.SessionReader;
+import de.bandika.webbase.servlet.*;
 import de.bandika.webbase.user.LoginActions;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +23,7 @@ public class TreeActions extends ActionSet {
             case openTree:
             default: {
                 if (!SessionReader.isLoggedIn(request)) {
-                    if (!isAjaxRequest(request)) {
+                    if (!RequestReader.isAjaxRequest(request)) {
                         return new LoginActions().execute(request, response, LoginActions.openLogin);
                     }
                     return forbidden();

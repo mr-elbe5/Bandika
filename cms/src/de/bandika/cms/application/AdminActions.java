@@ -112,7 +112,7 @@ public class AdminActions extends CmsActions {
 
     public boolean openAdministration(HttpServletRequest request, HttpServletResponse response) throws Exception{
         if (!SessionReader.isLoggedIn(request)) {
-            if (!isAjaxRequest(request)) {
+            if (!RequestReader.isAjaxRequest(request)) {
                 return (new LoginActions()).execute(request, response, LoginActions.openLogin);
             }
             return forbidden();

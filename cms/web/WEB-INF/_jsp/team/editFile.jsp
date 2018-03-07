@@ -19,6 +19,9 @@
     String tableId="table"+partId;
     Locale locale = SessionReader.getSessionLocale(request);
 %>
+<% if (RequestReader.isAjaxRequest(request)){%>
+<jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
+<%}%>
 <form action="/teamfile.ajx" method="post" id="teamfileform" name="teamfileform" accept-charset="UTF-8" enctype="multipart/form-data">
     <fieldset>
         <input type="hidden" name="act" value="checkinFile"/>

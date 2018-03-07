@@ -27,6 +27,10 @@ public class RequestReader {
         return request.getMethod().equalsIgnoreCase("POST");
     }
 
+    public static boolean isAjaxRequest(HttpServletRequest request) {
+        return getString(request, RequestStatics.PARAM_SUFFIX).equals(RequestStatics.AJAX_SUFFIX);
+    }
+
     public static Object getSessionObject(HttpServletRequest request, String key) {
         HttpSession session = request.getSession();
         if (session == null) {

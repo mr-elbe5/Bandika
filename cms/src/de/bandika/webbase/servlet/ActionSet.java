@@ -240,8 +240,4 @@ public abstract class ActionSet {
         throw new HttpException(HttpServletResponse.SC_BAD_REQUEST);
     }
 
-    protected boolean isAjaxRequest(HttpServletRequest request) {
-        return RequestReader.getString(request, RequestStatics.PARAM_SUFFIX).equals(RequestStatics.AJAX_SUFFIX);
-    }
-
 }

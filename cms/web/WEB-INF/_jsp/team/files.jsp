@@ -21,7 +21,9 @@
     Locale locale = SessionReader.getSessionLocale(request);
     String tableId="table"+partId;
 %>
+<% if (RequestReader.isAjaxRequest(request)){%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
+<%}%>
 <fieldset>
     <table id="<%=tableId%>" class="padded blockheader">
         <tr><th width="15%"><%=StringUtil.getHtml("team_name",locale)%></th>
