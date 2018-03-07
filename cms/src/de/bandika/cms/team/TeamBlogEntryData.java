@@ -16,11 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 
 public class TeamBlogEntryData extends BaseData {
 
-    public final static String DATAKEY = "data|teamblogentry";
-
     protected int id = 0;
-    protected int teamPartId = 0;
-    protected String title = "";
+    protected int partId = 0;
     protected int authorId = 0;
     protected String authorName = "";
     protected String text = "";
@@ -33,20 +30,12 @@ public class TeamBlogEntryData extends BaseData {
         this.id = id;
     }
 
-    public int getTeamPartId() {
-        return teamPartId;
+    public int getPartId() {
+        return partId;
     }
 
-    public void setTeamPartId(int teamPartId) {
-        this.teamPartId = teamPartId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public void setPartId(int partId) {
+        this.partId = partId;
     }
 
     public int getAuthorId() {
@@ -74,7 +63,6 @@ public class TeamBlogEntryData extends BaseData {
     }
 
     public boolean readRequestData(HttpServletRequest request) {
-        setTitle(RequestReader.getString(request,"title"));
         setAuthorId(SessionReader.getLoginId(request));
         setAuthorName(SessionReader.getLoginName(request));
         setText(RequestReader.getString(request, "text"));

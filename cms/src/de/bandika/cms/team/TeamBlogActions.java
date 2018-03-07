@@ -9,7 +9,6 @@
 package de.bandika.cms.team;
 
 import de.bandika.cms.servlet.CmsActions;
-import de.bandika.cms.tree.TreeCache;
 import de.bandika.webbase.rights.Right;
 import de.bandika.webbase.rights.SystemZone;
 import de.bandika.webbase.servlet.ActionSetCache;
@@ -22,15 +21,12 @@ import javax.servlet.http.HttpServletResponse;
 
 public class TeamBlogActions extends CmsActions {
 
+    public static final String showBlog="showBlog";
     public static final String openCreateEntry="openCreateEntry";
     public static final String openEditEntry="openEditEntry";
     public static final String saveEntry="saveEntry";
     public static final String openDeleteEntry="openDeleteEntry";
     public static final String deleteEntry="deleteEntry";
-
-    public final static int MODE_LIST = 0;
-    public final static int MODE_EDIT = 1;
-    public final static int MODE_DELETE = 2;
 
     public static final String KEY = "teamblog";
 
@@ -44,66 +40,49 @@ public class TeamBlogActions extends CmsActions {
 
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
+            case showBlog: {
+                return showBlog(request, response);
+            }
             case openCreateEntry: {
-                if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
-                    return false;
                 TeamBlogEntryData data = new TeamBlogEntryData();
-                data.setTeamPartId(RequestReader.getInt(request, "pid"));
+                data.setPartId(RequestReader.getInt(request, "partId"));
                 data.setId(TeamBlogBean.getInstance().getNextId());
                 data.setNew(true);
-                request.setAttribute("entry", data);
-                request.setAttribute("viewMode", Integer.toString(MODE_EDIT));
-                return showPage(request, response, data, RequestReader.getInt(request,"id"));
+                SessionWriter.setSessionObject(request, "entry", data);
+                return showEditEntry(request, response);
             }
             case openEditEntry: {
-                if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
-                    return false;
-                int id = RequestReader.getInt(request,"eid");
+                int id = RequestReader.getInt(request,"entryId");
                 TeamBlogEntryData data = TeamBlogBean.getInstance().getEntryData(id);
                 SessionWriter.setSessionObject(request, "entry", data);
-                request.setAttribute("viewMode", Integer.toString(MODE_EDIT));
-                return showPage(request, response, data, RequestReader.getInt(request,"id"));
+                return showEditEntry(request, response);
             }
             case saveEntry: {
-                if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
-                    return false;
                 TeamBlogEntryData data = (TeamBlogEntryData) SessionReader.getSessionObject(request, "entry");
-                if (data == null || data.getId() != RequestReader.getInt(request,"eid"))
+                if (data == null || data.getId() != RequestReader.getInt(request,"entryId"))
                     return false;
                 if (!data.readRequestData(request)) {
-                    request.setAttribute("viewMode", Integer.toString(MODE_EDIT));
-                    return showPage(request, response, data, RequestReader.getInt(request,"id"));
+                    return showEditEntry(request, response);
                 }
                 data.prepareSave();
                 TeamBlogBean.getInstance().saveEntryData(data);
-                request.setAttribute("viewMode", Integer.toString(MODE_LIST));
-                return showPage(request, response, data, RequestReader.getInt(request,"id"));
-            }
-            case openDeleteEntry: {
-                if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
-                    return false;
-                request.setAttribute("viewMode", Integer.toString(MODE_DELETE));
-                return showPage(request, response, null, RequestReader.getInt(request,"id"));
+                return showBlog(request, response);
             }
             case deleteEntry: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
-                TeamBlogBean.getInstance().deleteEntry(RequestReader.getInt(request,"eid"));
-                request.setAttribute("viewMode", Integer.toString(MODE_LIST));
-                return showPage(request, response, null, RequestReader.getInt(request,"id"));
+                TeamBlogBean.getInstance().deleteEntry(RequestReader.getInt(request,"entryId"));
+                return showBlog(request, response);
             }
         }
         return false;
     }
 
-    public boolean showImportTemplates(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/template/importTemplates.ajax.jsp");
+    protected boolean showBlog(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/team/blog.jsp");
     }
 
-    protected boolean showPage(HttpServletRequest request, HttpServletResponse response,TeamBlogEntryData data, int pageId) {
-        if (data!=null)
-            request.setAttribute("entryData", data);
-        request.setAttribute("pageData", TreeCache.getInstance().getPage(pageId));
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page.jsp");
+    protected boolean showEditEntry(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/team/editBlogEntry.jsp");
     }
 }

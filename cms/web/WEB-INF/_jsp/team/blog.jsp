@@ -12,26 +12,37 @@
 <%@ page import="java.util.List" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.cms.page.PageData" %>
-<%@ page import="de.bandika.cms.page.PagePartData" %>
+<%@ page import="de.bandika.webbase.servlet.RequestReader" %>
 <%
-    PageData data=(PageData) request.getAttribute("pageData");
-    PagePartData cpdata = (PagePartData) request.getAttribute("pagePartData");
-    List<TeamBlogEntryData> entries = TeamBlogBean.getInstance().getEntryList(cpdata.getId());
+    int partId = RequestReader.getInt(request,"partId");
+    int fileId = RequestReader.getInt(request,"fileId");
+    int userId = SessionReader.getLoginId(request);
+    List<TeamBlogEntryData> entries = TeamBlogBean.getInstance().getEntryList(partId);
     Locale locale = SessionReader.getSessionLocale(request);
+    String containerId="container"+partId;
 %>
+<% if (RequestReader.isAjaxRequest(request)){%>
+<jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
+<%}%>
+<div id="<%=containerId%>"
 <% for (TeamBlogEntryData entryData : entries) {%>
 <div class="blogEntry">
-    <div class="blogEntryTitle"><%=StringUtil.toHtml(entryData.getTitle())%>
-        (<%=StringUtil.toHtml(entryData.getAuthorName())%>) <%=StringUtil.toHtmlDateTime(entryData.getChangeDate(),locale)%>
+    <div class="blogEntryTitle"><%=StringUtil.toHtml(entryData.getAuthorName())%>, <%=StringUtil.toHtmlDateTime(entryData.getChangeDate(),locale)%>:
     </div>
     <div class="blogEntryText"><%=StringUtil.toHtml(entryData.getText())%>
     </div>
 </div>
 <%}%>
-<div class="btn-toolbar">
-    <button class="btn btn-primary"
-            onclick="return linkTo('/teamblog.srv?act=openCreateEntry&pageId=<%=data.getId()%>&pid=<%=cpdata.getId()%>');"><%=StringUtil.getHtml("team_newEntry", locale)%>
+<div class="buttonset topspace">
+    <button class="primary" onclick="return sendBlogAction('openCreateEntry');"><%=StringUtil.getHtml("_new", locale)%>
     </button>
 </div>
+<script type="text/javascript">
+    function sendBlogAction(action) {
+        var params = {act:action,partId: <%=partId%>};
+        post2Target('/teamblog.ajx', params, $('#<%=containerId%>').closest('.teamblog'));
+        return false;
+    }
+</script>
+
 

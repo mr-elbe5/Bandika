@@ -8,11 +8,16 @@
  */
 package de.bandika.cms.template.control;
 
+import de.bandika.base.log.Log;
 import de.bandika.base.util.StringWriteUtil;
 import de.bandika.cms.page.PageData;
 import de.bandika.cms.page.PageOutputContext;
 import de.bandika.cms.page.PageOutputData;
+import de.bandika.cms.page.PagePartData;
 import de.bandika.webbase.servlet.SessionReader;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
 
 public class TeamBlogControl extends TemplateControl {
 
@@ -25,16 +30,31 @@ public class TeamBlogControl extends TemplateControl {
         return KEY;
     }
 
-    public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) {
+    public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
         PageData page=outputData.pageData;
-        if (outputData.pageData!=null) {
-            if (SessionReader.isEditMode(outputContext.getRequest())) {
-
+        PagePartData part=outputData.partData;
+        if (page == null)
+            return;
+        int partId=0;
+        if (part!=null){
+            partId=part.getId();
+        }
+        else
+            partId=attributes.getInt("partId");
+        if (SessionReader.isEditMode(outputContext.getRequest()) && page.isPageEditMode()) {
+            writer.write("<div class=\"teamdocs\">TEAM BLOG</div>");
+        }
+        else{
+            writer.write("<div class=\"teamblog\">");
+            try {
+                outputContext.getRequest().setAttribute("pageId", String.valueOf(page.getId()));
+                outputContext.getRequest().setAttribute("partId", String.valueOf(partId));
+                outputContext.includeJsp("/WEB-INF/_jsp/team/blog.jsp");
+            } catch (ServletException e) {
+                Log.error("could not include team blog jsp", e);
             }
-            else{
-
-            }
+            writer.write("</div>");
         }
     }
 

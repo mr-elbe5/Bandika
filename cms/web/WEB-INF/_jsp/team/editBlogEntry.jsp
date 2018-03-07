@@ -12,45 +12,54 @@
 <%@ page import="de.bandika.cms.team.TeamBlogBean" %>
 <%@ page import="java.util.List" %>
 <%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.cms.page.PageData" %>
-<%@ page import="de.bandika.cms.page.PagePartData" %>
+<%@ page import="de.bandika.webbase.servlet.RequestReader" %>
 <%
     Locale locale= SessionReader.getSessionLocale(request);
-    PageData data=(PageData) request.getAttribute("pageData");
-    PagePartData cpdata = (PagePartData) request.getAttribute("pagePartData");
+    int partId = RequestReader.getInt(request,"partId");
+    int fileId = RequestReader.getInt(request,"fileId");
+    int userId = SessionReader.getLoginId(request);
     TeamBlogEntryData editEntry = (TeamBlogEntryData) SessionReader.getSessionObject(request, "entry");
-    List<TeamBlogEntryData> entries = TeamBlogBean.getInstance().getEntryList(cpdata.getId());
+    assert editEntry!=null;
+    List<TeamBlogEntryData> entries = TeamBlogBean.getInstance().getEntryList(partId);
+    String containerId ="container"+partId;
 %>
-<form class="form-horizontal" action="/teamblog.srv" method="post" name="teamblogform" accept-charset="UTF-8"
-      enctype="multipart/form-data">
-    <input type="hidden" name="act" value="saveEntry"/>
-    <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
-    <input type="hidden" name="pid" value="<%=cpdata.getId()%>"/>
-    <input type="hidden" name="eid" value="<%=editEntry.getId()%>"/>
-    <% for (TeamBlogEntryData entryData : entries) {%>
-    <div class="blogEntry">
-        <div class="blogEntryTitle"><%=StringUtil.toHtml(entryData.getTitle())%>
-            (<%=StringUtil.toHtml(entryData.getAuthorName())%>
-            ) <%=StringUtil.toHtmlDateTime(entryData.getChangeDate(),locale)%>
+<div id="<%=containerId%>">
+    <form action="/teamblog.ajx" method="post" id="teamblogform" name="teamblogform" accept-charset="UTF-8">
+        <input type="hidden" name="act" value="saveEntry"/>
+        <input type="hidden" name="partId" value="<%=partId%>"/>
+        <input type="hidden" name="entryId" value="<%=editEntry.getId()%>"/>
+        <% for (TeamBlogEntryData entryData : entries) {%>
+        <div class="blogEntry">
+            <div class="blogEntryTitle"><%=StringUtil.toHtml(entryData.getAuthorName())%>, <%=StringUtil.toHtmlDateTime(entryData.getChangeDate(),locale)%>:
+            </div>
+            <div class="blogEntryText"><%=StringUtil.toHtml(entryData.getText())%>
+            </div>
         </div>
-        <div class="blogEntryText"><%=StringUtil.toHtml(entryData.getText())%>
+        <%}%>
+        <div class="blogEntry">
+            <div class="blogEntryText"><textarea name="text" cols="40"
+                                                 rows="5"><%=StringUtil.toHtml(editEntry.getText())%>
+            </textarea></div>
         </div>
-    </div>
-    <%}%>
-    <div class="blogEntry">
-        <div class="blogEntryTitle"><input type="text" name="title"
-                                           value="<%=StringUtil.toHtml(editEntry.getTitle())%>"/>
+        <div class="buttonset topspace">
+            <button class="primary" type="submit"><%=StringUtil.getHtml("_save", locale)%>
+            </button>
+            <button onclick="return sendBlogAction('showBlog');"><%=StringUtil.getHtml("_cancel", locale)%>
+            </button>
         </div>
-        <div class="blogEntryText"><textarea name="text" cols="40"
-                                             rows="5"><%=StringUtil.toHtml(editEntry.getText())%>
-        </textarea></div>
-    </div>
-    <div class="btn-toolbar">
-        <button type="submit" class="btn btn-primary" ><%=StringUtil.getHtml("webapp_save", locale)%>
-        </button>
-        <button class="btn"
-                onclick="return linkTo('/page.srv?act=show&pageId=<%=data.getId()%>');"><%=StringUtil.getHtml("webapp_back", locale)%>
-        </button>
-    </div>
-</form>
+    </form>
+</div>
+<script type="text/javascript">
+    $('#teamblogform').submit(function (event) {
+        var $this = $(this);
+        event.preventDefault();
+        var params = $this.serialize();
+        post2Target('/teamblog.ajx', params, $('#<%=containerId%>').closest('.teamblog'));
+    });
+    function sendBlogAction(action) {
+        var params = {act:action,partId: <%=partId%>};
+        post2Target('/teamblog.ajx', params, $('#<%=containerId%>').closest('.teamblog'));
+        return false;
+    }
+</script>
 
