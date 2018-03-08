@@ -7,12 +7,14 @@
                 <cms:include type="head"></cms:include>
                 <link rel="shortcut icon" href="/favicon.ico"/>
                 <link rel="stylesheet" href="/_statics/css/style.css"/>
+                <link rel="stylesheet" href="/dynamic.css"/>
                 <script type="text/javascript" src="/_statics/js/jquery-1.12.4.min.js"></script>
                 <script type="text/javascript" src="/_statics/js/jquery.treeview.js"></script>
                 <script type="text/javascript" src="/_statics/ckeditor/ckeditor.js"></script>
                 <script type="text/javascript" src="/_statics/ckeditor/adapters/jquery.js"></script>
                 <script type="text/javascript" src="/_statics/js/base.js"></script>
                 <script type="text/javascript" src="/_statics/js/cms.js"></script>
+                <script type="text/javascript" src="/dynamic.js"></script>
             </head>
             <body class="carbon">
                 <div class="viewport">

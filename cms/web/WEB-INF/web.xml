@@ -16,10 +16,19 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
+        <servlet-name>dynamics</servlet-name>
+        <servlet-class>de.bandika.cms.application.DynamicsServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>applicationServlet</servlet-name>
         <servlet-class>de.bandika.cms.application.ApplicationServlet</servlet-class>
         <load-on-startup>10</load-on-startup>
     </servlet>
+    <servlet-mapping>
+        <servlet-name>dynamics</servlet-name>
+        <url-pattern>/dynamic.css</url-pattern>
+        <url-pattern>/dynamic.js</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>/_statics/*</url-pattern>

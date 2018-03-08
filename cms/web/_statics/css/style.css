@@ -159,6 +159,8 @@ nav li { list-style: none; }
 
 .icn.idownload:before { content: '\E115'; }
 
+.icn.idynamics:before { content: '\E009'; }
+
 .icn.iedit:before { content: '\E041'; }
 
 .icn.ifile:before { content: '\E048'; }
@@ -225,6 +227,8 @@ nav li { list-style: none; }
 
 .icn.iright:before { content: '\E112'; }
 
+.icn.iscript:before { content: '\E032'; }
+
 .icn.isearch:before { content: '\E116'; }
 
 .icn.isetting:before { content: '\E055'; }
@@ -234,6 +238,8 @@ nav li { list-style: none; }
 .icn.isite:before { content: '\E16d'; }
 
 .icn.isort:before { content: '\E120'; }
+
+.icn.istyle:before { content: '\E033'; }
 
 .icn.isync:before { content: '\E125'; }
 
@@ -673,15 +679,6 @@ nav.mainNav li li a:hover { background: inherit; }
 
 .mobile .footer { position: inherit; width: auto; }
 
-@media print { html { height: auto !important; }
-  body { height: auto; overflow-y: auto !important; }
-  .viewport { height: auto !important; }
-  .navSection { display: none; }
-  .breadcrumb { height: auto; }
-  .topNavSection { display: none; }
-  .main { bottom: auto; position: inherit; width: 100%; top: auto; overflow: inherit; }
-  aside { display: none; }
-  .footer { display: none; } }
 /************ print part ***********/
 @media print { html { height: auto !important; }
   body { height: auto; overflow-y: auto !important; }

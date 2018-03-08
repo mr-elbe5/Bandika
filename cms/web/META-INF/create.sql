@@ -90,6 +90,14 @@ CREATE TABLE IF NOT EXISTS t_configuration (
   timerInterval   INTEGER  NOT NULL
 );
 --
+CREATE TABLE IF NOT EXISTS t_dynamics (
+  change_date    TIMESTAMP  NOT NULL DEFAULT now(),
+  css_code       TEXT       NOT NULL DEFAULT '',
+  js_code        TEXT       NOT NULL DEFAULT ''
+);
+--
+INSERT INTO t_dynamics (css_code, js_code) VALUES ('','');
+--
 CREATE TABLE t_timer_task (
   name            VARCHAR(60)  NOT NULL,
   display_name    VARCHAR(255) NOT NULL,

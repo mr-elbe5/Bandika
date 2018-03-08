@@ -53,6 +53,7 @@ public class CmsInitializer extends Initializer {
             // actions
             AdminActions.initialize();
             ApplicationActions.initialize();
+            DynamicsActions.initialize();
             DefaultActions.initialize();
             InstallerActions.initialize();
             ConfigActions.initialize();
