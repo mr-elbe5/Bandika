@@ -167,5 +167,66 @@ h2.block {
 
 }
 
+.blogEntry {
+  margin: 10px 0 10px 0;
+  border: solid 1px #ddd;
+}
+
+.blogEntryTitle {
+  background: #ddd;
+  padding: 5px;
+}
+
+.blogEntryText {
+  padding: 5px;
+}
+
+.blogEntryTitle input {
+  width: 95%;
+}
+
+.blogEntryText textarea {
+  width: 95%;
+}
+
+.teamcalendar {
+
+  h3.calHeader{
+    font-weight: bold;
+    padding: 10px 0 10px 0;
+  }
+
+  table.calendar {
+    width: 100%;
+    border: 1px solid $color-darkgrey;
+
+    tr:first-child th {
+      width: 14%;
+      vertical-align: top;
+      background: $color-lightgrey;
+      text-align: center;
+    }
+
+    td {
+      height: 80px;
+      border: 1px solid $color-darkgrey;
+
+      div.day {
+        text-align: center;
+        font-weight: bold;
+        background: $color-superlight;
+
+        &.today{
+          color: $color-selected;
+        }
+        &.other{
+          color: $color-darkgrey;
+        }
+      }
+    }
+  }
+
+}
+
 
 

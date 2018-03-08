@@ -20,12 +20,24 @@
 <li>
     <div class="contextSource icn idynamics" ><%=StringUtil.getHtml("_dynamics", locale)%>
     </div>
-    <div class="contextMenu">
-        <div class="icn istyle" onclick="return openLayerDialog('<%=StringUtil.getHtml("_styles",locale)%>', '/dynamics.ajx?act=<%=DynamicsActions.openEditCss%>')"><%=StringUtil.getHtml("_styles", locale)%>
-        </div>
-        <div class="icn iscript" onclick="return openLayerDialog('<%=StringUtil.getHtml("_scripts",locale)%>', '/dynamics.ajx?act=<%=DynamicsActions.openEditJs%>')"><%=StringUtil.getHtml("_scripts", locale)%>
-        </div>
-    </div>
+    <ul>
+        <li>
+            <div class="contextSource icn istyle " ><%=StringUtil.getHtml("_styles",locale)%>
+            </div>
+            <div class="contextMenu">
+                <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_styles",locale)%>', '/dynamics.ajx?act=<%=DynamicsActions.openEditCss%>')"><%=StringUtil.getHtml("_edit", locale)%>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="contextSource icn iscript " ><%=StringUtil.getHtml("_scripts",locale)%>
+            </div>
+            <div class="contextMenu">
+                <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_scripts",locale)%>', '/dynamics.ajx?act=<%=DynamicsActions.openEditJs%>')"><%=StringUtil.getHtml("_edit", locale)%>
+                </div>
+            </div>
+        </li>
+    </ul>
 </li>
 
 <%}%>

@@ -639,6 +639,24 @@ h2.block { margin: 0 0 10px 0; }
 .asideSection .imageBox { padding: 0; }
 .asideSection .textBox { padding: 5px; }
 
+.blogEntry { margin: 10px 0 10px 0; border: solid 1px #ddd; }
+
+.blogEntryTitle { background: #ddd; padding: 5px; }
+
+.blogEntryText { padding: 5px; }
+
+.blogEntryTitle input { width: 95%; }
+
+.blogEntryText textarea { width: 95%; }
+
+.teamcalendar h3.calHeader { font-weight: bold; padding: 10px 0 10px 0; }
+.teamcalendar table.calendar { width: 100%; border: 1px solid #aaaaaa; }
+.teamcalendar table.calendar tr:first-child th { width: 14%; vertical-align: top; background: #dddddd; text-align: center; }
+.teamcalendar table.calendar td { height: 80px; border: 1px solid #aaaaaa; }
+.teamcalendar table.calendar td div.day { text-align: center; font-weight: bold; background: #f0f0f0; }
+.teamcalendar table.calendar td div.day.today { color: #3040d0; }
+.teamcalendar table.calendar td div.day.other { color: #aaaaaa; }
+
 /************ mobile part ***********/
 @media screen and (max-width: 1300px) { .viewport { margin-left: 10px; margin-right: 10px; } }
 body.mobile { height: auto; overflow: auto; }
