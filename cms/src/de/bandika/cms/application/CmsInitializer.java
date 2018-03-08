@@ -9,6 +9,7 @@
 package de.bandika.cms.application;
 
 import de.bandika.cms.team.TeamBlogActions;
+import de.bandika.cms.team.TeamCalendarActions;
 import de.bandika.cms.team.TeamFileActions;
 import de.bandika.webbase.application.DefaultActions;
 import de.bandika.webbase.application.Initializer;
@@ -66,6 +67,7 @@ public class CmsInitializer extends Initializer {
             SiteActions.initialize();
             TeamBlogActions.initialize();
             TeamFileActions.initialize();
+            TeamCalendarActions.initialize();
             TemplateActions.initialize();
             TimerActions.initialize();
             TreeActions.initialize();
@@ -80,6 +82,8 @@ public class CmsInitializer extends Initializer {
             Configuration config = ConfigurationBean.getInstance().getConfiguration();
             Configuration.getInstance().loadAppConfiguration(config);
             TemplateCache.getInstance().initialize();
+            //dynamics
+            DynamicsCache.getInstance().load();
             // tree
             TreeCache.getInstance().load();
             // rights

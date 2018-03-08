@@ -266,7 +266,6 @@ CREATE TABLE IF NOT EXISTS t_teamblogentry(
   id INTEGER NOT NULL,
   change_date TIMESTAMP NOT NULL DEFAULT now(),
   part_id INTEGER NOT NULL,
-  title VARCHAR(255) NOT NULL DEFAULT '',
   author_id INTEGER NULL,
   author_name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL DEFAULT '',
@@ -274,6 +273,21 @@ CREATE TABLE IF NOT EXISTS t_teamblogentry(
   constraint t_teamblogentry_pk PRIMARY KEY (id),
   CONSTRAINT t_teamblogentry_fk1 FOREIGN KEY (part_id) REFERENCES t_page_part (id) ON DELETE CASCADE,
   CONSTRAINT t_teamblogentry_fk2 FOREIGN KEY (author_id) REFERENCES t_user (id) ON DELETE SET NULL
+);
+--
+CREATE TABLE IF NOT EXISTS t_teamcalendarentry(
+  id INTEGER NOT NULL,
+  change_date TIMESTAMP NOT NULL DEFAULT now(),
+  part_id INTEGER NOT NULL,
+  author_id INTEGER NULL,
+  author_name VARCHAR(255) NOT NULL,
+  start_time  TIMESTAMP NOT NULL,
+  end_time  TIMESTAMP NULL,
+  title VARCHAR(255) NOT NULL DEFAULT '',
+  entry TEXT NOT NULL DEFAULT '',
+  constraint t_teamcalendarentry_pk PRIMARY KEY (id),
+  CONSTRAINT t_teamcalendarentry_fk1 FOREIGN KEY (part_id) REFERENCES t_page_part (id) ON DELETE CASCADE,
+  CONSTRAINT t_teamcalendarentry_fk2 FOREIGN KEY (author_id) REFERENCES t_user (id) ON DELETE SET NULL
 );
 -- inserts
 -- std locale

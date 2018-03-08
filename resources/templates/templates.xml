@@ -229,6 +229,14 @@
             <cms:include type="teamblog" name="teamblog"></cms:include>
         </div>
     </cms:template>
+    <cms:template type="PART" name="TeamCalendar" displayName="Team Calendar" sectionTypes="content">
+        <div class="textBox">
+            <h2>
+                <cms:include type="field" fieldType="text" name="text">Lorem ipsum</cms:include>
+            </h2>
+            <cms:include type="teamcalendar" name="teamcalendar"></cms:include>
+        </div>
+    </cms:template>
 
     <!-- aside parts -->
     <cms:template type="PART" name="ImageAside" displayName="Image" sectionTypes="aside">

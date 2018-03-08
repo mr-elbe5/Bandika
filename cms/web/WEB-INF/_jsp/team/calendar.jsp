@@ -7,17 +7,16 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.team.TeamBlogEntryData" %>
-<%@ page import="de.bandika.cms.team.TeamBlogBean" %>
+<%@ page import="de.bandika.cms.team.TeamCalendarEntryData" %>
+<%@ page import="de.bandika.cms.team.TeamCalendarBean" %>
 <%@ page import="java.util.List" %>
 <%@ page import="de.bandika.webbase.servlet.SessionReader" %>
-<%@ page import="de.bandika.base.util.StringUtil" %>
 <%@ page import="de.bandika.webbase.servlet.RequestReader" %>
 <%
     int partId = RequestReader.getInt(request,"partId");
     int entryId = RequestReader.getInt(request,"entryId");
     int userId = SessionReader.getLoginId(request);
-    List<TeamBlogEntryData> entries = TeamBlogBean.getInstance().getEntryList(partId);
+    List<TeamCalendarEntryData> entries = TeamCalendarBean.getInstance().getEntryList(partId);
     Locale locale = SessionReader.getSessionLocale(request);
     String containerId="container"+partId;
 %>
@@ -25,22 +24,11 @@
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <%}%>
 <div id="<%=containerId%>"
-<% for (TeamBlogEntryData entryData : entries) {%>
-<div class="blogEntry">
-    <div class="blogEntryTitle"><%=StringUtil.toHtml(entryData.getAuthorName())%>, <%=StringUtil.toHtmlDateTime(entryData.getChangeDate(),locale)%>:
-    </div>
-    <div class="blogEntryText"><%=StringUtil.toHtml(entryData.getText())%>
-    </div>
-</div>
-<%}%>
-<div class="buttonset topspace">
-    <button class="primary" onclick="return sendBlogAction('openCreateEntry');"><%=StringUtil.getHtml("_new", locale)%>
-    </button>
-</div>
+
 <script type="text/javascript">
-    function sendBlogAction(action) {
+    function sendCalendarAction(action) {
         var params = {act:action,partId: <%=partId%>};
-        post2Target('/teamblog.ajx', params, $('#<%=containerId%>').closest('.teamblog'));
+        post2Target('/teamcalendar.ajx', params, $('#<%=containerId%>').closest('.teamcalendar'));
         return false;
     }
 </script>
