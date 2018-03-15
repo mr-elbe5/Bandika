@@ -42,27 +42,31 @@ public class TeamCalendarActions extends CmsActions {
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
             case showCalendar: {
-                setCalendarData(request);
+                int partId=RequestReader.getInt(request,"partId");
+                setCalendarData(request, partId);
                 return showCalendar(request, response);
             }
             case openCreateEntry: {
-                assertCalendarData(request);
+                int partId=RequestReader.getInt(request,"partId");
+                assertCalendarData(request, partId);
                 TeamCalendarEntryData data = new TeamCalendarEntryData();
-                data.setPartId(RequestReader.getInt(request, "partId"));
+                data.setPartId(partId);
                 data.setId(TeamBlogBean.getInstance().getNextId());
                 data.setNew(true);
                 SessionWriter.setSessionObject(request, "entry", data);
                 return showEditEntry(request, response);
             }
             case openEditEntry: {
-                assertCalendarData(request);
+                int partId=RequestReader.getInt(request,"partId");
+                assertCalendarData(request, partId);
                 int id = RequestReader.getInt(request,"entryId");
                 TeamCalendarEntryData data = TeamCalendarBean.getInstance().getEntryData(id);
                 SessionWriter.setSessionObject(request, "entry", data);
                 return showEditEntry(request, response);
             }
             case saveEntry: {
-                assertCalendarData(request);
+                int partId=RequestReader.getInt(request,"partId");
+                assertCalendarData(request, partId);
                 TeamCalendarEntryData data = (TeamCalendarEntryData) SessionReader.getSessionObject(request, "entry");
                 if (data == null || data.getId() != RequestReader.getInt(request,"entryId"))
                     return false;
@@ -74,7 +78,8 @@ public class TeamCalendarActions extends CmsActions {
                 return showCalendar(request, response);
             }
             case deleteEntry: {
-                assertCalendarData(request);
+                int partId=RequestReader.getInt(request,"partId");
+                assertCalendarData(request, partId);
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
                 TeamCalendarBean.getInstance().deleteEntry(RequestReader.getInt(request,"entryId"));
@@ -84,16 +89,16 @@ public class TeamCalendarActions extends CmsActions {
         return false;
     }
 
-    public static void setCalendarData(HttpServletRequest request){
-        TeamCalendarData data = new TeamCalendarData();
-        SessionWriter.setSessionObject(request, KEY_CALENDAR, data);
+    public static void setCalendarData(HttpServletRequest request, int partId){
+        TeamCalendarData data = new TeamCalendarData(partId);
+        SessionWriter.setSessionObject(request, KEY_CALENDAR+partId, data);
     }
 
-    public static void assertCalendarData(HttpServletRequest request){
-        TeamCalendarData data= (TeamCalendarData) SessionReader.getSessionObject(request, KEY_CALENDAR);
+    public static void assertCalendarData(HttpServletRequest request, int partId){
+        TeamCalendarData data= (TeamCalendarData) SessionReader.getSessionObject(request, KEY_CALENDAR+partId);
         if (data==null){
-            data=new TeamCalendarData();
-            SessionWriter.setSessionObject(request, KEY_CALENDAR, data);
+            data=new TeamCalendarData(partId);
+            SessionWriter.setSessionObject(request, KEY_CALENDAR+partId, data);
         }
     }
 

@@ -9,16 +9,30 @@
 package de.elbe5.cms.team;
 
 import de.elbe5.base.data.CalendarDateTime;
+import de.elbe5.webbase.servlet.RequestReader;
+import de.elbe5.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TeamCalendarData extends CalendarDateTime {
 
-    public TeamCalendarData(){
+    protected int partId;
+
+    protected int entryId=0;
+    protected int userId=0;
+    protected List<TeamCalendarEntryData> entries = new ArrayList<>();
+
+    public TeamCalendarData(int partId){
         super(Scope.MONTH);
+        this.partId=partId;
     }
 
     public boolean readRequestData(HttpServletRequest request) {
+        entryId = RequestReader.getInt(request,"entryId");
+        userId = SessionReader.getLoginId(request);
+        entries = TeamCalendarBean.getInstance().getEntryList(partId);
         return true;
     }
 

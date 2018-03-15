@@ -7,9 +7,6 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.team.TeamCalendarEntryData" %>
-<%@ page import="de.elbe5.cms.team.TeamCalendarBean" %>
-<%@ page import="java.util.List" %>
 <%@ page import="de.elbe5.webbase.servlet.SessionReader" %>
 <%@ page import="de.elbe5.webbase.servlet.RequestReader" %>
 <%@ page import="java.time.LocalDate" %>
@@ -19,12 +16,10 @@
 <%@ page import="de.elbe5.cms.team.TeamCalendarActions" %>
 <%
     int partId = RequestReader.getInt(request,"partId");
-    int entryId = RequestReader.getInt(request,"entryId");
-    int userId = SessionReader.getLoginId(request);
-    List<TeamCalendarEntryData> entries = TeamCalendarBean.getInstance().getEntryList(partId);
     Locale locale = SessionReader.getSessionLocale(request);
     String containerId="container"+partId;
-    TeamCalendarData data= (TeamCalendarData) SessionReader.getSessionObject(request, TeamCalendarActions.KEY_CALENDAR);
+    TeamCalendarData data= (TeamCalendarData) SessionReader.getSessionObject(request, TeamCalendarActions.KEY_CALENDAR+partId);
+    assert data!=null;
     LocalDate current=data.getFirstVisibleDay();
 %>
 <% if (RequestReader.isAjaxRequest(request)){%>

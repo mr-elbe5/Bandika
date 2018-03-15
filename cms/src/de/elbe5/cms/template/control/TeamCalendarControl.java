@@ -51,7 +51,7 @@ public class TeamCalendarControl extends TemplateControl {
             try {
                 outputContext.getRequest().setAttribute("pageId", String.valueOf(page.getId()));
                 outputContext.getRequest().setAttribute("partId", String.valueOf(partId));
-                TeamCalendarActions.setCalendarData(outputContext.getRequest());
+                TeamCalendarActions.setCalendarData(outputContext.getRequest(),partId);
                 outputContext.includeJsp("/WEB-INF/_jsp/team/calendar.jsp");
             } catch (ServletException e) {
                 Log.error("could not include team calendar jsp", e);
