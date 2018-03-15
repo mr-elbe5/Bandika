@@ -6,13 +6,13 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="de.bandika.base.data.Locales" %>
-<%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.webbase.servlet.SessionReader" %>
-<%@ page import="de.bandika.cms.user.UserData" %>
+<%@ page import="de.elbe5.base.data.Locales" %>
+<%@ page import="de.elbe5.base.util.StringUtil" %>
+<%@ page import="de.elbe5.webbase.servlet.SessionReader" %>
+<%@ page import="de.elbe5.cms.user.UserData" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.user.UserActions" %>
-<%@ page import="de.bandika.webbase.user.LoginActions" %>
+<%@ page import="de.elbe5.cms.user.UserActions" %>
+<%@ page import="de.elbe5.webbase.user.LoginActions" %>
 <%
     UserData user = (UserData) SessionReader.getSessionObject(request, "userData");
     assert (user != null);

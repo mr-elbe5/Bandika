@@ -6,11 +6,11 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.webbase.servlet.SessionReader" %>
+<%@ page import="de.elbe5.base.util.StringUtil" %>
+<%@ page import="de.elbe5.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.user.UserActions" %>
-<%@ page import="de.bandika.webbase.user.LoginActions" %>
+<%@ page import="de.elbe5.cms.user.UserActions" %>
+<%@ page import="de.elbe5.webbase.user.LoginActions" %>
 <%Locale locale = SessionReader.getSessionLocale(request);%>
 <div class="userForm">
     <form action="/registration.srv" method="post" name="form" accept-charset="UTF-8">

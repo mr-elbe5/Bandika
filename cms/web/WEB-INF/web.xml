@@ -17,11 +17,11 @@
     </servlet>
     <servlet>
         <servlet-name>dynamics</servlet-name>
-        <servlet-class>de.bandika.cms.application.DynamicsServlet</servlet-class>
+        <servlet-class>de.elbe5.cms.application.DynamicsServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>applicationServlet</servlet-name>
-        <servlet-class>de.bandika.cms.application.ApplicationServlet</servlet-class>
+        <servlet-class>de.elbe5.cms.application.ApplicationServlet</servlet-class>
         <load-on-startup>10</load-on-startup>
     </servlet>
     <servlet-mapping>
@@ -41,6 +41,6 @@
         <url-pattern>*.ajx</url-pattern>
     </servlet-mapping>
     <listener>
-        <listener-class>de.bandika.webbase.application.AppContextListener</listener-class>
+        <listener-class>de.elbe5.webbase.application.AppContextListener</listener-class>
     </listener>
 </web-app>

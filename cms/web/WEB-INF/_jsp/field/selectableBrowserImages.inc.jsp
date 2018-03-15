@@ -1,8 +1,8 @@
-<%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.cms.file.FileData" %>
-<%@ page import="de.bandika.cms.page.CkCallbackData" %>
-<%@ page import="de.bandika.webbase.servlet.SessionReader" %>
-<%@ page import="de.bandika.cms.tree.TreeCache" %>
+<%@ page import="de.elbe5.base.util.StringUtil" %>
+<%@ page import="de.elbe5.cms.file.FileData" %>
+<%@ page import="de.elbe5.cms.page.CkCallbackData" %>
+<%@ page import="de.elbe5.webbase.servlet.SessionReader" %>
+<%@ page import="de.elbe5.cms.tree.TreeCache" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%

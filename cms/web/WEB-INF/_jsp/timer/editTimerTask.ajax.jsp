@@ -6,12 +6,12 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.webbase.servlet.SessionReader" %>
-<%@ page import="de.bandika.cms.timer.TimerTask" %>
+<%@ page import="de.elbe5.base.util.StringUtil" %>
+<%@ page import="de.elbe5.webbase.servlet.SessionReader" %>
+<%@ page import="de.elbe5.cms.timer.TimerTask" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.cms.timer.TimerInterval" %>
-<%@ page import="de.bandika.cms.timer.TimerActions" %>
+<%@ page import="de.elbe5.cms.timer.TimerInterval" %>
+<%@ page import="de.elbe5.cms.timer.TimerActions" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     TimerTask data = (TimerTask) SessionReader.getSessionObject(request, "timerTaskData");

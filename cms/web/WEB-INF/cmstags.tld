@@ -11,19 +11,19 @@
 
     <tag>
         <name>page</name>
-        <tag-class>de.bandika.cms.tag.PageTag</tag-class>
+        <tag-class>de.elbe5.cms.tag.PageTag</tag-class>
         <body-content>JSP</body-content>
     </tag>
 
     <tag>
         <name>content</name>
-        <tag-class>de.bandika.cms.tag.ContentTag</tag-class>
+        <tag-class>de.elbe5.cms.tag.ContentTag</tag-class>
         <body-content>JSP</body-content>
     </tag>
 
     <tag>
         <name>include</name>
-        <tag-class>de.bandika.cms.tag.IncludeTag</tag-class>
+        <tag-class>de.elbe5.cms.tag.IncludeTag</tag-class>
         <body-content>JSP</body-content>
         <attribute>
             <name>type</name>
@@ -39,7 +39,7 @@
 
     <tag>
         <name>snippet</name>
-        <tag-class>de.bandika.cms.tag.SnippetTag</tag-class>
+        <tag-class>de.elbe5.cms.tag.SnippetTag</tag-class>
         <body-content>JSP</body-content>
         <attribute>
             <name>name</name>

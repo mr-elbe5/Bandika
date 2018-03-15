@@ -1,6 +1,6 @@
-<%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.webbase.servlet.RequestReader" %>
-<%@ page import="de.bandika.webbase.servlet.SessionReader" %>
+<%@ page import="de.elbe5.base.util.StringUtil" %>
+<%@ page import="de.elbe5.webbase.servlet.RequestReader" %>
+<%@ page import="de.elbe5.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);

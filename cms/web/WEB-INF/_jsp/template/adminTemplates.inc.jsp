@@ -6,17 +6,17 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%><!DOCTYPE html><%response.setContentType("text/html;charset=UTF-8");%>
-<%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.webbase.rights.Right" %>
-<%@ page import="de.bandika.webbase.rights.SystemZone" %>
-<%@ page import="de.bandika.webbase.servlet.RequestReader" %>
-<%@ page import="de.bandika.webbase.servlet.SessionReader" %>
-<%@ page import="de.bandika.cms.template.TemplateBean" %>
-<%@ page import="de.bandika.cms.template.TemplateData" %>
+<%@ page import="de.elbe5.base.util.StringUtil" %>
+<%@ page import="de.elbe5.webbase.rights.Right" %>
+<%@ page import="de.elbe5.webbase.rights.SystemZone" %>
+<%@ page import="de.elbe5.webbase.servlet.RequestReader" %>
+<%@ page import="de.elbe5.webbase.servlet.SessionReader" %>
+<%@ page import="de.elbe5.cms.template.TemplateBean" %>
+<%@ page import="de.elbe5.cms.template.TemplateData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="de.bandika.cms.template.TemplateActions" %>
+<%@ page import="de.elbe5.cms.template.TemplateActions" %>
 <%
     if (SessionReader.hasSystemRight(request, SystemZone.CONTENT, Right.EDIT)) {
         Locale locale = SessionReader.getSessionLocale(request);

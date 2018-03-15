@@ -6,10 +6,10 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%><!DOCTYPE html><%response.setContentType("text/html;charset=UTF-8");%>
-<%@ page import="de.bandika.base.util.StringUtil" %>
+<%@ page import="de.elbe5.base.util.StringUtil" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.bandika.webbase.servlet.SessionReader" %>
-<%@ page import="de.bandika.webbase.user.LoginActions" %>
+<%@ page import="de.elbe5.webbase.servlet.SessionReader" %>
+<%@ page import="de.elbe5.webbase.user.LoginActions" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
     String title = StringUtil.getString("appTitle");

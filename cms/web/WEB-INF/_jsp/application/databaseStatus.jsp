@@ -6,10 +6,10 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="de.bandika.cms.application.Installer" %>
-<%@ page import="de.bandika.base.util.StringUtil" %>
-<%@ page import="de.bandika.webbase.database.DbConnector" %>
-<%@ page import="de.bandika.webbase.database.DbCreator" %>
+<%@ page import="de.elbe5.cms.application.Installer" %>
+<%@ page import="de.elbe5.base.util.StringUtil" %>
+<%@ page import="de.elbe5.webbase.database.DbConnector" %>
+<%@ page import="de.elbe5.webbase.database.DbCreator" %>
 <%
     boolean connectorInitialized = DbConnector.getInstance().isInitialized();
     boolean databaseCreated = connectorInitialized && DbCreator.getInstance().isDatabaseCreated();

@@ -1,0 +1,209 @@
+/*
+ Bandika  - A Java based modular Content Management System
+ Copyright (C) 2009-2017 Michael Roennau
+
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+ */
+package de.elbe5.cms.user;
+
+import de.elbe5.base.data.BaseIdData;
+import de.elbe5.base.data.Locales;
+import de.elbe5.base.log.Log;
+import de.elbe5.webbase.rights.RightBean;
+import de.elbe5.webbase.rights.RightsCache;
+import de.elbe5.webbase.servlet.RequestReader;
+import de.elbe5.webbase.user.IUserData;
+import de.elbe5.webbase.user.IUserRightsData;
+import de.elbe5.webbase.user.UserRightsData;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
+
+public class UserLoginData extends BaseIdData implements IUserData {
+
+    public static final int ID_SYSTEM = 1;
+
+    protected String title = "";
+    protected String firstName = "";
+    protected String lastName = "";
+    protected Locale locale = null;
+    protected String email = "";
+    protected String login = "";
+    protected String password = "";
+    protected String approvalCode = "";
+    protected boolean approved = false;
+    protected int failedLoginCount = 0;
+    protected boolean locked = false;
+    protected boolean deleted = false;
+
+    UserRightsData rights=new UserRightsData();
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getName() {
+        if (firstName.length() == 0) {
+            return lastName;
+        }
+        return firstName + ' ' + lastName;
+    }
+
+    public Locale getLocale() {
+        if (locale != null)
+            return locale;
+        return Locales.getInstance().getDefaultLocale();
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
+    public void setLocale(String localeName) {
+        try {
+            locale = new Locale(localeName);
+        } catch (Exception e) {
+            Log.error("locale not found: " + localeName);
+        }
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isCompletePassword() {
+        return (!isNew() && password.length() == 0) || isComplete(password);
+    }
+
+    public String getApprovalCode() {
+        return approvalCode;
+    }
+
+    public void setApprovalCode(String approvalCode) {
+        this.approvalCode = approvalCode;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
+
+    public int getFailedLoginCount() {
+        return failedLoginCount;
+    }
+
+    public void setFailedLoginCount(int failedLoginCount) {
+        this.failedLoginCount = failedLoginCount;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public IUserRightsData getRights() {
+        return rights;
+    }
+
+    public void setRights(UserRightsData rights) {
+        this.rights = rights;
+    }
+
+    public boolean checkRights() {
+        if (rights==null)
+            return false;
+        int ver = RightsCache.getInstance().getVersion();
+        if (ver == rights.getVersion())
+            return true;
+        UserRightsData newRights = RightBean.getInstance().getUserRights(getId());
+        newRights.setVersion(ver);
+        setRights(newRights);
+        return true;
+    }
+
+    public void readLoginRequestData(HttpServletRequest request) {
+        setTitle(RequestReader.getString(request, "title"));
+        setFirstName(RequestReader.getString(request, "firstName"));
+        setLastName(RequestReader.getString(request, "lastName"));
+        setLocale(new Locale(RequestReader.getString(request, "locale")));
+        setEmail(RequestReader.getString(request, "email"));
+        setLogin(RequestReader.getString(request, "login"));
+        setPassword(RequestReader.getString(request, "password"));
+        setApproved(RequestReader.getBoolean(request, "approved"));
+    }
+
+    public boolean readUserRegistrationData(HttpServletRequest request) {
+        setTitle(RequestReader.getString(request, "title"));
+        setFirstName(RequestReader.getString(request, "firstName"));
+        setLastName(RequestReader.getString(request, "lastName"));
+        setEmail(RequestReader.getString(request, "email"));
+        setLogin(RequestReader.getString(request, "login"));
+        return true;
+    }
+
+    @Override
+    public boolean isComplete() {
+        return isComplete(login) && isCompletePassword() && isComplete(email) && isComplete(lastName);
+    }
+
+    public boolean isCompleteProfile() {
+        return isComplete(login) && isComplete(email) && isComplete(lastName);
+    }
+
+}
