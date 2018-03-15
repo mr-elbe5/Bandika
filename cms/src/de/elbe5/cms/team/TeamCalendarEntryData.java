@@ -1,6 +1,6 @@
 /*
  Bandika  - A Java based modular Content Management System
- Copyright (C) 2009-2017 Michael Roennau
+ Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -8,14 +8,14 @@
  */
 package de.elbe5.cms.team;
 
-import de.elbe5.cms.file.FileData;
+import de.elbe5.base.data.BaseData;
 import de.elbe5.webbase.servlet.RequestReader;
 import de.elbe5.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
-public class TeamCalendarEntryData extends FileData {
+public class TeamCalendarEntryData extends BaseData {
 
     protected int id = 0;
     protected int partId = 0;

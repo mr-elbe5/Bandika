@@ -6,23 +6,20 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.base.thread;
+package de.elbe5.cms.team;
 
-public class BaseThread extends Thread {
+import de.elbe5.base.data.CalendarDateTime;
 
-    protected boolean running = false;
+import javax.servlet.http.HttpServletRequest;
 
-    public BaseThread(String name) {
-        super(name);
+public class TeamCalendarData extends CalendarDateTime {
+
+    public TeamCalendarData(){
+        super(Scope.MONTH);
     }
 
-    public void startRunning() {
-        running = true;
-        start();
+    public boolean readRequestData(HttpServletRequest request) {
+        return true;
     }
 
-    public void stopRunning() {
-        running = false;
-        interrupt();
-    }
 }

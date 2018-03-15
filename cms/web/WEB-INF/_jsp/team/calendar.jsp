@@ -15,8 +15,8 @@
 <%@ page import="java.time.LocalDate" %>
 <%@ page import="java.time.format.TextStyle" %>
 <%@ page import="java.time.DayOfWeek" %>
-<%@ page import="java.time.Month" %>
-<%@ page import="de.elbe5.base.data.CalendarDateTime" %>
+<%@ page import="de.elbe5.cms.team.TeamCalendarData" %>
+<%@ page import="de.elbe5.cms.team.TeamCalendarActions" %>
 <%
     int partId = RequestReader.getInt(request,"partId");
     int entryId = RequestReader.getInt(request,"entryId");
@@ -24,14 +24,14 @@
     List<TeamCalendarEntryData> entries = TeamCalendarBean.getInstance().getEntryList(partId);
     Locale locale = SessionReader.getSessionLocale(request);
     String containerId="container"+partId;
-    CalendarDateTime ct=new CalendarDateTime(CalendarDateTime.Scope.MONTH);
-    LocalDate current=ct.getFirstVisibleDay();
+    TeamCalendarData data= (TeamCalendarData) SessionReader.getSessionObject(request, TeamCalendarActions.KEY_CALENDAR);
+    LocalDate current=data.getFirstVisibleDay();
 %>
 <% if (RequestReader.isAjaxRequest(request)){%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <%}%>
 <div id="<%=containerId%>">
-    <h3 class="calHeader"><%=ct.getCurrentMonth().getDisplayName(TextStyle.FULL,locale)%>&nbsp;<%=ct.getCurrent().getYear()%></h3>
+    <h3 class="calHeader"><%=data.getCurrentMonth().getDisplayName(TextStyle.FULL,locale)%>&nbsp;<%=data.getCurrent().getYear()%></h3>
     <table class="calendar">
         <tr>
             <th><%=DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL,locale)%></th>
@@ -42,10 +42,10 @@
             <th><%=DayOfWeek.SATURDAY.getDisplayName(TextStyle.FULL,locale)%></th>
             <th><%=DayOfWeek.SUNDAY.getDisplayName(TextStyle.FULL,locale)%></th>
         </tr>
-        <% for (int line=0;line<ct.getVisibleDays()/7;line++){%>
+        <% for (int line=0;line<data.getVisibleDays()/7;line++){%>
         <tr>
             <% for (int col=0;col<7;col++){
-                String cls=current.equals(ct.getToday()) ? "today" : current.getMonth().equals(ct.getCurrentMonth()) ? "" : "other";
+                String cls=current.equals(data.getToday()) ? "today" : current.getMonth().equals(data.getCurrentMonth()) ? "" : "other";
             %>
             <td><div class="day <%=cls%>" ><%=current.getDayOfMonth()%></div></td>
         <% current=current.plusDays(1);
