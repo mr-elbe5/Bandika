@@ -345,7 +345,7 @@ INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description,
 VALUES (0, NULL, 0, '', 'ALL-NODE', 'Virtual Node for all IDs', 1, 'System', FALSE, FALSE, FALSE);
 --
 INSERT INTO t_template (name, type, display_name, code)
-VALUES ('pageMaster', 'TYPE_MASTER', 'Default Page Master',
+VALUES ('pageMaster', 'MASTER', 'Default Page Master',
 '<!DOCTYPE html>
 <html>
   <head>

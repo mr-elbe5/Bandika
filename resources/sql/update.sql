@@ -192,6 +192,14 @@ ALTER TABLE t_page ADD published_content TEXT     NOT NULL DEFAULT '';
 
 ALTER TABLE t_template rename usage to section_types;
 
+CREATE TABLE IF NOT EXISTS t_dynamics (
+  change_date    TIMESTAMP  NOT NULL DEFAULT now(),
+  css_code       TEXT       NOT NULL DEFAULT '',
+  js_code        TEXT       NOT NULL DEFAULT ''
+);
+--
+INSERT INTO t_dynamics (css_code, js_code) VALUES ('','');
+
 
 
 

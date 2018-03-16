@@ -1,6 +1,6 @@
 
-import de.bandika.base.data.XmlData;
-import de.bandika.base.util.FileUtil;
+import de.elbe5.base.data.XmlData;
+import de.elbe5.base.util.FileUtil;
 
 import javax.swing.*;
 import java.awt.*;
