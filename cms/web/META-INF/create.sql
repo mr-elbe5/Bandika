@@ -13,8 +13,6 @@ CREATE TABLE IF NOT EXISTS t_locale (
   CONSTRAINT t_locale_pk PRIMARY KEY (locale)
 );
 --
-INSERT INTO t_locale (locale, home) VALUES ('en', '/admin.srv?act=openAdministration');
---
 CREATE TABLE IF NOT EXISTS t_group (
   id          INTEGER      NOT NULL,
   change_date TIMESTAMP    NOT NULL DEFAULT now(),
@@ -101,7 +99,7 @@ INSERT INTO t_dynamics (css_code, js_code) VALUES ('','');
 CREATE TABLE t_timer_task (
   name            VARCHAR(60)  NOT NULL,
   display_name    VARCHAR(255) NOT NULL,
-  interval        VARCHAR(30)  NOT NULL,
+  execution_interval VARCHAR(30)  NOT NULL,
   day             INTEGER      NOT NULL DEFAULT 0,
   hour            INTEGER      NOT NULL DEFAULT 0,
   minute          INTEGER      NOT NULL DEFAULT 0,
@@ -292,7 +290,7 @@ CREATE TABLE IF NOT EXISTS t_teamcalendarentry(
 -- inserts
 -- std locale
 INSERT INTO t_locale (locale, home)
-VALUES ('de', '/admin.srv?act=openAdministration');
+VALUES ('en', '/admin.srv?act=openAdministration');
 -- virtual all users group
 INSERT INTO t_group (id, name)
 VALUES (0, 'All Users');
@@ -326,20 +324,20 @@ VALUES (4, 'Global Readers');
 --
 INSERT INTO t_system_right (name, group_id, value)
 VALUES ('CONTENT', 4, 'READ');
--- sysadmin user
+-- root user
 INSERT INTO t_user (id, first_name, last_name, email, login, pwd, pkey, approval_code, approved)
-VALUES (1, 'Sys', 'Admin', 'sysadmin@localhost', 'sysadmin', '', '', '', TRUE);
--- sysadmin is Global Administrator
+VALUES (1, 'Sys', 'Admin', 'root@localhost', 'root', '', '', '', TRUE);
+-- root is Global Administrator
 INSERT INTO t_user2group (user_id, group_id, relation) VALUES (1, 1, 'RIGHTS');
 -- configuration
 INSERT INTO t_configuration (defaultLocale, mailHost, mailPort, mailConnectionType, mailUser, mailPassword, mailSender, timerInterval)
 VALUES ('en', 'localhost', 25, 'plain', '', '', 'me@myhost.tld', 30);
 --
-INSERT INTO t_timer_task (name, display_name, interval, minute, active, note_execution)
-VALUES ('heartbeat', 'Heartbeat Task', 'CONTINOUS', 5, TRUE, FALSE);
+INSERT INTO t_timer_task (name, display_name, execution_interval, day, hour, minute, active, note_execution)
+VALUES ('heartbeat', 'Heartbeat Task', 'CONTINOUS', 0, 0, 5, FALSE, FALSE);
 --
-INSERT INTO t_timer_task (name, display_name, interval, hour, active, note_execution)
-VALUES ('searchindex', 'Search Index Task', 'CONTINOUS', 1, FALSE, FALSE);
+INSERT INTO t_timer_task (name, display_name, execution_interval, day, hour, minute, active, note_execution)
+VALUES ('searchindex', 'Search Index Task', 'CONTINOUS', 0, 1, 0, FALSE, FALSE);
 -- virtual all ids node
 INSERT INTO t_treenode (id, parent_id, ranking, name, display_name, description, owner_id, author_name, in_navigation, anonymous, inherits_rights)
 VALUES (0, NULL, 0, '', 'ALL-NODE', 'Virtual Node for all IDs', 1, 'System', FALSE, FALSE, FALSE);

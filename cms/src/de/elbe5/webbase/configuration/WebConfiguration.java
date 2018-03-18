@@ -17,7 +17,7 @@ import java.util.Locale;
 
 public class WebConfiguration extends BaseData implements Cloneable {
 
-    protected Locale defaultLocale = Locale.GERMAN;
+    protected Locale defaultLocale = Locale.ENGLISH;
 
     protected String smtpHost = null;
     protected int smtpPort = 25;
