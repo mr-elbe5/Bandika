@@ -15,10 +15,10 @@
 <%
     Locale locale= SessionReader.getSessionLocale(request);
     int partId = RequestReader.getInt(request,"partId");
-    int entryId = RequestReader.getInt(request,"entryId");
+    int entryId = 0;//RequestReader.getInt(request,"entryId");
     int userId = SessionReader.getLoginId(request);
-    TeamCalendarEntryData editEntry = (TeamCalendarEntryData) SessionReader.getSessionObject(request, "entry");
-    assert editEntry!=null;
+    /*TeamCalendarEntryData editEntry = (TeamCalendarEntryData) SessionReader.getSessionObject(request, "entry");
+    assert editEntry!=null;*/
     List<TeamCalendarEntryData> entries = TeamCalendarBean.getInstance().getEntryList(partId);
     String containerId ="container"+partId;
 %>
@@ -26,9 +26,9 @@
     <form action="/teamcalendar.ajx" method="post" id="teamcalendarform" name="teamcalendarform" accept-charset="UTF-8">
         <input type="hidden" name="act" value="saveEntry"/>
         <input type="hidden" name="partId" value="<%=partId%>"/>
-        <input type="hidden" name="entryId" value="<%=editEntry.getId()%>"/>
-
+        <input type="hidden" name="entryId" value="<%=entryId%>"/>
     </form>
+    Entry for <%=RequestReader.getString(request,"day")%>
 </div>
 <script type="text/javascript">
     $('#teamcalendarform').submit(function (event) {

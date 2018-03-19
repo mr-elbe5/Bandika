@@ -14,6 +14,7 @@
 <%@ page import="java.time.DayOfWeek" %>
 <%@ page import="de.elbe5.cms.team.TeamCalendarData" %>
 <%@ page import="de.elbe5.cms.team.TeamCalendarActions" %>
+<%@ page import="de.elbe5.base.util.StringUtil" %>
 <%
     int partId = RequestReader.getInt(request,"partId");
     Locale locale = SessionReader.getSessionLocale(request);
@@ -42,7 +43,9 @@
             <% for (int col=0;col<7;col++){
                 String cls=current.equals(data.getToday()) ? "today" : current.getMonth().equals(data.getCurrentMonth()) ? "" : "other";
             %>
-            <td><div class="day <%=cls%>" ><%=current.getDayOfMonth()%></div></td>
+            <td class="day" data-day="<%=current.toString()%>">
+                <div class="day <%=cls%>" ><%=current.getDayOfMonth()%></div>
+            </td>
         <% current=current.plusDays(1);
             }%>
         </tr>
@@ -55,6 +58,14 @@
         post2Target('/teamcalendar.ajx', params, $('#<%=containerId%>').closest('.teamcalendar'));
         return false;
     }
+    $('.day').each( function(){
+        this.addEventListener(contextEvent, function (e) {
+            e.preventDefault();
+            var $td = $(this);
+            var $day=$td.data('day');
+            openLayerDialog('<%=StringUtil.getHtml("team_calendarEntry",locale)%>', '/teamcalendar.ajx?act=<%=TeamCalendarActions.openCreateEntry%>&partId=<%=partId%>&day='+$day);
+        });
+    });
 </script>
 
 
