@@ -8,6 +8,7 @@
  */
 package de.elbe5.webbase.servlet;
 
+import de.elbe5.base.data.Locales;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.FileUtil;
 
@@ -16,7 +17,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Locale;
 
 public abstract class WebServlet extends HttpServlet {
 
@@ -39,7 +42,12 @@ public abstract class WebServlet extends HttpServlet {
             RequestReader.getSinglePartParams(request);
         }
         setRequestSuffix(request);
-        request.getSession(true);
+        HttpSession session=request.getSession(true);
+        if (session.isNew()){
+            Locale requestLocale=request.getLocale();
+            if (Locales.getInstance().hasLocale(requestLocale))
+                SessionWriter.setSessionLocale(request,requestLocale);
+        }
         try {
             String actionKey = getActionKey(request);
             if (actionKey != null) {

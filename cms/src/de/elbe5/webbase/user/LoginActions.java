@@ -46,8 +46,8 @@ public class LoginActions extends ActionSet {
                     return new LoginActions().execute(request, response, openLogin);
                 }
                 SessionWriter.setSessionLoginData(request, data);
+                SessionWriter.setSessionLocale(request, data.getLocale());
                 data.checkRights();
-                SessionWriter.setSessionLocale(request);
                 return showHome(request, response);
             }
             case showCaptcha: {
