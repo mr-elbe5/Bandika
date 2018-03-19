@@ -1,8 +1,16 @@
 @import "vars.scss";
-@import "compass/css3";
 
-@include font-face("LigatureSymbols" , font-files("LigatureSymbols-2.11.eot","LigatureSymbols-2.11.woff", "LigatureSymbols-2.11.ttf", "LigatureSymbols-2.11.svg"),
-        "LigatureSymbols-2.11.eot", normal, normal);
+@font-face {
+    font-family: 'LigatureSymbols';
+    src: url(font-path('LigatureSymbols-2.11.eot'));
+    src: url(font-path('LigatureSymbols-2.11.eot?#iefix')) format('embedded-opentype'),
+    url(font-path('LigatureSymbols-2.11.woff')) format('woff'),
+    url(font-path('LigatureSymbols-2.11.ttf')) format('truetype'),
+    url(font-path('LigatureSymbols-2.11.svg#LigatureSymbols')) format('svg');
+    src: url(font-path('LigatureSymbols-2.11.ttf')) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 
 .icn:before {
     font-family: 'LigatureSymbols', fantasy;

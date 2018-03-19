@@ -1,5 +1,4 @@
 @import "vars.scss";
-@import "compass/css3";
 
 /************ mobile part ***********/
 
@@ -43,7 +42,7 @@ body.mobile {
     width: 33px;
     height: 24px;
     margin-top: 15px;
-    background: image-url('navbtn.png') no-repeat;
+    background: url(img-path('navbtn.png')) no-repeat;
     cursor: pointer;
 }
 

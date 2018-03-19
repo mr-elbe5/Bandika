@@ -1,8 +1,7 @@
 @import "vars.scss";
-@import "compass/css3";
 
 .carbon {
-    background: $color-almostblack image-url("carbon.png");
+    background: $color-almostblack url(img-path('carbon.png'));
 }
 
 /********** body and main sections *************/
@@ -135,8 +134,10 @@ nav.mainNav li ul {
     display: none;
     width: inherit;
     min-width: 120px;
-    background: $color-darkgrey image-url("carbon.png");
-    border: 1px solid $color-midgrey;
+    background: $color-darkgrey url(img-path('carbon.png'));
+    border-left: 1px solid $color-midgrey;
+    border-right: 1px solid $color-midgrey;
+    border-bottom: 1px solid $color-midgrey;
     z-index: 9999;
 }
 

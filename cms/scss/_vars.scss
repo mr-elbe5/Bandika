@@ -63,3 +63,11 @@ $size_h4: $size_txt * 1.2;
   margin-top: $amount;
   margin-bottom: $amount;
 }
+
+@function img-path($name){
+  @return '/_statics/img/'+$name;
+}
+
+@function font-path($name){
+  @return '/_statics/fonts/'+$name;
+}
