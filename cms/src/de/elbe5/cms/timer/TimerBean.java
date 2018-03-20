@@ -24,13 +24,15 @@ public class TimerBean extends DbBean {
         return instance;
     }
 
+    private static String FIND_TASK_SQL="SELECT 'x' FROM t_timer_task WHERE name=?";
+    private static String INSERT_TASK_SQL="INSERT INTO t_timer_task (name, display_name, execution_interval, active) VALUES(?,?,'CONTINOUS', FALSE)";
     public void assertTimerTask(TimerTask task) {
         Connection con = getConnection();
         PreparedStatement pst1 = null;
         PreparedStatement pst2 = null;
         boolean found=false;
         try {
-            pst1 = con.prepareStatement("SELECT 'x' FROM t_timer_task WHERE name=?");
+            pst1 = con.prepareStatement(FIND_TASK_SQL);
             pst1.setString(1, task.getName());
             try (ResultSet rs = pst1.executeQuery()) {
                 if (rs.next()) {
@@ -38,7 +40,7 @@ public class TimerBean extends DbBean {
                 }
             }
             if (!found) {
-                pst2 = con.prepareStatement("INSERT INTO t_timer_task (name, display_name, execution_interval, active) VALUES(?,?,'CONTINOUS', FALSE)");
+                pst2 = con.prepareStatement(INSERT_TASK_SQL);
                 pst2.setString(1, task.getName());
                 pst2.setString(2, task.getName());
                 pst2.executeUpdate();
@@ -52,11 +54,12 @@ public class TimerBean extends DbBean {
         }
     }
 
+    private static String READ_TASK_SQL="SELECT display_name,execution_interval,day,hour,minute,note_execution,last_execution,active FROM t_timer_task WHERE name=?";
     public void readTimerTask(TimerTask task) {
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT display_name,execution_interval,day,hour,minute,note_execution,last_execution,active FROM t_timer_task WHERE name=?");
+            pst = con.prepareStatement(READ_TASK_SQL);
             pst.setString(1, task.getName());
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
@@ -80,11 +83,12 @@ public class TimerBean extends DbBean {
         }
     }
 
+    private static String UPDATE_TASK_DATE_SQL="UPDATE t_timer_task SET last_execution=? WHERE name=?";
     public void updateExcecutionDate(TimerTask task) {
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("UPDATE t_timer_task SET last_execution=? WHERE name=?");
+            pst = con.prepareStatement(UPDATE_TASK_DATE_SQL);
             if (task.getLastExecution() == null) {
                 pst.setNull(1, Types.TIMESTAMP);
             } else {
@@ -100,11 +104,12 @@ public class TimerBean extends DbBean {
         }
     }
 
+    private static String UPDATE_TASK_SQL="UPDATE t_timer_task SET display_name=?,execution_interval=?,day=?,hour=?,minute=?,active=? WHERE name=?";
     public void updateTaskData(TimerTask task) {
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("UPDATE t_timer_task SET display_name=?,execution_interval=?,day=?,hour=?,minute=?,active=? WHERE name=?");
+            pst = con.prepareStatement(UPDATE_TASK_SQL);
             int i = 1;
             pst.setString(i++, task.getDisplayName());
             pst.setString(i++, task.getInterval().name());

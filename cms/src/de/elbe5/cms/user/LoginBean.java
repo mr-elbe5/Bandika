@@ -14,7 +14,6 @@ import de.elbe5.base.util.StringUtil;
 import de.elbe5.webbase.database.DbBean;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 
 /**
  * Class LoginBean is the persistence class user login and registration. <br>
@@ -31,36 +30,19 @@ public class LoginBean extends DbBean {
         return instance;
     }
 
+    private static String UNCHANGED_SQL="SELECT change_date FROM t_user WHERE id=?";
     protected boolean unchangedLogin(Connection con, UserLoginData data) {
-        if (data.isNew()) {
-            return true;
-        }
-        PreparedStatement pst = null;
-        ResultSet rs;
-        boolean result = false;
-        try {
-            pst = con.prepareStatement("SELECT change_date FROM t_user WHERE id=?");
-            pst.setInt(1, data.getId());
-            rs = pst.executeQuery();
-            if (rs.next()) {
-                LocalDateTime date = rs.getTimestamp(1).toLocalDateTime();
-                rs.close();
-                result = date.equals(data.getChangeDate());
-            }
-        } catch (Exception ignored) {
-        } finally {
-            closeStatement(pst);
-        }
-        return result;
+        return unchangedItem(con, UNCHANGED_SQL, data);
     }
 
+    private static String GET_LOGIN_SQL="SELECT id,change_date,pwd,pkey,first_name,last_name,email FROM t_user WHERE login=? AND approval_code=?";
     public UserLoginData getLogin(String login, String approvalCode, String pwd) {
         Connection con = getConnection();
         PreparedStatement pst = null;
         UserLoginData data = null;
         boolean passed = false;
         try {
-            pst = con.prepareStatement("SELECT id,change_date,pwd,pkey,first_name,last_name,email FROM t_user WHERE login=? AND approval_code=?");
+            pst = con.prepareStatement(GET_LOGIN_SQL);
             pst.setString(1, login);
             pst.setString(2, approvalCode);
             try (ResultSet rs = pst.executeQuery()) {
@@ -88,12 +70,13 @@ public class LoginBean extends DbBean {
         return passed ? data : null;
     }
 
+    private static String GET_PASSWORD_SQL="SELECT pwd FROM t_user WHERE id=?";
     public boolean isSystemPasswordEmpty() {
         Connection con = getConnection();
         PreparedStatement pst = null;
         boolean empty = true;
         try {
-            pst = con.prepareStatement("SELECT pwd FROM t_user WHERE id=?");
+            pst = con.prepareStatement(GET_PASSWORD_SQL);
             pst.setInt(1, UserLoginData.ID_SYSTEM);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
@@ -110,12 +93,13 @@ public class LoginBean extends DbBean {
         return empty;
     }
 
+    private static String GET_X_SQL="SELECT 'x' FROM t_user WHERE login=?";
     public boolean doesLoginExist(String login) {
         Connection con = getConnection();
         PreparedStatement pst = null;
         boolean exists = false;
         try {
-            pst = con.prepareStatement("SELECT 'x' FROM t_user WHERE login=?");
+            pst = con.prepareStatement(GET_X_SQL);
             pst.setString(1, login);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
@@ -131,12 +115,14 @@ public class LoginBean extends DbBean {
         return exists;
     }
 
+    private static String LOGIN_SQL="SELECT id,pwd,pkey,change_date,first_name,last_name,locale,email,failed_login_count FROM t_user WHERE login=? AND approved=TRUE AND locked=FALSE AND deleted=FALSE";
+    private static String UPDATE_LOGINCOUNT_SQL="UPDATE t_user SET failed_login_count=? WHERE id=?";
     public UserLoginData loginUser(String login, String pwd) {
         Connection con = getConnection();
         PreparedStatement pst = null;
         UserLoginData data = null;
         try {
-            pst = con.prepareStatement("SELECT id,pwd,pkey,change_date,first_name,last_name,locale,email,failed_login_count FROM t_user WHERE login=? AND approved=TRUE AND locked=FALSE AND deleted=FALSE");
+            pst = con.prepareStatement(LOGIN_SQL);
             pst.setString(1, login);
             boolean passed;
             try (ResultSet rs = pst.executeQuery()) {
@@ -166,7 +152,7 @@ public class LoginBean extends DbBean {
                 if (!passed) {
                     count++;
                     pst.close();
-                    pst = con.prepareStatement("UPDATE t_user SET failed_login_count=? WHERE id=?");
+                    pst = con.prepareStatement(UPDATE_LOGINCOUNT_SQL);
                     pst.setInt(1, count);
                     pst.setInt(2, data.getId());
                     pst.executeUpdate();
@@ -174,7 +160,7 @@ public class LoginBean extends DbBean {
                 } else if (count > 0) {
                     data.setFailedLoginCount(0);
                     pst.close();
-                    pst = con.prepareStatement("UPDATE t_user SET failed_login_count=? WHERE id=?");
+                    pst = con.prepareStatement(UPDATE_LOGINCOUNT_SQL);
                     pst.setInt(1, 0);
                     pst.setInt(2, data.getId());
                     pst.executeUpdate();
@@ -204,10 +190,14 @@ public class LoginBean extends DbBean {
         }
     }
 
+    private static String INSERT_USER_SQL="insert into t_user (change_date,first_name,last_name,locale,email,login,pwd,pkey,approval_code,approved,failed_login_count,locked,deleted,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static String UPDATE_USER_NOPWD_SQL="update t_user set change_date=?,first_name=?,last_name=?,locale=?,email=?,login=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?";
+    private static String UPDATE_USER_WITHPWD_SQL="update t_user set change_date=?,first_name=?,last_name=?,street=?,email=?,login=?,pwd=?,pkey=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?";
     protected void writeLogin(Connection con, UserLoginData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(data.isNew() ? "insert into t_user (change_date,first_name,last_name,locale,email,login,pwd,pkey,approval_code,approved,failed_login_count,locked,deleted,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)" : data.getPassword().length() == 0 ? "update t_user set change_date=?,first_name=?,last_name=?,locale=?,email=?,login=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?" : "update t_user set change_date=?,first_name=?,last_name=?,street=?,email=?,login=?,pwd=?,pkey=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?");
+            pst = con.prepareStatement(data.isNew() ? INSERT_USER_SQL :
+                    data.getPassword().length() == 0 ? UPDATE_USER_NOPWD_SQL : UPDATE_USER_WITHPWD_SQL);
             int i = 1;
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getFirstName());
@@ -233,11 +223,12 @@ public class LoginBean extends DbBean {
         }
     }
 
+    private static String CHANGE_PASSWORD_SQL="UPDATE t_user SET pwd=?,pkey=? WHERE id=?";
     public boolean changePassword(int id, String pwd) {
         Connection con = startTransaction();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("UPDATE t_user SET pwd=?,pkey=? WHERE id=?");
+            pst = con.prepareStatement(CHANGE_PASSWORD_SQL);
             int i = 1;
             String key = generateKey();
             pst.setString(i++, encryptPassword(pwd, key));
@@ -269,10 +260,11 @@ public class LoginBean extends DbBean {
         }
     }
 
+    private static String UPDATE_PASSWORD_SQL="UPDATE t_user SET change_date=?, pwd=?, pkey=? WHERE id=?";
     protected void writeUserPassword(Connection con, UserLoginData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("UPDATE t_user SET change_date=?, pwd=?, pkey=? WHERE id=?");
+            pst = con.prepareStatement(UPDATE_PASSWORD_SQL);
             int i = 1;
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             String key = generateKey();

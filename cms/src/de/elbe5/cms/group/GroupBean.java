@@ -33,27 +33,9 @@ public class GroupBean extends DbBean {
         return instance;
     }
 
+    private static String UNCHANGED_SQL="SELECT change_date FROM t_group WHERE id=?";
     protected boolean unchangedGroup(Connection con, GroupData data) {
-        if (data.isNew()) {
-            return true;
-        }
-        PreparedStatement pst = null;
-        ResultSet rs;
-        boolean result = false;
-        try {
-            pst = con.prepareStatement("SELECT change_date FROM t_group WHERE id=?");
-            pst.setInt(1, data.getId());
-            rs = pst.executeQuery();
-            if (rs.next()) {
-                LocalDateTime date = rs.getTimestamp(1).toLocalDateTime();
-                rs.close();
-                result = date.equals(data.getChangeDate());
-            }
-        } catch (Exception ignored) {
-        } finally {
-            closeStatement(pst);
-        }
-        return result;
+        return unchangedItem(con, UNCHANGED_SQL, data);
     }
 
     public List<GroupData> getAllGroups() {

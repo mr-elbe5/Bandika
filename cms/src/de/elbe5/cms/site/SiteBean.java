@@ -29,17 +29,18 @@ public class SiteBean extends TreeBean {
         return instance;
     }
 
+    private static String GET_SITES_SQL="SELECT t1.id,t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
+            "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
+            "t2.template " +
+            "FROM t_treenode t1, t_site t2 " +
+            "WHERE t1.id=t2.id " +
+            "ORDER BY t1.parent_id NULLS FIRST, t1.ranking";
     public List<SiteData> getAllSites() {
         List<SiteData> list = new ArrayList<>();
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT t1.id,t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
-                    "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
-                    "t2.template " +
-                    "FROM t_treenode t1, t_site t2 " +
-                    "WHERE t1.id=t2.id " +
-                    "ORDER BY t1.parent_id NULLS FIRST, t1.ranking");
+            pst = con.prepareStatement(GET_SITES_SQL);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     int i = 1;
@@ -93,13 +94,12 @@ public class SiteBean extends TreeBean {
         return data;
     }
 
+    private static String READ_SITE_SQL="SELECT inherits_master, template FROM t_site WHERE id=?";
     public boolean readSite(Connection con, SiteData data) throws SQLException {
         PreparedStatement pst = null;
         boolean success = false;
         try {
-            pst = con.prepareStatement("SELECT inherits_master, template " +
-                    "FROM t_site " +
-                    "WHERE id=?");
+            pst = con.prepareStatement(READ_SITE_SQL);
             pst.setInt(1, data.getId());
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
@@ -134,12 +134,12 @@ public class SiteBean extends TreeBean {
         }
     }
 
+    private static String INSERT_SITE_SQL="insert into t_site (inherits_master, template, id) values(?,?,?)";
+    private static String UPDATE_SITE_SQL="update t_site set inherits_master=?, template=? where id=?";
     protected void writeSite(Connection con, SiteData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(data.isNew() ?
-                    "insert into t_site (inherits_master, template, id) values(?,?,?)" :
-                    "update t_site set inherits_master=?, template=? where id=?");
+            pst = con.prepareStatement(data.isNew() ? INSERT_SITE_SQL : UPDATE_SITE_SQL);
             int i = 1;
             pst.setBoolean(i++, data.inheritsMaster());
             if (data.getTemplateName().isEmpty()) {
@@ -165,24 +165,25 @@ public class SiteBean extends TreeBean {
         }
     }
 
+    private static String GET_SITENAME_SQL="SELECT name FROM t_treenode WHERE id=?";
+    private static String GET_SITENAMES_SQL="SELECT t1.id,t1.name " +
+            "FROM t_treenode t1, t_site t2 " +
+            "WHERE t1.parent_id=? AND t2.id=t1.id " +
+            "ORDER BY t1.ranking";
     public TreeNodeSortData getSortSites(int nodeId) {
         TreeNodeSortData sortData = new TreeNodeSortData();
         sortData.setId(nodeId);
-        TreeNodeSortData child;
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT name FROM t_treenode WHERE id=?");
+            pst = con.prepareStatement(GET_SITENAME_SQL);
             pst.setInt(1, nodeId);
             ResultSet rs = pst.executeQuery();
             rs.next();
             sortData.setName(rs.getString(1));
             rs.close();
             pst.close();
-            pst = con.prepareStatement("SELECT t1.id,t1.name " +
-                    "FROM t_treenode t1, t_site t2 " +
-                    "WHERE t1.parent_id=? AND t2.id=t1.id " +
-                    "ORDER BY t1.ranking");
+            pst = con.prepareStatement(GET_SITENAMES_SQL);
             pst.setInt(1, nodeId);
             rs = pst.executeQuery();
             addSortData(rs, sortData);
@@ -196,24 +197,25 @@ public class SiteBean extends TreeBean {
         return sortData;
     }
 
+    private static String GET_PAGENAME_SQL="SELECT name FROM t_treenode WHERE id=?";
+    private static String GET_PAGENAMES_SQL="SELECT t1.id,t1.name " +
+            "FROM t_treenode t1, t_page t2 " +
+            "WHERE t1.parent_id=? AND t2.id=t1.id " +
+            "ORDER BY t1.ranking";
     public TreeNodeSortData getSortPages(int nodeId) {
         TreeNodeSortData sortData = new TreeNodeSortData();
         sortData.setId(nodeId);
-        TreeNodeSortData child;
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT name FROM t_treenode WHERE id=?");
+            pst = con.prepareStatement(GET_PAGENAME_SQL);
             pst.setInt(1, nodeId);
             ResultSet rs = pst.executeQuery();
             rs.next();
             sortData.setName(rs.getString(1));
             rs.close();
             pst.close();
-            pst = con.prepareStatement("SELECT t1.id,t1.name " +
-                    "FROM t_treenode t1, t_page t2 " +
-                    "WHERE t1.parent_id=? AND t2.id=t1.id " +
-                    "ORDER BY t1.ranking");
+            pst = con.prepareStatement(GET_PAGENAMES_SQL);
             pst.setInt(1, nodeId);
             rs = pst.executeQuery();
             addSortData(rs, sortData);
@@ -227,24 +229,25 @@ public class SiteBean extends TreeBean {
         return sortData;
     }
 
+    private static String GET_FILENAME_SQL="SELECT name FROM t_treenode WHERE id=?";
+    private static String GET_FILENAMES_SQL="SELECT t1.id,t1.name " +
+            "FROM t_treenode t1, t_file t2 " +
+            "WHERE t1.parent_id=? AND t2.id=t1.id " +
+            "ORDER BY t1.ranking";
     public TreeNodeSortData getSortFiles(int nodeId) {
         TreeNodeSortData sortData = new TreeNodeSortData();
         sortData.setId(nodeId);
-        TreeNodeSortData child;
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT name FROM t_treenode WHERE id=?");
+            pst = con.prepareStatement(GET_FILENAME_SQL);
             pst.setInt(1, nodeId);
             ResultSet rs = pst.executeQuery();
             rs.next();
             sortData.setName(rs.getString(1));
             rs.close();
             pst.close();
-            pst = con.prepareStatement("SELECT t1.id,t1.name " +
-                    "FROM t_treenode t1, t_file t2 " +
-                    "WHERE t1.parent_id=? AND t2.id=t1.id " +
-                    "ORDER BY t1.ranking");
+            pst = con.prepareStatement(GET_FILENAMES_SQL);
             pst.setInt(1, nodeId);
             rs = pst.executeQuery();
             addSortData(rs, sortData);
@@ -258,12 +261,13 @@ public class SiteBean extends TreeBean {
         return sortData;
     }
 
+    private static String UPDATE_RANKING_SQL="UPDATE t_treenode SET ranking=? WHERE id=?";
     public void saveSortData(TreeNodeSortData data) {
         TreeNodeSortData child;
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("UPDATE t_treenode SET ranking=? WHERE id=?");
+            pst = con.prepareStatement(UPDATE_RANKING_SQL);
             for (int i = 0; i < data.getChildren().size(); i++) {
                 child = data.getChildren().get(i);
                 pst.setInt(1, i + 1);

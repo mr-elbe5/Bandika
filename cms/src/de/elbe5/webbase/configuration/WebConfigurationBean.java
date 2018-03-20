@@ -31,11 +31,12 @@ public class WebConfigurationBean extends DbBean {
         }
     }
 
+    private static String GET_LOCALES_SQL="SELECT locale,home FROM t_locale";
     public void readLocales(Connection con, Map<Locale, String> locales) throws SQLException {
         locales.clear();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT locale,home FROM t_locale");
+            pst = con.prepareStatement(GET_LOCALES_SQL);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     try {

@@ -7,14 +7,14 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.team.TeamFileData" %>
+<%@ page import="de.elbe5.cms.document.DocumentData" %>
 <%@ page import="de.elbe5.webbase.servlet.SessionReader" %>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
 <%@ page import="de.elbe5.webbase.servlet.RequestReader" %>
-<%@ page import="de.elbe5.cms.team.TeamFileActions" %>
+<%@ page import="de.elbe5.cms.document.DocumentActions" %>
 <%
     int partId = RequestReader.getInt(request,"partId");
-    TeamFileData fileData = (TeamFileData) SessionReader.getSessionObject(request, "fileData");
+    DocumentData fileData = (DocumentData) SessionReader.getSessionObject(request, "documentData");
     assert fileData!=null;
     String tableId="table"+partId;
     Locale locale = SessionReader.getSessionLocale(request);
@@ -22,15 +22,15 @@
 <% if (RequestReader.isAjaxRequest(request)){%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <%}%>
-<form action="/teamfile.ajx" method="post" id="teamfileform" name="teamfileform" accept-charset="UTF-8" enctype="multipart/form-data">
+<form action="/document.ajx" method="post" id="documentform" name="documentform" accept-charset="UTF-8" enctype="multipart/form-data">
     <fieldset>
-        <input type="hidden" name="act" value="checkinFile"/>
+        <input type="hidden" name="act" value=""/>
         <input type="hidden" name="partId" value="<%=partId%>"/>
         <input type="hidden" name="fileId" value="<%=fileData.getId()%>"/>
         <table class="padded form" id="<%=tableId%>">
             <tr>
                 <td>
-                    <label><%=StringUtil.getHtml("team_fileName", locale)%>
+                    <label><%=StringUtil.getHtml("_fileName", locale)%>
                     </label></td>
                 <td>
                     <div>
@@ -40,7 +40,7 @@
             </tr>
             <tr>
                 <td>
-                    <label><%=StringUtil.getHtml("team_owner", locale)%>
+                    <label><%=StringUtil.getHtml("_owner", locale)%>
                     </label></td>
                 <td>
                     <div>
@@ -50,7 +50,7 @@
             </tr>
             <tr>
                 <td>
-                    <label><%=StringUtil.getHtml("team_author", locale)%>
+                    <label><%=StringUtil.getHtml("_author", locale)%>
                     </label></td>
                 <td>
                     <div>
@@ -60,7 +60,7 @@
             </tr>
             <tr>
                 <td>
-                    <label><%=StringUtil.getHtml("team_checkedoutby", locale)%>
+                    <label><%=StringUtil.getHtml("_checkedoutby", locale)%>
                     </label></td>
                 <td>
                     <div>
@@ -70,7 +70,7 @@
             </tr>
             <tr>
                 <td>
-                    <label><%=StringUtil.getHtml("team_changeDate", locale)%>
+                    <label><%=StringUtil.getHtml("_changeDate", locale)%>
                     </label></td>
                 <td>
                     <div>
@@ -80,7 +80,7 @@
             </tr>
             <tr>
                 <td>
-                    <label><%=StringUtil.getHtml("team_size", locale)%>
+                    <label><%=StringUtil.getHtml("_size", locale)%>
                     </label></td>
                 <td>
                     <div>
@@ -90,7 +90,7 @@
             </tr>
             <tr>
                 <td>
-                    <label for="file"><%=StringUtil.getHtml("team_file", locale)%>
+                    <label for="file"><%=StringUtil.getHtml("_file", locale)%>
                     </label></td>
                 <td>
                     <div>
@@ -100,7 +100,7 @@
             </tr>
             <tr>
                 <td>
-                    <label for="name"><%=StringUtil.getHtml("team_name", locale)%>
+                    <label for="name"><%=StringUtil.getHtml("_name", locale)%>
                     </label></td>
                 <td>
                     <div>
@@ -110,7 +110,7 @@
             </tr>
             <tr>
                 <td>
-                    <label for="notes"><%=StringUtil.getHtml("team_notes", locale)%>
+                    <label for="notes"><%=StringUtil.getHtml("_notes", locale)%>
                     </label></td>
                 <td>
                     <div>
@@ -123,7 +123,7 @@
     <div class="buttonset topspace">
         <button class="primary" type="submit"><%=StringUtil.getHtml("_save", locale)%>
         </button>
-        <button onclick="return sendFileAction('<%=TeamFileActions.showList%>');"><%=StringUtil.getHtml("_cancel", locale)%>
+        <button onclick="return sendDocumentAction('<%=DocumentActions.showList%>');"><%=StringUtil.getHtml("_cancel", locale)%>
         </button>
     </div>
 </form>
@@ -132,11 +132,11 @@
         var $this = $(this);
         event.preventDefault();
         var params = $this.serializeFiles();
-        postMulti2Target('/teamfile.ajx', params, $('#<%=tableId%>').closest('.teamdocs'));
+        postMulti2Target('/document.ajx', params, $('#<%=tableId%>').closest('.documents'));
     });
-    function sendFileAction(action) {
+    function sendDocumentAction(action) {
         var params = {act:action,partId: <%=partId%>};
-        post2Target('/teamfile.ajx', params, $('#<%=tableId%>').closest('.teamdocs'));
+        post2Target('/document.ajx', params, $('#<%=tableId%>').closest('.documents'));
         return false;
     }
 </script>

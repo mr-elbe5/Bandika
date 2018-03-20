@@ -6,7 +6,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.cms.team;
+package de.elbe5.cms.calendar;
 
 import de.elbe5.base.data.CalendarDateTime;
 import de.elbe5.webbase.servlet.RequestReader;
@@ -16,15 +16,15 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeamCalendarData extends CalendarDateTime {
+public class CalendarData extends CalendarDateTime {
 
     protected int partId;
 
     protected int entryId=0;
     protected int userId=0;
-    protected List<TeamCalendarEntryData> entries = new ArrayList<>();
+    protected List<CalendarEntryData> entries = new ArrayList<>();
 
-    public TeamCalendarData(int partId){
+    public CalendarData(int partId){
         super(Scope.MONTH);
         this.partId=partId;
     }
@@ -32,7 +32,7 @@ public class TeamCalendarData extends CalendarDateTime {
     public boolean readRequestData(HttpServletRequest request) {
         entryId = RequestReader.getInt(request,"entryId");
         userId = SessionReader.getLoginId(request);
-        entries = TeamCalendarBean.getInstance().getEntryList(partId);
+        entries = CalendarBean.getInstance().getEntryList(partId);
         return true;
     }
 

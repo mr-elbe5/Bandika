@@ -7,17 +7,17 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.team.TeamFileData" %>
-<%@ page import="de.elbe5.cms.team.TeamFileBean" %>
+<%@ page import="de.elbe5.cms.document.DocumentData" %>
+<%@ page import="de.elbe5.cms.document.DocumentBean" %>
 <%@ page import="java.util.List" %>
 <%@ page import="de.elbe5.webbase.servlet.SessionReader" %>
 <%@ page import="de.elbe5.webbase.servlet.RequestReader" %>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
 <%
     int partId = RequestReader.getInt(request,"partId");
-    int fileId = RequestReader.getInt(request,"fileId");
+    int documentId = RequestReader.getInt(request,"documentId");
     int userId = SessionReader.getLoginId(request);
-    List<TeamFileData> files = TeamFileBean.getInstance().getFileList(partId, SessionReader.getLoginId(request));
+    List<DocumentData> documents = DocumentBean.getInstance().getFileList(partId, SessionReader.getLoginId(request));
     Locale locale = SessionReader.getSessionLocale(request);
     String tableId="table"+partId;
 %>
@@ -26,16 +26,16 @@
 <%}%>
 <fieldset>
     <table id="<%=tableId%>" class="padded blockheader">
-        <tr><th width="15%"><%=StringUtil.getHtml("team_name",locale)%></th>
-            <th width="15%"><%=StringUtil.getHtml("team_owner",locale)%></th>
-            <th width="15%"><%=StringUtil.getHtml("team_author",locale)%></th>
-            <th width="15%"><%=StringUtil.getHtml("team_checkedoutby",locale)%></th>
+        <tr><th width="15%"><%=StringUtil.getHtml("_name",locale)%></th>
+            <th width="15%"><%=StringUtil.getHtml("_owner",locale)%></th>
+            <th width="15%"><%=StringUtil.getHtml("_author",locale)%></th>
+            <th width="15%"><%=StringUtil.getHtml("_checkedoutby",locale)%></th>
             <th width="40%"></th>
         </tr>
-        <% for (TeamFileData fileData : files) {%>
+        <% for (DocumentData fileData : documents) {%>
         <tr>
             <td>
-                <a href="/teamfile.srv?act=showFile&fileId=<%=fileData.getId()%>" target="_blank"><%=StringUtil.toHtml(fileData.getShortName())%>
+                <a href="/document.srv?act=showDocument&documentId=<%=fileData.getId()%>" target="_blank"><%=StringUtil.toHtml(fileData.getShortName())%>
                 </a></td>
             <td><%=StringUtil.toHtml(fileData.getOwnerName())%>
             </td>
@@ -46,13 +46,13 @@
             <td>
                 <% if (userId!=0){
                 if (fileData.getCheckoutId()==0){%>
-                <a class="icn icheckout" title="<%=StringUtil.getHtml("team_checkout", locale)%>" href="" onclick="return sendFileAction('checkoutFile',<%=fileData.getId()%>);">&nbsp;</a>
+                <a class="icn icheckout" title="<%=StringUtil.getHtml("_checkout", locale)%>" href="" onclick="return sendFileAction('checkoutDocument',<%=fileData.getId()%>);">&nbsp;</a>
                 <%}else if (fileData.getCheckoutId()==userId){%>
-                <a class="icn icheckin" title="<%=StringUtil.getHtml("team_undoCheckout", locale)%>" href="" onclick="return sendFileAction('undoCheckoutFile',<%=fileData.getId()%>);">&nbsp;</a>
-                <a class="icn iedit" title="<%=StringUtil.getHtml("team_edit", locale)%>" href="" onclick="return sendFileAction('openEditFile',<%=fileData.getId()%>);">&nbsp;</a>
+                <a class="icn icheckin" title="<%=StringUtil.getHtml("_undoCheckout", locale)%>" href="" onclick="return sendFileAction('undoCheckoutDocument',<%=fileData.getId()%>);">&nbsp;</a>
+                <a class="icn iedit" title="<%=StringUtil.getHtml("_edit", locale)%>" href="" onclick="return sendFileAction('openEditDocument',<%=fileData.getId()%>);">&nbsp;</a>
                 <%}
                 if (fileData.getOwnerId()==userId || fileData.getAuthorId()==userId){%>
-                <a class="icn idelete" title="<%=StringUtil.getHtml("_delete", locale)%>" href="" onclick="return sendFileAction('deleteFile',<%=fileData.getId()%>);">&nbsp;</a>
+                <a class="icn idelete" title="<%=StringUtil.getHtml("_delete", locale)%>" href="" onclick="return sendFileAction('deleteDocument',<%=fileData.getId()%>);">&nbsp;</a>
                 <%}}%>
             </td>
         </tr>
@@ -60,13 +60,13 @@
     </table>
 </fieldset>
 <div class="buttonset topspace">
-    <button class="primary" onclick="return sendFileAction('openCreateFile',0);"><%=StringUtil.getHtml("_new", locale)%>
+    <button class="primary" onclick="return sendFileAction('openCreateDocument',0);"><%=StringUtil.getHtml("_new", locale)%>
     </button>
 </div>
 <script type="text/javascript">
     function sendFileAction(action, fileId) {
         var params = {act:action,partId: <%=partId%>,fileId:fileId};
-        post2Target('/teamfile.ajx', params, $('#<%=tableId%>').closest('.teamdocs'));
+        post2Target('/document.ajx', params, $('#<%=tableId%>').closest('.docuemnts'));
         return false;
     }
 </script>

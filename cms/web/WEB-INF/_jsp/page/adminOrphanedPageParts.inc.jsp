@@ -19,11 +19,15 @@
 <%
     if (SessionReader.hasSystemRight(request, SystemZone.CONTENT, Right.EDIT)) {
         Locale locale = SessionReader.getSessionLocale(request);
-        List<PagePartData> parts = PageBean.getInstance().getSharedPageParts();
+        List<PagePartData> parts = PageBean.getInstance().getOrphanedPageParts();
         int partId = RequestReader.getInt(request, "partId");
 %>
 <li<%=partId != 0 ? " class=\"open\"" : ""%>>
-    <div class="icn ipart"><%=StringUtil.getHtml("_sharedParts", locale)%>
+    <div class="icn ipart contextSource"><%=StringUtil.getHtml("_orphanedParts", locale)%>
+    </div>
+    <div class="contextMenu">
+        <div class="icn idelete" onclick="linkTo('/pagepart.srv?act=<%=PagePartActions.deleteAllOrphanedPageParts%>');"><%=StringUtil.getHtml("_deleteAll", locale)%>
+        </div>
     </div>
     <ul>
         <%

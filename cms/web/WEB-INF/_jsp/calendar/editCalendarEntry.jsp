@@ -10,20 +10,20 @@
 <%@ page import="de.elbe5.webbase.servlet.SessionReader" %>
 <%@ page import="java.util.List" %>
 <%@ page import="de.elbe5.webbase.servlet.RequestReader" %>
-<%@ page import="de.elbe5.cms.team.TeamCalendarEntryData" %>
-<%@ page import="de.elbe5.cms.team.TeamCalendarBean" %>
+<%@ page import="de.elbe5.cms.calendar.CalendarEntryData" %>
+<%@ page import="de.elbe5.cms.calendar.CalendarBean" %>
 <%
     Locale locale= SessionReader.getSessionLocale(request);
     int partId = RequestReader.getInt(request,"partId");
     int entryId = 0;//RequestReader.getInt(request,"entryId");
     int userId = SessionReader.getLoginId(request);
-    /*TeamCalendarEntryData editEntry = (TeamCalendarEntryData) SessionReader.getSessionObject(request, "entry");
+    /*CalendarEntryData editEntry = (CalendarEntryData) SessionReader.getSessionObject(request, "entry");
     assert editEntry!=null;*/
-    List<TeamCalendarEntryData> entries = TeamCalendarBean.getInstance().getEntryList(partId);
+    List<CalendarEntryData> entries = CalendarBean.getInstance().getEntryList(partId);
     String containerId ="container"+partId;
 %>
 <div id="<%=containerId%>">
-    <form action="/teamcalendar.ajx" method="post" id="teamcalendarform" name="teamcalendarform" accept-charset="UTF-8">
+    <form action="/calendar.ajx" method="post" id="calendarform" name="calendarform" accept-charset="UTF-8">
         <input type="hidden" name="act" value="saveEntry"/>
         <input type="hidden" name="partId" value="<%=partId%>"/>
         <input type="hidden" name="entryId" value="<%=entryId%>"/>
@@ -31,15 +31,15 @@
     Entry for <%=RequestReader.getString(request,"day")%>
 </div>
 <script type="text/javascript">
-    $('#teamcalendarform').submit(function (event) {
+    $('#calendarform').submit(function (event) {
         var $this = $(this);
         event.preventDefault();
         var params = $this.serialize();
-        post2Target('/teamcalendar.ajx', params, $('#<%=containerId%>').closest('.teamcalendar'));
+        post2Target('/calendar.ajx', params, $('#<%=containerId%>').closest('.calendar'));
     });
     function sendCalendarAction(action) {
         var params = {act:action,partId: <%=partId%>};
-        post2Target('/teamcalendar.ajx', params, $('#<%=containerId%>').closest('.teamcalendar'));
+        post2Target('/calendar.ajx', params, $('#<%=containerId%>').closest('.calendar'));
         return false;
     }
 </script>

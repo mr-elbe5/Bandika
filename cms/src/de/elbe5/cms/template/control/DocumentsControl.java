@@ -19,18 +19,18 @@ import de.elbe5.webbase.servlet.SessionReader;
 import javax.servlet.ServletException;
 import java.io.IOException;
 
-public class TeamBlogControl extends TemplateControl {
+public class DocumentsControl extends TemplateControl {
 
-    public static final String KEY = "teamblog";
+    public static final String KEY = "documents";
 
-    public TeamBlogControl(){
+    public DocumentsControl(){
     }
 
     public String getKey(){
         return KEY;
     }
 
-    public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
+    public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException{
         StringWriteUtil writer=outputContext.getWriter();
         PageData page=outputData.pageData;
         PagePartData part=outputData.partData;
@@ -43,16 +43,16 @@ public class TeamBlogControl extends TemplateControl {
         else
             partId=attributes.getInt("partId");
         if (SessionReader.isEditMode(outputContext.getRequest()) && page.isPageEditMode()) {
-            writer.write("<div class=\"teamdocs\">TEAM BLOG</div>");
+            writer.write("<div class=\"documents\">DOCUMENTS</div>");
         }
         else{
-            writer.write("<div class=\"teamblog\">");
+            writer.write("<div class=\"documents\">");
             try {
                 outputContext.getRequest().setAttribute("pageId", String.valueOf(page.getId()));
                 outputContext.getRequest().setAttribute("partId", String.valueOf(partId));
-                outputContext.includeJsp("/WEB-INF/_jsp/team/blog.jsp");
+                outputContext.includeJsp("/WEB-INF/_jsp/document/documents.jsp");
             } catch (ServletException e) {
-                Log.error("could not include team blog jsp", e);
+                Log.error("could not include documents jsp", e);
             }
             writer.write("</div>");
         }

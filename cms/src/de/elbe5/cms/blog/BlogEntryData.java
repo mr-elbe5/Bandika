@@ -6,29 +6,20 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.cms.team;
+package de.elbe5.cms.blog;
 
-import de.elbe5.base.data.BaseData;
+import de.elbe5.base.data.BaseIdData;
 import de.elbe5.webbase.servlet.RequestReader;
 import de.elbe5.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class TeamBlogEntryData extends BaseData {
+public class BlogEntryData extends BaseIdData {
 
-    protected int id = 0;
     protected int partId = 0;
     protected int authorId = 0;
     protected String authorName = "";
     protected String text = "";
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getPartId() {
         return partId;

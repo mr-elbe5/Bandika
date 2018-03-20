@@ -7,8 +7,8 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.team.TeamBlogEntryData" %>
-<%@ page import="de.elbe5.cms.team.TeamBlogBean" %>
+<%@ page import="de.elbe5.cms.blog.BlogEntryData" %>
+<%@ page import="de.elbe5.cms.blog.BlogBean" %>
 <%@ page import="java.util.List" %>
 <%@ page import="de.elbe5.webbase.servlet.SessionReader" %>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
@@ -17,7 +17,7 @@
     int partId = RequestReader.getInt(request,"partId");
     int entryId = RequestReader.getInt(request,"entryId");
     int userId = SessionReader.getLoginId(request);
-    List<TeamBlogEntryData> entries = TeamBlogBean.getInstance().getEntryList(partId);
+    List<BlogEntryData> entries = BlogBean.getInstance().getEntryList(partId);
     Locale locale = SessionReader.getSessionLocale(request);
     String containerId="container"+partId;
 %>
@@ -25,7 +25,7 @@
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <%}%>
 <div id="<%=containerId%>"
-<% for (TeamBlogEntryData entryData : entries) {%>
+<% for (BlogEntryData entryData : entries) {%>
 <div class="blogEntry">
     <div class="blogEntryTitle"><%=StringUtil.toHtml(entryData.getAuthorName())%>, <%=StringUtil.toHtmlDateTime(entryData.getChangeDate(),locale)%>:
     </div>
@@ -40,7 +40,7 @@
 <script type="text/javascript">
     function sendBlogAction(action) {
         var params = {act:action,partId: <%=partId%>};
-        post2Target('/teamblog.ajx', params, $('#<%=containerId%>').closest('.teamblog'));
+        post2Target('/blog.ajx', params, $('#<%=containerId%>').closest('.teamblog'));
         return false;
     }
 </script>

@@ -6,49 +6,31 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.cms.team;
+package de.elbe5.cms.document;
 
 import de.elbe5.cms.file.FileData;
 import de.elbe5.webbase.database.DbBean;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeamFileBean extends DbBean {
+public class DocumentBean extends DbBean {
 
-    private static TeamFileBean instance = null;
+    private static DocumentBean instance = null;
 
-    public static TeamFileBean getInstance() {
+    public static DocumentBean getInstance() {
         if (instance == null)
-            instance = new TeamFileBean();
+            instance = new DocumentBean();
         return instance;
     }
 
-    protected boolean unchanged(Connection con, TeamFileData data) {
-        if (data.isNew())
-            return true;
-        PreparedStatement pst = null;
-        ResultSet rs;
-        boolean result = false;
-        try {
-            pst = con.prepareStatement("select change_date from t_teamfile where id=?");
-            pst.setInt(1, data.getId());
-            rs = pst.executeQuery();
-            if (rs.next()) {
-                LocalDateTime date = rs.getTimestamp(1).toLocalDateTime();
-                rs.close();
-                result = date.equals(data.getChangeDate());
-            }
-        } catch (Exception ignored) {
-        } finally {
-            closeStatement(pst);
-        }
-        return result;
+    private static String UNCHANGED_SQL="select change_date from t_document where id=?";
+    protected boolean unchanged(Connection con, DocumentData data) {
+        return unchangedItem(con, UNCHANGED_SQL, data);
     }
 
-    public boolean saveFileData(TeamFileData data) {
+    public boolean saveFileData(DocumentData data) {
         Connection con = startTransaction();
         try {
             if (!unchanged(con, data)) {
@@ -65,7 +47,7 @@ public class TeamFileBean extends DbBean {
         }
     }
 
-    public boolean updateCheckout(TeamFileData data) {
+    public boolean updateCheckout(DocumentData data) {
         Connection con = startTransaction();
         try {
             if (!unchanged(con, data)) {
@@ -80,15 +62,15 @@ public class TeamFileBean extends DbBean {
         }
     }
 
-    protected void writeFileData(Connection con, TeamFileData data) throws SQLException {
+    private static String INSERT_DOCUMENT_SQL="insert into t_document (change_date,part_id,owner_id,owner_name,author_id,author_name,checkout_id,checkout_name," +
+            "file_name,name,notes,content_type,file_size,bytes,id) " +
+            "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static String UPDATE_DOCUMENT_SQL="update t_document set change_date=?,part_id=?,owner_id=?,owner_name=?,author_id=?,author_name=?,checkout_id=?,checkout_name=?," +
+            "file_name=?,name=?,notes=?,content_type=?,file_size=?,bytes=? where id=?";
+    protected void writeFileData(Connection con, DocumentData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            String sql = data.isNew() ?
-                    "insert into t_teamfile (change_date,part_id,owner_id,owner_name,author_id,author_name,checkout_id,checkout_name," +
-                            "file_name,name,notes,content_type,file_size,bytes,id) " +
-                            "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-                    : "update t_teamfile set change_date=?,part_id=?,owner_id=?,owner_name=?,author_id=?,author_name=?,checkout_id=?,checkout_name=?," +
-                    "file_name=?,name=?,notes=?,content_type=?,file_size=?,bytes=? where id=?";
+            String sql = data.isNew() ? INSERT_DOCUMENT_SQL : UPDATE_DOCUMENT_SQL;
             pst = con.prepareStatement(sql);
             int i = 1;
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
@@ -115,11 +97,11 @@ public class TeamFileBean extends DbBean {
         }
     }
 
-    protected void updateCheckoutState(Connection con, TeamFileData data) throws SQLException {
+    private static String UPDATE_CHECKOUT_SQL="update t_document set change_date=?,checkout_id=?,checkout_name=? where id=?";
+    protected void updateCheckoutState(Connection con, DocumentData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            String sql = "update t_teamfile set change_date=?,checkout_id=?,checkout_name=? where id=?";
-            pst = con.prepareStatement(sql);
+            pst = con.prepareStatement(UPDATE_CHECKOUT_SQL);
             int i = 1;
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             if (data.getCheckoutId() == 0)
@@ -134,9 +116,9 @@ public class TeamFileBean extends DbBean {
         }
     }
 
-    public TeamFileData getFileData(int id) {
+    public DocumentData getFileData(int id) {
         Connection con = null;
-        TeamFileData data = new TeamFileData();
+        DocumentData data = new DocumentData();
         data.setId(id);
         try {
             con = getConnection();
@@ -149,11 +131,11 @@ public class TeamFileBean extends DbBean {
         return data;
     }
 
-    public void readFileData(Connection con, TeamFileData data) throws SQLException {
+    private static String READ_DOCUMENT_SQL="select change_date,part_id,owner_id,owner_name,author_id,author_name,checkout_id,checkout_name,file_name,name,notes,content_type,file_size,bytes from t_document where id=?";
+    public void readFileData(Connection con, DocumentData data) throws SQLException {
         PreparedStatement pst = null;
-        String sql = "select change_date,part_id,owner_id,owner_name,author_id,author_name,checkout_id,checkout_name,file_name,name,notes,content_type,file_size,bytes from t_teamfile where id=?";
         try {
-            pst = con.prepareStatement(sql);
+            pst = con.prepareStatement(READ_DOCUMENT_SQL);
             pst.setInt(1, data.getId());
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
@@ -179,18 +161,18 @@ public class TeamFileBean extends DbBean {
         }
     }
 
+    private static String GET_FILE_SQL="select file_name,content_type,bytes from t_document where id=?";
     public FileData getFile(int id) throws SQLException {
         Connection con = null;
         PreparedStatement pst = null;
         FileData data = null;
-        String sql = "select file_name,content_type,bytes from t_teamfile where id=?";
         try {
             con = getConnection();
-            pst = con.prepareStatement(sql);
+            pst = con.prepareStatement(GET_FILE_SQL);
             pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
-                data = new TeamFileData();
+                data = new DocumentData();
                 int i = 1;
                 data.setName(rs.getString(i++));
                 data.setContentType(rs.getString(i++));
@@ -204,17 +186,18 @@ public class TeamFileBean extends DbBean {
         return data;
     }
 
-    public List<TeamFileData> getFileList(int partId, int userId) {
-        List<TeamFileData> list = new ArrayList<>();
+    private static String GET_FILE_LIST_SQL="select id,change_date,part_id,owner_id,owner_name,author_id,author_name,checkout_id,checkout_name," +
+            "file_name,name,notes,content_type,file_size " +
+            "from t_document where part_id=? " +
+            "and ((checkout_id is null or checkout_id<>?) or checkout_id=?) " +
+            "order by name;";
+    public List<DocumentData> getFileList(int partId, int userId) {
+        List<DocumentData> list = new ArrayList<>();
         Connection con = null;
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("select id,change_date,part_id,owner_id,owner_name,author_id,author_name,checkout_id,checkout_name," +
-                    "file_name,name,notes,content_type,file_size " +
-                    "from t_teamfile where part_id=? " +
-                    "and ((checkout_id is null or checkout_id<>?) or checkout_id=?) " +
-                    "order by name;");
+            pst = con.prepareStatement(GET_FILE_LIST_SQL);
             pst.setInt(1, partId);
             pst.setInt(2, userId);
             pst.setInt(3, userId);
@@ -222,7 +205,7 @@ public class TeamFileBean extends DbBean {
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 i = 1;
-                TeamFileData data = new TeamFileData();
+                DocumentData data = new DocumentData();
                 data.setId(rs.getInt(i++));
                 data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                 data.setPartId(rs.getInt(i++));
@@ -248,19 +231,9 @@ public class TeamFileBean extends DbBean {
         return list;
     }
 
-    public void deleteFile(int id) throws SQLException {
-        Connection con = null;
-        PreparedStatement pst = null;
-        try {
-            con = getConnection();
-            pst = con.prepareStatement("delete from t_teamfile where id=?");
-            pst.setInt(1, id);
-            pst.executeUpdate();
-            pst.close();
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
+    private static String DELETE_SQL="delete from t_document where id=?";
+    public boolean deleteFile(int id) throws SQLException {
+        return deleteItem(DELETE_SQL, id);
     }
 
 }

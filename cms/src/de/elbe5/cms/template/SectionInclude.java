@@ -207,11 +207,11 @@ public class SectionInclude extends TemplateInclude {
                 data.getSectionName(),
                 String.valueOf(data.getId()),
                 getHtml("_down", locale));
-        writer.write("<div class=\"icn idelete\" onclick = \"return post2EditPageContent('/pagepart.ajx?',{act:'deletePagePart',pageId:'{1}',sectionName:'{2}',partId:'{3}'});\">{4}</div>\n",
+        writer.write("<div class=\"icn idelete\" onclick = \"return post2EditPageContent('/pagepart.ajx?',{act:'removePagePart',pageId:'{1}',sectionName:'{2}',partId:'{3}'});\">{4}</div>\n",
                 String.valueOf(pageId),
                 data.getSectionName(),
                 String.valueOf(data.getId()),
-                getHtml("_delete", locale));
+                getHtml("_remove", locale));
     }
 
 }

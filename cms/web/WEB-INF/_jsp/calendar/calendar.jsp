@@ -12,14 +12,14 @@
 <%@ page import="java.time.LocalDate" %>
 <%@ page import="java.time.format.TextStyle" %>
 <%@ page import="java.time.DayOfWeek" %>
-<%@ page import="de.elbe5.cms.team.TeamCalendarData" %>
-<%@ page import="de.elbe5.cms.team.TeamCalendarActions" %>
+<%@ page import="de.elbe5.cms.calendar.CalendarData" %>
+<%@ page import="de.elbe5.cms.calendar.CalendarActions" %>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
 <%
     int partId = RequestReader.getInt(request,"partId");
     Locale locale = SessionReader.getSessionLocale(request);
     String containerId="container"+partId;
-    TeamCalendarData data= (TeamCalendarData) SessionReader.getSessionObject(request, TeamCalendarActions.KEY_CALENDAR+partId);
+    CalendarData data= (CalendarData) SessionReader.getSessionObject(request, CalendarActions.KEY_CALENDAR+partId);
     assert data!=null;
     LocalDate current=data.getFirstVisibleDay();
 %>
@@ -55,7 +55,7 @@
 <script type="text/javascript">
     function sendCalendarAction(action) {
         var params = {act:action,partId: <%=partId%>};
-        post2Target('/teamcalendar.ajx', params, $('#<%=containerId%>').closest('.teamcalendar'));
+        post2Target('/calendar.ajx', params, $('#<%=containerId%>').closest('.calendar'));
         return false;
     }
     $('.day').each( function(){
@@ -63,7 +63,7 @@
             e.preventDefault();
             var $td = $(this);
             var $day=$td.data('day');
-            openLayerDialog('<%=StringUtil.getHtml("team_calendarEntry",locale)%>', '/teamcalendar.ajx?act=<%=TeamCalendarActions.openCreateEntry%>&partId=<%=partId%>&day='+$day);
+            openLayerDialog('<%=StringUtil.getHtml("_calendarEntry",locale)%>', '/calendar.ajx?act=<%=CalendarActions.openCreateEntry%>&partId=<%=partId%>&day='+$day);
         });
     });
 </script>

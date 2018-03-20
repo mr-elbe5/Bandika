@@ -14,17 +14,16 @@ import de.elbe5.cms.page.PageData;
 import de.elbe5.cms.page.PageOutputContext;
 import de.elbe5.cms.page.PageOutputData;
 import de.elbe5.cms.page.PagePartData;
-import de.elbe5.cms.team.TeamCalendarActions;
 import de.elbe5.webbase.servlet.SessionReader;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
 
-public class TeamCalendarControl extends TemplateControl {
+public class BlogControl extends TemplateControl {
 
-    public static final String KEY = "teamcalendar";
+    public static final String KEY = "blog";
 
-    public TeamCalendarControl(){
+    public BlogControl(){
     }
 
     public String getKey(){
@@ -37,24 +36,23 @@ public class TeamCalendarControl extends TemplateControl {
         PagePartData part=outputData.partData;
         if (page == null)
             return;
-        int partId;
+        int partId=0;
         if (part!=null){
             partId=part.getId();
         }
         else
             partId=attributes.getInt("partId");
         if (SessionReader.isEditMode(outputContext.getRequest()) && page.isPageEditMode()) {
-            writer.write("<div class=\"teamcalendar\">TEAM CALENDAR</div>");
+            writer.write("<div class=\"blog\">BLOG</div>");
         }
         else{
-            writer.write("<div class=\"teamcalendar\">");
+            writer.write("<div class=\"blog\">");
             try {
                 outputContext.getRequest().setAttribute("pageId", String.valueOf(page.getId()));
                 outputContext.getRequest().setAttribute("partId", String.valueOf(partId));
-                TeamCalendarActions.setCalendarData(outputContext.getRequest(),partId);
-                outputContext.includeJsp("/WEB-INF/_jsp/team/calendar.jsp");
+                outputContext.includeJsp("/WEB-INF/_jsp/blog/blog.jsp");
             } catch (ServletException e) {
-                Log.error("could not include team calendar jsp", e);
+                Log.error("could not include blog jsp", e);
             }
             writer.write("</div>");
         }

@@ -34,13 +34,14 @@ public class UserBean extends LoginBean {
         return unchangedLogin(con, data);
     }
 
+    private static String GET_ALL_USERS_SQL="SELECT id,change_date,first_name,last_name,street,zipCode,city,country,locale,email,phone,mobile,notes,portrait_name,login,approval_code,approved,failed_login_count,locked FROM t_user WHERE deleted=FALSE";
     public List<UserData> getAllUsers() {
         List<UserData> list = new ArrayList<>();
         Connection con = getConnection();
         PreparedStatement pst = null;
         UserData data;
         try {
-            pst = con.prepareStatement("SELECT id,change_date,first_name,last_name,street,zipCode,city,country,locale,email,phone,mobile,notes,portrait_name,login,approval_code,approved,failed_login_count,locked FROM t_user WHERE deleted=FALSE");
+            pst = con.prepareStatement(GET_ALL_USERS_SQL);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     int i = 1;
@@ -79,12 +80,13 @@ public class UserBean extends LoginBean {
         return list;
     }
 
+    private static String GET_USER_SQL="SELECT change_date,title,first_name,last_name,street,zipCode,city,country,locale,email,phone,mobile,notes,portrait_name,login,approval_code,approved,failed_login_count,locked,deleted FROM t_user WHERE id=?";
     public UserData getUser(int id) {
         Connection con = getConnection();
         PreparedStatement pst = null;
         UserData data = null;
         try {
-            pst = con.prepareStatement("SELECT change_date,title,first_name,last_name,street,zipCode,city,country,locale,email,phone,mobile,notes,portrait_name,login,approval_code,approved,failed_login_count,locked,deleted FROM t_user WHERE id=?");
+            pst = con.prepareStatement(GET_USER_SQL);
             pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
@@ -123,13 +125,13 @@ public class UserBean extends LoginBean {
         return data;
     }
 
+    private static String GET_PORTRAIT_SQL="SELECT portrait_name, portrait FROM t_user WHERE id=?";
     public BinaryFileData getBinaryPortraitData(int id) throws SQLException {
         Connection con = getConnection();
         PreparedStatement pst = null;
         BinaryFileData data = null;
-        String sql = "SELECT portrait_name, portrait FROM t_user WHERE id=?";
         try {
-            pst = con.prepareStatement(sql);
+            pst = con.prepareStatement(GET_PORTRAIT_SQL);
             pst.setInt(1, id);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
@@ -148,10 +150,11 @@ public class UserBean extends LoginBean {
         return data;
     }
 
+    private static String READ_USER_GROUPS_SQL="SELECT group_id FROM t_user2group WHERE user_id=? AND relation=?";
     protected void readUserGroups(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT group_id FROM t_user2group WHERE user_id=? AND relation=?");
+            pst = con.prepareStatement(READ_USER_GROUPS_SQL);
             pst.setInt(1, data.getId());
             pst.setString(2, User2GroupRelation.RIGHTS.name());
             try (ResultSet rs = pst.executeQuery()) {
@@ -180,10 +183,15 @@ public class UserBean extends LoginBean {
         }
     }
 
+    private static String INSERT_USER_SQL="insert into t_user (change_date,title,first_name,last_name,street,zipCode,city,country,locale,email,phone,fax,mobile,notes,portrait_name,portrait,login,pwd,pkey,approval_code,approved,failed_login_count,locked,deleted,id) " +
+            "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static String UPDATE_USER_PWD_SQL="update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,pwd=?,pkey=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?";
+    private static String UPDATE_USER_NOPWD_SQL="update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?";
     protected void writeUser(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(data.isNew() ? "insert into t_user (change_date,title,first_name,last_name,street,zipCode,city,country,locale,email,phone,fax,mobile,notes,portrait_name,portrait,login,pwd,pkey,approval_code,approved,failed_login_count,locked,deleted,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" : data.getPassword().length() == 0 ? "update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?" : "update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,pwd=?,pkey=?,approval_code=?,approved=?,failed_login_count=?,locked=?,deleted=? where id=?");
+            pst = con.prepareStatement(data.isNew() ? INSERT_USER_SQL :
+                    data.getPassword().length() == 0 ? UPDATE_USER_NOPWD_SQL : UPDATE_USER_PWD_SQL);
             int i = 1;
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getTitle());
@@ -239,10 +247,11 @@ public class UserBean extends LoginBean {
         }
     }
 
+    private static String UPDATE_PROFILE_SQL="UPDATE t_user SET change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=? WHERE id=?";
     protected void writeUserProfile(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("UPDATE t_user SET change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=? WHERE id=?");
+            pst = con.prepareStatement(UPDATE_PROFILE_SQL);
             int i = 1;
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getTitle());
@@ -271,16 +280,18 @@ public class UserBean extends LoginBean {
         }
     }
 
+    private static String DELETE_USERGROUPS_SQL="DELETE FROM t_user2group WHERE user_id=? AND relation=?";
+    private static String INSERT_USERGROUP_SQL="INSERT INTO t_user2group (user_id,group_id,relation) VALUES(?,?,?)";
     protected void writeUserGroups(Connection con, UserData data, User2GroupRelation relation) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("DELETE FROM t_user2group WHERE user_id=? AND relation=?");
+            pst = con.prepareStatement(DELETE_USERGROUPS_SQL);
             pst.setInt(1, data.getId());
             pst.setString(2, relation.name());
             pst.execute();
             if (data.getGroupIds() != null) {
                 pst.close();
-                pst = con.prepareStatement("INSERT INTO t_user2group (user_id,group_id,relation) VALUES(?,?,?)");
+                pst = con.prepareStatement(INSERT_USERGROUP_SQL);
                 pst.setInt(1, data.getId());
                 pst.setString(3, relation.name());
                 for (int groupId : data.getGroupIds()) {
@@ -293,15 +304,17 @@ public class UserBean extends LoginBean {
         }
     }
 
+    private static String DELETE_USER_SQL="UPDATE t_user SET deleted=TRUE WHERE id=?";
+    private static String DELETE_ALL_USERGROUPS_SQL="DELETE FROM t_user2group WHERE user_id=?";
     public void deleteUser(int id) {
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("UPDATE t_user SET deleted=TRUE WHERE id=?");
+            pst = con.prepareStatement(DELETE_USER_SQL);
             pst.setInt(1, id);
             pst.executeUpdate();
             pst.close();
-            pst = con.prepareStatement("DELETE FROM t_user2group WHERE user_id=?");
+            pst = con.prepareStatement(DELETE_ALL_USERGROUPS_SQL);
             pst.setInt(1, id);
             pst.executeUpdate();
         } catch (SQLException se) {

@@ -34,35 +34,18 @@ public class TreeBean extends DbBean {
         return instance;
     }
 
+    private static String UNCHANGED_SQL="SELECT change_date FROM t_treenode WHERE id=?";
     protected boolean unchangedNode(Connection con, TreeNode data) {
-        if (data.isNew()) {
-            return true;
-        }
-        PreparedStatement pst = null;
-        ResultSet rs;
-        boolean result = false;
-        try {
-            pst = con.prepareStatement("SELECT change_date FROM t_treenode WHERE id=?");
-            pst.setInt(1, data.getId());
-            rs = pst.executeQuery();
-            if (rs.next()) {
-                LocalDateTime date = rs.getTimestamp(1).toLocalDateTime();
-                rs.close();
-                result = date.equals(data.getChangeDate());
-            }
-        } catch (Exception ignored) {
-        } finally {
-            closeStatement(pst);
-        }
-        return result;
+        return unchangedItem(con, UNCHANGED_SQL, data);
     }
 
+    private static String READ_LANG_ROOTS_SQL="SELECT t1.id,t2.locale FROM t_treenode t1, t_locale t2 WHERE t1.id=t2.tree_id";
     public Map<Locale, Integer> readLanguageRootIds() {
         Map<Locale, Integer> map = new HashMap<>();
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT t1.id,t2.locale FROM t_treenode t1, t_locale t2 WHERE t1.id=t2.tree_id");
+            pst = con.prepareStatement(READ_LANG_ROOTS_SQL);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     int i = 1;
@@ -84,14 +67,15 @@ public class TreeBean extends DbBean {
         return map;
     }
 
+    private static String READ_NODE_SQL="SELECT creation_date,change_date,parent_id,ranking,name,display_name," +
+            "description,keywords,owner_id,author_name,in_navigation,anonymous,inherits_rights " +
+            "FROM t_treenode " +
+            "WHERE id=?";
     public boolean readTreeNode(Connection con, TreeNode data) throws SQLException {
         PreparedStatement pst = null;
         boolean success = false;
         try {
-            pst = con.prepareStatement("SELECT creation_date,change_date,parent_id,ranking,name,display_name," +
-                    "description,keywords,owner_id,author_name,in_navigation,anonymous,inherits_rights " +
-                    "FROM t_treenode " +
-                    "WHERE id=?");
+            pst = con.prepareStatement(READ_NODE_SQL);
             pst.setInt(1, data.getId());
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
@@ -133,6 +117,12 @@ public class TreeBean extends DbBean {
         }
     }
 
+    private static String INSERT_NODE_SQL="insert into t_treenode (creation_date,change_date,parent_id," +
+            "ranking,name,display_name,description,owner_id,author_name,in_navigation,anonymous,inherits_rights,id) " +
+            "values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static String UPDATE_NODE_SQL="update t_treenode set creation_date=?,change_date=?,parent_id=?," +
+            "ranking=?,name=?,display_name=?,description=?,owner_id=?,author_name=?,in_navigation=?,anonymous=?,inherits_rights=? " +
+            "where id=?";
     protected void writeTreeNode(Connection con, TreeNode data) throws SQLException {
         LocalDateTime now = getServerTime(con);
         data.setChangeDate(now);
@@ -141,12 +131,7 @@ public class TreeBean extends DbBean {
         }
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(data.isNew() ? "insert into t_treenode (creation_date,change_date,parent_id," +
-                    "ranking,name,display_name,description,owner_id,author_name,in_navigation,anonymous,inherits_rights,id) " +
-                    "values(?,?,?,?,?,?,?,?,?,?,?,?,?)" :
-                    "update t_treenode set creation_date=?,change_date=?,parent_id=?," +
-                            "ranking=?,name=?,display_name=?,description=?,owner_id=?,author_name=?,in_navigation=?,anonymous=?,inherits_rights=? " +
-                            "where id=?");
+            pst = con.prepareStatement(data.isNew() ? INSERT_NODE_SQL : UPDATE_NODE_SQL);
             int i = 1;
             pst.setTimestamp(i++, Timestamp.valueOf(data.getCreationDate()));
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
@@ -172,11 +157,12 @@ public class TreeBean extends DbBean {
         }
     }
 
+    private static String GET_GROUP_RIGHTS_SQL="SELECT group_id,value FROM t_treenode_right WHERE id=?";
     public Map<Integer, Right> getTreeNodeRights(Connection con, int treeNodeId) throws SQLException {
         PreparedStatement pst = null;
         Map<Integer, Right> list = new HashMap<>();
         try {
-            pst = con.prepareStatement("SELECT group_id,value FROM t_treenode_right WHERE id=?");
+            pst = con.prepareStatement(GET_GROUP_RIGHTS_SQL);
             pst.setInt(1, treeNodeId);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
@@ -189,12 +175,15 @@ public class TreeBean extends DbBean {
         return list;
     }
 
+    private static String GET_ALL_RIGHT_SQL="SELECT value FROM t_treenode_right WHERE group_id=?";
+    private static String GET_ID_RIGHT_SQL="SELECT id,value FROM t_treenode_right WHERE group_id=?";
+    //todo!
     public Map<Integer, Integer> getGroupRights(int groupId) {
         Connection con = getConnection();
         PreparedStatement pst = null;
         Map<Integer, Integer> map = new HashMap<>();
         try {
-            pst = con.prepareStatement("SELECT value FROM t_treenode_right WHERE group_id=?");
+            pst = con.prepareStatement(GET_ALL_RIGHT_SQL);
             pst.setInt(1, groupId);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
@@ -202,7 +191,7 @@ public class TreeBean extends DbBean {
             }
             rs.close();
             pst.close();
-            pst = con.prepareStatement("SELECT id,value FROM t_treenode_right WHERE group_id=?");
+            pst = con.prepareStatement(GET_ID_RIGHT_SQL);
             pst.setInt(1, groupId);
             rs = pst.executeQuery();
             while (rs.next()) {
@@ -233,11 +222,12 @@ public class TreeBean extends DbBean {
         }
     }
 
+    private static String MOVE_NODE_SQL="UPDATE t_treenode SET parent_id=? WHERE id=?";
     public boolean moveTreeNode(int nodeId, int parentId) {
         Connection con = startTransaction();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("UPDATE t_treenode SET parent_id=? WHERE id=?");
+            pst = con.prepareStatement(MOVE_NODE_SQL);
             pst.setInt(1, parentId);
             pst.setInt(2, nodeId);
             pst.executeUpdate();
@@ -249,21 +239,9 @@ public class TreeBean extends DbBean {
         }
     }
 
+    private static String DELETE_SQL="DELETE FROM t_treenode WHERE id=?";
     public boolean deleteTreeNode(int id) {
-        Connection con = getConnection();
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement("DELETE FROM t_treenode WHERE id=?");
-            pst.setInt(1, id);
-            pst.executeUpdate();
-            return true;
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-            return false;
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
+        return deleteItem(DELETE_SQL, id);
     }
 
 }

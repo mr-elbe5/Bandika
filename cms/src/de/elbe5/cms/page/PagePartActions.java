@@ -8,6 +8,7 @@
  */
 package de.elbe5.cms.page;
 
+import de.elbe5.cms.application.AdminActions;
 import de.elbe5.cms.tree.BaseTreeActions;
 import de.elbe5.cms.tree.TreeCache;
 import de.elbe5.webbase.rights.Right;
@@ -32,10 +33,10 @@ public class PagePartActions extends BaseTreeActions {
     public static final String openSharePagePart="openSharePagePart";
     public static final String sharePagePart="sharePagePart";
     public static final String movePagePart="movePagePart";
+    public static final String removePagePart="removePagePart";
+    public static final String showPagePartDetails="showPagePartDetails";
     public static final String deletePagePart="deletePagePart";
-    public static final String showSharedPartDetails="showSharedPartDetails";
-    public static final String openDeleteSharedPart="openDeleteSharedPart";
-    public static final String deleteSharedPart="deleteSharedPart";
+    public static final String deleteAllOrphanedPageParts="deleteAllOrphanedPageParts";
 
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) {
         switch (actionName) {
@@ -190,7 +191,7 @@ public class PagePartActions extends BaseTreeActions {
                 data.setPageEditMode(true);
                 return setPageResponse(request, response, data);
             }
-            case deletePagePart: {
+            case removePagePart: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
@@ -201,17 +202,17 @@ public class PagePartActions extends BaseTreeActions {
                 data.removePagePart(sectionName, partId);
                 return setEditPageContentAjaxResponse(request, response, data);
             }
-            case PagePartActions.showSharedPartDetails: {
-                int pageId = RequestReader.getInt(request, "pageId");
-                if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                return showSharedPartDetails(request, response);
+            case showPagePartDetails: {
+                return showPagePartDetails(request, response);
             }
-            case PagePartActions.openDeleteSharedPart: {
-                int pageId = RequestReader.getInt(request, "pageId");
-                if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                return showDeleteSharedPart(request, response);
+            case deletePagePart: {
+                int partId = RequestReader.getInt(request, "partId");
+                PageBean.getInstance().deletePagePart(partId);
+                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration, "_pagePartDeleted");
+            }
+            case deleteAllOrphanedPageParts: {
+                PageBean.getInstance().deleteAllOrphanedPageParts();
+                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration, "_pagePartsDeleted");
             }
             default: {
                 return forbidden();
@@ -253,12 +254,12 @@ public class PagePartActions extends BaseTreeActions {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/sharePagePart.ajax.jsp");
     }
 
-    protected boolean showDeleteSharedPart(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/deleteSharedPart.ajax.jsp");
+    protected boolean showPagePartDetails(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/pagePartDetails.ajax.jsp");
     }
 
-    protected boolean showSharedPartDetails(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/sharedPagePartDetails.ajax.jsp");
+    protected boolean showDeletePagePart(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/deletePagePart.ajax.jsp");
     }
 
 }

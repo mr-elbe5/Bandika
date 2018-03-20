@@ -14,45 +14,47 @@ import de.elbe5.cms.page.PageData;
 import de.elbe5.cms.page.PageOutputContext;
 import de.elbe5.cms.page.PageOutputData;
 import de.elbe5.cms.page.PagePartData;
+import de.elbe5.cms.calendar.CalendarActions;
 import de.elbe5.webbase.servlet.SessionReader;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
 
-public class TeamDocsControl extends TemplateControl {
+public class CalendarControl extends TemplateControl {
 
-    public static final String KEY = "teamdocs";
+    public static final String KEY = "calendar";
 
-    public TeamDocsControl(){
+    public CalendarControl(){
     }
 
     public String getKey(){
         return KEY;
     }
 
-    public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException{
+    public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
         PageData page=outputData.pageData;
         PagePartData part=outputData.partData;
         if (page == null)
             return;
-        int partId=0;
+        int partId;
         if (part!=null){
             partId=part.getId();
         }
         else
             partId=attributes.getInt("partId");
         if (SessionReader.isEditMode(outputContext.getRequest()) && page.isPageEditMode()) {
-            writer.write("<div class=\"teamdocs\">TEAM DOCUMENTS</div>");
+            writer.write("<div class=\"calendar\">CALENDAR</div>");
         }
         else{
-            writer.write("<div class=\"teamdocs\">");
+            writer.write("<div class=\"calendar\">");
             try {
                 outputContext.getRequest().setAttribute("pageId", String.valueOf(page.getId()));
                 outputContext.getRequest().setAttribute("partId", String.valueOf(partId));
-                outputContext.includeJsp("/WEB-INF/_jsp/team/files.jsp");
+                CalendarActions.setCalendarData(outputContext.getRequest(),partId);
+                outputContext.includeJsp("/WEB-INF/_jsp/calendar/calendar.jsp");
             } catch (ServletException e) {
-                Log.error("could not include team doc jsp", e);
+                Log.error("could not include calendar jsp", e);
             }
             writer.write("</div>");
         }

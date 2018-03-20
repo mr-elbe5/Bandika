@@ -6,18 +6,17 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.cms.team;
+package de.elbe5.cms.calendar;
 
-import de.elbe5.base.data.BaseData;
+import de.elbe5.base.data.BaseIdData;
 import de.elbe5.webbase.servlet.RequestReader;
 import de.elbe5.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
-public class TeamCalendarEntryData extends BaseData {
+public class CalendarEntryData extends BaseIdData {
 
-    protected int id = 0;
     protected int partId = 0;
     protected int authorId = 0;
     protected String authorName = "";
@@ -25,14 +24,6 @@ public class TeamCalendarEntryData extends BaseData {
     protected LocalDateTime endTime = null;
     protected String title = "";
     protected String text = "";
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getPartId() {
         return partId;

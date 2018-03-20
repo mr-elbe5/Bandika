@@ -6,7 +6,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.cms.team;
+package de.elbe5.cms.calendar;
 
 import de.elbe5.webbase.database.DbBean;
 
@@ -15,39 +15,22 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeamBlogBean extends DbBean {
+public class CalendarBean extends DbBean {
 
-    private static TeamBlogBean instance = null;
+    private static CalendarBean instance = null;
 
-    public static TeamBlogBean getInstance() {
+    public static CalendarBean getInstance() {
         if (instance == null)
-            instance = new TeamBlogBean();
+            instance = new CalendarBean();
         return instance;
     }
 
-    protected boolean unchanged(Connection con, TeamBlogEntryData data) {
-        if (data.isNew())
-            return true;
-        PreparedStatement pst = null;
-        ResultSet rs;
-        boolean result = false;
-        try {
-            pst = con.prepareStatement("select change_date from t_teamblogentry where id=?");
-            pst.setInt(1, data.getId());
-            rs = pst.executeQuery();
-            if (rs.next()) {
-                LocalDateTime date = rs.getTimestamp(1).toLocalDateTime();
-                rs.close();
-                result = date.equals(data.getChangeDate());
-            }
-        } catch (Exception ignored) {
-        } finally {
-            closeStatement(pst);
-        }
-        return result;
+    private static String UNCHANGED_SQL="select change_date from t_calendarentry where id=?";
+    protected boolean unchanged(Connection con, CalendarEntryData data) {
+        return unchangedItem(con, UNCHANGED_SQL, data);
     }
 
-    public boolean saveEntryData(TeamBlogEntryData data) {
+    public boolean saveEntryData(CalendarEntryData data) {
         Connection con = startTransaction();
         try {
             if (!unchanged(con, data)) {
@@ -62,17 +45,25 @@ public class TeamBlogBean extends DbBean {
         }
     }
 
-    protected void writeEntryData(Connection con, TeamBlogEntryData data) throws SQLException {
+    private static String INSERT_ENTRY_SQL="insert into t_calendarentry (change_date,part_id,author_id,author_name,start_time,end_time,title,entry,id) values (?,?,?,?,?,?,?,?,?)";
+    private static String UPDATE_ENTRY_SQL="update t_calendarentry set change_date=?,part_id=?,author_id=?,author_name=?,start_time=?,end_time=?,title=?,entry=? where id=?";
+    protected void writeEntryData(Connection con, CalendarEntryData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            String sql = data.isNew() ? "insert into t_teamblogentry (change_date,part_id,author_id,author_name,entry,id) values (?,?,?,?,?,?)"
-                    : "update t_teamblogentry set change_date=?,teampart_id=?,author_id=?,author_name=?,entry=? where id=?";
+            String sql = data.isNew() ? INSERT_ENTRY_SQL : UPDATE_ENTRY_SQL;
             pst = con.prepareStatement(sql);
             int i = 1;
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setInt(i++, data.getPartId());
             pst.setInt(i++, data.getAuthorId());
             pst.setString(i++, data.getAuthorName());
+            pst.setTimestamp(i++,Timestamp.valueOf(data.getStartTime()));
+            LocalDateTime time = data.getEndTime();
+            if (time==null)
+                pst.setNull(i++,Types.TIMESTAMP);
+            else
+                pst.setTimestamp(i++,Timestamp.valueOf(time));
+            pst.setString(i++, data.getTitle());
             pst.setString(i++, data.getText());
             pst.setInt(i, data.getId());
             pst.executeUpdate();
@@ -81,9 +72,9 @@ public class TeamBlogBean extends DbBean {
         }
     }
 
-    public TeamBlogEntryData getEntryData(int id) {
+    public CalendarEntryData getEntryData(int id) {
         Connection con = null;
-        TeamBlogEntryData data = new TeamBlogEntryData();
+        CalendarEntryData data = new CalendarEntryData();
         data.setId(id);
         try {
             con = getConnection();
@@ -96,11 +87,11 @@ public class TeamBlogBean extends DbBean {
         return data;
     }
 
-    public void readEntryData(Connection con, TeamBlogEntryData data) throws SQLException {
+    private static String READ_ENTRY_SQL="select change_date,part_id,author_id,author_name,start_time,end_time,title,entry from t_calendarentry where id=?";
+    public void readEntryData(Connection con, CalendarEntryData data) throws SQLException {
         PreparedStatement pst = null;
-        String sql = "select change_date,part_id,author_id,author_name,entry from t_teamblogentry where id=?";
         try {
-            pst = con.prepareStatement(sql);
+            pst = con.prepareStatement(READ_ENTRY_SQL);
             pst.setInt(1, data.getId());
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
@@ -109,6 +100,13 @@ public class TeamBlogBean extends DbBean {
                 data.setPartId(rs.getInt(i++));
                 data.setAuthorId(rs.getInt(i++));
                 data.setAuthorName(rs.getString(i++));
+                data.setStartTime(rs.getTimestamp(i++).toLocalDateTime());
+                Timestamp ts=rs.getTimestamp(i++);
+                if (ts==null)
+                    data.setEndTime(null);
+                else
+                    data.setEndTime(ts.toLocalDateTime());
+                data.setTitle(rs.getString(i++));
                 data.setText(rs.getString(i));
             }
             rs.close();
@@ -117,25 +115,35 @@ public class TeamBlogBean extends DbBean {
         }
     }
 
-    public List<TeamBlogEntryData> getEntryList(int teampartId) {
-        List<TeamBlogEntryData> list = new ArrayList<>();
+    private static String GET_ENTRY_LIST_SQL="select id,change_date,part_id,author_id,author_name,start_time,end_time,title,entry " +
+            "from t_calendarentry " +
+            "where part_id=? " +
+            "order by start_time ASC;";
+    public List<CalendarEntryData> getEntryList(int teampartId) {
+        List<CalendarEntryData> list = new ArrayList<>();
         Connection con = null;
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("select id,change_date,part_id,author_id,author_name,entry from t_teamblogentry " +
-                    "where part_id=? order by id;");
+            pst = con.prepareStatement(GET_ENTRY_LIST_SQL);
             pst.setInt(1, teampartId);
             int i;
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 i = 1;
-                TeamBlogEntryData data = new TeamBlogEntryData();
+                CalendarEntryData data = new CalendarEntryData();
                 data.setId(rs.getInt(i++));
                 data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                 data.setPartId(rs.getInt(i++));
                 data.setAuthorId(rs.getInt(i++));
                 data.setAuthorName(rs.getString(i++));
+                pst.setTimestamp(i++,Timestamp.valueOf(data.getStartTime()));
+                LocalDateTime time = data.getEndTime();
+                if (time==null)
+                    pst.setNull(i++,Types.TIMESTAMP);
+                else
+                    pst.setTimestamp(i++,Timestamp.valueOf(time));
+                pst.setString(i++, data.getTitle());
                 data.setText(rs.getString(i));
                 list.add(data);
             }
@@ -148,19 +156,9 @@ public class TeamBlogBean extends DbBean {
         return list;
     }
 
-    public void deleteEntry(int id) throws SQLException {
-        Connection con = null;
-        PreparedStatement pst = null;
-        try {
-            con = getConnection();
-            pst = con.prepareStatement("delete from t_teamblogentry where id=?");
-            pst.setInt(1, id);
-            pst.executeUpdate();
-            pst.close();
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
+    private static String DELETE_SQL="delete from t_calendarentry where id=?";
+    public boolean deleteEntry(int id) throws SQLException {
+        return deleteItem(DELETE_SQL, id);
     }
 
 }

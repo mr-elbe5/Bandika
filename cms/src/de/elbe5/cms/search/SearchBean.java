@@ -149,16 +149,28 @@ public class SearchBean extends DbBean {
         return new IndexWriter(dir, iwc);
     }
 
+    private static String INDEX_NODE_SQL = "SELECT id,display_name,description,author_name,keywords FROM t_treenode WHERE id=?";
+
+    private void getSearchData(ContentSearchData data, ResultSet rs) throws SQLException {
+        int i = 1;
+        data.setId(rs.getInt(i++));
+        data.setName(rs.getString(i++));
+        data.setDescription(rs.getString(i++));
+        data.setAuthorName(rs.getString(i++));
+        data.setKeywords(rs.getString(i));
+    }
+
+    private static String INDEX_SITES_SQL="SELECT t1.id,t1.display_name,t1.description,t1.author_name FROM t_treenode t1, t_site t2 WHERE t1.id=t2.id";
     protected void indexSites(IndexWriter writer) throws Exception {
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name FROM t_treenode t1, t_site t2 WHERE t1.id=t2.id");
+            pst = con.prepareStatement(INDEX_SITES_SQL);
             ResultSet rs = pst.executeQuery();
             int count = 0;
             while (rs.next()) {
                 SiteSearchData data = new SiteSearchData();
-                getSiteSearchData(data, rs);
+                getSearchData(data, rs);
                 data.setDoc();
                 writer.addDocument(data.getDoc());
                 count++;
@@ -181,15 +193,12 @@ public class SearchBean extends DbBean {
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name " +
-                    "FROM t_treenode t1, t_site t2 " +
-                    "WHERE t1.id=? AND t2.id=?");
+            pst = con.prepareStatement(INDEX_NODE_SQL);
             pst.setInt(1, id);
-            pst.setInt(2, id);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
                 SiteSearchData data = new SiteSearchData();
-                getSiteSearchData(data, rs);
+                getSearchData(data, rs);
                 data.setDoc();
                 writer.addDocument(data.getDoc());
             }
@@ -204,25 +213,17 @@ public class SearchBean extends DbBean {
         }
     }
 
-    private void getSiteSearchData(ContentSearchData data, ResultSet rs) throws SQLException {
-        int i = 1;
-        data.setId(rs.getInt(i++));
-        data.setName(rs.getString(i++));
-        data.setDescription(rs.getString(i++));
-        data.setAuthorName(rs.getString(i));
-    }
-
+    private static String INDEX_PAGES_SQL="SELECT t1.id,t1.display_name,t1.description,t1.author_name FROM t_treenode t1, t_page t2 WHERE t1.id=t2.id";
     protected void indexPages(IndexWriter writer) throws Exception {
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t1.keywords " +
-                    "FROM t_treenode t1 ");
+            pst = con.prepareStatement(INDEX_PAGES_SQL);
             ResultSet rs = pst.executeQuery();
             int count = 0;
             while (rs.next()) {
                 PageSearchData data = new PageSearchData();
-                getPageSearchData(data, rs);
+                getSearchData(data, rs);
                 data.setDoc();
                 writer.addDocument(data.getDoc());
                 count++;
@@ -245,14 +246,12 @@ public class SearchBean extends DbBean {
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t1.keywords " +
-                    "FROM t_treenode t1 " +
-                    "WHERE t1.id=? ");
+            pst = con.prepareStatement(INDEX_NODE_SQL);
             pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
                 PageSearchData data = new PageSearchData();
-                getPageSearchData(data, rs);
+                getSearchData(data, rs);
                 //todo read parts
                 data.setDoc();
                 writer.addDocument(data.getDoc());
@@ -268,27 +267,17 @@ public class SearchBean extends DbBean {
         }
     }
 
-    private void getPageSearchData(ContentSearchData data, ResultSet rs) throws SQLException {
-        int i = 1;
-        data.setId(rs.getInt(i++));
-        data.setName(rs.getString(i++));
-        data.setDescription(rs.getString(i++));
-        data.setAuthorName(rs.getString(i++));
-        data.setKeywords(rs.getString(i));
-    }
-
+    private static String INDEX_FILES_SQL="SELECT t1.id,t1.display_name,t1.description,t1.author_name FROM t_treenode t1, t_file t2 WHERE t1.id=t2.id";
     protected void indexFiles(IndexWriter writer) throws Exception {
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t1.keywords,t2.content_type,t2.bytes " +
-                    "FROM t_treenode t1, t_file t2 " +
-                    "WHERE t1.id=t2.id");
+            pst = con.prepareStatement(INDEX_FILES_SQL);
             ResultSet rs = pst.executeQuery();
             int count = 0;
             while (rs.next()) {
                 FileSearchData data = new FileSearchData();
-                getFileSearchData(data, rs);
+                getSearchData(data, rs);
                 data.setDoc();
                 writer.addDocument(data.getDoc());
                 count++;
@@ -311,15 +300,12 @@ public class SearchBean extends DbBean {
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT t1.id,t1.display_name,t1.description,t1.author_name,t1.keywords,t2.content_type,t2.bytes " +
-                    "FROM t_treenode t1, t_file t2 " +
-                    "WHERE t1.id=? AND t2.id=? ");
+            pst = con.prepareStatement(INDEX_NODE_SQL);
             pst.setInt(1, id);
-            pst.setInt(2, id);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
                 FileSearchData data = new FileSearchData();
-                getFileSearchData(data, rs);
+                getSearchData(data, rs);
                 data.setDoc();
                 writer.addDocument(data.getDoc());
             }
@@ -334,24 +320,13 @@ public class SearchBean extends DbBean {
         }
     }
 
-    private void getFileSearchData(ContentSearchData data, ResultSet rs) throws SQLException {
-        int i = 1;
-        data.setId(rs.getInt(i++));
-        data.setName(rs.getString(i++));
-        data.setDescription(rs.getString(i++));
-        data.setAuthorName(rs.getString(i++));
-        data.setKeywords(rs.getString(i++));
-        String contentType = rs.getString(i++);
-        byte[] bytes = rs.getBytes(i);
-        SearchHelper.getSearchContent(bytes,data.getName(),contentType);
-    }
-
+    private static String INDEX_USERS_SQL="SELECT id,first_name,last_name,email FROM t_user";
     protected void indexUsers(IndexWriter writer) throws Exception {
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
             int count = 0;
-            pst = con.prepareStatement("SELECT id,first_name,last_name,email FROM t_user");
+            pst = con.prepareStatement(INDEX_USERS_SQL);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 SearchData data = getUserSearchData(rs);
@@ -372,11 +347,12 @@ public class SearchBean extends DbBean {
         }
     }
 
+    private static String INDEX_USER_SQL="SELECT id, first_name,last_name FROM t_user WHERE id=?";
     protected void indexUser(IndexWriter writer, int id) throws Exception {
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT id, first_name,last_name FROM t_user WHERE id=?");
+            pst = con.prepareStatement(INDEX_USER_SQL);
             pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {

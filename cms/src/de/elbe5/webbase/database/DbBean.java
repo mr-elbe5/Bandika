@@ -8,6 +8,7 @@
  */
 package de.elbe5.webbase.database;
 
+import de.elbe5.base.data.BaseIdData;
 import de.elbe5.base.log.Log;
 
 import java.sql.*;
@@ -103,6 +104,46 @@ public abstract class DbBean {
             closeStatement(pst);
         }
         return now;
+    }
+
+    protected boolean unchangedItem(Connection con, String sql, BaseIdData data) {
+        if (data.isNew()) {
+            return true;
+        }
+        PreparedStatement pst = null;
+        ResultSet rs;
+        boolean result = false;
+        try {
+            pst = con.prepareStatement(sql);
+            pst.setInt(1, data.getId());
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                LocalDateTime date = rs.getTimestamp(1).toLocalDateTime();
+                rs.close();
+                result = date.equals(data.getChangeDate());
+            }
+        } catch (Exception ignored) {
+        } finally {
+            closeStatement(pst);
+        }
+        return result;
+    }
+
+    public boolean deleteItem(String sql, int id) {
+        Connection con = getConnection();
+        PreparedStatement pst = null;
+        try {
+            pst = con.prepareStatement(sql);
+            pst.setInt(1, id);
+            pst.executeUpdate();
+            return true;
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+            return false;
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
     }
 
 }

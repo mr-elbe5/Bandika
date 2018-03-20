@@ -6,7 +6,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.cms.team;
+package de.elbe5.cms.document;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
@@ -21,21 +21,21 @@ import de.elbe5.webbase.servlet.SessionWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class TeamFileActions extends CmsActions {
+public class DocumentActions extends CmsActions {
 
     public static final String showList="showList";
-    public static final String showFile="showFile";
-    public static final String openCreateFile="openCreateFile";
-    public static final String checkoutFile="checkoutFile";
-    public static final String undoCheckoutFile="undoCheckoutFile";
-    public static final String checkinFile="checkinFile";
-    public static final String openEditFile="openEditFile";
-    public static final String deleteFile="deleteFile";
+    public static final String showDocument="showDocument";
+    public static final String openCreateDocument="openCreateDocument";
+    public static final String checkoutDocument="checkoutDocument";
+    public static final String undoCheckoutDocument="undoCheckoutDocument";
+    public static final String checkinDocument="checkinDocument";
+    public static final String openEditDocument="openEditDocument";
+    public static final String deleteDocument="deleteDocument";
 
-    public static final String KEY = "teamfile";
+    public static final String KEY = "document";
 
     public static void initialize() {
-        ActionSetCache.addActionSet(KEY, new TeamFileActions());
+        ActionSetCache.addActionSet(KEY, new DocumentActions());
     }
 
     public String getKey(){
@@ -45,20 +45,20 @@ public class TeamFileActions extends CmsActions {
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
             case showList: {
-                return showFiles(request, response);
+                return showDocuments(request, response);
             }
-            case showFile: {
+            case showDocument: {
                 int fileId = RequestReader.getInt(request,"fileId");
-                FileData data = TeamFileBean.getInstance().getFile(fileId);
+                FileData data = DocumentBean.getInstance().getFile(fileId);
                 if (data == null) {
-                    Log.error( "Error delivering unknown file - id: " + fileId);
+                    Log.error( "Error delivering unknown document - id: " + fileId);
                     return false;
                 }
                 return sendBinaryResponse(request, response, data.getName(), data.getContentType(), data.getBytes());
             }
-            case openCreateFile: {
-                TeamFileData data = new TeamFileData();
-                data.setId(TeamFileBean.getInstance().getNextId());
+            case openCreateDocument: {
+                DocumentData data = new DocumentData();
+                data.setId(DocumentBean.getInstance().getNextId());
                 data.setPartId(RequestReader.getInt(request,"partId"));
                 data.setOwnerId(SessionReader.getLoginId(request));
                 data.setOwnerName(SessionReader.getLoginName(request));
@@ -67,86 +67,86 @@ public class TeamFileActions extends CmsActions {
                 data.setCheckoutId(SessionReader.getLoginId(request));
                 data.setCheckoutName(SessionReader.getLoginName(request));
                 data.setNew(true);
-                SessionWriter.setSessionObject(request,"fileData", data);
-                return showEditFile(request, response);
+                SessionWriter.setSessionObject(request,"documentData", data);
+                return showEditDocument(request, response);
             }
-            case checkoutFile: {
+            case checkoutDocument: {
                 int fid = RequestReader.getInt(request,"fileId");
                 int userId=SessionReader.getLoginId(request);
-                TeamFileData data = TeamFileBean.getInstance().getFileData(fid);
+                DocumentData data = DocumentBean.getInstance().getFileData(fid);
                 if (data.getCheckoutId() != 0) {
-                    addError(request, StringUtil.getHtml("team_alreadyCheckedout",SessionReader.getSessionLocale(request)));
-                    return showFiles(request, response);
+                    addError(request, StringUtil.getHtml("_alreadyCheckedout",SessionReader.getSessionLocale(request)));
+                    return showDocuments(request, response);
                 }
                 data.setCheckoutId(userId);
                 data.setCheckoutName(SessionReader.getLoginName(request));
-                TeamFileBean.getInstance().updateCheckout(data);
-                return showFiles(request, response);
+                DocumentBean.getInstance().updateCheckout(data);
+                return showDocuments(request, response);
             }
-            case undoCheckoutFile: {
+            case undoCheckoutDocument: {
                 int fid = RequestReader.getInt(request,"fileId");
                 int userId=SessionReader.getLoginId(request);
-                TeamFileData data = TeamFileBean.getInstance().getFileData(fid);
+                DocumentData data = DocumentBean.getInstance().getFileData(fid);
                 if (data.getCheckoutId() != userId) {
-                    addError(request, StringUtil.getHtml("team_notCheckedoutByYou",SessionReader.getSessionLocale(request)));
-                    return showFiles(request, response);
+                    addError(request, StringUtil.getHtml("_notCheckedoutByYou",SessionReader.getSessionLocale(request)));
+                    return showDocuments(request, response);
                 }
                 data.setCheckoutId(0);
                 data.setCheckoutName("");
-                TeamFileBean.getInstance().updateCheckout(data);
-                return showFiles(request, response);
+                DocumentBean.getInstance().updateCheckout(data);
+                return showDocuments(request, response);
             }
-            case openEditFile: {
+            case openEditDocument: {
                 int fid = RequestReader.getInt(request,"fileId");
-                TeamFileData data = TeamFileBean.getInstance().getFileData(fid);
+                DocumentData data = DocumentBean.getInstance().getFileData(fid);
                 if (data.getCheckoutId() != SessionReader.getLoginId(request)) {
-                    addError(request, StringUtil.getHtml("team_notCheckedoutByYou",SessionReader.getSessionLocale(request)));
-                    return showFiles(request, response);
+                    addError(request, StringUtil.getHtml("_notCheckedoutByYou",SessionReader.getSessionLocale(request)));
+                    return showDocuments(request, response);
                 }
-                SessionWriter.setSessionObject(request, "fileData", data);
-                return showEditFile(request, response);
+                SessionWriter.setSessionObject(request, "documentData", data);
+                return showEditDocument(request, response);
             }
-            case checkinFile: {
-                TeamFileData data = (TeamFileData) SessionReader.getSessionObject(request, "fileData");
+            case checkinDocument: {
+                DocumentData data = (DocumentData) SessionReader.getSessionObject(request, "documentData");
                 int fid=RequestReader.getInt(request,"fileId");
                 int userId=SessionReader.getLoginId(request);
                 if (data == null || data.getId() != fid || userId!=data.getCheckoutId())
                     return false;
                 if (data.getCheckoutId() != SessionReader.getLoginId(request)) {
-                    addError(request, StringUtil.getHtml("team_notCheckedoutByYou",SessionReader.getSessionLocale(request)));
-                    return showFiles(request, response);
+                    addError(request, StringUtil.getHtml("_notCheckedoutByYou",SessionReader.getSessionLocale(request)));
+                    return showDocuments(request, response);
                 }
                 if (!data.readRequestData(request)) {
-                    return showEditFile(request, response);
+                    return showEditDocument(request, response);
                 }
                 data.setCheckoutId(0);
                 data.setCheckoutName("");
                 data.setAuthorId(SessionReader.getLoginId(request));
                 data.setAuthorName(SessionReader.getLoginName(request));
-                TeamFileBean.getInstance().saveFileData(data);
-                return showFiles(request, response);
+                DocumentBean.getInstance().saveFileData(data);
+                return showDocuments(request, response);
             }
-            case deleteFile: {
+            case deleteDocument: {
                 int fid = RequestReader.getInt(request,"fileId");
                 int userId=SessionReader.getLoginId(request);
                 if (userId==0)
                     return false;
-                TeamFileData fileData = TeamFileBean.getInstance().getFileData(fid);
+                DocumentData fileData = DocumentBean.getInstance().getFileData(fid);
                 if (fileData.getOwnerId()!=userId && fileData.getAuthorId()!=userId)
                     return false;
-                TeamFileBean.getInstance().deleteFile(fid);
-                return showFiles(request, response);
+                DocumentBean.getInstance().deleteFile(fid);
+                return showDocuments(request, response);
             }
         }
         return false;
     }
 
-    protected boolean showFiles(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/team/files.jsp");
+    protected boolean showDocuments(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/document/documents.jsp");
     }
 
-    protected boolean showEditFile(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/team/editFile.jsp");
+    protected boolean showEditDocument(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/document/editDocument.jsp");
     }
 
 }

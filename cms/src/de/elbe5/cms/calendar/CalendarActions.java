@@ -6,8 +6,9 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.cms.team;
+package de.elbe5.cms.calendar;
 
+import de.elbe5.cms.blog.BlogBean;
 import de.elbe5.cms.servlet.CmsActions;
 import de.elbe5.webbase.rights.Right;
 import de.elbe5.webbase.rights.SystemZone;
@@ -19,19 +20,20 @@ import de.elbe5.webbase.servlet.SessionWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class TeamBlogActions extends CmsActions {
+public class CalendarActions extends CmsActions {
 
-    public static final String showBlog="showBlog";
+    public static final String showCalendar="showCalendar";
     public static final String openCreateEntry="openCreateEntry";
     public static final String openEditEntry="openEditEntry";
     public static final String saveEntry="saveEntry";
-    public static final String openDeleteEntry="openDeleteEntry";
     public static final String deleteEntry="deleteEntry";
 
-    public static final String KEY = "teamblog";
+    public static final String KEY = "calendar";
+
+    public static final String KEY_CALENDAR = "$CALENDAR";
 
     public static void initialize() {
-        ActionSetCache.addActionSet(KEY, new TeamBlogActions());
+        ActionSetCache.addActionSet(KEY, new CalendarActions());
     }
 
     public String getKey(){
@@ -40,49 +42,72 @@ public class TeamBlogActions extends CmsActions {
 
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
-            case showBlog: {
-                return showBlog(request, response);
+            case showCalendar: {
+                int partId=RequestReader.getInt(request,"partId");
+                setCalendarData(request, partId);
+                return showCalendar(request, response);
             }
             case openCreateEntry: {
-                TeamBlogEntryData data = new TeamBlogEntryData();
-                data.setPartId(RequestReader.getInt(request, "partId"));
-                data.setId(TeamBlogBean.getInstance().getNextId());
+                int partId=RequestReader.getInt(request,"partId");
+                assertCalendarData(request, partId);
+                CalendarEntryData data = new CalendarEntryData();
+                data.setPartId(partId);
+                data.setId(BlogBean.getInstance().getNextId());
                 data.setNew(true);
                 SessionWriter.setSessionObject(request, "entry", data);
                 return showEditEntry(request, response);
             }
             case openEditEntry: {
+                int partId=RequestReader.getInt(request,"partId");
+                assertCalendarData(request, partId);
                 int id = RequestReader.getInt(request,"entryId");
-                TeamBlogEntryData data = TeamBlogBean.getInstance().getEntryData(id);
+                CalendarEntryData data = CalendarBean.getInstance().getEntryData(id);
                 SessionWriter.setSessionObject(request, "entry", data);
                 return showEditEntry(request, response);
             }
             case saveEntry: {
-                TeamBlogEntryData data = (TeamBlogEntryData) SessionReader.getSessionObject(request, "entry");
+                int partId=RequestReader.getInt(request,"partId");
+                assertCalendarData(request, partId);
+                CalendarEntryData data = (CalendarEntryData) SessionReader.getSessionObject(request, "entry");
                 if (data == null || data.getId() != RequestReader.getInt(request,"entryId"))
                     return false;
                 if (!data.readRequestData(request)) {
                     return showEditEntry(request, response);
                 }
                 data.prepareSave();
-                TeamBlogBean.getInstance().saveEntryData(data);
-                return showBlog(request, response);
+                CalendarBean.getInstance().saveEntryData(data);
+                return showCalendar(request, response);
             }
             case deleteEntry: {
+                int partId=RequestReader.getInt(request,"partId");
+                assertCalendarData(request, partId);
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
-                TeamBlogBean.getInstance().deleteEntry(RequestReader.getInt(request,"entryId"));
-                return showBlog(request, response);
+                CalendarBean.getInstance().deleteEntry(RequestReader.getInt(request,"entryId"));
+                return showCalendar(request, response);
             }
         }
         return false;
     }
 
-    protected boolean showBlog(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/team/blog.jsp");
+    public static void setCalendarData(HttpServletRequest request, int partId){
+        CalendarData data = new CalendarData(partId);
+        SessionWriter.setSessionObject(request, KEY_CALENDAR+partId, data);
+    }
+
+    public static void assertCalendarData(HttpServletRequest request, int partId){
+        CalendarData data= (CalendarData) SessionReader.getSessionObject(request, KEY_CALENDAR+partId);
+        if (data==null){
+            data=new CalendarData(partId);
+            SessionWriter.setSessionObject(request, KEY_CALENDAR+partId, data);
+        }
+    }
+
+    protected boolean showCalendar(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/calendar/calendar.jsp");
     }
 
     protected boolean showEditEntry(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/team/editBlogEntry.jsp");
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/calendar/editCalendarEntry.jsp");
     }
 }

@@ -213,28 +213,28 @@
             </div>
         </div>
     </cms:template>
-    <cms:template type="PART" name="TeamDocuments" displayName="Team Documents" sectionTypes="content">
+    <cms:template type="PART" name="Documents" displayName="Documents" sectionTypes="content">
         <div class="textBox">
             <h2>
                 <cms:include type="field" fieldType="text" name="text">Lorem ipsum</cms:include>
             </h2>
-            <cms:include type="teamdocs" name="teamdocs"></cms:include>
+            <cms:include type="documents" name="documents"> </cms:include>
         </div>
     </cms:template>
-    <cms:template type="PART" name="TeamBlog" displayName="Team Blog" sectionTypes="content">
+    <cms:template type="PART" name="Blog" displayName="Blog" sectionTypes="content">
         <div class="textBox">
             <h2>
                 <cms:include type="field" fieldType="text" name="text">Lorem ipsum</cms:include>
             </h2>
-            <cms:include type="teamblog" name="teamblog"></cms:include>
+            <cms:include type="blog" name="blog"> </cms:include>
         </div>
     </cms:template>
-    <cms:template type="PART" name="TeamCalendar" displayName="Team Calendar" sectionTypes="content">
+    <cms:template type="PART" name="Calendar" displayName="Calendar" sectionTypes="content">
         <div class="textBox">
             <h2>
                 <cms:include type="field" fieldType="text" name="text">Lorem ipsum</cms:include>
             </h2>
-            <cms:include type="teamcalendar" name="teamcalendar"></cms:include>
+            <cms:include type="calendar" name="calendar"> </cms:include>
         </div>
     </cms:template>
 
@@ -267,7 +267,7 @@
                 <cms:include type="field" fieldType="text" name="header">Lorem ipsum</cms:include>
             </h3>
             <div class="textBox">
-                <cms:include type="files" name="files" filter="documents"></cms:include>
+                <cms:include type="files" name="files" filter="documents"> </cms:include>
             </div>
         </div>
     </cms:template>
@@ -277,7 +277,7 @@
                 <cms:include type="field" fieldType="text" name="header">Lorem ipsum</cms:include>
             </h3>
             <div class="textBox">
-                <cms:include type="files" name="files" filter="images"></cms:include>
+                <cms:include type="files" name="files" filter="images"> </cms:include>
             </div>
         </div>
     </cms:template>
@@ -287,7 +287,7 @@
                 <cms:include type="field" fieldType="text" name="header">Lorem ipsum</cms:include>
             </h3>
             <div class="textBox">
-                <cms:include type="subnavi" name="subnavi"></cms:include>
+                <cms:include type="subnavi" name="subnavi"> </cms:include>
             </div>
         </div>
     </cms:template>
@@ -298,14 +298,14 @@
                 <input type="hidden" name="act" value="search"/>
                 <input id="searchPattern" name="searchPattern" title="" value="" maxlength="60"/>
                 <button>
-                    <span class="icn isearch"></span>
+                    <span class="icn isearch"> </span>
                 </button>
             </form>
         </div>
     </cms:template>
     <cms:template type="SNIPPET" name="footer" displayName="Footer">
         <a href="/imprint.html">
-            <cms:include type="resource" key="_imprint"></cms:include>
+            <cms:include type="resource" key="_imprint"> </cms:include>
         </a>
     </cms:template>
     <cms:template type="SNIPPET" name="dialogLayer" displayName="Dialog Layer">
@@ -315,7 +315,7 @@
                     <span>&#160;</span>
                     <div class="closeLayer" onclick="closeLayerDialog()">&#215;</div>
                 </div>
-                <div class="layermainbox"></div>
+                <div class="layermainbox"> </div>
             </div>
         </div>
     </cms:template>
@@ -325,10 +325,10 @@
                 <div class="treeContainer">
                     <div class="treeMainCell">
                         <div class="layerheadbox">
-                            <cms:include type="resource" key="tree"></cms:include>
+                            <cms:include type="resource" key="tree"> </cms:include>
                             <div class="closeLayer" onclick="closeTreeLayer();">&#215;</div>
                         </div>
-                        <div class="layermainbox"></div>
+                        <div class="layermainbox"> </div>
                     </div>
                     <div class="treeResizeCell">
                     </div>
@@ -343,7 +343,7 @@
                     <span>&#160;</span>
                     <div class="closeLayer" onclick="closeBrowserLayer();">&#215;</div>
                 </div>
-                <div class="layermainbox"></div>
+                <div class="layermainbox"> </div>
             </div>
         </div>
     </cms:template>
@@ -354,7 +354,7 @@
                     <span>&#160;</span>
                     <div class="closeLayer" onclick="closeBrowserDialogLayer();">&#215;</div>
                 </div>
-                <div class="layermainbox"></div>
+                <div class="layermainbox"> </div>
             </div>
         </div>
     </cms:template>

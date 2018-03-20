@@ -236,8 +236,8 @@ CREATE TABLE IF NOT EXISTS t_node_usage (
   CONSTRAINT t_page_usage_fk2 FOREIGN KEY (page_id) REFERENCES t_page (id) ON DELETE CASCADE
 );
 --
---team
-CREATE TABLE IF NOT EXISTS t_teamfile(
+--collaboration
+CREATE TABLE IF NOT EXISTS t_document(
   id INTEGER NOT NULL,
   change_date TIMESTAMP NOT NULL DEFAULT now(),
   part_id INTEGER NOT NULL,
@@ -253,14 +253,14 @@ CREATE TABLE IF NOT EXISTS t_teamfile(
   content_type varchar(255),
   file_size INTEGER NOT NULL DEFAULT 0,
   bytes BYTEA NOT NULL,
-  CONSTRAINT t_teamfile_pk PRIMARY KEY (id),
-  CONSTRAINT t_teamfile_fk1 FOREIGN KEY (part_id) REFERENCES t_page_part (id) ON DELETE CASCADE,
-  CONSTRAINT t_teamfile_fk2 FOREIGN KEY (owner_id) REFERENCES t_user (id) ON DELETE SET NULL,
-  CONSTRAINT t_teamfile_fk3 FOREIGN KEY (author_id) REFERENCES t_user (id) ON DELETE SET NULL,
-  CONSTRAINT t_teamfile_fk4 FOREIGN KEY (checkout_id) REFERENCES t_user (id) ON DELETE SET NULL
+  CONSTRAINT t_document_pk PRIMARY KEY (id),
+  CONSTRAINT t_document_fk1 FOREIGN KEY (part_id) REFERENCES t_page_part (id) ON DELETE CASCADE,
+  CONSTRAINT t_document_fk2 FOREIGN KEY (owner_id) REFERENCES t_user (id) ON DELETE SET NULL,
+  CONSTRAINT t_document_fk3 FOREIGN KEY (author_id) REFERENCES t_user (id) ON DELETE SET NULL,
+  CONSTRAINT t_document_fk4 FOREIGN KEY (checkout_id) REFERENCES t_user (id) ON DELETE SET NULL
 );
 --
-CREATE TABLE IF NOT EXISTS t_teamblogentry(
+CREATE TABLE IF NOT EXISTS t_blogentry(
   id INTEGER NOT NULL,
   change_date TIMESTAMP NOT NULL DEFAULT now(),
   part_id INTEGER NOT NULL,
@@ -268,12 +268,12 @@ CREATE TABLE IF NOT EXISTS t_teamblogentry(
   author_name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL DEFAULT '',
   entry TEXT NOT NULL DEFAULT '',
-  constraint t_teamblogentry_pk PRIMARY KEY (id),
-  CONSTRAINT t_teamblogentry_fk1 FOREIGN KEY (part_id) REFERENCES t_page_part (id) ON DELETE CASCADE,
-  CONSTRAINT t_teamblogentry_fk2 FOREIGN KEY (author_id) REFERENCES t_user (id) ON DELETE SET NULL
+  constraint t_logentry_pk PRIMARY KEY (id),
+  CONSTRAINT t_blogentry_fk1 FOREIGN KEY (part_id) REFERENCES t_page_part (id) ON DELETE CASCADE,
+  CONSTRAINT t_blogentry_fk2 FOREIGN KEY (author_id) REFERENCES t_user (id) ON DELETE SET NULL
 );
 --
-CREATE TABLE IF NOT EXISTS t_teamcalendarentry(
+CREATE TABLE IF NOT EXISTS t_calendarentry(
   id INTEGER NOT NULL,
   change_date TIMESTAMP NOT NULL DEFAULT now(),
   part_id INTEGER NOT NULL,
@@ -283,9 +283,9 @@ CREATE TABLE IF NOT EXISTS t_teamcalendarentry(
   end_time  TIMESTAMP NULL,
   title VARCHAR(255) NOT NULL DEFAULT '',
   entry TEXT NOT NULL DEFAULT '',
-  constraint t_teamcalendarentry_pk PRIMARY KEY (id),
-  CONSTRAINT t_teamcalendarentry_fk1 FOREIGN KEY (part_id) REFERENCES t_page_part (id) ON DELETE CASCADE,
-  CONSTRAINT t_teamcalendarentry_fk2 FOREIGN KEY (author_id) REFERENCES t_user (id) ON DELETE SET NULL
+  constraint t_calendarentry_pk PRIMARY KEY (id),
+  CONSTRAINT t_calendarentry_fk1 FOREIGN KEY (part_id) REFERENCES t_page_part (id) ON DELETE CASCADE,
+  CONSTRAINT t_calendarentry_fk2 FOREIGN KEY (author_id) REFERENCES t_user (id) ON DELETE SET NULL
 );
 -- inserts
 -- std locale

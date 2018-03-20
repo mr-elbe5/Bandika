@@ -36,6 +36,7 @@
                 <jsp:include page="/WEB-INF/_jsp/application/adminDynamics.inc.jsp"/>
                 <jsp:include page="/WEB-INF/_jsp/template/adminTemplates.inc.jsp"/>
                 <jsp:include page="/WEB-INF/_jsp/page/adminSharedPageParts.inc.jsp"/>
+                <jsp:include page="/WEB-INF/_jsp/page/adminOrphanedPageParts.inc.jsp"/>
             </ul>
         </div>
     </section>

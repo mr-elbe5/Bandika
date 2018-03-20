@@ -12,6 +12,7 @@ import de.elbe5.base.data.Locales;
 import de.elbe5.base.log.Log;
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,6 +30,24 @@ public class StringUtil {
 
     public static void setBundleName(String bundleName) {
         StringUtil.bundleName = bundleName;
+    }
+
+    public static String format(String src, String... params) {
+        StringBuilder sb=new StringBuilder();
+        int p1=0;
+        int p2;
+        String placeholder;
+        for (int i=0;i<params.length;i++){
+            placeholder="{"+(i+1)+"}";
+            p2=src.indexOf(placeholder, p1);
+            if (p2==-1)
+                break;
+            sb.append(src.substring(p1,p2));
+            sb.append(params[i]);
+            p1=p2+placeholder.length();
+        }
+        sb.append(src.substring(p1));
+        return sb.toString();
     }
 
     public static String toHtml(String src) {

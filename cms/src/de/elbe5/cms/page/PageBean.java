@@ -32,17 +32,18 @@ public class PageBean extends TreeBean {
     }
     // *******************************
 
+    private static String GET_PAGES_SQL="SELECT t1.id,t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
+            "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
+            "t2.template,t2.publish_date,t2.published_content " +
+            "FROM t_treenode t1, t_page t2 " +
+            "WHERE t1.id=t2.id AND t1.id=t2.id " +
+            "ORDER BY t1.parent_id, t1.ranking";
     public List<PageData> getAllPages() {
         List<PageData> list = new ArrayList<>();
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT t1.id,t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
-                    "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
-                    "t2.template,t2.publish_date,t2.published_content " +
-                    "FROM t_treenode t1, t_page t2 " +
-                    "WHERE t1.id=t2.id AND t1.id=t2.id " +
-                    "ORDER BY t1.parent_id, t1.ranking");
+            pst = con.prepareStatement(GET_PAGES_SQL);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     int i = 1;
@@ -64,16 +65,17 @@ public class PageBean extends TreeBean {
         return list;
     }
 
+    private static String GET_PAGE_SQL="SELECT t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
+            "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
+            "t2.template,t2.publish_date,t2.published_content " +
+            "FROM t_treenode t1, t_page t2 " +
+            "WHERE t1.id=? AND t2.id=?";
     public PageData getPage(int id) {
         PageData data = null;
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
-                    "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
-                    "t2.template,t2.publish_date,t2.published_content " +
-                    "FROM t_treenode t1, t_page t2 " +
-                    "WHERE t1.id=? AND t2.id=?");
+            pst = con.prepareStatement(GET_PAGE_SQL);
             pst.setInt(1, id);
             pst.setInt(2, id);
             try (ResultSet rs = pst.executeQuery()) {
@@ -128,10 +130,11 @@ public class PageBean extends TreeBean {
         }
     }
 
+    private static String READ_PAGE_SQL="SELECT template FROM t_page WHERE id=? ";
     public void readPage(Connection con, PageData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT template FROM t_page WHERE id=? ");
+            pst = con.prepareStatement(READ_PAGE_SQL);
             pst.setInt(1, data.getId());
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
@@ -176,13 +179,13 @@ public class PageBean extends TreeBean {
         }
     }
 
+    private static String INSERT_PAGE_SQL="insert into t_page (template,id) values(?,?)";
+    private static String UPDATE_PAGE_SQL="update t_page set template=? where id=?";
     // public for SiteBean
     public void writePage(Connection con, PageData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(data.isNew() ?
-                    "insert into t_page (template,id) values(?,?)" :
-                    "update t_page set template=? where id=?");
+            pst = con.prepareStatement(data.isNew() ? INSERT_PAGE_SQL : UPDATE_PAGE_SQL);
             int i = 1;
             pst.setString(i++, data.getTemplateName());
             pst.setInt(i, data.getId());
@@ -193,10 +196,11 @@ public class PageBean extends TreeBean {
         }
     }
 
+    private static String PUBLISH_PAGE_SQL="update t_page set publish_date=?,published_content=? where id=?";
     public void publishPage(Connection con, PageData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("update t_page set publish_date=?,published_content=? where id=?");
+            pst = con.prepareStatement(PUBLISH_PAGE_SQL);
             int i = 1;
             pst.setTimestamp(i++, Timestamp.valueOf(data.getPublishDate()));
             pst.setString(i++, data.getPublishedContent());
@@ -208,10 +212,11 @@ public class PageBean extends TreeBean {
         }
     }
 
+    private static String WRITE_USAGE_SQL="INSERT INTO t_node_usage (page_id,linked_node_id) VALUES(?,?)";
     protected void writeUsagesByPage(Connection con, PageData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("INSERT INTO t_node_usage (page_id,linked_node_id) VALUES(?,?)");
+            pst = con.prepareStatement(WRITE_USAGE_SQL);
             pst.setInt(1, data.getId());
             HashSet<Integer> list = data.getNodeUsage();
             for (int nid : list) {
@@ -249,13 +254,27 @@ public class PageBean extends TreeBean {
         return list;
     }
 
+    public List<PagePartData> getOrphanedPageParts() {
+        Connection con = getConnection();
+        List<PagePartData> list = new ArrayList<>();
+        try {
+            readOrphanedPageParts(con, list);
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+        } finally {
+            closeConnection(con);
+        }
+        return list;
+    }
+
+    private static String READ_PART_SQL="SELECT id,name,change_date,template,content " +
+            "FROM t_page_part " +
+            "WHERE id=? ";
     public PagePartData readPagePart(Connection con, int id) throws SQLException {
         PreparedStatement pst = null;
         PagePartData partData=null;
         try {
-            pst = con.prepareStatement("SELECT id,name,change_date,template,content " +
-                    "FROM t_page_part " +
-                    "WHERE id=? ");
+            pst = con.prepareStatement(READ_PART_SQL);
             pst.setInt(1,id);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
@@ -270,14 +289,15 @@ public class PageBean extends TreeBean {
         return partData;
     }
 
+    private static String READ_SHARED_PARTS_SQL="SELECT id,name,change_date,template,content " +
+            "FROM t_page_part " +
+            "WHERE length(name)>0 " +
+            "ORDER BY template, name";
     public void readSharedPageParts(Connection con, List<PagePartData> list) throws SQLException {
         PreparedStatement pst = null;
         PagePartData partData;
         try {
-            pst = con.prepareStatement("SELECT id,name,change_date,template,content " +
-                    "FROM t_page_part " +
-                    "WHERE length(name)>0 " +
-                    "ORDER BY template, name");
+            pst = con.prepareStatement(READ_SHARED_PARTS_SQL);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     int i = 1;
@@ -291,14 +311,36 @@ public class PageBean extends TreeBean {
         }
     }
 
+    private static String READ_ORPHANED_PARTS_SQL="SELECT t1.id,t1.name,t1.change_date,t1.template,t1.content " +
+            "FROM t_page_part t1 WHERE NOT EXISTS(SELECT 'x' FROM t_page_part2page t2 WHERE t1.id=t2.part_id) " +
+            "ORDER BY t1.template, t1.name";
+    public void readOrphanedPageParts(Connection con, List<PagePartData> list) throws SQLException {
+        PreparedStatement pst = null;
+        PagePartData partData;
+        try {
+            pst = con.prepareStatement(READ_ORPHANED_PARTS_SQL);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    int i = 1;
+                    partData = new PagePartData();
+                    readPagePartResult(rs, i, partData);
+                    list.add(partData);
+                }
+            }
+        } finally {
+            closeStatement(pst);
+        }
+    }
+
+    private static String READ_PAGE_PARTS_SQL="SELECT t2.section,t2.ranking,t1.id,t1.name,t1.change_date,t1.template,t1.content " +
+            "FROM t_page_part t1, t_page_part2page t2 " +
+            "WHERE t1.id=t2.part_id AND t2.page_id=? ORDER BY t2.ranking";
     public void readAllPageParts(Connection con, PageData pageData) throws SQLException {
         PreparedStatement pst = null;
         PagePartData partData;
         pageData.clearContent();
         try {
-            pst = con.prepareStatement("SELECT t2.section,t2.ranking,t1.id,t1.name,t1.change_date,t1.template,t1.content " +
-                    "FROM t_page_part t1, t_page_part2page t2 " +
-                    "WHERE t1.id=t2.part_id AND t2.page_id=? ORDER BY t2.ranking");
+            pst = con.prepareStatement(READ_PAGE_PARTS_SQL);
             pst.setInt(1, pageData.getId());
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
@@ -324,6 +366,10 @@ public class PageBean extends TreeBean {
         partData.parseXml();
     }
 
+    private static String DELETE_PAGE_PARTS_SQL="DELETE FROM t_page_part2page WHERE page_id=?";
+    private static String INSERT_PAGE_PART_SQL="INSERT INTO t_page_part (change_date,template,name,content,id) VALUES(?,?,?,?,?)";
+    private static String UPDATE_PAGE_PART_SQL="UPDATE t_page_part SET change_date=?,template=?,name=?,content=? WHERE id=?";
+    private static String INSERT_PAGE_PART_RELATIONS_SQL="INSERT INTO t_page_part2page (part_id,page_id,section,ranking) VALUES(?,?,?,?)";
     public void writeAllPageParts(Connection con, PageData page) throws Exception {
         PreparedStatement pstDelP2P = null;
         PreparedStatement pstIns = null;
@@ -331,13 +377,13 @@ public class PageBean extends TreeBean {
         PreparedStatement pst;
         PreparedStatement pstInsP2P = null;
         try{
-            pstDelP2P = con.prepareStatement("DELETE FROM t_page_part2page WHERE page_id=?");
+            pstDelP2P = con.prepareStatement(DELETE_PAGE_PARTS_SQL);
             pstDelP2P.setInt(1, page.getId());
             pstDelP2P.executeUpdate();
             pstDelP2P.close();
-            pstIns = con.prepareStatement("INSERT INTO t_page_part (change_date,template,name,content,id) VALUES(?,?,?,?,?)");
-            pstUpd = con.prepareStatement("UPDATE t_page_part SET change_date=?,template=?,name=?,content=? WHERE id=?");
-            pstInsP2P = con.prepareStatement("INSERT INTO t_page_part2page (part_id,page_id,section,ranking) VALUES(?,?,?,?)");
+            pstIns = con.prepareStatement(INSERT_PAGE_PART_SQL);
+            pstUpd = con.prepareStatement(UPDATE_PAGE_PART_SQL);
+            pstInsP2P = con.prepareStatement(INSERT_PAGE_PART_RELATIONS_SQL);
             for (SectionData section : page.getSections().values()) {
                 for (PagePartData part : section.getParts()) {
                     part.setChangeDate(page.getChangeDate());
@@ -362,6 +408,41 @@ public class PageBean extends TreeBean {
             closeStatement(pstIns);
             closeStatement(pstUpd);
             closeStatement(pstInsP2P);
+        }
+    }
+
+    private static String DELETE_ORPHANED_PAGEPARTS_SQL="DELETE  FROM t_page_part t1 WHERE NOT EXISTS(SELECT 'x' FROM t_page_part2page t2 WHERE t1.id=t2.part_id)";
+    public boolean deleteAllOrphanedPageParts() {
+        Connection con = getConnection();
+        PreparedStatement pst = null;
+        try {
+            pst = con.prepareStatement(DELETE_ORPHANED_PAGEPARTS_SQL);
+            pst.executeUpdate();
+            return true;
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+            return false;
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+    }
+
+    private static String DELETE_PAGEPART_SQL="DELETE FROM t_page_part WHERE id=?";
+    public boolean deletePagePart(int id) {
+        Connection con = getConnection();
+        PreparedStatement pst = null;
+        try {
+            pst = con.prepareStatement(DELETE_PAGEPART_SQL);
+            pst.setInt(1, id);
+            pst.executeUpdate();
+            return true;
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+            return false;
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
         }
     }
 

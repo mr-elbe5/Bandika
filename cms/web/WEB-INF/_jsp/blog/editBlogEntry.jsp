@@ -8,8 +8,8 @@
 --%>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.webbase.servlet.SessionReader" %>
-<%@ page import="de.elbe5.cms.team.TeamBlogEntryData" %>
-<%@ page import="de.elbe5.cms.team.TeamBlogBean" %>
+<%@ page import="de.elbe5.cms.blog.BlogEntryData" %>
+<%@ page import="de.elbe5.cms.blog.BlogBean" %>
 <%@ page import="java.util.List" %>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
 <%@ page import="de.elbe5.webbase.servlet.RequestReader" %>
@@ -18,17 +18,17 @@
     int partId = RequestReader.getInt(request,"partId");
     int fileId = RequestReader.getInt(request,"fileId");
     int userId = SessionReader.getLoginId(request);
-    TeamBlogEntryData editEntry = (TeamBlogEntryData) SessionReader.getSessionObject(request, "entry");
+    BlogEntryData editEntry = (BlogEntryData) SessionReader.getSessionObject(request, "entry");
     assert editEntry!=null;
-    List<TeamBlogEntryData> entries = TeamBlogBean.getInstance().getEntryList(partId);
+    List<BlogEntryData> entries = BlogBean.getInstance().getEntryList(partId);
     String containerId ="container"+partId;
 %>
 <div id="<%=containerId%>">
-    <form action="/teamblog.ajx" method="post" id="teamblogform" name="teamblogform" accept-charset="UTF-8">
+    <form action="/blog.ajx" method="post" id="blogform" name="blogform" accept-charset="UTF-8">
         <input type="hidden" name="act" value="saveEntry"/>
         <input type="hidden" name="partId" value="<%=partId%>"/>
         <input type="hidden" name="entryId" value="<%=editEntry.getId()%>"/>
-        <% for (TeamBlogEntryData entryData : entries) {%>
+        <% for (BlogEntryData entryData : entries) {%>
         <div class="blogEntry">
             <div class="blogEntryTitle"><%=StringUtil.toHtml(entryData.getAuthorName())%>, <%=StringUtil.toHtmlDateTime(entryData.getChangeDate(),locale)%>:
             </div>
@@ -54,11 +54,11 @@
         var $this = $(this);
         event.preventDefault();
         var params = $this.serialize();
-        post2Target('/teamblog.ajx', params, $('#<%=containerId%>').closest('.teamblog'));
+        post2Target('/blog.ajx', params, $('#<%=containerId%>').closest('.blog'));
     });
     function sendBlogAction(action) {
         var params = {act:action,partId: <%=partId%>};
-        post2Target('/teamblog.ajx', params, $('#<%=containerId%>').closest('.teamblog'));
+        post2Target('/blog.ajx', params, $('#<%=containerId%>').closest('.blog'));
         return false;
     }
 </script>
