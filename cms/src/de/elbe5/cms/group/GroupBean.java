@@ -64,13 +64,14 @@ public class GroupBean extends DbBean {
         return list;
     }
 
+    private static String GET_GROUP_SQL="SELECT change_date,name,notes FROM t_group WHERE id=? ORDER BY name";
     public GroupData getGroup(int id) {
         Connection con = getConnection();
         PreparedStatement pst = null;
         ResultSet rs;
         GroupData data = null;
         try {
-            pst = con.prepareStatement("SELECT change_date,name,notes FROM t_group WHERE id=? ORDER BY name");
+            pst = con.prepareStatement(GET_GROUP_SQL);
             pst.setInt(1, id);
             rs = pst.executeQuery();
             if (rs.next()) {
@@ -93,10 +94,11 @@ public class GroupBean extends DbBean {
         return data;
     }
 
+    private static String READ_GROUPUSER_SQL="SELECT user_id FROM t_user2group WHERE group_id=? AND relation=?";
     protected void readGroupUsers(Connection con, GroupData data, User2GroupRelation relation) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT user_id FROM t_user2group WHERE group_id=? AND relation=?");
+            pst = con.prepareStatement(READ_GROUPUSER_SQL);
             pst.setInt(1, data.getId());
             pst.setString(2, relation.name());
             try (ResultSet rs = pst.executeQuery()) {
@@ -141,10 +143,12 @@ public class GroupBean extends DbBean {
         }
     }
 
+    private static String INSERT_GROUP_SQL="insert into t_group (change_date,name,notes, id) values(?,?,?,?)";
+    private static String UPDATE_GROUP_SQL="update t_group set change_date=?,name=?,notes=? where id=?";
     protected void writeGroup(Connection con, GroupData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(data.isNew() ? "insert into t_group (change_date,name,notes, id) values(?,?,?,?)" : "update t_group set change_date=?,name=?,notes=? where id=?");
+            pst = con.prepareStatement(data.isNew() ? INSERT_GROUP_SQL : UPDATE_GROUP_SQL);
             int i = 1;
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getName());
@@ -158,15 +162,17 @@ public class GroupBean extends DbBean {
         }
     }
 
+    private static String DELETE_GROUPUSERS_SQL="DELETE FROM t_user2group WHERE group_id=?";
+    private static String INSERT_GROUPUSER_SQL="INSERT INTO t_user2group (group_id,user_id,relation) VALUES(?,?,?)";
     protected void writeGroupUsers(Connection con, GroupData data, User2GroupRelation relation) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("DELETE FROM t_user2group WHERE group_id=?");
+            pst = con.prepareStatement(DELETE_GROUPUSERS_SQL);
             pst.setInt(1, data.getId());
             pst.execute();
             if (data.getUserIds() != null) {
                 pst.close();
-                pst = con.prepareStatement("INSERT INTO t_user2group (group_id,user_id,relation) VALUES(?,?,?)");
+                pst = con.prepareStatement(INSERT_GROUPUSER_SQL);
                 pst.setInt(1, data.getId());
                 pst.setString(3, relation.name());
                 for (int userId : data.getUserIds()) {
@@ -179,18 +185,8 @@ public class GroupBean extends DbBean {
         }
     }
 
-    public void deleteGroup(int id) {
-        Connection con = getConnection();
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement("DELETE FROM t_group WHERE id=?");
-            pst.setInt(1, id);
-            pst.executeUpdate();
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
+    private static String DELETE_GROUP_SQL="DELETE FROM t_group WHERE id=?";
+    public boolean deleteGroup(int id) {
+        return deleteItem(DELETE_GROUP_SQL, id);
     }
 }

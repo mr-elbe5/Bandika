@@ -43,10 +43,11 @@ public class ConfigurationBean extends WebConfigurationBean {
         return config;
     }
 
+    private static String READ_CONFIG_SQL="SELECT defaultLocale, mailHost, mailPort, mailConnectionType, mailUser, mailPassword, mailSender, timerInterval FROM t_configuration";
     public void readConfiguration(Connection con, Configuration config) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("SELECT defaultLocale, mailHost, mailPort, mailConnectionType, mailUser, mailPassword, mailSender, timerInterval FROM t_configuration");
+            pst = con.prepareStatement(READ_CONFIG_SQL);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
@@ -80,10 +81,11 @@ public class ConfigurationBean extends WebConfigurationBean {
         }
     }
 
+    private static String UPDATE_CONFIG_SQL="UPDATE t_configuration SET defaultLocale=?, mailHost=?, mailPort=?, mailConnectionType=?, mailUser=?, mailPassword=?, mailSender=?, timerInterval=?";
     protected void writeConfiguration(Connection con, Configuration config) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement("UPDATE t_configuration SET defaultLocale=?, mailHost=?, mailPort=?, mailConnectionType=?, mailUser=?, mailPassword=?, mailSender=?, timerInterval=? ");
+            pst = con.prepareStatement(UPDATE_CONFIG_SQL);
             int i = 1;
             pst.setString(i++, config.getDefaultLocale().getLanguage());
             pst.setString(i++, config.getSmtpHost());

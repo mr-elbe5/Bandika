@@ -27,12 +27,13 @@ public class DynamicsBean extends DbBean {
         return instance;
     }
 
+    private static String GET_CSS_SQL="SELECT css_code FROM t_dynamics";
     public String getCss() {
         Connection con = getConnection();
         PreparedStatement pst = null;
         String css="";
         try {
-            pst = con.prepareStatement("SELECT css_code FROM t_dynamics");
+            pst = con.prepareStatement(GET_CSS_SQL);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     css=rs.getString(1);
@@ -47,12 +48,13 @@ public class DynamicsBean extends DbBean {
         return css;
     }
 
+    private static String GET_JS_SQL="SELECT js_code FROM t_dynamics";
     public String getJs() {
         Connection con = getConnection();
         PreparedStatement pst = null;
         String js="";
         try {
-            pst = con.prepareStatement("SELECT js_code FROM t_dynamics");
+            pst = con.prepareStatement(GET_JS_SQL);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     js=rs.getString(1);
