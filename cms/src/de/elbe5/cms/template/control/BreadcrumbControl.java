@@ -42,12 +42,12 @@ public class BreadcrumbControl extends TemplateControl {
         StringWriteUtil writer=outputContext.getWriter();
         TreeCache tc = TreeCache.getInstance();
         List<Integer> activeIds = new ArrayList<>();
-        if (outputData.pageData != null) {
-            activeIds.addAll(outputData.pageData.getParentIds());
-            activeIds.add(outputData.pageData.getId());
+        if (outputData.getPageData() != null) {
+            activeIds.addAll(outputData.getPageData().getParentIds());
+            activeIds.add(outputData.getPageData().getId());
         }
         else {
-            int homeId=TreeCache.getInstance().getLanguageRootSiteId(outputData.locale);
+            int homeId=TreeCache.getInstance().getLanguageRootSiteId(outputData.getLocale());
             if (homeId!=0) {
                 activeIds.add(TreeNode.ID_ROOT);
                 activeIds.add(homeId);

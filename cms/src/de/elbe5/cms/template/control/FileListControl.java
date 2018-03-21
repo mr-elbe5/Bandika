@@ -36,9 +36,9 @@ public class FileListControl extends TemplateControl {
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
-        if (outputData.pageData==null)
+        if (outputData.getPageData()==null)
             return;
-        int siteId = outputData.pageData.getParentId();
+        int siteId = outputData.getPageData().getParentId();
         SiteData site = TreeCache.getInstance().getSite(siteId);
         List<FileData> files;
         String filter=attributes.getString("filter");
@@ -58,7 +58,7 @@ public class FileListControl extends TemplateControl {
                 continue;
             writer.write("<div class=\"documentListLine icn ifile\"><a href=\"{1}\" target=\"_blank\" title=\"{2}\">{3}</a></div>",
                     file.getUrl(),
-                    StringUtil.getHtml("_show", outputData.locale),
+                    StringUtil.getHtml("_show", outputData.getLocale()),
                     StringUtil.toHtml(file.getDisplayName()));
         }
     }

@@ -23,9 +23,9 @@ public class FieldInclude extends TemplateInclude {
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        Field field = outputData.partData.ensureField(getAttributes().get("name"), getAttributes().get("fieldType"));
-        outputData.attributes=attributes;
-        outputData.content=content;
+        Field field = outputData.getPartData().ensureField(getAttributes().get("name"), getAttributes().get("fieldType"));
+        outputData.addAttributes(attributes);
+        outputData.setContent(content);
         field.appendFieldHtml(outputContext, outputData);
     }
 

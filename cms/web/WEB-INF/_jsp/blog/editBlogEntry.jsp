@@ -38,8 +38,7 @@
         <%}%>
         <div class="blogEntry">
             <div class="blogEntryText"><textarea name="text" cols="40"
-                                                 rows="5"><%=StringUtil.toHtml(editEntry.getText())%>
-            </textarea></div>
+                                                 rows="5"><%=StringUtil.toHtml(editEntry.getText())%></textarea></div>
         </div>
         <div class="buttonset topspace">
             <button class="primary" type="submit"><%=StringUtil.getHtml("_save", locale)%>
@@ -50,7 +49,7 @@
     </form>
 </div>
 <script type="text/javascript">
-    $('#teamblogform').submit(function (event) {
+    $('#blogform').submit(function (event) {
         var $this = $(this);
         event.preventDefault();
         var params = $this.serialize();

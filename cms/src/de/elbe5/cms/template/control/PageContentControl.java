@@ -44,8 +44,8 @@ public class PageContentControl extends TemplateControl {
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
-        PageData page=outputData.pageData;
-        if (outputData.pageData!=null) {
+        PageData page=outputData.getPageData();
+        if (outputData.getPageData()!=null) {
             if (SessionReader.isEditMode(outputContext.getRequest())) {
                 if (page.isPageEditMode()) {
                     writer.write("<div id=\"pageContent\" class=\"editArea\">");

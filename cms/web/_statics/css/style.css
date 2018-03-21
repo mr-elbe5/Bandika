@@ -1001,7 +1001,8 @@ a.navBtn {
 
 nav.mainNav {
   border-bottom: 1px solid #dddddd;
-  margin-top: 15px; }
+  margin-top: 15px;
+  padding-left: 10px; }
 
 nav.mainNav ul {
   list-style: none;
@@ -1320,27 +1321,27 @@ h2.block {
 .blogEntryText textarea {
   width: 95%; }
 
-.teamcalendar h3.calHeader {
+.calendar h3.calHeader {
   font-weight: bold;
   padding: 10px 0 10px 0; }
-.teamcalendar table.calendar {
+.calendar table.calendar {
   width: 100%;
   border: 1px solid #aaaaaa; }
-  .teamcalendar table.calendar tr:first-child th {
+  .calendar table.calendar tr:first-child th {
     width: 14%;
     vertical-align: top;
     background: #dddddd;
     text-align: center; }
-  .teamcalendar table.calendar td {
+  .calendar table.calendar td {
     height: 80px;
     border: 1px solid #aaaaaa; }
-    .teamcalendar table.calendar td div.day {
+    .calendar table.calendar td div.day {
       text-align: center;
       font-weight: bold;
       background: #f0f0f0; }
-      .teamcalendar table.calendar td div.day.today {
+      .calendar table.calendar td div.day.today {
         color: #3040d0; }
-      .teamcalendar table.calendar td div.day.other {
+      .calendar table.calendar td div.day.other {
         color: #aaaaaa; }
 
 /************ mobile part ***********/

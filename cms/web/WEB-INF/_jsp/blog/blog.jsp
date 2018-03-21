@@ -40,7 +40,7 @@
 <script type="text/javascript">
     function sendBlogAction(action) {
         var params = {act:action,partId: <%=partId%>};
-        post2Target('/blog.ajx', params, $('#<%=containerId%>').closest('.teamblog'));
+        post2Target('/blog.ajx', params, $('#<%=containerId%>').closest('.blog'));
         return false;
     }
 </script>

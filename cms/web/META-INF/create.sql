@@ -237,7 +237,7 @@ CREATE TABLE IF NOT EXISTS t_node_usage (
 );
 --
 --collaboration
-CREATE TABLE IF NOT EXISTS t_document(
+CREATE TABLE IF NOT EXISTS t_shared_document(
   id INTEGER NOT NULL,
   change_date TIMESTAMP NOT NULL DEFAULT now(),
   part_id INTEGER NOT NULL,
@@ -253,11 +253,11 @@ CREATE TABLE IF NOT EXISTS t_document(
   content_type varchar(255),
   file_size INTEGER NOT NULL DEFAULT 0,
   bytes BYTEA NOT NULL,
-  CONSTRAINT t_document_pk PRIMARY KEY (id),
-  CONSTRAINT t_document_fk1 FOREIGN KEY (part_id) REFERENCES t_page_part (id) ON DELETE CASCADE,
-  CONSTRAINT t_document_fk2 FOREIGN KEY (owner_id) REFERENCES t_user (id) ON DELETE SET NULL,
-  CONSTRAINT t_document_fk3 FOREIGN KEY (author_id) REFERENCES t_user (id) ON DELETE SET NULL,
-  CONSTRAINT t_document_fk4 FOREIGN KEY (checkout_id) REFERENCES t_user (id) ON DELETE SET NULL
+  CONSTRAINT t_shared_document_pk PRIMARY KEY (id),
+  CONSTRAINT t_shared_document_fk1 FOREIGN KEY (part_id) REFERENCES t_page_part (id) ON DELETE CASCADE,
+  CONSTRAINT t_shared_document_fk2 FOREIGN KEY (owner_id) REFERENCES t_user (id) ON DELETE SET NULL,
+  CONSTRAINT t_shared_document_fk3 FOREIGN KEY (author_id) REFERENCES t_user (id) ON DELETE SET NULL,
+  CONSTRAINT t_shared_document_fk4 FOREIGN KEY (checkout_id) REFERENCES t_user (id) ON DELETE SET NULL
 );
 --
 CREATE TABLE IF NOT EXISTS t_blogentry(

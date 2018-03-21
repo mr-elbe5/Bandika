@@ -48,7 +48,7 @@ public class TopNavControl extends TemplateControl {
         StringWriteUtil writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
         boolean editMode = SessionReader.isEditMode(request);
-        PageData page=outputData.pageData;
+        PageData page=outputData.getPageData();
         int pageId = page == null ? 0 : page.getId();
         int siteId = page == null ? 0 : page.getParentId();
         boolean pageEditMode = page != null && page.isPageEditMode();
@@ -59,8 +59,8 @@ public class TopNavControl extends TemplateControl {
         SiteData homeSite = null;
         List<Locale> otherLocales = null;
         try {
-            homeSite = TreeCache.getInstance().getLanguageRootSite(outputData.locale);
-            otherLocales = TreeCache.getInstance().getOtherLocales(outputData.locale);
+            homeSite = TreeCache.getInstance().getLanguageRootSite(outputData.getLocale());
+            otherLocales = TreeCache.getInstance().getOtherLocales(outputData.getLocale());
         } catch (Exception ignore) {
         }
 
@@ -68,42 +68,42 @@ public class TopNavControl extends TemplateControl {
         if (pageEditMode & hasEditRight) {
             writer.write("<li class=\"editControl\"><a href=\"/page.srv?act=savePageContent&pageId={1}\">{2}</a></li>",
                     String.valueOf(pageId),
-                    getHtml("_save", outputData.locale));
+                    getHtml("_save", outputData.getLocale()));
 
             writer.write("<li><a href=\"/page.srv?act=stopEditing&pageId={1}\">{2}</a></li>",
                     String.valueOf(pageId),
-                    getHtml("_cancel", outputData.locale));
+                    getHtml("_cancel", outputData.getLocale()));
         } else {
             if (editMode) {
                 if (page!=null && hasEditRight) {
                     writer.write("<li><a href=\"/page.srv?act=openEditPageContent&pageId={1}\" >{2}</span></a></li>",
                             String.valueOf(pageId),
-                            getHtml("_editPage", outputData.locale));
+                            getHtml("_editPage", outputData.getLocale()));
                 }
                 if (page!=null && hasApproveRight && page.hasUnpublishedDraft()) {
                     writer.write("<li><a href=\"/page.srv?act=publishPage&pageId={1}\" >{2}</a></li>",
                             String.valueOf(pageId),
-                            getHtml("_publish", outputData.locale));
+                            getHtml("_publish", outputData.getLocale()));
                 }
                 if (hasAnyEditRight) {
                     writer.write("<li><a href=\"#\" onclick=\"return openTreeLayer('{1}', '/tree.ajx?act=openTree&siteId={2}&pageId={3}');\" >{4}</a></li>",
                             StringUtil.getHtml("_tree"),
                             String.valueOf(siteId),
                             String.valueOf(pageId),
-                            getHtml("_tree", outputData.locale));
+                            getHtml("_tree", outputData.getLocale()));
                 }
                 if (hasAdminRight) {
                     writer.write("<li><a href=\"/admin.srv?act=openAdministration&siteId={1}&pageId={2}\" >{3}</a></li>",
                             String.valueOf(siteId),
                             String.valueOf(pageId),
-                            getHtml("_administration", outputData.locale));
+                            getHtml("_administration", outputData.getLocale()));
                 }
             }
             if (hasAnyEditRight || hasAdminRight){
                 writer.write("<li><a href=\"/application.srv?act={1}&pageId={2}\" title=\"{3}\"><span class=\"icn {4}\"></span></a></li>",
                         ApplicationActions.toggleEditMode,
                         String.valueOf(pageId),
-                        getHtml(editMode ? "_editModeOff" : "_editModeOn", outputData.locale),
+                        getHtml(editMode ? "_editModeOff" : "_editModeOn", outputData.getLocale()),
                         editMode ? "iright" : "ileft");
             }
             if (homeSite != null) {
@@ -116,15 +116,15 @@ public class TopNavControl extends TemplateControl {
                 }
             }
             writer.write("<li><a href=\"javascript:window.print();\" >{1}</a></li>",
-                    getHtml("_print", outputData.locale));
+                    getHtml("_print", outputData.getLocale()));
             if (SessionReader.isLoggedIn(request)) {
                 writer.write("<li><a href=\"/user.srv?act=openProfile\">{1}</a></li>",
-                        getHtml("_profile", outputData.locale));
+                        getHtml("_profile", outputData.getLocale()));
                 writer.write("<li><a href=\"/login.srv?act=logout\">{1}</a></li>",
-                        getHtml("_logout", outputData.locale));
+                        getHtml("_logout", outputData.getLocale()));
             } else {
                 writer.write("<li><a href=\"/login.srv?act=openLogin\">{1}</a></li>",
-                        getHtml("_login", outputData.locale));
+                        getHtml("_login", outputData.getLocale()));
             }
         }
         writer.write("</ul></nav>");

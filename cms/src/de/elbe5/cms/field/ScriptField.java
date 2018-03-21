@@ -49,8 +49,8 @@ public class ScriptField extends Field {
     @Override
     public void appendFieldHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
-        boolean partEditMode = outputData.pageData.isPageEditMode() && outputData.partData == outputData.pageData.getEditPagePart();
-        int height = outputData.attributes.getInt("height");
+        boolean partEditMode = outputData.getPageData().isPageEditMode() && outputData.getPartData() == outputData.getPageData().getEditPagePart();
+        int height = outputData.getAttributes().getInt("height");
         if (partEditMode) {
             writer.write("<textarea class=\"editField\" name=\"{1}\" rows=\"5\" ",
                     getIdentifier());
@@ -62,7 +62,7 @@ public class ScriptField extends Field {
                     StringUtil.toHtmlInput(getCode()));
         } else {
             if (getCode().length() == 0) {
-                writer.write(outputData.content);
+                writer.write(outputData.getContent());
             } else {
                 writer.write("<script type=\"text/javascript\">" + getCode() + "</script>");
             }

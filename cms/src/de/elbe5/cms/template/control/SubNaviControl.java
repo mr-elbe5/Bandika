@@ -40,12 +40,12 @@ public class SubNaviControl extends TemplateControl {
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer = outputContext.getWriter();
         HttpServletRequest request = outputContext.getRequest();
-        if (outputData.pageData == null)
+        if (outputData.getPageData() == null)
             return;
-        int siteId = outputData.pageData.getParentId();
+        int siteId = outputData.getPageData().getParentId();
         SiteData parentSite = TreeCache.getInstance().getSite(siteId);
         writer.write("<nav class=\"subNav\"><ul>");
-        if (outputData.pageData.isDefaultPage()){
+        if (outputData.getPageData().isDefaultPage()){
             for (PageData page : parentSite.getPages()) {
                 if (page.isInNavigation() && page.isVisibleToUser(request) && !page.isDefaultPage()) {
                     writer.write("<li class=\"icn ipage\"><a href=\"{1}\">{2}</a></li>",

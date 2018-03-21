@@ -29,9 +29,9 @@ public class JspControl extends TemplateControl {
         StringWriteUtil writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
         String url = attributes.getString("url");
-        request.setAttribute("pageData", outputData.pageData);
-        if (outputData.partData != null) {
-            request.setAttribute("partData", outputData.partData);
+        request.setAttribute("pageData", outputData.getPageData());
+        if (outputData.getPartData() != null) {
+            request.setAttribute("partData", outputData.getPartData());
         }
         try {
             outputContext.includeJsp(url);

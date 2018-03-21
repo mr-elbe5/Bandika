@@ -15,7 +15,6 @@
 <%@ page import="de.elbe5.base.util.StringUtil" %>
 <%
     int partId = RequestReader.getInt(request,"partId");
-    int documentId = RequestReader.getInt(request,"documentId");
     int userId = SessionReader.getLoginId(request);
     List<SharedDocumentData> documents = SharingBean.getInstance().getFileList(partId, SessionReader.getLoginId(request));
     Locale locale = SessionReader.getSessionLocale(request);
@@ -35,7 +34,7 @@
         <% for (SharedDocumentData fileData : documents) {%>
         <tr>
             <td>
-                <a href="/sharing.srv?act=showDocument&documentId=<%=fileData.getId()%>" target="_blank"><%=StringUtil.toHtml(fileData.getShortName())%>
+                <a href="/sharing.srv?act=showDocument&fileId=<%=fileData.getId()%>" target="_blank"><%=StringUtil.toHtml(fileData.getShortName())%>
                 </a></td>
             <td><%=StringUtil.toHtml(fileData.getOwnerName())%>
             </td>
@@ -46,13 +45,13 @@
             <td>
                 <% if (userId!=0){
                 if (fileData.getCheckoutId()==0){%>
-                <a class="icn icheckout" title="<%=StringUtil.getHtml("_checkout", locale)%>" href="" onclick="return sendFileAction('checkoutDocument',<%=fileData.getId()%>);">&nbsp;</a>
+                <a class="icn icheckout" title="<%=StringUtil.getHtml("_checkout", locale)%>" href="" onclick="return sendSharingAction('checkoutDocument',<%=fileData.getId()%>);">&nbsp;</a>
                 <%}else if (fileData.getCheckoutId()==userId){%>
-                <a class="icn icheckin" title="<%=StringUtil.getHtml("_undoCheckout", locale)%>" href="" onclick="return sendFileAction('undoCheckoutDocument',<%=fileData.getId()%>);">&nbsp;</a>
-                <a class="icn iedit" title="<%=StringUtil.getHtml("_edit", locale)%>" href="" onclick="return sendFileAction('openEditDocument',<%=fileData.getId()%>);">&nbsp;</a>
+                <a class="icn icheckin" title="<%=StringUtil.getHtml("_undoCheckout", locale)%>" href="" onclick="return sendSharingAction('undoCheckoutDocument',<%=fileData.getId()%>);">&nbsp;</a>
+                <a class="icn iedit" title="<%=StringUtil.getHtml("_edit", locale)%>" href="" onclick="return sendSharingAction('openEditDocument',<%=fileData.getId()%>);">&nbsp;</a>
                 <%}
                 if (fileData.getOwnerId()==userId || fileData.getAuthorId()==userId){%>
-                <a class="icn idelete" title="<%=StringUtil.getHtml("_delete", locale)%>" href="" onclick="return sendFileAction('deleteDocument',<%=fileData.getId()%>);">&nbsp;</a>
+                <a class="icn idelete" title="<%=StringUtil.getHtml("_delete", locale)%>" href="" onclick="return sendSharingAction('deleteDocument',<%=fileData.getId()%>);">&nbsp;</a>
                 <%}}%>
             </td>
         </tr>

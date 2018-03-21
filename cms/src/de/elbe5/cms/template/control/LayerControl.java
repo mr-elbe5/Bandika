@@ -40,7 +40,7 @@ public class LayerControl extends TemplateControl {
         StringWriteUtil writer=outputContext.getWriter();
         if (SessionReader.isEditMode(outputContext.getRequest())) {
             writer.write(TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, "treeLayer").getCode());
-            if (outputData.pageData != null && outputData.pageData.isPageEditMode()) {
+            if (outputData.getPageData() != null && outputData.getPageData().isPageEditMode()) {
                 writer.write(TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, "browserLayer").getCode());
                 writer.write(TemplateCache.getInstance().getTemplate(TemplateData.TYPE_SNIPPET, "browserDialogLayer").getCode());
             }

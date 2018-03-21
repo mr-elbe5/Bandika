@@ -43,12 +43,12 @@ public class MainMenuControl extends TemplateControl {
         StringWriteUtil writer=outputContext.getWriter();
         HttpServletRequest request=outputContext.getRequest();
         TreeCache tc = TreeCache.getInstance();
-        SiteData homeSite = tc.getLanguageRootSite(outputData.locale);
+        SiteData homeSite = tc.getLanguageRootSite(outputData.getLocale());
         List<Integer> activeIds = new ArrayList<>();
         int pageId = 0;
-        if (outputData.pageData != null) {
-            pageId = outputData.pageData.getId();
-            activeIds.addAll(outputData.pageData.getParentIds());
+        if (outputData.getPageData() != null) {
+            pageId = outputData.getPageData().getId();
+            activeIds.addAll(outputData.getPageData().getParentIds());
             activeIds.add(pageId);
         }
         writer.write("<nav class=\"mainNav\"><ul>");

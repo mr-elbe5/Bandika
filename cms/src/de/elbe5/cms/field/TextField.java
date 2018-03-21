@@ -49,12 +49,12 @@ public class TextField extends Field {
     @Override
     public void appendFieldHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
-        boolean partEditMode = outputData.pageData.isPageEditMode() && outputData.partData == outputData.pageData.getEditPagePart();
-        int rows = outputData.attributes.getInt("rows");
+        boolean partEditMode = outputData.getPageData().isPageEditMode() && outputData.getPartData() == outputData.getPageData().getEditPagePart();
+        int rows = outputData.getAttributes().getInt("rows");
         if (partEditMode) {
             String content = getText();
             if (content.isEmpty())
-                content = outputData.content;
+                content = outputData.getContent();
             if (rows > 1)
                 writer.write("<textarea class=\"editField\" name=\"" + getIdentifier() + "\" rows=\"" + rows + "\" >" + StringUtil.toHtmlInput(content) + "</textarea>");
             else

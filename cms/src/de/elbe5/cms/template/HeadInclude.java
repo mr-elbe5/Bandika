@@ -37,12 +37,12 @@ public class HeadInclude extends TemplateControl {
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
-        if (outputData.pageData==null)
+        if (outputData.getPageData()==null)
             return;
         writer.write("<title>{1}</title>\n" +
                         "<meta name=\"keywords\" content=\"{2}\">\n",
-                StringUtil.getHtml("appTitle", outputData.locale),
-                StringUtil.toHtml(outputData.pageData.getKeywords()));
+                StringUtil.getHtml("appTitle", outputData.getLocale()),
+                StringUtil.toHtml(outputData.getPageData().getKeywords()));
     }
 
 }

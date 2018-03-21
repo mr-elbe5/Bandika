@@ -145,11 +145,11 @@ public class SharingActions extends CmsActions {
     }
 
     protected boolean showDocuments(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/document/documents.jsp");
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/sharing/documents.jsp");
     }
 
     protected boolean showEditDocument(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/document/editDocument.jsp");
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/sharing/editDocument.jsp");
     }
 
 }

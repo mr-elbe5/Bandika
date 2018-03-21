@@ -25,7 +25,7 @@ public class SharingBean extends DbBean {
         return instance;
     }
 
-    private static String UNCHANGED_SQL="select change_date from t_document where id=?";
+    private static String UNCHANGED_SQL="select change_date from t_shared_document where id=?";
     protected boolean unchanged(Connection con, SharedDocumentData data) {
         return unchangedItem(con, UNCHANGED_SQL, data);
     }
@@ -62,10 +62,10 @@ public class SharingBean extends DbBean {
         }
     }
 
-    private static String INSERT_DOCUMENT_SQL="insert into t_document (change_date,part_id,owner_id,owner_name,author_id,author_name,checkout_id,checkout_name," +
+    private static String INSERT_DOCUMENT_SQL="insert into t_shared_document (change_date,part_id,owner_id,owner_name,author_id,author_name,checkout_id,checkout_name," +
             "file_name,name,notes,content_type,file_size,bytes,id) " +
             "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    private static String UPDATE_DOCUMENT_SQL="update t_document set change_date=?,part_id=?,owner_id=?,owner_name=?,author_id=?,author_name=?,checkout_id=?,checkout_name=?," +
+    private static String UPDATE_DOCUMENT_SQL="update t_shared_document set change_date=?,part_id=?,owner_id=?,owner_name=?,author_id=?,author_name=?,checkout_id=?,checkout_name=?," +
             "file_name=?,name=?,notes=?,content_type=?,file_size=?,bytes=? where id=?";
     protected void writeFileData(Connection con, SharedDocumentData data) throws SQLException {
         PreparedStatement pst = null;
@@ -97,7 +97,7 @@ public class SharingBean extends DbBean {
         }
     }
 
-    private static String UPDATE_CHECKOUT_SQL="update t_document set change_date=?,checkout_id=?,checkout_name=? where id=?";
+    private static String UPDATE_CHECKOUT_SQL="update t_shared_document set change_date=?,checkout_id=?,checkout_name=? where id=?";
     protected void updateCheckoutState(Connection con, SharedDocumentData data) throws SQLException {
         PreparedStatement pst = null;
         try {
@@ -131,7 +131,7 @@ public class SharingBean extends DbBean {
         return data;
     }
 
-    private static String READ_DOCUMENT_SQL="select change_date,part_id,owner_id,owner_name,author_id,author_name,checkout_id,checkout_name,file_name,name,notes,content_type,file_size,bytes from t_document where id=?";
+    private static String READ_DOCUMENT_SQL="select change_date,part_id,owner_id,owner_name,author_id,author_name,checkout_id,checkout_name,file_name,name,notes,content_type,file_size,bytes from t_shared_document where id=?";
     public void readFileData(Connection con, SharedDocumentData data) throws SQLException {
         PreparedStatement pst = null;
         try {
@@ -161,7 +161,7 @@ public class SharingBean extends DbBean {
         }
     }
 
-    private static String GET_FILE_SQL="select file_name,content_type,bytes from t_document where id=?";
+    private static String GET_FILE_SQL="select file_name,content_type,bytes from t_shared_document where id=?";
     public FileData getFile(int id) throws SQLException {
         Connection con = null;
         PreparedStatement pst = null;
@@ -188,7 +188,7 @@ public class SharingBean extends DbBean {
 
     private static String GET_FILE_LIST_SQL="select id,change_date,part_id,owner_id,owner_name,author_id,author_name,checkout_id,checkout_name," +
             "file_name,name,notes,content_type,file_size " +
-            "from t_document where part_id=? " +
+            "from t_shared_document where part_id=? " +
             "and ((checkout_id is null or checkout_id<>?) or checkout_id=?) " +
             "order by name;";
     public List<SharedDocumentData> getFileList(int partId, int userId) {
@@ -231,7 +231,7 @@ public class SharingBean extends DbBean {
         return list;
     }
 
-    private static String DELETE_SQL="delete from t_document where id=?";
+    private static String DELETE_SQL="delete from t_shared_document where id=?";
     public boolean deleteFile(int id) throws SQLException {
         return deleteItem(DELETE_SQL, id);
     }

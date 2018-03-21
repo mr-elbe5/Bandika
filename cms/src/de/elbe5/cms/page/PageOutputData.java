@@ -19,10 +19,53 @@ public class PageOutputData {
         this.locale=locale;
     }
 
-    public PageData pageData;
-    public PagePartData partData=null;
-    public Locale locale;
-    public TagAttributes attributes=null;
-    public String content="";
+    private PageData pageData;
+    private PagePartData partData=null;
+    private Locale locale;
+    private TagAttributes attributes=new TagAttributes();
+    private String content="";
 
+    public PageData getPageData() {
+        return pageData;
+    }
+
+    public void setPageData(PageData pageData) {
+        this.pageData = pageData;
+    }
+
+    public PagePartData getPartData() {
+        return partData;
+    }
+
+    public void setPartData(PagePartData partData) {
+        this.partData = partData;
+    }
+
+    public Locale getLocale() {
+        return locale!=null ? locale : Locale.ENGLISH;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
+    public TagAttributes getAttributes() {
+        return attributes;
+    }
+
+    public void clearAttributes() {
+        this.attributes.clear();
+    }
+
+    public void addAttributes(TagAttributes attributes) {
+        this.attributes.putAll(attributes);
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }

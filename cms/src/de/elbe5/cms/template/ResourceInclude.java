@@ -25,7 +25,7 @@ public class ResourceInclude extends TemplateInclude {
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
-        writer.write(StringUtil.getHtml(attributes.get("key"), outputData.locale));
+        writer.write(StringUtil.getHtml(attributes.get("key"), outputData.getLocale()));
     }
 
 }

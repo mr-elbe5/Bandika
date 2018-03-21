@@ -82,12 +82,12 @@ public abstract class HtmlBaseField extends Field {
     @Override
     public void appendFieldHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
-        boolean partEditMode = outputData.pageData.isPageEditMode() && outputData.partData == outputData.pageData.getEditPagePart();
-        int siteId = outputData.pageData.getParentId();
-        int pageId = outputData.pageData.getId();
+        boolean partEditMode = outputData.getPageData().isPageEditMode() && outputData.getPartData() == outputData.getPageData().getEditPagePart();
+        int siteId = outputData.getPageData().getParentId();
+        int pageId = outputData.getPageData().getId();
         String html = getHtml().trim();
         if (partEditMode) {
-            writer.write(String.format(getCKCODE(), getIdentifier(), html.isEmpty() ? outputData.content : html, getIdentifier(), StringUtil.toHtml(html), getIdentifier(), siteId, pageId, siteId, pageId));
+            writer.write(String.format(getCKCODE(), getIdentifier(), html.isEmpty() ? outputData.getContent() : html, getIdentifier(), StringUtil.toHtml(html), getIdentifier(), siteId, pageId, siteId, pageId));
         } else {
             try {
                 if (html.isEmpty()) {

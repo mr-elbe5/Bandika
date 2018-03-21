@@ -24,7 +24,7 @@
 <%}%>
 <form action="/sharing.ajx" method="post" id="documentform" name="documentform" accept-charset="UTF-8" enctype="multipart/form-data">
     <fieldset>
-        <input type="hidden" name="act" value=""/>
+        <input type="hidden" name="act" value="<%=SharingActions.checkinDocument%>"/>
         <input type="hidden" name="partId" value="<%=partId%>"/>
         <input type="hidden" name="fileId" value="<%=fileData.getId()%>"/>
         <table class="padded form" id="<%=tableId%>">
@@ -128,7 +128,7 @@
     </div>
 </form>
 <script type="text/javascript">
-    $('#teamfileform').submit(function (event) {
+    $('#documentform').submit(function (event) {
         var $this = $(this);
         event.preventDefault();
         var params = $this.serializeFiles();

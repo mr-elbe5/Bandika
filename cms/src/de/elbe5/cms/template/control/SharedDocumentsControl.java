@@ -32,8 +32,8 @@ public class SharedDocumentsControl extends TemplateControl {
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException{
         StringWriteUtil writer=outputContext.getWriter();
-        PageData page=outputData.pageData;
-        PagePartData part=outputData.partData;
+        PageData page=outputData.getPageData();
+        PagePartData part=outputData.getPartData();
         if (page == null)
             return;
         int partId=0;

@@ -28,11 +28,10 @@ public class SectionInclude extends TemplateInclude {
     }
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        StringWriteUtil writer=outputContext.getWriter();
         String sectionName = attributes.getString("name");
-        SectionData section = outputData.pageData.getSection(sectionName);
+        SectionData section = outputData.getPageData().getSection(sectionName);
         if (section == null) {
-            section = outputData.pageData.ensureSection(sectionName);
+            section = outputData.getPageData().ensureSection(sectionName);
         }
         if (section != null) {
             section.setClassName(attributes.getString("class"));
@@ -43,8 +42,8 @@ public class SectionInclude extends TemplateInclude {
 
     public void appendSectionHtml(SectionData data, PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
-        boolean editMode = outputData.pageData.isPageEditMode();
-        String cls = outputData.attributes.getString("class");
+        boolean editMode = outputData.getPageData().isPageEditMode();
+        String cls = outputData.getAttributes().getString("class");
         boolean hasParts = data.getParts().size() > 0;
         if (editMode) {
             writer.write("<div class = \"editSection\">");
@@ -58,11 +57,11 @@ public class SectionInclude extends TemplateInclude {
                 writer.write("<div class = \"contextMenu\">" +
                                 "<div class=\"icn inew\" onclick = \"return openLayerDialog('{1}', '/pagepart.ajx?act=openAddPagePart&pageId={2}&sectionName={3}&sectionType={4}&partId=-1');\">{5}\n</div>\n" +
                                 "</div>",
-                        StringUtil.getHtml("_addPart", outputData.locale),
-                        String.valueOf(outputData.pageData.getId()),
+                        StringUtil.getHtml("_addPart", outputData.getLocale()),
+                        String.valueOf(outputData.getPageData().getId()),
                         data.getName(),
-                        outputData.attributes.getString("sectionType"),
-                        StringUtil.getHtml("_new", outputData.locale));
+                        outputData.getAttributes().getString("sectionType"),
+                        StringUtil.getHtml("_new", outputData.getLocale()));
             }
         }
         if (!data.getParts().isEmpty()) {
@@ -79,7 +78,7 @@ public class SectionInclude extends TemplateInclude {
     }
 
     public void appendPartHtml(PagePartData data, PageOutputContext outputContext, PageOutputData outputData) throws IOException {
-        if (outputData.pageData.isPageEditMode())
+        if (outputData.getPageData().isPageEditMode())
             appendEditPartHtml(data, outputContext, outputData);
         else
             appendLivePartHtml(data, outputContext, outputData);
@@ -87,16 +86,16 @@ public class SectionInclude extends TemplateInclude {
 
     public void appendEditPartHtml(PagePartData data, PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         StringWriteUtil writer=outputContext.getWriter();
-        String sectionType=outputData.attributes.getString("sectionType");
-        writeEditPartStart(data, writer, outputData.pageData.getEditPagePart(), outputData.pageData.getId(), outputData.locale);
+        String sectionType=outputData.getAttributes().getString("sectionType");
+        writeEditPartStart(data, writer, outputData.getPageData().getEditPagePart(), outputData.getPageData().getId(), outputData.getLocale());
         TemplateData partTemplate = TemplateCache.getInstance().getTemplate(TemplateData.TYPE_PART, data.getTemplateName());
         try {
-            outputData.partData=data;
+            outputData.setPartData(data);
             partTemplate.writeTemplate(outputContext, outputData);
         } catch (Exception e) {
             Log.error("error in part template", e);
         }
-        writeEditPartEnd(data, writer, outputData.pageData.getEditPagePart(), sectionType, outputData.pageData.getId(), outputData.locale);
+        writeEditPartEnd(data, writer, outputData.getPageData().getEditPagePart(), sectionType, outputData.getPageData().getId(), outputData.getLocale());
     }
 
     public void appendLivePartHtml(PagePartData data, PageOutputContext outputContext, PageOutputData outputData)  {
@@ -105,7 +104,7 @@ public class SectionInclude extends TemplateInclude {
         try {
             writer.write("<div class=\"pagePart\" id=\"{1}\" >",
                     data.getHtmlId());
-            outputData.partData=data;
+            outputData.setPartData(data);
             partTemplate.writeTemplate(outputContext, outputData);
             writer.write("</div>");
         } catch (Exception e) {

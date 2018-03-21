@@ -59,17 +59,17 @@ public abstract class TemplateInclude implements Serializable {
                 continue;
             sb.append(" ").append(key).append("=\"").append(attributes.getString(key)).append("\"");
         }
-        if (outputData.partData!=null){
-            sb.append(" section=\"").append(outputData.partData.getSectionName()).append("\"");
-            sb.append(" partId=\"").append(outputData.partData.getId()).append("\"");
+        if (outputData.getPartData()!=null){
+            sb.append(" section=\"").append(outputData.getPartData().getSectionName()).append("\"");
+            sb.append(" partId=\"").append(outputData.getPartData().getId()).append("\"");
         }
         sb.append(" />}");
         return sb.toString();
     }
 
     public void completeOutputData(PageOutputData outputData){
-        outputData.attributes=attributes;
-        outputData.content=content;
+        outputData.addAttributes(attributes);
+        outputData.setContent(content);
     }
 
     public abstract void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException;
