@@ -25,6 +25,15 @@ public class TimerActions extends CmsActions {
     public static final String openEditTimerTask="openEditTimerTask";
     public static final String saveTimerTask="saveTimerTask";
 
+    public static final String KEY = "timer";
+
+    public static void initialize() {
+        ActionSetCache.addActionSet(KEY, new TimerActions());
+    }
+
+    private TimerActions(){
+    }
+
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) {
         switch (actionName) {
             case showTimerTaskDetails: {
@@ -57,12 +66,6 @@ public class TimerActions extends CmsActions {
                 return forbidden();
             }
         }
-    }
-
-    public static final String KEY = "timer";
-
-    public static void initialize() {
-        ActionSetCache.addActionSet(KEY, new TimerActions());
     }
 
     @Override

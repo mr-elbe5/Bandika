@@ -213,12 +213,10 @@ public abstract class ActionSet {
     }
 
     protected boolean closeLayerToUrl(HttpServletRequest request, HttpServletResponse response, String url) {
-
         return closeLayer(request, response, "linkTo('" + url + "');");
     }
 
     protected boolean closeLayerToUrl(HttpServletRequest request, HttpServletResponse response, String url, String messageKey) {
-
         return closeLayer(request, response, "linkTo('" + url + "&" + RequestStatics.KEY_MESSAGEKEY + "=" + messageKey + "');");
     }
 

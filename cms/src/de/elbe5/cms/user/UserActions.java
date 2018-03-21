@@ -48,6 +48,15 @@ public class UserActions extends CmsActions {
     public static final String approveRegistration="approveRegistration";
     public static final String showPortrait="showPortrait";
 
+    public static final String KEY = "user";
+
+    public static void initialize() {
+        ActionSetCache.addActionSet(KEY, new UserActions());
+    }
+
+    private UserActions(){
+    }
+
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
             case changeLocale: {
@@ -287,15 +296,9 @@ public class UserActions extends CmsActions {
                 return file != null && sendBinaryResponse(request, response, file.getFileName(), file.getContentType(), file.getBytes());
             }
             default: {
-                return new LoginActions().execute(request, response, LoginActions.login);
+                return sendForwardResponse(request, response, "/login.srv?act="+ LoginActions.openLogin);
             }
         }
-    }
-
-    public static final String KEY = "user";
-
-    public static void initialize() {
-        ActionSetCache.addActionSet(KEY, new UserActions());
     }
 
     @Override

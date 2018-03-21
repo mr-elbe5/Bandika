@@ -56,6 +56,16 @@ public class SiteActions extends BaseTreeActions {
     public static final String openDeleteSite = "openDeleteSite";
     public static final String delete = "delete";
 
+    public static final String KEY = "site";
+
+    public static void initialize() {
+        ActionSetCache.addActionSet(KEY, new SiteActions());
+    }
+
+
+    private SiteActions(){
+    }
+
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
             case show: {
@@ -448,12 +458,6 @@ public class SiteActions extends BaseTreeActions {
         }
     }
 
-    public static final String KEY = "site";
-
-    public static void initialize() {
-        ActionSetCache.addActionSet(KEY, new SiteActions());
-    }
-
     @Override
     public String getKey() {
         return KEY;
@@ -479,7 +483,7 @@ public class SiteActions extends BaseTreeActions {
         if (data.hasDefaultPage()) {
             int defaultPageId = data.getDefaultPageId();
             request.setAttribute("pageId", Integer.toString(defaultPageId));
-            return new PageActions().execute(request, response, PageActions.show);
+            return sendForwardResponse(request, response, "/page.srv?act="+ PageActions.show);
         }
         return showBlankSite(request, response);
     }

@@ -32,6 +32,15 @@ public class TemplateActions extends CmsActions {
     public static final String openDeleteTemplate="openDeleteTemplate";
     public static final String deleteTemplate="deleteTemplate";
 
+    public static final String KEY = "template";
+
+    public static void initialize() {
+        ActionSetCache.addActionSet(KEY, new TemplateActions());
+    }
+
+    private TemplateActions(){
+    }
+
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
             case openImportTemplates: {
@@ -121,12 +130,6 @@ public class TemplateActions extends CmsActions {
                 return forbidden();
             }
         }
-    }
-
-    public static final String KEY = "template";
-
-    public static void initialize() {
-        ActionSetCache.addActionSet(KEY, new TemplateActions());
     }
 
     @Override

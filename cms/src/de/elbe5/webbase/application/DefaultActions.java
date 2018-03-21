@@ -20,6 +20,15 @@ public class DefaultActions extends ActionSet {
 
     public static final String test="test";
 
+    public static final String KEY = "default";
+
+    public static void initialize() {
+        ActionSetCache.addActionSet(KEY, new DefaultActions());
+    }
+
+    private DefaultActions(){
+    }
+
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) {
         switch (actionName) {
             default: {
@@ -27,12 +36,6 @@ public class DefaultActions extends ActionSet {
                 return sendRedirect(request, response, home);
             }
         }
-    }
-
-    public static final String KEY = "default";
-
-    public static void initialize() {
-        ActionSetCache.addActionSet(KEY, new DefaultActions());
     }
 
     @Override

@@ -29,6 +29,9 @@ public class DynamicsActions extends CmsActions {
 
     public static DynamicsActions instance=new DynamicsActions();
 
+    private DynamicsActions(){
+    }
+
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) {
         switch (actionName) {
             case openEditCss: {

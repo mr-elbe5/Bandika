@@ -24,6 +24,15 @@ public class LoginActions extends ActionSet {
     public static final String showCaptcha="showCaptcha";
     public static final String logout="logout";
 
+    public static final String KEY = "login";
+
+    public static void initialize() {
+        ActionSetCache.addActionSet(KEY, new LoginActions());
+    }
+
+    private LoginActions(){
+    }
+
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
             case openLogin: {
@@ -66,12 +75,6 @@ public class LoginActions extends ActionSet {
                 return showLogin(request, response);
             }
         }
-    }
-
-    public static final String KEY = "login";
-
-    public static void initialize() {
-        ActionSetCache.addActionSet(KEY, new LoginActions());
     }
 
     @Override

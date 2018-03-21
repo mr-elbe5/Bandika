@@ -19,11 +19,11 @@ import de.elbe5.webbase.servlet.SessionReader;
 import javax.servlet.ServletException;
 import java.io.IOException;
 
-public class DocumentsControl extends TemplateControl {
+public class SharedDocumentsControl extends TemplateControl {
 
-    public static final String KEY = "documents";
+    public static final String KEY = "sharedDocuments";
 
-    public DocumentsControl(){
+    public SharedDocumentsControl(){
     }
 
     public String getKey(){
@@ -50,7 +50,7 @@ public class DocumentsControl extends TemplateControl {
             try {
                 outputContext.getRequest().setAttribute("pageId", String.valueOf(page.getId()));
                 outputContext.getRequest().setAttribute("partId", String.valueOf(partId));
-                outputContext.includeJsp("/WEB-INF/_jsp/document/documents.jsp");
+                outputContext.includeJsp("/WEB-INF/_jsp/sharing/documents.jsp");
             } catch (ServletException e) {
                 Log.error("could not include documents jsp", e);
             }

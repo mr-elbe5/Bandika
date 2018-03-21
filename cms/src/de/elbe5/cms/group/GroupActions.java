@@ -34,6 +34,15 @@ public class GroupActions extends CmsActions {
     public static final String openDeleteGroup="openDeleteGroup";
     public static final String deleteGroup="deleteGroup";
 
+    public static final String KEY = "group";
+
+    public static void initialize() {
+        ActionSetCache.addActionSet(KEY, new GroupActions());
+    }
+
+    private GroupActions(){
+    }
+
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
             case openAddGroupUser: {
@@ -144,12 +153,6 @@ public class GroupActions extends CmsActions {
                 return forbidden();
             }
         }
-    }
-
-    public static final String KEY = "group";
-
-    public static void initialize() {
-        ActionSetCache.addActionSet(KEY, new GroupActions());
     }
 
     @Override

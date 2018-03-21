@@ -14,6 +14,7 @@ import de.elbe5.cms.tree.TreeCache;
 import de.elbe5.webbase.rights.Right;
 import de.elbe5.webbase.servlet.ActionSetCache;
 import de.elbe5.webbase.servlet.RequestReader;
+import de.elbe5.webbase.servlet.RequestStatics;
 import de.elbe5.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
@@ -212,7 +213,8 @@ public class PagePartActions extends BaseTreeActions {
             }
             case deleteAllOrphanedPageParts: {
                 PageBean.getInstance().deleteAllOrphanedPageParts();
-                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration, "_pagePartsDeleted");
+                request.setAttribute(RequestStatics.KEY_MESSAGEKEY,"_pagePartsDeleted");
+                return sendForwardResponse(request, response, "/admin.srv?act="+ AdminActions.openAdministration);
             }
             default: {
                 return forbidden();

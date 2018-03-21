@@ -7,8 +7,8 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.document.DocumentData" %>
-<%@ page import="de.elbe5.cms.document.DocumentBean" %>
+<%@ page import="de.elbe5.cms.sharing.SharedDocumentData" %>
+<%@ page import="de.elbe5.cms.sharing.SharingBean" %>
 <%@ page import="java.util.List" %>
 <%@ page import="de.elbe5.webbase.servlet.SessionReader" %>
 <%@ page import="de.elbe5.webbase.servlet.RequestReader" %>
@@ -17,7 +17,7 @@
     int partId = RequestReader.getInt(request,"partId");
     int documentId = RequestReader.getInt(request,"documentId");
     int userId = SessionReader.getLoginId(request);
-    List<DocumentData> documents = DocumentBean.getInstance().getFileList(partId, SessionReader.getLoginId(request));
+    List<SharedDocumentData> documents = SharingBean.getInstance().getFileList(partId, SessionReader.getLoginId(request));
     Locale locale = SessionReader.getSessionLocale(request);
     String tableId="table"+partId;
 %>
@@ -32,10 +32,10 @@
             <th width="15%"><%=StringUtil.getHtml("_checkedoutby",locale)%></th>
             <th width="40%"></th>
         </tr>
-        <% for (DocumentData fileData : documents) {%>
+        <% for (SharedDocumentData fileData : documents) {%>
         <tr>
             <td>
-                <a href="/document.srv?act=showDocument&documentId=<%=fileData.getId()%>" target="_blank"><%=StringUtil.toHtml(fileData.getShortName())%>
+                <a href="/sharing.srv?act=showDocument&documentId=<%=fileData.getId()%>" target="_blank"><%=StringUtil.toHtml(fileData.getShortName())%>
                 </a></td>
             <td><%=StringUtil.toHtml(fileData.getOwnerName())%>
             </td>
@@ -60,13 +60,13 @@
     </table>
 </fieldset>
 <div class="buttonset topspace">
-    <button class="primary" onclick="return sendFileAction('openCreateDocument',0);"><%=StringUtil.getHtml("_new", locale)%>
+    <button class="primary" onclick="return sendSharingAction('openCreateDocument',0);"><%=StringUtil.getHtml("_new", locale)%>
     </button>
 </div>
 <script type="text/javascript">
-    function sendFileAction(action, fileId) {
+    function sendSharingAction(action, fileId) {
         var params = {act:action,partId: <%=partId%>,fileId:fileId};
-        post2Target('/document.ajx', params, $('#<%=tableId%>').closest('.docuemnts'));
+        post2Target('/sharing.ajx', params, $('#<%=tableId%>').closest('.documents'));
         return false;
     }
 </script>

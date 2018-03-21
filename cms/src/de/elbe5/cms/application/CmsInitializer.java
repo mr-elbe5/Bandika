@@ -11,7 +11,7 @@ package de.elbe5.cms.application;
 import de.elbe5.cms.field.*;
 import de.elbe5.cms.blog.BlogActions;
 import de.elbe5.cms.calendar.CalendarActions;
-import de.elbe5.cms.document.DocumentActions;
+import de.elbe5.cms.sharing.SharingActions;
 import de.elbe5.webbase.application.DefaultActions;
 import de.elbe5.webbase.application.Initializer;
 import de.elbe5.base.log.Log;
@@ -66,7 +66,7 @@ public class CmsInitializer extends Initializer {
             SearchActions.initialize();
             SiteActions.initialize();
             BlogActions.initialize();
-            DocumentActions.initialize();
+            SharingActions.initialize();
             CalendarActions.initialize();
             TemplateActions.initialize();
             TimerActions.initialize();

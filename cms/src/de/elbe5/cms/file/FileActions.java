@@ -46,6 +46,15 @@ public class FileActions extends BaseTreeActions {
     public static final String openDeleteFile="openDeleteFile";
     public static final String deleteFile="deleteFile";
 
+    public static final String KEY = "file";
+
+    public static void initialize() {
+        ActionSetCache.addActionSet(KEY, new FileActions());
+    }
+
+    private FileActions(){
+    }
+
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
             case show: {
@@ -294,12 +303,6 @@ public class FileActions extends BaseTreeActions {
                 return show(request, response);
             }
         }
-    }
-
-    public static final String KEY = "file";
-
-    public static void initialize() {
-        ActionSetCache.addActionSet(KEY, new FileActions());
     }
 
     @Override

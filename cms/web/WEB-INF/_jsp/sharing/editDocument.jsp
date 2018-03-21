@@ -7,14 +7,14 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.document.DocumentData" %>
+<%@ page import="de.elbe5.cms.sharing.SharedDocumentData" %>
 <%@ page import="de.elbe5.webbase.servlet.SessionReader" %>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
 <%@ page import="de.elbe5.webbase.servlet.RequestReader" %>
-<%@ page import="de.elbe5.cms.document.DocumentActions" %>
+<%@ page import="de.elbe5.cms.sharing.SharingActions" %>
 <%
     int partId = RequestReader.getInt(request,"partId");
-    DocumentData fileData = (DocumentData) SessionReader.getSessionObject(request, "documentData");
+    SharedDocumentData fileData = (SharedDocumentData) SessionReader.getSessionObject(request, "documentData");
     assert fileData!=null;
     String tableId="table"+partId;
     Locale locale = SessionReader.getSessionLocale(request);
@@ -22,7 +22,7 @@
 <% if (RequestReader.isAjaxRequest(request)){%>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
 <%}%>
-<form action="/document.ajx" method="post" id="documentform" name="documentform" accept-charset="UTF-8" enctype="multipart/form-data">
+<form action="/sharing.ajx" method="post" id="documentform" name="documentform" accept-charset="UTF-8" enctype="multipart/form-data">
     <fieldset>
         <input type="hidden" name="act" value=""/>
         <input type="hidden" name="partId" value="<%=partId%>"/>
@@ -123,7 +123,7 @@
     <div class="buttonset topspace">
         <button class="primary" type="submit"><%=StringUtil.getHtml("_save", locale)%>
         </button>
-        <button onclick="return sendDocumentAction('<%=DocumentActions.showList%>');"><%=StringUtil.getHtml("_cancel", locale)%>
+        <button onclick="return sendSharingAction('<%=SharingActions.showList%>');"><%=StringUtil.getHtml("_cancel", locale)%>
         </button>
     </div>
 </form>
@@ -132,11 +132,11 @@
         var $this = $(this);
         event.preventDefault();
         var params = $this.serializeFiles();
-        postMulti2Target('/document.ajx', params, $('#<%=tableId%>').closest('.documents'));
+        postMulti2Target('/sharing.ajx', params, $('#<%=tableId%>').closest('.documents'));
     });
-    function sendDocumentAction(action) {
+    function sendSharingAction(action) {
         var params = {act:action,partId: <%=partId%>};
-        post2Target('/document.ajx', params, $('#<%=tableId%>').closest('.documents'));
+        post2Target('/sharing.ajx', params, $('#<%=tableId%>').closest('.documents'));
         return false;
     }
 </script>

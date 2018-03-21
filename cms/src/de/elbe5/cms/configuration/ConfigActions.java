@@ -31,6 +31,15 @@ public class ConfigActions extends CmsActions {
     public static final String clearDataCache="clearDataCache";
     public static final String clearFileCache="clearFileCache";
 
+    public static final String KEY = "config";
+
+    public static void initialize() {
+        ActionSetCache.addActionSet(KEY, new ConfigActions());
+    }
+
+    private ConfigActions(){
+    }
+
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName){
             case showConfigurationDetails:{
@@ -105,12 +114,6 @@ public class ConfigActions extends CmsActions {
             }
         }
 
-    }
-
-    public static final String KEY = "config";
-
-    public static void initialize() {
-        ActionSetCache.addActionSet(KEY, new ConfigActions());
     }
 
     @Override

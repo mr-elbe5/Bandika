@@ -28,6 +28,9 @@ public class ApplicationActions extends CmsActions {
 
     public static ApplicationActions instance=new ApplicationActions();
 
+    private ApplicationActions(){
+    }
+
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) {
         switch (actionName) {
             case ApplicationActions.toggleEditMode: {
@@ -37,7 +40,7 @@ public class ApplicationActions extends CmsActions {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (pageId==0)
                     request.setAttribute("pageId", Integer.toString(TreeCache.getInstance().getFallbackPageId(request)));
-                return new PageActions().show(request, response);
+                return sendForwardResponse(request, response, "/page.srv?act="+ PageActions.show);
             }
             default:{
                 return false;

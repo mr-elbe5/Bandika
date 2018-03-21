@@ -44,6 +44,9 @@ public class AdminActions extends CmsActions {
 
     public static AdminActions instance=new AdminActions();
 
+    private AdminActions(){
+    }
+
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
             case reinitialize: {
@@ -116,7 +119,7 @@ public class AdminActions extends CmsActions {
     public boolean openAdministration(HttpServletRequest request, HttpServletResponse response) throws Exception{
         if (!SessionReader.isLoggedIn(request)) {
             if (!RequestReader.isAjaxRequest(request)) {
-                return (new LoginActions()).execute(request, response, LoginActions.openLogin);
+                return sendForwardResponse(request, response, "/login.srv?act="+ LoginActions.openLogin);
             }
             return forbidden();
         }

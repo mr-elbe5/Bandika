@@ -33,6 +33,9 @@ public class BlogActions extends CmsActions {
         ActionSetCache.addActionSet(KEY, new BlogActions());
     }
 
+    private BlogActions(){
+    }
+
     public String getKey(){
         return KEY;
     }

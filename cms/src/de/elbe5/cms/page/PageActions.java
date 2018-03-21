@@ -49,6 +49,15 @@ public class PageActions extends BaseTreeActions {
     public static final String stopEditing="stopEditing";
     public static final String showPageContent="showPageContent";
 
+    public static final String KEY = "page";
+
+    public static void initialize() {
+        ActionSetCache.addActionSet(KEY, new PageActions());
+    }
+
+    private PageActions(){
+    }
+
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
             case show: {
@@ -307,12 +316,6 @@ public class PageActions extends BaseTreeActions {
                 return show(request, response);
             }
         }
-    }
-
-    public static final String KEY = "page";
-
-    public static void initialize() {
-        ActionSetCache.addActionSet(KEY, new PageActions());
     }
 
     @Override

@@ -6,7 +6,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.cms.document;
+package de.elbe5.cms.sharing;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
@@ -21,7 +21,7 @@ import de.elbe5.webbase.servlet.SessionWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class DocumentActions extends CmsActions {
+public class SharingActions extends CmsActions {
 
     public static final String showList="showList";
     public static final String showDocument="showDocument";
@@ -32,10 +32,13 @@ public class DocumentActions extends CmsActions {
     public static final String openEditDocument="openEditDocument";
     public static final String deleteDocument="deleteDocument";
 
-    public static final String KEY = "document";
+    public static final String KEY = "sharing";
 
     public static void initialize() {
-        ActionSetCache.addActionSet(KEY, new DocumentActions());
+        ActionSetCache.addActionSet(KEY, new SharingActions());
+    }
+
+    private SharingActions(){
     }
 
     public String getKey(){
@@ -49,7 +52,7 @@ public class DocumentActions extends CmsActions {
             }
             case showDocument: {
                 int fileId = RequestReader.getInt(request,"fileId");
-                FileData data = DocumentBean.getInstance().getFile(fileId);
+                FileData data = SharingBean.getInstance().getFile(fileId);
                 if (data == null) {
                     Log.error( "Error delivering unknown document - id: " + fileId);
                     return false;
@@ -57,8 +60,8 @@ public class DocumentActions extends CmsActions {
                 return sendBinaryResponse(request, response, data.getName(), data.getContentType(), data.getBytes());
             }
             case openCreateDocument: {
-                DocumentData data = new DocumentData();
-                data.setId(DocumentBean.getInstance().getNextId());
+                SharedDocumentData data = new SharedDocumentData();
+                data.setId(SharingBean.getInstance().getNextId());
                 data.setPartId(RequestReader.getInt(request,"partId"));
                 data.setOwnerId(SessionReader.getLoginId(request));
                 data.setOwnerName(SessionReader.getLoginName(request));
@@ -73,32 +76,32 @@ public class DocumentActions extends CmsActions {
             case checkoutDocument: {
                 int fid = RequestReader.getInt(request,"fileId");
                 int userId=SessionReader.getLoginId(request);
-                DocumentData data = DocumentBean.getInstance().getFileData(fid);
+                SharedDocumentData data = SharingBean.getInstance().getFileData(fid);
                 if (data.getCheckoutId() != 0) {
                     addError(request, StringUtil.getHtml("_alreadyCheckedout",SessionReader.getSessionLocale(request)));
                     return showDocuments(request, response);
                 }
                 data.setCheckoutId(userId);
                 data.setCheckoutName(SessionReader.getLoginName(request));
-                DocumentBean.getInstance().updateCheckout(data);
+                SharingBean.getInstance().updateCheckout(data);
                 return showDocuments(request, response);
             }
             case undoCheckoutDocument: {
                 int fid = RequestReader.getInt(request,"fileId");
                 int userId=SessionReader.getLoginId(request);
-                DocumentData data = DocumentBean.getInstance().getFileData(fid);
+                SharedDocumentData data = SharingBean.getInstance().getFileData(fid);
                 if (data.getCheckoutId() != userId) {
                     addError(request, StringUtil.getHtml("_notCheckedoutByYou",SessionReader.getSessionLocale(request)));
                     return showDocuments(request, response);
                 }
                 data.setCheckoutId(0);
                 data.setCheckoutName("");
-                DocumentBean.getInstance().updateCheckout(data);
+                SharingBean.getInstance().updateCheckout(data);
                 return showDocuments(request, response);
             }
             case openEditDocument: {
                 int fid = RequestReader.getInt(request,"fileId");
-                DocumentData data = DocumentBean.getInstance().getFileData(fid);
+                SharedDocumentData data = SharingBean.getInstance().getFileData(fid);
                 if (data.getCheckoutId() != SessionReader.getLoginId(request)) {
                     addError(request, StringUtil.getHtml("_notCheckedoutByYou",SessionReader.getSessionLocale(request)));
                     return showDocuments(request, response);
@@ -107,7 +110,7 @@ public class DocumentActions extends CmsActions {
                 return showEditDocument(request, response);
             }
             case checkinDocument: {
-                DocumentData data = (DocumentData) SessionReader.getSessionObject(request, "documentData");
+                SharedDocumentData data = (SharedDocumentData) SessionReader.getSessionObject(request, "documentData");
                 int fid=RequestReader.getInt(request,"fileId");
                 int userId=SessionReader.getLoginId(request);
                 if (data == null || data.getId() != fid || userId!=data.getCheckoutId())
@@ -123,7 +126,7 @@ public class DocumentActions extends CmsActions {
                 data.setCheckoutName("");
                 data.setAuthorId(SessionReader.getLoginId(request));
                 data.setAuthorName(SessionReader.getLoginName(request));
-                DocumentBean.getInstance().saveFileData(data);
+                SharingBean.getInstance().saveFileData(data);
                 return showDocuments(request, response);
             }
             case deleteDocument: {
@@ -131,10 +134,10 @@ public class DocumentActions extends CmsActions {
                 int userId=SessionReader.getLoginId(request);
                 if (userId==0)
                     return false;
-                DocumentData fileData = DocumentBean.getInstance().getFileData(fid);
+                SharedDocumentData fileData = SharingBean.getInstance().getFileData(fid);
                 if (fileData.getOwnerId()!=userId && fileData.getAuthorId()!=userId)
                     return false;
-                DocumentBean.getInstance().deleteFile(fid);
+                SharingBean.getInstance().deleteFile(fid);
                 return showDocuments(request, response);
             }
         }

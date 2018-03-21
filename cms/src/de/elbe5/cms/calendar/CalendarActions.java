@@ -36,6 +36,9 @@ public class CalendarActions extends CmsActions {
         ActionSetCache.addActionSet(KEY, new CalendarActions());
     }
 
+    private CalendarActions(){
+    }
+
     public String getKey(){
         return KEY;
     }

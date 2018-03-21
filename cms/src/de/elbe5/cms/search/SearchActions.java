@@ -31,6 +31,15 @@ public class SearchActions extends CmsActions {
     public static final String indexAllContent="indexAllContent";
     public static final String indexAllUsers="indexAllUsers";
 
+    public static final String KEY = "search";
+
+    public static void initialize() {
+        ActionSetCache.addActionSet(KEY, new SearchActions());
+    }
+
+    private SearchActions(){
+    }
+
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
             case openSearch: {
@@ -83,12 +92,6 @@ public class SearchActions extends CmsActions {
                 return showSearch(request, response);
             }
         }
-    }
-
-    public static final String KEY = "search";
-
-    public static void initialize() {
-        ActionSetCache.addActionSet(KEY, new SearchActions());
     }
 
     @Override

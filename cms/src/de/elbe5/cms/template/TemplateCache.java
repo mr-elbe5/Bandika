@@ -64,8 +64,8 @@ public class TemplateCache extends BaseCache {
                 return new ResourceInclude();
             case SnippetInclude.KEY :
                 return new SnippetInclude();
-            case DocumentsControl.KEY :
-                return new DocumentsControl();
+            case SharedDocumentsControl.KEY :
+                return new SharedDocumentsControl();
             case BlogControl.KEY :
                 return new BlogControl();
             case CalendarControl.KEY :

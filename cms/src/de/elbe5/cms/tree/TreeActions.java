@@ -18,13 +18,22 @@ public class TreeActions extends ActionSet {
 
     public static final String openTree="openTree";
 
+    public static final String KEY = "tree";
+
+    public static void initialize() {
+        ActionSetCache.addActionSet(KEY, new TreeActions());
+    }
+
+    private TreeActions(){
+    }
+
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
             case openTree:
             default: {
                 if (!SessionReader.isLoggedIn(request)) {
                     if (!RequestReader.isAjaxRequest(request)) {
-                        return new LoginActions().execute(request, response, LoginActions.openLogin);
+                        return sendForwardResponse(request, response, "/login.srv?act="+ LoginActions.openLogin);
                     }
                     return forbidden();
                 }
@@ -34,12 +43,6 @@ public class TreeActions extends ActionSet {
                 return forbidden();
             }
         }
-    }
-
-    public static final String KEY = "tree";
-
-    public static void initialize() {
-        ActionSetCache.addActionSet(KEY, new TreeActions());
     }
 
     @Override

@@ -6,7 +6,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.cms.document;
+package de.elbe5.cms.sharing;
 
 import de.elbe5.cms.file.FileData;
 import de.elbe5.webbase.database.DbBean;
@@ -15,22 +15,22 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DocumentBean extends DbBean {
+public class SharingBean extends DbBean {
 
-    private static DocumentBean instance = null;
+    private static SharingBean instance = null;
 
-    public static DocumentBean getInstance() {
+    public static SharingBean getInstance() {
         if (instance == null)
-            instance = new DocumentBean();
+            instance = new SharingBean();
         return instance;
     }
 
     private static String UNCHANGED_SQL="select change_date from t_document where id=?";
-    protected boolean unchanged(Connection con, DocumentData data) {
+    protected boolean unchanged(Connection con, SharedDocumentData data) {
         return unchangedItem(con, UNCHANGED_SQL, data);
     }
 
-    public boolean saveFileData(DocumentData data) {
+    public boolean saveFileData(SharedDocumentData data) {
         Connection con = startTransaction();
         try {
             if (!unchanged(con, data)) {
@@ -47,7 +47,7 @@ public class DocumentBean extends DbBean {
         }
     }
 
-    public boolean updateCheckout(DocumentData data) {
+    public boolean updateCheckout(SharedDocumentData data) {
         Connection con = startTransaction();
         try {
             if (!unchanged(con, data)) {
@@ -67,7 +67,7 @@ public class DocumentBean extends DbBean {
             "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static String UPDATE_DOCUMENT_SQL="update t_document set change_date=?,part_id=?,owner_id=?,owner_name=?,author_id=?,author_name=?,checkout_id=?,checkout_name=?," +
             "file_name=?,name=?,notes=?,content_type=?,file_size=?,bytes=? where id=?";
-    protected void writeFileData(Connection con, DocumentData data) throws SQLException {
+    protected void writeFileData(Connection con, SharedDocumentData data) throws SQLException {
         PreparedStatement pst = null;
         try {
             String sql = data.isNew() ? INSERT_DOCUMENT_SQL : UPDATE_DOCUMENT_SQL;
@@ -98,7 +98,7 @@ public class DocumentBean extends DbBean {
     }
 
     private static String UPDATE_CHECKOUT_SQL="update t_document set change_date=?,checkout_id=?,checkout_name=? where id=?";
-    protected void updateCheckoutState(Connection con, DocumentData data) throws SQLException {
+    protected void updateCheckoutState(Connection con, SharedDocumentData data) throws SQLException {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(UPDATE_CHECKOUT_SQL);
@@ -116,9 +116,9 @@ public class DocumentBean extends DbBean {
         }
     }
 
-    public DocumentData getFileData(int id) {
+    public SharedDocumentData getFileData(int id) {
         Connection con = null;
-        DocumentData data = new DocumentData();
+        SharedDocumentData data = new SharedDocumentData();
         data.setId(id);
         try {
             con = getConnection();
@@ -132,7 +132,7 @@ public class DocumentBean extends DbBean {
     }
 
     private static String READ_DOCUMENT_SQL="select change_date,part_id,owner_id,owner_name,author_id,author_name,checkout_id,checkout_name,file_name,name,notes,content_type,file_size,bytes from t_document where id=?";
-    public void readFileData(Connection con, DocumentData data) throws SQLException {
+    public void readFileData(Connection con, SharedDocumentData data) throws SQLException {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(READ_DOCUMENT_SQL);
@@ -172,7 +172,7 @@ public class DocumentBean extends DbBean {
             pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
-                data = new DocumentData();
+                data = new SharedDocumentData();
                 int i = 1;
                 data.setName(rs.getString(i++));
                 data.setContentType(rs.getString(i++));
@@ -191,8 +191,8 @@ public class DocumentBean extends DbBean {
             "from t_document where part_id=? " +
             "and ((checkout_id is null or checkout_id<>?) or checkout_id=?) " +
             "order by name;";
-    public List<DocumentData> getFileList(int partId, int userId) {
-        List<DocumentData> list = new ArrayList<>();
+    public List<SharedDocumentData> getFileList(int partId, int userId) {
+        List<SharedDocumentData> list = new ArrayList<>();
         Connection con = null;
         PreparedStatement pst = null;
         try {
@@ -205,7 +205,7 @@ public class DocumentBean extends DbBean {
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 i = 1;
-                DocumentData data = new DocumentData();
+                SharedDocumentData data = new SharedDocumentData();
                 data.setId(rs.getInt(i++));
                 data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                 data.setPartId(rs.getInt(i++));

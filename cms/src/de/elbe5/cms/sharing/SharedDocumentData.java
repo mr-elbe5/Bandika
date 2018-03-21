@@ -6,7 +6,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.cms.document;
+package de.elbe5.cms.sharing;
 
 import de.elbe5.cms.file.FileData;
 import de.elbe5.webbase.servlet.RequestReader;
@@ -14,7 +14,7 @@ import de.elbe5.webbase.servlet.SessionReader;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class DocumentData extends FileData {
+public class SharedDocumentData extends FileData {
 
     public static int MAX_SHORTNAME_LENGTH = 50;
 

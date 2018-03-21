@@ -30,6 +30,14 @@ public class FieldActions extends BaseTreeActions {
     public static final String openCreateImageInBrowser="openCreateImageInBrowser";
     public static final String saveImageInBrowser="saveImageInBrowser";
 
+    public static final String KEY = "field";
+
+    public static void initialize() {
+        ActionSetCache.addActionSet(KEY, new FieldActions());
+    }
+
+    private FieldActions(){
+    }
 
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
@@ -123,12 +131,6 @@ public class FieldActions extends BaseTreeActions {
                 return forbidden();
             }
         }
-    }
-
-    public static final String KEY = "field";
-
-    public static void initialize() {
-        ActionSetCache.addActionSet(KEY, new FieldActions());
     }
 
     @Override

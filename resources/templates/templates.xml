@@ -213,12 +213,12 @@
             </div>
         </div>
     </cms:template>
-    <cms:template type="PART" name="Documents" displayName="Documents" sectionTypes="content">
+    <cms:template type="PART" name="SharedDocuments" displayName="Shared Documents" sectionTypes="content">
         <div class="textBox">
             <h2>
                 <cms:include type="field" fieldType="text" name="text">Lorem ipsum</cms:include>
             </h2>
-            <cms:include type="documents" name="documents"> </cms:include>
+            <cms:include type="sharedDocuments" name="sharedDocuments"> </cms:include>
         </div>
     </cms:template>
     <cms:template type="PART" name="Blog" displayName="Blog" sectionTypes="content">
