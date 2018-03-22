@@ -40,7 +40,6 @@ public class PageActions extends BaseTreeActions {
     public static final String clonePage="clonePage";
     public static final String cutPage="cutPage";
     public static final String movePage="movePage";
-    public static final String openDeletePage="openDeletePage";
     public static final String deletePage="deletePage";
     public static final String openEditPageContent="openEditPageContent";
     public static final String reopenEditPageContent="reopenEditPageContent";
@@ -213,23 +212,13 @@ public class PageActions extends BaseTreeActions {
                 }
                 return true;
             }
-            case openDeletePage: {
-                int pageId = RequestReader.getInt(request, "pageId");
-                if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                if (pageId == 0) {
-                    addError(request, StringUtil.getString("_noSelection", SessionReader.getSessionLocale(request)));
-                    return showTree(request, response);
-                }
-                return showDeletePage(request, response);
-            }
             case deletePage: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
                 if (pageId < BaseIdData.ID_MIN) {
                     addError(request, StringUtil.getString("_notDeletable", SessionReader.getSessionLocale(request)));
-                    return showDeletePage(request, response);
+                    return showTree(request, response);
                 }
                 TreeCache tc = TreeCache.getInstance();
                 int parentId = tc.getParentNodeId(pageId);
@@ -239,8 +228,9 @@ public class PageActions extends BaseTreeActions {
                 request.setAttribute("pageId", Integer.toString(parentId));
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
+                RequestWriter.setMessageKey(request, "_pageDeleted");
                 request.setAttribute("siteId", Integer.toString(parentId));
-                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&siteId=" + parentId, "_pageDeleted");
+                return showTree(request, response);
             }
             case openEditPageContent: {
                 int pageId = RequestReader.getInt(request, "pageId");
@@ -389,10 +379,6 @@ public class PageActions extends BaseTreeActions {
 
     protected boolean showEditPageRights(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/editPageRights.ajax.jsp");
-    }
-
-    protected boolean showDeletePage(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/deletePage.ajax.jsp");
     }
 
     protected boolean showPageDetails(HttpServletRequest request, HttpServletResponse response) {

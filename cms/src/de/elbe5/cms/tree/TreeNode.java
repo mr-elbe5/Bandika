@@ -349,4 +349,20 @@ public abstract class TreeNode extends BaseIdData implements Comparable<TreeNode
         return getDisplayName().compareTo(node.getDisplayName());
     }
 
+    public static TreeNode getRequestedNode(HttpServletRequest request, Locale locale) {
+        int nodeId = RequestReader.getInt(request, "pageId");
+        if (nodeId == 0) {
+            nodeId = RequestReader.getInt(request, "fileId");
+        }
+        if (nodeId == 0) {
+            nodeId = RequestReader.getInt(request, "siteId");
+        }
+        // for opening tree
+        TreeCache tc = TreeCache.getInstance();
+        if (nodeId != 0) {
+            return tc.getNode(nodeId);
+        }
+        return tc.getLanguageRootSite(locale);
+    }
+
 }

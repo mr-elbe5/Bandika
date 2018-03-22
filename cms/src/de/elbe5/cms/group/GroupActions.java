@@ -31,7 +31,6 @@ public class GroupActions extends CmsActions {
     public static final String openEditGroup="openEditGroup";
     public static final String openCreateGroup="openCreateGroup";
     public static final String saveGroup="saveGroup";
-    public static final String openDeleteGroup="openDeleteGroup";
     public static final String deleteGroup="deleteGroup";
 
     public static final String KEY = "group";
@@ -128,26 +127,18 @@ public class GroupActions extends CmsActions {
                 RightsCache.getInstance().setDirty();
                 return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration+"&groupId=" + data.getId(), "_groupSaved");
             }
-            case openDeleteGroup: {
-                if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
-                    return false;
-                int id = RequestReader.getInt(request, "groupId");
-                if (id < BaseIdData.ID_MIN) {
-                    addError(request, StringUtil.getString("_notDeletable", SessionReader.getSessionLocale(request)));
-                }
-                return showDeleteGroup(request, response);
-            }
             case deleteGroup: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 int id = RequestReader.getInt(request, "groupId");
                 if (id < BaseIdData.ID_MIN) {
                     addError(request, StringUtil.getString("_notDeletable", SessionReader.getSessionLocale(request)));
-                } else {
-                    GroupBean.getInstance().deleteGroup(id);
-                    RightsCache.getInstance().setDirty();
+                    return sendForwardResponse(request, response, "/admin.srv?act="+ AdminActions.openAdministration);
                 }
-                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration, "_groupDeleted");
+                GroupBean.getInstance().deleteGroup(id);
+                RightsCache.getInstance().setDirty();
+                RequestWriter.setMessageKey(request, "_groupDeleted");
+                return sendForwardResponse(request, response, "/admin.srv?act="+ AdminActions.openAdministration);
             }
             default: {
                 return forbidden();
@@ -162,10 +153,6 @@ public class GroupActions extends CmsActions {
 
     protected boolean showEditGroup(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/group/editGroup.ajax.jsp");
-    }
-
-    protected boolean showDeleteGroup(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/group/deleteGroup.ajax.jsp");
     }
 
     protected boolean showAddGroupUser(HttpServletRequest request, HttpServletResponse response) {

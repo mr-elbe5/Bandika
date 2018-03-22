@@ -4,7 +4,6 @@
 <%@ page import="de.elbe5.webbase.servlet.SessionReader" %>
 <%@ page import="de.elbe5.cms.site.SiteData" %>
 <%@ page import="de.elbe5.cms.tree.TreeCache" %>
-<%@ page import="de.elbe5.cms.tree.TreeHelper" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
@@ -16,11 +15,13 @@
     TreeCache tc = TreeCache.getInstance();
     if (siteId == 0)
         siteId = tc.getLanguageRootSiteId(locale);
-    SiteData site = tc.getSite(siteId);
+    SiteData siteData = tc.getSite(siteId);
     List<Integer> activeIds = new ArrayList<>();
-    if (site != null)
-        activeIds.addAll(site.getParentIds());
+    if (siteData != null)
+        activeIds.addAll(siteData.getParentIds());
     activeIds.add(siteId);
+    request.setAttribute("activeIds",activeIds);
+    request.setAttribute("functionName",FieldActions.showSelectableBrowserImages);
 %>
 <script type="text/javascript">
     $("#browserLayer").setLayerHeader("<%=StringUtil.getHtml("_selectImage",locale)%>&nbsp;<span style=\"font-size:80%;\">(<%=StringUtil.getHtml("_selectImageHint",locale)%>)</span>");
@@ -34,7 +35,8 @@
             <%=StringUtil.getHtml("_structure", locale)%>
         </h3>
         <ul id="browseNavigation" class="treeRoot">
-            <%TreeHelper.addBrowserSiteNode(out, request, tc.getRootSite(), siteId, activeIds, FieldActions.showSelectableBrowserImages, locale);%>
+            <% request.setAttribute("siteData",TreeCache.getInstance().getRootSite()); %>
+            <jsp:include  page="/WEB-INF/_jsp/field/browserSites.inc.jsp" flush="true"/>
         </ul>
     </div>
     <div id="browserView"></div>

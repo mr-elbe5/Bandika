@@ -15,6 +15,7 @@ import de.elbe5.webbase.rights.Right;
 import de.elbe5.webbase.rights.SystemZone;
 import de.elbe5.webbase.servlet.ActionSetCache;
 import de.elbe5.webbase.servlet.RequestReader;
+import de.elbe5.webbase.servlet.RequestWriter;
 import de.elbe5.webbase.servlet.SessionWriter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +30,6 @@ public class TemplateActions extends CmsActions {
     public static final String showTemplateDetails="showTemplateDetails";
     public static final String openEditTemplate="openEditTemplate";
     public static final String saveTemplate="saveTemplate";
-    public static final String openDeleteTemplate="openDeleteTemplate";
     public static final String deleteTemplate="deleteTemplate";
 
     public static final String KEY = "template";
@@ -111,11 +111,6 @@ public class TemplateActions extends CmsActions {
                 TemplateCache.getInstance().setDirty();
                 return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration+"&templateType=" + data.getType() + "&templateName=" + data.getName(), "_templateSaved");
             }
-            case openDeleteTemplate: {
-                if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
-                    return false;
-                return showDeleteTemplate(request, response);
-            }
             case deleteTemplate: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
                     return false;
@@ -124,7 +119,8 @@ public class TemplateActions extends CmsActions {
                 if (!TemplateBean.getInstance().deleteTemplate(templateName, templateType))
                     return false;
                 TemplateCache.getInstance().setDirty();
-                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration, "_templateDeleted");
+                RequestWriter.setMessageKey(request, "_templateDeleted");
+                return sendForwardResponse(request, response, "/admin.srv?act="+ AdminActions.openAdministration);
             }
             default: {
                 return forbidden();
@@ -153,10 +149,6 @@ public class TemplateActions extends CmsActions {
 
     public boolean showEditTemplate(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/template/editTemplate.ajax.jsp");
-    }
-
-    public boolean showDeleteTemplate(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/template/deleteTemplate.ajax.jsp");
     }
 
     protected boolean showTemplateDetails(HttpServletRequest request, HttpServletResponse response) {

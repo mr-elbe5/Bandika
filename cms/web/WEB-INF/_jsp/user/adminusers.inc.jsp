@@ -49,7 +49,7 @@
                 <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editUser",locale)%>', '/user.ajx?act=<%=UserActions.openEditUser%>&userId=<%=user.getId()%>');"><%=StringUtil.getHtml("_edit", locale)%>
                 </div>
                 <% if (user.getId() != UserData.ID_SYSTEM) {%>
-                <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteUser",locale)%>', '/user.ajx?act=<%=UserActions.openDeleteUser%>&userId=<%=user.getId()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                <div class="icn idelete" onclick="if (confirmDelete()) return linkTo('/user.ajx?act=<%=UserActions.deleteUser%>&userId=<%=user.getId()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                 </div>
                 <%}%>
             </div>

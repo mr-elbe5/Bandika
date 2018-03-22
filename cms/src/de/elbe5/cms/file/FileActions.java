@@ -43,7 +43,6 @@ public class FileActions extends BaseTreeActions {
     public static final String cloneFile="cloneFile";
     public static final String cutFile="cutFile";
     public static final String moveFile="moveFile";
-    public static final String openDeleteFile="openDeleteFile";
     public static final String deleteFile="deleteFile";
 
     public static final String KEY = "file";
@@ -283,12 +282,6 @@ public class FileActions extends BaseTreeActions {
                 }
                 return true;
             }
-            case openDeleteFile: {
-                int fileId = RequestReader.getInt(request, "fileId");
-                if (!hasContentRight(request, fileId, Right.EDIT))
-                    return false;
-                return showDeleteFile(request, response);
-            }
             case deleteFile: {
                 int fileId = RequestReader.getInt(request, "fileId");
                 if (!hasContentRight(request, fileId, Right.EDIT))
@@ -297,7 +290,10 @@ public class FileActions extends BaseTreeActions {
                 FileData data = tc.getFile(fileId);
                 FileBean.getInstance().deleteFile(fileId);
                 TreeCache.getInstance().setDirty();
-                return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&siteId=" + data.getParentId(), "_fileDeleted");
+                request.removeAttribute("fileId");
+                RequestWriter.setMessageKey(request, "_fileDeleted");
+                request.setAttribute("siteId", data.getParentId());
+                return showTree(request, response);
             }
             default: {
                 return show(request, response);
@@ -349,10 +345,6 @@ public class FileActions extends BaseTreeActions {
 
     protected boolean showCreateFile(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/file/createFile.ajax.jsp");
-    }
-
-    protected boolean showDeleteFile(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/file/deleteFile.ajax.jsp");
     }
 
     protected boolean showFileDetails(HttpServletRequest request, HttpServletResponse response) {

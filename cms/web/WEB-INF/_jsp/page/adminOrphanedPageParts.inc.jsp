@@ -26,7 +26,7 @@
     <div class="icn ipart contextSource"><%=StringUtil.getHtml("_orphanedParts", locale)%>
     </div>
     <div class="contextMenu">
-        <div class="icn idelete" onclick="linkTo('/pagepart.srv?act=<%=PagePartActions.deleteAllOrphanedPageParts%>');"><%=StringUtil.getHtml("_deleteAll", locale)%>
+        <div class="icn idelete" onclick="if (confirmDelete()) linkTo('/pagepart.srv?act=<%=PagePartActions.deleteAllOrphanedPageParts%>');"><%=StringUtil.getHtml("_deleteAll", locale)%>
         </div>
     </div>
     <ul>
@@ -38,7 +38,7 @@
             <div class="contextSource icn ipart <%=partId==part.getId() ? "selected" : ""%>" onclick="return openLayerDialog('<%=StringUtil.getHtml("_details",locale)%>', '/pagepart.ajx?act=<%=PagePartActions.showPagePartDetails%>&partId=<%=part.getId()%>')"><%=part.getId()%>&nbsp;(<%=StringUtil.toHtml(part.getName())%> <%=StringUtil.toHtml(part.getTemplateName())%>)
             </div>
             <div class="contextMenu">
-                <div class="icn idelete" onclick="linkTo('/pagepart.srv?act=<%=PagePartActions.deletePagePart%>&partId=<%=part.getId()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                <div class="icn idelete" onclick="if (confirmDelete()) linkTo('/pagepart.srv?act=<%=PagePartActions.deletePagePart%>&partId=<%=part.getId()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                 </div>
             </div>
         </li>

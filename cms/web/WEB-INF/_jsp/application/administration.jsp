@@ -49,5 +49,8 @@
         persist: "location", collapsed: true, unique: false
     });
     $(".halfSection").initContextMenus();
+    function confirmDelete(){
+        return confirm('<%=StringUtil.getString("_confirmDelete", locale)%>');
+    }
 </script>
     

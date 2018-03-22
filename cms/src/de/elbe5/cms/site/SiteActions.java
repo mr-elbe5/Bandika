@@ -53,8 +53,7 @@ public class SiteActions extends BaseTreeActions {
     public static final String openSortFiles = "openSortFiles";
     public static final String changeFileRanking = "changeFileRanking";
     public static final String saveSortFiles = "saveSortFiles";
-    public static final String openDeleteSite = "openDeleteSite";
-    public static final String delete = "delete";
+    public static final String deleteSite = "deleteSite";
 
     public static final String KEY = "site";
 
@@ -426,31 +425,22 @@ public class SiteActions extends BaseTreeActions {
                 TreeCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act=" + TreeActions.openTree, "_childOrderSaved");
             }
-            case openDeleteSite: {
-                int siteId = RequestReader.getInt(request, "siteId");
-                if (!hasContentRight(request, siteId, Right.EDIT))
-                    return false;
-                if (siteId == 0) {
-                    addError(request, StringUtil.getString("_noSelection", SessionReader.getSessionLocale(request)));
-                    return new SiteActions().execute(request, response, show);
-                }
-                return showDeleteSite(request, response);
-            }
-            case delete: {
+            case deleteSite: {
                 int siteId = RequestReader.getInt(request, "siteId");
                 if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
                 if (siteId < BaseIdData.ID_MIN) {
                     addError(request, StringUtil.getString("_notDeletable", SessionReader.getSessionLocale(request)));
-                    return showDeleteSite(request, response);
+                    return showTree(request, response);
                 }
                 TreeCache tc = TreeCache.getInstance();
                 int parent = tc.getParentNodeId(siteId);
                 SiteBean.getInstance().deleteTreeNode(siteId);
                 TreeCache.getInstance().setDirty();
                 RightsCache.getInstance().setDirty();
+                RequestWriter.setMessageKey(request, "_siteDeleted");
                 request.setAttribute("siteId", Integer.toString(parent));
-                return closeLayerToTree(request, response, "/tree.ajx?act=" + TreeActions.openTree, "_siteDeleted");
+                return showTree(request, response);
             }
             default: {
                 return show(request, response);
@@ -526,10 +516,6 @@ public class SiteActions extends BaseTreeActions {
 
     protected boolean showSortFiles(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/site/sortFiles.ajax.jsp");
-    }
-
-    protected boolean showDeleteSite(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/site/deleteSite.ajax.jsp");
     }
 
     protected boolean showSiteDetails(HttpServletRequest request, HttpServletResponse response) {

@@ -9,17 +9,19 @@
 <%@ page import="de.elbe5.base.util.StringUtil" %>
 <%@ page import="de.elbe5.webbase.servlet.SessionReader" %>
 <%@ page import="de.elbe5.cms.tree.TreeCache" %>
-<%@ page import="de.elbe5.cms.tree.TreeHelper" %>
 <%@ page import="de.elbe5.cms.tree.TreeNode" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="de.elbe5.cms.site.SiteData" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
-    TreeNode node = TreeHelper.getRequestedNode(request, locale);
+    TreeNode node = TreeNode.getRequestedNode(request, locale);
     int nodeId = node == null ? 0 : node.getId();
-    List<Integer> parentIds = (node == null) ? new ArrayList<Integer>() : node.getParentIds();
-    TreeCache tc = TreeCache.getInstance();
+    List<Integer> activeIds = (node == null) ? new ArrayList<Integer>() : node.getParentIds();
+    activeIds.add(nodeId);
+    request.setAttribute("activeIds",activeIds);
+    SiteData siteData = TreeCache.getInstance().getRootSite();
 %>
 
 <section class="mainSection ">
@@ -32,7 +34,8 @@
                         <%=StringUtil.getString("_structure", SessionReader.getSessionLocale(request))%>
                     </h3>
                     <ul id="structure" class="treeRoot">
-                        <%TreeHelper.addAdminSiteNode(out, request, tc.getRootSite(), nodeId, parentIds, locale);%>
+                        <% request.setAttribute("siteData",siteData); %>
+                        <jsp:include  page="/WEB-INF/_jsp/tree/treeSite.inc.jsp" flush="true"/>
                     </ul>
                     <%}%>
                 </div>
@@ -71,5 +74,8 @@
     $.each($(".ifiles"), function (i, val) {
         $(val).makeFileDropArea();
     });
+    function confirmDelete(){
+        return confirm('<%=StringUtil.getString("_confirmDelete", locale)%>');
+    }
 </script>
 

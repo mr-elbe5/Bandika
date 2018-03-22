@@ -51,7 +51,7 @@
                 <div class="icn iremove" onclick="return openLayerDialog('<%=StringUtil.getHtml("_removeUsers",locale)%>', '/group.ajx?act=<%=GroupActions.openRemoveGroupUsers%>&groupId=<%=group.getId()%>');"><%=StringUtil.getHtml("_removeUsers", locale)%>
                 </div>
                 <% if (group.getId() >= GroupData.ID_MAX_FINAL) {%>
-                <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteGroup",locale)%>', '/group.ajx?act=<%=GroupActions.openDeleteGroup%>&groupId=<%=group.getId()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                <div class="icn idelete" onclick="if (confirmDelete()) return linkTo('/group.ajx?act=<%=GroupActions.deleteGroup%>&groupId=<%=group.getId()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                 </div>
                 <%
                         }

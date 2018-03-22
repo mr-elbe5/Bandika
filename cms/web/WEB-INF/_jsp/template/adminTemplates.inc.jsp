@@ -49,7 +49,7 @@
                     <div class="contextMenu">
                         <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editTemplate",locale)%>', '/template.ajx?act=<%=TemplateActions.openEditTemplate%>&templateType=<%=TemplateData.TYPE_MASTER%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_edit", locale)%>
                         </div>
-                        <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteTemplate",locale)%>', '/template.ajx?act=<%=TemplateActions.openDeleteTemplate%>&templateType=<%=TemplateData.TYPE_MASTER%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                        <div class="icn idelete" onclick="if (confirmDelete()) return linkTo('/template.ajx?act=<%=TemplateActions.deleteTemplate%>&templateType=<%=TemplateData.TYPE_MASTER%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                         </div>
                     </div>
                 </li>
@@ -75,7 +75,7 @@
                     <div class="contextMenu">
                         <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editTemplate",locale)%>', '/template.ajx?act=<%=TemplateActions.openEditTemplate%>&templateType=<%=TemplateData.TYPE_PAGE%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_edit", locale)%>
                         </div>
-                        <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteTemplate",locale)%>', '/template.ajx?act=<%=TemplateActions.openDeleteTemplate%>&templateType=<%=TemplateData.TYPE_PAGE%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                        <div class="icn idelete" onclick="if (confirmDelete()) return linkTo('/template.ajx?act=<%=TemplateActions.deleteTemplate%>&templateType=<%=TemplateData.TYPE_PAGE%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                         </div>
                     </div>
                 </li>
@@ -101,7 +101,7 @@
                     <div class="contextMenu">
                         <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editTemplate",locale)%>', '/template.ajx?act=<%=TemplateActions.openEditTemplate%>&templateType=<%=TemplateData.TYPE_PART%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_edit", locale)%>
                         </div>
-                        <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteTemplate",locale)%>', '/template.ajx?act=<%=TemplateActions.openDeleteTemplate%>&templateType=<%=TemplateData.TYPE_PART%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                        <div class="icn idelete" onclick="if (confirmDelete()) return linkTo('/template.ajx?act=<%=TemplateActions.deleteTemplate%>&templateType=<%=TemplateData.TYPE_PART%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                         </div>
                     </div>
                 </li>
@@ -127,7 +127,7 @@
                     <div class="contextMenu">
                         <div class="icn iedit" onclick="return openLayerDialog('<%=StringUtil.getHtml("_editTemplateSnippet",locale)%>', '/template.ajx?act=<%=TemplateActions.openEditTemplate%>&templateType=<%=TemplateData.TYPE_SNIPPET%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_edit", locale)%>
                         </div>
-                        <div class="icn idelete" onclick="return openLayerDialog('<%=StringUtil.getHtml("_deleteTemplate",locale)%>', '/template.ajx?act=<%=TemplateActions.openDeleteTemplate%>&templateType=<%=TemplateData.TYPE_SNIPPET%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_delete", locale)%>
+                        <div class="icn idelete" onclick="if (confirmDelete()) return linkTo('/template.ajx?act=<%=TemplateActions.deleteTemplate%>&templateType=<%=TemplateData.TYPE_SNIPPET%>&templateName=<%=template.getName()%>');"><%=StringUtil.getHtml("_delete", locale)%>
                         </div>
                     </div>
                 </li>

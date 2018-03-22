@@ -39,7 +39,6 @@ public class UserActions extends CmsActions {
     public static final String openEditUser="openEditUser";
     public static final String openCreateUser="openCreateUser";
     public static final String saveUser="saveUser";
-    public static final String openDeleteUser="openDeleteUser";
     public static final String deleteUser="deleteUser";
     public static final String openEditUsers="openEditUsers";
     public static final String openRegisterUser="openRegisterUser";
@@ -158,28 +157,17 @@ public class UserActions extends CmsActions {
                 }
                 return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration+"&userId=" + data.getId(), "_userSaved");
             }
-            case openDeleteUser: {
-                if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
-                    return false;
-                int id = RequestReader.getInt(request, "userId");
-                if (id == SessionReader.getLoginId(request)) {
-                    addError(request, StringUtil.getString("_noSelfDelete", SessionReader.getSessionLocale(request)));
-                }
-                if (id < BaseIdData.ID_MIN) {
-                    addError(request, StringUtil.getString("_notDeletable", SessionReader.getSessionLocale(request)));
-                }
-                return showDeleteUser(request, response);
-            }
             case deleteUser: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 int id = RequestReader.getInt(request, "userId");
                 if (id < BaseIdData.ID_MIN) {
                     addError(request, StringUtil.getString("_notDeletable", SessionReader.getSessionLocale(request)));
-                } else {
-                    UserBean.getInstance().deleteUser(id);
+                    return sendForwardResponse(request, response, "/admin.srv?act=" + AdminActions.openAdministration);
                 }
-                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration, "_usersDeleted");
+                UserBean.getInstance().deleteUser(id);
+                RequestWriter.setMessageKey(request, "_userDeleted");
+                return sendForwardResponse(request, response, "/admin.srv?act="+ AdminActions.openAdministration);
             }
             case openEditUsers: {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
@@ -320,10 +308,6 @@ public class UserActions extends CmsActions {
 
     protected boolean showEditUser(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/user/editUser.ajax.jsp");
-    }
-
-    protected boolean showDeleteUser(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/user/deleteUser.ajax.jsp");
     }
 
     protected boolean showUserDetails(HttpServletRequest request, HttpServletResponse response) {
