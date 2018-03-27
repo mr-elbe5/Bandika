@@ -65,14 +65,17 @@
         });
     });
     $(".contentSection").initContextMenus($('.layermainbox'));
-    $.each($(".isite"), function (i, val) {
-        $(val).makeSiteDropArea();
+    $.each($(".ifile"), function () {
+        $(this).setDraggable('file','move','.ifiles',moveFile);
     });
-    $.each($(".ipages"), function (i, val) {
-        $(val).makePageDropArea();
+    $.each($(".ipage"), function () {
+        $(this).setDraggable('page','move','.ipages',movePage);
     });
-    $.each($(".ifiles"), function (i, val) {
-        $(val).makeFileDropArea();
+    $.each($(".isite"), function () {
+        $(this).setDraggable('site','move','.isites',moveSite);
+    });
+    $.each($(".ifiles"), function () {
+        $(this).makeFileDropArea();
     });
     function confirmDelete(){
         return confirm('<%=StringUtil.getString("_confirmDelete", locale)%>');

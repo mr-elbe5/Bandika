@@ -101,87 +101,6 @@ $.fn.extend({
     }
 });
 
-$.fn.extend({
-    makeSiteDropArea: function () {
-        $(this).bind('dragenter', function (e) {
-            e.preventDefault();
-            if (isSiteNodeDrag(e)) {
-                $(this).addClass('dropTarget');
-            }
-        });
-        $(this).bind('dragover', function (e) {
-            e.preventDefault();
-        });
-        $(this).bind('dragleave', function (e) {
-            e.preventDefault();
-            if (isSiteNodeDrag(e)) {
-                $(this).removeClass('dropTarget');
-            }
-        });
-        $(this).bind('drop', function (e) {
-            e.preventDefault();
-            if (isSiteNodeDrag(e)) {
-                var nodeType = e.originalEvent.dataTransfer.getData('nodeType');
-                var nodeid = e.originalEvent.dataTransfer.getData('nodeId');
-                moveSite(nodeid, e.originalEvent.currentTarget.dataset.siteid);
-            }
-        });
-    },
-    makePageDropArea: function () {
-        $(this).bind('dragenter', function (e) {
-            e.preventDefault();
-            if (isPageNodeDrag(e)) {
-                $(this).addClass('dropTarget');
-            }
-        });
-        $(this).bind('dragover', function (e) {
-            e.preventDefault();
-        });
-        $(this).bind('dragleave', function (e) {
-            e.preventDefault();
-            if (isPageNodeDrag(e)) {
-                $(this).removeClass('dropTarget');
-            }
-        });
-        $(this).bind('drop', function (e) {
-            e.preventDefault();
-            if (isPageNodeDrag(e)) {
-                var nodeid = e.originalEvent.dataTransfer.getData('nodeId');
-                movePage(nodeid, e.originalEvent.currentTarget.dataset.siteid);
-            }
-        });
-    },
-    makeFileDropArea: function () {
-        $(this).bind('dragenter', function (e) {
-            e.preventDefault();
-            if (isFileDrag(e) || isFileNodeDrag(e)) {
-                $(this).addClass('dropTarget');
-            }
-        });
-        $(this).bind('dragover', function (e) {
-            e.preventDefault();
-        });
-        $(this).bind('dragleave', function (e) {
-            e.preventDefault();
-            if (isFileDrag(e) || isFileNodeDrag(e)) {
-                $(this).removeClass('dropTarget');
-            }
-        });
-        $(this).bind('drop', function (e) {
-            e.preventDefault();
-            if (isFileDrop(e)) {
-                var files = e.originalEvent.dataTransfer.files;
-                uploadFiles(files, e.originalEvent.currentTarget.dataset.siteid);
-                $(this).removeClass('dropTarget');
-            }
-            else if (isFileNodeDrag(e)) {
-                var nodeid = e.originalEvent.dataTransfer.getData('nodeId');
-                moveFile(nodeid, e.originalEvent.currentTarget.dataset.siteid);
-            }
-        });
-    }
-});
-
 function uploadFiles(files, siteid) {
     var fd = new FormData();
     for (var i = 0; i < files.length; i++) {
@@ -202,37 +121,11 @@ function uploadFiles(files, siteid) {
     });
 }
 
-function isSiteNodeDrag(e) {
-    return e.originalEvent && e.originalEvent.dataTransfer && (e.originalEvent.dataTransfer.getData('nodeType') === 'site');
-}
-
-function isPageNodeDrag(e) {
-    return e.originalEvent && e.originalEvent.dataTransfer && (e.originalEvent.dataTransfer.getData('nodeType') === 'page');
-}
-
-function isFileNodeDrag(e) {
-    return e.originalEvent && e.originalEvent.dataTransfer && (e.originalEvent.dataTransfer.getData('nodeType') === 'file');
-}
-
-function startSiteDrag(ev) {
-    ev.dataTransfer.setData("nodeType", "site");
-    ev.dataTransfer.setData("nodeId", ev.target.dataset.siteid);
-}
-
-function startPageDrag(ev) {
-    ev.dataTransfer.setData("nodeType", "page");
-    ev.dataTransfer.setData("nodeId", ev.target.dataset.pageid);
-}
-
-function startFileDrag(ev) {
-    ev.dataTransfer.setData("nodeType", "file");
-    ev.dataTransfer.setData("nodeId", ev.target.dataset.fileid);
-}
-
-function moveSite(siteid, parentid) {
+function moveSite(ev) {
     var fd = new FormData();
+    var parentid=ev.originalEvent.currentTarget.dataset.siteid;
     fd.append('act', 'moveSite');
-    fd.append('siteId', siteid);
+    fd.append('siteId', ev.originalEvent.dataTransfer.getData('dragData'));
     fd.append('parentId', parentid);
     $.ajax({
         type: 'POST',
@@ -246,10 +139,11 @@ function moveSite(siteid, parentid) {
     });
 }
 
-function movePage(pageid, parentid) {
+function movePage(ev) {
     var fd = new FormData();
+    var parentid=ev.originalEvent.currentTarget.dataset.siteid;
     fd.append('act', 'movePage');
-    fd.append('pageId', pageid);
+    fd.append('pageId', ev.originalEvent.dataTransfer.getData('dragData'));
     fd.append('parentId', parentid);
     $.ajax({
         type: 'POST',
@@ -263,10 +157,11 @@ function movePage(pageid, parentid) {
     });
 }
 
-function moveFile(fileid, parentid) {
+function moveFile(ev) {
     var fd = new FormData();
+    var parentid=ev.originalEvent.currentTarget.dataset.siteid;
     fd.append('act', 'moveFile');
-    fd.append('fileId', fileid);
+    fd.append('fileId', ev.originalEvent.dataTransfer.getData('dragData'));
     fd.append('parentId', parentid);
     $.ajax({
         type: 'POST',

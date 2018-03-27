@@ -829,7 +829,10 @@ h3.treeHeader {
   color: #3040d0; }
 
 .dropTarget {
-  background: #e0e0e0; }
+  background: #aaffaa; }
+
+.noDropTarget {
+  background: #ffaaaa; }
 
 /* cms part */
 .adminTree {

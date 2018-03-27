@@ -27,8 +27,8 @@
 %>
 
 <li class="<%=isOpen ? "open" : ""%>">
-    <div class="contextSource icn isite <%=nodeId == siteData.getId() ? "selected" : ""%>" data-siteid="<%=Integer.toString(siteData.getId())%>"
-         draggable="true" ondragstart="startSiteDrag(event)" onclick="$('#details').load('/site.ajx?act=showSiteDetails&siteId=<%=siteData.getId()%>');">
+    <div class="contextSource icn isite <%=nodeId == siteData.getId() ? "selected" : ""%>" data-siteid="<%=Integer.toString(siteData.getId())%>" data-dragid="<%=Integer.toString(siteData.getId())%>"
+         onclick="$('#details').load('/site.ajx?act=showSiteDetails&siteId=<%=siteData.getId()%>');">
         <%=siteData.getDisplayName()%>
     </div>
     <% if (SessionReader.hasContentRight(request, siteData.getId(), Right.EDIT)) {%>
@@ -96,8 +96,7 @@
                     if (SessionReader.hasContentRight(request, pageData.getId(), Right.READ)) {%>
                 <li>
                     <div class="contextSource icn ipage <%=nodeId == pageData.getId() ? " selected" : ""%> <%=pageData.hasUnpublishedDraft() ? "unpublished" : "published"%>"
-                         data-pageid="<%=Integer.toString(pageData.getId())%>" draggable="true" ondragstart="startPageDrag(event)"
-                         onclick="$('#details').load('/page.ajx?act=showPageDetails&pageId=<%=pageData.getId()%>');">
+                         data-dragid="<%=Integer.toString(pageData.getId())%>" onclick="$('#details').load('/page.ajx?act=showPageDetails&pageId=<%=pageData.getId()%>');">
                         <%=pageData.getDisplayName()%>
                     <% if (pageData.isDefaultPage()) {%>(<%=StringUtil.getHtml("_default", locale)%>)<%}%>
                     </div>
@@ -157,8 +156,7 @@
                     if (SessionReader.hasContentRight(request, fileData.getId(), Right.READ)) {%>
                 <li>
                     <div class="contextSource icn ifile <%=nodeId == fileData.getId() ? " selected" : ""%>"
-                         data-fileid="<%=Integer.toString(fileData.getId())%>" draggable="true" ondragstart="startFileDrag(event)"
-                         onclick="$('#details').load('/file.ajx?act=showFileDetails&fileId=<%=fileData.getId()%>');">
+                         data-dragid="<%=Integer.toString(fileData.getId())%>" onclick="$('#details').load('/file.ajx?act=showFileDetails&fileId=<%=fileData.getId()%>');">
                         <%=fileData.getDisplayName()%>
                     </div>
                     <%if (SessionReader.hasContentRight(request, fileData.getId(), Right.EDIT)) {%>
