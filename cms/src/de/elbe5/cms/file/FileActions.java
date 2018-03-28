@@ -36,7 +36,8 @@ public class FileActions extends BaseTreeActions {
     public static final String openEditFileRights="openEditFileRights";
     public static final String openCreateFile="openCreateFile";
     public static final String createFile="createFile";
-    public static final String createFiles="createFiles";
+    public static final String openUploadFiles="openUploadFiles";
+    public static final String uploadFiles ="uploadFiles";
     public static final String saveFileSettings="saveFileSettings";
     public static final String saveFileRights="saveFileRights";
     public static final String replaceFile="replaceFile";
@@ -139,8 +140,8 @@ public class FileActions extends BaseTreeActions {
                 return showEditFileRights(request, response);
             }
             case openCreateFile: {
-                int fileId = RequestReader.getInt(request, "fileId");
-                if (!hasContentRight(request, fileId, Right.EDIT))
+                int siteId = RequestReader.getInt(request, "siteId");
+                if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
                 return showCreateFile(request, response);
             }
@@ -164,14 +165,19 @@ public class FileActions extends BaseTreeActions {
                 TreeCache.getInstance().setDirty();
                 return closeLayerToTree(request, response, "/tree.ajx?act="+ TreeActions.openTree+"&fileId=&fileId=" + data.getId(), "_fileCreated");
             }
-            case createFiles: {
-                int fileId = RequestReader.getInt(request, "fileId");
-                if (!hasContentRight(request, fileId, Right.EDIT))
+            case openUploadFiles: {
+                int siteId = RequestReader.getInt(request, "siteId");
+                if (!hasContentRight(request, siteId, Right.EDIT))
                     return false;
-                int parentId = RequestReader.getInt(request, "siteId");
+                return showUploadFiles(request, response);
+            }
+            case uploadFiles: {
+                int siteId = RequestReader.getInt(request, "siteId");
+                if (!hasContentRight(request, siteId, Right.EDIT))
+                    return false;
                 FileBean ts = FileBean.getInstance();
                 TreeCache tc = TreeCache.getInstance();
-                SiteData parentNode = tc.getSite(parentId);
+                SiteData parentNode = tc.getSite(siteId);
                 int numFiles = RequestReader.getInt(request, "numFiles");
                 for (int i = 0; i < numFiles; i++) {
                     BinaryFileData file = RequestReader.getFile(request, "file_" + i);
@@ -345,6 +351,10 @@ public class FileActions extends BaseTreeActions {
 
     protected boolean showCreateFile(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/file/createFile.ajax.jsp");
+    }
+
+    protected boolean showUploadFiles(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/file/uploadFiles.ajax.jsp");
     }
 
     protected boolean showFileDetails(HttpServletRequest request, HttpServletResponse response) {

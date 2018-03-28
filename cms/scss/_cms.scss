@@ -221,11 +221,12 @@ h3.treeHeader {
 }
 
 .dropTarget {
-  background: $color-droparea;
+  box-shadow: $color-droparea;
 }
 
-.noDropTarget {
-  background: $color-nodroparea;
+div.dropArea {
+  height: 100px;
+  border: 1px solid $color-lightgrey;
 }
 
 /* cms part */

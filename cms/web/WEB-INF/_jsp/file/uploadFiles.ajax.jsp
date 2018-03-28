@@ -16,31 +16,14 @@
     int siteId = RequestReader.getInt(request, "siteId");
 %>
 <jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
-<form action="/file.srv" method="post" id="uploadform" name="uploadform" accept-charset="UTF-8" enctype="multipart/form-data">
     <fieldset>
         <input type="hidden" name="siteId" value="<%=siteId%>"/>
-        <input type="hidden" name="act" value="<%=FileActions.createFile%>"/>
         <table class="padded form">
             <tr>
                 <td>
-                    <label for="file"><%=StringUtil.getHtml("_file", locale)%>&nbsp;*</label></td>
+                    <label><%=StringUtil.getHtml("_dragFilesHere", locale)%></label></td>
                 <td>
-                    <input type="file" id="file" name="file"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="displayName"><%=StringUtil.getHtml("_displayName", locale)%>&nbsp;*</label></td>
-                <td>
-                    <input type="text" id="displayName" name="displayName" value="" maxlength="60"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="name"><%=StringUtil.getHtml("_name", locale)%>
-                    </label></td>
-                <td>
-                    <input type="text" id="name" name="name" value="" maxlength="60"/>
+                    <div class="dropArea"></div>
                 </td>
             </tr>
         </table>
@@ -48,15 +31,46 @@
     <div class="buttonset topspace">
         <button onclick="closeLayerDialog();"><%=StringUtil.getHtml("_close", locale)%>
         </button>
-        <button type="submit" class="primary"><%=StringUtil.getHtml("_create", locale)%>
-        </button>
     </div>
-</form>
 <script type="text/javascript">
-    $('#uploadform').submit(function (event) {
-        var $this = $(this);
-        event.preventDefault();
-        var params = $this.serializeFiles();
-        postMulti2ModalDialog('/file.srv', params);
+    var $dropArea=$('.dropArea');
+    var siteid=<%=siteId%>;
+    $dropArea.on('dragenter', function (e) {
+        e.preventDefault();
+        if (isFileDrag(e)) {
+            $dropArea.addClass('dropTarget');
+        }
+    });
+    $dropArea.on('dragover', function (e) {
+        e.preventDefault();
+    });
+    $dropArea.on('dragleave', function (e) {
+        e.preventDefault();
+        if (isFileDrag(e)) {
+            $dropArea.removeClass('dropTarget');
+        }
+    });
+    $dropArea.on('drop', function (e) {
+        e.preventDefault();
+        if (isFileDrop(e)) {
+            var files = e.originalEvent.dataTransfer.files;
+            var fd = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                fd.append('file_' + i, files[i]);
+            }
+            fd.append('numFiles', files.length);
+            fd.append('act', 'uploadFiles');
+            fd.append('siteId', siteid);
+            $.ajax({
+                type: 'POST',
+                url: '/file.ajx?',
+                data: fd,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    closeLayerToTree('tree.srv?act=openTree&siteId=' + siteid);
+                }
+            });
+        }
     });
 </script>

@@ -424,61 +424,30 @@ $.fn.extend({
             dt.setData("dragData", e.target.dataset.dragid);
             dt.effectAllowed=effect;
             $.each($(dropIdentifier), function(){
-                $(this).setDroppable(dragType, dropIdentifier, dropFunction);
+                var $droppable=$(this);
+                console.log($droppable);
+                $droppable.on('dragenter', function (e) {
+                    e.preventDefault();
+                    $(this).addClass('dropTarget');
+                });
+                $droppable.on('dragover', function (e) {
+                    e.preventDefault();
+                });
+                $droppable.on('dragleave', function (e) {
+                    e.preventDefault();
+                    $(this).removeClass('dropTarget');
+                });
+                $droppable.on('drop dragend', function (e) {
+                    e.preventDefault();
+                    if (dragType == e.originalEvent.dataTransfer.getData("dragType")) {
+                        dropFunction(e);
+                    }
+                    $(this).removeClass('dropTarget');
+                    $.each($(dropIdentifier), function(){
+                        $(this).off('dragenter dragover dragleave drop dragend');
+                    });
+                });
             });
-        });
-    },
-    setDroppable: function(dragType, dropIdentifier, dropFunction){
-        var $droppable=$(this);
-        console.log($droppable);
-        $droppable.on('dragenter', function (e) {
-            e.preventDefault();
-            $(this).addClass('dropTarget');
-        });
-        $droppable.on('dragover', function (e) {
-            e.preventDefault();
-        });
-        $droppable.on('dragleave', function (e) {
-            e.preventDefault();
-            $(this).removeClass('dropTarget');
-        });
-        $droppable.on('drop dragend', function (e) {
-            e.preventDefault();
-            if (dragType == e.originalEvent.dataTransfer.getData("dragType")) {
-                dropFunction(e);
-            }
-            $(this).removeClass('dropTarget');
-            $.each($(dropIdentifier), function(){
-                $(this).off('dragenter dragover dragleave drop dragend');
-            });
-        });
-    }
-});
-
-$.fn.extend({
-    makeFileDropArea: function () {
-        $(this).on('dragenter', function (e) {
-            e.preventDefault();
-            if (isFileDrag(e)) {
-                $(this).addClass('dropTarget');
-            }
-        });
-        $(this).on('dragover', function (e) {
-            e.preventDefault();
-        });
-        $(this).on('dragleave', function (e) {
-            e.preventDefault();
-            if (isFileDrag(e)) {
-                $(this).removeClass('dropTarget');
-            }
-        });
-        $(this).on('drop', function (e) {
-            e.preventDefault();
-            if (isFileDrop(e)) {
-                var files = e.originalEvent.dataTransfer.files;
-                uploadFiles(files, e.originalEvent.currentTarget.dataset.siteid);
-                $(this).removeClass('dropTarget');
-            }
         });
     }
 });
@@ -487,7 +456,7 @@ function isFileDrag(e) {
     return e.originalEvent &&
         e.originalEvent.dataTransfer &&
         e.originalEvent.dataTransfer.types &&
-        e.originalEvent.dataTransfer.types[2] === 'Files';
+        e.originalEvent.dataTransfer.types[1] == 'Files';
 }
 
 function isFileDrop(e) {

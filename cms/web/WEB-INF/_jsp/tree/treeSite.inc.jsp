@@ -139,7 +139,10 @@
             <%if (SessionReader.hasContentRight(request, siteData.getId(), Right.EDIT)) {%>
             <div class="contextMenu">
                 <div class="icn inew" onclick="return openLayerDialog('<%=StringUtil.getHtml("_createFile", locale)%>', '/file.ajx?act=openCreateFile&siteId=<%=siteData.getId()%>');">
-                    <%=StringUtil.getHtml("_newPage", locale)%>
+                    <%=StringUtil.getHtml("_newFile", locale)%>
+                </div>
+                <div class="icn iupload" onclick="return openLayerDialog('<%=StringUtil.getHtml("_uploadFiles", locale)%>', '/file.ajx?act=openUploadFiles&siteId=<%=siteData.getId()%>');">
+                    <%=StringUtil.getHtml("_uploadFiles", locale)%>
                 </div>
                 <%if (SessionReader.getSessionObject(request, "cutFileId") != null) {%>
                 <div class="icn ipaste" onclick="return linkToTree('/site.srv?act=pasteFile&siteId=<%=siteData.getId()%>');">

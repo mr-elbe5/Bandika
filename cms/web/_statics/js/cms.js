@@ -101,26 +101,6 @@ $.fn.extend({
     }
 });
 
-function uploadFiles(files, siteid) {
-    var fd = new FormData();
-    for (var i = 0; i < files.length; i++) {
-        fd.append('file_' + i, files[i]);
-    }
-    fd.append('numFiles', i);
-    fd.append('act', 'createFiles');
-    fd.append('siteId', siteid);
-    $.ajax({
-        type: 'POST',
-        url: '/file.srv?',
-        data: fd,
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            linkToTree('tree.srv?act=openTree&siteId=' + siteid);
-        }
-    });
-}
-
 function moveSite(ev) {
     var fd = new FormData();
     var parentid=ev.originalEvent.currentTarget.dataset.siteid;
@@ -129,7 +109,7 @@ function moveSite(ev) {
     fd.append('parentId', parentid);
     $.ajax({
         type: 'POST',
-        url: '/site.srv?',
+        url: '/site.ajx?',
         data: fd,
         processData: false,
         contentType: false,
@@ -147,7 +127,7 @@ function movePage(ev) {
     fd.append('parentId', parentid);
     $.ajax({
         type: 'POST',
-        url: '/page.srv?',
+        url: '/page.ajx?',
         data: fd,
         processData: false,
         contentType: false,
@@ -165,7 +145,7 @@ function moveFile(ev) {
     fd.append('parentId', parentid);
     $.ajax({
         type: 'POST',
-        url: '/file.srv?',
+        url: '/file.ajx?',
         data: fd,
         processData: false,
         contentType: false,

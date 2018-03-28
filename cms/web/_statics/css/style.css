@@ -469,6 +469,9 @@ nav li {
 .icn.iup:before {
   content: '\E135'; }
 
+.icn.iupload:before {
+  content: '\E038'; }
+
 .icn.iuser:before {
   content: '\E137'; }
 
@@ -829,10 +832,11 @@ h3.treeHeader {
   color: #3040d0; }
 
 .dropTarget {
-  background: #aaffaa; }
+  box-shadow: #aaffaa; }
 
-.noDropTarget {
-  background: #ffaaaa; }
+div.dropArea {
+  height: 100px;
+  border: 1px solid #dddddd; }
 
 /* cms part */
 .adminTree {

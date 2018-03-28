@@ -74,9 +74,6 @@
     $.each($(".isite"), function () {
         $(this).setDraggable('site','move','.isites',moveSite);
     });
-    $.each($(".ifiles"), function () {
-        $(this).makeFileDropArea();
-    });
     function confirmDelete(){
         return confirm('<%=StringUtil.getString("_confirmDelete", locale)%>');
     }
