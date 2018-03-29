@@ -19,7 +19,7 @@ public class BlogEntryData extends BaseIdData {
     protected int partId = 0;
     protected int authorId = 0;
     protected String authorName = "";
-    protected String text = "";
+    protected String text = ""; //html format
 
     public int getPartId() {
         return partId;

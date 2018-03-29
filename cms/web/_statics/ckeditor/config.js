@@ -20,7 +20,7 @@ CKEDITOR.editorConfig = function( config ) {
     ];
 
     config.toolbar_Text = [
-        { name: 'document', items: [ 'Sourcedialog' , '-', 'ShowBlocks', '-', 'Undo', 'Redo' ] },
+        { name: 'document', items: [ 'ShowBlocks', '-', 'Undo', 'Redo' ] },
         { name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord' ] },
         '/',
         { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },

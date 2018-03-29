@@ -26,20 +26,26 @@
 <%}%>
 <div id="<%=containerId%>"
 <% for (BlogEntryData entryData : entries) {%>
-<div class="blogEntry">
-    <div class="blogEntryTitle"><%=StringUtil.toHtml(entryData.getAuthorName())%>, <%=StringUtil.toHtmlDateTime(entryData.getChangeDate(),locale)%>:
+<div id="blogEntry<%=entryId%>" class="blogEntry">
+    <div class="blogEntryTitle">
+        <%=StringUtil.toHtml(entryData.getAuthorName())%>, <%=StringUtil.toHtmlDateTime(entryData.getChangeDate(),locale)%>:
     </div>
-    <div class="blogEntryText"><%=StringUtil.toHtml(entryData.getText())%>
+    <div class="blogEntryText"><%=entryData.getText()%>
+        <%if (entryData.getAuthorId()==userId){%>
+        <span class="icn iedit" onclick="return sendBlogAction('openEditEntry',<%=entryData.getId()%>);">&nbsp;</span>
+        <%}%>
     </div>
 </div>
 <%}%>
+<% if (userId!=0){%>
 <div class="buttonset topspace">
-    <button class="primary" onclick="return sendBlogAction('openCreateEntry');"><%=StringUtil.getHtml("_new", locale)%>
+    <button class="primary" onclick="return sendBlogAction('openCreateEntry',0);"><%=StringUtil.getHtml("_new", locale)%>
     </button>
 </div>
+<%}%>
 <script type="text/javascript">
-    function sendBlogAction(action) {
-        var params = {act:action,partId: <%=partId%>};
+    function sendBlogAction(action, entryId) {
+        var params = {act:action,partId: <%=partId%>,entryId: entryId};
         post2Target('/blog.ajx', params, $('#<%=containerId%>').closest('.blog'));
         return false;
     }

@@ -45,7 +45,7 @@ public class BlogBean extends DbBean {
     }
 
     private static String INSERT_ENTRY_SQL="insert into t_blogentry (change_date,part_id,author_id,author_name,entry,id) values (?,?,?,?,?,?)";
-    private static String UPDATE_ENTRY_SQL="update t_blogentry set change_date=?,teampart_id=?,author_id=?,author_name=?,entry=? where id=?";
+    private static String UPDATE_ENTRY_SQL="update t_blogentry set change_date=?,part_id=?,author_id=?,author_name=?,entry=? where id=?";
     protected void writeEntryData(Connection con, BlogEntryData data) throws SQLException {
         PreparedStatement pst = null;
         try {
