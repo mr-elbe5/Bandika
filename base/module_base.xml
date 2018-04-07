@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_base" default="compile.module.base">
+  <dirname property="module.base.basedir" file="${ant.file.module_base}"/>
+  
+  <property name="module.jdk.home.base" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.base" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.base" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.base" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="base.output.dir" value="${module.base.basedir}/../out/production/base"/>
+  <property name="base.testoutput.dir" value="${module.base.basedir}/../out/test/base"/>
+  
+  <path id="base.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="base.module.production.classpath">
+    <path refid="${module.jdk.classpath.base}"/>
+    <path refid="library.commons.classpath"/>
+    <path refid="library.mail.classpath"/>
+  </path>
+  
+  <path id="base.runtime.production.module.classpath">
+    <pathelement location="${base.output.dir}"/>
+    <path refid="library.commons.classpath"/>
+    <path refid="library.mail.classpath"/>
+  </path>
+  
+  <path id="base.module.classpath">
+    <path refid="${module.jdk.classpath.base}"/>
+    <pathelement location="${base.output.dir}"/>
+    <path refid="library.commons.classpath"/>
+    <path refid="library.mail.classpath"/>
+  </path>
+  
+  <path id="base.runtime.module.classpath">
+    <pathelement location="${base.testoutput.dir}"/>
+    <pathelement location="${base.output.dir}"/>
+    <path refid="library.commons.classpath"/>
+    <path refid="library.mail.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.base">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.base">
+    <patternset refid="excluded.from.module.base"/>
+  </patternset>
+  
+  <path id="base.module.sourcepath">
+    <dirset dir="${module.base.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.base" depends="compile.module.base.production,compile.module.base.tests" description="Compile module base"/>
+  
+  <target name="compile.module.base.production" depends="register.custom.compilers" description="Compile module base; production classes">
+    <mkdir dir="${base.output.dir}"/>
+    <javac2 destdir="${base.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.base}/javac">
+      <compilerarg line="${compiler.args.base}"/>
+      <bootclasspath refid="base.module.bootclasspath"/>
+      <classpath refid="base.module.production.classpath"/>
+      <src refid="base.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.base"/>
+    </javac2>
+    
+    <copy todir="${base.output.dir}">
+      <fileset dir="${module.base.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.base.tests" depends="register.custom.compilers,compile.module.base.production" description="compile module base; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.base" description="cleanup module">
+    <delete dir="${base.output.dir}"/>
+    <delete dir="${base.testoutput.dir}"/>
+  </target>
+</project>

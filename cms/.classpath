@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/tomcat"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/commons"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mail"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jsoup"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/lucene"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/base"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
