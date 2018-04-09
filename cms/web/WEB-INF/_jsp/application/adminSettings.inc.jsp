@@ -6,7 +6,6 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="de.elbe5.base.cache.DataCache" %>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
 <%@ page import="de.elbe5.webbase.rights.Right" %>
 <%@ page import="de.elbe5.webbase.rights.SystemZone" %>
@@ -23,11 +22,6 @@
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     if (SessionReader.hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT)) {
-        List<DataCache> dataCaches = null;
-        try {
-            dataCaches = DataCache.getAllCaches();
-        } catch (Exception ignore) {
-        }
         List<FileCache> fileCaches = null;
         try {
             fileCaches = FileCache.getAllCaches();
@@ -55,22 +49,6 @@
     <div class="icn icache"><%=StringUtil.getHtml("_caches", locale)%>
     </div>
     <ul>
-        <%
-            if (dataCaches != null) {
-                for (DataCache cache : dataCaches) {
-        %>
-        <li>
-            <div class="contextSource icn icache <%=cacheName.equals(cache.getName()) ? "selected" : ""%>" onclick="return openLayerDialog('<%=StringUtil.getHtml("_details",locale)%>', '/config.ajx?act=<%=ConfigActions.showDataCacheDetails%>&cacheName=<%=StringUtil.toUrl(cache.getName())%>')"><%=StringUtil.toHtml(cache.getName())%>
-            </div>
-            <div class="contextMenu">
-                <div class="icn iclear" onclick="linkTo('/config.srv?act=<%=ConfigActions.clearDataCache%>&cacheName=<%=StringUtil.toUrl(cache.getName())%>');"><%=StringUtil.getHtml("_clear", locale)%>
-                </div>
-            </div>
-        </li>
-        <%
-                }
-            }
-        %>
         <%
             if (fileCaches != null) {
                 for (FileCache cache : fileCaches) {

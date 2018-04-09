@@ -72,13 +72,13 @@ public class CalendarBean extends DbBean {
         }
     }
 
-    public CalendarEntryData getEntryData(int id) {
+    public CalendarEntryData getCalendarEntryData(int id) {
         Connection con = null;
         CalendarEntryData data = new CalendarEntryData();
         data.setId(id);
         try {
             con = getConnection();
-            readEntryData(con, data);
+            readCalendarEntryData(con, data);
         } catch (SQLException se) {
             se.printStackTrace();
         } finally {
@@ -88,7 +88,7 @@ public class CalendarBean extends DbBean {
     }
 
     private static String READ_ENTRY_SQL="select change_date,part_id,author_id,author_name,start_time,end_time,title,entry from t_calendarentry where id=?";
-    public void readEntryData(Connection con, CalendarEntryData data) throws SQLException {
+    public void readCalendarEntryData(Connection con, CalendarEntryData data) throws SQLException {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(READ_ENTRY_SQL);
@@ -157,7 +157,7 @@ public class CalendarBean extends DbBean {
     }
 
     private static String DELETE_SQL="delete from t_calendarentry where id=?";
-    public boolean deleteEntry(int id) throws SQLException {
+    public boolean deleteEntry(int id) {
         return deleteItem(DELETE_SQL, id);
     }
 

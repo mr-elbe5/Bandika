@@ -8,7 +8,6 @@
  */
 package de.elbe5.cms.configuration;
 
-import de.elbe5.base.cache.DataCache;
 import de.elbe5.base.cache.FileCache;
 import de.elbe5.base.mail.Mailer;
 import de.elbe5.cms.application.AdminActions;
@@ -26,9 +25,7 @@ public class ConfigActions extends CmsActions {
     public static final String showConfigurationDetails="showConfigurationDetails";
     public static final String openEditConfiguration="openEditConfiguration";
     public static final String saveConfiguration="saveConfiguration";
-    public static final String showDataCacheDetails="showDataCacheDetails";
     public static final String showFileCacheDetails="showFileCacheDetails";
-    public static final String clearDataCache="clearDataCache";
     public static final String clearFileCache="clearFileCache";
 
     public static final String KEY = "config";
@@ -75,27 +72,10 @@ public class ConfigActions extends CmsActions {
                 Configuration.getInstance().loadAppConfiguration(config);
                 return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration, "_configurationSaved");
             }
-            case showDataCacheDetails:{
-                if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                    return false;
-                return showDataCacheDetails(request, response);
-            }
             case showFileCacheDetails:{
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
                     return false;
                 return showFileCacheDetails(request, response);
-            }
-            case clearDataCache:{
-                if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
-                    return false;
-                String name = RequestReader.getString(request, "cacheName");
-                DataCache cache = DataCache.getCache(name);
-                if (cache != null) {
-                    cache.setDirty();
-                    cache.checkDirty();
-                }
-                RequestWriter.setMessageKey(request, "_cacheCleared");
-                return AdminActions.instance.openAdministration(request, response);
             }
             case clearFileCache:{
                 if (!hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT))
@@ -127,10 +107,6 @@ public class ConfigActions extends CmsActions {
 
     protected boolean showConfigurationDetails(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/configuration/configurationDetails.ajax.jsp");
-    }
-
-    protected boolean showDataCacheDetails(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/configuration/dataCacheDetails.ajax.jsp");
     }
 
     protected boolean showFileCacheDetails(HttpServletRequest request, HttpServletResponse response) {

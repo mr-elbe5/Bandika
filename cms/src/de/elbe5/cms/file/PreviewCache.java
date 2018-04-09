@@ -9,9 +9,8 @@
 package de.elbe5.cms.file;
 
 import de.elbe5.base.cache.FileCache;
-import de.elbe5.base.data.BinaryFileData;
 
-public class PreviewCache extends FileCache<BinaryFileData> {
+public class PreviewCache extends FileCache {
 
     public static final String CACHEKEY = "File Previews";
     private static PreviewCache instance = null;

@@ -64,7 +64,7 @@ public class CalendarActions extends CmsActions {
                 int partId=RequestReader.getInt(request,"partId");
                 assertCalendarData(request, partId);
                 int id = RequestReader.getInt(request,"entryId");
-                CalendarEntryData data = CalendarBean.getInstance().getEntryData(id);
+                CalendarEntryData data = CalendarBean.getInstance().getCalendarEntryData(id);
                 SessionWriter.setSessionObject(request, "entry", data);
                 return showEditEntry(request, response);
             }

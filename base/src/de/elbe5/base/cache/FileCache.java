@@ -8,14 +8,14 @@
  */
 package de.elbe5.base.cache;
 
-import de.elbe5.base.data.BinaryFileBaseData;
+import de.elbe5.base.data.BinaryFileData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FileCache<T extends BinaryFileBaseData> extends BaseCache{
+public class FileCache extends BaseCache{
 
     protected static Map<String, FileCache> cacheMap = new HashMap<>();
 
@@ -35,7 +35,7 @@ public class FileCache<T extends BinaryFileBaseData> extends BaseCache{
     protected long maxSize = 0;
     protected int cacheCount = 0;
     protected long cacheSize = 0;
-    protected Map<Integer, T> map;
+    protected Map<Integer, BinaryFileData> map;
     protected List<Integer> list;
 
     public FileCache() {
@@ -109,10 +109,10 @@ public class FileCache<T extends BinaryFileBaseData> extends BaseCache{
         this.maxSize = maxSize;
     }
 
-    public T get(Integer key) {
+    public BinaryFileData get(Integer key) {
         checkDirty();
         synchronized (this) {
-            T data = map.get(key);
+            BinaryFileData data = map.get(key);
             if (data != null) {
                 list.remove(key);
                 list.add(key);
@@ -121,7 +121,7 @@ public class FileCache<T extends BinaryFileBaseData> extends BaseCache{
         }
     }
 
-    public void add(Integer key, T data) {
+    public void add(Integer key, BinaryFileData data) {
         checkDirty();
         synchronized (this) {
             if (!map.containsKey(key)) {
@@ -142,7 +142,7 @@ public class FileCache<T extends BinaryFileBaseData> extends BaseCache{
     public void remove(Integer key) {
         checkDirty();
         synchronized (this) {
-            T data = map.get(key);
+            BinaryFileData data = map.get(key);
             list.remove(key);
             map.remove(key);
             if (data != null) {
@@ -158,7 +158,7 @@ public class FileCache<T extends BinaryFileBaseData> extends BaseCache{
             return;
         }
         Integer key = list.get(0);
-        T data = map.get(key);
+        BinaryFileData data = map.get(key);
         list.remove(0);
         cacheCount--;
         cacheSize-=data.getFileSize();

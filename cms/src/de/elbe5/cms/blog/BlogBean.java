@@ -64,13 +64,13 @@ public class BlogBean extends DbBean {
         }
     }
 
-    public BlogEntryData getEntryData(int id) {
+    public BlogEntryData getBlogEntryData(int id) {
         Connection con = null;
         BlogEntryData data = new BlogEntryData();
         data.setId(id);
         try {
             con = getConnection();
-            readEntryData(con, data);
+            readBlogEntryData(con, data);
         } catch (SQLException se) {
             se.printStackTrace();
         } finally {
@@ -80,7 +80,7 @@ public class BlogBean extends DbBean {
     }
 
     private static String READ_ENTRY_SQL="select change_date,part_id,author_id,author_name,entry from t_blogentry where id=?";
-    public void readEntryData(Connection con, BlogEntryData data) throws SQLException {
+    public void readBlogEntryData(Connection con, BlogEntryData data) throws SQLException {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(READ_ENTRY_SQL);

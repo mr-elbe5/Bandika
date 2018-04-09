@@ -55,7 +55,7 @@ public class BlogActions extends CmsActions {
             }
             case openEditEntry: {
                 int id = RequestReader.getInt(request,"entryId");
-                BlogEntryData data = BlogBean.getInstance().getEntryData(id);
+                BlogEntryData data = BlogBean.getInstance().getBlogEntryData(id);
                 SessionWriter.setSessionObject(request, "entry", data);
                 return showEditEntry(request, response);
             }
