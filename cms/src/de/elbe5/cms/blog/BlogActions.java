@@ -51,7 +51,7 @@ public class BlogActions extends CmsActions {
                 data.setId(BlogBean.getInstance().getNextId());
                 data.setNew(true);
                 SessionWriter.setSessionObject(request, "entry", data);
-                return showEditEntry(request, response);
+                return showCreateEntry(request, response);
             }
             case openEditEntry: {
                 int id = RequestReader.getInt(request,"entryId");
@@ -64,7 +64,7 @@ public class BlogActions extends CmsActions {
                 if (data == null || data.getId() != RequestReader.getInt(request,"entryId"))
                     return false;
                 if (!data.readRequestData(request)) {
-                    return showEditEntry(request, response);
+                    return data.isNew() ? showCreateEntry(request, response) : showEditEntry(request, response);
                 }
                 data.prepareSave();
                 BlogBean.getInstance().saveEntryData(data);
@@ -82,6 +82,10 @@ public class BlogActions extends CmsActions {
 
     protected boolean showBlog(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/blog/blog.jsp");
+    }
+
+    protected boolean showCreateEntry(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/blog/createBlogEntry.jsp");
     }
 
     protected boolean showEditEntry(HttpServletRequest request, HttpServletResponse response) {

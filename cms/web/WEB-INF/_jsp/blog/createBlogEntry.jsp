@@ -16,7 +16,6 @@
 <%
     Locale locale= SessionReader.getSessionLocale(request);
     int partId = RequestReader.getInt(request,"partId");
-    int entryId = RequestReader.getInt(request,"entryId");
     BlogEntryData editEntry = (BlogEntryData) SessionReader.getSessionObject(request, "entry");
     assert editEntry!=null;
     List<BlogEntryData> entries = BlogBean.getInstance().getEntryList(partId);
@@ -31,23 +30,20 @@
         <div class="blogEntry">
             <div class="blogEntryTitle"><%=StringUtil.toHtml(entryData.getAuthorName())%>, <%=StringUtil.toHtmlDateTime(entryData.getChangeDate(),locale)%>:
             </div>
-            <% if (entryData.getId()==entryId){%>
-            <div id="text" class="blogEntryText ckeditField" contenteditable="true"><%=editEntry.getText()%></div>
-            <input type="hidden" name="text" value="<%=StringUtil.toHtml(editEntry.getText())%>" />
-            <%}else{%>
             <div class="blogEntryText"><%=entryData.getText()%>
             </div>
-            <%}%>
         </div>
-        <% if (entryData.getId()==entryId){%>
+        <%}%>
+        <div class="blogEntry">
+            <div id="text" class="blogEntryText ckeditField" contenteditable="true"><%=editEntry.getText()%></div>
+            <input type="hidden" name="text" value="<%=StringUtil.toHtml(editEntry.getText())%>" />
+        </div>
         <div class="buttonset topspace">
             <button class="primary" type="submit"><%=StringUtil.getHtml("_save", locale)%>
             </button>
             <button onclick="return sendBlogAction('showBlog');"><%=StringUtil.getHtml("_cancel", locale)%>
             </button>
         </div>
-        <%}%>
-        <%}%>
     </form>
 </div>
 <script type="text/javascript">
