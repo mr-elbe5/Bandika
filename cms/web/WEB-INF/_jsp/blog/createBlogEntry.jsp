@@ -28,7 +28,7 @@
         <input type="hidden" name="entryId" value="<%=editEntry.getId()%>"/>
         <% for (BlogEntryData entryData : entries) {%>
         <div class="blogEntry">
-            <div class="blogEntryTitle"><%=StringUtil.toHtml(entryData.getAuthorName())%>, <%=StringUtil.toHtmlDateTime(entryData.getChangeDate(),locale)%>:
+            <div class="blogEntryTitle"><%=StringUtil.toHtml(entryData.getAuthorName())%>, <%=StringUtil.toHtmlDateTime(entryData.getChangeDate(),locale)%>
             </div>
             <div class="blogEntryText"><%=entryData.getText()%>
             </div>

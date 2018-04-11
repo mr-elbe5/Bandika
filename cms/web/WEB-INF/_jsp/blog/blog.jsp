@@ -28,7 +28,7 @@
 <% for (BlogEntryData entryData : entries) {%>
 <div id="blogEntry<%=entryId%>" class="blogEntry">
     <div class="blogEntryTitle">
-        <%=StringUtil.toHtml(entryData.getAuthorName())%>, <%=StringUtil.toHtmlDateTime(entryData.getChangeDate(),locale)%>:
+        <%=StringUtil.toHtml(entryData.getAuthorName())%>, <%=StringUtil.toHtmlDateTime(entryData.getChangeDate(),locale)%>
     </div>
     <div class="blogEntryText"><%=entryData.getText()%>
         <%if (entryData.getAuthorId()==userId){%>

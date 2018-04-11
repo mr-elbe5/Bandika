@@ -29,7 +29,7 @@
         <input type="hidden" name="entryId" value="<%=editEntry.getId()%>"/>
         <% for (BlogEntryData entryData : entries) {%>
         <div class="blogEntry">
-            <div class="blogEntryTitle"><%=StringUtil.toHtml(entryData.getAuthorName())%>, <%=StringUtil.toHtmlDateTime(entryData.getChangeDate(),locale)%>:
+            <div class="blogEntryTitle"><%=StringUtil.toHtml(entryData.getAuthorName())%>, <%=StringUtil.toHtmlDateTime(entryData.getChangeDate(),locale)%>
             </div>
             <% if (entryData.getId()==entryId){%>
             <div id="text" class="blogEntryText ckeditField" contenteditable="true"><%=editEntry.getText()%></div>
