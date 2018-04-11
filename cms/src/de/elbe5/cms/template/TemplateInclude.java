@@ -67,11 +67,6 @@ public abstract class TemplateInclude implements Serializable {
         return sb.toString();
     }
 
-    public void completeOutputData(PageOutputData outputData){
-        outputData.addAttributes(attributes);
-        outputData.setContent(content);
-    }
-
     public abstract void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException;
 
     protected String toHtml(String src) {

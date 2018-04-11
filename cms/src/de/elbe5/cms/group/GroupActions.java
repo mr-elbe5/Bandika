@@ -56,10 +56,6 @@ public class GroupActions extends CmsActions {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 GroupData data = (GroupData) getSessionObject(request, "groupData");
-                data.readGroupRequestData(request);
-                if (!isDataComplete(data, request)) {
-                    return showAddGroupUser(request, response);
-                }
                 int userId = RequestReader.getInt(request, "userAddId");
                 if (userId != 0) {
                     data.getUserIds().add(userId);
@@ -81,7 +77,6 @@ public class GroupActions extends CmsActions {
                 if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
                     return false;
                 GroupData data = (GroupData) getSessionObject(request, "groupData");
-                data.readGroupRequestData(request);
                 List<Integer> ids = RequestReader.getIntegerList(request, "userRemoveId");
                 for (int userId : ids) {
                     data.getUserIds().remove(userId);

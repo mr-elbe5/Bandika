@@ -12,6 +12,7 @@ import de.elbe5.base.data.BaseData;
 import de.elbe5.base.util.StringWriteUtil;
 import de.elbe5.cms.page.PageOutputContext;
 import de.elbe5.cms.page.PageOutputData;
+import de.elbe5.webbase.util.TagAttributes;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -121,13 +122,18 @@ public class TemplateData extends BaseData implements Serializable {
             end=parsedCode.indexOf(placeholder,start);
             if (end==-1) throw new IOException("missing placeholder");
             writer.write(parsedCode.substring(start,end));
-            templateInclude.completeOutputData(outputData);
+            TagAttributes oldAttributes=outputData.getAttributes();
+            String oldContent=outputData.getContent();
+            outputData.setAttributes(templateInclude.getAttributes());
+            outputData.setContent(templateInclude.getContent());
             if (templateInclude.isDynamic() && outputContext.getRequest()==null){
                 writer.write(templateInclude.getPlaceholder(outputData));
             }
             else {
                 templateInclude.writeHtml(outputContext, outputData);
             }
+            outputData.setAttributes(oldAttributes);
+            outputData.setContent(oldContent);
             start=end+placeholder.length();
         }
         writer.write(parsedCode.substring(start));

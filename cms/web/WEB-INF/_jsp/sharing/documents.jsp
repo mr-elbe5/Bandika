@@ -58,10 +58,12 @@
         <%}%>
     </table>
 </fieldset>
+<% if (userId!=0){%>
 <div class="buttonset topspace">
     <button class="primary" onclick="return sendSharingAction('openCreateDocument',0);"><%=StringUtil.getHtml("_new", locale)%>
     </button>
 </div>
+<%}%>
 <script type="text/javascript">
     function sendSharingAction(action, fileId) {
         var params = {act:action,partId: <%=partId%>,fileId:fileId};

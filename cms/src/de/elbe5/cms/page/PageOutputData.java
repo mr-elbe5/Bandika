@@ -53,12 +53,8 @@ public class PageOutputData {
         return attributes;
     }
 
-    public void clearAttributes() {
-        this.attributes.clear();
-    }
-
-    public void addAttributes(TagAttributes attributes) {
-        this.attributes.putAll(attributes);
+    public void setAttributes(TagAttributes attributes) {
+        this.attributes=attributes;
     }
 
     public String getContent() {

@@ -33,7 +33,7 @@
         <%if (inherited) {%>
         <span> <%=StringUtil.getHtml("_inheritedHint", locale)%></span>
         <%} else {%>
-        <button type="submit" class="primary" disabled="disabled" ><%=StringUtil.getHtml("_save", locale)%>
+        <button type="submit" class="primary"><%=StringUtil.getHtml("_save", locale)%>
         </button>
         <%}%>
     </div>

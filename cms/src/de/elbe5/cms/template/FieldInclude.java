@@ -11,6 +11,7 @@ package de.elbe5.cms.template;
 import de.elbe5.cms.field.Field;
 import de.elbe5.cms.page.PageOutputContext;
 import de.elbe5.cms.page.PageOutputData;
+import de.elbe5.webbase.util.TagAttributes;
 
 import java.io.IOException;
 
@@ -24,9 +25,13 @@ public class FieldInclude extends TemplateInclude {
 
     public void writeHtml(PageOutputContext outputContext, PageOutputData outputData) throws IOException {
         Field field = outputData.getPartData().ensureField(getAttributes().get("name"), getAttributes().get("fieldType"));
-        outputData.addAttributes(attributes);
-        outputData.setContent(content);
+        TagAttributes oldAttributes=outputData.getAttributes();
+        String oldContent=outputData.getContent();
+        outputData.setAttributes(getAttributes());
+        outputData.setContent(getContent());
         field.appendFieldHtml(outputContext, outputData);
+        outputData.setAttributes(oldAttributes);
+        outputData.setContent(oldContent);
     }
 
 }
