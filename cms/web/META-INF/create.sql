@@ -268,9 +268,24 @@ CREATE TABLE IF NOT EXISTS t_blogentry(
   author_name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL DEFAULT '',
   entry TEXT NOT NULL DEFAULT '',
-  constraint t_logentry_pk PRIMARY KEY (id),
+  constraint t_blogentry_pk PRIMARY KEY (id),
   CONSTRAINT t_blogentry_fk1 FOREIGN KEY (part_id) REFERENCES t_page_part (id) ON DELETE CASCADE,
   CONSTRAINT t_blogentry_fk2 FOREIGN KEY (author_id) REFERENCES t_user (id) ON DELETE SET NULL
+);
+--
+CREATE TABLE IF NOT EXISTS t_forumentry(
+  id INTEGER NOT NULL,
+  change_date TIMESTAMP NOT NULL DEFAULT now(),
+  part_id INTEGER NOT NULL,
+  author_id INTEGER NULL,
+  author_name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL DEFAULT '',
+  parent_id INTEGER NULL,
+  entry TEXT NOT NULL DEFAULT '',
+  constraint t_forumentry_pk PRIMARY KEY (id),
+  CONSTRAINT t_forumentry_fk1 FOREIGN KEY (part_id) REFERENCES t_page_part (id) ON DELETE CASCADE,
+  CONSTRAINT t_forumentry_fk2 FOREIGN KEY (author_id) REFERENCES t_user (id) ON DELETE SET NULL,
+  CONSTRAINT t_forumentry_fk3 FOREIGN KEY (parent_id) REFERENCES t_forumentry (id) ON DELETE SET NULL
 );
 --
 CREATE TABLE IF NOT EXISTS t_calendarentry(

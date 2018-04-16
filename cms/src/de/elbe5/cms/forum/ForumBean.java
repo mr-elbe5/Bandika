@@ -6,7 +6,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.cms.blog;
+package de.elbe5.cms.forum;
 
 import de.elbe5.webbase.database.DbBean;
 
@@ -14,22 +14,22 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlogBean extends DbBean {
+public class ForumBean extends DbBean {
 
-    private static BlogBean instance = null;
+    private static ForumBean instance = null;
 
-    public static BlogBean getInstance() {
+    public static ForumBean getInstance() {
         if (instance == null)
-            instance = new BlogBean();
+            instance = new ForumBean();
         return instance;
     }
 
-    private static String UNCHANGED_SQL="select change_date from t_blogentry where id=?";
-    protected boolean unchanged(Connection con, BlogEntryData data) {
+    private static String UNCHANGED_SQL="select change_date from t_forumentry where id=?";
+    protected boolean unchanged(Connection con, ForumEntryData data) {
         return unchangedItem(con, UNCHANGED_SQL, data);
     }
 
-    public boolean saveBlogEntryData(BlogEntryData data) {
+    public boolean saveForumEntryData(ForumEntryData data) {
         Connection con = startTransaction();
         try {
             if (!unchanged(con, data)) {
@@ -37,16 +37,16 @@ public class BlogBean extends DbBean {
                 return false;
             }
             data.setChangeDate(getServerTime(con));
-            writeBlogEntryData(con, data);
+            writeForumEntryData(con, data);
             return commitTransaction(con);
         } catch (Exception e) {
             return rollbackTransaction(con, e);
         }
     }
 
-    private static String INSERT_ENTRY_SQL="insert into t_blogentry (change_date,part_id,author_id,author_name,entry,id) values (?,?,?,?,?,?)";
-    private static String UPDATE_ENTRY_SQL="update t_blogentry set change_date=?,part_id=?,author_id=?,author_name=?,entry=? where id=?";
-    protected void writeBlogEntryData(Connection con, BlogEntryData data) throws SQLException {
+    private static String INSERT_ENTRY_SQL="insert into t_forumentry (change_date,part_id,author_id,author_name,entry,id) values (?,?,?,?,?,?)";
+    private static String UPDATE_ENTRY_SQL="update t_forumentry set change_date=?,part_id=?,author_id=?,author_name=?,entry=? where id=?";
+    protected void writeForumEntryData(Connection con, ForumEntryData data) throws SQLException {
         PreparedStatement pst = null;
         try {
             String sql = data.isNew() ? INSERT_ENTRY_SQL : UPDATE_ENTRY_SQL;
@@ -64,13 +64,13 @@ public class BlogBean extends DbBean {
         }
     }
 
-    public BlogEntryData getBlogEntryData(int id) {
+    public ForumEntryData getForumEntryData(int id) {
         Connection con = null;
-        BlogEntryData data = new BlogEntryData();
+        ForumEntryData data = new ForumEntryData();
         data.setId(id);
         try {
             con = getConnection();
-            readBlogEntryData(con, data);
+            readForumEntryData(con, data);
         } catch (SQLException se) {
             se.printStackTrace();
         } finally {
@@ -79,8 +79,8 @@ public class BlogBean extends DbBean {
         return data;
     }
 
-    private static String READ_ENTRY_SQL="select change_date,part_id,author_id,author_name,entry from t_blogentry where id=?";
-    public void readBlogEntryData(Connection con, BlogEntryData data) throws SQLException {
+    private static String READ_ENTRY_SQL="select change_date,part_id,author_id,author_name,entry from t_forumentry where id=?";
+    public void readForumEntryData(Connection con, ForumEntryData data) throws SQLException {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(READ_ENTRY_SQL);
@@ -100,10 +100,10 @@ public class BlogBean extends DbBean {
         }
     }
 
-    private static String GET_LIST_SQL="select id,change_date,part_id,author_id,author_name,entry from t_blogentry " +
+    private static String GET_LIST_SQL="select id,change_date,part_id,author_id,author_name,entry from t_forumentry " +
             "where part_id=? order by id;";
-    public List<BlogEntryData> getEntryList(int teampartId) {
-        List<BlogEntryData> list = new ArrayList<>();
+    public List<ForumEntryData> getEntryList(int teampartId) {
+        List<ForumEntryData> list = new ArrayList<>();
         Connection con = null;
         PreparedStatement pst = null;
         try {
@@ -114,7 +114,7 @@ public class BlogBean extends DbBean {
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 i = 1;
-                BlogEntryData data = new BlogEntryData();
+                ForumEntryData data = new ForumEntryData();
                 data.setId(rs.getInt(i++));
                 data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                 data.setPartId(rs.getInt(i++));
@@ -132,7 +132,7 @@ public class BlogBean extends DbBean {
         return list;
     }
 
-    private static String DELETE_SQL="delete from t_blogentry where id=?";
+    private static String DELETE_SQL="delete from t_forumentry where id=?";
     public boolean deleteEntry(int id) throws SQLException {
         return deleteItem(DELETE_SQL, id);
     }

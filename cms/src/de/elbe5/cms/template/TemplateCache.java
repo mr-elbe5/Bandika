@@ -68,6 +68,8 @@ public class TemplateCache extends BaseCache {
                 return new SharedDocumentsControl();
             case BlogControl.KEY :
                 return new BlogControl();
+            case ForumControl.KEY :
+                return new ForumControl();
             case CalendarControl.KEY :
                 return new CalendarControl();
         }
