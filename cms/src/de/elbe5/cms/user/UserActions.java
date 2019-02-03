@@ -1,5 +1,5 @@
 /*
- Bandika  - A Java based modular Content Management System
+ Elbe 5 CMS - A Java based modular Content Management System
  Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -11,41 +11,43 @@ package de.elbe5.cms.user;
 import de.elbe5.base.data.BaseIdData;
 import de.elbe5.base.data.BinaryFileData;
 import de.elbe5.base.data.Locales;
-import de.elbe5.base.mail.Mailer;
-import de.elbe5.base.util.StringUtil;
 import de.elbe5.cms.application.AdminActions;
+import de.elbe5.cms.application.Strings;
 import de.elbe5.cms.configuration.Configuration;
-import de.elbe5.cms.servlet.CmsActions;
-import de.elbe5.webbase.rights.Right;
-import de.elbe5.webbase.rights.RightsCache;
-import de.elbe5.webbase.rights.SystemZone;
-import de.elbe5.webbase.servlet.*;
-import de.elbe5.webbase.user.LoginActions;
-import de.elbe5.webbase.user.UserSecurity;
+import de.elbe5.cms.page.JspPageData;
+import de.elbe5.cms.servlet.*;
+import de.elbe5.cms.rights.Right;
+import de.elbe5.cms.rights.RightsCache;
+import de.elbe5.cms.rights.SystemZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 
-public class UserActions extends CmsActions {
+public class UserActions extends ActionSet {
 
+    public static final String openLogin="openLogin";
+    public static final String login="login";
+    public static final String showCaptcha="showCaptcha";
+    public static final String logout="logout";
+    public static final String openEditGroup="openEditGroup";
+    public static final String openCreateGroup="openCreateGroup";
+    public static final String saveGroup="saveGroup";
+    public static final String deleteGroup="deleteGroup";
+    public static final String openEditUser="openEditUser";
+    public static final String openCreateUser="openCreateUser";
+    public static final String saveUser="saveUser";
+    public static final String deleteUser="deleteUser";
+    public static final String showPortrait="showPortrait";
     public static final String changeLocale="changeLocale";
     public static final String openProfile="openProfile";
     public static final String openChangePassword="openChangePassword";
     public static final String changePassword="changePassword";
     public static final String openChangeProfile="openChangeProfile";
     public static final String changeProfile="changeProfile";
-    public static final String showUserDetails="showUserDetails";
-    public static final String openEditUser="openEditUser";
-    public static final String openCreateUser="openCreateUser";
-    public static final String saveUser="saveUser";
-    public static final String deleteUser="deleteUser";
-    public static final String openEditUsers="openEditUsers";
-    public static final String openRegisterUser="openRegisterUser";
-    public static final String registerUser="registerUser";
-    public static final String openApproveRegistration="openApproveRegistration";
-    public static final String approveRegistration="approveRegistration";
-    public static final String showPortrait="showPortrait";
+    public static final String openRegistration ="openRegistration";
+    public static final String register="register";
+    public static final String verifyEmail ="verifyEmail";
 
     public static final String KEY = "user";
 
@@ -58,6 +60,196 @@ public class UserActions extends CmsActions {
 
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
         switch (actionName) {
+            case openLogin: {
+                return showLogin(request, response);
+            }
+            case login: {
+                if (!RequestReader.isPostback(request)) {
+                    return false;
+                }
+                String login = RequestReader.getString(request, "login");
+                String pwd = RequestReader.getString(request, "password");
+                if (login.length() == 0 || pwd.length() == 0) {
+                    ErrorMessage.setMessageByKey(request, Strings._notComplete);
+                    return new UserActions().execute(request, response, openLogin);
+                }
+                UserData data = UserBean.getInstance().loginUser(login, pwd);
+                if (data == null) {
+                    ErrorMessage.setMessageByKey(request, Strings._badLogin);
+                    return new UserActions().execute(request, response, openLogin);
+                }
+                SessionWriter.setSessionLoginData(request, data);
+                SessionWriter.setSessionLocale(request, data.getLocale());
+                data.checkRights();
+                return showHome(request, response);
+            }
+            case showCaptcha: {
+                String captcha = (String) RequestReader.getSessionObject(request, "captcha");
+                if (captcha==null)
+                    return false;
+                BinaryFileData data = UserSecurity.getCaptcha(captcha);
+                assert data != null;
+                return sendBinaryResponse(request, response, data.getFileName(), data.getContentType(), data.getBytes(), false);
+            }
+            case logout: {
+                SessionWriter.setSessionLoginData(request, null);
+                SessionWriter.resetSession(request);
+                RequestWriter.setMessageKey(request, Strings._loggedOut.toString());
+                return showHome(request, response);
+            }
+            case openRegistration: {
+                request.setAttribute("userData", new UserData());
+                return showRegistration(request, response);
+            }
+            case register: {
+                UserData user=new UserData();
+                request.setAttribute("userData", user);
+                if (!user.readRegistrationRequestData(request))
+                    return showRegistration(request, response);
+                RequestError error= new RequestError();
+                if (UserBean.getInstance().doesLoginExist(user.getLogin())){
+                    error.addErrorField("login");
+                    error.addErrorString(Strings._loginExistsError.string(SessionReader.getSessionLocale(request)));
+                }
+                if (UserBean.getInstance().doesEmailExist(user.getEmail())){
+                    error.addErrorField("email");
+                    error.addErrorString(Strings._emailInUseError.string(SessionReader.getSessionLocale(request)));
+                }
+                if (!error.isEmpty()){
+                    error.setError(request);
+                    return showRegistration(request, response);
+                }
+                user.setApproved(false);
+                user.setApprovalCode(UserSecurity.getApprovalString());
+                user.setId(UserBean.getInstance().getNextId());
+                user.setLocale(SessionReader.getSessionLocale(request));
+                user.setNew(true);
+                if (!UserBean.getInstance().saveUser(user)){
+                    ErrorMessage.setMessageByKey(request, Strings._saveError);
+                    return showRegistration(request, response);
+                }
+                Locale locale=SessionReader.getSessionLocale(request);
+                String mailText=Strings._registrationVerifyMail.string(locale)+" "+ SessionReader.getSessionHost(request)+"/user.srv?act="+ verifyEmail +"&userId="+user.getId()+"&approvalCode="+user.getApprovalCode();
+                if (!sendPlainMail(user.getEmail(),Strings._registrationRequest.string(locale),mailText)){
+                    ErrorMessage.setMessageByKey(request, Strings._emailError);
+                    return showRegistration(request, response);
+                }
+                return showRegistrationDone(request, response);
+            }
+            case verifyEmail: {
+                int userId = RequestReader.getInt(request, "userId");
+                String approvalCode = RequestReader.getString(request, "approvalCode");
+                UserData data = UserBean.getInstance().getUser(userId);
+                if (approvalCode.isEmpty() || !approvalCode.equals(data.getApprovalCode())){
+                    ErrorMessage.setMessageByKey(request,"_emailVerificationFailed");
+                    return showHome(request,response);
+                }
+                UserBean.getInstance().saveUserVerifyEmail(data);
+                Locale locale=SessionReader.getSessionLocale(request);
+                String mailText=Strings._registrationRequestMail.string(locale)+" "+ data.getName() + "(" +data.getId() + ")";
+                if (!sendPlainMail(Configuration.getInstance().getMailReceiver(),Strings._registrationRequest.string(locale),mailText)){
+                    ErrorMessage.setMessageByKey(request, Strings._emailError);
+                    return showRegistration(request, response);
+                }
+                return showEmailVerification(request, response);
+            }
+            case openEditGroup: {
+                if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                    return forbidden(request,response);
+                int groupId = RequestReader.getInt(request, "groupId");
+                GroupData data = GroupBean.getInstance().getGroup(groupId);
+                data.checkRights();
+                SessionWriter.setSessionObject(request, "groupData", data);
+                return showEditGroup(request, response);
+            }
+            case openCreateGroup: {
+                if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                    return forbidden(request,response);
+                GroupData data = new GroupData();
+                data.setNew(true);
+                data.setId(GroupBean.getInstance().getNextId());
+                SessionWriter.setSessionObject(request, "groupData", data);
+                return showEditGroup(request, response);
+            }
+            case saveGroup: {
+                if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                    return forbidden(request,response);
+                GroupData data = (GroupData) RequestReader.getSessionObject(request, "groupData");
+                if (data==null)
+                    return noData(request,response);
+                if (!data.readRequestData(request)){
+                    ErrorMessage.setMessageByKey(request, Strings._notComplete);
+                    return showEditGroup(request, response);
+                }
+                GroupBean.getInstance().saveGroup(data);
+                RightsCache.getInstance().setDirty();
+                return closeDialogWithRedirect(request,response,"/admin.srv?act="+ AdminActions.openSystemAdministration+"&groupId=" + data.getId(), Strings._groupSaved);
+            }
+            case deleteGroup: {
+                if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                    return forbidden(request,response);
+                int id = RequestReader.getInt(request, "groupId");
+                if (id < BaseIdData.ID_MIN) {
+                    ErrorMessage.setMessageByKey(request, Strings._notDeletable);
+                    return sendForwardResponse(request, response, "/admin.srv?act="+ AdminActions.openSystemAdministration);
+                }
+                GroupBean.getInstance().deleteGroup(id);
+                RightsCache.getInstance().setDirty();
+                SuccessMessage.setMessageByKey(request, Strings._groupDeleted);
+                return sendForwardResponse(request,response,"/admin.srv?act="+ AdminActions.openSystemAdministration);
+            }
+            case openEditUser: {
+                if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                    return forbidden(request,response);
+                int userId = RequestReader.getInt(request, "userId");
+                UserData data = UserBean.getInstance().getUser(userId);
+                SessionWriter.setSessionObject(request, "userData", data);
+                return showEditUser(request, response);
+            }
+            case openCreateUser: {
+                if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                    return forbidden(request,response);
+                UserData data = new UserData();
+                data.setNew(true);
+                data.setId(UserBean.getInstance().getNextId());
+                SessionWriter.setSessionObject(request, "userData", data);
+                return showEditUser(request, response);
+            }
+            case saveUser: {
+                if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                    return forbidden(request,response);
+                UserData data = (UserData) RequestReader.getSessionObject(request, "userData");
+                if (data==null)
+                    return noData(request,response);
+                if (!data.readRequestData(request)){
+                    ErrorMessage.setMessageByKey(request, Strings._notComplete);
+                    return showEditUser(request, response);
+                }
+                UserBean.getInstance().saveUser(data);
+                RightsCache.getInstance().setDirty();
+                if (SessionReader.getLoginId(request) == data.getId()) {
+                    data.checkRights();
+                    SessionWriter.setSessionLoginData(request, data);
+                }
+                return closeDialogWithRedirect(request,response,"/admin.srv?act="+ AdminActions.openSystemAdministration+"&userId=" + data.getId(), Strings._userSaved);
+            }
+            case deleteUser: {
+                if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
+                    return forbidden(request,response);
+                int id = RequestReader.getInt(request, "userId");
+                if (id < BaseIdData.ID_MIN) {
+                    ErrorMessage.setMessageByKey(request, Strings._notDeletable);
+                    return sendForwardResponse(request, response, "/admin.srv?act=" + AdminActions.openSystemAdministration);
+                }
+                UserBean.getInstance().deleteUser(id);
+                SuccessMessage.setMessageByKey(request, Strings._userDeleted);
+                return sendForwardResponse(request,response,"/admin.srv?act="+ AdminActions.openSystemAdministration);
+            }
+            case showPortrait: {
+                int userId = RequestReader.getInt(request, "userId");
+                BinaryFileData file = UserBean.getInstance().getBinaryPortraitData(userId);
+                return file != null && sendBinaryResponse(request, response, file.getFileName(), file.getContentType(), file.getBytes(), false);
+            }
             case changeLocale: {
                 String language = RequestReader.getString(request, "language");
                 Locale locale = new Locale(language);
@@ -67,7 +259,7 @@ public class UserActions extends CmsActions {
             }
             case openProfile: {
                 if (!SessionReader.isLoggedIn(request))
-                    return false;
+                    return forbidden(request,response);
                 return showProfile(request, response);
             }
             case openChangePassword: {
@@ -75,216 +267,48 @@ public class UserActions extends CmsActions {
             }
             case changePassword: {
                 if (!SessionReader.isLoggedIn(request) || SessionReader.getLoginId(request) != RequestReader.getInt(request, "userId"))
-                    return false;
+                    return forbidden(request,response);
                 UserData user = UserBean.getInstance().getUser(SessionReader.getSessionLoginData(request).getId());
-                checkObject(user);
+                if (user==null)
+                    return noData(request,response);
                 String oldPassword = RequestReader.getString(request, "oldPassword");
                 String newPassword = RequestReader.getString(request, "newPassword1");
                 String newPassword2 = RequestReader.getString(request, "newPassword2");
                 if (newPassword.length() < UserData.MIN_PASSWORD_LENGTH) {
-                    RequestError.setError(request, new RequestError(StringUtil.getString("_passwordLengthError", SessionReader.getSessionLocale(request))));
+                    ErrorMessage.setMessageByKey(request, Strings._passwordLengthError);
                     return showChangePassword(request, response);
                 }
                 if (!newPassword.equals(newPassword2)) {
-                    RequestError.setError(request, new RequestError(StringUtil.getString("_passwordsDontMatch", SessionReader.getSessionLocale(request))));
+                    ErrorMessage.setMessageByKey(request, Strings._passwordsDontMatch);
                     return showChangePassword(request, response);
                 }
-                UserLoginData data = LoginBean.getInstance().loginUser(user.getLogin(), oldPassword);
+                UserData data = UserBean.getInstance().loginUser(user.getLogin(), oldPassword);
                 if (data == null) {
-                    RequestError.setError(request, new RequestError(StringUtil.getString("_badLogin", SessionReader.getSessionLocale(request))));
+                    ErrorMessage.setMessageByKey(request, Strings._badLogin);
                     return showChangePassword(request, response);
                 }
                 data.setPassword(newPassword);
                 UserBean.getInstance().saveUserPassword(data);
-                RequestWriter.setMessageKey(request, "_passwordChanged");
-                return closeLayerToUrl(request, response, "/user.srv?act="+ UserActions.openProfile, "_passwordChanged");
+                return closeDialogWithRedirect(request,response,"/user.srv?act="+ UserActions.openProfile, Strings._passwordChanged);
             }
             case openChangeProfile: {
                 return SessionReader.isLoggedIn(request) && showChangeProfile(request, response);
             }
             case changeProfile: {
-                if (!SessionReader.isLoggedIn(request) || SessionReader.getLoginId(request) != RequestReader.getInt(request, "userId"))
-                    return false;
-                int userId=SessionReader.getSessionLoginData(request).getId();
+                int userId = RequestReader.getInt(request, "userId");
+                if (!SessionReader.isLoggedIn(request) || SessionReader.getLoginId(request) != userId)
+                    return forbidden(request,response);
                 UserData data = UserBean.getInstance().getUser(userId);
-                data.readUserProfileRequestData(request);
-                if (!data.isCompleteProfile()) {
-                    RequestError err = new RequestError();
-                    err.addErrorString(StringUtil.getHtml("_notComplete", SessionReader.getSessionLocale(request)));
-                    RequestError.setError(request, err);
+                if (!data.readProfileRequestData(request)){
+                    ErrorMessage.setMessageByKey(request, Strings._notComplete);
                     return showChangeProfile(request, response);
                 }
                 UserBean.getInstance().saveUserProfile(data);
                 SessionWriter.setSessionLoginData(request, data);
-                RequestWriter.setMessageKey(request, "_profileChanged");
-                return closeLayerToUrl(request, response, "/user.srv?act="+ UserActions.openProfile, "_profileChanged");
-            }
-            case showUserDetails: {
-                return hasSystemRight(request, SystemZone.USER, Right.EDIT) && showUserDetails(request, response);
-            }
-            case openEditUser: {
-                if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
-                    return false;
-                int userId = RequestReader.getInt(request, "userId");
-                UserData data = UserBean.getInstance().getUser(userId);
-                data.prepareEditing();
-                SessionWriter.setSessionObject(request, "userData", data);
-                return showEditUser(request, response);
-            }
-            case openCreateUser: {
-                if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
-                    return false;
-                UserData data = new UserData();
-                data.setNew(true);
-                data.setId(UserBean.getInstance().getNextId());
-                data.prepareEditing();
-                SessionWriter.setSessionObject(request, "userData", data);
-                return showEditUser(request, response);
-            }
-            case saveUser: {
-                if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
-                    return false;
-                UserData data = (UserData) getSessionObject(request, "userData");
-                data.readUserRequestData(request);
-                if (!isDataComplete(data, request)) {
-                    return showEditUser(request, response);
-                }
-                UserBean.getInstance().saveUser(data);
-                RightsCache.getInstance().setDirty();
-                if (SessionReader.getLoginId(request) == data.getId()) {
-                    data.checkRights();
-                    SessionWriter.setSessionLoginData(request, data);
-                }
-                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration+"&userId=" + data.getId(), "_userSaved");
-            }
-            case deleteUser: {
-                if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
-                    return false;
-                int id = RequestReader.getInt(request, "userId");
-                if (id < BaseIdData.ID_MIN) {
-                    addError(request, StringUtil.getString("_notDeletable", SessionReader.getSessionLocale(request)));
-                    return sendForwardResponse(request, response, "/admin.srv?act=" + AdminActions.openAdministration);
-                }
-                UserBean.getInstance().deleteUser(id);
-                RequestWriter.setMessageKey(request, "_userDeleted");
-                return sendForwardResponse(request, response, "/admin.srv?act="+ AdminActions.openAdministration);
-            }
-            case openEditUsers: {
-                if (!hasSystemRight(request, SystemZone.USER, Right.EDIT))
-                    return false;
-                UserData data = new UserData();
-                data.setNew(true);
-                data.setId(UserBean.getInstance().getNextId());
-                data.prepareEditing();
-                SessionWriter.setSessionObject(request, "userData", data);
-                return showEditUsers(request, response);
-            }
-            case openRegisterUser: {
-                UserData data = new UserData();
-                data.setId(LoginBean.getInstance().getNextId());
-                data.setNew(true);
-                SessionWriter.setSessionObject(request, "userData", data);
-                SessionWriter.setSessionObject(request, "captcha", UserSecurity.generateCaptchaString());
-                return showRegisterUser(request, response);
-            }
-            case registerUser: {
-                UserData data = (UserData) getSessionObject(request, "userData");
-                String captcha = (String) getSessionObject(request, "captcha");
-                if (captcha == null || captcha.isEmpty()) {
-                    throw new HttpException(HttpServletResponse.SC_NO_CONTENT);
-                }
-                data.setPassword(UserSecurity.generateSimplePassword());
-                if (!captcha.equals(RequestReader.getString(request, "captcha"))) {
-                    RequestError.setError(request, new RequestError(StringUtil.getString("_badCaptcha", SessionReader.getSessionLocale(request))));
-                    SessionWriter.setSessionObject(request, "captcha", UserSecurity.generateCaptchaString());
-                    return showRegisterUser(request, response);
-                }
-                data.readUserRegistrationData(request);
-                if (!isDataComplete(data, request)) {
-                    SessionWriter.setSessionObject(request, "captcha", UserSecurity.generateCaptchaString());
-                    return showRegisterUser(request, response);
-                }
-                if (LoginBean.getInstance().doesLoginExist(data.getLogin())) {
-                    RequestError.setError(request, new RequestError(StringUtil.getString("_loginExists", SessionReader.getSessionLocale(request))));
-                    SessionWriter.setSessionObject(request, "captcha", UserSecurity.generateCaptchaString());
-                    return showRegisterUser(request, response);
-                }
-                data.setApprovalCode(UserSecurity.getApprovalString());
-                SessionWriter.removeSessionObject(request, "captcha");
-                Mailer mailer = Configuration.getInstance().getMailer();
-                mailer.setTo(data.getEmail());
-                StringBuffer url = request.getRequestURL();
-                url.append("?act=openApproveRegistration");
-                String text = String.format(StringUtil.getString("_registrationMail", SessionReader.getSessionLocale(request)), data.getApprovalCode(), url.toString());
-                mailer.setText(text);
-                boolean emailSent = false;
-                try {
-                    emailSent = mailer.sendMail();
-                } catch (Exception ignore) {
-                }
-                if (!emailSent) {
-                    RequestError.setError(request, new RequestError(StringUtil.getString("_emailSendError", SessionReader.getSessionLocale(request))));
-                    SessionWriter.setSessionObject(request, "captcha", UserSecurity.generateCaptchaString());
-                    return showRegisterUser(request, response);
-                }
-                mailer = Configuration.getInstance().getMailer();
-                mailer.setTo(data.getEmail());
-                text = String.format(StringUtil.getString("_passwordMail", SessionReader.getSessionLocale(request)), data.getPassword());
-                mailer.setText(text);
-                emailSent = false;
-                try {
-                    emailSent = mailer.sendMail();
-                } catch (Exception ignore) {
-                }
-                if (!emailSent) {
-                    RequestError.setError(request, new RequestError(StringUtil.getString("_emailSendError", SessionReader.getSessionLocale(request))));
-                    SessionWriter.setSessionObject(request, "captcha", UserSecurity.generateCaptchaString());
-                    return showRegisterUser(request, response);
-                }
-                LoginBean.getInstance().saveLogin(data);
-                SessionWriter.removeSessionObject(request, "userData");
-                request.setAttribute("userData", data);
-                return showUserRegistered(request, response);
-            }
-            case openApproveRegistration: {
-                UserData data = new UserData();
-                SessionWriter.setSessionObject(request, "userData", data);
-                return showApproveRegistration(request, response);
-            }
-            case approveRegistration: {
-                getSessionObject(request, "userData");
-                String login = RequestReader.getString(request, "login");
-                String approvalCode = RequestReader.getString(request, "approvalCode");
-                String oldPassword = RequestReader.getString(request, "oldPassword");
-                String newPassword = RequestReader.getString(request, "newPassword1");
-                String newPassword2 = RequestReader.getString(request, "newPassword2");
-                if (login.length() == 0 || approvalCode.length() == 0 || oldPassword.length() == 0 || newPassword.length() == 0 || newPassword2.length() == 0) {
-                    RequestError.setError(request, new RequestError(StringUtil.getString("_notComplete", SessionReader.getSessionLocale(request))));
-                    return showApproveRegistration(request, response);
-                }
-                UserLoginData registeredUser = LoginBean.getInstance().getLogin(login, approvalCode, oldPassword);
-                if (registeredUser == null) {
-                    RequestError.setError(request, new RequestError(StringUtil.getString("_badLogin", SessionReader.getSessionLocale(request))));
-                    return showApproveRegistration(request, response);
-                }
-                if (!newPassword.equals(newPassword2)) {
-                    RequestError.setError(request, new RequestError(StringUtil.getString("_passwordsDontMatch", SessionReader.getSessionLocale(request))));
-                    return showApproveRegistration(request, response);
-                }
-                registeredUser.setPassword(newPassword);
-                registeredUser.setApproved(true);
-                registeredUser.setLocked(false);
-                registeredUser.setFailedLoginCount(0);
-                LoginBean.getInstance().saveLogin(registeredUser);
-                return showRegistrationApproved(request, response);
-            }
-            case showPortrait: {
-                int userId = RequestReader.getInt(request, "userId");
-                BinaryFileData file = UserBean.getInstance().getBinaryPortraitData(userId);
-                return file != null && sendBinaryResponse(request, response, file.getFileName(), file.getContentType(), file.getBytes());
+                return closeDialogWithRedirect(request,response,"/user.srv?act="+ UserActions.openProfile, Strings._profileChanged);
             }
             default: {
-                return sendForwardResponse(request, response, "/login.srv?act="+ LoginActions.openLogin);
+                return showLogin(request, response);
             }
         }
     }
@@ -294,8 +318,22 @@ public class UserActions extends CmsActions {
         return KEY;
     }
 
+    protected boolean showLogin(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/user/login.jsp");
+    }
+
+    protected boolean showEditGroup(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/user/editGroup.ajax.jsp");
+    }
+
+    protected boolean showEditUser(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/user/editUser.ajax.jsp");
+    }
+
     protected boolean showProfile(HttpServletRequest request, HttpServletResponse response) {
-        return setJspResponse(request, response, "/WEB-INF/_jsp/user/profile.jsp");
+        JspPageData pageData=new JspPageData();
+        pageData.setJsp("/WEB-INF/_jsp/user/profile.jsp");
+        return setPageResponse(request, response, pageData);
     }
 
     protected boolean showChangePassword(HttpServletRequest request, HttpServletResponse response) {
@@ -306,32 +344,22 @@ public class UserActions extends CmsActions {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/user/changeProfile.ajax.jsp");
     }
 
-    protected boolean showEditUser(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/user/editUser.ajax.jsp");
+    protected boolean showRegistration(HttpServletRequest request, HttpServletResponse response) {
+        JspPageData pageData=new JspPageData();
+        pageData.setJsp("/WEB-INF/_jsp/user/registration.jsp");
+        return setPageResponse(request, response, pageData);
     }
 
-    protected boolean showUserDetails(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/user/userDetails.ajax.jsp");
+    protected boolean showRegistrationDone(HttpServletRequest request, HttpServletResponse response) {
+        JspPageData pageData=new JspPageData();
+        pageData.setJsp("/WEB-INF/_jsp/user/registrationDone.jsp");
+        return setPageResponse(request, response, pageData);
     }
 
-    protected boolean showEditUsers(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/user/editUsers.ajax.jsp");
-    }
-
-    protected boolean showRegisterUser(HttpServletRequest request, HttpServletResponse response) {
-        return setJspResponse(request, response, "/WEB-INF/_jsp/user/registerUser.jsp");
-    }
-
-    protected boolean showUserRegistered(HttpServletRequest request, HttpServletResponse response) {
-        return setJspResponse(request, response, "/WEB-INF/_jsp/user/userRegistered.jsp");
-    }
-
-    protected boolean showApproveRegistration(HttpServletRequest request, HttpServletResponse response) {
-        return setJspResponse(request, response, "/WEB-INF/_jsp/user/approveRegistration.jsp");
-    }
-
-    protected boolean showRegistrationApproved(HttpServletRequest request, HttpServletResponse response) {
-        return setJspResponse(request, response, "/WEB-INF/_jsp/user/registrationApproved.jsp");
+    protected boolean showEmailVerification(HttpServletRequest request, HttpServletResponse response) {
+        JspPageData pageData=new JspPageData();
+        pageData.setJsp("/WEB-INF/_jsp/user/verifyRegistrationEmail.jsp");
+        return setPageResponse(request, response, pageData);
     }
 
 }

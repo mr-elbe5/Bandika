@@ -1,0 +1,66 @@
+/*!
+ * CSS extensions for elbe5
+ */
+@import "global";
+@import "common";
+
+body.login {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+#searchboxform{
+  .form-control{
+    height: auto;
+    padding: 0 0.75rem;
+  }
+  .btn{
+    padding: 0 0.4rem;
+  }
+}
+
+table.searchResults{
+  td,th{
+    padding: 1rem;
+  }
+}
+
+div#pageContainer {
+  background: #ffffff;
+}
+
+div#pageContent {
+  h1, h2, h3{
+    margin: 0;
+  }
+
+  .headerBox{
+    padding: 0.5rem 1rem;
+  }
+
+  .headerBox h1{
+    text-align: center;
+  }
+
+  .htmlBox{
+    background: $white;
+    padding: 1rem;
+  }
+
+  .imageBox{
+    background: $white;
+    padding: 0;
+
+    img{
+      width: 100%;
+    }
+  }
+
+  h3.partHeader{
+    background: $color-darkgray;
+    padding: 0.5rem 1rem;
+  }
+}

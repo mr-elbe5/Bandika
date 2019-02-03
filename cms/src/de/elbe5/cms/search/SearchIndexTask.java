@@ -1,5 +1,5 @@
 /*
- Bandika  - A Java based modular Content Management System
+ Elbe 5 CMS - A Java based modular Content Management System
  Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -12,21 +12,26 @@ import de.elbe5.base.data.Locales;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.cms.timer.TimerBean;
-import de.elbe5.cms.timer.TimerTask;
+import de.elbe5.cms.timer.TimerTaskData;
 
 import java.time.LocalDateTime;
 
-public class SearchIndexTask extends TimerTask {
+public class SearchIndexTask extends TimerTaskData {
 
     @Override
     public String getName() {
         return "searchindex";
     }
 
+    @Override
+    public String getDisplayName() {
+        return "Search Index Task";
+    }
+
     public boolean execute(LocalDateTime executionTime, LocalDateTime checkTime) {
         Log.log("indexing content for search at " + StringUtil.toHtmlDateTime(TimerBean.getInstance().getServerTime(), Locales.getInstance().getDefaultLocale()));
-        SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_CONTENT, 0, null));
-        SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_USERS, 0, null));
+        SearchQueue.getInstance().addAction(SearchQueue.ACTION_INDEX_PAGES);
+        SearchQueue.getInstance().addAction(SearchQueue.ACTION_INDEX_USERS);
         return true;
     }
 

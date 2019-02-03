@@ -1,5 +1,5 @@
 /*
- Bandika  - A Java based modular Content Management System
+ Elbe 5 CMS - A Java based modular Content Management System
  Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -8,7 +8,7 @@
  */
 package de.elbe5.cms.search;
 
-import de.elbe5.webbase.application.AppContextListener;
+import de.elbe5.cms.application.AppContextListener;
 import de.elbe5.base.thread.BaseThread;
 
 import java.util.ArrayList;
@@ -17,6 +17,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SearchQueue {
+
+    public static final int ACTION_INDEX_PAGES = 1;
+    public static final int ACTION_INDEX_USERS = 2;
 
     private static SearchQueue instance = null;
 
@@ -27,25 +30,18 @@ public class SearchQueue {
         return instance;
     }
 
-    protected List<SearchQueueAction> actionList = Collections.synchronizedList(new LinkedList<SearchQueueAction>());
+    protected List<Integer> actionList = Collections.synchronizedList(new LinkedList<>());
     protected final Object lockObj = 1;
     protected ActionThread actionThread = null;
 
-    public void itemChanged(String messageKey, String action, String item, int itemId, boolean internal) {
-
-    }
-
-    public void onItemChanged(String type, String action, String name) {
-    }
-
-    public void addAction(SearchQueueAction data) {
+    public void addAction(int actionId) {
         if (actionList.size() > 0) {
-            SearchQueueAction lastData = actionList.get(actionList.size() - 1);
-            if (lastData.isEqual(data)) {
+            int lastData = actionList.get(actionList.size() - 1);
+            if (lastData==actionId) {
                 return;
             }
         }
-        actionList.add(data);
+        actionList.add(actionId);
         if (actionThread == null) {
             synchronized (lockObj) {
                 if (actionThread == null) {
@@ -57,36 +53,20 @@ public class SearchQueue {
         }
     }
 
-    protected void executeAction(SearchQueueAction data) {
-        if (data == null)
+    protected void executeAction(int actionId) {
+        if (actionId == 0)
             return;
-        switch (data.getActionId()) {
-            case SearchQueueAction.ACTION_INDEX_ALL_CONTENT:
-                SearchBean.getInstance().indexAllContent();
+        switch (actionId) {
+            case ACTION_INDEX_PAGES:
+                SearchBean.getInstance().indexPages();
                 break;
-            case SearchQueueAction.ACTION_INDEX_ALL_USERS:
-                SearchBean.getInstance().indexAllUsers();
-                break;
-            case SearchQueueAction.ACTION_ADD_ID:
-                SearchBean.getInstance().addItem(data.getId(), data.getDataType());
-                break;
-            case SearchQueueAction.ACTION_UPDATE_ID:
-                SearchBean.getInstance().updateItem(data.getId(), data.getDataType());
-                break;
-            case SearchQueueAction.ACTION_DELETE_ID:
-                SearchBean.getInstance().deleteItem(data.getId(), data.getDataType());
+            case ACTION_INDEX_USERS:
+                SearchBean.getInstance().indexUsers();
                 break;
         }
     }
 
-    public SearchQueueAction getRunningAction() {
-        ActionThread th = actionThread;
-        if (th == null)
-            return null;
-        return th.getCurrentAction();
-    }
-
-    public List<SearchQueueAction> getActions() {
+    public List<Integer> getActions() {
         return new ArrayList<>(actionList);
     }
 
@@ -100,27 +80,27 @@ public class SearchQueue {
     private class ActionThread extends BaseThread {
 
         public int SLEEP_INTERVAL = 500;
-        protected SearchQueueAction data = null;
+        protected int actionId = 0;
 
         public ActionThread(String name) {
             super(name);
         }
 
-        public SearchQueueAction getCurrentAction() {
-            return data;
+        public int getCurrentAction() {
+            return actionId;
         }
 
         public void run() {
             while (running) {
-                data = null;
+                actionId = 0;
                 try {
                     if (!actionList.isEmpty())
-                        data = actionList.remove(0);
-                    executeAction(data);
+                        actionId = actionList.remove(0);
+                    executeAction(actionId);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (data == null) {
+                if (actionId == 0) {
                     if (!running)
                         break;
                     try {

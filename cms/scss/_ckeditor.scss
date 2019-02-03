@@ -1,0 +1,67 @@
+@import "global";
+
+div.imgBox, p.imgBox{
+  overflow:hidden;
+
+  img{
+    display: block;
+    width: 100%;
+    margin: 0;
+  }
+
+  &.left66{
+    img{
+      width: 66%;
+      float:left;
+      margin-right: 1rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  &.left50{
+    img{
+      width: 50%;
+      float:left;
+      margin-right: 1rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  &.right66{
+    img{
+      width: 66%;
+      float:right;
+      margin-left: 1rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  &.right50{
+    img{
+      width: 50%;
+      float:right;
+      margin-left: 1rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+}
+
+div.codeBox, p.codeBox{
+  font-family: 'Courier New', Monospace, sans-serif;
+  padding: 0.5em;
+  max-height: 20em;
+  overflow: scroll;
+}
+
+a.link::before{
+  content : "\203A";
+  padding-right: 0.25em;
+}
+
+a.mail::before{
+  content: "\f003";
+  font-family: FontAwesome;
+  padding-right: 0.25em;
+}
+

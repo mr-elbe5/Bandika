@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cms:templates xmlns:cms="https://elbe5.de" >
+    <!-- master -->
+    <cms:template type="MASTER" name="defaultMaster" displayName="Default Master Page">
+        <!DOCTYPE html>
+        <html lang="en">
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+                <cms:head />
+                <link rel="shortcut icon" href="/favicon.ico"/>
+                <link rel="stylesheet" href="/_statics/css/bootstrap.min.css" />
+                <link rel="stylesheet" href="/_statics/css/cms.css"/>
+                <link rel="stylesheet" href="/_statics/css/page.css"/>
+                <script type="text/javascript" src="/_statics/js/jquery-1.12.4.min.js"></script>
+                <script type="text/javascript" src="/_statics/js/bootstrap.bundle.min.js"></script>
+                <script type="text/javascript" src="/_statics/js/bootstrap.tree.js"></script>
+                <script type="text/javascript" src="/_statics/ckeditor/ckeditor.js"></script>
+                <script type="text/javascript" src="/_statics/ckeditor/adapters/jquery.js"></script>
+                <script type="text/javascript" src="/_statics/js/ace.js"></script>
+                <script type="text/javascript" src="/_statics/js/cms.js"></script>
+                <script type="text/javascript" src="/_statics/js/page.js"></script>
+            </head>
+            <body>
+                <header>
+                    <div class="container">
+                        <div class="topheader row">
+                            <section class="col-12 sysnav">
+                                <cms:sysnav/>
+                            </section>
+                            <section class="col-12 logo">
+                                <a href="/"><img src="/_statics/img/logo-light.png" alt="" /></a>
+                            </section>
+                        </div>
+                        <div class="menuheader row">
+                            <section class="col-9 menu">
+                                <cms:topnav />
+                            </section>
+                            <div class="col-3 searchbox">
+                                <cms:searchbox />
+                            </div>
+                        </div>
+                        <div>
+                            <section class="bc">
+                                <cms:breadcrumb />
+                            </section>
+                        </div>
+                    </div>
+                </header>
+                <main id="main" role="main">
+                    <div id="pageContainer" class="container">
+                        <cms:pagecontent />
+                    </div>
+                </main>
+                <footer>
+                    <div class="container">
+                        <cms:footernav/>
+                    </div>
+                </footer>
+                <cms:modal/>
+            </body>
+        </html>
+    </cms:template>
+    <!-- pages -->
+    <cms:template type="PAGE" name="homePage" displayName="Home Page Layout">
+        <cms:message />
+        <section class="contentTop">
+            <cms:section name="top"></cms:section>
+        </section>
+        <div class="row">
+            <section class="col-md-8 contentSection">
+                <cms:section name="main"></cms:section>
+            </section>
+            <aside class="col-md-4 asideSection">
+                <cms:section name="aside" ></cms:section>
+            </aside>
+        </div>
+    </cms:template>
+    <cms:template type="PAGE" name="fullPage" displayName="Full Page Layout">
+        <cms:message />
+        <section class="contentTop">
+            <cms:section name="top"></cms:section>
+        </section>
+        <section class="contentSection">
+            <cms:section flex="true" name="main"></cms:section>
+        </section>
+    </cms:template>
+    <cms:template type="PAGE" name="articlePage" displayName="Article Page Layout">
+        <cms:message />
+        <section class="contentTop">
+            <cms:section name="top"></cms:section>
+        </section>
+        <div class="row">
+            <section class="col-md-8 contentSection">
+                <cms:section name="main"></cms:section>
+            </section>
+            <aside class="col-md-4 asideSection">
+                <cms:section name="aside"></cms:section>
+            </aside>
+        </div>
+    </cms:template>
+    <!-- content parts -->
+    <cms:template type="PART" name="H1" displayName="Headline 1">
+        <h1>
+            <cms:textfield name="header" placeholder="Lorem ipsum"/>
+        </h1>
+    </cms:template>
+    <cms:template type="PART" name="H2" displayName="Headline 2">
+        <h2>
+            <cms:textfield name="header" placeholder="Lorem ipsum"/>
+        </h2>
+    </cms:template>
+    <cms:template type="PART" name="H3" displayName="Headline 3">
+        <h3>
+            <cms:textfield name="header" placeholder="Lorem ipsum"/>
+        </h3>
+    </cms:template>
+    <cms:template type="PART" name="Paragraph" displayName="Paragraph">
+        <div class="paragraph">
+            <cms:htmlfield name="html" placeholder="Lorem ipsum"/>
+        </div>
+    </cms:template>
+    <cms:template type="PART" name="ParagraphWithHeader" displayName="Paragraph with Header">
+        <div class="paragraph">
+            <h2>
+                <cms:textfield name="header" placeholder="Lorem ipsum"/>
+            </h2>
+            <cms:htmlfield name="html" placeholder="Lorem ipsum"/>
+        </div>
+    </cms:template>
+    <cms:template type="PART" name="Image" displayName="Image">
+        <div class="imageBox">
+            <cms:htmlfield name="html" placeholder="Image"/>
+        </div>
+    </cms:template>
+
+</cms:templates>
+

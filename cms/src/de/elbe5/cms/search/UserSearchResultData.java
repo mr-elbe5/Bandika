@@ -1,5 +1,5 @@
 /*
- Bandika  - A Java based modular Content Management System
+ Elbe 5 CMS - A Java based modular Content Management System
  Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -13,18 +13,9 @@ import java.util.List;
 
 public class UserSearchResultData extends SearchResultData {
 
-    protected String[] fieldNames = {"name"};
     protected List<UserSearchData> results = new ArrayList<>();
 
     public UserSearchResultData() {
-    }
-
-    public String[] getFieldNames() {
-        return fieldNames;
-    }
-
-    public void setFieldNames(String[] fieldNames) {
-        this.fieldNames = fieldNames;
     }
 
     public List<UserSearchData> getResults() {

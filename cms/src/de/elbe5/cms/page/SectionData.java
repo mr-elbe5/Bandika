@@ -1,5 +1,5 @@
 /*
- Bandika  - A Java based modular Content Management System
+ Elbe 5 CMS - A Java based modular Content Management System
  Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -12,14 +12,11 @@ import java.util.*;
 
 public class SectionData {
 
-    public static final String TYPE_STATIC = "static";
-
     protected String name;
-    protected String className = "";
-    protected String type = "";
+    protected int pageId = 0;
+    protected boolean flex;
+    protected boolean inTemplate = false;
     protected List<PagePartData> parts = new ArrayList<>();
-
-    int pageId = 0;
 
     public SectionData() {
     }
@@ -42,20 +39,32 @@ public class SectionData {
         this.name = name;
     }
 
-    public String getClassName() {
-        return className;
+    public int getPageId() {
+        return pageId;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
+    public void setPageId(int pageId) {
+        this.pageId = pageId;
     }
 
-    public String getType() {
-        return type;
+    public boolean isFlex() {
+        return flex;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setFlex(boolean flex) {
+        this.flex = flex;
+    }
+
+    public boolean isInTemplate() {
+        return inTemplate;
+    }
+
+    public void setInTemplate(boolean inTemplate) {
+        this.inTemplate = inTemplate;
+    }
+
+    public String getCss(){
+        return isFlex() ? "row" : "";
     }
 
     public List<PagePartData> getParts() {
@@ -66,14 +75,6 @@ public class SectionData {
         Collections.sort(parts);
     }
 
-    public int getPageId() {
-        return pageId;
-    }
-
-    public void setPageId(int pageId) {
-        this.pageId = pageId;
-    }
-
     public PagePartData getPart(int pid) {
         for (PagePartData pdata : parts) {
             if (pdata.getId() == pid) {
@@ -81,6 +82,15 @@ public class SectionData {
             }
         }
         return null;
+    }
+
+    public boolean isDynamic() {
+        for (PagePartData pdata : parts) {
+            if (pdata.isDynamic()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void addPagePart(PagePartData part, int fromPartId, boolean below, boolean setRanking) {
@@ -136,15 +146,6 @@ public class SectionData {
         }
     }
 
-    public void shareChanges(PagePartData part) {
-        for (PagePartData ppd : parts) {
-            if (ppd.getId() == part.getId() && part != ppd) {
-                ppd.setContent(part.getContent());
-                return;
-            }
-        }
-    }
-
     public void getNodeUsage(HashSet<Integer> list) {
         for (PagePartData part : parts) {
             part.getNodeUsage(list);
@@ -154,12 +155,6 @@ public class SectionData {
     public void prepareCopy() {
         for (PagePartData part : parts) {
             part.prepareCopy();
-        }
-    }
-
-    public void prepareSave() {
-        for (PagePartData part : parts) {
-            part.prepareSave();
         }
     }
 

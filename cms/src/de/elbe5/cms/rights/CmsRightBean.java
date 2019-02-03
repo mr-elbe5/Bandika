@@ -1,5 +1,5 @@
 /*
- Bandika  - A Java based modular Content Management System
+ Elbe 5 CMS - A Java based modular Content Management System
  Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -10,14 +10,8 @@ package de.elbe5.cms.rights;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
-import de.elbe5.cms.group.GroupData;
-import de.elbe5.cms.group.GroupRightsData;
-import de.elbe5.cms.tree.TreeNode;
 import de.elbe5.cms.user.User2GroupRelation;
-import de.elbe5.webbase.rights.Right;
-import de.elbe5.webbase.rights.RightBean;
-import de.elbe5.webbase.rights.SystemZone;
-import de.elbe5.webbase.user.UserRightsData;
+import de.elbe5.cms.user.UserRightsData;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,7 +30,7 @@ public class CmsRightBean extends RightBean {
 
     private static String GET_GROUPS_SQL="SELECT group_id FROM t_user2group WHERE user_id=? AND relation=?";
     private static String GET_SYSTEM_RIGHTS_SQL="select name, value from t_system_right where group_id in({1})";
-    private static String GET_NODE_RIGHTS_SQL="select id, value from t_treenode_right where group_id in({1})";
+    private static String GET_PAGE_RIGHTS_SQL="select page_id, value from t_page_right where group_id in({1})";
     public UserRightsData getUserRights(int userId) {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -68,7 +62,7 @@ public class CmsRightBean extends RightBean {
                 data.addSystemRight(SystemZone.valueOf(rs.getString(1)), Right.valueOf(rs.getString(2)));
             }
             rs.close();
-            pst = con.prepareStatement(StringUtil.format(GET_NODE_RIGHTS_SQL, buffer.toString()));
+            pst = con.prepareStatement(StringUtil.format(GET_PAGE_RIGHTS_SQL, buffer.toString()));
             rs = pst.executeQuery();
             while (rs.next()) {
                 data.addSingleContentRight(rs.getInt(1), Right.valueOf(rs.getString(2)));
@@ -82,73 +76,6 @@ public class CmsRightBean extends RightBean {
             closeConnection(con);
         }
         return null;
-    }
-
-    private static String DELETE_RIGHTS_SQL="DELETE FROM t_treenode_right WHERE id=?";
-    private static String INSERT_RIGHT_SQL="INSERT INTO t_treenode_right (id,group_id,value) VALUES(?,?,?)";
-    public void saveTreeNodeRights(Connection con, TreeNode data) throws SQLException {
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement(DELETE_RIGHTS_SQL);
-            pst.setInt(1, data.getId());
-            pst.executeUpdate();
-            if (!data.inheritsRights()) {
-                pst.close();
-                pst = con.prepareStatement(INSERT_RIGHT_SQL);
-                pst.setInt(1, data.getId());
-                for (int id : data.getRights().keySet()) {
-                    pst.setInt(2, id);
-                    pst.setString(3, data.getRights().get(id).name());
-                    pst.executeUpdate();
-                }
-            }
-        } finally {
-            closeStatement(pst);
-        }
-    }
-
-    private static String GET_SYSTEM_RIGHT_SQL="SELECT name, value FROM t_system_right WHERE group_id=?";
-    public GroupRightsData getGroupRights(int groupId) {
-        Connection con = getConnection();
-        PreparedStatement pst = null;
-        GroupRightsData rights = new GroupRightsData();
-        try {
-            pst = con.prepareStatement(GET_SYSTEM_RIGHT_SQL);
-            pst.setInt(1, groupId);
-            ResultSet rs = pst.executeQuery();
-            while (rs.next()) {
-                rights.addSystemRight(SystemZone.valueOf(rs.getString(1)), Right.valueOf(rs.getString(2)));
-            }
-            rs.close();
-            return rights;
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-        return null;
-    }
-
-    private static String DELETE_SYSTEM_RIGHTS_SQL="DELETE FROM t_system_right WHERE group_id=?";
-    private static String INSERT_SYSTEM_RIGHT_SQL="INSERT INTO t_system_right (name,group_id,value) VALUES(?,?,?)";
-    public void writeGroupRights(Connection con, GroupData data) throws SQLException {
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement(DELETE_SYSTEM_RIGHTS_SQL);
-            pst.setInt(1, data.getId());
-            pst.executeUpdate();
-            pst.close();
-            pst = con.prepareStatement(INSERT_SYSTEM_RIGHT_SQL);
-            pst.setInt(2, data.getId());
-            for (SystemZone zone : data.getRights().getSystemRights().keySet()) {
-                pst.setString(1, zone.name());
-                pst.setString(3, data.getRights().getSystemRights().get(zone).name());
-                pst.executeUpdate();
-            }
-        } finally {
-            closeStatement(pst);
-        }
     }
 
 }

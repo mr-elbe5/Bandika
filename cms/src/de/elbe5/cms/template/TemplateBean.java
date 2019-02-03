@@ -1,5 +1,5 @@
 /*
- Bandika  - A Java based modular Content Management System
+ Elbe 5 CMS - A Java based modular Content Management System
  Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -8,10 +8,13 @@
  */
 package de.elbe5.cms.template;
 
-import de.elbe5.webbase.database.DbBean;
+import de.elbe5.base.log.Log;
+import de.elbe5.base.util.FileUtil;
+import de.elbe5.cms.database.DbBean;
+import de.elbe5.cms.application.ApplicationPath;
 
+import java.io.File;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,38 +31,11 @@ public class TemplateBean extends DbBean {
         return instance;
     }
 
-    private static String UNCHANGED_SQL="SELECT change_date FROM t_template WHERE name=? AND type=?";
-    protected boolean unchangedTemplate(Connection con, TemplateData data) {
-        if (data.isNew())
-            return true;
-        PreparedStatement pst = null;
-        ResultSet rs;
-        boolean result = false;
-        try {
-            pst = con.prepareStatement(UNCHANGED_SQL);
-            pst.setString(1, data.getName());
-            pst.setString(2, data.getType());
-            rs = pst.executeQuery();
-            if (rs.next()) {
-                LocalDateTime date = rs.getTimestamp(1).toLocalDateTime();
-                rs.close();
-                result = date.equals(data.getChangeDate());
-            }
-        } catch (Exception ignored) {
-        } finally {
-            closeStatement(pst);
-        }
-        return result;
-    }
-
-    public Map<String, List<TemplateData>> getAllTemplates() {
-        Map<String, List<TemplateData>> templates = new HashMap<>();
+    public List<TemplateData> getAllTemplates(String type) {
+        List<TemplateData> templates = null;
         Connection con = getConnection();
         try {
-            templates.put(TemplateData.TYPE_MASTER, getAllTemplates(con, TemplateData.TYPE_MASTER));
-            templates.put(TemplateData.TYPE_PAGE, getAllTemplates(con, TemplateData.TYPE_PAGE));
-            templates.put(TemplateData.TYPE_PART, getAllTemplates(con, TemplateData.TYPE_PART));
-            templates.put(TemplateData.TYPE_SNIPPET, getAllTemplates(con, TemplateData.TYPE_SNIPPET));
+            templates=getAllTemplates(con, type);
         } catch (SQLException se) {
             se.printStackTrace();
         } finally {
@@ -68,7 +44,7 @@ public class TemplateBean extends DbBean {
         return templates;
     }
 
-    private static String GET_TEMPLATES_SQL="SELECT name,change_date,display_name,description,section_types,code FROM t_template WHERE type=? ORDER BY name";
+    private static String GET_TEMPLATES_SQL="SELECT name,change_date,display_name,description,code FROM t_template WHERE type=? ORDER BY name";
     protected List<TemplateData> getAllTemplates(Connection con, String type) throws SQLException {
         List<TemplateData> list = new ArrayList<>();
         PreparedStatement pst = null;
@@ -85,10 +61,8 @@ public class TemplateBean extends DbBean {
                 data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                 data.setDisplayName(rs.getString(i++));
                 data.setDescription(rs.getString(i++));
-                data.setSectionTypes(rs.getString(i++));
                 data.setCode(rs.getString(i));
-                if (TemplateParser.parseTemplate(data))
-                    list.add(data);
+                list.add(data);
             }
             rs.close();
         } finally {
@@ -97,23 +71,105 @@ public class TemplateBean extends DbBean {
         return list;
     }
 
-    public boolean saveTemplate(TemplateData data, boolean checkUnchanged) {
+    public TemplateData getTemplate(String name, String type) {
+        TemplateData template = null;
+        Connection con = getConnection();
+        try {
+            template=getTemplate(con, name, type);
+        } catch (SQLException se) {
+            se.printStackTrace();
+        } finally {
+            closeConnection(con);
+        }
+        return template;
+    }
+
+    private static String GET_TEMPLATE_SQL="SELECT change_date,display_name,description,code FROM t_template WHERE type=? AND name=?";
+    protected TemplateData getTemplate(Connection con, String name, String type) throws SQLException {
+        TemplateData data=null;
+        PreparedStatement pst = null;
+        try {
+            pst = con.prepareStatement(GET_TEMPLATE_SQL);
+            pst.setString(1, type);
+            pst.setString(2, name);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                int i = 1;
+                data = new TemplateData();
+                data.setType(type);
+                data.setName(name);
+                data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
+                data.setDisplayName(rs.getString(i++));
+                data.setDescription(rs.getString(i++));
+                data.setCode(rs.getString(i));
+            }
+            rs.close();
+        } finally {
+            closeStatement(pst);
+        }
+        return data;
+    }
+
+    public Map<String, List<String>> getAllTemplateNames() {
+        Map<String, List<String>> templateNames = new HashMap<>();
+        Connection con = getConnection();
+        try {
+            templateNames.put(TemplateData.TYPE_MASTER, getTemplateNames(con, TemplateData.TYPE_MASTER));
+            templateNames.put(TemplateData.TYPE_PAGE, getTemplateNames(con, TemplateData.TYPE_PAGE));
+            templateNames.put(TemplateData.TYPE_PART, getTemplateNames(con, TemplateData.TYPE_PART));
+        } catch (SQLException se) {
+            se.printStackTrace();
+        } finally {
+            closeConnection(con);
+        }
+        return templateNames;
+    }
+
+    public List<String> getTemplateNames(String type) {
+        List<String> templateNames = null;
+        Connection con = getConnection();
+        try {
+            templateNames = getTemplateNames(con, type);
+        } catch (SQLException se) {
+            se.printStackTrace();
+        } finally {
+            closeConnection(con);
+        }
+        return templateNames;
+    }
+
+    private static String GET_TEMPLATE_NAMES_SQL="SELECT name FROM t_template WHERE type=? ORDER BY name";
+    public List<String> getTemplateNames(Connection con, String type) throws SQLException {
+        List<String> list = new ArrayList<>();
+        PreparedStatement pst = null;
+        try {
+            pst = con.prepareStatement(GET_TEMPLATE_NAMES_SQL);
+            pst.setString(1, type);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                list.add(rs.getString(1));
+            }
+            rs.close();
+        } finally {
+            closeStatement(pst);
+        }
+        return list;
+    }
+
+    public boolean saveTemplate(TemplateData data) {
         Connection con = startTransaction();
         try {
-            if (checkUnchanged && !unchangedTemplate(con, data)) {
-                rollbackTransaction(con);
-                return false;
-            }
             data.setChangeDate(getServerTime(con));
             writeTemplate(con, data);
             return commitTransaction(con);
         } catch (Exception se) {
-            return rollbackTransaction(con, se);
+            rollbackTransaction(con, se);
+            return false;
         }
     }
 
-    private static String INSERT_TEMPLATE_SQL="insert into t_template (change_date,display_name,description,section_types,code,name,type) values(?,?,?,?,?,?,?)";
-    private static String UPDATE_TEMPLATE_SQL="update t_template set change_date=?, display_name=?, description=?, section_types=?, code=? where name=? and type=?";
+    private static String INSERT_TEMPLATE_SQL="insert into t_template (change_date,display_name,description,code,name,type) values(?,?,?,?,?,?)";
+    private static String UPDATE_TEMPLATE_SQL="update t_template set change_date=?, display_name=?, description=?, code=? where name=? and type=?";
     protected void writeTemplate(Connection con, TemplateData data) throws SQLException {
         PreparedStatement pst = null;
         try {
@@ -122,7 +178,6 @@ public class TemplateBean extends DbBean {
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getDisplayName());
             pst.setString(i++, data.getDescription());
-            pst.setString(i++, data.getSectionTypes());
             pst.setString(i++, data.getCode());
             pst.setString(i++, data.getName());
             pst.setString(i, data.getType());
@@ -150,6 +205,91 @@ public class TemplateBean extends DbBean {
             closeConnection(con);
         }
         return true;
+    }
+
+    public void writeAllTemplateFiles(){
+        ensureTemplateFolders();
+        deleteAllTemplateFiles();
+        Connection con = getConnection();
+        List<TemplateData> templates=new ArrayList<>();
+        try {
+            templates.addAll(getAllTemplates(con, TemplateData.TYPE_MASTER));
+            templates.addAll(getAllTemplates(con, TemplateData.TYPE_PAGE));
+            templates.addAll(getAllTemplates(con, TemplateData.TYPE_PART));
+        } catch (SQLException se) {
+            se.printStackTrace();
+        } finally {
+            closeConnection(con);
+        }
+        for (TemplateData data : templates){
+            writeTemplateFile(data);
+        }
+    }
+
+    public void ensureTemplateFolders(){
+        String basePath = ApplicationPath.getAppROOTPath() + "/WEB-INF/_jsp/_templates/";
+        ensureTemplateFolder(basePath+TemplateData.TYPE_MASTER);
+        ensureTemplateFolder(basePath+TemplateData.TYPE_PAGE);
+        ensureTemplateFolder(basePath+TemplateData.TYPE_PART);
+    }
+
+    public void ensureTemplateFolder(String path) {
+        File f = new File(path);
+        if (!f.exists() && !f.mkdir())
+            Log.error("could not create template folder " + path);
+    }
+
+    public String readTemplateFile(TemplateData data) {
+        String path = data.getFilePath();
+        File f = new File(path);
+        if (!f.exists()) {
+            return null;
+        }
+        return FileUtil.readTextFile(path);
+    }
+
+    public void writeTemplateFile(TemplateData data) {
+        Log.log("writing template file " + data.getName());
+        if (!data.getName().isEmpty() && !data.getCode().isEmpty()) {
+            String path = data.getFilePath();
+            FileUtil.writeTextFile(path,data.getJspCode());
+        }
+    }
+
+    public void deleteAllTemplateFiles() {
+        String basePath = ApplicationPath.getAppROOTPath() + "/WEB-INF/_jsp/_templates/";
+        deleteAllTemplateFiles(basePath+TemplateData.TYPE_MASTER);
+        deleteAllTemplateFiles(basePath+TemplateData.TYPE_PAGE);
+        deleteAllTemplateFiles(basePath+TemplateData.TYPE_PART);
+    }
+
+    public void deleteAllTemplateFiles(String path) {
+        File f = new File(path);
+        if (!f.exists() || !f.isDirectory())
+            return;
+        File[] files = f.listFiles();
+        if (files!=null) {
+            for (File df : files) {
+                if (!df.delete())
+                    Log.error("could not delete file " + df.getName());
+            }
+        }
+    }
+
+    public void deleteTemplateFile(TemplateData data) {
+        Log.info("deleting template file " + data.getName());
+        String path = data.getFilePath();
+        File f = new File(path);
+        if (f.exists() && !f.delete())
+            Log.error("could not delete template file " + path);
+    }
+
+    public void deleteTemplateFile(String name, String type) {
+        Log.info("deleting template file " + name);
+        String path = ApplicationPath.getAppROOTPath() + "/WEB-INF/_jsp/_templates/" + type + "/" + name + ".jsp";
+        File f = new File(path);
+        if (f.exists() && !f.delete())
+            Log.error("could not delete template file " + path);
     }
 
 }

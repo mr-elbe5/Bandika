@@ -1,149 +1,66 @@
 <%--
-  Bandika  - A Java based modular Content Management System
+  Elbe 5 CMS - A Java based modular Content Management System
   Copyright (C) 2009-2018 Michael Roennau
 
   This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="de.elbe5.base.data.Locales" %>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
-<%@ page import="de.elbe5.webbase.servlet.SessionReader" %>
+<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
 <%@ page import="de.elbe5.cms.user.UserBean" %>
 <%@ page import="de.elbe5.cms.user.UserData" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.cms.user.UserActions" %>
+<%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
     UserData user = UserBean.getInstance().getUser(SessionReader.getSessionLoginData(request).getId());
 %>
-<jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
-<form action="/user.ajx" method="post" id="userform" name="userform" accept-charset="UTF-8">
-    <input type="hidden" name="act" value="<%=UserActions.changeProfile%>">
-    <input type="hidden" name="userId" value="<%=user.getId()%>">
-    <fieldset>
-        <table class="padded form">
-            <tr>
-                <td>
-                    <label for="title"><%=StringUtil.getHtml("_title", locale)%>
-                    </label></td>
-                <td>
-                    <input type="text" id="title" name="title" value="<%=StringUtil.toHtml(user.getTitle())%>" maxlength="30"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="firstName"><%=StringUtil.getHtml("_firstName", locale)%>
-                    </label></td>
-                <td>
-                    <input type="text" id="firstName" name="firstName" value="<%=StringUtil.toHtml(user.getFirstName())%>" maxlength="100"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="lastName"><%=StringUtil.getHtml("_lastName", locale)%>&nbsp;*</label></td>
-                <td>
-                    <input type="text" id="lastName" name="lastName" value="<%=StringUtil.toHtml(user.getLastName())%>" maxlength="100"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="street"><%=StringUtil.getHtml("_street", locale)%>
-                    </label></td>
-                <td>
-                    <input type="text" id="street" name="street" value="<%=StringUtil.toHtml(user.getStreet())%>" maxlength="100"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="zipCode"><%=StringUtil.getHtml("_zipCode", locale)%>
-                    </label></td>
-                <td>
-                    <input type="text" id="zipCode" name="zipCode" value="<%=StringUtil.toHtml(user.getZipCode())%>" maxlength="30"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="city"><%=StringUtil.getHtml("_city", locale)%>
-                    </label></td>
-                <td>
-                    <input type="text" id="city" name="city" value="<%=StringUtil.toHtml(user.getCity())%>" maxlength="100"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="country"><%=StringUtil.getHtml("_country", locale)%>
-                    </label></td>
-                <td>
-                    <input type="text" id="country" name="country" value="<%=StringUtil.toHtml(user.getCountry())%>" maxlength="100"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="locale"><%=StringUtil.getHtml("_locale", locale)%>
-                    </label></td>
-                <td>
-                    <select id="locale" name="locale">
-                        <% for (Locale loc : Locales.getInstance().getLocales().keySet()) {%>
-                        <option value="<%=loc.getLanguage()%>" <%=loc.equals(user.getLocale()) ? "selected" : ""%>><%=loc.getDisplayName(locale)%>
-                        </option>
-                        <%}%>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="email"><%=StringUtil.getHtml("_email", locale)%>&nbsp;*</label></td>
-                <td>
-                    <input type="text" id="email" name="email" value="<%=StringUtil.toHtml(user.getEmail())%>" maxlength="100"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="phone"><%=StringUtil.getHtml("_phone", locale)%>
-                    </label></td>
-                <td>
-                    <input type="text" id="phone" name="phone" value="<%=StringUtil.toHtml(user.getPhone())%>" maxlength="100"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="fax"><%=StringUtil.getHtml("_fax", locale)%>
-                    </label></td>
-                <td>
-                    <input type="text" id="fax" name="fax" value="<%=StringUtil.toHtml(user.getFax())%>" maxlength="100"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="mobile"><%=StringUtil.getHtml("_mobile", locale)%>
-                    </label></td>
-                <td>
-                    <input type="text" id="mobile" name="mobile" value="<%=StringUtil.toHtml(user.getMobile())%>" maxlength="100"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="notes"><%=StringUtil.getHtml("_notes", locale)%>
-                    </label></td>
-                <td><textarea id="notes" name="notes" rows="5"><%=StringUtil.toHtmlInput(user.getNotes())%></textarea>
-                </td>
-            </tr>
-        </table>
-    </fieldset>
-    <div class="buttonset topspace">
-        <button onclick="closeLayerDialog();"><%=StringUtil.getHtml("_close", locale)%>
-        </button>
-        <button type="submit" class="primary"><%=StringUtil.getHtml("_save", locale)%>
-        </button>
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title"><%=Strings._changeProfile.html(locale)%>
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <cms:form url="/user.ajx" name="changeprofileform" act="<%=UserActions.changeProfile%>" ajax="true" multi="true">
+            <input type="hidden" name="userId" value="<%=SessionReader.getLoginId(request)%>" />
+            <div class="modal-body">
+                <cms:message/>
+                <cms:line label="<%=Strings._id.toString()%>"><%=Integer.toString(user.getId())%></cms:line>
+                <cms:line label="<%=Strings._login.toString()%>" required="true"><%=StringUtil.toHtml(user.getLogin())%></cms:line>
+                <cms:text name="title" label="<%=Strings._title.toString()%>"><%=StringUtil.toHtml(user.getTitle())%></cms:text>
+                <cms:text name="firstName" label="<%=Strings._firstName.toString()%>"><%=StringUtil.toHtml(user.getFirstName())%></cms:text>
+                <cms:text name="lastName" label="<%=Strings._lastName.toString()%>" required="true"><%=StringUtil.toHtml(user.getLastName())%></cms:text>
+                <cms:text name="locale" label="<%=Strings._locale.toString()%>"><%=StringUtil.toHtml(user.getLocale().getLanguage())%></cms:text>
+                <cms:textarea name="notes" label="<%=Strings._notes.toString()%>" height="5rem"><%=StringUtil.toHtml(user.getNotes())%></cms:textarea>
+                <cms:file name="portrait" label="<%=Strings._portrait.toString()%>"><% if (!user.getPortraitName().isEmpty()) {%><img
+                        src="/user.srv?act=<%=UserActions.showPortrait%>&userId=<%=user.getId()%>"
+                        alt="<%=StringUtil.toHtml(user.getName())%>"/> <%}%></cms:file>
+                <h3><%=Strings._address.html(locale)%></h3>
+                <cms:text name="street" label="<%=Strings._street.toString()%>"><%=StringUtil.toHtml(user.getStreet())%></cms:text>
+                <cms:text name="zipCode" label="<%=Strings._zipCode.toString()%>"><%=StringUtil.toHtml(user.getZipCode())%></cms:text>
+                <cms:text name="city" label="<%=Strings._city.toString()%>"><%=StringUtil.toHtml(user.getCity())%></cms:text>
+                <cms:text name="country" label="<%=Strings._country.toString()%>"><%=StringUtil.toHtml(user.getCountry())%></cms:text>
+                <h3><%=Strings._contact.html(locale)%></h3>
+                <cms:text name="email" label="<%=Strings._email.toString()%>" required="true"><%=StringUtil.toHtml(user.getEmail())%></cms:text>
+                <cms:text name="phone" label="<%=Strings._phone.toString()%>"><%=StringUtil.toHtml(user.getPhone())%></cms:text>
+                <cms:text name="fax" label="<%=Strings._fax.toString()%>"><%=StringUtil.toHtml(user.getFax())%></cms:text>
+                <cms:text name="mobile" label="<%=Strings._mobile.toString()%>"><%=StringUtil.toHtml(user.getMobile())%></cms:text>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal"><%=Strings._close.html(locale)%>
+                </button>
+                <button type="submit" class="btn btn-primary"><%=Strings._save.html(locale)%>
+                </button>
+            </div>
+        </cms:form>
     </div>
-</form>
-<script type="text/javascript">
-    $('#userform').submit(function (event) {
-        var $this = $(this);
-        event.preventDefault();
-        var params = $this.serialize();
-        post2ModalDialog('/user.ajx', params);
-    });
-</script>
+</div>
+
         

@@ -1,5 +1,5 @@
 /*
- Bandika  - A Java based modular Content Management System
+ Elbe 5 CMS - A Java based modular Content Management System
  Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -9,12 +9,12 @@
 package de.elbe5.cms.application;
 
 import de.elbe5.cms.page.PageActions;
-import de.elbe5.cms.servlet.CmsActions;
-import de.elbe5.cms.tree.TreeCache;
-import de.elbe5.webbase.servlet.ActionSetCache;
-import de.elbe5.webbase.servlet.RequestReader;
-import de.elbe5.webbase.servlet.SessionReader;
-import de.elbe5.webbase.servlet.SessionWriter;
+import de.elbe5.cms.page.PageCache;
+import de.elbe5.cms.servlet.ActionSet;
+import de.elbe5.cms.servlet.ActionSetCache;
+import de.elbe5.cms.servlet.RequestReader;
+import de.elbe5.cms.servlet.SessionReader;
+import de.elbe5.cms.servlet.SessionWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * General Actions
  */
-public class ApplicationActions extends CmsActions {
+public class ApplicationActions extends ActionSet {
 
     public static final String toggleEditMode="toggleEditMode";
 
@@ -35,12 +35,12 @@ public class ApplicationActions extends CmsActions {
         switch (actionName) {
             case ApplicationActions.toggleEditMode: {
                 if (!hasAnyContentRight(request))
-                    return false;
+                    return forbidden(request,response);
                 SessionWriter.setEditMode(request, !SessionReader.isEditMode(request));
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (pageId==0)
-                    request.setAttribute("pageId", Integer.toString(TreeCache.getInstance().getFallbackPageId(request)));
-                return sendForwardResponse(request, response, "/page.srv?act="+ PageActions.show);
+                    pageId=PageCache.getInstance().getHomePageId(SessionReader.getSessionLocale(request));
+                return sendForwardResponse(request, response, "/page.srv?act="+ PageActions.show+"&pageId="+pageId);
             }
             default:{
                 return false;

@@ -1,7 +1,7 @@
 ﻿/*
- Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
+ Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
 
- For licensing, see LICENSE.md or http://ckeditor.com/license
+ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
 
 */
 CKEDITOR.plugins.add("smiley",{requires:"dialog",lang:"de,en",icons:"smiley",hidpi:!0,init:function(a){a.config.smiley_path=a.config.smiley_path||this.path+"images/";a.addCommand("smiley",new CKEDITOR.dialogCommand("smiley",{allowedContent:"img[alt,height,!src,title,width]",requiredContent:"img"}));a.ui.addButton&&a.ui.addButton("Smiley",{label:a.lang.smiley.toolbar,command:"smiley",toolbar:"insert,50"});CKEDITOR.dialog.add("smiley",this.path+"dialogs/smiley.js")}});

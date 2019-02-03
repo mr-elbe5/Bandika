@@ -1,5 +1,5 @@
 <%--
-  Bandika  - A Java based modular Content Management System
+  Elbe 5 CMS - A Java based modular Content Management System
   Copyright (C) 2009-2018 Michael Roennau
 
   This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -7,37 +7,60 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
-<%@ page import="de.elbe5.webbase.servlet.SessionReader" %>
+<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
 <%@ page import="de.elbe5.cms.template.TemplateActions" %>
 <%@ page import="java.util.Locale" %>
-<%Locale locale = SessionReader.getSessionLocale(request);%>
-<jsp:include page="/WEB-INF/_jsp/_master/error.inc.jsp"/>
-<form action="/template.ajx" method="post" id="importTemplates" name="importTemplates" accept-charset="UTF-8" enctype="multipart/form-data">
-    <input type="hidden" name="act" value="<%=TemplateActions.importTemplates%>"/>
-    <fieldset>
-        <table class="padded form">
-            <tr>
-                <td>
-                    <label for="file"><%=StringUtil.getHtml("_file", locale)%>
-                    </label></td>
-                <td>
-                    <input type="file" id="file" name="file"/>
-                </td>
-            </tr>
-        </table>
-    </fieldset>
-    <div class="buttonset topspace">
-        <button onclick="closeLayerDialog();"><%=StringUtil.getHtml("_close", locale)%>
-        </button>
-        <button type="submit" class="primary"><%=StringUtil.getHtml("_execute", locale)%>
-        </button>
+<%@ page import="de.elbe5.cms.servlet.RequestReader" %>
+<%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.cms.application.Statics" %>
+<%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
+<%Locale locale = SessionReader.getSessionLocale(request);
+%>
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title"><%=Strings._importTemplates.html(locale)%>
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <cms:form url="/template.ajx" name="importTemplates" act="<%=TemplateActions.importTemplates%>">
+            <div class="modal-body">
+                <cms:message/>
+                <cms:file name="file" label="<%=Strings._file.toString()%>" />
+                <cms:editor name="code" label="<%=Strings._code.toString()%>" type="html" hint="<%=Strings._htmlHint.toString()%>" height="20rem" required="true">
+                    <%=StringUtil.toHtml(RequestReader.getString(request, "code"))%>
+                </cms:editor>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal"><%=Strings._close.html(locale)%>
+                </button>
+                <button type="submit" class="btn btn-primary"><%=Strings._execute.html(locale)%>
+                </button>
+            </div>
+        </cms:form>
+        <script type="text/javascript">
+            var editor = initAce($('#code'));
+            $('#importTemplates').submit(function (event) {
+                var $this = $(this);
+                event.preventDefault();
+                $('#code').val(editor.getSession().getValue());
+                var params = $this.serialize();
+                postByAjax('/template.ajx', params,'<%=Statics.MODAL_DIALOG_JQID%>');
+            });
+            $('#file').change(function(){
+                if (this.files){
+                    var file=this.files[0];
+                    var fr = new FileReader();
+                    fr.onload = function(){
+                        editor.setValue(fr.result);
+                    };
+                    fr.readAsText(file);
+                }
+            });
+        </script>
     </div>
-</form>
-<script type="text/javascript">
-    $('#importTemplates').submit(function (event) {
-        var $this = $(this);
-        event.preventDefault();
-        var params = $this.serializeFiles();
-        postMulti2ModalDialog('/template.ajx', params);
-    });
-</script>
+</div>
+

@@ -1,3 +1,4 @@
 # Bandika
-A Java CMS and framework - now switched to elbe5.de
+A Java CMS and framework
+version 9 - 2019
 

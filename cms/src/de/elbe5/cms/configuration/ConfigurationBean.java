@@ -1,5 +1,5 @@
 /*
- Bandika  - A Java based modular Content Management System
+ Elbe 5 CMS - A Java based modular Content Management System
  Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -9,17 +9,16 @@
 package de.elbe5.cms.configuration;
 
 import de.elbe5.base.log.Log;
-import de.elbe5.base.mail.Mailer;
-import de.elbe5.webbase.configuration.WebConfigurationBean;
+import de.elbe5.cms.database.DbBean;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Base64;
 import java.util.Locale;
+import java.util.Map;
 
-public class ConfigurationBean extends WebConfigurationBean {
+public class ConfigurationBean extends DbBean {
 
     private static ConfigurationBean instance = null;
 
@@ -28,6 +27,42 @@ public class ConfigurationBean extends WebConfigurationBean {
             instance = new ConfigurationBean();
         }
         return instance;
+    }
+
+    public void readLocales(Map<Locale, String> locales) {
+        Connection con = getConnection();
+        try {
+            readLocales(con, locales);
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+        } finally {
+            closeConnection(con);
+        }
+    }
+
+    private static String GET_LOCALES_SQL="SELECT locale,home FROM t_locale";
+    public void readLocales(Connection con, Map<Locale, String> locales) throws SQLException {
+        locales.clear();
+        PreparedStatement pst = null;
+        try {
+            pst = con.prepareStatement(GET_LOCALES_SQL);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    try {
+                        locales.put(new Locale(rs.getString(1)), rs.getString(2));
+                    } catch (Exception e) {
+                        Log.error("no appropriate locale", e);
+                    }
+                }
+            }
+        } finally {
+            try {
+                if (pst != null) {
+                    pst.close();
+                }
+            } catch (SQLException ignored) {
+            }
+        }
     }
 
     public Configuration getConfiguration() {
@@ -40,25 +75,18 @@ public class ConfigurationBean extends WebConfigurationBean {
         } finally {
             closeConnection(con);
         }
+        config.evaluateConfigs();
         return config;
     }
 
-    private static String READ_CONFIG_SQL="SELECT defaultLocale, mailHost, mailPort, mailConnectionType, mailUser, mailPassword, mailSender, timerInterval FROM t_configuration";
+    private static String READ_CONFIG_SQL="SELECT key, value FROM t_configuration";
     public void readConfiguration(Connection con, Configuration config) throws SQLException {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(READ_CONFIG_SQL);
             try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    int i = 1;
-                    config.setDefaultLocale(new Locale(rs.getString(i++)));
-                    config.setSmtpHost(rs.getString(i++));
-                    config.setSmtpPort(rs.getInt(i++));
-                    config.setSmtpConnectionType(Mailer.SmtpConnectionType.valueOf(rs.getString(i++)));
-                    config.setSmtpUser(rs.getString(i++));
-                    config.setSmtpPassword(new String(Base64.getEncoder().encode(rs.getString(i++).getBytes())));
-                    config.setMailSender(rs.getString(i++));
-                    config.setTimerInterval(rs.getInt(i));
+                while (rs.next()) {
+                    config.getConfigs().put(rs.getString(1),rs.getString(2));
                 }
             }
         } finally {
@@ -74,6 +102,7 @@ public class ConfigurationBean extends WebConfigurationBean {
     public boolean saveConfiguration(Configuration config) {
         Connection con = startTransaction();
         try {
+            config.putConfigs();
             writeConfiguration(con, config);
             return commitTransaction(con);
         } catch (Exception se) {
@@ -81,21 +110,16 @@ public class ConfigurationBean extends WebConfigurationBean {
         }
     }
 
-    private static String UPDATE_CONFIG_SQL="UPDATE t_configuration SET defaultLocale=?, mailHost=?, mailPort=?, mailConnectionType=?, mailUser=?, mailPassword=?, mailSender=?, timerInterval=?";
+    private static String UPDATE_CONFIG_SQL="UPDATE t_configuration SET value=? WHERE key=?";
     protected void writeConfiguration(Connection con, Configuration config) throws SQLException {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(UPDATE_CONFIG_SQL);
-            int i = 1;
-            pst.setString(i++, config.getDefaultLocale().getLanguage());
-            pst.setString(i++, config.getSmtpHost());
-            pst.setInt(i++, config.getSmtpPort());
-            pst.setString(i++, config.getSmtpConnectionType().name());
-            pst.setString(i++, config.getSmtpUser());
-            pst.setString(i++, new String(Base64.getDecoder().decode(config.getSmtpPassword().getBytes())));
-            pst.setString(i++, config.getMailSender());
-            pst.setInt(i, config.getTimerInterval());
-            pst.executeUpdate();
+            for (String key : config.getConfigs().keySet()) {
+                pst.setString(1, config.getConfigs().get(key));
+                pst.setString(2, key);
+                pst.executeUpdate();
+            }
         } finally {
             closeStatement(pst);
         }

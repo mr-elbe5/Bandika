@@ -1,0 +1,208 @@
+@import "global";
+
+/* general */
+
+a {
+  cursor: pointer;
+}
+
+a, a:active, a:hover, a:visited{
+  color: $gray-900;
+  text-decoration: none;
+}
+
+.padded{
+  padding-top: calc(0.375rem + 1px);
+  padding-bottom: calc(0.375rem + 1px);
+}
+
+.alert, .alert-dismissible .close{
+  padding: 0.5rem 1.25rem;
+}
+
+.modal-backdrop{
+  z-index: $zindex-modal-backdrop;
+}
+
+.modal{
+  z-index: $zindex-modal;
+}
+
+.popover{
+  z-index: $zindex-popover;
+}
+
+.tooltip{
+  z-index: $zindex-tooltip;
+}
+
+.requestError{
+  color: $red;
+}
+
+form{
+
+  .tab-content > .tab-pane {
+    padding: 1rem 1rem 0 1rem;
+  }
+
+  .form-control-file, .form-control-range {
+    padding: .375rem 0;
+  }
+
+}
+
+.form-group {
+  margin-bottom: 0.5rem;
+}
+
+/* administration */
+
+.installSection {
+  .form {
+    width: 100%;
+    max-width: 730px;
+    padding: 30px;
+    margin: 2rem auto;
+    background-color: $gray-100;
+    border-radius: 5px;
+  }
+}
+
+.logo{
+  text-align: center;
+}
+
+.searchHighlight{
+  background: $yellow;
+}
+
+.modal-dialog-wide {
+  max-width: none;
+  margin: $modal-dialog-margin-wide;
+}
+
+.modal-dialog-full {
+  max-width: none;
+  position: fixed;
+  left: $modal-dialog-margin-wide;
+  top: $modal-dialog-margin-wide;
+  right: $modal-dialog-margin-wide;
+  bottom: $modal-dialog-margin-wide;
+
+  .modal-content {
+    height: 100%;
+  }
+
+  .modal-body {
+    overflow: auto;
+  }
+
+}
+
+.treeSection {
+  padding: 2rem;
+
+  .treeRoot {
+    font-size: 1.2em;
+  }
+
+  ul.tree {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      margin: 0;
+      padding: 0 1em;
+      line-height: 2em;
+      position: relative;
+
+      a.fa {
+        margin-left: .375rem;
+        cursor: pointer;
+        position: relative;
+        top: 1px;
+      }
+
+      button, button:active, button:focus {
+        text-decoration: none;
+        border: none;
+        background: transparent;
+        margin: 0;
+        padding: 0;
+        outline: 0;
+      }
+    }
+
+    ul {
+      position: relative;
+      margin-left: .33em;
+      padding: 0;
+      list-style: none;
+
+      li:before {
+        content: "";
+        display: block;
+        width: 10px;
+        height: 0;
+        border-top: 1px dotted;
+        margin-top: -1px;
+        position: absolute;
+        top: 1em;
+        left: 0
+      }
+
+      li:last-child:before {
+        background: #fff;
+        height: auto;
+        top: 1em;
+        bottom: 0
+      }
+    }
+
+    ul:before {
+      content: "";
+      display: block;
+      width: 0;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      border-left: 1px dotted
+    }
+
+  }
+
+}
+
+.loginSection {
+  margin-top: 150px;
+
+  .form {
+    width: 100%;
+    max-width: 360px;
+    padding: 30px;
+    margin: auto;
+    background-color: $gray-100;
+    border-radius: 5px;
+
+    img {
+      width: 80px;
+    }
+
+    .form-control:focus {
+      z-index: 2;
+    }
+
+    input[type="text"] {
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="password"] {
+      margin-bottom: 2rem;
+    }
+  }
+}
+
+

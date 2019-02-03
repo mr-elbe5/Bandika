@@ -1,5 +1,5 @@
 /*
- Bandika  - A Java based modular Content Management System
+ Elbe 5 CMS - A Java based modular Content Management System
  Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -8,29 +8,28 @@
  */
 package de.elbe5.cms.page;
 
+import de.elbe5.base.data.JsonData;
 import de.elbe5.cms.application.AdminActions;
-import de.elbe5.cms.tree.BaseTreeActions;
-import de.elbe5.cms.tree.TreeCache;
-import de.elbe5.webbase.rights.Right;
-import de.elbe5.webbase.servlet.ActionSetCache;
-import de.elbe5.webbase.servlet.RequestReader;
-import de.elbe5.webbase.servlet.RequestStatics;
-import de.elbe5.webbase.servlet.SessionReader;
+import de.elbe5.cms.application.Statics;
+import de.elbe5.cms.application.Strings;
+import de.elbe5.cms.rights.Right;
+import de.elbe5.cms.servlet.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class PagePartActions extends BaseTreeActions {
+public class PagePartActions extends ActionSet {
 
     public static final String executePagePartMethod="executePagePartMethod";
     public static final String openAddPagePart="openAddPagePart";
     public static final String addPagePart="addPagePart";
-    public static final String addSharedPart="addSharedPart";
+    public static final String openAddSharedPagePart="openAddSharedPagePart";
+    public static final String addSharedPagePart="addSharedPagePart";
     public static final String editPagePart="editPagePart";
     public static final String cancelEditPagePart="cancelEditPagePart";
     public static final String savePagePart="savePagePart";
-    public static final String openEditHtmlPartSettings="openEditHtmlPartSettings";
-    public static final String saveHtmlPartSettings="saveHtmlPartSettings";
+    public static final String openEditPagePartSettings="openEditPagePartSettings";
+    public static final String savePagePartSettings="savePagePartSettings";
     public static final String openSharePagePart="openSharePagePart";
     public static final String sharePagePart="sharePagePart";
     public static final String movePagePart="movePagePart";
@@ -39,185 +38,231 @@ public class PagePartActions extends BaseTreeActions {
     public static final String deletePagePart="deletePagePart";
     public static final String deleteAllOrphanedPageParts="deleteAllOrphanedPageParts";
 
+    public static final String KEY_PART = "partData";
+    public static final String KEY_PART_ID = "partId";
+
     public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) {
         switch (actionName) {
             case executePagePartMethod: {
-                int pageId = RequestReader.getInt(request, "pageId");
-                int partId = RequestReader.getInt(request, "partId");
+                int pageId = RequestReader.getInt(request, PageActions.KEY_PAGE_ID);
+                int partId = RequestReader.getInt(request, KEY_PART_ID);
                 String sectionName = RequestReader.getString(request, "sectionName");
                 String partMethod = RequestReader.getString(request, "partMethod");
-                PageData data = TreeCache.getInstance().getPage(pageId);
+                PageData data = PageCache.getInstance().getPage(pageId);
                 if (!data.isAnonymous() && !SessionReader.hasContentRight(request, pageId, Right.READ)) {
-                    return forbidden();
+                    return forbidden(request, response);
                 }
                 PagePartData pdata = data.getPagePart(sectionName, partId);
                 return pdata != null && pdata.executePagePartMethod(partMethod, request, response);
             }
             case openAddPagePart: {
-                int pageId = RequestReader.getInt(request, "pageId");
+                int pageId = RequestReader.getInt(request, PageActions.KEY_PAGE_ID);
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
                 return showAddPagePart(request, response);
             }
             case addPagePart: {
-                int pageId = RequestReader.getInt(request, "pageId");
+                int pageId = RequestReader.getInt(request, PageActions.KEY_PAGE_ID);
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
-                PageData data = (PageData) getSessionObject(request, "pageData");
-                checkObject(data, pageId);
-                int fromPartId = RequestReader.getInt(request, "partId", -1);
+                PageData data = (PageData) RequestReader.getSessionObject(request, ActionSet.KEY_PAGE);
+                if (data==null || data.getId()!=pageId)
+                    return badData(request,response);
+                String templateName=RequestReader.getString(request, "template");
+                int fromPartId = RequestReader.getInt(request, KEY_PART_ID, -1);
+                String mainClass= RequestReader.getString(request, "flexClass");
                 boolean below = RequestReader.getBoolean(request, "below");
                 String sectionName = RequestReader.getString(request, "sectionName");
-                String templateName = RequestReader.getString(request, "templateName");
                 PagePartData pdata = new PagePartData();
                 pdata.setSectionName(sectionName);
                 pdata.setTemplateName(templateName);
+                pdata.setFlexClass(mainClass);
                 pdata.setId(PageBean.getInstance().getNextId());
                 pdata.setNew(true);
                 data.addPagePart(pdata, fromPartId, below, true);
                 data.setEditPagePart(pdata);
-                return closeLayer(request, response, "replacePageContent();");
+                JsonData jdata=new JsonData();
+                jdata.AddParam("act",PageActions.showEditPageContent);
+                jdata.AddParam(Statics.KEY_MESSAGEKEY, Strings._pagePartAdded.toString());
+                return closeDialogWithAjaxRedirect(request,response,getPostByAjaxCall("/page.srv", jdata, Statics.PAGE_CONTAINER_JQID));
             }
-            case addSharedPart: {
-                int pageId = RequestReader.getInt(request, "pageId");
+            case openAddSharedPagePart: {
+                int pageId = RequestReader.getInt(request, PageActions.KEY_PAGE_ID);
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return false;
-                PageData data = (PageData) getSessionObject(request, "pageData");
-                int fromPartId = RequestReader.getInt(request, "partId", -1);
+                return showAddSharedPagePart(request, response);
+            }
+            case addSharedPagePart: {
+                int pageId = RequestReader.getInt(request, PageActions.KEY_PAGE_ID);
+                if (!hasContentRight(request, pageId, Right.EDIT))
+                    return false;
+                PageData data = (PageData) RequestReader.getSessionObject(request, ActionSet.KEY_PAGE);
+                if (data==null || data.getId()!=pageId)
+                    return badData(request,response);
+                int partId=RequestReader.getInt(request, "sharedPartId");
+                int fromPartId = RequestReader.getInt(request, KEY_PART_ID, -1);
                 boolean below = RequestReader.getBoolean(request, "below");
-                int partId = RequestReader.getInt(request, "sharedPartId");
                 String sectionName = RequestReader.getString(request, "sectionName");
-                PagePartData pdata = PageBean.getInstance().getPagePart(partId);
-                checkObject(pdata);
+                PagePartData pdata = PagePartBean.getInstance().getPagePart(partId);
+                if (pdata==null)
+                    return noData(request,response);
                 pdata.setSectionName(sectionName);
-                data.addPagePart(pdata, fromPartId, below, true);
-                return closeLayer(request, response, "replacePageContent();");
+                data.addSharedPagePart(pdata, fromPartId, below, true);
+                JsonData jdata=new JsonData();
+                jdata.AddParam("act",PageActions.showEditPageContent);
+                jdata.AddParam(Statics.KEY_MESSAGEKEY,Strings._pagePartAdded.toString());
+                return closeDialogWithAjaxRedirect(request,response,getPostByAjaxCall("/page.srv", jdata, Statics.PAGE_CONTAINER_JQID));
             }
             case editPagePart: {
-                int pageId = RequestReader.getInt(request, "pageId");
+                int pageId = RequestReader.getInt(request, PageActions.KEY_PAGE_ID);
                 if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                PageData data = (PageData) getSessionObject(request, "pageData");
-                checkObject(data, pageId);
-                int partId = RequestReader.getInt(request, "partId");
+                    return forbidden(request,response);
+                PageData data = (PageData) RequestReader.getSessionObject(request, ActionSet.KEY_PAGE);
+                if (data==null || data.getId()!=pageId)
+                    return badData(request,response);
+                int partId = RequestReader.getInt(request, KEY_PART_ID);
                 String sectionName = RequestReader.getString(request, "sectionName");
                 data.setEditPagePart(sectionName, partId);
-                return setEditPageContentAjaxResponse(request, response, data);
+                return setPageContentResponse(request, response, data);
             }
             case cancelEditPagePart: {
-                int pageId = RequestReader.getInt(request, "pageId");
+                int pageId = RequestReader.getInt(request, PageActions.KEY_PAGE_ID);
                 if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                PageData data = (PageData) getSessionObject(request, "pageData");
-                checkObject(data, pageId);
+                    return forbidden(request,response);
+                PageData data = (PageData) RequestReader.getSessionObject(request, ActionSet.KEY_PAGE);
+                if (data==null || data.getId()!=pageId)
+                    return badData(request,response);
                 PagePartData pdata = data.getEditPagePart();
                 if (pdata != null && pdata.getTemplateName().isEmpty()) {
                     data.removePagePart(pdata.getSectionName(), pdata.getId());
                 }
                 data.setEditPagePart(null);
-                return setEditPageContentAjaxResponse(request, response, data);
+                return setPageContentResponse(request, response, data);
             }
             case savePagePart: {
-                int pageId = RequestReader.getInt(request, "pageId");
+                int pageId = RequestReader.getInt(request, PageActions.KEY_PAGE_ID);
                 if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                PageData data = (PageData) getSessionObject(request, "pageData");
-                checkObject(data, pageId);
-                int partId = RequestReader.getInt(request, "partId");
+                    return forbidden(request,response);
+                PageData data = (PageData) RequestReader.getSessionObject(request, ActionSet.KEY_PAGE);
+                if (data==null || data.getId()!=pageId)
+                    return badData(request,response);
+                int partId = RequestReader.getInt(request, KEY_PART_ID);
                 String sectionName = RequestReader.getString(request, "sectionName");
                 PagePartData pdata = data.getEditPagePart();
                 if (pdata == null || data.getPagePart(sectionName, partId) != pdata) {
                     return setPageResponse(request, response, data);
                 }
-                if (!pdata.readPagePartRequestData(request)) {
+                if (!pdata.readRequestData(request)) {
                     return setPageResponse(request, response, data);
                 }
                 data.setEditPagePart(null);
-                return setEditPageContentAjaxResponse(request, response, data);
+                return setPageContentResponse(request, response, data);
             }
-            case openEditHtmlPartSettings: {
-                int pageId = RequestReader.getInt(request, "pageId");
+            case openEditPagePartSettings: {
+                int pageId = RequestReader.getInt(request, PageActions.KEY_PAGE_ID);
                 if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                PageData data = (PageData) getSessionObject(request, "pageData");
-                int partId = RequestReader.getInt(request, "partId");
+                    return forbidden(request,response);
+                PageData data = (PageData) RequestReader.getSessionObject(request, ActionSet.KEY_PAGE);
+                if (data==null)
+                    return noData(request,response);
+                int partId = RequestReader.getInt(request, KEY_PART_ID);
                 String sectionName = RequestReader.getString(request, "sectionName");
                 data.setEditPagePart(sectionName, partId);
-                return showEditHtmlPartSettings(request, response);
+                return showEditPagePartSettings(request, response);
             }
-            case saveHtmlPartSettings: {
-                int pageId = RequestReader.getInt(request, "pageId");
+            case savePagePartSettings: {
+                int pageId = RequestReader.getInt(request, PageActions.KEY_PAGE_ID);
                 if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                PageData data = (PageData) getSessionObject(request, "pageData");
-                int partId = RequestReader.getInt(request, "partId");
+                    return forbidden(request,response);
+                PageData data = (PageData) RequestReader.getSessionObject(request, ActionSet.KEY_PAGE);
+                if (data==null)
+                    return noData(request,response);
+                int partId = RequestReader.getInt(request, KEY_PART_ID);
                 PagePartData part = data.getEditPagePart();
-                checkObject(part, partId);
+                if (part==null || part.getId()!=partId)
+                    return badData(request,response);
                 part.readPagePartSettingsData(request);
                 data.setEditPagePart(null);
-                return closeLayerToUrl(request, response, "/page.srv?act="+PageActions.reopenEditPageContent+"&pageId=" + data.getId());
+                JsonData jdata=new JsonData();
+                jdata.AddParam("act",PageActions.showEditPageContent);
+                jdata.AddParam(Statics.KEY_MESSAGEKEY,Strings._pagePartSettingsSaved.toString());
+                return closeDialogWithAjaxRedirect(request,response,getPostByAjaxCall("/page.srv", jdata, Statics.PAGE_CONTAINER_JQID));
             }
             case openSharePagePart: {
-                int pageId = RequestReader.getInt(request, "pageId");
+                int pageId = RequestReader.getInt(request, PageActions.KEY_PAGE_ID);
                 if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                PageData data = (PageData) getSessionObject(request, "pageData");
-                int partId = RequestReader.getInt(request, "partId");
+                    return forbidden(request,response);
+                PageData data = (PageData) RequestReader.getSessionObject(request, ActionSet.KEY_PAGE);
+                if (data==null)
+                    return noData(request,response);
+                int partId = RequestReader.getInt(request, KEY_PART_ID);
                 String sectionName = RequestReader.getString(request, "sectionName");
                 data.setEditPagePart(sectionName, partId);
                 return showSharePagePart(request, response);
             }
             case sharePagePart: {
-                int pageId = RequestReader.getInt(request, "pageId");
+                int pageId = RequestReader.getInt(request, PageActions.KEY_PAGE_ID);
                 if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                PageData data = (PageData) getSessionObject(request, "pageData");
-                int partId = RequestReader.getInt(request, "partId");
+                    return forbidden(request,response);
+                PageData data = (PageData) RequestReader.getSessionObject(request, ActionSet.KEY_PAGE);
+                if (data==null)
+                    return noData(request,response);
+                int partId = RequestReader.getInt(request, KEY_PART_ID);
                 PagePartData part = data.getEditPagePart();
-                checkObject(part, partId);
+                if (part==null || part.getId()!=partId)
+                    return badData(request,response);
                 part.setName(RequestReader.getString(request, "name"));
                 data.setEditPagePart(null);
-                return closeLayerToUrl(request, response, "/page.srv?act="+PageActions.reopenEditPageContent+"&pageId=" + data.getId());
+                JsonData jdata=new JsonData();
+                jdata.AddParam("act",PageActions.showEditPageContent);
+                jdata.AddParam(Statics.KEY_MESSAGEKEY,Strings._pagePartShared.toString());
+                return closeDialogWithAjaxRedirect(request,response,getPostByAjaxCall("/page.srv", jdata, Statics.PAGE_CONTAINER_JQID));
             }
             case movePagePart: {
-                int pageId = RequestReader.getInt(request, "pageId");
+                int pageId = RequestReader.getInt(request, PageActions.KEY_PAGE_ID);
                 if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                PageData data = (PageData) getSessionObject(request, "pageData");
-                checkObject(data, pageId);
-                int partId = RequestReader.getInt(request, "partId");
+                    return forbidden(request,response);
+                PageData data = (PageData) RequestReader.getSessionObject(request, ActionSet.KEY_PAGE);
+                if (data==null || data.getId()!=pageId)
+                    return badData(request,response);
+                int partId = RequestReader.getInt(request, KEY_PART_ID);
                 String sectionName = RequestReader.getString(request, "sectionName");
                 int dir = RequestReader.getInt(request, "dir");
                 data.movePagePart(sectionName, partId, dir);
-                data.setPageEditMode(true);
-                return setPageResponse(request, response, data);
+                return setPageContentResponse(request, response, data);
             }
             case removePagePart: {
-                int pageId = RequestReader.getInt(request, "pageId");
+                int pageId = RequestReader.getInt(request, PageActions.KEY_PAGE_ID);
                 if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                PageData data = (PageData) getSessionObject(request, "pageData");
-                checkObject(data, pageId);
-                int partId = RequestReader.getInt(request, "partId");
+                    return forbidden(request,response);
+                PageData data = (PageData) RequestReader.getSessionObject(request, ActionSet.KEY_PAGE);
+                if (data==null || data.getId()!=pageId)
+                    return badData(request,response);
+                int partId = RequestReader.getInt(request, KEY_PART_ID);
                 String sectionName = RequestReader.getString(request, "sectionName");
                 data.removePagePart(sectionName, partId);
-                return setEditPageContentAjaxResponse(request, response, data);
+                return setPageContentResponse(request, response, data);
             }
             case showPagePartDetails: {
                 return showPagePartDetails(request, response);
             }
             case deletePagePart: {
-                int partId = RequestReader.getInt(request, "partId");
-                PageBean.getInstance().deletePagePart(partId);
-                return closeLayerToUrl(request, response, "/admin.srv?act="+ AdminActions.openAdministration, "_pagePartDeleted");
+                int partId = RequestReader.getInt(request, KEY_PART_ID);
+                if (!PagePartBean.getInstance().deletePagePart(partId)){
+                    //todo
+                    return forbidden(request,response);
+                }
+                return closeDialogWithRedirect(request,response,"/admin.srv?act="+AdminActions.openContentAdministration,Strings._pagePartDeleted);
             }
             case deleteAllOrphanedPageParts: {
-                PageBean.getInstance().deleteAllOrphanedPageParts();
-                request.setAttribute(RequestStatics.KEY_MESSAGEKEY,"_pagePartsDeleted");
-                return sendForwardResponse(request, response, "/admin.srv?act="+ AdminActions.openAdministration);
+                if (!PagePartBean.getInstance().deleteAllOrphanedPageParts()){
+                    //todo
+                    return forbidden(request,response);
+                }
+                return closeDialogWithRedirect(request,response,"/admin.srv?act="+AdminActions.openContentAdministration,Strings._pagePartsDeleted);
             }
             default: {
-                return forbidden();
+                return forbidden(request, response);
             }
         }
     }
@@ -233,23 +278,21 @@ public class PagePartActions extends BaseTreeActions {
         return KEY;
     }
 
-    protected boolean setPageResponse(HttpServletRequest request, HttpServletResponse response, PageData data) {
-        request.setAttribute("pageData", data);
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page.jsp");
-    }
-
-    protected boolean setEditPageContentAjaxResponse(HttpServletRequest request, HttpServletResponse response, PageData data) {
-        data.setPageEditMode(true);
-        request.setAttribute("pageData", data);
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp//page/content.ajax.jsp");
+    protected boolean setPageContentResponse(HttpServletRequest request, HttpServletResponse response, PageData data) {
+        request.setAttribute(ActionSet.KEY_PAGE, data);
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/pageContent.inc.jsp");
     }
 
     protected boolean showAddPagePart(HttpServletRequest request, HttpServletResponse response) {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/addPagePart.ajax.jsp");
     }
 
-    protected boolean showEditHtmlPartSettings(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/editHtmlPartSettings.ajax.jsp");
+    protected boolean showAddSharedPagePart(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/addSharedPagePart.ajax.jsp");
+    }
+
+    protected boolean showEditPagePartSettings(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/page/editPagePartSettings.ajax.jsp");
     }
 
     protected boolean showSharePagePart(HttpServletRequest request, HttpServletResponse response) {

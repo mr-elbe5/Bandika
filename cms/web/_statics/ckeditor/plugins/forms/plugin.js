@@ -1,7 +1,7 @@
 ﻿/*
- Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
+ Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
 
- For licensing, see LICENSE.md or http://ckeditor.com/license
+ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
 
 */
 CKEDITOR.plugins.add("forms",{requires:"dialog,fakeobjects",lang:"de,en",icons:"button,checkbox,form,hiddenfield,imagebutton,radio,select,select-rtl,textarea,textarea-rtl,textfield",hidpi:!0,onLoad:function(){CKEDITOR.addCss(".cke_editable form{border: 1px dotted #FF0000;padding: 2px;}\n");CKEDITOR.addCss("img.cke_hidden{background-image: url("+CKEDITOR.getUrl(this.path+"images/hiddenfield.gif")+");background-position: center center;background-repeat: no-repeat;border: 1px solid #a9a9a9;width: 16px !important;height: 16px !important;}")},

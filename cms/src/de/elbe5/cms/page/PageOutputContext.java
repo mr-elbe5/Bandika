@@ -1,5 +1,5 @@
 /*
- Bandika  - A Java based modular Content Management System
+ Elbe 5 CMS - A Java based modular Content Management System
  Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -9,7 +9,7 @@
 package de.elbe5.cms.page;
 
 import de.elbe5.base.util.StringWriteUtil;
-import de.elbe5.webbase.servlet.RequestReader;
+import de.elbe5.cms.servlet.RequestReader;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

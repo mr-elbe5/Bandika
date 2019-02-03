@@ -1,5 +1,5 @@
 /*
-  Bandika  - A Java based modular Content Management System
+  Elbe 5 CMS - A Java based modular Content Management System
   Copyright (C) 2009-2015 Michael Roennau
 
   This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -8,10 +8,15 @@
  */
 package de.elbe5.cms.tag;
 
+import de.elbe5.base.util.StringUtil;
+import de.elbe5.cms.servlet.SessionReader;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
 import java.io.Writer;
+import java.util.Locale;
 
 public class BaseTag implements Tag {
     protected Tag parent = null;
@@ -24,6 +29,14 @@ public class BaseTag implements Tag {
 
     public PageContext getContext() {
         return context;
+    }
+
+    public HttpServletRequest getRequest(){
+        return (HttpServletRequest) getContext().getRequest();
+    }
+
+    public Locale getLocale(HttpServletRequest request){
+        return SessionReader.getSessionLocale(request);
     }
 
     public Writer getWriter() {
@@ -42,16 +55,20 @@ public class BaseTag implements Tag {
 
     @Override
     public int doStartTag() throws JspException {
-        return EVAL_BODY_INCLUDE;
+        return SKIP_BODY;
     }
 
     @Override
     public int doEndTag() {
-        return 0;
+        return EVAL_PAGE;
     }
 
     @Override
     public void release() {
+    }
+
+    protected String toHtml(String s){
+        return StringUtil.toHtml(s);
     }
 
 }

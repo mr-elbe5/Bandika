@@ -1,5 +1,5 @@
 /*
- Bandika  - A Java based modular Content Management System
+ Elbe 5 CMS - A Java based modular Content Management System
  Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -9,25 +9,24 @@
 package de.elbe5.cms.search;
 
 import de.elbe5.cms.application.AdminActions;
-import de.elbe5.cms.servlet.CmsActions;
-import de.elbe5.webbase.rights.Right;
-import de.elbe5.webbase.rights.SystemZone;
-import de.elbe5.webbase.servlet.ActionSetCache;
-import de.elbe5.webbase.servlet.RequestReader;
-import de.elbe5.webbase.servlet.RequestWriter;
+import de.elbe5.cms.application.Strings;
+import de.elbe5.cms.page.JspPageData;
+import de.elbe5.cms.servlet.ActionSet;
+import de.elbe5.cms.servlet.ActionSetCache;
+import de.elbe5.cms.servlet.RequestReader;
+import de.elbe5.cms.servlet.SuccessMessage;
+import de.elbe5.cms.rights.Right;
+import de.elbe5.cms.rights.SystemZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class SearchActions extends CmsActions {
+public class SearchActions extends ActionSet {
 
     public static final String openSearch="openSearch";
+    public static final String openUserSearch="openUserSearch";
     public static final String search="search";
-    public static final String showAdminSearchDetails="showAdminSearchDetails";
-    public static final String showSiteSearchDetails="showSiteSearchDetails";
-    public static final String showPageSearchDetails="showPageSearchDetails";
-    public static final String showFileSearchDetails="showFileSearchDetails";
-    public static final String showUserSearchDetails="showUserSearchDetails";
+    public static final String searchUsers="searchUsers";
     public static final String indexAllContent="indexAllContent";
     public static final String indexAllUsers="indexAllUsers";
 
@@ -40,53 +39,42 @@ public class SearchActions extends CmsActions {
     private SearchActions(){
     }
 
-    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) throws Exception {
+    public boolean execute(HttpServletRequest request, HttpServletResponse response, String actionName) {
         switch (actionName) {
             case openSearch: {
                 return showSearch(request, response);
             }
+            case openUserSearch: {
+                return showUserSearch(request, response);
+            }
             case search: {
-                ContentSearchResultData contentResult = new ContentSearchResultData();
+                PageSearchResultData contentResult = new PageSearchResultData();
                 String pattern = RequestReader.getString(request, "searchPattern");
                 contentResult.setPattern(pattern);
-                SearchBean.getInstance().searchContent(contentResult);
-                request.setAttribute("contentSearchResultData", contentResult);
-                UserSearchResultData userResult = new UserSearchResultData();
-                userResult.setPattern(pattern);
-                SearchBean.getInstance().searchUsers(userResult);
-                request.setAttribute("userSearchResultData", userResult);
+                SearchBean.getInstance().searchPages(contentResult);
+                request.setAttribute("searchResultData", contentResult);
                 return showSearch(request, response);
             }
-            case showAdminSearchDetails: {
-                if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
-                    return false;
-                return showAdminSearchDetails(request, response);
-            }
-            case showSiteSearchDetails: {
-                return showSiteSearchDetails(request, response);
-            }
-            case showPageSearchDetails: {
-                return showPageSearchDetails(request, response);
-            }
-            case showFileSearchDetails: {
-                return showFileSearchDetails(request, response);
-            }
-            case showUserSearchDetails: {
-                return showUserSearchDetails(request, response);
+            case searchUsers: {
+                UserSearchResultData userResult = new UserSearchResultData();
+                userResult.setPattern(RequestReader.getString(request, "searchPattern"));
+                SearchBean.getInstance().searchUsers(userResult);
+                request.setAttribute("searchResultData", userResult);
+                return showSearch(request, response);
             }
             case indexAllContent: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
-                    return false;
-                SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_CONTENT, 0, null));
-                RequestWriter.setMessageKey(request, "_indexingContentQueued");
-                return AdminActions.instance.openAdministration(request, response);
+                    return forbidden(request,response);
+                SearchQueue.getInstance().addAction(SearchQueue.ACTION_INDEX_PAGES);
+                SuccessMessage.setMessageByKey(request, Strings._indexingContentQueued);
+                return sendForwardResponse(request,response,"/admin.srv?act="+ AdminActions.openSystemAdministration);
             }
             case indexAllUsers: {
                 if (!hasSystemRight(request, SystemZone.CONTENT, Right.EDIT))
-                    return false;
-                SearchQueue.getInstance().addAction(new SearchQueueAction(SearchQueueAction.ACTION_INDEX_ALL_USERS, 0, null));
-                RequestWriter.setMessageKey(request, "_indexingUsersQueued");
-                return AdminActions.instance.openAdministration(request, response);
+                    return forbidden(request,response);
+                SearchQueue.getInstance().addAction(SearchQueue.ACTION_INDEX_USERS);
+                SuccessMessage.setMessageByKey(request, Strings._indexingUsersQueued);
+                return sendForwardResponse(request,response,"/admin.srv?act="+ AdminActions.openSystemAdministration);
             }
             default: {
                 return showSearch(request, response);
@@ -100,27 +88,15 @@ public class SearchActions extends CmsActions {
     }
 
     protected boolean showSearch(HttpServletRequest request, HttpServletResponse response) {
-        return setJspResponse(request, response, "/WEB-INF/_jsp/search/search.jsp");
+        JspPageData pageData=new JspPageData();
+        pageData.setJsp("/WEB-INF/_jsp/search/search.jsp");
+        return setPageResponse(request, response, pageData);
     }
 
-    protected boolean showAdminSearchDetails(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/search/searchDetails.ajax.jsp");
-    }
-
-    protected boolean showSiteSearchDetails(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/search/siteSearchDetails.ajax.jsp");
-    }
-
-    protected boolean showPageSearchDetails(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/search/pageSearchDetails.ajax.jsp");
-    }
-
-    protected boolean showFileSearchDetails(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/search/fileSearchDetails.ajax.jsp");
-    }
-
-    protected boolean showUserSearchDetails(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/search/userSearchDetails.ajax.jsp");
+    protected boolean showUserSearch(HttpServletRequest request, HttpServletResponse response) {
+        JspPageData pageData=new JspPageData();
+        pageData.setJsp("/WEB-INF/_jsp/search/userSearch.jsp");
+        return setPageResponse(request, response, pageData);
     }
 
 }

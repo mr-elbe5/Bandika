@@ -1,5 +1,5 @@
 /*
- Bandika  - A Java based modular Content Management System
+ Elbe 5 CMS - A Java based modular Content Management System
  Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -8,7 +8,7 @@
  */
 package de.elbe5.cms.timer;
 
-import de.elbe5.webbase.application.AppContextListener;
+import de.elbe5.cms.application.AppContextListener;
 import de.elbe5.base.log.Log;
 import de.elbe5.cms.configuration.Configuration;
 
@@ -27,10 +27,10 @@ public class TimerController {
         return instance;
     }
 
-    protected Map<String, TimerTask> tasks = new HashMap<>();
+    protected Map<String, TimerTaskData> tasks = new HashMap<>();
     protected TimerThread timerThread = null;
 
-    public void registerTimerTask(TimerTask task){
+    public void registerTimerTask(TimerTaskData task){
         TimerBean.getInstance().assertTimerTask(task);
         tasks.put(task.getName(),task);
     }
@@ -63,27 +63,27 @@ public class TimerController {
 
     public void loadTasks() {
         LocalDateTime now = TimerBean.getInstance().getServerTime();
-        for (TimerTask task : tasks.values()) {
+        for (TimerTaskData task : tasks.values()) {
             TimerBean.getInstance().readTimerTask(task);
             task.setNextExecution(task.computeNextExecution(now));
         }
     }
 
     public void loadTask(String name) {
-        TimerTask task=tasks.get(name);
+        TimerTaskData task=tasks.get(name);
         TimerBean.getInstance().readTimerTask(task);
         LocalDateTime now = TimerBean.getInstance().getServerTime();
         task.setNextExecution(task.computeNextExecution(now));
     }
 
-    public Map<String, TimerTask> getTasks() {
+    public Map<String, TimerTaskData> getTasks() {
         return tasks;
     }
 
-    public TimerTask getTaskCopy(String name) {
-        TimerTask task = tasks.get(name);
+    public TimerTaskData getTaskCopy(String name) {
+        TimerTaskData task = tasks.get(name);
         try {
-            return (TimerTask) task.clone();
+            return (TimerTaskData) task.clone();
         } catch (CloneNotSupportedException e) {
             return null;
         }

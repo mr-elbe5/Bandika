@@ -1,5 +1,5 @@
 /*
- Bandika  - A Java based modular Content Management System
+ Elbe 5 CMS - A Java based modular Content Management System
  Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -11,13 +11,14 @@ package de.elbe5.cms.file;
 import de.elbe5.base.data.BinaryFileData;
 import de.elbe5.base.data.BinaryFileStreamData;
 import de.elbe5.base.log.Log;
-import de.elbe5.cms.tree.TreeBean;
+import de.elbe5.cms.database.DbBean;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileBean extends TreeBean {
+public class FileBean extends DbBean {
 
     private static FileBean instance = null;
 
@@ -28,18 +29,27 @@ public class FileBean extends TreeBean {
         return instance;
     }
 
-    private static String GEL_FILES_SQL="SELECT t1.id,t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
-            "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
-            "t2.content_type " +
-            "FROM t_treenode t1, t_file t2 " +
-            "WHERE t1.id=t2.id " +
-            "ORDER BY t1.parent_id, t1.ranking";
+    public int getNextId(){
+        return getNextId("s_file_id");
+    }
+
+    private static String CHANGED_FILE_SQL="SELECT change_date FROM t_file WHERE id=?";
+
+    protected boolean changedFile(Connection con, FileData data) {
+        return changedItem(con, CHANGED_FILE_SQL, data);
+    }
+
+    private static String GEL_ALL_FILES_SQL="SELECT id,creation_date,change_date,folder_id,name," +
+            "display_name,description,author_name," +
+            "content_type,file_size,width,height,(preview_bytes IS NOT NULL) as has_preview " +
+            "FROM t_file " +
+            "ORDER BY folder_id";
     public List<FileData> getAllFiles() {
         List<FileData> list = new ArrayList<>();
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(GEL_FILES_SQL);
+            pst = con.prepareStatement(GEL_ALL_FILES_SQL);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     int i = 1;
@@ -47,19 +57,16 @@ public class FileBean extends TreeBean {
                     data.setId(rs.getInt(i++));
                     data.setCreationDate(rs.getTimestamp(i++).toLocalDateTime());
                     data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
-                    data.setParentId(rs.getInt(i++));
-                    data.setRanking(rs.getInt(i++));
+                    data.setFolderId(rs.getInt(i++));
                     data.setName(rs.getString(i++));
                     data.setDisplayName(rs.getString(i++));
                     data.setDescription(rs.getString(i++));
                     data.setAuthorName(rs.getString(i++));
-                    data.setInNavigation(rs.getBoolean(i++));
-                    data.setAnonymous(rs.getBoolean(i++));
-                    data.setInheritsRights(rs.getBoolean(i++));
-                    data.setContentType(rs.getString(i));
-                    if (!data.inheritsRights()) {
-                        data.setRights(getTreeNodeRights(con, data.getId()));
-                    }
+                    data.setContentType(rs.getString(i++));
+                    data.setFileSize(rs.getInt(i++));
+                    data.setWidth(rs.getInt(i++));
+                    data.setHeight(rs.getInt(i));
+                    data.setHasPreview(rs.getBoolean(i));
                     list.add(data);
                 }
             }
@@ -72,178 +79,168 @@ public class FileBean extends TreeBean {
         return list;
     }
 
-    private static String GET_FILE_SQL="SELECT t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
-            "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
-            "t2.content_type " +
-            "FROM t_treenode t1, t_file t2 " +
-            "WHERE t1.id=? AND t2.id=?";
     public FileData getFile(int id, boolean withBytes) {
-        FileData data = null;
+        FileData data = new FileData();
+        data.setId(id);
         Connection con = getConnection();
-        PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(GET_FILE_SQL);
-            pst.setInt(1, id);
-            pst.setInt(2, id);
-            try (ResultSet rs = pst.executeQuery()) {
-                while (rs.next()) {
-                    int i = 1;
-                    data = new FileData();
-                    data.setId(id);
-                    data.setCreationDate(rs.getTimestamp(i++).toLocalDateTime());
-                    data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
-                    data.setParentId(rs.getInt(i++));
-                    data.setRanking(rs.getInt(i++));
-                    data.setName(rs.getString(i++));
-                    data.setDisplayName(rs.getString(i++));
-                    data.setDescription(rs.getString(i++));
-                    data.setAuthorName(rs.getString(i++));
-                    data.setInNavigation(rs.getBoolean(i++));
-                    data.setAnonymous(rs.getBoolean(i++));
-                    data.setInheritsRights(rs.getBoolean(i++));
-                    data.setContentType(rs.getString(i));
-                    if (!data.inheritsRights()) {
-                        data.setRights(getTreeNodeRights(con, data.getId()));
-                    }
-                    if (withBytes)
-                        loadFileContentWithBytes(data);
-                    else
-                        loadFileContent(data);
-                }
+            if (!readFileData(con, data, withBytes)) {
+                return null;
             }
+            FileCache tc = FileCache.getInstance();
+            tc.inheritFromFolder(data);
         } catch (SQLException se) {
             Log.error("sql error", se);
         } finally {
-            closeStatement(pst);
             closeConnection(con);
         }
         return data;
     }
 
-    public BinaryFileData getBinaryPreview(int id) {
-        if (PreviewCache.getInstance().getMaxCount() == 0) {
-            try {
-                return getBinaryPreviewData(id);
-            } catch (Exception e) {
-                return null;
-            }
-        }
-        BinaryFileData data = PreviewCache.getInstance().get(id);
-        if (data == null) {
-            try {
-                data = getBinaryPreviewData(id);
-                PreviewCache.getInstance().add(id, data);
-            } catch (Exception e) {
-                return null;
-            }
-        }
-        return data;
-    }
+    private static String READ_FILE_SQL="SELECT creation_date,change_date,folder_id,name,display_name,description, " +
+            "keywords,author_name,content_type,file_size,width,height,(preview_bytes IS NOT NULL) as has_preview " +
+            "FROM t_file " +
+            "WHERE id=?";
 
-    public void loadFileContent(FileData data) {
-        Connection con = getConnection();
-        try {
-            readFile(con, data);
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeConnection(con);
-        }
-    }
+    private static String READ_FILE_WITH_BYTES_SQL="SELECT creation_date,change_date,folder_id,name,display_name,description, " +
+            "keywords,author_name,content_type,file_size,width,height,(preview_bytes IS NOT NULL) as has_preview,bytes,preview_bytes " +
+            "FROM t_file " +
+            "WHERE id=?";
 
-    public void loadFileContentWithBytes(FileData data) {
-        Connection con = getConnection();
-        try {
-            readFile(con, data);
-            readFileBytes(con, data);
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeConnection(con);
-        }
-    }
-
-    private static String READ_FILE_SQL="SELECT content_type,file_size,width,height,preview_content_type,(preview_bytes IS NOT NULL) AS has_preview FROM t_file WHERE id=?";
-    protected void readFile(Connection con, FileData data) throws SQLException {
+    public boolean readFileData(Connection con, FileData data, boolean withBytes) throws SQLException {
         PreparedStatement pst = null;
+        boolean success = false;
         try {
-            pst = con.prepareStatement(READ_FILE_SQL);
-            pst.setInt(1, data.getId());
-            try (ResultSet rs = pst.executeQuery()) {
-                while (rs.next()) {
-                    int i = 1;
-                    data.setContentType(rs.getString(i++));
-                    data.setFileSize(rs.getInt(i++));
-                    data.setWidth(rs.getInt(i++));
-                    data.setHeight(rs.getInt(i++));
-                    data.setPreviewContentType(rs.getString(i++));
-                    data.setHasPreview(rs.getBoolean(i));
-                }
-            }
-        } finally {
-            closeStatement(pst);
-        }
-    }
-
-    private static String READ_BYTES_SQL="SELECT bytes, preview_bytes FROM t_file WHERE id=?";
-    protected void readFileBytes(Connection con, FileData data) throws SQLException {
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement(READ_BYTES_SQL);
+            pst = con.prepareStatement(withBytes? READ_FILE_WITH_BYTES_SQL : READ_FILE_SQL);
             pst.setInt(1, data.getId());
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
-                    data.setBytes(rs.getBytes(i++));
-                    data.setPreviewBytes(rs.getBytes(i));
+                    data.setCreationDate(rs.getTimestamp(i++).toLocalDateTime());
+                    data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
+                    data.setFolderId(rs.getInt(i++));
+                    data.setName(rs.getString(i++));
+                    data.setDisplayName(rs.getString(i++));
+                    data.setDescription(rs.getString(i++));
+                    data.setKeywords(rs.getString(i++));
+                    data.setAuthorName(rs.getString(i++));
+                    data.setContentType(rs.getString(i++));
+                    data.setFileSize(rs.getInt(i++));
+                    data.setWidth(rs.getInt(i++));
+                    data.setHeight(rs.getInt(i++));
+                    data.setHasPreview(rs.getBoolean(i++));
+                    if (withBytes) {
+                        data.setBytes(rs.getBytes(i++));
+                        data.setPreviewBytes(rs.getBytes(i));
+                    }
+                    success = true;
                 }
             }
         } finally {
             closeStatement(pst);
         }
+        return success;
     }
 
     public boolean saveFile(FileData data) {
         Connection con = startTransaction();
         try {
-            if (!data.isNew() && !unchangedNode(con, data)) {
+            if (!data.isNew() && changedFile(con, data)) {
                 rollbackTransaction(con);
                 return false;
             }
             data.setChangeDate(getServerTime(con));
-            writeTreeNode(con, data);
-            writeFile(con, data);
+            writeFileData(con, data);
             return commitTransaction(con);
         } catch (Exception se) {
             return rollbackTransaction(con, se);
         }
     }
 
-    private static String INSERT_FILE_SQL="INSERT INTO t_file (id,content_type,file_size,width,height,bytes,preview_content_type,preview_bytes) VALUES(?,?,?,?,?,?,?,?)";
-    protected void writeFile(Connection con, FileData data) throws SQLException {
+    private static String INSERT_FILE_SQL="insert into t_file (creation_date,change_date,folder_id," +
+            "name,display_name,description,author_name,content_type,file_size,width,height,bytes,preview_bytes,id) " +
+            "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static String UPDATE_FILE_SQL="update t_file set creation_date=?,change_date=?,folder_id=?," +
+            "name=?,display_name=?,description=?,author_name=?,content_type=?,file_size=?,width=?,height=?,bytes=?,preview_bytes=? " +
+            "where id=?";
+
+    protected void writeFileData(Connection con, FileData data) throws SQLException {
+        LocalDateTime now = getServerTime(con);
+        data.setChangeDate(now);
+        if (data.isNew()) {
+            data.setCreationDate(now);
+        }
         PreparedStatement pst = null;
         try {
+            pst = con.prepareStatement(data.isNew() ? INSERT_FILE_SQL : UPDATE_FILE_SQL);
             int i = 1;
-            pst = con.prepareStatement(INSERT_FILE_SQL);
-            pst.setInt(i++, data.getId());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getCreationDate()));
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
+            pst.setInt(i++, data.getFolderId());
+            pst.setString(i++, data.getName());
+            pst.setString(i++, data.getDisplayName());
+            pst.setString(i++, data.getDescription());
+            pst.setString(i++, data.getAuthorName());
             pst.setString(i++, data.getContentType());
             pst.setInt(i++, data.getFileSize());
             pst.setInt(i++, data.getWidth());
             pst.setInt(i++, data.getHeight());
             pst.setBytes(i++, data.getBytes());
-            pst.setString(i++, data.getPreviewContentType());
-            if (data.getPreviewBytes() == null) {
-                pst.setNull(i, Types.BINARY);
-            } else {
-                pst.setBytes(i, data.getPreviewBytes());
-            }
+            pst.setBytes(i++, data.getPreviewBytes());
+            pst.setInt(i, data.getId());
             pst.executeUpdate();
+            pst.close();
         } finally {
             closeStatement(pst);
         }
     }
 
-    private static String GET_FILE_STREAM_SQL="SELECT t1.name,t2.content_type,t2.file_size,t2.bytes FROM t_treenode t1, t_file t2 WHERE t1.id=? AND t2.id=?";
+    private static String MOVE_FILE_SQL="UPDATE t_file SET folder_id=? WHERE id=?";
+
+    public boolean moveFile(int docId, int folderId) {
+        Connection con = startTransaction();
+        PreparedStatement pst = null;
+        try {
+            pst = con.prepareStatement(MOVE_FILE_SQL);
+            pst.setInt(1, folderId);
+            pst.setInt(2, docId);
+            pst.executeUpdate();
+            closeStatement(pst);
+            return commitTransaction(con);
+        } catch (Exception se) {
+            closeStatement(pst);
+            return rollbackTransaction(con, se);
+        }
+    }
+
+    private static String GET_PREVIEW_SQL="SELECT name, preview_bytes FROM t_file WHERE id=?";
+
+    public BinaryFileData getBinaryPreviewData(int id) throws SQLException {
+        Connection con = getConnection();
+        PreparedStatement pst = null;
+        BinaryFileData data = null;
+        try {
+            pst = con.prepareStatement(GET_PREVIEW_SQL);
+            pst.setInt(1, id);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    int i = 1;
+                    data = new BinaryFileData();
+                    data.setFileName(rs.getString(i++));
+                    data.setContentType("image/jpg");
+                    data.setBytes(rs.getBytes(i));
+                    data.setFileSize(data.getBytes().length);
+                }
+            }
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+        return data;
+    }
+    
+    private static String GET_FILE_STREAM_SQL="SELECT name,content_type,file_size,bytes FROM t_file WHERE id=?";
+    
     public BinaryFileStreamData getBinaryFileStreamData(int id) throws SQLException {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -251,7 +248,6 @@ public class FileBean extends TreeBean {
         try {
             pst = con.prepareStatement(GET_FILE_STREAM_SQL);
             pst.setInt(1, id);
-            pst.setInt(2, id);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
@@ -269,7 +265,7 @@ public class FileBean extends TreeBean {
         return data;
     }
 
-    private static String GET_FILE_DATA_SQL="SELECT t1.name,t2.content_type,t2.file_size,t2.bytes FROM t_treenode t1, t_file t2 WHERE t1.id=? AND t2.id=?";
+    private static String GET_FILE_DATA_SQL="SELECT name,content_type,file_size,bytes FROM t_file WHERE id=?";
     public BinaryFileData getBinaryFileData(int id) throws SQLException {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -277,7 +273,6 @@ public class FileBean extends TreeBean {
         try {
             pst = con.prepareStatement(GET_FILE_DATA_SQL);
             pst.setInt(1, id);
-            pst.setInt(2, id);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
@@ -294,73 +289,11 @@ public class FileBean extends TreeBean {
         }
         return data;
     }
+    
+    private static String DELETE_FILE_SQL="DELETE FROM t_file WHERE id=?";
 
-    private static String GET_PREVIEW_DATA_SQL="SELECT t1.name, t2.preview_content_type, t2.preview_bytes FROM t_treenode t1, t_file t2 WHERE t1.id=? AND t2.id=?";
-    public BinaryFileData getBinaryPreviewData(int id) throws SQLException {
-        Connection con = getConnection();
-        PreparedStatement pst = null;
-        BinaryFileData data = null;
-        try {
-            pst = con.prepareStatement(GET_PREVIEW_DATA_SQL);
-            pst.setInt(1, id);
-            pst.setInt(2, id);
-            try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    int i = 1;
-                    data = new BinaryFileData();
-                    data.setFileName(rs.getString(i++));
-                    data.setContentType(rs.getString(i++));
-                    data.setBytes(rs.getBytes(i));
-                    data.setFileSize(data.getBytes().length);
-                }
-            }
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-        return data;
+    public boolean deleteFile(int id) {
+        return deleteItem(DELETE_FILE_SQL, id);
     }
 
-    private static String GET_USAGES_SQL="SELECT DISTINCT t1.page_id FROM t_node_usage t1, t_file t2 " + "WHERE t1.linked_node_id=? AND t1.page_id=t2.id";
-    public void readFileUsages(Connection con, FileData data) throws SQLException {
-        List<Integer> ids = new ArrayList<>();
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement(GET_USAGES_SQL);
-            pst.setInt(1, data.getId());
-            try (ResultSet rs = pst.executeQuery()) {
-                while (rs.next()) {
-                    ids.add(rs.getInt(1));
-                }
-            }
-        } finally {
-            closeStatement(pst);
-        }
-        data.setPageIds(ids);
-    }
-
-    private static String GET_INUSE_SQL="SELECT page_id FROM t_node_usage WHERE linked_node_id=?";
-    public boolean isFileInUse(int id) throws SQLException {
-        Connection con = getConnection();
-        PreparedStatement pst = null;
-        boolean inUse = false;
-        try {
-            pst = con.prepareStatement(GET_INUSE_SQL);
-            pst.setInt(1, id);
-            try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    inUse = true;
-                }
-            }
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-        return inUse;
-    }
-
-    public void deleteFile(int id) {
-        deleteTreeNode(id);
-        PreviewCache.getInstance().remove(id);
-    }
 }

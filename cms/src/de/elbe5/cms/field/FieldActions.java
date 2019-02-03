@@ -1,5 +1,5 @@
 /*
- Bandika  - A Java based modular Content Management System
+ Elbe 5 CMS - A Java based modular Content Management System
  Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -8,26 +8,21 @@
  */
 package de.elbe5.cms.field;
 
+import de.elbe5.cms.application.Strings;
 import de.elbe5.cms.file.FileBean;
+import de.elbe5.cms.file.FileCache;
 import de.elbe5.cms.file.FileData;
-import de.elbe5.cms.page.CkCallbackData;
-import de.elbe5.cms.site.SiteData;
-import de.elbe5.cms.tree.BaseTreeActions;
-import de.elbe5.cms.tree.TreeCache;
-import de.elbe5.webbase.rights.Right;
-import de.elbe5.webbase.servlet.*;
+import de.elbe5.cms.file.FolderData;
+import de.elbe5.cms.rights.Right;
+import de.elbe5.cms.servlet.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class FieldActions extends BaseTreeActions {
+public class FieldActions extends ActionSet {
 
     public static final String openLinkBrowser="openLinkBrowser";
-    public static final String showSelectableBrowserLinks="showSelectableBrowserLinks";
     public static final String openImageBrowser="openImageBrowser";
-    public static final String reopenImageBrowser="reopenImageBrowser";
-    public static final String showSelectableBrowserImages="showSelectableBrowserImages";
-    public static final String openCreateImageInBrowser="openCreateImageInBrowser";
     public static final String saveImageInBrowser="saveImageInBrowser";
 
     public static final String KEY = "field";
@@ -44,91 +39,36 @@ public class FieldActions extends BaseTreeActions {
             case openLinkBrowser: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                int siteId = RequestReader.getInt(request, "siteId");
-                CkCallbackData browseData = new CkCallbackData();
-                browseData.setPageId(pageId);
-                browseData.setCkCallbackNum(RequestReader.getInt(request, "CKEditorFuncNum", -1));
-                browseData.setSiteId(siteId);
-                SessionWriter.setSessionObject(request, "browseData", browseData);
+                    return forbidden(request,response);
                 return showLinkBrowserJsp(request, response);
-            }
-            case showSelectableBrowserLinks: {
-                int pageId = RequestReader.getInt(request, "pageId");
-                if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                CkCallbackData browseData = (CkCallbackData) SessionReader.getSessionObject(request, "browseData");
-                assert browseData != null;
-                browseData.setSiteId(RequestReader.getInt(request, "siteId"));
-                return showSelectableBrowserLinksJsp(request, response);
             }
             case openImageBrowser: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                int siteId = RequestReader.getInt(request, "siteId");
-                CkCallbackData browseData = new CkCallbackData();
-                browseData.setPageId(pageId);
-                browseData.setCkCallbackNum(RequestReader.getInt(request, "CKEditorFuncNum", -1));
-                browseData.setSiteId(siteId);
-                SessionWriter.setSessionObject(request, "browseData", browseData);
+                    return forbidden(request,response);
                 return showImageBrowserJsp(request, response);
-            }
-            case reopenImageBrowser: {
-                int pageId = RequestReader.getInt(request, "pageId");
-                if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                return showImageBrowserJsp(request, response);
-            }
-            case showSelectableBrowserImages: {
-                int pageId = RequestReader.getInt(request, "pageId");
-                if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                CkCallbackData browseData = (CkCallbackData) SessionReader.getSessionObject(request, "browseData");
-                assert browseData != null;
-                browseData.setSiteId(RequestReader.getInt(request, "siteId"));
-                return showSelectableBrowserImagesJsp(request, response);
-            }
-            case openCreateImageInBrowser: {
-                int pageId = RequestReader.getInt(request, "pageId");
-                if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                return showCreateImageInBrowserJsp(request, response);
             }
             case saveImageInBrowser: {
                 int pageId = RequestReader.getInt(request, "pageId");
                 if (!hasContentRight(request, pageId, Right.EDIT))
-                    return false;
-                int parentId = RequestReader.getInt(request, "siteId");
+                    return forbidden(request,response);
+                int parentId = RequestReader.getInt(request, "folderId");
                 FileBean ts = FileBean.getInstance();
-                TreeCache tc = TreeCache.getInstance();
-                SiteData parentNode = tc.getSite(parentId);
+                FolderData parentNode = FileCache.getInstance().getFolder(parentId);
                 FileData data = new FileData();
-                data.readFileCreateRequestData(request);
-                if (!data.isComplete()) {
-                    return showCreateImageInBrowserJsp(request, response);
-                }
+                data.readRequestData(request);
                 data.setNew(true);
                 data.setId(FileBean.getInstance().getNextId());
-                data.setParentId(parentNode.getId());
-                data.setParent(parentNode);
-                data.setAnonymous(parentNode.isAnonymous());
-                data.setInheritsRights(true);
-                data.inheritPathFromParent();
-                data.inheritRightsFromParent();
-                data.inheritParentIdsFromParent();
-                data.setInNavigation(parentNode.isInNavigation());
-                data.setRanking(parentNode.getSites().size());
+                data.setFolderId(parentNode.getId());
+                data.setFolder(parentNode);
                 data.setAuthorName(SessionReader.getLoginName(request));
-                data.prepareSave();
                 ts.saveFile(data);
-                TreeCache.getInstance().setDirty();
-                return closeLayer(request, response, "closeLayerToBrowserLayer('/field.srv?act="+reopenImageBrowser+"&siteId=" + parentId + "&" + RequestStatics.KEY_MESSAGEKEY + "=_fileCreated');");
+                FileCache.getInstance().setDirty();
+                SuccessMessage.setMessageByKey(request, Strings._fileCreated);
+                return showBrowserImagesJsp(request, response);
             }
             default: {
-                return forbidden();
+                return forbidden(request, response);
             }
         }
     }
@@ -146,16 +86,8 @@ public class FieldActions extends BaseTreeActions {
         return sendForwardResponse(request, response, "/WEB-INF/_jsp/field/browseLinks.jsp");
     }
 
-    public boolean showSelectableBrowserLinksJsp(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/field/selectableBrowserLinks.inc.jsp");
-    }
-
-    public boolean showSelectableBrowserImagesJsp(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/field/selectableBrowserImages.inc.jsp");
-    }
-
-    public boolean showCreateImageInBrowserJsp(HttpServletRequest request, HttpServletResponse response) {
-        return sendForwardResponse(request, response, "/WEB-INF/_jsp/field/createImageInBrowser.ajax.jsp");
+    public boolean showBrowserImagesJsp(HttpServletRequest request, HttpServletResponse response) {
+        return sendForwardResponse(request, response, "/WEB-INF/_jsp/field/browserImages.inc.jsp");
     }
 
 }

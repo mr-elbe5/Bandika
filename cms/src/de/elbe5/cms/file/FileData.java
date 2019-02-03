@@ -1,21 +1,14 @@
-/*
- Bandika  - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
-
- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
- This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
- */
 package de.elbe5.cms.file;
 
+import de.elbe5.base.data.BaseIdData;
 import de.elbe5.base.data.BinaryFileData;
+import de.elbe5.base.log.Log;
 import de.elbe5.base.util.FileUtil;
 import de.elbe5.base.util.ImageUtil;
 import de.elbe5.base.util.StringUtil;
-import de.elbe5.cms.tree.TreeNode;
-import de.elbe5.webbase.servlet.RequestError;
-import de.elbe5.webbase.servlet.RequestReader;
-import de.elbe5.webbase.servlet.SessionReader;
+import de.elbe5.cms.servlet.IRequestData;
+import de.elbe5.cms.servlet.RequestError;
+import de.elbe5.cms.servlet.RequestReader;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
@@ -24,121 +17,170 @@ import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class FileData extends TreeNode {
+public class FileData extends BaseIdData implements IRequestData, Comparable<FileData> {
 
     public static int MAX_THUMBNAIL_WIDTH = 200;
     public static int MAX_THUMBNAIL_HEIGHT = 200;
+
+    protected LocalDateTime creationDate = null;
+    protected int folderId = 0;
+    protected FolderData folder = null;
+    protected List<Integer> folderIds = new ArrayList<>();
+    protected String name = "";
+    protected String path = "";
+    protected String displayName = "";
+    protected String description = "";
+    protected String keywords = "";
+    protected String authorName = "";
 
     protected String contentType = null;
     protected int fileSize = 0;
     protected int width = 0;
     protected int height = 0;
-    protected String previewContentType = "";
-    protected boolean hasPreview = false;
     protected byte[] bytes = null;
     protected byte[] previewBytes = null;
-    protected List<Integer> pageIds = new ArrayList<>();
+    protected boolean hasPreview=false;
 
     public FileData() {
     }
 
-    public void cloneData(FileData data) {
-        super.cloneData(data);
-        setContentType(data.getContentType());
-        setFileSize(data.getFileSize());
-        setWidth(data.getWidth());
-        setHeight(data.getHeight());
-        setPreviewContentType(data.getPreviewContentType());
-        setHasPreview(data.hasPreview());
-        if (data.getBytes() == null) {
-            setBytes(null);
-        } else {
-            setBytes(new byte[data.getBytes().length]);
-            System.arraycopy(data.getBytes(), 0, getBytes(), 0, data.getBytes().length);
-        }
-        if (data.getPreviewBytes() == null) {
-            setPreviewBytes(null);
-        } else {
-            setPreviewBytes(new byte[data.getPreviewBytes().length]);
-            System.arraycopy(data.getPreviewBytes(), 0, getPreviewBytes(), 0, data.getPreviewBytes().length);
-        }
+    public void setCreateValues(FolderData folder) {
+        setNew(true);
+        setId(FileBean.getInstance().getNextId());
+        setFolderId(folder.getId());
+        setFolder(folder);
+        inheritFolderIdsFromFolder();
+        inheritPathFromFolder();
     }
 
-    @Override
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime d) {
+        creationDate = d;
+    }
+
+    public int getFolderId() {
+        return folderId;
+    }
+
+    public void setFolderId(int folderId) {
+        this.folderId = folderId;
+    }
+
+    public FolderData getFolder() {
+        return folder;
+    }
+
+    public void setFolder(FolderData folder) {
+        this.folder = folder;
+    }
+
+    public List<Integer> getFolderIds() {
+        return folderIds;
+    }
+
+    public void setFolderIds(List<Integer> folderIds) {
+        this.folderIds = folderIds;
+    }
+
+    public void inheritFolderIdsFromFolder() {
+        getFolderIds().clear();
+        getFolderIds().addAll(folder.getParentIds());
+        getFolderIds().add(folderId);
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
-        if (!name.contains(".") && this.name.contains("."))
-            name = name + FileUtil.getExtension(this.name);
         this.name = StringUtil.toSafeWebName(name);
     }
 
-    @Override
+    public String getPath() {
+        return path;
+    }
+
     public String getUrl() {
         return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public void setPathFromFolderPath(String folderPath) {
+        path = folderPath;
+        if (!path.endsWith("/") && name.length() > 0) {
+            path += '/';
+        }
+        path += name;
+    }
+
+    public void inheritPathFromFolder() {
+        setPathFromFolderPath(folder.getPath());
+    }
+
+    public String getDisplayName() {
+        if (displayName == null || displayName.isEmpty()) {
+            return getName();
+        }
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
 
     public String getContentType() {
         return contentType;
     }
 
+    public boolean isImage(){
+        return contentType.startsWith("image/");
+    }
+
     public void setContentType(String contentType) {
         this.contentType = contentType;
-    }
-
-    public boolean isImage() {
-        return getContentType().startsWith("image");
-    }
-
-    public void setFileSize(int fileSize) {
-        this.fileSize = fileSize;
     }
 
     public int getFileSize() {
         return fileSize;
     }
 
-    public boolean hasPreview() {
-        return hasPreview;
-    }
-
-    public void setHasPreview(boolean hasPreview) {
-        this.hasPreview = hasPreview;
-    }
-
-    public String getPreviewContentType() {
-        return previewContentType;
-    }
-
-    public void setPreviewContentType(String previewContentType) {
-        this.previewContentType = previewContentType;
-    }
-
-    public byte[] getPreviewBytes() {
-        return previewBytes;
-    }
-
-    public void setPreviewBytes(byte[] previewBytes) {
-        this.previewBytes = previewBytes;
-    }
-
-    public byte[] getBytes() {
-        return bytes;
-    }
-
-    public void setBytes(byte[] bytes) {
-        this.bytes = bytes;
-    }
-
-    @Override
-    public boolean isComplete() {
-        return isCompleteSettings() && isComplete(bytes);
-    }
-
-    public boolean isCompleteSettings() {
-        return isComplete(name) && isComplete(contentType) && isComplete(fileSize);
+    public void setFileSize(int fileSize) {
+        this.fileSize = fileSize;
     }
 
     public int getWidth() {
@@ -157,80 +199,87 @@ public class FileData extends TreeNode {
         this.height = height;
     }
 
-    public List<Integer> getPageIds() {
-        return pageIds;
+    public byte[] getBytes() {
+        return bytes;
     }
 
-    public void setPageIds(List<Integer> pageIds) {
-        this.pageIds = pageIds;
+    public void setBytes(byte[] bytes) {
+        this.bytes = bytes;
     }
 
-    public boolean isComplete(HttpServletRequest request) {
-        RequestError err = null;
-        boolean valid = isComplete(name);
-        valid &= !isNew() || isComplete(bytes);
-        if (!valid) {
-            err = new RequestError();
-            err.addErrorString(StringUtil.getHtml("_notComplete", SessionReader.getSessionLocale(request)));
-            RequestError.setError(request, err);
-        }
-        return err == null;
+    public byte[] getPreviewBytes() {
+        return previewBytes;
     }
 
-    public void readFileCreateRequestData(HttpServletRequest request) {
+    public void setPreviewBytes(byte[] previewBytes) {
+        this.previewBytes = previewBytes;
+    }
+
+    public boolean hasPreview() {
+        return hasPreview;
+    }
+
+    public void setHasPreview(boolean hasPreview) {
+        this.hasPreview = hasPreview;
+    }
+
+    @Override
+    public boolean readRequestData(HttpServletRequest request) {
         BinaryFileData file = RequestReader.getFile(request, "file");
         if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringUtil.isNullOrEmpty(file.getContentType())) {
             setBytes(file.getBytes());
             setFileSize(file.getBytes().length);
             setName(file.getFileName());
             setContentType(file.getContentType());
-            String name = RequestReader.getString(request, "displayName").trim();
-            setDisplayName(name.isEmpty() ? getName() : name);
-            name = RequestReader.getString(request, "name").trim();
-            setName(name.isEmpty() ? getDisplayName() : name);
-        }
-    }
-
-    protected void readFileEditRequestData(HttpServletRequest request) {
-        BinaryFileData file = RequestReader.getFile(request, "file");
-        if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringUtil.isNullOrEmpty(file.getContentType())) {
-            setBytes(file.getBytes());
-            setFileSize(file.getBytes().length);
-            setName(file.getFileName());
-            setContentType(file.getContentType());
-        }
-    }
-
-    protected void readFileRequestData(HttpServletRequest request) throws Exception {
-        String oldName = getName();
-        readTreeNodeRequestData(request);
-        if (getName().indexOf('.') == -1)
-            setName(getName() + FileUtil.getExtension(oldName));
-        int width = RequestReader.getInt(request, "width");
-        int height = RequestReader.getInt(request, "height");
-        if (width == getWidth()) {
-            width = 0;
-        }
-        if (height == getHeight()) {
-            height = 0;
-        }
-        if (width != 0 || height != 0) {
-            createResizedImage(width, height);
-        }
-    }
-
-    public void prepareSave() throws Exception {
-        super.prepareSave();
-        if (isImage() && getBytes() != null) {
-            BufferedImage source = ImageUtil.createImage(bytes, contentType);
-            if (source != null) {
-                setWidth(source.getWidth());
-                setHeight(source.getHeight());
-                float factor = ImageUtil.getResizeFactor(source, MAX_THUMBNAIL_WIDTH, MAX_THUMBNAIL_HEIGHT);
-                BufferedImage image = ImageUtil.copyImage(source, factor);
-                createJpegPreview(image);
+            if (isImage()) {
+                int width = RequestReader.getInt(request, "width");
+                int height = RequestReader.getInt(request, "height");
+                if (width == getWidth()) {
+                    width = 0;
+                }
+                if (height == getHeight()) {
+                    height = 0;
+                }
+                if (width != 0 || height != 0) {
+                    try {
+                        createResizedImage(width, height);
+                    }
+                    catch (IOException e){
+                        Log.error("could not create resized image", e);
+                    }
+                }
+                try {
+                    BufferedImage source = ImageUtil.createImage(bytes, contentType);
+                    if (source != null) {
+                        setWidth(source.getWidth());
+                        setHeight(source.getHeight());
+                        float factor = ImageUtil.getResizeFactor(source, MAX_THUMBNAIL_WIDTH, MAX_THUMBNAIL_HEIGHT);
+                        BufferedImage image = ImageUtil.copyImage(source, factor);
+                        createJpegPreview(image);
+                    }
+                }
+                catch (IOException e){
+                    Log.error("could not create preview image", e);
+                }
             }
         }
+        String newName = RequestReader.getString(request, "name").trim();
+        if (!newName.isEmpty())
+            setName(newName);
+        setDisplayName(RequestReader.getString(request, "displayName").trim());
+        if (getDisplayName().isEmpty())
+            setDisplayName(getName());
+        setDescription(RequestReader.getString(request, "description"));
+        setKeywords(RequestReader.getString(request, "keywords"));
+        RequestError error = new RequestError();
+        if (name.isEmpty()) {
+            error.addErrorField("name");
+        }
+        if (!error.isEmpty()){
+            error.setError(request);
+            return false;
+        }
+        return true;
     }
 
     public void createResizedImage(int width, int height) throws IOException {
@@ -272,7 +321,12 @@ public class FileData extends TreeNode {
         bout.flush();
         bout.close();
         setPreviewBytes(bout.toByteArray());
-        setPreviewContentType("image/jpeg");
     }
+
+    @Override
+    public int compareTo(FileData doc) {
+        return getName().compareTo(doc.getName());
+    }
+
 
 }

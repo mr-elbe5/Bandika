@@ -1,5 +1,5 @@
 /*
- Bandika  - A Java based modular Content Management System
+ Elbe 5 CMS - A Java based modular Content Management System
  Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -39,7 +39,7 @@ public class TimerThread extends BaseThread {
 
     protected void checkTasks() {
         LocalDateTime now = TimerBean.getInstance().getServerTime();
-        for (TimerTask task : TimerController.getInstance().getTasks().values()) {
+        for (TimerTaskData task : TimerController.getInstance().getTasks().values()) {
             try {
                 if (task.isActive()) {
                     checkTask(task, now);
@@ -50,7 +50,7 @@ public class TimerThread extends BaseThread {
         }
     }
 
-    protected void checkTask(TimerTask task, LocalDateTime now) {
+    protected void checkTask(TimerTaskData task, LocalDateTime now) {
         if (now == null) {
             return;
         }

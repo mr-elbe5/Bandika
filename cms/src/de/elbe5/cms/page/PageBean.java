@@ -1,5 +1,5 @@
 /*
- Bandika  - A Java based modular Content Management System
+ Elbe 5 CMS - A Java based modular Content Management System
  Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -9,18 +9,14 @@
 package de.elbe5.cms.page;
 
 import de.elbe5.base.log.Log;
-import de.elbe5.cms.tree.TreeBean;
+import de.elbe5.cms.database.DbBean;
+import de.elbe5.cms.rights.Right;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 
-/**
- * Class PageBean is the persistence class for any page. <br>
- * Usage:
- */
-public class PageBean extends TreeBean {
+public class PageBean extends DbBean {
 
     private static PageBean instance = null;
 
@@ -30,14 +26,51 @@ public class PageBean extends TreeBean {
         }
         return instance;
     }
-    // *******************************
 
-    private static String GET_PAGES_SQL="SELECT t1.id,t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
-            "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
-            "t2.template,t2.publish_date,t2.published_content " +
-            "FROM t_treenode t1, t_page t2 " +
-            "WHERE t1.id=t2.id AND t1.id=t2.id " +
-            "ORDER BY t1.parent_id, t1.ranking";
+    public int getNextId(){
+        return getNextId("s_page_id");
+    }
+
+    private static String CHANGED_SQL="SELECT change_date FROM t_page WHERE id=?";
+
+    protected boolean changedPage(Connection con, PageData data) {
+        return changedItem(con, CHANGED_SQL, data);
+    }
+
+    private static String READ_LANG_ROOTS_SQL="SELECT t1.id,t2.locale FROM t_page t1, t_locale t2 WHERE t1.id=t2.home_id";
+
+    public Map<Locale, Integer> readLanguageRootIds() {
+        Map<Locale, Integer> map = new HashMap<>();
+        Connection con = getConnection();
+        PreparedStatement pst = null;
+        try {
+            pst = con.prepareStatement(READ_LANG_ROOTS_SQL);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    int i = 1;
+                    int id = rs.getInt(i++);
+                    String locale = rs.getString(i);
+                    try {
+                        map.put(new Locale(locale), id);
+                    } catch (Exception e) {
+                        Log.error("no appropriate locale", e);
+                    }
+                }
+            }
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+        return map;
+    }
+
+    private static String GET_PAGES_SQL="SELECT id,creation_date,change_date,parent_id,ranking,name," +
+            "display_name,description,keywords,author_name,in_topnav,in_footer,anonymous,inherits_rights," +
+            "master,template,dynamic,publish_date,published_content,search_content " +
+            "FROM t_page " +
+            "ORDER BY parent_id, ranking";
     public List<PageData> getAllPages() {
         List<PageData> list = new ArrayList<>();
         Connection con = getConnection();
@@ -50,8 +83,8 @@ public class PageBean extends TreeBean {
                     PageData data = new PageData();
                     data.setId(rs.getInt(i++));
                     readPageResult(rs,i,data);
-                    if (!data.inheritsRights()) {
-                        data.setRights(getTreeNodeRights(con, data.getId()));
+                    if (!data.isAnonymous() && !data.inheritsRights()) {
+                        data.setRights(getPageRights(con, data.getId()));
                     }
                     list.add(data);
                 }
@@ -65,11 +98,11 @@ public class PageBean extends TreeBean {
         return list;
     }
 
-    private static String GET_PAGE_SQL="SELECT t1.creation_date,t1.change_date,t1.parent_id,t1.ranking,t1.name," +
-            "t1.display_name,t1.description,t1.author_name,t1.in_navigation,t1.anonymous,t1.inherits_rights," +
-            "t2.template,t2.publish_date,t2.published_content " +
-            "FROM t_treenode t1, t_page t2 " +
-            "WHERE t1.id=? AND t2.id=?";
+    private static String GET_PAGE_SQL="SELECT creation_date,change_date,parent_id,ranking,name," +
+            "display_name,description,keywords,author_name,in_topnav,in_footer,anonymous,inherits_rights," +
+            "master,template,dynamic,publish_date,published_content,search_content " +
+            "FROM t_page " +
+            "WHERE id=?";
     public PageData getPage(int id) {
         PageData data = null;
         Connection con = getConnection();
@@ -77,17 +110,16 @@ public class PageBean extends TreeBean {
         try {
             pst = con.prepareStatement(GET_PAGE_SQL);
             pst.setInt(1, id);
-            pst.setInt(2, id);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
                     data = new PageData();
                     data.setId(id);
                     readPageResult(rs,i,data);
-                    if (!data.inheritsRights()) {
-                        data.setRights(getTreeNodeRights(con, data.getId()));
+                    if (!data.isAnonymous() && !data.inheritsRights()) {
+                        data.setRights(getPageRights(con, data.getId()));
                     }
-                    readAllPageParts(con, data);
+                    PagePartBean.getInstance().readAllPageParts(con, data);
                     data.sortPageParts();
                 }
             }
@@ -108,56 +140,52 @@ public class PageBean extends TreeBean {
         data.setName(rs.getString(i++));
         data.setDisplayName(rs.getString(i++));
         data.setDescription(rs.getString(i++));
+        data.setKeywords(rs.getString(i++));
         data.setAuthorName(rs.getString(i++));
-        data.setInNavigation(rs.getBoolean(i++));
+        data.setInTopNav(rs.getBoolean(i++));
+        data.setInFooter(rs.getBoolean(i++));
         data.setAnonymous(rs.getBoolean(i++));
         data.setInheritsRights(rs.getBoolean(i++));
+        data.setMasterName(rs.getString(i++));
         data.setTemplateName(rs.getString(i++));
+        data.setDynamic(rs.getBoolean(i++));
         Timestamp ts=rs.getTimestamp(i++);
         data.setPublishDate(ts==null ? null : ts.toLocalDateTime());
-        data.setPublishedContent(rs.getString(i));
+        data.setPublishedContent(rs.getString(i++));
+        data.setSearchContent(rs.getString(i));
     }
 
-    public void loadPageContent(PageData data) {
-        Connection con = getConnection();
-        try {
-            readAllPageParts(con, data);
-            data.sortPageParts();
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeConnection(con);
-        }
-    }
+    private static String GET_PAGE_RIGHTS_SQL="SELECT group_id,value FROM t_page_right WHERE page_id=?";
 
-    private static String READ_PAGE_SQL="SELECT template FROM t_page WHERE id=? ";
-    public void readPage(Connection con, PageData data) throws SQLException {
+    public Map<Integer, Right> getPageRights(Connection con, int treeNodeId) throws SQLException {
         PreparedStatement pst = null;
+        Map<Integer, Right> list = new HashMap<>();
         try {
-            pst = con.prepareStatement(READ_PAGE_SQL);
-            pst.setInt(1, data.getId());
+            pst = con.prepareStatement(GET_PAGE_RIGHTS_SQL);
+            pst.setInt(1, treeNodeId);
             try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    int i = 1;
-                    data.setTemplateName(rs.getString(i));
+                while (rs.next()) {
+                    list.put(rs.getInt(1), Right.valueOf(rs.getString(2)));
                 }
             }
         } finally {
             closeStatement(pst);
         }
+        return list;
     }
 
     public boolean savePage(PageData data) {
         Connection con = startTransaction();
         try {
-            if (!data.isNew() && !unchangedNode(con, data)) {
+            if (!data.isNew() && changedPage(con, data)) {
                 rollbackTransaction(con);
                 return false;
             }
             data.setChangeDate(getServerTime(con));
-            writeTreeNode(con, data);
             writePage(con, data);
-            writeAllPageParts(con, data);
+            PagePartBean.getInstance().writeAllPageParts(con, data);
+            savePageRights(con, data);
+            saveSubpageRanking(con,data);
             return commitTransaction(con);
         } catch (Exception se) {
             return rollbackTransaction(con, se);
@@ -167,7 +195,7 @@ public class PageBean extends TreeBean {
     public boolean publishPage(PageData data) {
         Connection con = startTransaction();
         try {
-            if (!data.isNew() && !unchangedNode(con, data)) {
+            if (!data.isNew() && changedPage(con, data)) {
                 rollbackTransaction(con);
                 return false;
             }
@@ -179,15 +207,43 @@ public class PageBean extends TreeBean {
         }
     }
 
-    private static String INSERT_PAGE_SQL="insert into t_page (template,id) values(?,?)";
-    private static String UPDATE_PAGE_SQL="update t_page set template=? where id=?";
-    // public for SiteBean
-    public void writePage(Connection con, PageData data) throws SQLException {
+    private static String INSERT_PAGE_SQL="insert into t_page (creation_date,change_date,parent_id," +
+            "ranking,name,display_name,description,keywords,author_name,in_topnav,in_footer,anonymous,inherits_rights,master,template,dynamic,id) " +
+            "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static String UPDATE_PAGE_SQL="update t_page set creation_date=?,change_date=?,parent_id=?," +
+            "ranking=?,name=?,display_name=?,description=?,keywords=?,author_name=?,in_topnav=?,in_footer=?,anonymous=?,inherits_rights=?,master=?,template=?,dynamic=? " +
+            "where id=?";
+
+    protected void writePage(Connection con, PageData data) throws SQLException {
+        LocalDateTime now = getServerTime(con);
+        data.setChangeDate(now);
+        if (data.isNew()) {
+            data.setCreationDate(now);
+        }
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(data.isNew() ? INSERT_PAGE_SQL : UPDATE_PAGE_SQL);
             int i = 1;
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getCreationDate()));
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
+            if (data.getParentId() == 0) {
+                pst.setNull(i++, Types.INTEGER);
+            } else {
+                pst.setInt(i++, data.getParentId());
+            }
+            pst.setInt(i++, data.getRanking());
+            pst.setString(i++, data.getName());
+            pst.setString(i++, data.getDisplayName());
+            pst.setString(i++, data.getDescription());
+            pst.setString(i++, data.getKeywords());
+            pst.setString(i++, data.getAuthorName());
+            pst.setBoolean(i++, data.isInTopNav());
+            pst.setBoolean(i++, data.isInFooter());
+            pst.setBoolean(i++, data.isAnonymous());
+            pst.setBoolean(i++, data.inheritsRights());
+            pst.setString(i++, data.getMasterName());
             pst.setString(i++, data.getTemplateName());
+            pst.setBoolean(i++, data.isDynamic());
             pst.setInt(i, data.getId());
             pst.executeUpdate();
             pst.close();
@@ -196,31 +252,15 @@ public class PageBean extends TreeBean {
         }
     }
 
-    private static String PUBLISH_PAGE_SQL="update t_page set publish_date=?,published_content=? where id=?";
-    public void publishPage(Connection con, PageData data) throws SQLException {
+    private static String UPDATE_RANKING_SQL="UPDATE t_page SET ranking=? WHERE id=?";
+    public void saveSubpageRanking(Connection con, PageData data) throws SQLException{
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(PUBLISH_PAGE_SQL);
-            int i = 1;
-            pst.setTimestamp(i++, Timestamp.valueOf(data.getPublishDate()));
-            pst.setString(i++, data.getPublishedContent());
-            pst.setInt(i, data.getId());
-            pst.executeUpdate();
-            pst.close();
-        } finally {
-            closeStatement(pst);
-        }
-    }
-
-    private static String WRITE_USAGE_SQL="INSERT INTO t_node_usage (page_id,linked_node_id) VALUES(?,?)";
-    protected void writeUsagesByPage(Connection con, PageData data) throws SQLException {
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement(WRITE_USAGE_SQL);
-            pst.setInt(1, data.getId());
-            HashSet<Integer> list = data.getNodeUsage();
-            for (int nid : list) {
-                pst.setInt(2, nid);
+            pst = con.prepareStatement(UPDATE_RANKING_SQL);
+            for (int i = 0; i < data.getSubpageIds().size(); i++) {
+                int id = data.getSubpageIds().get(i);
+                pst.setInt(1, i + 1);
+                pst.setInt(2, id);
                 pst.executeUpdate();
             }
         } finally {
@@ -228,222 +268,100 @@ public class PageBean extends TreeBean {
         }
     }
 
-    public PagePartData getPagePart(int id) {
-        Connection con = getConnection();
-        PagePartData part = null;
+    private static String PUBLISH_PAGE_SQL="update t_page set publish_date=?,published_content=?,search_content=? where id=?";
+    public void publishPage(Connection con, PageData data) throws SQLException {
+        PreparedStatement pst = null;
         try {
-            part=readPagePart(con, id);
+            pst = con.prepareStatement(PUBLISH_PAGE_SQL);
+            int i = 1;
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getPublishDate()));
+            pst.setString(i++, data.getPublishedContent());
+            pst.setString(i++, data.getSearchContent());
+            pst.setInt(i, data.getId());
+            pst.executeUpdate();
+            pst.close();
+        } finally {
+            closeStatement(pst);
+        }
+    }
+
+    private static String GET_ALL_RIGHT_SQL="SELECT value FROM t_page_right WHERE group_id=?";
+    private static String GET_ID_RIGHT_SQL="SELECT page_id,value FROM t_page_right WHERE group_id=?";
+    public Map<Integer, Integer> getGroupRights(int groupId) {
+        Connection con = getConnection();
+        PreparedStatement pst = null;
+        Map<Integer, Integer> map = new HashMap<>();
+        try {
+            pst = con.prepareStatement(GET_ALL_RIGHT_SQL);
+            pst.setInt(1, groupId);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                map.put(PageData.ID_ALL, rs.getInt(1));
+            }
+            rs.close();
+            pst.close();
+            pst = con.prepareStatement(GET_ID_RIGHT_SQL);
+            pst.setInt(1, groupId);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                map.put(rs.getInt(1), rs.getInt(2));
+            }
+            rs.close();
+            return map;
         } catch (SQLException se) {
             Log.error("sql error", se);
         } finally {
+            closeStatement(pst);
             closeConnection(con);
         }
-        return part;
+        return null;
     }
 
-    public List<PagePartData> getSharedPageParts() {
-        Connection con = getConnection();
-        List<PagePartData> list = new ArrayList<>();
-        try {
-            readSharedPageParts(con, list);
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeConnection(con);
-        }
-        return list;
-    }
-
-    public List<PagePartData> getOrphanedPageParts() {
-        Connection con = getConnection();
-        List<PagePartData> list = new ArrayList<>();
-        try {
-            readOrphanedPageParts(con, list);
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeConnection(con);
-        }
-        return list;
-    }
-
-    private static String READ_PART_SQL="SELECT id,name,change_date,template,content " +
-            "FROM t_page_part " +
-            "WHERE id=? ";
-    public PagePartData readPagePart(Connection con, int id) throws SQLException {
+    private static String DELETE_RIGHTS_SQL="DELETE FROM t_page_right WHERE page_id=?";
+    private static String INSERT_RIGHT_SQL="INSERT INTO t_page_right (page_id,group_id,value) VALUES(?,?,?)";
+    public void savePageRights(Connection con, PageData data) throws SQLException {
         PreparedStatement pst = null;
-        PagePartData partData=null;
         try {
-            pst = con.prepareStatement(READ_PART_SQL);
-            pst.setInt(1,id);
-            try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    int i = 1;
-                    partData = new PagePartData();
-                    readPagePartResult(rs, i, partData);
-                }
-            }
-        } finally {
-            closeStatement(pst);
-        }
-        return partData;
-    }
-
-    private static String READ_SHARED_PARTS_SQL="SELECT id,name,change_date,template,content " +
-            "FROM t_page_part " +
-            "WHERE length(name)>0 " +
-            "ORDER BY template, name";
-    public void readSharedPageParts(Connection con, List<PagePartData> list) throws SQLException {
-        PreparedStatement pst = null;
-        PagePartData partData;
-        try {
-            pst = con.prepareStatement(READ_SHARED_PARTS_SQL);
-            try (ResultSet rs = pst.executeQuery()) {
-                while (rs.next()) {
-                    int i = 1;
-                    partData = new PagePartData();
-                    readPagePartResult(rs, i, partData);
-                    list.add(partData);
-                }
-            }
-        } finally {
-            closeStatement(pst);
-        }
-    }
-
-    private static String READ_ORPHANED_PARTS_SQL="SELECT t1.id,t1.name,t1.change_date,t1.template,t1.content " +
-            "FROM t_page_part t1 WHERE NOT EXISTS(SELECT 'x' FROM t_page_part2page t2 WHERE t1.id=t2.part_id) " +
-            "ORDER BY t1.template, t1.name";
-    public void readOrphanedPageParts(Connection con, List<PagePartData> list) throws SQLException {
-        PreparedStatement pst = null;
-        PagePartData partData;
-        try {
-            pst = con.prepareStatement(READ_ORPHANED_PARTS_SQL);
-            try (ResultSet rs = pst.executeQuery()) {
-                while (rs.next()) {
-                    int i = 1;
-                    partData = new PagePartData();
-                    readPagePartResult(rs, i, partData);
-                    list.add(partData);
-                }
-            }
-        } finally {
-            closeStatement(pst);
-        }
-    }
-
-    private static String READ_PAGE_PARTS_SQL="SELECT t2.section,t2.ranking,t1.id,t1.name,t1.change_date,t1.template,t1.content " +
-            "FROM t_page_part t1, t_page_part2page t2 " +
-            "WHERE t1.id=t2.part_id AND t2.page_id=? ORDER BY t2.ranking";
-    public void readAllPageParts(Connection con, PageData pageData) throws SQLException {
-        PreparedStatement pst = null;
-        PagePartData partData;
-        pageData.clearContent();
-        try {
-            pst = con.prepareStatement(READ_PAGE_PARTS_SQL);
-            pst.setInt(1, pageData.getId());
-            try (ResultSet rs = pst.executeQuery()) {
-                while (rs.next()) {
-                    int i = 1;
-                    partData = new PagePartData();
-                    partData.setSectionName(rs.getString(i++));
-                    partData.setRanking(rs.getInt(i++));
-                    readPagePartResult(rs, i, partData);
-                    pageData.addPagePart(partData, -1, false, false);
-                }
-            }
-        } finally {
-            closeStatement(pst);
-        }
-    }
-
-    private void readPagePartResult(ResultSet rs, int i, PagePartData partData) throws SQLException{
-        partData.setId(rs.getInt(i++));
-        partData.setName(rs.getString(i++));
-        partData.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
-        partData.setTemplateName(rs.getString(i++));
-        partData.setContent(rs.getString(i));
-        partData.parseXml();
-    }
-
-    private static String DELETE_PAGE_PARTS_SQL="DELETE FROM t_page_part2page WHERE page_id=?";
-    private static String INSERT_PAGE_PART_SQL="INSERT INTO t_page_part (change_date,template,name,content,id) VALUES(?,?,?,?,?)";
-    private static String UPDATE_PAGE_PART_SQL="UPDATE t_page_part SET change_date=?,template=?,name=?,content=? WHERE id=?";
-    private static String INSERT_PAGE_PART_RELATIONS_SQL="INSERT INTO t_page_part2page (part_id,page_id,section,ranking) VALUES(?,?,?,?)";
-    public void writeAllPageParts(Connection con, PageData page) throws Exception {
-        PreparedStatement pstDelP2P = null;
-        PreparedStatement pstIns = null;
-        PreparedStatement pstUpd = null;
-        PreparedStatement pst;
-        PreparedStatement pstInsP2P = null;
-        try{
-            pstDelP2P = con.prepareStatement(DELETE_PAGE_PARTS_SQL);
-            pstDelP2P.setInt(1, page.getId());
-            pstDelP2P.executeUpdate();
-            pstDelP2P.close();
-            pstIns = con.prepareStatement(INSERT_PAGE_PART_SQL);
-            pstUpd = con.prepareStatement(UPDATE_PAGE_PART_SQL);
-            pstInsP2P = con.prepareStatement(INSERT_PAGE_PART_RELATIONS_SQL);
-            for (SectionData section : page.getSections().values()) {
-                for (PagePartData part : section.getParts()) {
-                    part.setChangeDate(page.getChangeDate());
-                    pst = part.isNew() ? pstIns : pstUpd;
-                    int i=1;
-                    pst.setTimestamp(i++, Timestamp.valueOf(part.getChangeDate()));
-                    pst.setString(i++, part.getTemplateName());
-                    pst.setString(i++, part.getName());
-                    pst.setString(i++, part.getContent());
-                    pst.setInt(i, part.getId());
+            pst = con.prepareStatement(DELETE_RIGHTS_SQL);
+            pst.setInt(1, data.getId());
+            pst.executeUpdate();
+            if (!data.inheritsRights()) {
+                pst.close();
+                pst = con.prepareStatement(INSERT_RIGHT_SQL);
+                pst.setInt(1, data.getId());
+                for (int id : data.getRights().keySet()) {
+                    pst.setInt(2, id);
+                    pst.setString(3, data.getRights().get(id).name());
                     pst.executeUpdate();
-                    i=1;
-                    pstInsP2P.setInt(i++, part.getId());
-                    pstInsP2P.setInt(i++, page.getId());
-                    pstInsP2P.setString(i++, part.getSectionName());
-                    pstInsP2P.setInt(i, part.getRanking());
-                    pstInsP2P.executeUpdate();
                 }
             }
         } finally {
-            closeStatement(pstDelP2P);
-            closeStatement(pstIns);
-            closeStatement(pstUpd);
-            closeStatement(pstInsP2P);
+            closeStatement(pst);
         }
     }
 
-    private static String DELETE_ORPHANED_PAGEPARTS_SQL="DELETE  FROM t_page_part t1 WHERE NOT EXISTS(SELECT 'x' FROM t_page_part2page t2 WHERE t1.id=t2.part_id)";
-    public boolean deleteAllOrphanedPageParts() {
-        Connection con = getConnection();
+    private static String MOVE_NODE_SQL="UPDATE t_page SET parent_id=? WHERE id=?";
+
+    public boolean movePage(int pageId, int parentId) {
+        Connection con = startTransaction();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(DELETE_ORPHANED_PAGEPARTS_SQL);
+            pst = con.prepareStatement(MOVE_NODE_SQL);
+            pst.setInt(1, parentId);
+            pst.setInt(2, pageId);
             pst.executeUpdate();
-            return true;
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-            return false;
-        } finally {
             closeStatement(pst);
-            closeConnection(con);
+            return commitTransaction(con);
+        } catch (Exception se) {
+            closeStatement(pst);
+            return rollbackTransaction(con, se);
         }
     }
 
-    private static String DELETE_PAGEPART_SQL="DELETE FROM t_page_part WHERE id=?";
-    public boolean deletePagePart(int id) {
-        Connection con = getConnection();
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement(DELETE_PAGEPART_SQL);
-            pst.setInt(1, id);
-            pst.executeUpdate();
-            return true;
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-            return false;
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
+    private static String DELETE_SQL="DELETE FROM t_page WHERE id=?";
+
+    public boolean deletePage(int id) {
+        return deleteItem(DELETE_SQL, id);
     }
 
 }

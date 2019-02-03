@@ -1,5 +1,5 @@
 /*
- Bandika  - A Java based modular Content Management System
+ Elbe 5 CMS - A Java based modular Content Management System
  Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -9,30 +9,29 @@
 package de.elbe5.cms.page;
 
 import de.elbe5.base.data.BaseIdData;
-import de.elbe5.base.data.XmlData;
-import de.elbe5.cms.field.Field;
-import de.elbe5.cms.field.Fields;
+import de.elbe5.cms.field.*;
 import de.elbe5.cms.template.TemplateData;
-import de.elbe5.webbase.servlet.RequestReader;
-import org.w3c.dom.Element;
+import de.elbe5.cms.servlet.IRequestData;
+import de.elbe5.cms.servlet.RequestReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class PagePartData extends BaseIdData implements Comparable<PagePartData> {
+public class PagePartData extends BaseIdData implements IRequestData, Comparable<PagePartData> {
 
     protected String name = "";
     protected String sectionName = "";
     protected int ranking = 0;
     protected String templateName;
     protected boolean editable = true;
+    protected String flexClass = "";
+    protected String cssClasses = "";
+    protected String script = "";
     protected boolean dynamic = false;
-    protected String cssClass = "";
-    protected String content = "";
+    protected LocalDateTime publishDate = null;
     protected String publishedContent = "";
-    protected LocalDateTime publishDate=null;
     protected Set<Integer> pageIds = null;
 
     protected Map<String, Field> fields = new HashMap<>();
@@ -44,9 +43,16 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         setId(PageBean.getInstance().getNextId());
         setTemplateName(data.getTemplateName());
         setEditable((data.isEditable()));
-        setDynamic(data.isDynamic());
-        setCssClass(data.getCssClass());
-        setContent(data.getContent());
+        setFlexClass(data.getFlexClass());
+        setCssClasses(data.getCssClasses());
+        setScript(data.getScript());
+        getFields().clear();
+        for (Field f : data.getFields().values()){
+            try {
+                getFields().put(f.getName(), (Field) f.clone());
+            }
+            catch (CloneNotSupportedException ignore){}
+        }
     }
 
     @Override
@@ -64,10 +70,6 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getHtmlId() {
-        return getSectionName() + "-part-" + getId();
     }
 
     public String getSectionName() {
@@ -102,28 +104,59 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         this.editable = editable;
     }
 
+    public String getFlexClass() {
+        return flexClass;
+    }
+
+    public void setFlexClass(String flexClass) {
+        this.flexClass = flexClass;
+    }
+
+    public String getCssClasses() {
+        return cssClasses;
+    }
+
+    public void setCssClasses(String cssClasses) {
+        this.cssClasses = cssClasses;
+    }
+
+    public String getCss(boolean flex){
+        if (flex)
+            return getFlexClass() + " " + getCssClasses();
+        return getCssClasses();
+    }
+
+    public String getScript() {
+        return script;
+    }
+
+    public void setScript(String script) {
+        this.script = script;
+    }
+
     public boolean isDynamic() {
-        return dynamic;
+        for (Field field : fields.values()) {
+            if (field.isDynamic()) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public void setDynamic(boolean dynamic) {
-        this.dynamic = dynamic;
+    public LocalDateTime getPublishDate() {
+        return publishDate;
     }
 
-    public String getCssClass() {
-        return cssClass;
+    public boolean hasUnpublishedDraft(){
+        return publishDate==null || publishDate.isBefore(getChangeDate());
     }
 
-    public void setCssClass(String cssClass) {
-        this.cssClass = cssClass;
+    public boolean isPublished(){
+        return publishDate!=null;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public void setPublishDate(LocalDateTime publishDate) {
+        this.publishDate = publishDate;
     }
 
     public String getPublishedContent() {
@@ -132,14 +165,6 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
 
     public void setPublishedContent(String publishedContent) {
         this.publishedContent = publishedContent;
-    }
-
-    public LocalDateTime getPublishDate() {
-        return publishDate;
-    }
-
-    public void setPublishDate(LocalDateTime publishDate) {
-        this.publishDate = publishDate;
     }
 
     public void setTemplateData(TemplateData data) {
@@ -154,16 +179,37 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         return fields.get(name);
     }
 
-    public Field ensureField(String name, String fieldType) {
+    public TextField ensureTextField(String name) {
         Field field = fields.get(name);
-        if (field == null) {
-            field = Fields.getNewField(fieldType);
-            assert field != null;
-            field.setName(name);
-            field.setPagePartId(getId());
-            fields.put(name, field);
-        }
-        return field;
+        if (field instanceof TextField)
+            return (TextField) field;
+        TextField textfield = new TextField();
+        textfield.setName(name);
+        textfield.setPagePartId(getId());
+        fields.put(name, textfield);
+        return textfield;
+    }
+
+    public HtmlField ensureHtmlField(String name) {
+        Field field = fields.get(name);
+        if (field instanceof HtmlField)
+            return (HtmlField) field;
+        HtmlField htmlfield = new HtmlField();
+        htmlfield.setName(name);
+        htmlfield.setPagePartId(getId());
+        fields.put(name, htmlfield);
+        return htmlfield;
+    }
+
+    public ScriptField ensureScriptField(String name) {
+        Field field = fields.get(name);
+        if (field instanceof ScriptField)
+            return (ScriptField) field;
+        ScriptField scriptField = new ScriptField();
+        scriptField.setName(name);
+        scriptField.setPagePartId(getId());
+        fields.put(name, scriptField);
+        return scriptField;
     }
 
     public void getNodeUsage(Set<Integer> list) {
@@ -180,16 +226,19 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         return true;
     }
 
-    public boolean readPagePartRequestData(HttpServletRequest request) {
-        boolean complete = true;
+    @Override
+    public boolean readRequestData(HttpServletRequest request) {
+        boolean success = true;
         for (Field field : getFields().values()) {
-            complete &= field.readPagePartRequestData(request);
+            success &= field.readRequestData(request);
         }
-        return complete;
+        return success;
     }
 
     public void readPagePartSettingsData(HttpServletRequest request) {
-        setCssClass(RequestReader.getString(request, "cssClass"));
+        setFlexClass(RequestReader.getString(request, "flexClass"));
+        setCssClasses(RequestReader.getString(request, "cssClasses"));
+        setScript(RequestReader.getString(request, "script"));
     }
 
     public void prepareCopy() {
@@ -197,37 +246,13 @@ public class PagePartData extends BaseIdData implements Comparable<PagePartData>
         setId(PageBean.getInstance().getNextId());
     }
 
-    @Override
-    public void prepareSave() {
-        createXml();
-    }
-
-    /******************* XML part *********************************/
-
-    public void createXml(){
-        XmlData data=XmlData.create();
-        assert data!=null;
-        Element root=data.createRootNode("part");
-        for (Field field : fields.values()) {
-            field.createXml(data, root);
+    public Field getNewField(String type) {
+        switch (type){
+            case TextField.FIELDTYPE: return new TextField();
+            case HtmlField.FIELDTYPE: return new HtmlField();
+            case ScriptField.FIELDTYPE: return new ScriptField();
         }
-        content = data.toString();
-    }
-
-    public void parseXml(){
-        XmlData data=XmlData.create(content);
-        if (data==null)
-            return;
-        Element root=data.getRootNode();
-        List<Element> children = data.findChildElements(root, "field", true);
-        for (Element child : children) {
-            String fieldType = data.getStringAttribute(child, "fieldType");
-            Field field = Fields.getNewField(fieldType);
-            if (field != null) {
-                field.parseXml(data, child);
-                fields.put(field.getName(), field);
-            }
-        }
+        return null;
     }
 
 }

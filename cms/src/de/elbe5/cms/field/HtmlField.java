@@ -1,5 +1,5 @@
 /*
- Bandika  - A Java based modular Content Management System
+ Elbe 5 CMS - A Java based modular Content Management System
  Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -8,37 +8,96 @@
  */
 package de.elbe5.cms.field;
 
+import de.elbe5.cms.file.FileCache;
+import de.elbe5.cms.file.FileData;
+import de.elbe5.cms.page.PageCache;
+import de.elbe5.cms.page.PageData;
 import de.elbe5.cms.search.SearchHelper;
+import de.elbe5.cms.servlet.RequestReader;
 
-public class HtmlField extends HtmlBaseField {
+import javax.servlet.http.HttpServletRequest;
+import java.util.Set;
 
-    public static String FIELDTYPE_HTML = "html";
+public class HtmlField extends StaticField {
+
+    public static final String FIELDTYPE = "html";
+
+    public static final String SRC_PATTERN = " src=\"/";
+    public static final String LINK_PATTERN = " href=\"/";
 
     @Override
     public String getFieldType() {
-        return FIELDTYPE_HTML;
+        return FIELDTYPE;
     }
 
-    protected String html = "";
+    @Override
+    public void getNodeUsage(Set<Integer> list) {
+        registerImagesInHtml(content, list);
+        registerPagesInHtml(content, list);
+    }
 
     /******************* HTML part *********************************/
 
     @Override
-    protected String getCKCODE(){
-        return "<div class=\"ckeditField\" id=\"%s\" contenteditable=\"true\">%s</div>" +
-            "<input type=\"hidden\" name=\"%s\" value=\"%s\" />" +
-            "<script type=\"text/javascript\">$('#%s').ckeditor({" +
-            "toolbar : 'Full'," +
-            "filebrowserBrowseUrl : '/field.srv?act=openLinkBrowser&siteId=%s&pageId=%s'," +
-            "filebrowserImageBrowseUrl : '/field.srv?act=openImageBrowser&siteId=%s&pageId=%s'" +
-            "});" +
-            "</script>";
+    public boolean readRequestData(HttpServletRequest request) {
+        setContent(RequestReader.getString(request, getIdentifier()));
+        return true;
+    }
+
+    public static void registerPagesInHtml(String html, Set<Integer> list) {
+        int start;
+        int end = 0;
+        while (true) {
+            start = html.indexOf(LINK_PATTERN, end);
+            if (start == -1) {
+                break;
+            }
+            // keep '/'
+            start += LINK_PATTERN.length() - 1;
+            end = html.indexOf('\"', start);
+            if (end == -1) {
+                break;
+            }
+            try {
+                String url = html.substring(start, end);
+                PageData page = PageCache.getInstance().getPage(url);
+                if (page != null)
+                    list.add(page.getId());
+            } catch (Exception ignored) {
+            }
+            end++;
+        }
+    }
+
+    public static void registerImagesInHtml(String html, Set<Integer> list) {
+        int start;
+        int end = 0;
+        while (true) {
+            start = html.indexOf(SRC_PATTERN, end);
+            if (start == -1) {
+                break;
+            }
+            // keep '/'
+            start += SRC_PATTERN.length() - 1;
+            end = html.indexOf('\"', start);
+            if (end == -1) {
+                break;
+            }
+            try {
+                String url = html.substring(start, end);
+                FileData file = FileCache.getInstance().getFile(url);
+                if (file != null)
+                    list.add(file.getId());
+            } catch (Exception ignored) {
+            }
+            end++;
+        }
     }
 
     /******************* search part *********************************/
 
     public void appendSearchText(StringBuilder sb) {
-        sb.append(" ").append(SearchHelper.getSearchContentFromHtml(html));
+        sb.append(" ").append(SearchHelper.getSearchContentFromHtml(getContent()));
     }
 
 }
