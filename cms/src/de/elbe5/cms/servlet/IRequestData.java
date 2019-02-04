@@ -12,5 +12,5 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface IRequestData {
 
-    public boolean readRequestData(HttpServletRequest request);
+    public void readRequestData(HttpServletRequest request, RequestError error);
 }

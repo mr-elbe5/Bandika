@@ -26,7 +26,7 @@
         <cms:form url="/user.ajx" name="changepasswordform" act="<%=UserActions.changePassword%>" ajax="true">
             <input type="hidden" name="userId" value="<%=SessionReader.getLoginId(request)%>" />
             <div class="modal-body">
-                <cms:message/>
+                <cms:requesterror/>
                 <cms:password name="oldPassword" label="<%=Strings._oldPassword.toString()%>"></cms:password>
                 <cms:password name="newPassword1" label="<%=Strings._newPassword.toString()%>"></cms:password>
                 <cms:password name="newPassword2" label="<%=Strings._retypePassword.toString()%>"></cms:password>

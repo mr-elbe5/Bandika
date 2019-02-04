@@ -26,7 +26,7 @@
         </div>
         <cms:form url="/admin.ajx" name="executeDbScript" act="<%=AdminActions.executeDatabaseScript%>">
             <div class="modal-body">
-                <cms:message/>
+                <cms:requesterror/>
                 <cms:file name="file" label="<%=Strings._file.toString()%>" />
                 <cms:editor name="script" label="<%=Strings._script.toString()%>" type="pgsql" hint="<%=Strings._sqlHint.toString()%>" height="20rem" required="true">
                     <%=StringUtil.toHtml(RequestReader.getString(request, "script"))%>

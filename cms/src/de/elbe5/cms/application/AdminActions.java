@@ -110,7 +110,9 @@ public class AdminActions extends ActionSet {
                     return forbidden(request,response);
                 Configuration config = (Configuration) SessionReader.getSessionObject(request, "config");
                 assert(config!=null);
-                if (!config.readRequestData(request)) {
+                RequestError error=new RequestError();
+                config.readRequestData(request,error);
+                if (!error.checkErrors(request)) {
                     return showEditConfiguration(request, response);
                 }
                 ConfigurationBean ts = ConfigurationBean.getInstance();
@@ -147,7 +149,9 @@ public class AdminActions extends ActionSet {
                 TimerTaskData data = (TimerTaskData) RequestReader.getSessionObject(request, "timerTaskData");
                 if (data==null)
                     return noData(request,response);
-                if (!data.readRequestData(request)){
+                RequestError error=new RequestError();
+                data.readRequestData(request,error);
+                if (!error.checkErrors(request)){
                     return showEditTimerTask(request, response);
                 }
                 TimerBean ts = TimerBean.getInstance();

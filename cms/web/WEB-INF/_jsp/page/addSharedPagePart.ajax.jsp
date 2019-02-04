@@ -35,7 +35,7 @@
         </div>
         <cms:form url="/pagepart.ajx" name="partform" act="<%=PagePartActions.addSharedPagePart%>" ajax="true">
         <div class="modal-body">
-            <cms:message/>
+            <cms:requesterror/>
             <input type="hidden" name="pageId" value="<%=pageId%>" />
             <input type="hidden" name="partId" value="<%=partId%>" />
             <input type="hidden" name="sectionName" value="<%=sectionName%>" />

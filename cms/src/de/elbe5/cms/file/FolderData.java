@@ -272,7 +272,7 @@ public class FolderData extends BaseIdData implements IRequestData, Comparable<F
     }
 
     @Override
-    public boolean readRequestData(HttpServletRequest request) {
+    public void readRequestData(HttpServletRequest request, RequestError error) {
         setName(RequestReader.getString(request, "name").trim());
         setDescription(RequestReader.getString(request, "description"));
         setAnonymous(RequestReader.getBoolean(request, "anonymous"));
@@ -290,15 +290,9 @@ public class FolderData extends BaseIdData implements IRequestData, Comparable<F
                 }
             }
         }
-        RequestError error = new RequestError();
         if (name.isEmpty()) {
-            error.addErrorField("name");
+            error.addNotCompleteField("name");
         }
-        if (!error.isEmpty()){
-            error.setError(request);
-            return false;
-        }
-        return true;
     }
 
     public boolean isVisibleToUser(HttpServletRequest request) {

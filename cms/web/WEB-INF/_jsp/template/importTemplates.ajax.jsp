@@ -27,7 +27,7 @@
         </div>
         <cms:form url="/template.ajx" name="importTemplates" act="<%=TemplateActions.importTemplates%>">
             <div class="modal-body">
-                <cms:message/>
+                <cms:requesterror/>
                 <cms:file name="file" label="<%=Strings._file.toString()%>" />
                 <cms:editor name="code" label="<%=Strings._code.toString()%>" type="html" hint="<%=Strings._htmlHint.toString()%>" height="20rem" required="true">
                     <%=StringUtil.toHtml(RequestReader.getString(request, "code"))%>

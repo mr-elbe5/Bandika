@@ -152,7 +152,9 @@ public class PagePartActions extends ActionSet {
                 if (pdata == null || data.getPagePart(sectionName, partId) != pdata) {
                     return setPageResponse(request, response, data);
                 }
-                if (!pdata.readRequestData(request)) {
+                RequestError error=new RequestError();
+                data.readRequestData(request,error);
+                if (!error.checkErrors(request)){
                     return setPageResponse(request, response, data);
                 }
                 data.setEditPagePart(null);

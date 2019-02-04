@@ -13,6 +13,7 @@ import de.elbe5.cms.file.FileData;
 import de.elbe5.cms.page.PageCache;
 import de.elbe5.cms.page.PageData;
 import de.elbe5.cms.search.SearchHelper;
+import de.elbe5.cms.servlet.RequestError;
 import de.elbe5.cms.servlet.RequestReader;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,9 +40,8 @@ public class HtmlField extends StaticField {
     /******************* HTML part *********************************/
 
     @Override
-    public boolean readRequestData(HttpServletRequest request) {
+    public void readRequestData(HttpServletRequest request, RequestError error) {
         setContent(RequestReader.getString(request, getIdentifier()));
-        return true;
     }
 
     public static void registerPagesInHtml(String html, Set<Integer> list) {

@@ -489,7 +489,7 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
     }
 
     @Override
-    public boolean readRequestData(HttpServletRequest request) {
+    public void readRequestData(HttpServletRequest request, RequestError error) {
         setName(RequestReader.getString(request, "name").trim());
         String dname = RequestReader.getString(request, "displayName").trim();
         setDisplayName(dname.isEmpty() ? getName() : dname);
@@ -521,18 +521,12 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
             for (int subId : subIds)
                 subpageIds.add(subId);
         }
-        RequestError error = new RequestError();
         if (name.isEmpty()) {
-            error.addErrorField("name");
+            error.addNotCompleteField("name");
         }
         if (templateName.isEmpty()) {
-            error.addErrorField("templateName");
+            error.addNotCompleteField("templateName");
         }
-        if (!error.isEmpty()){
-            error.setError(request);
-            return false;
-        }
-        return true;
     }
 
     @Override

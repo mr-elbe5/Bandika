@@ -10,6 +10,7 @@ package de.elbe5.cms.page;
 
 import de.elbe5.base.data.BaseIdData;
 import de.elbe5.cms.field.*;
+import de.elbe5.cms.servlet.RequestError;
 import de.elbe5.cms.template.TemplateData;
 import de.elbe5.cms.servlet.IRequestData;
 import de.elbe5.cms.servlet.RequestReader;
@@ -227,12 +228,10 @@ public class PagePartData extends BaseIdData implements IRequestData, Comparable
     }
 
     @Override
-    public boolean readRequestData(HttpServletRequest request) {
-        boolean success = true;
+    public void readRequestData(HttpServletRequest request, RequestError error) {
         for (Field field : getFields().values()) {
-            success &= field.readRequestData(request);
+            field.readRequestData(request, error);
         }
-        return success;
     }
 
     public void readPagePartSettingsData(HttpServletRequest request) {

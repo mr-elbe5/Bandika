@@ -55,7 +55,7 @@
         <cms:form url="/page.ajx" name="pageform" act="<%=PageActions.savePage%>" ajax="true">
             <input type="hidden" name="pageId" value="<%=pageData.getId()%>"/>
             <div class="modal-body">
-                <cms:message/>
+                <cms:requesterror/>
                 <h3><%=Strings._settings.html(locale)%></h3>
                 <cms:line label="<%=Strings._id.toString()%>"><%=Integer.toString(pageData.getId())%></cms:line>
                 <cms:line label="<%=Strings._creationDate.toString()%>"><%=StringUtil.toHtmlDateTime(pageData.getCreationDate(), locale)%></cms:line>

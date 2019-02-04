@@ -15,7 +15,6 @@ import de.elbe5.cms.servlet.RequestError;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import java.io.Writer;
-import java.util.Locale;
 
 public class RequestErrorTag extends BaseTag {
 
@@ -25,7 +24,6 @@ public class RequestErrorTag extends BaseTag {
             HttpServletRequest request = getRequest();
             RequestError err = RequestError.getError(request);
             if (err!=null) {
-                Locale locale = getLocale(request);
                 Writer writer = getWriter();
                 writer.write("<div class=\"requestError\">\n");
                 writer.write(StringUtil.toHtmlMultiline(err.getErrorString()));

@@ -90,8 +90,9 @@ public class PageActions extends ActionSet {
                 PageData data = (PageData) RequestReader.getSessionObject(request, KEY_PAGE);
                 if (data==null || data.getId()!=pageId)
                     return badData(request,response);
-                if (!data.readRequestData(request)) {
-                    ErrorMessage.setMessageByKey(request, Strings._notComplete);
+                RequestError error=new RequestError();
+                data.readRequestData(request,error);
+                if (!error.checkErrors(request)) {
                     return showEditPage(request, response);
                 }
                 data.setAuthorName(SessionReader.getLoginName(request));

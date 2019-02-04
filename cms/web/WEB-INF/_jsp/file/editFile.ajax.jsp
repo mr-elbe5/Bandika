@@ -38,7 +38,7 @@
         <cms:form url="/file.ajx" name="fileform" act="<%=FileActions.saveFile%>" ajax="true" multi="true">
             <input type="hidden" name="fileId" value="<%=fileData.getId()%>"/>
             <div class="modal-body">
-                <cms:message/>
+                <cms:requesterror/>
                 <cms:line label="<%=Strings._id.toString()%>"><%=Integer.toString(fileData.getId())%></cms:line>
                 <cms:line label="<%=Strings._creationDate.toString()%>"><%=StringUtil.toHtmlDateTime(fileData.getCreationDate(), locale)%></cms:line>
                 <cms:line label="<%=Strings._changeDate.toString()%>"><%=StringUtil.toHtmlDateTime(fileData.getChangeDate(), locale)%></cms:line>

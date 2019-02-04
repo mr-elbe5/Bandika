@@ -13,6 +13,7 @@ import de.elbe5.base.data.Locales;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.mail.Mailer;
 import de.elbe5.cms.servlet.IRequestData;
+import de.elbe5.cms.servlet.RequestError;
 import de.elbe5.cms.servlet.RequestReader;
 
 import javax.servlet.http.HttpServletRequest;
@@ -197,7 +198,8 @@ public class Configuration extends BaseData implements IRequestData, Cloneable {
         Log.log("default locale is " + Locales.getInstance().getDefaultLocale().getLanguage());
     }
 
-    public boolean readRequestData(HttpServletRequest request) {
+    @Override
+    public void readRequestData(HttpServletRequest request, RequestError error) {
         setSmtpHost(RequestReader.getString(request, "smtpHost"));
         setSmtpPort(RequestReader.getInt(request, "smtpPort"));
         setSmtpConnectionType(Mailer.SmtpConnectionType.valueOf(RequestReader.getString(request, "smtpConnectionType")));
@@ -208,6 +210,5 @@ public class Configuration extends BaseData implements IRequestData, Cloneable {
         setTimerInterval(RequestReader.getInt(request, "timerInterval"));
         setEditProfile(RequestReader.getBoolean(request, "editProfile"));
         setSelfRegistration(RequestReader.getBoolean(request, "selfRegistration"));
-        return true;
     }
 }

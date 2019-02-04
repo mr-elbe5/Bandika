@@ -10,6 +10,8 @@ package de.elbe5.cms.tag;
 
 import de.elbe5.base.cache.StringCache;
 import de.elbe5.base.log.Log;
+import de.elbe5.cms.servlet.RequestError;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import java.io.Writer;
@@ -44,8 +46,12 @@ public class FormLineTag extends BaseTag {
         try {
             HttpServletRequest request = getRequest();
             Locale locale= getLocale(request);
+            RequestError error=RequestError.getError(request);
             Writer writer = getWriter();
-            writer.write("<div class=\"form-group row\">\n");
+            writer.write("<div class=\"form-group row");
+            if (error!=null && error.hasErrorField(name))
+                writer.write(" error");
+            writer.write("\">\n");
             if (label.isEmpty()) {
                 writer.write("<div class=\"col-md-3\"></div>");
             }

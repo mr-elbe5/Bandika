@@ -95,7 +95,11 @@ public class FileActions extends ActionSet {
                 FolderData data = (FolderData) RequestReader.getSessionObject(request, KEY_FOLDER);
                 if (data==null || data.getId()!=folderId)
                     return badData(request,response);
-                data.readRequestData(request);
+                RequestError error=new RequestError();
+                data.readRequestData(request,error);
+                if (!error.checkErrors(request)) {
+                    return showEditFolder(request, response);
+                }
                 if (!FolderBean.getInstance().saveFolder(data)){
                     ErrorMessage.setMessageByKey(request, Strings._saveError);
                     return showEditFolder(request, response);
@@ -262,8 +266,9 @@ public class FileActions extends ActionSet {
                     return badData(request,response);
                 if (!hasContentRight(request, data.getFolderId(), Right.EDIT))
                     return forbidden(request,response);
-                if (!data.readRequestData(request)) {
-                    ErrorMessage.setMessageByKey(request, Strings._notComplete);
+                RequestError error=new RequestError();
+                data.readRequestData(request,error);
+                if (!error.checkErrors(request)) {
                     return showEditFile(request, response);
                 }
                 data.setAuthorName(SessionReader.getLoginName(request));

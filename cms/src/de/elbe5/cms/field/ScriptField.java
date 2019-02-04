@@ -8,6 +8,7 @@
  */
 package de.elbe5.cms.field;
 
+import de.elbe5.cms.servlet.RequestError;
 import de.elbe5.cms.servlet.RequestReader;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,9 +35,8 @@ public class ScriptField extends StaticField {
     /******************* HTML part *********************************/
 
     @Override
-    public boolean readRequestData(HttpServletRequest request) {
+    public void readRequestData(HttpServletRequest request, RequestError error) {
         setCode(RequestReader.getString(request, getIdentifier()));
-        return true;
     }
 
 

@@ -174,7 +174,7 @@ public abstract class TimerTaskData extends BaseData implements IRequestData, Cl
     }
 
     @Override
-    public boolean readRequestData(HttpServletRequest request) {
+    public void readRequestData(HttpServletRequest request, RequestError error) {
         setInterval(TimerInterval.valueOf(RequestReader.getString(request, "interval")));
         setDay(RequestReader.getInt(request, "day"));
         setHour(RequestReader.getInt(request, "hour"));
@@ -182,16 +182,12 @@ public abstract class TimerTaskData extends BaseData implements IRequestData, Cl
         setActive(RequestReader.getBoolean(request, "active"));
         setRegisterExecution(RequestReader.getBoolean(request, "registerExecution"));
         if (interval!=TimerInterval.CONTINOUS && (day==0 || (hour < 0 || hour >= 24) || (minute < 0 || minute >= 60))){
-            RequestError error= new RequestError();
             error.addErrorString(Strings._timerSettingsError.string(SessionReader.getSessionLocale(request)));
             error.addErrorField("interval");
             error.addErrorField("day");
             error.addErrorField("hour");
             error.addErrorField("minute");
-            error.setError(request);
-            return false;
         }
-        return true;
     }
 
     public abstract boolean execute(LocalDateTime executionTime, LocalDateTime checkTime);

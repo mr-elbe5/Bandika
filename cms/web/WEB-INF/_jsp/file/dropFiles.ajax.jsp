@@ -30,7 +30,7 @@
         </div>
         <cms:form url="/file.ajx" name="fileform" act="<%=FileActions.dropFiles%>" multi="true">
             <div class="modal-body">
-                <cms:message/>
+                <cms:requesterror/>
                 <cms:line label="<%=Strings._id.toString()%>"><%=Integer.toString(folderData.getId())%></cms:line>
                 <cms:line label="<%=Strings._name.toString()%>"><%=StringUtil.toHtml(folderData.getName())%></cms:line>
                 <div class="form-group row">

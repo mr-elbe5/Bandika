@@ -104,9 +104,11 @@ public class UserActions extends ActionSet {
             case register: {
                 UserData user=new UserData();
                 request.setAttribute("userData", user);
-                if (!user.readRegistrationRequestData(request))
+                RequestError error=new RequestError();
+                user.readRegistrationRequestData(request,error);
+                if (!error.checkErrors(request)) {
                     return showRegistration(request, response);
-                RequestError error= new RequestError();
+                }
                 if (UserBean.getInstance().doesLoginExist(user.getLogin())){
                     error.addErrorField("login");
                     error.addErrorString(Strings._loginExistsError.string(SessionReader.getSessionLocale(request)));
@@ -177,8 +179,9 @@ public class UserActions extends ActionSet {
                 GroupData data = (GroupData) RequestReader.getSessionObject(request, "groupData");
                 if (data==null)
                     return noData(request,response);
-                if (!data.readRequestData(request)){
-                    ErrorMessage.setMessageByKey(request, Strings._notComplete);
+                RequestError error=new RequestError();
+                data.readRequestData(request,error);
+                if (!error.checkErrors(request)){
                     return showEditGroup(request, response);
                 }
                 GroupBean.getInstance().saveGroup(data);
@@ -221,8 +224,9 @@ public class UserActions extends ActionSet {
                 UserData data = (UserData) RequestReader.getSessionObject(request, "userData");
                 if (data==null)
                     return noData(request,response);
-                if (!data.readRequestData(request)){
-                    ErrorMessage.setMessageByKey(request, Strings._notComplete);
+                RequestError error=new RequestError();
+                data.readRequestData(request,error);
+                if (!error.checkErrors(request)){
                     return showEditUser(request, response);
                 }
                 UserBean.getInstance().saveUser(data);
@@ -299,8 +303,9 @@ public class UserActions extends ActionSet {
                 if (!SessionReader.isLoggedIn(request) || SessionReader.getLoginId(request) != userId)
                     return forbidden(request,response);
                 UserData data = UserBean.getInstance().getUser(userId);
-                if (!data.readProfileRequestData(request)){
-                    ErrorMessage.setMessageByKey(request, Strings._notComplete);
+                RequestError error=new RequestError();
+                data.readProfileRequestData(request,error);
+                if (!error.checkErrors(request)){
                     return showChangeProfile(request, response);
                 }
                 UserBean.getInstance().saveUserProfile(data);

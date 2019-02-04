@@ -366,54 +366,40 @@ public class UserData extends BaseIdData implements IRequestData {
 
     private void checkBasics(RequestError error){
         if (lastName.isEmpty())
-            error.addErrorField("lastName");
+            error.addNotCompleteField("lastName");
         if (email.isEmpty())
-            error.addErrorField("email");
+            error.addNotCompleteField("email");
     }
 
-    public boolean readRequestData(HttpServletRequest request) {
+    @Override
+    public void readRequestData(HttpServletRequest request, RequestError error) {
         readBasicData(request);
         setLogin(RequestReader.getString(request, "login"));
         setPassword(RequestReader.getString(request, "password"));
         setApproved(RequestReader.getBoolean(request, "approved"));
         setEmailVerified(RequestReader.getBoolean(request, "emailVerified"));
         setGroupIds(RequestReader.getIntegerSet(request, "groupIds"));
-        RequestError error= new RequestError();
         if (login.isEmpty())
-            error.addErrorField("login");
-        if (!isNew() && !hasPassword())
-            error.addErrorField("password");
+            error.addNotCompleteField("login");
+        if (isNew() && !hasPassword())
+            error.addNotCompleteField("password");
         checkBasics(error);
-        if (!error.isEmpty()) {
-            error.setError(request);
-            return false;
-        }
-        return true;
     }
 
-    public boolean readProfileRequestData(HttpServletRequest request) {
+    public void readProfileRequestData(HttpServletRequest request, RequestError error) {
         readBasicData(request);
-        RequestError error= new RequestError();
         checkBasics(error);
-        if (!error.isEmpty()) {
-            error.setError(request);
-            return false;
-        }
-        return true;
     }
 
-    public boolean readRegistrationRequestData(HttpServletRequest request) {
+    public void readRegistrationRequestData(HttpServletRequest request, RequestError error) {
         readBasicData(request);
         Locale locale= SessionReader.getSessionLocale(request);
         setLogin(RequestReader.getString(request, "login"));
         String password1 = RequestReader.getString(request, "password1");
         String password2 = RequestReader.getString(request, "password2");
-        RequestError error= new RequestError();
         checkBasics(error);
         if (login.isEmpty())
-            error.addErrorField("login");
-        if (!error.isEmpty())
-            error.addErrorString(Strings._notComplete.string(locale));
+            error.addNotCompleteField("login");
         if (login.length() < UserData.MIN_LOGIN_LENGTH) {
             error.addErrorField("login");
             error.addErrorString(Strings._loginLengthError.string(locale));
@@ -428,11 +414,6 @@ public class UserData extends BaseIdData implements IRequestData {
         }
         else
             setPassword(password1);
-        if (!error.isEmpty()) {
-            error.setError(request);
-            return false;
-        }
-        return true;
     }
 
 }

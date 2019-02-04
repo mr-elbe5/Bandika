@@ -82,8 +82,9 @@ public class TemplateActions extends ActionSet {
                 TemplateData data = (TemplateData) RequestReader.getSessionObject(request, "templateData");
                 if (data==null)
                     return noData(request,response);
-                if (!data.readRequestData(request)) {
-                    ErrorMessage.setMessageByKey(request, Strings._notComplete);
+                RequestError error=new RequestError();
+                data.readRequestData(request,error);
+                if (!error.checkErrors(request)) {
                     return showEditTemplate(request, response);
                 }
                 TemplateBean.getInstance().saveTemplate(data);

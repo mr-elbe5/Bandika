@@ -32,7 +32,7 @@
             <input type="hidden" name="templateType" value="<%=data.getType()%>"/>
             <input type="hidden" name="templateName" value="<%=data.getName()%>"/>
             <div class="modal-body">
-                <cms:message/>
+                <cms:requesterror/>
                 <%if (!data.isNew()) {%>
                 <cms:line label="<%=Strings._name.toString()%>"><%=StringUtil.toHtml(data.getName())%></cms:line>
                 <% } else {%>

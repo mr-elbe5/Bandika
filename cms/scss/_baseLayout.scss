@@ -56,6 +56,18 @@ form{
   margin-bottom: 0.5rem;
 }
 
+.form-group.error{
+
+  label{
+    color:red;
+  }
+
+  input{
+    border-color:red;
+  }
+}
+
+
 /* administration */
 
 .installSection {

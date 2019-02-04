@@ -32,7 +32,7 @@
             <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
             <input type="hidden" name="partId" value="<%=part.getId()%>"/>
             <div class="modal-body">
-                <cms:message/>
+                <cms:requesterror/>
                 <cms:text name="name" label="<%=Strings._name.toString()%>" required="true"></cms:text>
             </div>
             <div class="modal-footer">

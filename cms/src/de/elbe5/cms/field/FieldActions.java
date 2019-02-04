@@ -23,7 +23,6 @@ public class FieldActions extends ActionSet {
 
     public static final String openLinkBrowser="openLinkBrowser";
     public static final String openImageBrowser="openImageBrowser";
-    public static final String saveImageInBrowser="saveImageInBrowser";
 
     public static final String KEY = "field";
 
@@ -47,25 +46,6 @@ public class FieldActions extends ActionSet {
                 if (!hasContentRight(request, pageId, Right.EDIT))
                     return forbidden(request,response);
                 return showImageBrowserJsp(request, response);
-            }
-            case saveImageInBrowser: {
-                int pageId = RequestReader.getInt(request, "pageId");
-                if (!hasContentRight(request, pageId, Right.EDIT))
-                    return forbidden(request,response);
-                int parentId = RequestReader.getInt(request, "folderId");
-                FileBean ts = FileBean.getInstance();
-                FolderData parentNode = FileCache.getInstance().getFolder(parentId);
-                FileData data = new FileData();
-                data.readRequestData(request);
-                data.setNew(true);
-                data.setId(FileBean.getInstance().getNextId());
-                data.setFolderId(parentNode.getId());
-                data.setFolder(parentNode);
-                data.setAuthorName(SessionReader.getLoginName(request));
-                ts.saveFile(data);
-                FileCache.getInstance().setDirty();
-                SuccessMessage.setMessageByKey(request, Strings._fileCreated);
-                return showBrowserImagesJsp(request, response);
             }
             default: {
                 return forbidden(request, response);

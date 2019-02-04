@@ -9,6 +9,7 @@
 package de.elbe5.cms.servlet;
 
 import de.elbe5.cms.application.Statics;
+import de.elbe5.cms.application.Strings;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.PrintWriter;
@@ -26,6 +27,7 @@ public final class RequestError {
 
     List<String> errorStrings = new ArrayList<>();
     Set<String> errorFields = new HashSet<>();
+    boolean notComplete=false;
 
     public RequestError() {
     }
@@ -50,15 +52,17 @@ public final class RequestError {
         }
     }
 
-    public void addError(Exception e) {
-        if (e != null) {
-            errorStrings.add(e.getMessage());
-            StringWriter sWriter = new StringWriter();
-            PrintWriter pWriter = new PrintWriter(sWriter);
-            e.printStackTrace(pWriter);
-            pWriter.flush();
-            errorStrings.add(sWriter.toString());
-        }
+    public void addNotCompleteField(String field) {
+        addErrorField(field);
+        notComplete=true;
+    }
+
+    public boolean hasErrorField(String name){
+        return errorFields.contains(name);
+    }
+
+    public void setNotComplete() {
+        notComplete=true;
     }
 
     public boolean isEmpty() {
@@ -80,6 +84,16 @@ public final class RequestError {
             sb.append(errorKey);
         }
         return sb.toString();
+    }
+
+    public boolean checkErrors(HttpServletRequest request){
+        if (notComplete)
+            addErrorString(Strings._notComplete.string(SessionReader.getSessionLocale(request)));
+        if (!isEmpty()) {
+            setError(request);
+            return false;
+        }
+        return true;
     }
 
 }

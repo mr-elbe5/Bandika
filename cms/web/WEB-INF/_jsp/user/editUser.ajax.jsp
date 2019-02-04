@@ -34,7 +34,7 @@
         </div>
         <cms:form url="/user.ajx" name="userform" act="<%=UserActions.saveUser%>" multi="true" ajax="true">
             <div class="modal-body">
-                <cms:message/>
+                <cms:requesterror/>
                 <h3><%=Strings._settings.html(locale)%></h3>
                 <cms:line label="<%=Strings._id.toString()%>"><%=Integer.toString(user.getId())%></cms:line>
                 <cms:text name="login" label="<%=Strings._login.toString()%>" required="true"><%=StringUtil.toHtml(user.getLogin())%></cms:text>

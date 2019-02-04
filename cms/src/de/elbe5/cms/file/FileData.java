@@ -224,7 +224,7 @@ public class FileData extends BaseIdData implements IRequestData, Comparable<Fil
     }
 
     @Override
-    public boolean readRequestData(HttpServletRequest request) {
+    public void readRequestData(HttpServletRequest request, RequestError error) {
         BinaryFileData file = RequestReader.getFile(request, "file");
         if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringUtil.isNullOrEmpty(file.getContentType())) {
             setBytes(file.getBytes());
@@ -271,15 +271,9 @@ public class FileData extends BaseIdData implements IRequestData, Comparable<Fil
             setDisplayName(getName());
         setDescription(RequestReader.getString(request, "description"));
         setKeywords(RequestReader.getString(request, "keywords"));
-        RequestError error = new RequestError();
         if (name.isEmpty()) {
-            error.addErrorField("name");
+            error.addNotCompleteField("name");
         }
-        if (!error.isEmpty()){
-            error.setError(request);
-            return false;
-        }
-        return true;
     }
 
     public void createResizedImage(int width, int height) throws IOException {

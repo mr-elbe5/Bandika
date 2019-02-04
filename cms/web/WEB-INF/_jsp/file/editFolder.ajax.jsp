@@ -43,7 +43,7 @@
         <cms:form url="/file.ajx" name="folderform" act="<%=FileActions.saveFolder%>" ajax="true">
             <input type="hidden" name="folderId" value="<%=folderData.getId()%>"/>
             <div class="modal-body">
-                <cms:message/>
+                <cms:requesterror/>
                 <h3><%=Strings._settings.html(locale)%></h3>
                 <cms:line label="<%=Strings._id.toString()%>"><%=Integer.toString(folderData.getId())%></cms:line>
                 <cms:line label="<%=Strings._creationDate.toString()%>"><%=StringUtil.toHtmlDateTime(folderData.getCreationDate(), locale)%></cms:line>

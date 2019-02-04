@@ -33,7 +33,7 @@
         <cms:form url="/admin.ajx" name="taskform" act="<%=AdminActions.saveTimerTask%>" ajax="true">
             <input type="hidden" name="timerName" value="<%=data.getName()%>"/>
             <div class="modal-body">
-                <cms:message/>
+                <cms:requesterror/>
                 <cms:line label="<%=Strings._name.toString()%>"><%=StringUtil.toHtml(data.getName())%></cms:line>
                 <cms:line label="<%=Strings._displayName.toString()%>"><%=StringUtil.toHtml(data.getDisplayName())%>
                 </cms:line>

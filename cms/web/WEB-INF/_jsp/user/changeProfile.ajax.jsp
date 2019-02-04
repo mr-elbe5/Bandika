@@ -30,7 +30,7 @@
         <cms:form url="/user.ajx" name="changeprofileform" act="<%=UserActions.changeProfile%>" ajax="true" multi="true">
             <input type="hidden" name="userId" value="<%=SessionReader.getLoginId(request)%>" />
             <div class="modal-body">
-                <cms:message/>
+                <cms:requesterror/>
                 <cms:line label="<%=Strings._id.toString()%>"><%=Integer.toString(user.getId())%></cms:line>
                 <cms:line label="<%=Strings._login.toString()%>" required="true"><%=StringUtil.toHtml(user.getLogin())%></cms:line>
                 <cms:text name="title" label="<%=Strings._title.toString()%>"><%=StringUtil.toHtml(user.getTitle())%></cms:text>

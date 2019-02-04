@@ -37,7 +37,7 @@
         </div>
         <cms:form url="/user.ajx" name="groupform" act="<%=UserActions.saveGroup%>" ajax="true">
             <div class="modal-body">
-                <cms:message/>
+                <cms:requesterror/>
                 <h3><%=Strings._settings.html(locale)%></h3>
                 <cms:line label="<%=Strings._id.toString()%>"><%=Integer.toString(group.getId())%></cms:line>
                 <cms:text name="name" label="<%=Strings._name.toString()%>" required="true"><%=StringUtil.toHtml(group.getName())%></cms:text>

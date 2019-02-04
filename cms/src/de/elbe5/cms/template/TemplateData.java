@@ -95,24 +95,19 @@ public class TemplateData extends BaseData implements IRequestData, Serializable
         this.code = code;
     }
 
-    public boolean readRequestData(HttpServletRequest request){
+    @Override
+    public void readRequestData(HttpServletRequest request, RequestError error) {
         if (isNew())
             setName(RequestReader.getString(request, "name"));
         setDisplayName(RequestReader.getString(request, "displayName", name));
         setDescription(RequestReader.getString(request, "description"));
         setCode(RequestReader.getString(request, "code"));
-        RequestError error = new RequestError();
         if (name.isEmpty()) {
-            error.addErrorField("name");
+            error.addNotCompleteField("name");
         }
         if (code.isEmpty()) {
-            error.addErrorField("code");
+            error.addNotCompleteField("code");
         }
-        if (!error.isEmpty()){
-            error.setError(request);
-            return false;
-        }
-        return true;
     }
 
 }

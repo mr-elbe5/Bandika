@@ -83,7 +83,7 @@ public class GroupData extends BaseIdData implements IRequestData {
         return users;
     }
 
-    public boolean readRequestData(HttpServletRequest request) {
+    public void readRequestData(HttpServletRequest request, RequestError error) {
         setName(RequestReader.getString(request, "name"));
         setNotes(RequestReader.getString(request, "notes"));
         getRights().getSystemRights().clear();
@@ -94,12 +94,8 @@ public class GroupData extends BaseIdData implements IRequestData {
         }
         setUserIds(RequestReader.getIntegerSet(request, "userIds"));
         if (name.isEmpty()){
-            RequestError error = new RequestError();
-            error.addErrorField("name");
-            error.setError(request);
-            return false;
+            error.addNotCompleteField("name");
         }
-        return true;
     }
 
 }

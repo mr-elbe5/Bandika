@@ -31,6 +31,7 @@
         <cms:form url="/pagepart.ajx" name="settingsform" act="<%=PagePartActions.savePagePartSettings%>">
             <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
             <input type="hidden" name="partId" value="<%=part.getId()%>"/>
+            <cms:requesterror/>
             <cms:select name="flexClass" label="<%=Strings._flexClass.toString()%>">
                 <% String selection=part.getFlexClass();
                     if (selection.isEmpty())
