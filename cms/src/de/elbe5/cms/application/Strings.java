@@ -29,6 +29,10 @@ public enum Strings{
     _cacheCleared,
     _cacheReloaded,
     _caches,
+    _captcha,
+    _captchaHint,
+    _captchaRenew,
+    _captchaError,
     _cancel,
     _changeDate,
     _changePassword,
@@ -278,6 +282,10 @@ public enum Strings{
 
     public String html(Locale locale){
         return StringCache.getHtml(name(),locale);
+    }
+
+    public String htmlMultiline(Locale locale){
+        return StringCache.getHtmlMultiline(name(),locale);
     }
 
     public String js(Locale locale){

@@ -11,7 +11,9 @@ package de.elbe5.cms.user;
 import de.elbe5.base.data.BaseIdData;
 import de.elbe5.base.data.BinaryFileData;
 import de.elbe5.base.data.Locales;
+import de.elbe5.base.log.Log;
 import de.elbe5.cms.application.AdminActions;
+import de.elbe5.cms.application.Statics;
 import de.elbe5.cms.application.Strings;
 import de.elbe5.cms.configuration.Configuration;
 import de.elbe5.cms.page.JspPageData;
@@ -29,6 +31,7 @@ public class UserActions extends ActionSet {
     public static final String openLogin="openLogin";
     public static final String login="login";
     public static final String showCaptcha="showCaptcha";
+    public static final String renewCaptcha="renewCaptcha";
     public static final String logout="logout";
     public static final String openEditGroup="openEditGroup";
     public static final String openCreateGroup="openCreateGroup";
@@ -84,12 +87,17 @@ public class UserActions extends ActionSet {
                 return showHome(request, response);
             }
             case showCaptcha: {
-                String captcha = (String) RequestReader.getSessionObject(request, "captcha");
-                if (captcha==null)
+                String captcha = (String) RequestReader.getSessionObject(request, Statics.KEY_CAPTCHA);
+                if (captcha==null) {
                     return false;
+                }
                 BinaryFileData data = UserSecurity.getCaptcha(captcha);
                 assert data != null;
                 return sendBinaryResponse(request, response, data.getFileName(), data.getContentType(), data.getBytes(), false);
+            }
+            case renewCaptcha: {
+                SessionWriter.setSessionObject(request, Statics.KEY_CAPTCHA, UserSecurity.generateCaptchaString());
+                return sendHtmlResponse(request, response, "ok");
             }
             case logout: {
                 SessionWriter.setSessionLoginData(request, null);
@@ -99,6 +107,7 @@ public class UserActions extends ActionSet {
             }
             case openRegistration: {
                 request.setAttribute("userData", new UserData());
+                SessionWriter.setSessionObject(request, Statics.KEY_CAPTCHA, UserSecurity.generateCaptchaString());
                 return showRegistration(request, response);
             }
             case register: {
@@ -116,6 +125,11 @@ public class UserActions extends ActionSet {
                 if (UserBean.getInstance().doesEmailExist(user.getEmail())){
                     error.addErrorField("email");
                     error.addErrorString(Strings._emailInUseError.string(SessionReader.getSessionLocale(request)));
+                }
+                String captchaString=RequestReader.getString(request,"captcha");
+                if (!captchaString.equals(RequestReader.getSessionObject(request, Statics.KEY_CAPTCHA))){
+                    error.addErrorField("captcha");
+                    error.addErrorString(Strings._captchaError.string(SessionReader.getSessionLocale(request)));
                 }
                 if (!error.isEmpty()){
                     error.setError(request);

@@ -23,6 +23,10 @@ _cacheCleared;Cache cleared;Speicher wurde geleert
 _cacheReloaded;Cache reloaded;Speicher wurde neu geladen
 _caches;Caches;Datenspeicher
 _cancel;Cancel;Abbrechen
+_captcha;Captcha (Your are not a robot!);Captcha (Sie sind kein Robot!)
+_captchaHint;As result please enter the numbers of blue, yellow and red lines and circles (6 digits).\n\nExample: no blue line, 2 yellow Lines, 1 red line, 3 blue circles, 1 yellow circle, no red circle make 021310.;Als Ergebnis geben Sie die Zahlen der blauen, gelben und roten Linien und Kreise ein (6 Ziffern).\n\nBeispiel: keine blaue Linie, zwei gelbe Linien, 1 rote Linie, 3 blaue Kreise, 1 gelber Kreis, kein roter Kreis ergeben 021310.
+_captchaRenew;Load a different captcha;Ein anderes Captcha laden
+_captchaError;Your captcha solution was not correct. Please try again.;Ihr Captcha-Ergebnis war nicht korrekt. Bitte versuchen Sie es noch einmal.
 _changeDate;Change Date;Änderungsdatum
 _changePassword;Change Password;Passwort ändern
 _changeProfile;Change Profile;Profil ändern
@@ -38,7 +42,7 @@ _contact;Contact;Kontakt
 _content;Content;Inhalt
 _contentAdministration;Content Administration;Inhalts-Administration
 _continous;Continous;Kontinuierlich
-_copyright;© 2019 Bandika elbe5.de;© 2019 Bandika elbe5.de
+_copyright;© 2019 Elbe 5;© 2019 Elbe 5
 _country;Country;Land
 _creationDate;Creation Date;Erstellungsdatum
 _cssClass;CSS Class;CSS Klasse

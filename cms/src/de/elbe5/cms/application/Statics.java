@@ -25,6 +25,7 @@ public class Statics {
     public static final String KEY_TITLE = "$TITLE";
     public static final String KEY_LOGIN = "$LOGIN";
     public static final String KEY_LOCALE = "$LOCALE";
+    public static final String KEY_CAPTCHA = "$CAPTCHA";
     public static final String KEY_HOST = "$HOST";
     public static final String KEY_EDITMODE = "$EDITMODE";
     public static String MODAL_DIALOG_ID = "modalDialog";

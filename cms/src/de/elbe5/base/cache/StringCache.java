@@ -55,7 +55,7 @@ public class StringCache {
     }
 
     public static String getHtmlMultiline(String key, Locale locale) {
-        return StringEscapeUtils.escapeHtml4(getString(key, locale)).replaceAll("\n","\n<br>\n");
+        return StringEscapeUtils.escapeHtml4(getString(key, locale)).replaceAll("\\\\n","<br/>");
     }
 
     public static String getJavascript(String key, Locale locale) {

@@ -12,6 +12,7 @@
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.cms.user.UserActions" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="java.util.Date" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
     Locale locale = SessionReader.getSessionLocale(request);
@@ -45,11 +46,31 @@
             <cms:text name="phone" label="<%=Strings._phone.toString()%>"><%=StringUtil.toHtml(user.getPhone())%></cms:text>
             <cms:text name="fax" label="<%=Strings._fax.toString()%>"><%=StringUtil.toHtml(user.getFax())%></cms:text>
             <cms:text name="mobile" label="<%=Strings._mobile.toString()%>"><%=StringUtil.toHtml(user.getMobile())%></cms:text>
+            <hr/>
+            <cms:line padded="true">
+                <div class="imgBox left50">
+                    <img id="captchaImg" src="/user.srv?act=<%=UserActions.showCaptcha%>&timestamp=<%=new Date().getTime()%>" alt="captcha" />
+                    <%=Strings._captchaHint.htmlMultiline(locale)%>
+                    <br/><br/>
+                    <a class="link" href="#" onclick="return renewCaptcha();"><%=Strings._captchaRenew.html(locale)%></a>
+                </div>
+            </cms:line>
+            <cms:text name="captcha" label="<%=Strings._captcha.toString()%>"></cms:text>
         </div>
         <div>
             <button type="submit" class="btn btn-primary"><%=Strings._register.html(locale)%>
             </button>
         </div>
     </cms:form>
+    <script type="text/javascript">
+        function renewCaptcha(){
+            $.ajax({
+                url: '/user.ajx', type: 'POST', data: {act :'<%=UserActions.renewCaptcha%>'}, cache: false, dataType: 'html'
+            }).success(function (html, textStatus) {
+                $('#captchaImg').attr("src","/user.srv?act=<%=UserActions.showCaptcha%>&timestamp="+new Date().getTime());
+            });
+            return false;
+        }
+    </script>
 </div>
 

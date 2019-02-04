@@ -14,6 +14,7 @@ import de.elbe5.base.log.Log;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,6 +35,7 @@ public class UserSecurity {
     public static final String LOWER_SIMPLE_CONSONANTS = "bcdfgklmnprstvwxz";
     public static final String UPPER_VOWELS = "AEIOU";
     public static final String LOWER_VOWELS = "aeiou";
+    public static final String SMALLNUMBERS = "01234";
 
     public static String generateSimplePassword() {
         Random random = new Random();
@@ -52,13 +54,20 @@ public class UserSecurity {
     public static String generateCaptchaString() {
         Random random = new Random();
         random.setSeed(Instant.now().toEpochMilli());
-        char[] chars = new char[5];
-        chars[0] = getRandomChar(UPPER_SIMPLE_CONSONANTS, random);
-        chars[1] = getRandomChar(LOWER_VOWELS, random);
-        chars[2] = getRandomChar(LOWER_SIMPLE_CONSONANTS, random);
-        chars[3] = getRandomChar(LOWER_VOWELS, random);
-        chars[4] = getRandomChar(UPPER_SIMPLE_CONSONANTS, random);
+        char[] chars = new char[6];
+        for (int i=0;i<6;i++)
+            chars[i] = getRandomChar(SMALLNUMBERS, random);
         return new String(chars);
+    }
+
+    public static int[] getCaptchaInts(String captchaString){
+        char[] chars=captchaString.toCharArray();
+        if (chars.length!=6)
+            return null;
+        int[] ints=new int[6];
+        for (int i=0;i<6;i++)
+            ints[i]=chars[i]-48;
+        return ints;
     }
 
     public static String getApprovalString() {
@@ -79,50 +88,45 @@ public class UserSecurity {
         return chars.charAt(random.nextInt(chars.length()));
     }
 
+    private static int getRandomInt(String chars, Random random) {
+        return chars.charAt(random.nextInt(chars.length()));
+    }
+
     public static BinaryFileData getCaptcha(String captcha) {
+        int[] ints = getCaptchaInts(captcha);
+        if (ints==null)
+            return null;
         int width = 300;
-        int height = 60;
-        int fontSize = 26;
-        int xGap = 30;
-        int yGap = 25;
-        String fontName = "Arial";
+        int height = 200;
         Color gradiantStartColor = new Color(60, 60, 60);
         Color gradiantEndColor = new Color(140, 140, 140);
-        Color textColor = new Color(255, 153, 0);
+        Color yellowColor = new Color(255, 255, 0);
+        Color blueColor = new Color(127, 127, 255);
+        Color redColor = new Color(255, 127, 127);
         BinaryFileData data;
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = bufferedImage.createGraphics();
-        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        rh.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        g2d.setRenderingHints(rh);
-        GradientPaint gp = new GradientPaint(0, 0, gradiantStartColor, 0, height / 2, gradiantEndColor, true);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        GradientPaint gp = new GradientPaint(0, 0, gradiantStartColor, 0, height >> 1, gradiantEndColor, true);
         g2d.setPaint(gp);
         g2d.fillRect(0, 0, width, height);
-        Random r = new Random();
-        for (int i = 0; i < width - 10; i = i + 25) {
-            int q = Math.abs(r.nextInt()) % width;
-            int colorIndex = Math.abs(r.nextInt()) % 200;
-            g2d.setColor(new Color(colorIndex, colorIndex, colorIndex));
-            g2d.drawLine(i, q, width, height);
-            g2d.drawLine(q, i, i, height);
+        for (int i=0;i<ints[0];i++){
+            drawLine(g2d,blueColor,width,height);
         }
-        g2d.setColor(textColor);
-        int x = 0;
-        int y;
-        for (int i = 0; i < captcha.length(); i++) {
-            Font font = new Font(fontName, Font.BOLD, fontSize);
-            g2d.setFont(font);
-            x += xGap + (Math.abs(r.nextInt()) % 15);
-            y = yGap + Math.abs(r.nextInt()) % 20;
-            g2d.drawChars(captcha.toCharArray(), i, 1, x, y);
+        for (int i=0;i<ints[1];i++){
+            drawLine(g2d,yellowColor,width,height);
         }
-        for (int i = 0; i < width - 10; i = i + 25) {
-            int p = Math.abs(r.nextInt()) % width;
-            int q = Math.abs(r.nextInt()) % width;
-            int colorIndex = Math.abs(r.nextInt()) % 200;
-            g2d.setColor(new Color(colorIndex, colorIndex, colorIndex));
-            g2d.drawLine(p, 0, i + p, q);
-            g2d.drawLine(p, 0, i + 25, height);
+        for (int i=0;i<ints[2];i++){
+            drawLine(g2d,redColor,width,height);
+        }
+        for (int i=0;i<ints[3];i++){
+            drawCircle(g2d,blueColor,width,height);
+        }
+        for (int i=0;i<ints[4];i++){
+            drawCircle(g2d,yellowColor,width,height);
+        }
+        for (int i=0;i<ints[5];i++){
+            drawCircle(g2d,redColor,width,height);
         }
         g2d.dispose();
         try {
@@ -136,6 +140,26 @@ public class UserSecurity {
             return null;
         }
         return data;
+    }
+
+    private static void drawLine(Graphics2D g2d, Color col, int width, int height){
+        Random r = new Random();
+        int x1 = 10*r.nextInt(width/10);
+        int y1 = 10*r.nextInt(height/10);
+        int x2 = 10*r.nextInt(width/10);
+        int y2 = 10*r.nextInt(height/10);
+        g2d.setColor(col);
+        g2d.drawLine(x1,y1,x2,y2);
+    }
+
+    private static void drawCircle(Graphics2D g2d, Color col, int width, int height){
+        Random r = new Random();
+        int x1 = width/10+r.nextInt(8*width/10);
+        int y1 = height/10+r.nextInt(8*height/10);
+        int radius = 10+r.nextInt(height/10);
+        g2d.setColor(col);
+        Shape circle = new Ellipse2D.Double(x1 - radius, y1 - radius, 2.0 * radius, 2.0 * radius);
+        g2d.draw(circle);
     }
 
     public static String generateKey() {
