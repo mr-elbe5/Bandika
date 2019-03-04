@@ -153,7 +153,7 @@ public class PagePartActions extends ActionSet {
                     return setPageResponse(request, response, data);
                 }
                 RequestError error=new RequestError();
-                data.readRequestData(request,error);
+                pdata.readRequestData(request,error);
                 if (!error.checkErrors(request)){
                     return setPageResponse(request, response, data);
                 }
