@@ -10,10 +10,10 @@ package de.elbe5.cms.tag;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
+import de.elbe5.cms.application.Statics;
 import de.elbe5.cms.page.PageCache;
 import de.elbe5.cms.page.PageData;
-import de.elbe5.cms.servlet.ActionSet;
-import de.elbe5.cms.servlet.SessionReader;
+import de.elbe5.cms.servlet.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -26,9 +26,10 @@ public class BreadcrumbTag extends BaseTag {
     public int doStartTag() {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
-            Locale locale=SessionReader.getSessionLocale(request);
+            RequestData rdata = RequestData.getRequestData(request);
+            Locale locale=rdata.getSessionLocale();
             JspWriter writer = getContext().getOut();
-            PageData pageData = (PageData) request.getAttribute(ActionSet.KEY_PAGE);
+            PageData pageData = (PageData) rdata.get(Statics.KEY_PAGE);
             int pageId = pageData==null ? 0 : pageData.getId();
             if (pageId==0)
                 pageId = PageCache.getInstance().getHomePageId(locale);
@@ -41,9 +42,9 @@ public class BreadcrumbTag extends BaseTag {
                 if (bcnode == null) {
                     continue;
                 }
-                StringUtil.write(writer, "<li class=\"breadcrumb-item\"><a href=\"{1}\">{2}</a></li>",
-                        bcnode.getUrl(),
-                        StringUtil.toHtml(bcnode.getDisplayName()));
+                StringUtil.write(writer, "<li class=\"breadcrumb-item\"><a href=\"/page/show/{1}\">{2}</a></li>",
+                        Integer.toString(bcnode.getId()),
+                        StringUtil.toHtml(bcnode.getName()));
             }
             writer.write("</ol>");
         } catch (Exception e) {

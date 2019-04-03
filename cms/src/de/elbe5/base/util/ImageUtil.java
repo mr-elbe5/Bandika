@@ -10,11 +10,14 @@ package de.elbe5.base.util;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
+import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -78,4 +81,13 @@ public class ImageUtil {
         return bi;
     }
 
+    public static byte[] writeImage(ImageWriter writer, BufferedImage image) throws IOException{
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        ImageOutputStream ios = ImageIO.createImageOutputStream(bout);
+        writer.setOutput(ios);
+        writer.write(image);
+        bout.flush();
+        bout.close();
+        return bout.toByteArray();
+    }
 }

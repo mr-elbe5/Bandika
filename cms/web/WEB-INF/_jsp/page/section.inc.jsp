@@ -9,24 +9,26 @@
 <%@ page import="de.elbe5.cms.page.PageData" %>
 <%@ page import="de.elbe5.cms.page.SectionData" %>
 <%@ page import="de.elbe5.cms.page.PagePartData" %>
-<%@ page import="de.elbe5.cms.page.PagePartActions" %>
 <%@ page import="de.elbe5.cms.template.TemplateData" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
+<%@ page import="de.elbe5.cms.application.Statics" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    PageData pageData = (PageData) request.getAttribute("pageData");
+    RequestData rdata= RequestData.getRequestData(request);
+    PageData pageData = (PageData) rdata.get("pageData");
     assert pageData != null;
-    SectionData sectionData = (SectionData) request.getAttribute("sectionData");
+    SectionData sectionData = (SectionData) rdata.get("sectionData");
     assert sectionData != null;
 %>
 <% if (!sectionData.getParts().isEmpty()) {%>
 <div class = "section <%=sectionData.getCss()%>" >
 <% for (PagePartData partData : sectionData.getParts()) {
-    request.setAttribute(PagePartActions.KEY_PART,partData);%>
+    rdata.put(Statics.KEY_PART,partData);%>
     <div class="<%=partData.getCss(sectionData.isFlex())%>">
     <jsp:include page="<%=TemplateData.getTemplateUrl(TemplateData.TYPE_PART,partData.getTemplateName())%>" flush="true"/>
     </div>
     <%
-    request.removeAttribute(PagePartActions.KEY_PART);
+    request.removeAttribute(Statics.KEY_PART);
 }%>
 </div>
 <%}%>

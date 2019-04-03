@@ -6,14 +6,15 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%><%response.setContentType("text/html;charset=UTF-8");%>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.cms.rights.SystemZone" %>
 <%@ page import="de.elbe5.cms.rights.Right" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
+    RequestData rdata=RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
 %>
 
             <div id="pageContent">
@@ -23,7 +24,7 @@
                         <li class="open">
                             <a class="treeRoot"><%=Strings._content.html(locale)%></a>
                             <ul>
-                                <% if (SessionReader.hasSystemRight(request, SystemZone.CONTENT, Right.EDIT)) {
+                                <% if (rdata.hasSystemRight(SystemZone.CONTENT, Right.EDIT)) {
                                 %>
                                 <jsp:include page="templateAdministration.inc.jsp" flush="true" />
                                 <jsp:include page="partAdministration.inc.jsp" flush="true" />

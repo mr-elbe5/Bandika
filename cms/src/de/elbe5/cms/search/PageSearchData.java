@@ -8,8 +8,6 @@
  */
 package de.elbe5.cms.search;
 
-import de.elbe5.cms.page.PageCache;
-import de.elbe5.cms.page.PageData;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -132,9 +130,6 @@ public class PageSearchData extends SearchData {
         keywords = doc.get("keywords");
         authorName = doc.get("authorName");
         content = doc.get("content");
-        PageData pageData = PageCache.getInstance().getPage(getId());
-        if (pageData != null)
-            setUrl(pageData.getUrl());
     }
 
 }

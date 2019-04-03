@@ -5,31 +5,67 @@
                       http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
     <servlet>
-        <servlet-name>default</servlet-name>
-        <servlet-class>
-            org.apache.catalina.servlets.DefaultServlet
-        </servlet-class>
-        <init-param>
-            <param-name>listings</param-name>
-            <param-value>false</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet>
-        <servlet-name>applicationServlet</servlet-name>
-        <servlet-class>de.elbe5.application.BandikaServlet</servlet-class>
+        <!--suppress ServletWithoutMappingInspection -->
+        <servlet-name>initServlet</servlet-name>
+        <servlet-class>de.elbe5.application.InitServlet</servlet-class>
         <load-on-startup>10</load-on-startup>
     </servlet>
+    <servlet>
+        <servlet-name>adminServlet</servlet-name>
+        <servlet-class>de.elbe5.cms.application.AdminServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>fieldServlet</servlet-name>
+        <servlet-class>de.elbe5.cms.field.FieldServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>fileServlet</servlet-name>
+        <servlet-class>de.elbe5.cms.file.FileServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>pageServlet</servlet-name>
+        <servlet-class>de.elbe5.cms.page.PageServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>searchServlet</servlet-name>
+        <servlet-class>de.elbe5.cms.search.SearchServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>templateServlet</servlet-name>
+        <servlet-class>de.elbe5.cms.template.TemplateServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>userServlet</servlet-name>
+        <servlet-class>de.elbe5.cms.user.UserServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>/_statics/*</url-pattern>
-        <url-pattern>/favicon.ico</url-pattern>
+        <servlet-name>adminServlet</servlet-name>
+        <url-pattern>/admin/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>applicationServlet</servlet-name>
-        <url-pattern>/</url-pattern>
-        <url-pattern>*.srv</url-pattern>
-        <url-pattern>*.ajx</url-pattern>
+        <servlet-name>fieldServlet</servlet-name>
+        <url-pattern>/field/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>fileServlet</servlet-name>
+        <url-pattern>/file/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>pageServlet</servlet-name>
+        <url-pattern>/page/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>searchServlet</servlet-name>
+        <url-pattern>/search/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>templateServlet</servlet-name>
+        <url-pattern>/template/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>userServlet</servlet-name>
+        <url-pattern>/user/*</url-pattern>
     </servlet-mapping>
     <listener>
         <listener-class>de.elbe5.cms.application.AppContextListener</listener-class>

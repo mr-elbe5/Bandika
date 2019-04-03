@@ -18,7 +18,7 @@ _back;Back;Zurück
 _badData;Bad Request - Maybe your session timed out or this request has no adequate response.;Ungültiger Request - Möglicherweise ist die Sitzung abgelaufen.
 _badLogin;Your login could not be approved.;Ihre Anmeldung konnte nicht bestätigt werden.
 _below;Below;Unterhalb
-_binaryFileCache;File Cache.;Datei-Speicher
+_binaryFileCache;File Cache;Datei-Speicher
 _cacheCleared;Cache cleared;Speicher wurde geleert
 _cacheReloaded;Cache reloaded;Speicher wurde neu geladen
 _caches;Caches;Datenspeicher
@@ -99,6 +99,7 @@ _flexClass;Flex Class;Flex-Klasse
 _folderDeleted;Folder deleted;Verzeichnis gelöscht
 _folderSaved;Folder saved;Verzeichnis gespeichert
 _forbidden;Forbidden - Please log in (again) with sufficient rights.;Keine Rechte - Bitte melden Sie sich (mit ausreichenden Rechten) neu an.
+_formError;Error in form;Fehler im Formular
 _fromTemplate;From Template;Von Vorlage
 _general;General;Allgemein
 _group;Group;Gruppe

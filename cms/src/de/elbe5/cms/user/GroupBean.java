@@ -84,7 +84,7 @@ public class GroupBean extends DbBean {
                 data.setName(rs.getString(i++));
                 data.setNotes(rs.getString(i));
                 rs.close();
-                readGroupUsers(con, data, User2GroupRelation.RIGHTS);
+                readGroupUsers(con, data);
             }
             rs.close();
         } catch (SQLException se) {
@@ -96,13 +96,12 @@ public class GroupBean extends DbBean {
         return data;
     }
 
-    private static String READ_GROUPUSER_SQL="SELECT user_id FROM t_user2group WHERE group_id=? AND relation=?";
-    protected void readGroupUsers(Connection con, GroupData data, User2GroupRelation relation) throws SQLException {
+    private static String READ_GROUPUSER_SQL="SELECT user_id FROM t_user2group WHERE group_id=?";
+    protected void readGroupUsers(Connection con, GroupData data) throws SQLException {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(READ_GROUPUSER_SQL);
             pst.setInt(1, data.getId());
-            pst.setString(2, relation.name());
             try (ResultSet rs = pst.executeQuery()) {
                 data.getUserIds().clear();
                 while (rs.next()) {
@@ -118,13 +117,12 @@ public class GroupBean extends DbBean {
         Connection con = startTransaction();
         try {
             if (!data.isNew() && changedGroup(con, data)) {
-                rollbackTransaction(con);
-                return false;
+                return rollbackTransaction(con);
             }
             data.setChangeDate(getServerTime(con));
             writeGroup(con, data);
             RightBean.getInstance().writeGroupRights(con, data);
-            writeGroupUsers(con, data, User2GroupRelation.RIGHTS);
+            writeGroupUsers(con, data);
             return commitTransaction(con);
         } catch (Exception se) {
             return rollbackTransaction(con, se);
@@ -144,15 +142,15 @@ public class GroupBean extends DbBean {
             pst.setInt(i, data.getId());
             pst.executeUpdate();
             pst.close();
-            writeGroupUsers(con, data, User2GroupRelation.RIGHTS);
+            writeGroupUsers(con, data);
         } finally {
             closeStatement(pst);
         }
     }
 
     private static String DELETE_GROUPUSERS_SQL="DELETE FROM t_user2group WHERE group_id=?";
-    private static String INSERT_GROUPUSER_SQL="INSERT INTO t_user2group (group_id,user_id,relation) VALUES(?,?,?)";
-    protected void writeGroupUsers(Connection con, GroupData data, User2GroupRelation relation) throws SQLException {
+    private static String INSERT_GROUPUSER_SQL="INSERT INTO t_user2group (group_id,user_id) VALUES(?,?)";
+    protected void writeGroupUsers(Connection con, GroupData data) throws SQLException {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(DELETE_GROUPUSERS_SQL);
@@ -162,7 +160,6 @@ public class GroupBean extends DbBean {
                 pst.close();
                 pst = con.prepareStatement(INSERT_GROUPUSER_SQL);
                 pst.setInt(1, data.getId());
-                pst.setString(3, relation.name());
                 for (int userId : data.getUserIds()) {
                     pst.setInt(2, userId);
                     pst.executeUpdate();

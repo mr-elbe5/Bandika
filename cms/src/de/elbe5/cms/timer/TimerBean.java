@@ -24,37 +24,7 @@ public class TimerBean extends DbBean {
         return instance;
     }
 
-    private static String FIND_TASK_SQL="SELECT 'x' FROM t_timer_task WHERE name=?";
-    private static String INSERT_TASK_SQL="INSERT INTO t_timer_task (name, display_name, execution_interval, active) VALUES(?,?,'CONTINOUS', FALSE)";
-    public void assertTimerTask(TimerTaskData task) {
-        Connection con = getConnection();
-        PreparedStatement pst1 = null;
-        PreparedStatement pst2 = null;
-        boolean found=false;
-        try {
-            pst1 = con.prepareStatement(FIND_TASK_SQL);
-            pst1.setString(1, task.getName());
-            try (ResultSet rs = pst1.executeQuery()) {
-                if (rs.next()) {
-                    found = true;
-                }
-            }
-            if (!found) {
-                pst2 = con.prepareStatement(INSERT_TASK_SQL);
-                pst2.setString(1, task.getName());
-                pst2.setString(2, task.getDisplayName());
-                pst2.executeUpdate();
-            }
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeStatement(pst1);
-            closeStatement(pst2);
-            closeConnection(con);
-        }
-    }
-
-    private static String READ_TASK_SQL="SELECT execution_interval,day,hour,minute,note_execution,last_execution,active FROM t_timer_task WHERE name=?";
+    private static String READ_TASK_SQL="SELECT display_name,execution_interval,day,hour,minute,note_execution,last_execution,active FROM t_timer_task WHERE name=?";
     public void readTimerTask(TimerTaskData task) {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -64,6 +34,7 @@ public class TimerBean extends DbBean {
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
+                    task.setDisplayName(rs.getString(i++));
                     task.setInterval(TimerInterval.valueOf(rs.getString(i++)));
                     task.setDay(rs.getInt(i++));
                     task.setHour(rs.getInt(i++));

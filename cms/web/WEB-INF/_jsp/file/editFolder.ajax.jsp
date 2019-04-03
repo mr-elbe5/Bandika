@@ -7,7 +7,7 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
+
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.cms.file.FileCache" %>
@@ -15,12 +15,13 @@
 <%@ page import="de.elbe5.cms.user.GroupData" %>
 <%@ page import="de.elbe5.cms.rights.Right" %>
 <%@ page import="de.elbe5.cms.file.FolderData" %>
-<%@ page import="de.elbe5.cms.file.FileActions" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
-    FolderData folderData = (FolderData) SessionReader.getSessionObject(request, FileActions.KEY_FOLDER);
+    RequestData rdata= RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
+    FolderData folderData = (FolderData) rdata.getSessionObject("folderData");
     assert(folderData !=null);
     FolderData parentFolder = null;
     if (folderData.getParentId() != 0) {
@@ -30,6 +31,7 @@
     List<GroupData> groups = GroupBean.getInstance().getAllGroups();
     String label;
     String name;
+    String url="/file/saveFolder/"+folderData.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -40,19 +42,17 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <cms:form url="/file.ajx" name="folderform" act="<%=FileActions.saveFolder%>" ajax="true">
-            <input type="hidden" name="folderId" value="<%=folderData.getId()%>"/>
+        <cms:form url="<%=url%>" name="folderform" ajax="true">
             <div class="modal-body">
-                <cms:requesterror/>
+                <cms:formerror/>
                 <h3><%=Strings._settings.html(locale)%></h3>
                 <cms:line label="<%=Strings._id.toString()%>"><%=Integer.toString(folderData.getId())%></cms:line>
                 <cms:line label="<%=Strings._creationDate.toString()%>"><%=StringUtil.toHtmlDateTime(folderData.getCreationDate(), locale)%></cms:line>
                 <cms:line label="<%=Strings._changeDate.toString()%>"><%=StringUtil.toHtmlDateTime(folderData.getChangeDate(), locale)%></cms:line>
                 <cms:line label="<%=Strings._parentFolder.toString()%>"><%=(parentFolder == null) ? "-" : StringUtil.toHtml(parentFolder.getName()) + "&nbsp;(" + parentFolder.getId() + ')'%></cms:line>
 
-                <cms:text name="name" label="<%=Strings._name.toString()%>" required="true"><%=StringUtil.toHtml(folderData.getName())%></cms:text>
-                <cms:line label="<%=Strings._url.toString()%>"><%=StringUtil.toHtml(folderData.getUrl())%></cms:line>
-                <cms:text name="description" label="<%=Strings._description.toString()%>"><%=StringUtil.toHtml(folderData.getDescription())%></cms:text>
+                <cms:text name="name" label="<%=Strings._name.toString()%>" required="true" value="<%=StringUtil.toHtml(folderData.getName())%>" />
+                <cms:text name="description" label="<%=Strings._description.toString()%>" value="<%=StringUtil.toHtml(folderData.getDescription())%>" />
                 <cms:line label="<%=Strings._anonymous.toString()%>" padded="true">
                     <cms:check name="anonymous" value="true" checked="<%=folderData.isAnonymous()%>" />
                 </cms:line>

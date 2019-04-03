@@ -6,15 +6,17 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
+
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.cms.search.PageSearchResultData" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
 <%@ page import="de.elbe5.cms.search.PageSearchData" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
-    PageSearchResultData pageResult = (PageSearchResultData) request.getAttribute("searchResultData");
+    RequestData rdata=RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
+    PageSearchResultData pageResult = (PageSearchResultData) rdata.get("searchResultData");
 %>
 <cms:message />
 <section class="contentTop">

@@ -9,8 +9,9 @@
 package de.elbe5.cms.tag;
 
 import de.elbe5.base.log.Log;
+import de.elbe5.cms.application.Statics;
 import de.elbe5.cms.page.*;
-import de.elbe5.cms.servlet.ActionSet;
+import de.elbe5.cms.servlet.RequestData;
 import de.elbe5.cms.template.TemplateData;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +22,8 @@ public class PageTag extends BaseTag {
     public int doStartTag() {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
-            PageData pageData = (PageData) request.getAttribute(ActionSet.KEY_PAGE);
+            RequestData rdata = RequestData.getRequestData(request);
+            PageData pageData = (PageData) rdata.get(Statics.KEY_PAGE);
             try {
                 getContext().include(TemplateData.getTemplateUrl(TemplateData.TYPE_MASTER, pageData.getMasterName()));
             } catch (Exception e) {

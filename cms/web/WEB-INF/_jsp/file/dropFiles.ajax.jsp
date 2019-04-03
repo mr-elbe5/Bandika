@@ -7,17 +7,18 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
+
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.file.FileActions" %>
 <%@ page import="de.elbe5.cms.file.FolderData" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
-<%@ page import="de.elbe5.cms.application.AdminActions" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
-    FolderData folderData = (FolderData) SessionReader.getSessionObject(request, "folderData");
+    RequestData rdata= RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
+    FolderData folderData = (FolderData) rdata.getSessionObject("folderData");
     assert(folderData !=null);
+    String url="/file/dropFiles/"+folderData.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -28,14 +29,16 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <cms:form url="/file.ajx" name="fileform" act="<%=FileActions.dropFiles%>" multi="true">
+        <cms:form url="<%=url%>" name="fileform" multi="true">
             <div class="modal-body">
-                <cms:requesterror/>
+                <cms:formerror/>
                 <cms:line label="<%=Strings._id.toString()%>"><%=Integer.toString(folderData.getId())%></cms:line>
                 <cms:line label="<%=Strings._name.toString()%>"><%=StringUtil.toHtml(folderData.getName())%></cms:line>
                 <div class="form-group row">
                     <label class="col-md-3 col-form-label"><%=Strings._dragFilesHere.html(locale)%></label>
-                    <div id="dropArea" class="col-md-9"></div>
+                    <div class="col-md-9">
+                        <div id="dropArea" class="form-control"></div>
+                    </div>
                 </div>
                 <div class="form-group row">
                     <label class="col-md-3 col-form-label"><%=Strings._files.html(locale)%></label>
@@ -105,8 +108,6 @@
     $('#fileform').submit(function (event) {
         event.preventDefault();
         var fd = new FormData();
-        fd.append('act', 'dropFiles');
-        fd.append('folderId', <%=Integer.valueOf(folderData.getId())%>);
         fd.append('numFiles', dropFiles.length.toString());
         for (i = 0; i < dropFiles.length; i++) {
             var file = dropFiles[i];
@@ -114,12 +115,12 @@
         }
         $.ajax({
             type: 'POST',
-            url: '/file.srv?',
+            url: '/file/dropFiles/<%=folderData.getId()%>',
             data: fd,
             processData: false,
             contentType: false,
             success: function (data) {
-                linkTo('admin.srv?act=<%=AdminActions.openFileStructure%>&folderId=' + <%=folderData.getId()%>);
+                linkTo('/admin/openFileStructure?folderId=' + <%=folderData.getId()%>);
             }
         });
     });

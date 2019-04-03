@@ -10,9 +10,10 @@ package de.elbe5.cms.tag;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
+import de.elbe5.cms.application.Statics;
 import de.elbe5.cms.field.HtmlField;
 import de.elbe5.cms.page.*;
-import de.elbe5.cms.servlet.ActionSet;
+import de.elbe5.cms.servlet.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -23,29 +24,16 @@ public class HtmlFieldTag extends FieldTag {
     public int doStartTag() {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+            RequestData rdata = RequestData.getRequestData(request);
             JspWriter writer = getContext().getOut();
-            PageData pageData = (PageData) request.getAttribute(ActionSet.KEY_PAGE);
-            PagePartData partData = (PagePartData) request.getAttribute(PagePartActions.KEY_PART);
+            PageData pageData = (PageData) rdata.get(Statics.KEY_PAGE);
+            PagePartData partData = (PagePartData) rdata.get(Statics.KEY_PART);
 
             HtmlField field = partData.ensureHtmlField(name);
 
-            boolean partEditMode = pageData.getViewMode()== ViewMode.EDIT && partData == pageData.getEditPagePart();
+            boolean partEditMode = pageData.getViewMode() == ViewMode.EDIT && partData == pageData.getEditPagePart();
             if (partEditMode) {
-                StringUtil.write(writer,"<div class=\"ckeditField\" id=\"{1}\" contenteditable=\"true\">{2}</div>" +
-                                "<input type=\"hidden\" name=\"{3}\" value=\"{4}\" />" +
-                                "<script type=\"text/javascript\">$('#{5}').ckeditor({" +
-                                "toolbar : 'Full'," +
-                                "filebrowserBrowseUrl : '/field.srv?act=openLinkBrowser&pageId={6}'," +
-                                "filebrowserImageBrowseUrl : '/field.srv?act=openImageBrowser&pageId={7}'" +
-                                "});" +
-                                "</script>",
-                        field.getIdentifier(),
-                        field.getContent().isEmpty() ? StringUtil.toHtml(placeholder) : field.getContent(),
-                        field.getIdentifier(),
-                        StringUtil.toHtml(field.getContent()),
-                        field.getIdentifier(),
-                        Integer.toString(pageData.getId()),
-                        Integer.toString(pageData.getId()));
+                StringUtil.write(writer, "<div class=\"ckeditField\" id=\"{1}\" contenteditable=\"true\">{2}</div>" + "<input type=\"hidden\" name=\"{3}\" value=\"{4}\" />" + "<script type=\"text/javascript\">$('#{5}').ckeditor({" + "toolbar : 'Full'," + "filebrowserBrowseUrl : '/field/openLinkBrowser?pageId={6}'," + "filebrowserImageBrowseUrl : '/field/openImageBrowser?pageId={7}'" + "});" + "</script>", field.getIdentifier(), field.getContent().isEmpty() ? StringUtil.toHtml(placeholder) : field.getContent(), field.getIdentifier(), StringUtil.toHtml(field.getContent()), field.getIdentifier(), Integer.toString(pageData.getId()), Integer.toString(pageData.getId()));
             } else {
                 try {
                     if (field.getContent().isEmpty()) {

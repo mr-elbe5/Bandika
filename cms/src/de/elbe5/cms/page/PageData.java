@@ -12,17 +12,13 @@ import de.elbe5.base.data.BaseIdData;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.cms.rights.Right;
-import de.elbe5.cms.servlet.IRequestData;
-import de.elbe5.cms.servlet.RequestError;
-import de.elbe5.cms.servlet.RequestReader;
-import de.elbe5.cms.servlet.SessionReader;
+import de.elbe5.cms.servlet.*;
 import de.elbe5.cms.template.TemplateData;
 import de.elbe5.cms.user.GroupBean;
 import de.elbe5.cms.user.GroupData;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -34,7 +30,6 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
     // base data
     protected LocalDateTime creationDate = null;
     protected String name = "";
-    protected String displayName = "";
     protected String description = "";
     protected String keywords = "";
     protected String authorName = "";
@@ -49,7 +44,6 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
     // tree data
     protected int parentId = 0;
     protected PageData parent = null;
-    protected String path = "";
     protected int ranking = 0;
     protected List<PageData> subPages = new ArrayList<>();
     protected List<Integer> subpageIds=new ArrayList<>();
@@ -65,8 +59,6 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
     protected String publishedContent = "";
     protected String searchContent = "";
 
-
-
     public PageData() {
     }
 
@@ -74,7 +66,6 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
         setNew(true);
         setId(PageBean.getInstance().getNextId());
         setName(data.getName() + "_clone");
-        setDisplayName(data.getDisplayName() + "_Clone");
         setDescription(data.getDescription());
         setKeywords(data.getKeywords());
         setInTopNav(data.isInTopNav());
@@ -88,7 +79,6 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
 
         setParentId(data.getParentId());
         setParent(data.getParent());
-        inheritPathFromParent();
         setRanking(data.getRanking() + 1);
 
         for (String sectionName : data.sections.keySet()) {
@@ -108,14 +98,12 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
         setMasterName(parent.getMasterName());
         setAnonymous(parent.isAnonymous());
         setInheritsRights(true);
-        inheritPathFromParent();
         inheritRightsFromParent();
     }
 
     public void setEditValues(PageData cachedData) {
         if (cachedData==null)
             return;
-        setPath(cachedData.getPath());
         if (!isNew()) {
             for (PageData subpage : cachedData.getSubPages()) {
                 subpageIds.add(subpage.getId());
@@ -136,18 +124,7 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
     }
 
     public void setName(String name) {
-        this.name = StringUtil.toSafeWebName(name);
-    }
-
-    public String getDisplayName() {
-        if (displayName == null || displayName.isEmpty()) {
-            return getName();
-        }
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+        this.name = name;
     }
 
     public String getDescription() {
@@ -305,7 +282,6 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
     }
 
     public void inheritToChild(PageData child) {
-        child.setPathFromParentPath(path);
         if (child.inheritsRights()) {
             child.getRights().clear();
             child.getRights().putAll(rights);
@@ -314,33 +290,6 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
 
     public List<Integer> getSubpageIds() {
         return subpageIds;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public String getUrl() {
-        return path + ".html";
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public void setPathFromParentPath(String parentPath) {
-        path = parentPath;
-        if (!path.endsWith("/") && name.length() > 0) {
-            path += '/';
-        }
-        path += name;
-    }
-
-    public void inheritPathFromParent() {
-        if (parent == null) {
-            return;
-        }
-        setPathFromParentPath(parent.getPath());
     }
 
     // part data
@@ -419,10 +368,10 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
 
     // display data
 
-    public boolean isVisibleToUser(HttpServletRequest request) {
+    public boolean isVisibleToUser(RequestData rdata) {
         if (isPublished())
-            return isAnonymous() || SessionReader.hasContentRight(request, getId(), Right.READ);
-        return SessionReader.hasContentRight(request, getId(), Right.READ) && SessionReader.isEditMode(request);
+            return isAnonymous() || rdata.hasContentRight(getId(), Right.READ);
+        return rdata.hasContentRight(getId(), Right.READ) && rdata.isEditMode();
     }
 
     public ViewMode getViewMode() {
@@ -489,24 +438,22 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
     }
 
     @Override
-    public void readRequestData(HttpServletRequest request, RequestError error) {
-        setName(RequestReader.getString(request, "name").trim());
-        String dname = RequestReader.getString(request, "displayName").trim();
-        setDisplayName(dname.isEmpty() ? getName() : dname);
-        setDescription(RequestReader.getString(request, "description"));
-        setKeywords(RequestReader.getString(request, "keywords"));
-        setTemplateName(RequestReader.getString(request, "templateName"));
-        setInTopNav(RequestReader.getBoolean(request, "inTopNav"));
-        setInFooter(RequestReader.getBoolean(request, "inFooter"));
-        setAnonymous(RequestReader.getBoolean(request, "anonymous"));
-        setInheritsRights(RequestReader.getBoolean(request, "inheritsRights"));
+    public void readRequestData(RequestData rdata) {
+        setName(rdata.getString("name").trim());
+        setDescription(rdata.getString("description"));
+        setKeywords(rdata.getString("keywords"));
+        setTemplateName(rdata.getString("templateName"));
+        setInTopNav(rdata.getBoolean("inTopNav"));
+        setInFooter(rdata.getBoolean("inFooter"));
+        setAnonymous(rdata.getBoolean("anonymous"));
+        setInheritsRights(rdata.getBoolean("inheritsRights"));
         if (anonymous && !inheritsRights) {
             List<GroupData> groups = GroupBean.getInstance().getAllGroups();
             getRights().clear();
             for (GroupData group : groups) {
                 if (group.getId() <= GroupData.ID_MAX_FINAL)
                     continue;
-                String value = RequestReader.getString(request, "groupright_" + group.getId());
+                String value = rdata.getString("groupright_" + group.getId());
                 if (!value.isEmpty())
                     getRights().put(group.getId(), Right.valueOf(value));
             }
@@ -514,7 +461,7 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
         if (!subpageIds.isEmpty()) {
             int[] subIds = new int[subpageIds.size()];
             for (int subId : subpageIds) {
-                int idx=RequestReader.getInt(request, "select"+subId);
+                int idx=rdata.getInt("select"+subId);
                 subIds[idx]=subId;
             }
             subpageIds.clear();
@@ -522,10 +469,10 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
                 subpageIds.add(subId);
         }
         if (name.isEmpty()) {
-            error.addNotCompleteField("name");
+            rdata.addIncompleteField("name");
         }
         if (templateName.isEmpty()) {
-            error.addNotCompleteField("templateName");
+            rdata.addIncompleteField("templateName");
         }
     }
 

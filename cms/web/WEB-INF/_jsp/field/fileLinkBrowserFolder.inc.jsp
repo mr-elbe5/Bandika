@@ -6,20 +6,21 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
+
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.cms.rights.Right" %>
 <%@ page import="de.elbe5.cms.file.FolderData" %>
 <%@ page import="de.elbe5.cms.file.FileData" %>
-<%@ page import="de.elbe5.cms.file.FileActions" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
-    FolderData folder = (FolderData) request.getAttribute("folderData");
+    RequestData rdata= RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
+    FolderData folder = (FolderData) rdata.get("folderData");
     assert folder !=null;
 %>
-<% if (SessionReader.hasContentRight(request, folder.getId(), Right.READ)) {%>
+<% if (rdata.hasContentRight(folder.getId(), Right.READ)) {%>
 <li class="open">
     <a id="<%=folder.getId()%>" ><%=folder.getName()%></a>
     <ul>
@@ -29,17 +30,17 @@
         <li>
             <i class="fa <%=file.isImage()?"fa-image" : "fa-file-o"%>">&nbsp;</i>
             <a id="<%=file.getId()%>"><%=file.getName()%></a>
-            <a class="fa fa-globe" title="<%=Strings._view.html(locale)%>" href="<%=file.getUrl()%>" target="_blank">
+            <a class="fa fa-globe" title="<%=Strings._view.html(locale)%>" href="/file/show/<%=file.getId()%>" target="_blank">
             </a>
-            <a class="fa fa-check" title="<%=Strings._select.html(locale)%>" href="" onclick="return ckLinkCallback('<%=file.getUrl()%>');">
+            <a class="fa fa-check" title="<%=Strings._select.html(locale)%>" href="" onclick="return ckLinkCallback('/file/show/<%=file.getId()%>');">
             </a>
         </li>
         <%}
         for (FolderData subFolder : folder.getSubFolders()){
-            request.setAttribute("folderData",subFolder); %>
+            rdata.put("folderData",subFolder); %>
         <jsp:include  page="/WEB-INF/_jsp/field/fileLinkBrowserFolder.inc.jsp" flush="true"/>
         <%}
-        request.setAttribute("folderData", folder);%>
+        rdata.put("folderData", folder);%>
     <%}%>
     </ul>
 </li>

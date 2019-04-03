@@ -4,14 +4,10 @@ import de.elbe5.base.data.BaseIdData;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.cms.rights.Right;
-import de.elbe5.cms.servlet.IRequestData;
-import de.elbe5.cms.servlet.RequestError;
-import de.elbe5.cms.servlet.RequestReader;
-import de.elbe5.cms.servlet.SessionReader;
+import de.elbe5.cms.servlet.*;
 import de.elbe5.cms.user.GroupBean;
 import de.elbe5.cms.user.GroupData;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -23,11 +19,9 @@ public class FolderData extends BaseIdData implements IRequestData, Comparable<F
     protected LocalDateTime creationDate = null;
     protected int parentId = 0;
     protected FolderData parent = null;
-    protected List<Integer> parentIds = new ArrayList<>();
     protected List<FolderData> subFolders = new ArrayList<>();
     protected List<FileData> docs = new ArrayList<>();
     protected String name = "";
-    protected String path = "";
     protected String description = "";
     protected boolean anonymous = true;
     protected boolean inheritsRights = true;
@@ -42,14 +36,11 @@ public class FolderData extends BaseIdData implements IRequestData, Comparable<F
         setCreationDate(data.getCreationDate());
         setParentId(data.getParentId());
         setName(data.getName());
-        setPath(data.getPath());
         setDescription(data.getDescription());
         setAnonymous(data.isAnonymous());
         setInheritsRights(data.inheritsRights());
         getRights().clear();
         getRights().putAll(data.getRights());
-        parentIds.clear();
-        parentIds.addAll(data.getParentIds());
     }
 
     public void cloneData(FolderData data) {
@@ -58,13 +49,11 @@ public class FolderData extends BaseIdData implements IRequestData, Comparable<F
         setParentId(data.getParentId());
         setParent(data.getParent());
         setName(data.getName() + "_clone");
-        inheritPathFromParent();
         setDescription(data.getDescription());
         setAnonymous(data.isAnonymous());
         setInheritsRights(data.inheritsRights());
         getRights().clear();
         getRights().putAll(data.getRights());
-        inheritParentIdsFromParent();
     }
 
     public LocalDateTime getCreationDate() {
@@ -93,7 +82,7 @@ public class FolderData extends BaseIdData implements IRequestData, Comparable<F
     }
 
     public void setName(String name) {
-        this.name = StringUtil.toSafeWebName(name);
+        this.name = name;
     }
 
     public String getDescription() {
@@ -130,53 +119,12 @@ public class FolderData extends BaseIdData implements IRequestData, Comparable<F
         this.parent = parent;
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public String getUrl() {
-        return path.endsWith("/") ? path : path + '/';
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public void setPathFromParentPath(String parentPath) {
-        path = parentPath;
-        if (!path.endsWith("/") && name.length() > 0) {
-            path += '/';
-        }
-        path += name;
-    }
-
-    public void inheritPathFromParent() {
-        if (parent == null) {
-            return;
-        }
-        setPathFromParentPath(parent.getPath());
-    }
-
-    public void inheritParentIdsFromParent() {
-        if (parent == null) {
-            return;
-        }
-        getParentIds().clear();
-        getParentIds().addAll(parent.getParentIds());
-        getParentIds().add(parentId);
-    }
-
     public void inheritRightsFromParent() {
         if (!inheritsRights() || parent == null) {
             return;
         }
         rights.clear();
         rights.putAll(parent.getRights());
-        if (parentId != 0) {
-            parentIds.clear();
-            parentIds.addAll(parent.getParentIds());
-            parentIds.add(parentId);
-        }
     }
 
     public Map<Integer, Right> getRights() {
@@ -193,14 +141,6 @@ public class FolderData extends BaseIdData implements IRequestData, Comparable<F
 
     public void setRights(Map<Integer, Right> rights) {
         this.rights = rights;
-    }
-
-    public List<Integer> getParentIds() {
-        return parentIds;
-    }
-
-    public void setParentIds(List<Integer> parentIds) {
-        this.parentIds = parentIds;
     }
 
     public void clearContent() {
@@ -229,34 +169,18 @@ public class FolderData extends BaseIdData implements IRequestData, Comparable<F
         docs.add(doc);
     }
 
-    public void inheritToChildren() {
+    public void inheritRightsToChildren() {
         for (FolderData child : subFolders) {
-            inheritToSubFolder(child);
-            child.inheritToChildren();
+            inheritRightsToSubFolder(child);
+            child.inheritRightsToChildren();
         }
-        Collections.sort(subFolders);
-        for (FileData child : docs) {
-            inheritToFile(child);
-        }
-        Collections.sort(docs);
     }
 
-    public void inheritToSubFolder(FolderData child) {
-        child.setPathFromParentPath(path);
+    public void inheritRightsToSubFolder(FolderData child) {
         if (child.inheritsRights()) {
             child.getRights().clear();
             child.getRights().putAll(rights);
         }
-        child.getParentIds().clear();
-        child.getParentIds().addAll(getParentIds());
-        child.getParentIds().add(getId());
-    }
-
-    public void inheritToFile(FileData child) {
-        child.setPathFromFolderPath(path);
-        child.getFolderIds().clear();
-        child.getFolderIds().addAll(getParentIds());
-        child.getFolderIds().add(getId());
     }
 
     public void setCreateValues(FolderData parent) {
@@ -266,17 +190,15 @@ public class FolderData extends BaseIdData implements IRequestData, Comparable<F
         setParent(parent);
         setAnonymous(parent.isAnonymous());
         setInheritsRights(true);
-        inheritPathFromParent();
         inheritRightsFromParent();
-        inheritParentIdsFromParent();
     }
 
     @Override
-    public void readRequestData(HttpServletRequest request, RequestError error) {
-        setName(RequestReader.getString(request, "name").trim());
-        setDescription(RequestReader.getString(request, "description"));
-        setAnonymous(RequestReader.getBoolean(request, "anonymous"));
-        setInheritsRights(RequestReader.getBoolean(request, "inheritsRights"));
+    public void readRequestData(RequestData rdata) {
+        setName(rdata.getString("name").trim());
+        setDescription(rdata.getString("description"));
+        setAnonymous(rdata.getBoolean("anonymous"));
+        setInheritsRights(rdata.getBoolean("inheritsRights"));
         if (anonymous && !inheritsRights){
             List<GroupData> groups = GroupBean.getInstance().getAllGroups();
             getRights().clear();
@@ -284,23 +206,23 @@ public class FolderData extends BaseIdData implements IRequestData, Comparable<F
                 for (GroupData group : groups) {
                     if (group.getId() <= GroupData.ID_MAX_FINAL)
                         continue;
-                    String value = RequestReader.getString(request, "groupright_" + group.getId());
+                    String value = rdata.getString("groupright_" + group.getId());
                     if (!value.isEmpty())
                         getRights().put(group.getId(), Right.valueOf(value));
                 }
             }
         }
         if (name.isEmpty()) {
-            error.addNotCompleteField("name");
+            rdata.addIncompleteField("name");
         }
     }
 
-    public boolean isVisibleToUser(HttpServletRequest request) {
-        return isAnonymous() || SessionReader.hasContentRight(request, getId(), Right.READ);
+    public boolean isVisibleToUser(RequestData rdata) {
+        return isAnonymous() || rdata.hasContentRight(getId(), Right.READ);
     }
 
-    public static FolderData getRequestedFolder(HttpServletRequest request) {
-        int folderId = RequestReader.getInt(request, "folderId");
+    public static FolderData getRequestedFolder(RequestData rdata) {
+        int folderId = rdata.getInt("folderId");
         if (folderId != 0) {
             return FileCache.getInstance().getFolder(folderId);
         }

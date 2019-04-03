@@ -8,15 +8,16 @@
 --%><!DOCTYPE html>
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
-<%@ page import="de.elbe5.cms.user.UserActions" %>
+
 <%@ page import="de.elbe5.cms.configuration.Configuration" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 
 <%
     String title = Configuration.getInstance().getAppTitle();
-    Locale locale = SessionReader.getSessionLocale(request);
+    RequestData rdata=RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
 %>
 <html lang="en">
 <head>
@@ -24,11 +25,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title><%=title%></title>
     <link rel="shortcut icon" href="/favicon.ico"/>
-    <link rel="stylesheet" href="/_statics/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/_statics/css/cms.css"/>
-    <link rel="stylesheet" href="/_statics/css/page.css"/>
-    <script type="text/javascript" src="/_statics/js/jquery-1.12.4.min.js"></script>
-    <script type="text/javascript" src="/_statics/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/cms.css"/>
+    <link rel="stylesheet" href="/css/page.css"/>
+    <script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
 
 </head>
 <body class="login">
@@ -36,9 +37,8 @@
         <div class="container">
             <cms:message/>
             <section class="mainSection loginSection text-center">
-                <form class="form" action="/user.srv" method="post" name="loginForm" accept-charset="UTF-8">
-                    <input type="hidden" name="act" value="<%=UserActions.login%>">
-                    <img class="mb-4" src="/_statics/img/logo-dark.png" alt="<%=Configuration.getInstance().getAppTitle()%>">
+                <form class="form" action="/user/login" method="post" name="loginForm" accept-charset="UTF-8">
+                    <img class="mb-4" src="/img/logo-dark.png" alt="<%=Configuration.getInstance().getAppTitle()%>">
                     <h1 class="h3 mb-3 font-weight-normal"><%=Strings._login.html(locale)%>
                     </h1>
                     <label for="login" class="sr-only"><%=Strings._loginName.html(locale)%>

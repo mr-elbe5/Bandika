@@ -9,8 +9,9 @@
 package de.elbe5.cms.tag;
 
 import de.elbe5.base.log.Log;
+import de.elbe5.cms.application.Statics;
 import de.elbe5.cms.page.*;
-import de.elbe5.cms.servlet.ActionSet;
+import de.elbe5.cms.servlet.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,11 +31,12 @@ public class SectionTag extends BaseTag {
     public int doStartTag() {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
-            PageData pageData = (PageData) request.getAttribute(ActionSet.KEY_PAGE);
+            RequestData rdata = RequestData.getRequestData(request);
+            PageData pageData = (PageData) rdata.get(Statics.KEY_PAGE);
             SectionData sectionData = pageData.ensureSection(name);
             if (sectionData != null) {
                 sectionData.setFlex(flex);
-                request.setAttribute("sectionData",sectionData);
+                rdata.put("sectionData",sectionData);
                 String url;
                 if (pageData.getViewMode()== ViewMode.EDIT) {
                     if (sectionData.getParts().isEmpty())

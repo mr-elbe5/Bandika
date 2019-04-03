@@ -6,20 +6,21 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
+
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
 <%@ page import="de.elbe5.cms.template.TemplateData" %>
 <%@ page import="de.elbe5.cms.page.*" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
 <%@ page import="de.elbe5.cms.application.Statics" %>
-<%@ page import="de.elbe5.cms.servlet.ActionSet" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
-    PageData pageData = (PageData) request.getAttribute(ActionSet.KEY_PAGE);
+    RequestData rdata=RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
+    PageData pageData = (PageData) rdata.get(Statics.KEY_PAGE);
     assert pageData != null;
-    SectionData sectionData = (SectionData) request.getAttribute("sectionData");
+    SectionData sectionData = (SectionData) rdata.get("sectionData");
     assert sectionData != null;
     PagePartData editPagePart = pageData.getEditPagePart();
 %>
@@ -29,24 +30,22 @@
 </div>
 <div class="section <%=sectionData.getCss()%>" title="Section <%=sectionData.getName()%>">
     <% for (PagePartData partData : sectionData.getParts()) {
-        request.setAttribute(PagePartActions.KEY_PART, partData);
+        rdata.put(Statics.KEY_PART, partData);
         String title = partData.getTemplateName() + "(ID=" + partData.getId() + ")";%>
     <div title="<%=title%>" id="part_<%=partData.getId()%>" class="<%=partData.getCss(sectionData.isFlex())%>">
         <% if (partData == editPagePart) { %>
         <a id="current" name="current"></a>
-        <form action="/pagepart.srv" method="post" id="partform" name="partform" accept-charset="UTF-8">
-            <input type="hidden" name="act" value="savePagePart"/>
-            <input type="hidden" name="pageId" value="<%=pageData.getId()%>"/>
+        <form action="/page/savePagePart/<%=pageData.getId()%>" method="post" id="partform" name="partform" accept-charset="UTF-8">
             <input type="hidden" name="sectionName" value="<%=partData.getSectionName()%>"/>
             <input type="hidden" name="partId" value="<%=partData.getId()%>"/>
             <div class="editpartheader active">
                 <a class="btn btn-outline-primary"
-                   onclick="evaluateEditFields();return postByAjax('/pagepart.srv',
+                   onclick="evaluateEditFields();return postByAjax('/page/savePagePart/<%=pageData.getId()%>',
                            $('#partform').serialize(),
                            '<%=Statics.PAGE_CONTAINER_JQID%>');"><%=Strings._ok.html(locale)%>
                 </a>
-                <a class="btn btn-outline-secondary" onclick="return postByAjax('/pagepart.srv',
-                        {act:'<%=PagePartActions.cancelEditPagePart%>',pageId:'<%=pageData.getId()%>'},
+                <a class="btn btn-outline-secondary" onclick="return postByAjax('/page/cancelEditPagePart',
+                        {pageId:'<%=pageData.getId()%>'},
                         '<%=Statics.PAGE_CONTAINER_JQID%>');"><%=Strings._cancel.html(locale)%>
                 </a>
             </div>
@@ -60,7 +59,7 @@
         <jsp:include page="<%=TemplateData.getTemplateUrl(TemplateData.TYPE_PART,partData.getTemplateName())%>"
                      flush="true"/>
         <% }
-            request.removeAttribute(PagePartActions.KEY_PART); %>
+            request.removeAttribute(Statics.KEY_PART); %>
     </div>
     <%}%>
 </div>

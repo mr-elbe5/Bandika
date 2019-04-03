@@ -8,23 +8,24 @@
 --%>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
 <%@ page import="de.elbe5.cms.file.FileData" %>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
+
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.file.FileActions" %>
 <%@ page import="de.elbe5.cms.file.FileCache" %>
 <%@ page import="de.elbe5.cms.file.FolderData" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
-    FileData fileData = (FileData) SessionReader.getSessionObject(request, "fileData");
+    RequestData rdata= RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
+    FileData fileData = (FileData) rdata.getSessionObject("fileData");
     assert(fileData !=null);
     FolderData parentFolder = null;
     if (fileData.getFolderId() != 0) {
         FileCache tc = FileCache.getInstance();
         parentFolder = tc.getFolder(fileData.getFolderId());
     }
-    String label;
+    String url="/file/saveFile/"+fileData.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -35,21 +36,19 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <cms:form url="/file.ajx" name="fileform" act="<%=FileActions.saveFile%>" ajax="true" multi="true">
-            <input type="hidden" name="fileId" value="<%=fileData.getId()%>"/>
+        <cms:form url="<%=url%>" name="fileform" ajax="true" multi="true">
             <div class="modal-body">
-                <cms:requesterror/>
+                <cms:formerror/>
                 <cms:line label="<%=Strings._id.toString()%>"><%=Integer.toString(fileData.getId())%></cms:line>
                 <cms:line label="<%=Strings._creationDate.toString()%>"><%=StringUtil.toHtmlDateTime(fileData.getCreationDate(), locale)%></cms:line>
                 <cms:line label="<%=Strings._changeDate.toString()%>"><%=StringUtil.toHtmlDateTime(fileData.getChangeDate(), locale)%></cms:line>
                 <cms:line label="<%=Strings._parentFolder.toString()%>"><%=(parentFolder == null) ? "-" : StringUtil.toHtml(parentFolder.getName()) + "&nbsp;(" + parentFolder.getId() + ')'%></cms:line>
 
                 <cms:file name="file" label="<%=Strings._file.toString()%>" required="true"/>
-                <cms:text name="name" label="<%=Strings._name.toString()%>" required="true"><%=StringUtil.toHtml(fileData.getName())%></cms:text>
-                <cms:line label="<%=Strings._url.toString()%>"><%=StringUtil.toHtml(fileData.getUrl())%></cms:line>
-                <cms:text name="displayName" label="<%=Strings._displayName.toString()%>"><%=StringUtil.toHtml(fileData.getDisplayName())%></cms:text>
-                <cms:text name="description" label="<%=Strings._description.toString()%>"><%=StringUtil.toHtml(fileData.getDescription())%></cms:text>
-                <cms:text name="keywords" label="<%=Strings._keywords.toString()%>"><%=StringUtil.toHtml(fileData.getKeywords())%></cms:text>
+                <cms:text name="name" label="<%=Strings._name.toString()%>" required="true" value="<%=StringUtil.toHtml(fileData.getName())%>" />
+                <cms:text name="displayName" label="<%=Strings._displayName.toString()%>" value="<%=StringUtil.toHtml(fileData.getDisplayName())%>" />
+                <cms:text name="description" label="<%=Strings._description.toString()%>" value="<%=StringUtil.toHtml(fileData.getDescription())%>" />
+                <cms:text name="keywords" label="<%=Strings._keywords.toString()%>" value="<%=StringUtil.toHtml(fileData.getKeywords())%>" />
                 <cms:line label="<%=Strings._author.toString()%>"><%=StringUtil.toHtml(fileData.getAuthorName())%></cms:line>
             </div>
             <div class="modal-footer">

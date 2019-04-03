@@ -11,6 +11,7 @@ package de.elbe5.cms.user;
 import de.elbe5.base.data.BinaryFileData;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
+import de.elbe5.cms.configuration.Configuration;
 import de.elbe5.cms.database.DbBean;
 
 import java.sql.*;
@@ -74,7 +75,7 @@ public class UserBean extends DbBean {
         return list;
     }
 
-    private static String LOGIN_SQL="SELECT id,pwd,pkey,change_date,first_name,last_name,locale,email,failed_login_count FROM t_user WHERE login=? AND approved=TRUE AND locked=FALSE AND deleted=FALSE";
+    private static String LOGIN_SQL="SELECT id,pwd,change_date,first_name,last_name,locale,email,failed_login_count FROM t_user WHERE login=? AND approved=TRUE AND locked=FALSE AND deleted=FALSE";
     private static String UPDATE_LOGINCOUNT_SQL="UPDATE t_user SET failed_login_count=? WHERE id=?";
     public UserData loginUser(String login, String pwd) {
         Connection con = getConnection();
@@ -92,8 +93,7 @@ public class UserBean extends DbBean {
                     data.setId(rs.getInt(i++));
                     data.setLogin(login);
                     String encrypted = rs.getString(i++);
-                    String key = rs.getString(i++);
-                    passed = (UserSecurity.encryptPassword(pwd, key).equals(encrypted));
+                    passed = (UserSecurity.encryptPassword(pwd, Configuration.getInstance().getSalt()).equals(encrypted));
                     data.setPassword("");
                     data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     data.setFirstName(rs.getString(i++));
@@ -134,7 +134,7 @@ public class UserBean extends DbBean {
         return data;
     }
 
-    private static String GET_LOGIN_SQL="SELECT id,change_date,pwd,pkey,first_name,last_name,email FROM t_user WHERE login=? AND approval_code=?";
+    private static String GET_LOGIN_SQL="SELECT id,change_date,pwd,first_name,last_name,email FROM t_user WHERE login=? AND approval_code=?";
     public UserData getLogin(String login, String approvalCode, String pwd) {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -152,8 +152,7 @@ public class UserBean extends DbBean {
                     data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     data.setLogin(login);
                     String encypted = rs.getString(i++);
-                    String key = rs.getString(i++);
-                    passed = (UserSecurity.encryptPassword(pwd, key).equals(encypted));
+                    passed = (UserSecurity.encryptPassword(pwd, Configuration.getInstance().getSalt()).equals(encypted));
                     data.setPassword("");
                     data.setFirstName(rs.getString(i++));
                     data.setLastName(rs.getString(i++));
@@ -287,7 +286,7 @@ public class UserBean extends DbBean {
     }
 
     private static String GET_PORTRAIT_SQL="SELECT portrait_name, portrait FROM t_user WHERE id=?";
-    public BinaryFileData getBinaryPortraitData(int id) throws SQLException {
+    public BinaryFileData getBinaryPortraitData(int id) {
         Connection con = getConnection();
         PreparedStatement pst = null;
         BinaryFileData data = null;
@@ -304,6 +303,8 @@ public class UserBean extends DbBean {
                     data.setFileSize(data.getBytes() == null ? 0 : data.getBytes().length);
                 }
             }
+        } catch (SQLException e){
+            return null;
         } finally {
             closeStatement(pst);
             closeConnection(con);
@@ -311,13 +312,12 @@ public class UserBean extends DbBean {
         return data;
     }
 
-    private static String READ_USER_GROUPS_SQL="SELECT group_id FROM t_user2group WHERE user_id=? AND relation=?";
+    private static String READ_USER_GROUPS_SQL="SELECT group_id FROM t_user2group WHERE user_id=?";
     protected void readUserGroups(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(READ_USER_GROUPS_SQL);
             pst.setInt(1, data.getId());
-            pst.setString(2, User2GroupRelation.RIGHTS.name());
             try (ResultSet rs = pst.executeQuery()) {
                 data.getGroupIds().clear();
                 while (rs.next()) {
@@ -333,8 +333,7 @@ public class UserBean extends DbBean {
         Connection con = startTransaction();
         try {
             if (!data.isNew() && changedUser(con, data)) {
-                rollbackTransaction(con);
-                return false;
+                return rollbackTransaction(con);
             }
             data.setChangeDate(getServerTime(con));
             writeUser(con, data);
@@ -344,9 +343,9 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String INSERT_USER_SQL="insert into t_user (change_date,title,first_name,last_name,street,zipCode,city,country,locale,email,phone,fax,mobile,notes,portrait_name,portrait,login,pwd,pkey,approval_code,approved,email_verified,failed_login_count,locked,deleted,id) " +
-            "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    private static String UPDATE_USER_PWD_SQL="update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,pwd=?,pkey=?,approval_code=?,approved=?,email_verified=?,failed_login_count=?,locked=?,deleted=? where id=?";
+    private static String INSERT_USER_SQL="insert into t_user (change_date,title,first_name,last_name,street,zipCode,city,country,locale,email,phone,fax,mobile,notes,portrait_name,portrait,login,pwd,approval_code,approved,email_verified,failed_login_count,locked,deleted,id) " +
+            "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static String UPDATE_USER_PWD_SQL="update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,pwd=?,approval_code=?,approved=?,email_verified=?,failed_login_count=?,locked=?,deleted=? where id=?";
     private static String UPDATE_USER_NOPWD_SQL="update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,approval_code=?,approved=?,email_verified=?,failed_login_count=?,locked=?,deleted=? where id=?";
     protected void writeUser(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
@@ -376,7 +375,6 @@ public class UserBean extends DbBean {
             pst.setString(i++, data.getLogin());
             if (data.hasPassword()) {
                 pst.setString(i++, data.getPasswordHash());
-                pst.setString(i++, data.getPasswordKey());
             }
             pst.setString(i++, data.getApprovalCode());
             pst.setBoolean(i++, data.isApproved());
@@ -387,7 +385,7 @@ public class UserBean extends DbBean {
             pst.setInt(i, data.getId());
             pst.executeUpdate();
             pst.close();
-            writeUserGroups(con, data, User2GroupRelation.RIGHTS);
+            writeUserGroups(con, data);
         } finally {
             closeStatement(pst);
         }
@@ -397,8 +395,7 @@ public class UserBean extends DbBean {
         Connection con = startTransaction();
         try {
             if (changedUser(con, data)) {
-                rollbackTransaction(con);
-                return false;
+                return rollbackTransaction(con);
             }
             data.setChangeDate(getServerTime(con));
             writeUserProfile(con, data);
@@ -441,16 +438,14 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String CHANGE_PASSWORD_SQL="UPDATE t_user SET pwd=?,pkey=? WHERE id=?";
+    private static String CHANGE_PASSWORD_SQL="UPDATE t_user SET pwd=? WHERE id=?";
     public boolean changePassword(int id, String pwd) {
         Connection con = startTransaction();
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(CHANGE_PASSWORD_SQL);
             int i = 1;
-            String key = UserSecurity.generateKey();
-            pst.setString(i++, UserSecurity.encryptPassword(pwd, key));
-            pst.setString(i++, key);
+            pst.setString(i++, UserSecurity.encryptPassword(pwd, Configuration.getInstance().getSalt()));
             pst.setInt(i, id);
             pst.executeUpdate();
             pst.close();
@@ -467,8 +462,7 @@ public class UserBean extends DbBean {
         Connection con = startTransaction();
         try {
             if (changedLogin(con, data)) {
-                rollbackTransaction(con);
-                return false;
+                return rollbackTransaction(con);
             }
             data.setChangeDate(getServerTime(con));
             writeUserVerfiyEmail(con, data);
@@ -497,8 +491,7 @@ public class UserBean extends DbBean {
         Connection con = startTransaction();
         try {
             if (changedLogin(con, data)) {
-                rollbackTransaction(con);
-                return false;
+                return rollbackTransaction(con);
             }
             data.setChangeDate(getServerTime(con));
             writeUserPassword(con, data);
@@ -508,7 +501,7 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String UPDATE_PASSWORD_SQL="UPDATE t_user SET change_date=?, pwd=?, pkey=? WHERE id=?";
+    private static String UPDATE_PASSWORD_SQL="UPDATE t_user SET change_date=?, pwd=? WHERE id=?";
     protected void writeUserPassword(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
         try {
@@ -516,7 +509,6 @@ public class UserBean extends DbBean {
             int i = 1;
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getPasswordHash());
-            pst.setString(i++, data.getPasswordKey());
             pst.setInt(i, data.getId());
             pst.executeUpdate();
             pst.close();
@@ -525,20 +517,18 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String DELETE_USERGROUPS_SQL="DELETE FROM t_user2group WHERE user_id=? AND relation=?";
-    private static String INSERT_USERGROUP_SQL="INSERT INTO t_user2group (user_id,group_id,relation) VALUES(?,?,?)";
-    protected void writeUserGroups(Connection con, UserData data, User2GroupRelation relation) throws SQLException {
+    private static String DELETE_USERGROUPS_SQL="DELETE FROM t_user2group WHERE user_id=?";
+    private static String INSERT_USERGROUP_SQL="INSERT INTO t_user2group (user_id,group_id) VALUES(?,?)";
+    protected void writeUserGroups(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(DELETE_USERGROUPS_SQL);
             pst.setInt(1, data.getId());
-            pst.setString(2, relation.name());
             pst.execute();
             if (data.getGroupIds() != null) {
                 pst.close();
                 pst = con.prepareStatement(INSERT_USERGROUP_SQL);
                 pst.setInt(1, data.getId());
-                pst.setString(3, relation.name());
                 for (int groupId : data.getGroupIds()) {
                     pst.setInt(2, groupId);
                     pst.executeUpdate();

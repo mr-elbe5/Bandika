@@ -8,10 +8,7 @@
  */
 package de.elbe5.cms.field;
 
-import de.elbe5.cms.servlet.RequestError;
-import de.elbe5.cms.servlet.RequestReader;
-
-import javax.servlet.http.HttpServletRequest;
+import de.elbe5.cms.servlet.RequestData;
 
 public class TextField extends StaticField {
 
@@ -26,8 +23,8 @@ public class TextField extends StaticField {
     /******************* HTML part *********************************/
 
     @Override
-    public void readRequestData(HttpServletRequest request, RequestError error) {
-        setContent(RequestReader.getString(request, getIdentifier()));
+    public void readRequestData(RequestData rdata) {
+        setContent(rdata.getString(getIdentifier()));
     }
 
     /******************* search part *********************************/

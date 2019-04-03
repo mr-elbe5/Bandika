@@ -7,33 +7,32 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%><%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="de.elbe5.cms.servlet.RequestReader" %>
 <%@ page import="de.elbe5.cms.template.TemplateBean" %>
 <%@ page import="de.elbe5.cms.template.TemplateData" %>
-<%@ page import="de.elbe5.cms.template.TemplateActions" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
+    RequestData rdata=RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
     Map<String, List<String>> templateNames = TemplateBean.getInstance().getAllTemplateNames();
     assert (templateNames != null);
-    String requestedTemplateName = RequestReader.getString(request, "templateName");
+    String requestedTemplateName = rdata.getString("templateName");
 %>
 
                             <li class="open">
                                 <span class="dropdown-toggle" data-toggle="dropdown"><%=Strings._templates.html(locale)%></span>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="" onclick="return openModalDialog('/template.ajx?act=<%=TemplateActions.openImportTemplates%>');"><%=Strings._import.html(locale)%></a>
+                                    <a class="dropdown-item" href="" onclick="return openModalDialog('/template/openImportTemplates');"><%=Strings._import.html(locale)%></a>
                                 </div>
                                 <ul>
                                     <li<%=!requestedTemplateName.isEmpty() ? " class=\"open\"" : ""%>>
                                         <span class="dropdown-toggle" data-toggle="dropdown"><%=Strings._masterTemplates.html(locale)%></span>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="" onclick="return openModalDialog('/template.ajx?act=<%=TemplateActions.openCreateTemplate%>&templateType=<%=TemplateData.TYPE_MASTER%>');"><%=Strings._new.html(locale)%></a>
+                                            <a class="dropdown-item" href="" onclick="return openModalDialog('/template/openCreateTemplate?templateType=<%=TemplateData.TYPE_MASTER%>');"><%=Strings._new.html(locale)%></a>
                                         </div>
                                         <ul>
                                             <%
@@ -42,8 +41,8 @@
                                             <li class="<%=requestedTemplateName.equals(templateName) ? "open" : ""%>">
                                                 <span class="dropdown-toggle" data-toggle="dropdown"><%=StringUtil.toHtml(templateName)%></span>
                                                 <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="" onclick="return openModalDialog('/template.ajx?act=<%=TemplateActions.openEditTemplate%>&templateType=<%=TemplateData.TYPE_MASTER%>&templateName=<%=templateName%>');"><%=Strings._edit.html(locale)%></a>
-                                                <a class="dropdown-item" href="" onclick="if (confirmDelete()) return linkTo('/template.ajx?act=<%=TemplateActions.deleteTemplate%>&templateType=<%=TemplateData.TYPE_MASTER%>&templateName=<%=templateName%>');"><%=Strings._delete.html(locale)%></a>
+                                                <a class="dropdown-item" href="" onclick="return openModalDialog('/template/openEditTemplate?templateType=<%=TemplateData.TYPE_MASTER%>&templateName=<%=templateName%>');"><%=Strings._edit.html(locale)%></a>
+                                                <a class="dropdown-item" href="" onclick="if (confirmDelete()) return linkTo('/template/deleteTemplate?templateType=<%=TemplateData.TYPE_MASTER%>&templateName=<%=templateName%>');"><%=Strings._delete.html(locale)%></a>
                                                 </div>
                                             </li>
                                             <%
@@ -54,7 +53,7 @@
                                     <li<%=!requestedTemplateName.isEmpty() ? " class=\"open\"" : ""%>>
                                         <span class="dropdown-toggle" data-toggle="dropdown"><%=Strings._pageTemplates.html(locale)%></span>
                                         <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="" onclick="return openModalDialog('/template.ajx?act=<%=TemplateActions.openCreateTemplate%>&templateType=<%=TemplateData.TYPE_PAGE%>');"><%=Strings._new.html(locale)%></a>
+                                        <a class="dropdown-item" href="" onclick="return openModalDialog('/template/openCreateTemplate?templateType=<%=TemplateData.TYPE_PAGE%>');"><%=Strings._new.html(locale)%></a>
                                         </div>
                                         <ul>
                                             <%
@@ -63,8 +62,8 @@
                                             <li class="<%=requestedTemplateName.equals(templateName) ? "open" : ""%>">
                                                 <span class="dropdown-toggle" data-toggle="dropdown"><%=StringUtil.toHtml(templateName)%></span>
                                                 <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="" onclick="return openModalDialog('/template.ajx?act=<%=TemplateActions.openEditTemplate%>&templateType=<%=TemplateData.TYPE_PAGE%>&templateName=<%=templateName%>');"><%=Strings._edit.html(locale)%></a>
-                                                <a class="dropdown-item" href="" onclick="if (confirmDelete()) return linkTo('/template.ajx?act=<%=TemplateActions.deleteTemplate%>&templateType=<%=TemplateData.TYPE_PAGE%>&templateName=<%=templateName%>');"><%=Strings._delete.html(locale)%></a>
+                                                <a class="dropdown-item" href="" onclick="return openModalDialog('/template/openEditTemplate?templateType=<%=TemplateData.TYPE_PAGE%>&templateName=<%=templateName%>');"><%=Strings._edit.html(locale)%></a>
+                                                <a class="dropdown-item" href="" onclick="if (confirmDelete()) return linkTo('/template/deleteTemplate?templateType=<%=TemplateData.TYPE_PAGE%>&templateName=<%=templateName%>');"><%=Strings._delete.html(locale)%></a>
                                                 </div>
                                             </li>
                                             <%
@@ -75,7 +74,7 @@
                                     <li<%=!requestedTemplateName.isEmpty() ? " class=\"open\"" : ""%>>
                                         <span class="dropdown-toggle" data-toggle="dropdown"><%=Strings._partTemplates.html(locale)%></span>
                                         <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="" onclick="return openModalDialog('/template.ajx?act=<%=TemplateActions.openCreateTemplate%>&templateType=<%=TemplateData.TYPE_PART%>');"><%=Strings._new.html(locale)%></a>
+                                        <a class="dropdown-item" href="" onclick="return openModalDialog('/template/openCreateTemplate?templateType=<%=TemplateData.TYPE_PART%>');"><%=Strings._new.html(locale)%></a>
                                         </div>
                                         <ul>
                                             <%
@@ -84,8 +83,8 @@
                                             <li class="<%=requestedTemplateName.equals(templateName) ? "open" : ""%>">
                                                 <span class="dropdown-toggle" data-toggle="dropdown"><%=StringUtil.toHtml(templateName)%></span>
                                                 <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="" onclick="return openModalDialog('/template.ajx?act=<%=TemplateActions.openEditTemplate%>&templateType=<%=TemplateData.TYPE_PART%>&templateName=<%=templateName%>');"><%=Strings._edit.html(locale)%></a>
-                                                <a class="dropdown-item" href="" onclick="if (confirmDelete()) return linkTo('/template.ajx?act=<%=TemplateActions.deleteTemplate%>&templateType=<%=TemplateData.TYPE_PART%>&templateName=<%=templateName%>');"><%=Strings._delete.html(locale)%></a>
+                                                <a class="dropdown-item" href="" onclick="return openModalDialog('/template/openEditTemplate?templateType=<%=TemplateData.TYPE_PART%>&templateName=<%=templateName%>');"><%=Strings._edit.html(locale)%></a>
+                                                <a class="dropdown-item" href="" onclick="if (confirmDelete()) return linkTo('/template/deleteTemplate?templateType=<%=TemplateData.TYPE_PART%>&templateName=<%=templateName%>');"><%=Strings._delete.html(locale)%></a>
                                                 </div>
                                             </li>
                                             <%

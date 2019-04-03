@@ -9,19 +9,21 @@
 <%@ page import="de.elbe5.base.util.StringUtil" %>
 <%@ page import="de.elbe5.cms.user.GroupBean" %>
 <%@ page import="de.elbe5.cms.user.GroupData" %>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
+
 <%@ page import="de.elbe5.cms.user.UserData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.user.UserActions" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
-    UserData user = (UserData) SessionReader.getSessionObject(request, "userData");
+    RequestData rdata= RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
+    UserData user = (UserData) rdata.getSessionObject("userData");
     assert user != null;
     List<GroupData> groups = GroupBean.getInstance().getAllGroups();
     String label;
+    String url="/user/saveUser/"+user.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -32,37 +34,37 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <cms:form url="/user.ajx" name="userform" act="<%=UserActions.saveUser%>" multi="true" ajax="true">
+        <cms:form url="<%=url%>" name="userform" multi="true" ajax="true">
             <div class="modal-body">
-                <cms:requesterror/>
+                <cms:formerror/>
                 <h3><%=Strings._settings.html(locale)%></h3>
                 <cms:line label="<%=Strings._id.toString()%>"><%=Integer.toString(user.getId())%></cms:line>
-                <cms:text name="login" label="<%=Strings._login.toString()%>" required="true"><%=StringUtil.toHtml(user.getLogin())%></cms:text>
-                <cms:password name="password" label="<%=Strings._password.toString()%>"></cms:password>
-                <cms:text name="title" label="<%=Strings._title.toString()%>"><%=StringUtil.toHtml(user.getTitle())%></cms:text>
-                <cms:text name="firstName" label="<%=Strings._firstName.toString()%>"><%=StringUtil.toHtml(user.getFirstName())%></cms:text>
-                <cms:text name="lastName" label="<%=Strings._lastName.toString()%>" required="true"><%=StringUtil.toHtml(user.getLastName())%></cms:text>
-                <cms:text name="locale" label="<%=Strings._locale.toString()%>"><%=StringUtil.toHtml(user.getLocale().getLanguage())%></cms:text>
+                <cms:text name="login" label="<%=Strings._login.toString()%>" required="true" value="<%=StringUtil.toHtml(user.getLogin())%>" />
+                <cms:password name="password" label="<%=Strings._password.toString()%>" />
+                <cms:text name="title" label="<%=Strings._title.toString()%>" value="<%=StringUtil.toHtml(user.getTitle())%>" />
+                <cms:text name="firstName" label="<%=Strings._firstName.toString()%>" value="<%=StringUtil.toHtml(user.getFirstName())%>" />
+                <cms:text name="lastName" label="<%=Strings._lastName.toString()%>" required="true" value="<%=StringUtil.toHtml(user.getLastName())%>" />
+                <cms:text name="locale" label="<%=Strings._locale.toString()%>" value="<%=StringUtil.toHtml(user.getLocale().getLanguage())%>" />
                 <cms:textarea name="notes" label="<%=Strings._notes.toString()%>" height="5rem"><%=StringUtil.toHtml(user.getNotes())%></cms:textarea>
                 <cms:file name="portrait" label="<%=Strings._portrait.toString()%>"><% if (!user.getPortraitName().isEmpty()) {%><img
-                        src="/user.srv?act=<%=UserActions.showPortrait%>&userId=<%=user.getId()%>"
+                        src="/user/showPortrait/<%=user.getId()%>"
                         alt="<%=StringUtil.toHtml(user.getName())%>"/> <%}%></cms:file>
                 <cms:line label="<%=Strings._approved.toString()%>" padded="true">
                     <cms:check name="approved" value="true" checked="<%=user.isApproved()%>"></cms:check>
                 </cms:line>
                 <h3><%=Strings._address.html(locale)%></h3>
-                <cms:text name="street" label="<%=Strings._street.toString()%>"><%=StringUtil.toHtml(user.getStreet())%></cms:text>
-                <cms:text name="zipCode" label="<%=Strings._zipCode.toString()%>"><%=StringUtil.toHtml(user.getZipCode())%></cms:text>
-                <cms:text name="city" label="<%=Strings._city.toString()%>"><%=StringUtil.toHtml(user.getCity())%></cms:text>
-                <cms:text name="country" label="<%=Strings._country.toString()%>"><%=StringUtil.toHtml(user.getCountry())%></cms:text>
+                <cms:text name="street" label="<%=Strings._street.toString()%>" value="<%=StringUtil.toHtml(user.getStreet())%>" />
+                <cms:text name="zipCode" label="<%=Strings._zipCode.toString()%>" value="<%=StringUtil.toHtml(user.getZipCode())%>" />
+                <cms:text name="city" label="<%=Strings._city.toString()%>" value="<%=StringUtil.toHtml(user.getCity())%>" />
+                <cms:text name="country" label="<%=Strings._country.toString()%>" value="<%=StringUtil.toHtml(user.getCountry())%>" />
                 <h3><%=Strings._contact.html(locale)%></h3>
-                <cms:text name="email" label="<%=Strings._email.toString()%>" required="true"><%=StringUtil.toHtml(user.getEmail())%></cms:text>
+                <cms:text name="email" label="<%=Strings._email.toString()%>" required="true" value="<%=StringUtil.toHtml(user.getEmail())%>" />
                 <cms:line label="<%=Strings._emailVerified.toString()%>" padded="true">
                     <cms:check name="emailVerified" value="true" checked="<%=user.isEmailVerified()%>"></cms:check>
                 </cms:line>
-                <cms:text name="phone" label="<%=Strings._phone.toString()%>"><%=StringUtil.toHtml(user.getPhone())%></cms:text>
-                <cms:text name="fax" label="<%=Strings._fax.toString()%>"><%=StringUtil.toHtml(user.getFax())%></cms:text>
-                <cms:text name="mobile" label="<%=Strings._mobile.toString()%>"><%=StringUtil.toHtml(user.getMobile())%></cms:text>
+                <cms:text name="phone" label="<%=Strings._phone.toString()%>" value="<%=StringUtil.toHtml(user.getPhone())%>" />
+                <cms:text name="fax" label="<%=Strings._fax.toString()%>" value="<%=StringUtil.toHtml(user.getFax())%>" />
+                <cms:text name="mobile" label="<%=Strings._mobile.toString()%>" value="<%=StringUtil.toHtml(user.getMobile())%>" />
                 <h3><%=Strings._groups.html(locale)%></h3>
                 <cms:line label="<%=Strings._group.toString()%>"><%=Strings._inGroup.html(locale)%></cms:line>
                 <% for (GroupData gdata : groups) {%>

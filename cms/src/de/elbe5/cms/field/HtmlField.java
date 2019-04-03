@@ -8,23 +8,18 @@
  */
 package de.elbe5.cms.field;
 
-import de.elbe5.cms.file.FileCache;
-import de.elbe5.cms.file.FileData;
-import de.elbe5.cms.page.PageCache;
-import de.elbe5.cms.page.PageData;
 import de.elbe5.cms.search.SearchHelper;
-import de.elbe5.cms.servlet.RequestError;
-import de.elbe5.cms.servlet.RequestReader;
+import de.elbe5.cms.servlet.RequestData;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
 public class HtmlField extends StaticField {
 
     public static final String FIELDTYPE = "html";
 
-    public static final String SRC_PATTERN = " src=\"/";
-    public static final String LINK_PATTERN = " href=\"/";
+    public static final String SRC_PATTERN = " src=\"/file/show/";
+    public static final String PAGE_LINK_PATTERN = " href=\"/page/show/";
+    public static final String FILE_LINK_PATTERN = " href=\"/file/show/";
 
     @Override
     public String getFieldType() {
@@ -40,54 +35,39 @@ public class HtmlField extends StaticField {
     /******************* HTML part *********************************/
 
     @Override
-    public void readRequestData(HttpServletRequest request, RequestError error) {
-        setContent(RequestReader.getString(request, getIdentifier()));
+    public void readRequestData(RequestData rdata) {
+        setContent(rdata.getString(getIdentifier()));
     }
 
     public static void registerPagesInHtml(String html, Set<Integer> list) {
-        int start;
-        int end = 0;
-        while (true) {
-            start = html.indexOf(LINK_PATTERN, end);
-            if (start == -1) {
-                break;
-            }
-            // keep '/'
-            start += LINK_PATTERN.length() - 1;
-            end = html.indexOf('\"', start);
-            if (end == -1) {
-                break;
-            }
-            try {
-                String url = html.substring(start, end);
-                PageData page = PageCache.getInstance().getPage(url);
-                if (page != null)
-                    list.add(page.getId());
-            } catch (Exception ignored) {
-            }
-            end++;
-        }
+        registerIdsInHtml(html,PAGE_LINK_PATTERN,list);
+    }
+
+    public static void registerFilesInHtml(String html, Set<Integer> list) {
+        registerIdsInHtml(html,FILE_LINK_PATTERN,list);
     }
 
     public static void registerImagesInHtml(String html, Set<Integer> list) {
+        registerIdsInHtml(html,SRC_PATTERN,list);
+    }
+
+    public static void registerIdsInHtml(String html, String pattern, Set<Integer> list) {
         int start;
         int end = 0;
         while (true) {
-            start = html.indexOf(SRC_PATTERN, end);
+            start = html.indexOf(pattern, end);
             if (start == -1) {
                 break;
             }
             // keep '/'
-            start += SRC_PATTERN.length() - 1;
+            start += pattern.length() - 1;
             end = html.indexOf('\"', start);
             if (end == -1) {
                 break;
             }
             try {
-                String url = html.substring(start, end);
-                FileData file = FileCache.getInstance().getFile(url);
-                if (file != null)
-                    list.add(file.getId());
+                int id = Integer.parseInt(html.substring(start, end));
+                list.add(id);
             } catch (Exception ignored) {
             }
             end++;

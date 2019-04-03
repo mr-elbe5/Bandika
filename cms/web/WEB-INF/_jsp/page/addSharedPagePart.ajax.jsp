@@ -8,21 +8,22 @@
 --%>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
 <%@ page import="de.elbe5.cms.page.PagePartData" %>
-<%@ page import="de.elbe5.cms.servlet.RequestReader" %>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
+
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.page.PagePartActions" %>
 <%@ page import="de.elbe5.cms.page.PagePartBean" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
-    int pageId = RequestReader.getInt(request, "pageId");
-    int partId = RequestReader.getInt(request, "partId");
-    String sectionName = RequestReader.getString(request, "sectionName");
-    String sectionType = RequestReader.getString(request, "sectionType");
+    RequestData rdata=RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
+    int pageId = rdata.getId();
+    int partId = rdata.getInt("partId");
+    String sectionName = rdata.getString("sectionName");
+    String sectionType = rdata.getString("sectionType");
     List<PagePartData> parts = PagePartBean.getInstance().getSharedPageParts();
+    String url="/page/addSharedPagePart/"+pageId;
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -33,10 +34,9 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <cms:form url="/pagepart.ajx" name="partform" act="<%=PagePartActions.addSharedPagePart%>" ajax="true">
+        <cms:form url="<%=url%>" name="partform" ajax="true">
         <div class="modal-body">
-            <cms:requesterror/>
-            <input type="hidden" name="pageId" value="<%=pageId%>" />
+            <cms:formerror/>
             <input type="hidden" name="partId" value="<%=partId%>" />
             <input type="hidden" name="sectionName" value="<%=sectionName%>" />
             <input type="hidden" name="sectionType" value="<%=sectionType%>" />

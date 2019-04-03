@@ -16,8 +16,8 @@
     </tag>
 
     <tag>
-        <name>requesterror</name>
-        <tag-class>de.elbe5.cms.tag.RequestErrorTag</tag-class>
+        <name>formerror</name>
+        <tag-class>de.elbe5.cms.tag.FormErrorTag</tag-class>
         <body-content>empty</body-content>
     </tag>
 
@@ -37,11 +37,6 @@
         </attribute>
         <attribute>
             <name>multi</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>act</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
@@ -137,6 +132,11 @@
         <attribute>
             <name>label</name>
             <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>value</name>
+            <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>

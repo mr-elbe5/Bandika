@@ -10,9 +10,10 @@ package de.elbe5.cms.tag;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
+import de.elbe5.cms.application.Statics;
 import de.elbe5.cms.page.*;
 import de.elbe5.cms.configuration.Configuration;
-import de.elbe5.cms.servlet.ActionSet;
+import de.elbe5.cms.servlet.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -23,8 +24,9 @@ public class HeadTag extends BaseTag {
     public int doStartTag() {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+            RequestData rdata = RequestData.getRequestData(request);
             JspWriter writer = getContext().getOut();
-            PageData pageData = (PageData) request.getAttribute(ActionSet.KEY_PAGE);
+            PageData pageData = (PageData) rdata.get(Statics.KEY_PAGE);
             assert (pageData != null);
 
             StringUtil.write(writer, "<title>{1}</title>\n" +

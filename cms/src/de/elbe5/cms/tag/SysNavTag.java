@@ -10,15 +10,12 @@ package de.elbe5.cms.tag;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
-import de.elbe5.cms.application.AdminActions;
-import de.elbe5.cms.application.ApplicationActions;
+import de.elbe5.cms.application.Statics;
 import de.elbe5.cms.configuration.Configuration;
 import de.elbe5.cms.page.*;
 import de.elbe5.cms.application.Strings;
 import de.elbe5.cms.rights.Right;
-import de.elbe5.cms.servlet.ActionSet;
-import de.elbe5.cms.servlet.SessionReader;
-import de.elbe5.cms.user.UserActions;
+import de.elbe5.cms.servlet.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -31,17 +28,18 @@ public class SysNavTag extends BaseTag {
     public int doStartTag() {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+            RequestData rdata= RequestData.getRequestData(request);
             JspWriter writer = getContext().getOut();
-            PageData pageData = (PageData) request.getAttribute(ActionSet.KEY_PAGE);
-            Locale locale= SessionReader.getSessionLocale(request);
+            PageData pageData = (PageData) rdata.get(Statics.KEY_PAGE);
+            Locale locale= rdata.getSessionLocale();
 
-            boolean editMode = SessionReader.isEditMode(request);
+            boolean editMode = rdata.isEditMode();
             int pageId = pageData == null ? 0 : pageData.getId();
             boolean pageEditMode = pageData != null && pageData.getViewMode()== ViewMode.EDIT;
-            boolean hasAnyEditRight = SessionReader.hasAnyContentRight(request);
-            boolean hasEditRight = SessionReader.hasContentRight(request, pageId, Right.EDIT);
-            boolean hasAdminRight = SessionReader.hasAnyElevatedSystemRight(request) || SessionReader.hasContentRight(request, PageData.ID_ALL, Right.EDIT);
-            boolean hasApproveRight = SessionReader.hasContentRight(request, pageId, Right.APPROVE);
+            boolean hasAnyEditRight = rdata.hasAnyContentRight();
+            boolean hasEditRight = rdata.hasContentRight(pageId, Right.EDIT);
+            boolean hasAdminRight = rdata.hasAnyElevatedSystemRight() || rdata.hasContentRight(PageData.ID_ALL, Right.EDIT);
+            boolean hasApproveRight = rdata.hasContentRight(pageId, Right.APPROVE);
             PageData homePage = null;
             List<Locale> otherLocales = null;
             try {
@@ -52,45 +50,37 @@ public class SysNavTag extends BaseTag {
 
             writer.write("<ul class=\"nav justify-content-end\">");
             if (pageId!=0 && pageEditMode & hasEditRight) {
-                StringUtil.write(writer,"<li class=\"nav-item editControl\"><a class=\"nav-link\" href=\"/page.srv?act={1}&pageId={2}\">{3}</a></li>",
-                        PageActions.savePageContent,
+                StringUtil.write(writer,"<li class=\"nav-item editControl\"><a class=\"nav-link\" href=\"/page/savePageContent/{1}\">{2}</a></li>",
                         String.valueOf(pageId),
                         Strings._save.html(locale));
 
-                StringUtil.write(writer,"<li class=\"nav-item editControl\"><a class=\"nav-link\" href=\"/page.srv?act={1}&pageId={2}\">{3}</a></li>",
-                        PageActions.stopEditing,
+                StringUtil.write(writer,"<li class=\"nav-item editControl\"><a class=\"nav-link\" href=\"/page/stopEditing/{1}\">{2}</a></li>",
                         String.valueOf(pageId),
                         Strings._cancel.html(locale));
             } else {
                 if (editMode) {
                     if (pageId!=0 && hasEditRight) {
-                        StringUtil.write(writer,"<li class=\"nav-item\"><a class=\"nav-link\" href=\"/page.srv?act={1}&pageId={2}\" >{3}</span></a></li>",
-                                PageActions.openEditPageContent,
+                        StringUtil.write(writer,"<li class=\"nav-item\"><a class=\"nav-link\" href=\"/page/openEditPageContent/{1}\" >{2}</span></a></li>",
                                 String.valueOf(pageId),
                                 Strings._editPage.html(locale));
                     }
                     if (pageId!=0 && hasApproveRight && pageData.hasUnpublishedDraft()) {
-                        StringUtil.write(writer,"<li class=\"nav-item\"><a class=\"nav-link\" href=\"/page.srv?act={1}&pageId={2}\" >{3}</a></li>",
-                                PageActions.publishPage,
+                        StringUtil.write(writer,"<li class=\"nav-item\"><a class=\"nav-link\" href=\"/page/publishPage/{1}\" >{2}</a></li>",
                                 String.valueOf(pageId),
                                 Strings._publish.html(locale));
                     }
                     if (hasAnyEditRight) {
-                        StringUtil.write(writer,"<li class=\"nav-item\"><a class=\"nav-link\" href=\"/admin.srv?act={1}&pageId={2}\" >{3}</a></li>",
-                                AdminActions.openPageStructure,
+                        StringUtil.write(writer,"<li class=\"nav-item\"><a class=\"nav-link\" href=\"/admin/openPageStructure/{1}\" >{2}</a></li>",
                                 String.valueOf(pageId),
                                 Strings._pageStructure.html(locale));
                     }
                     if (hasAdminRight || hasAnyEditRight) {
-                        StringUtil.write(writer,"<li class=\"nav-item\"><a class=\"nav-link\" href=\"/admin.srv?act={1}&pageId={2}\" >{3}</a></li>",
-                                AdminActions.openSystemAdministration,
-                                String.valueOf(pageId),
+                        StringUtil.write(writer,"<li class=\"nav-item\"><a class=\"nav-link\" href=\"/admin/openSystemAdministration\" >{1}</a></li>",
                                 Strings._administration.html(locale));
                     }
                 }
                 if (hasAnyEditRight || hasAdminRight){
-                    StringUtil.write(writer,"<li class=\"nav-item\"><a class=\"nav-link\" href=\"/application.srv?act={1}&pageId={2}\" title=\"{3}\"><span class=\"fa fa-chevron-{4}\"></span></a></li>",
-                            ApplicationActions.toggleEditMode,
+                    StringUtil.write(writer,"<li class=\"nav-item\"><a class=\"nav-link\" href=\"/page/toggleEditMode/{1}\" title=\"{2}\"><span class=\"fa fa-chevron-{3}\"></span></a></li>",
                             String.valueOf(pageId),
                             editMode ? Strings._editModeOff.html(locale) : Strings._editModeOn.html(locale),
                             editMode ? "right" : "left");
@@ -98,30 +88,25 @@ public class SysNavTag extends BaseTag {
                 if (homePage != null) {
                     if (otherLocales != null) {
                         for (Locale loc : otherLocales) {
-                            StringUtil.write(writer, "<li><a class=\"nav-link\" href=\"/user.srv?act={1}&language={2}\">{3}</a></li>",
-                                    UserActions.changeLocale,
+                            StringUtil.write(writer, "<li><a class=\"nav-link\" href=\"/user/changeLocale?language={1}\">{2}</a></li>",
                                     loc.getLanguage(),
                                     StringUtil.toHtml(loc.getDisplayName(loc)));
                         }
                     }
                 }
-                if (SessionReader.isLoggedIn(request)) {
+                if (rdata.isLoggedIn()) {
                     if (Configuration.getInstance().isEditProfile()) {
-                        StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/user.srv?act={1}\">{2}</a></li>",
-                                UserActions.openProfile,
+                        StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/user/openProfile\">{1}</a></li>",
                                 Strings._profile.html(locale));
                     }
-                    StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/user.srv?act={1}\">{2}</a></li>",
-                            UserActions.logout,
+                    StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/user/logout\">{1}</a></li>",
                             Strings._logout.html(locale));
                 } else {
                     if (Configuration.getInstance().isSelfRegistration()) {
-                        StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/user.srv?act={1}\">{2}</a></li>",
-                                UserActions.openRegistration,
+                        StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/user/openRegistration\">{1}</a></li>",
                                 Strings._register.html(locale));
                     }
-                    StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/user.srv?act={1}\">{2}</a></li>",
-                            UserActions.openLogin,
+                    StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/user/openLogin\">{1}</a></li>",
                             Strings._login.html(locale));
                 }
             }

@@ -6,19 +6,19 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%><%response.setContentType("text/html;charset=UTF-8");%>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.search.SearchActions" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
+    RequestData rdata=RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
 %>
 
                             <li class="open">
                                 <span class="dropdown-toggle" data-toggle="dropdown"><%=Strings._search.html(locale)%></span>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="/search.srv?act=<%=SearchActions.indexAllContent%>"><%=Strings._indexAllContent.html(locale)%></a>
-                                    <a class="dropdown-item" href="/search.srv?act=<%=SearchActions.indexAllUsers%>"><%=Strings._indexAllUsers.html(locale)%></a>
+                                    <a class="dropdown-item" href="/search/indexAllContent"><%=Strings._indexAllContent.html(locale)%></a>
+                                    <a class="dropdown-item" href="/search/indexAllUsers"><%=Strings._indexAllUsers.html(locale)%></a>
                                 </div>
                             </li>

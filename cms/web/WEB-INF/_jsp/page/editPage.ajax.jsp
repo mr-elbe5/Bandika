@@ -8,11 +8,10 @@
 --%>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
 <%@ page import="de.elbe5.cms.page.PageData" %>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
+
 <%@ page import="de.elbe5.cms.template.TemplateData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.page.PageActions" %>
 <%@ page import="de.elbe5.cms.template.TemplateBean" %>
 <%@ page import="de.elbe5.cms.page.PageCache" %>
 <%@ page import="de.elbe5.cms.user.GroupBean" %>
@@ -20,12 +19,13 @@
 <%@ page import="de.elbe5.cms.rights.Right" %>
 <%@ page import="de.elbe5.base.data.Pair" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="de.elbe5.cms.servlet.RequestReader" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
-    PageData pageData = (PageData) SessionReader.getSessionObject(request, "pageData");
+    RequestData rdata=RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
+    PageData pageData = (PageData) rdata.getSessionObject("pageData");
     assert(pageData !=null);
     PageCache cache = PageCache.getInstance();
     PageData parentPage = null;
@@ -37,11 +37,11 @@
     List<Pair<Integer,String>> childSortList=new ArrayList<>();
     if (!pageData.isNew()) {
         for (PageData subpage : cache.getPage(pageData.getId()).getSubPages()) {
-            childSortList.add(new Pair<>(subpage.getId(),subpage.getDisplayName()));
+            childSortList.add(new Pair<>(subpage.getId(),subpage.getName()));
         }
     }
-    boolean saveAsClone= RequestReader.getBoolean(request,"saveAsClone");
     String label,name,onchange;
+    String url="/page/savePage/"+pageData.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -52,10 +52,9 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <cms:form url="/page.ajx" name="pageform" act="<%=PageActions.savePage%>" ajax="true">
-            <input type="hidden" name="pageId" value="<%=pageData.getId()%>"/>
+        <cms:form url="<%=url%>" name="pageform" ajax="true">
             <div class="modal-body">
-                <cms:requesterror/>
+                <cms:formerror/>
                 <h3><%=Strings._settings.html(locale)%></h3>
                 <cms:line label="<%=Strings._id.toString()%>"><%=Integer.toString(pageData.getId())%></cms:line>
                 <cms:line label="<%=Strings._creationDate.toString()%>"><%=StringUtil.toHtmlDateTime(pageData.getCreationDate(), locale)%></cms:line>
@@ -63,11 +62,9 @@
                 <cms:line label="<%=Strings._parentPage.toString()%>"><%=(parentPage == null) ? "-" : StringUtil.toHtml(parentPage.getName()) + "&nbsp;(" + parentPage.getId() + ')'%></cms:line>
                 <cms:line label="<%=Strings._position.toString()%>"><%=Integer.toString(pageData.getRanking())%></cms:line>
 
-                <cms:text name="name" label="<%=Strings._name.toString()%>" required="true"><%=StringUtil.toHtml(pageData.getName())%></cms:text>
-                <cms:line label="<%=Strings._url.toString()%>"><%=StringUtil.toHtml(pageData.getUrl())%></cms:line>
-                <cms:text name="displayName" label="<%=Strings._displayName.toString()%>"><%=StringUtil.toHtml(pageData.getDisplayName())%></cms:text>
-                <cms:text name="description" label="<%=Strings._description.toString()%>"><%=StringUtil.toHtml(pageData.getDescription())%></cms:text>
-                <cms:text name="keywords" label="<%=Strings._keywords.toString()%>"><%=StringUtil.toHtml(pageData.getKeywords())%></cms:text>
+                <cms:text name="name" label="<%=Strings._name.toString()%>" required="true" value="<%=StringUtil.toHtml(pageData.getName())%>" />
+                <cms:text name="description" label="<%=Strings._description.toString()%>" value="<%=StringUtil.toHtml(pageData.getDescription())%>" />
+                <cms:text name="keywords" label="<%=Strings._keywords.toString()%>" value="<%=StringUtil.toHtml(pageData.getKeywords())%>" />
                 <cms:line label="<%=Strings._author.toString()%>"><%=StringUtil.toHtml(pageData.getAuthorName())%></cms:line>
                 <cms:select name="templateName" label="<%=Strings._pageTemplate.toString()%>" required="true">
                     <option value="" <%=pageData.getTemplateName().isEmpty() ? "selected" : ""%>><%=Strings._pleaseSelect.html(locale)%>

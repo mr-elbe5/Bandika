@@ -7,16 +7,17 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
+
 <%@ page import="de.elbe5.cms.template.TemplateData" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.template.TemplateActions" %>
 <%@ page import="de.elbe5.cms.application.Statics" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
-    TemplateData data = (TemplateData) SessionReader.getSessionObject(request, "templateData");
+    RequestData rdata=RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
+    TemplateData data = (TemplateData) rdata.getSessionObject("templateData");
     assert (data != null);
 %>
 <div class="modal-dialog modal-lg" role="document">
@@ -28,17 +29,17 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <cms:form url="/template.ajx" name="templateform" act="<%=TemplateActions.saveTemplate%>">
+        <cms:form url="/template/saveTemplate" name="templateform" >
             <input type="hidden" name="templateType" value="<%=data.getType()%>"/>
             <input type="hidden" name="templateName" value="<%=data.getName()%>"/>
             <div class="modal-body">
-                <cms:requesterror/>
+                <cms:formerror/>
                 <%if (!data.isNew()) {%>
                 <cms:line label="<%=Strings._name.toString()%>"><%=StringUtil.toHtml(data.getName())%></cms:line>
                 <% } else {%>
-                <cms:text name="name" label="<%=Strings._name.toString()%>" required="true"><%=StringUtil.toHtml(data.getName())%></cms:text>
+                <cms:text name="name" label="<%=Strings._name.toString()%>" required="true" value="<%=StringUtil.toHtml(data.getName())%>" />
                 <%}%>
-                <cms:text name="displayName" label="<%=Strings._displayName.toString()%>"><%=StringUtil.toHtml(data.getDisplayName())%></cms:text>
+                <cms:text name="displayName" label="<%=Strings._displayName.toString()%>" value="<%=StringUtil.toHtml(data.getDisplayName())%>" />
                 <cms:textarea name="description" label="<%=Strings._description.toString()%>" height="5rem"><%=StringUtil.toHtml(data.getDescription())%></cms:textarea>
                 <cms:editor name="code" label="<%=Strings._code.toString()%>" type="html" hint="<%=Strings._htmlHint.toString()%>" height="20rem" required="true">
                     <%=StringUtil.toHtml(data.getCode())%>
@@ -59,7 +60,7 @@
                 event.preventDefault();
                 $('#code').val(editor.getSession().getValue());
                 var params = $this.serialize();
-                postByAjax('/template.ajx', params,'<%=Statics.MODAL_DIALOG_JQID%>');
+                postByAjax('/template/saveTemplate', params,'<%=Statics.MODAL_DIALOG_JQID%>');
             });
         </script>
     </div>

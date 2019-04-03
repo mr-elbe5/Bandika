@@ -6,25 +6,46 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="de.elbe5.cms.servlet.RequestReader" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ page import="de.elbe5.cms.application.Statics" %>
+<%@ page import="de.elbe5.base.util.StringUtil" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    String closeScript = RequestReader.getString(request, Statics.KEY_CLOSESCRIPT);
+    RequestData rdata= RequestData.getRequestData(request);
+    String url=rdata.getString(Statics.KEY_URL);
+    String targetId=rdata.getString(Statics.KEY_TARGETID);
+    String msg=rdata.getString(Statics.KEY_MESSAGE);
+    String msgType=rdata.getString(Statics.KEY_MESSAGETYPE);
 %>
-<div id="pageContent">
-    &nbsp;
-</div>
-<script type="text/javascript">
-    var $dlg=$(MODAL_DLG_JQID);
-    $dlg.html('');
-    $dlg.modal('hide');
-    $('.modal-backdrop').remove();
-<%
-    if (closeScript.length() > 0) {%>
-        try {
-            <%=closeScript%>
-        } catch (e){
-        }
-    <%}%>
-</script>
+<% if (targetId.isEmpty()){%>
+    <div id="pageContent">
+
+        <form action="<%=url%>" method="POST" id="forwardform" accept-charset="UTF-8">
+        <%if (!msg.isEmpty()){%>
+            <input type="hidden" name="<%=Statics.KEY_MESSAGE%>" value="<%=StringUtil.toHtml(msg)%>" />
+            <input type="hidden" name="<%=Statics.KEY_MESSAGETYPE%>" value="<%=StringUtil.toHtml(msgType)%>" />
+            <%}%>
+        </form>
+
+    </div>
+    <script type="text/javascript">
+        $('#forwardform').submit();
+    </script>
+<%}else{
+    StringBuilder sb = new StringBuilder("{");
+    if (!msg.isEmpty()) {
+        sb.append(Statics.KEY_MESSAGE).append(" : '").append(StringUtil.toJs(msg)).append("',");
+        sb.append(Statics.KEY_MESSAGETYPE).append(" : '").append(StringUtil.toJs(msgType)).append("'");
+    }
+    sb.append("}");
+%>
+    <div id="pageContent">
+    </div>
+    <script type="text/javascript">
+        var $dlg=$(MODAL_DLG_JQID);
+        $dlg.html('');
+        $dlg.modal('hide');
+        $('.modal-backdrop').remove();
+        postByAjax('<%=url%>', <%=sb.toString()%>, '<%=StringUtil.toJs(targetId)%>');
+    </script>
+<%}%>

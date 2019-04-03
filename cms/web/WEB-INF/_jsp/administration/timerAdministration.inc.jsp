@@ -7,19 +7,19 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%><%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.application.AdminActions" %>
 <%@ page import="de.elbe5.cms.timer.TimerTaskData" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="de.elbe5.cms.timer.TimerController" %>
+<%@ page import="de.elbe5.cms.timer.Timer" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
+    RequestData rdata=RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
     Map<String, TimerTaskData> tasks = null;
     try {
-        TimerController timerCache = TimerController.getInstance();
+        Timer timerCache = Timer.getInstance();
         tasks = timerCache.getTasks();
     } catch (Exception ignore) {
     }
@@ -34,7 +34,7 @@
                                     <li>
                                         <span class="dropdown-toggle" data-toggle="dropdown"><%=StringUtil.toHtml(task.getDisplayName())%></span>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="" onclick="return openModalDialog('/admin.ajx?act=<%=AdminActions.openEditTimerTask%>&timerName=<%=task.getName()%>');"><%=Strings._edit.html(locale)%></a>
+                                            <a class="dropdown-item" href="" onclick="return openModalDialog('/admin/openEditTimerTask?timerName=<%=task.getName()%>');"><%=Strings._edit.html(locale)%></a>
                                         </div>
                                     </li>
                                     <%

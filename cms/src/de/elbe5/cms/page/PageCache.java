@@ -1,6 +1,7 @@
 package de.elbe5.cms.page;
 
 import de.elbe5.base.cache.BaseCache;
+import de.elbe5.base.log.Log;
 import de.elbe5.cms.rights.RightsCache;
 
 import java.util.*;
@@ -21,10 +22,10 @@ public class PageCache extends BaseCache {
 
     protected Map<Locale, Integer> homePageIds = new HashMap<>();
     protected Map<Integer, PageData> pageMap = new HashMap<>();
-    protected Map<String, Integer> pagePathMap = new HashMap<>();
 
     @Override
     public synchronized void load() {
+        //Log.info("loading pages");
         PageBean bean = PageBean.getInstance();
         Map<Locale, Integer> homeMap = bean.readLanguageRootIds();
         List<PageData> pageList = PageBean.getInstance().getAllPages();
@@ -35,7 +36,6 @@ public class PageCache extends BaseCache {
         rootPage = pages.get(PageData.ID_ROOT);
         if (rootPage == null)
             return;
-        rootPage.setPath("/");
         for (PageData page : pageList) {
             PageData parent = pages.get(page.getParentId());
             page.setParent(parent);
@@ -44,13 +44,8 @@ public class PageCache extends BaseCache {
             }
         }
         rootPage.inheritToChildren();
-        Map<String, Integer> pagePaths = new HashMap<>();
-        for (PageData page : pages.values()) {
-            pagePaths.put(page.getUrl(), page.getId());
-        }
         pageMap = pages;
         homePageIds = homeMap;
-        pagePathMap = pagePaths;
     }
 
     @Override
@@ -69,6 +64,7 @@ public class PageCache extends BaseCache {
     }
 
     public PageData getRootPage() {
+        checkDirty();
         return rootPage;
     }
 
@@ -89,12 +85,6 @@ public class PageCache extends BaseCache {
     public PageData getPage(int id) {
         checkDirty();
         return pageMap.get(id);
-    }
-
-    public PageData getPage(String path) {
-        checkDirty();
-        int id = pagePathMap.get(path);
-        return getPage(id);
     }
 
     public int getParentPageId(int id) {

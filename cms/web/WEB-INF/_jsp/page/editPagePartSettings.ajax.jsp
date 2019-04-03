@@ -7,17 +7,20 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
+
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
 <%@ page import="de.elbe5.cms.application.Statics" %>
 <%@ page import="de.elbe5.cms.page.*" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
-    PageData data = (PageData) SessionReader.getSessionObject(request, "pageData");
+    RequestData rdata= RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
+    PageData data = (PageData) rdata.getSessionObject("pageData");
     assert(data!=null);
     PagePartData part = data.getEditPagePart();
+    String url="/page/savePagePartSettings/"+data.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -28,10 +31,9 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <cms:form url="/pagepart.ajx" name="settingsform" act="<%=PagePartActions.savePagePartSettings%>">
-            <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
+        <cms:form url="<%=url%>" name="settingsform" >
             <input type="hidden" name="partId" value="<%=part.getId()%>"/>
-            <cms:requesterror/>
+            <cms:formerror/>
             <cms:select name="flexClass" label="<%=Strings._flexClass.toString()%>">
                 <% String selection=part.getFlexClass();
                     if (selection.isEmpty())
@@ -40,7 +42,7 @@
                 <option value="<%=css.getCssClass()%>" <%=css.name().equals(selection) ? "selected" : ""%>><%=css.name()%></option>
                 <%}%>
             </cms:select>
-            <cms:text name="cssClasses" label="<%=Strings._cssClass.toString()%>" ><%=StringUtil.toHtml(part.getCssClasses())%></cms:text>
+            <cms:text name="cssClasses" label="<%=Strings._cssClass.toString()%>" value="<%=StringUtil.toHtml(part.getCssClasses())%>" />
             <cms:editor name="script" label="<%=Strings._script.toString()%>" type="javascript" hint="<%=Strings._javascriptHint.toString()%>" height="10rem">
                 <%=StringUtil.toHtml(part.getScript())%>
             </cms:editor>
@@ -59,7 +61,7 @@
                 event.preventDefault();
                 $('#script').val(editor.getSession().getValue());
                 var params = $this.serialize();
-                postByAjax('/pagepart.ajx', params,'<%=Statics.MODAL_DIALOG_JQID%>');
+                postByAjax('/page/savePagePartSettings/<%=data.getId()%>', params,'<%=Statics.MODAL_DIALOG_JQID%>');
             });
         </script>
     </div>

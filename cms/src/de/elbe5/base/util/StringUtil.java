@@ -144,4 +144,17 @@ public class StringUtil {
         return s == null || s.length() == 0;
     }
 
+    public static int toInt(String s){
+        return toInt(s,0);
+    }
+
+    public static int toInt(String s, int def){
+        try{
+            return Integer.valueOf(s);
+        }
+        catch (Exception ignore){
+            return def;
+        }
+    }
+
 }

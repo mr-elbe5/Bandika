@@ -12,18 +12,11 @@ import de.elbe5.base.data.BaseData;
 import de.elbe5.base.data.Locales;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.mail.Mailer;
-import de.elbe5.cms.servlet.IRequestData;
-import de.elbe5.cms.servlet.RequestError;
-import de.elbe5.cms.servlet.RequestReader;
 
-import javax.servlet.http.HttpServletRequest;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.HashMap;
+import javax.servlet.ServletContext;
 import java.util.Locale;
-import java.util.Map;
 
-public class Configuration extends BaseData implements IRequestData, Cloneable {
+public class Configuration extends BaseData {
 
     private static Configuration instance = new Configuration();
 
@@ -31,9 +24,8 @@ public class Configuration extends BaseData implements IRequestData, Cloneable {
         return instance;
     }
 
-    protected Map<String,String> configs = new HashMap<>();
-
     protected String appTitle="";
+    protected String salt="";
     protected String smtpHost = null;
     protected int smtpPort = 25;
     protected Mailer.SmtpConnectionType smtpConnectionType = Mailer.SmtpConnectionType.plain;
@@ -48,45 +40,18 @@ public class Configuration extends BaseData implements IRequestData, Cloneable {
     public Configuration() {
     }
 
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
-    public Map<String, String> getConfigs() {
-        return configs;
-    }
-
-    public void evaluateConfigs(){
-        setSmtpHost(getConfigs().get("mailHost"));
-        setSmtpPort(Integer.parseInt(getConfigs().get("mailPort")));
-        setSmtpConnectionType(Mailer.SmtpConnectionType.valueOf(getConfigs().get("mailConnectionType")));
-        setSmtpUser(getConfigs().get("mailUser"));
-        String s="";
-        try{
-            s=new String(Base64.getDecoder().decode(getConfigs().get("mailPassword").getBytes(StandardCharsets.UTF_8)));
-        }
-        catch (Exception ignore){
-
-        }
-        setSmtpPassword(s);
-        setMailSender(getConfigs().get("mailSender"));
-        setMailReceiver(getConfigs().get("mailReceiver"));
-        setTimerInterval(Integer.parseInt(getConfigs().get("timerInterval")));
-        setEditProfile(getConfigs().get("editProfile").equalsIgnoreCase("true"));
-        setSelfRegistration(getConfigs().get("selfRegistration").equalsIgnoreCase("true"));
-    }
-
-    public void putConfigs(){
-        getConfigs().put("mailHost",getSmtpHost());
-        getConfigs().put("mailPort",Integer.toString(getSmtpPort()));
-        getConfigs().put("mailConnectionType",getSmtpConnectionType().name());
-        getConfigs().put("mailUser",getSmtpUser());
-        getConfigs().put("mailPassword",new String(Base64.getEncoder().encode(getSmtpPassword().getBytes(StandardCharsets.UTF_8))));
-        getConfigs().put("mailSender",getMailSender());
-        getConfigs().put("mailReceiver",getMailReceiver());
-        getConfigs().put("timerInterval",Integer.toString(getTimerInterval()));
-        getConfigs().put("editProfile",Boolean.toString(isEditProfile()));
-        getConfigs().put("selfRegistration",Boolean.toString(isSelfRegistration()));
+    public void setConfigs(ServletContext servletContext){
+        setSalt(servletContext.getInitParameter("salt"));
+        setSmtpHost(servletContext.getInitParameter("mailHost"));
+        setSmtpPort(Integer.parseInt(servletContext.getInitParameter("mailPort")));
+        setSmtpConnectionType(Mailer.SmtpConnectionType.valueOf(servletContext.getInitParameter("mailConnectionType")));
+        setSmtpUser(servletContext.getInitParameter("mailUser"));
+        setSmtpPassword(servletContext.getInitParameter("mailPassword"));
+        setMailSender(servletContext.getInitParameter("mailSender"));
+        setMailReceiver(servletContext.getInitParameter("mailReceiver"));
+        setTimerInterval(Integer.parseInt(servletContext.getInitParameter("timerInterval")));
+        setEditProfile(servletContext.getInitParameter("editProfile").equalsIgnoreCase("true"));
+        setSelfRegistration(servletContext.getInitParameter("selfRegistration").equalsIgnoreCase("true"));
     }
 
     public String getAppTitle() {
@@ -95,6 +60,14 @@ public class Configuration extends BaseData implements IRequestData, Cloneable {
 
     public void setAppTitle(String appTitle) {
         this.appTitle = appTitle;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     public String getSmtpHost() {
@@ -189,8 +162,7 @@ public class Configuration extends BaseData implements IRequestData, Cloneable {
         this.timerInterval = timerInterval;
     }
 
-    public void loadAppConfiguration(Configuration config) {
-        instance = config;
+    public void loadLocales() {
         ConfigurationBean.getInstance().readLocales(Locales.getInstance().getLocales());
         for (Locale locale : Locales.getInstance().getLocales().keySet()) {
             Log.log("found locale: " + locale.getLanguage() + '(' + locale.getDisplayName() + ')');
@@ -198,17 +170,4 @@ public class Configuration extends BaseData implements IRequestData, Cloneable {
         Log.log("default locale is " + Locales.getInstance().getDefaultLocale().getLanguage());
     }
 
-    @Override
-    public void readRequestData(HttpServletRequest request, RequestError error) {
-        setSmtpHost(RequestReader.getString(request, "smtpHost"));
-        setSmtpPort(RequestReader.getInt(request, "smtpPort"));
-        setSmtpConnectionType(Mailer.SmtpConnectionType.valueOf(RequestReader.getString(request, "smtpConnectionType")));
-        setSmtpUser(RequestReader.getString(request, "smtpUser"));
-        setSmtpPassword(RequestReader.getString(request, "smtpPassword"));
-        setMailSender(RequestReader.getString(request, "emailSender"));
-        setMailReceiver(RequestReader.getString(request, "emailReceiver"));
-        setTimerInterval(RequestReader.getInt(request, "timerInterval"));
-        setEditProfile(RequestReader.getBoolean(request, "editProfile"));
-        setSelfRegistration(RequestReader.getBoolean(request, "selfRegistration"));
-    }
 }

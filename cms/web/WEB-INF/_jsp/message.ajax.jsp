@@ -7,31 +7,29 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.servlet.Message" %>
-<%@ page import="de.elbe5.cms.servlet.RequestReader" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
 <%@ page import="de.elbe5.base.cache.StringCache" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ page import="de.elbe5.cms.application.Statics" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
-    Message msg = Message.getMessage(request);
-    String closeScript= RequestReader.getString(request, Statics.KEY_CLOSESCRIPT);
-    assert (msg!=null);
+    RequestData rdata=RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
+    String msg = rdata.getString(Statics.KEY_MESSAGE);
+    String msgType= rdata.getString(Statics.KEY_MESSAGETYPE);
 %>
 <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title"><%=StringCache.getHtml(msg.getTypeKey(), locale)%>
+            <h5 class="modal-title"><%=StringCache.getHtml(Statics.getTypeKey(msgType), locale)%>
             </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
             <div class="modal-body">
-                <%=StringUtil.toHtml(msg.getMessage())%>
+                <%=StringUtil.toHtml(msg)%>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary"
@@ -39,11 +37,4 @@
                 </button>
             </div>
     </div>
-    <% if (!closeScript.isEmpty()){%>
-        <script type="application/javascript">
-            $('#modalDialog').on('hidden.bs.modal', function (e) {
-                <%=closeScript%>
-            })
-        </script>
-    <%}%>
 </div>

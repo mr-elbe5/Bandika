@@ -87,8 +87,6 @@ public class FileBean extends DbBean {
             if (!readFileData(con, data, withBytes)) {
                 return null;
             }
-            FileCache tc = FileCache.getInstance();
-            tc.inheritFromFolder(data);
         } catch (SQLException se) {
             Log.error("sql error", se);
         } finally {
@@ -146,8 +144,7 @@ public class FileBean extends DbBean {
         Connection con = startTransaction();
         try {
             if (!data.isNew() && changedFile(con, data)) {
-                rollbackTransaction(con);
-                return false;
+                return rollbackTransaction(con);
             }
             data.setChangeDate(getServerTime(con));
             writeFileData(con, data);
@@ -215,7 +212,7 @@ public class FileBean extends DbBean {
 
     private static String GET_PREVIEW_SQL="SELECT name, preview_bytes FROM t_file WHERE id=?";
 
-    public BinaryFileData getBinaryPreviewData(int id) throws SQLException {
+    public BinaryFileData getBinaryPreviewData(int id){
         Connection con = getConnection();
         PreparedStatement pst = null;
         BinaryFileData data = null;
@@ -232,6 +229,10 @@ public class FileBean extends DbBean {
                     data.setFileSize(data.getBytes().length);
                 }
             }
+        }
+        catch (SQLException e){
+            Log.error("error while downloading file", e);
+            return null;
         } finally {
             closeStatement(pst);
             closeConnection(con);
@@ -241,7 +242,7 @@ public class FileBean extends DbBean {
     
     private static String GET_FILE_STREAM_SQL="SELECT name,content_type,file_size,bytes FROM t_file WHERE id=?";
     
-    public BinaryFileStreamData getBinaryFileStreamData(int id) throws SQLException {
+    public BinaryFileStreamData getBinaryFileStreamData(int id){
         Connection con = getConnection();
         PreparedStatement pst = null;
         BinaryFileStreamData data = null;
@@ -258,6 +259,10 @@ public class FileBean extends DbBean {
                     data.setInputStream(rs.getBinaryStream(i));
                 }
             }
+        }
+        catch (SQLException e){
+            Log.error("error while streaming file", e);
+            return null;
         } finally {
             closeStatement(pst);
             closeConnection(con);

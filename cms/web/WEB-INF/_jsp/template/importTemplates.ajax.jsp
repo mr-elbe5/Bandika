@@ -7,14 +7,15 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
-<%@ page import="de.elbe5.cms.template.TemplateActions" %>
+
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.servlet.RequestReader" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
 <%@ page import="de.elbe5.cms.application.Statics" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
-<%Locale locale = SessionReader.getSessionLocale(request);
+<%
+    RequestData rdata=RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -25,12 +26,12 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <cms:form url="/template.ajx" name="importTemplates" act="<%=TemplateActions.importTemplates%>">
+        <cms:form url="/template/importTemplates" name="importTemplates" >
             <div class="modal-body">
-                <cms:requesterror/>
+                <cms:formerror/>
                 <cms:file name="file" label="<%=Strings._file.toString()%>" />
                 <cms:editor name="code" label="<%=Strings._code.toString()%>" type="html" hint="<%=Strings._htmlHint.toString()%>" height="20rem" required="true">
-                    <%=StringUtil.toHtml(RequestReader.getString(request, "code"))%>
+                    <%=StringUtil.toHtml(rdata.getString("code"))%>
                 </cms:editor>
             </div>
             <div class="modal-footer">
@@ -48,7 +49,7 @@
                 event.preventDefault();
                 $('#code').val(editor.getSession().getValue());
                 var params = $this.serialize();
-                postByAjax('/template.ajx', params,'<%=Statics.MODAL_DIALOG_JQID%>');
+                postByAjax('/template/importTemplates', params,'<%=Statics.MODAL_DIALOG_JQID%>');
             });
             $('#file').change(function(){
                 if (this.files){

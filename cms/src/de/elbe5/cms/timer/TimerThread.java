@@ -39,7 +39,7 @@ public class TimerThread extends BaseThread {
 
     protected void checkTasks() {
         LocalDateTime now = TimerBean.getInstance().getServerTime();
-        for (TimerTaskData task : TimerController.getInstance().getTasks().values()) {
+        for (TimerTaskData task : Timer.getInstance().getTasks().values()) {
             try {
                 if (task.isActive()) {
                     checkTask(task, now);

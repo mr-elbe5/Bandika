@@ -147,8 +147,7 @@ public class FolderBean extends DbBean {
         Connection con = startTransaction();
         try {
             if (!data.isNew() && changedFolder(con, data)) {
-                rollbackTransaction(con);
-                return false;
+                return rollbackTransaction(con);
             }
             data.setChangeDate(getServerTime(con));
             writeFolder(con, data);

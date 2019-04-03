@@ -11,7 +11,7 @@ package de.elbe5.cms.tag;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.cms.page.*;
-import de.elbe5.cms.servlet.SessionReader;
+import de.elbe5.cms.servlet.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -24,13 +24,14 @@ public class TopNavTag extends BaseTag {
     public int doStartTag() {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+            RequestData rdata = RequestData.getRequestData(request);
             JspWriter writer = getContext().getOut();
-            Locale locale= SessionReader.getSessionLocale(request);
+            Locale locale= rdata.getSessionLocale();
 
             PageData rootPage = PageCache.getInstance().getHomePage(locale);
             writer.write("<ul class=\"nav nav-tabs\">");
             if (rootPage != null)
-                addTopNodes(writer, request, rootPage);
+                addTopNodes(writer, rdata, rootPage);
             writer.write("</ul>");
 
         } catch (Exception e) {
@@ -39,38 +40,38 @@ public class TopNavTag extends BaseTag {
         return SKIP_BODY;
     }
 
-    public void addTopNodes(JspWriter writer, HttpServletRequest request, PageData parentPage) throws IOException {
+    public void addTopNodes(JspWriter writer, RequestData rdata, PageData parentPage) throws IOException {
         for (PageData page : parentPage.getSubPages()) {
-            if (page.isInTopNav() && page.isVisibleToUser(request)) {
+            if (page.isInTopNav() && page.isVisibleToUser(rdata)) {
                 boolean hasSubPages = page.getSubPages().size() > 1;
                 if (hasSubPages) {
                     writer.write("<li class=\"nav-item dropdown\">");
-                    StringUtil.write(writer, "<a class=\"nav-link dropdown-toggle\" data-toggle=\"dropdown\" href=\"{1}\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">{2}</a>",
-                            page.getUrl(),
-                            StringUtil.toHtml(page.getDisplayName()));
+                    StringUtil.write(writer, "<a class=\"nav-link dropdown-toggle\" data-toggle=\"dropdown\" href=\"/page/show/{1}\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">{2}</a>",
+                            Integer.toString(page.getId()),
+                            StringUtil.toHtml(page.getName()));
                     writer.write("<div class=\"dropdown-menu carbon\">");
-                    addSubPages(writer, request, page);
+                    addSubPages(writer, rdata, page);
                     writer.write("</div></li>");
                 }
                 else{
-                    StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"{1}\">{2}</a></li>",
-                            page.getUrl(),
-                            StringUtil.toHtml(page.getDisplayName()));
+                    StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/page/show/{1}\">{2}</a></li>",
+                            Integer.toString(page.getId()),
+                            StringUtil.toHtml(page.getName()));
                 }
             }
         }
     }
 
-    public void addSubPages(JspWriter writer, HttpServletRequest request, PageData parentPage) throws IOException {
+    public void addSubPages(JspWriter writer, RequestData rdata, PageData parentPage) throws IOException {
         for (PageData page : parentPage.getSubPages()) {
-            if (page.isInTopNav() && page.isVisibleToUser(request)) {
+            if (page.isInTopNav() && page.isVisibleToUser(rdata)) {
                 boolean hasSubPages = page.getSubPages().size() > 1;
-                StringUtil.write(writer, "<a class=\"dropdown-item\" href=\"{1}\">{2}</a>",
-                        page.getUrl(),
-                        StringUtil.toHtml(page.getDisplayName()));
+                StringUtil.write(writer, "<a class=\"dropdown-item\" href=\"/page/show/{1}\">{2}</a>",
+                        Integer.toString(page.getId()),
+                        StringUtil.toHtml(page.getName()));
                 if (hasSubPages) {
                     writer.write("");
-                    addSubPages(writer, request, page);
+                    addSubPages(writer, rdata, page);
                     writer.write("");
                 }
             }

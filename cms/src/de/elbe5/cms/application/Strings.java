@@ -106,6 +106,7 @@ public enum Strings{
     _folderDeleted,
     _folderSaved,
     _forbidden,
+    _formError,
     _fromTemplate,
     _general,
     _group,

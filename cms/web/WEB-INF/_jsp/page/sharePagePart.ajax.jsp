@@ -8,16 +8,18 @@
 --%>
 <%@ page import="de.elbe5.cms.page.PageData" %>
 <%@ page import="de.elbe5.cms.page.PagePartData" %>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
+
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.page.PagePartActions" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
-    PageData data = (PageData) SessionReader.getSessionObject(request, "pageData");
-    assert(data!=null);
-    PagePartData part = data.getEditPagePart();
+    RequestData rdata= RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
+    PageData pageData = (PageData) rdata.getSessionObject("pageData");
+    assert(pageData !=null);
+    PagePartData part = pageData.getEditPagePart();
+    String url="/page/sharePagePart/"+pageData.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -28,12 +30,11 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <cms:form url="/pagepart.ajx" name="shareform" act="<%=PagePartActions.sharePagePart%>" ajax="true">
-            <input type="hidden" name="pageId" value="<%=data.getId()%>"/>
+        <cms:form url="<%=url%>" name="shareform" ajax="true">
             <input type="hidden" name="partId" value="<%=part.getId()%>"/>
             <div class="modal-body">
-                <cms:requesterror/>
-                <cms:text name="name" label="<%=Strings._name.toString()%>" required="true"></cms:text>
+                <cms:formerror/>
+                <cms:text name="name" label="<%=Strings._name.toString()%>" required="true" value="" />
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary"

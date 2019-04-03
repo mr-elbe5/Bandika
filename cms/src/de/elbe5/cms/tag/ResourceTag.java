@@ -10,7 +10,7 @@ package de.elbe5.cms.tag;
 
 import de.elbe5.base.cache.StringCache;
 import de.elbe5.base.log.Log;
-import de.elbe5.cms.servlet.SessionReader;
+import de.elbe5.cms.servlet.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -28,8 +28,9 @@ public class ResourceTag extends BaseTag {
     public int doStartTag() {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+            RequestData rdata = RequestData.getRequestData(request);
             JspWriter writer = getContext().getOut();
-            Locale locale= SessionReader.getSessionLocale(request);
+            Locale locale= rdata.getSessionLocale();
 
             writer.write(StringCache.getHtml(key, locale));
 

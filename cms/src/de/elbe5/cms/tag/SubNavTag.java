@@ -10,8 +10,9 @@ package de.elbe5.cms.tag;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
+import de.elbe5.cms.application.Statics;
 import de.elbe5.cms.page.*;
-import de.elbe5.cms.servlet.ActionSet;
+import de.elbe5.cms.servlet.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -22,23 +23,24 @@ public class SubNavTag extends BaseTag {
     public int doStartTag() {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+            RequestData rdata = RequestData.getRequestData(request);
             JspWriter writer = getContext().getOut();
-            PageData pageData = (PageData) request.getAttribute(ActionSet.KEY_PAGE);
+            PageData pageData = (PageData) rdata.get(Statics.KEY_PAGE);
             int parentId = pageData.getParentId();
             PageData parentPage = PageCache.getInstance().getPage(parentId);
             writer.write("<nav class=\"subNav\"><ul>");
             for (PageData page : parentPage.getSubPages()) {
-                if (page.isInTopNav() && page.isVisibleToUser(request)) {
-                    StringUtil.write(writer, "<li class=\"icn isite\"><a href=\"{1}\">{2}</a>",
-                            page.getUrl(),
-                            StringUtil.toHtml(page.getDisplayName()));
+                if (page.isInTopNav() && page.isVisibleToUser(rdata)) {
+                    StringUtil.write(writer, "<li class=\"icn isite\"><a href=\"/page/show/{1}\">{2}</a>",
+                            Integer.toString(page.getId()),
+                            StringUtil.toHtml(page.getName()));
                     if (page.getSubPages().size() > 1) {
                         writer.write("<ul>");
                         for (PageData subPage : page.getSubPages()) {
-                            if (subPage.isInTopNav() && subPage.isVisibleToUser(request)) {
-                                StringUtil.write(writer, "<li class=\"icn ipage\"><a href=\"{1}\">{2}</a></li>",
-                                        subPage.getUrl(),
-                                        StringUtil.toHtml(subPage.getDisplayName()));
+                            if (subPage.isInTopNav() && subPage.isVisibleToUser(rdata)) {
+                                StringUtil.write(writer, "<li class=\"icn ipage\"><a href=\"/page/show/{1}\">{2}</a></li>",
+                                        Integer.toString(subPage.getId()),
+                                        StringUtil.toHtml(subPage.getName()));
                             }
                         }
                         writer.write("</ul>");

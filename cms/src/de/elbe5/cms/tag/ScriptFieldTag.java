@@ -10,9 +10,10 @@ package de.elbe5.cms.tag;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
+import de.elbe5.cms.application.Statics;
 import de.elbe5.cms.field.ScriptField;
 import de.elbe5.cms.page.*;
-import de.elbe5.cms.servlet.ActionSet;
+import de.elbe5.cms.servlet.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -23,9 +24,10 @@ public class ScriptFieldTag extends FieldTag {
     public int doStartTag() {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+            RequestData rdata = RequestData.getRequestData(request);
             JspWriter writer = getContext().getOut();
-            PageData pageData = (PageData) request.getAttribute(ActionSet.KEY_PAGE);
-            PagePartData partData = (PagePartData) request.getAttribute(PagePartActions.KEY_PART);
+            PageData pageData = (PageData) rdata.get(Statics.KEY_PAGE);
+            PagePartData partData = (PagePartData) rdata.get(Statics.KEY_PART);
 
             ScriptField field = partData.ensureScriptField(name);
 

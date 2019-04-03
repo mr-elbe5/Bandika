@@ -10,17 +10,17 @@ package de.elbe5.base.crypto;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import javax.xml.bind.DatatypeConverter;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.util.Base64;
 
 public class PBKDF2Encryption {
 
     private static final String RNG_ALGORITHM = "SHA1PRNG";
     private static final String HASH_ALGORITHM = "PBKDF2WithHmacSHA1";
-    private static final int HASH_ITERATIONS = 22000;
+    private static final int HASH_ITERATIONS = 22005;
 
     public static byte[] generateSalt() throws NoSuchAlgorithmException {
         SecureRandom random = SecureRandom.getInstance(RNG_ALGORITHM);
@@ -30,7 +30,7 @@ public class PBKDF2Encryption {
     }
 
     public static String generateSaltBase64() throws NoSuchAlgorithmException {
-        return DatatypeConverter.printBase64Binary(generateSalt());
+        return Base64.getEncoder().encodeToString(generateSalt());
     }
 
     public static byte[] getEncryptedPassword(String password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -42,8 +42,8 @@ public class PBKDF2Encryption {
     }
 
     public static String getEncryptedPasswordBase64(String password, String saltBase64) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        byte[] salt = DatatypeConverter.parseBase64Binary(saltBase64);
-        return DatatypeConverter.printBase64Binary(getEncryptedPassword(password, salt));
+        byte[] salt = Base64.getDecoder().decode(saltBase64);
+        return Base64.getEncoder().encodeToString(getEncryptedPassword(password, salt));
     }
 
 }

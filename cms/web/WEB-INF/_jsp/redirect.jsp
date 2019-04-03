@@ -1,4 +1,4 @@
-<%--
+<%@ page import="de.elbe5.cms.servlet.RequestData" %><%--
   Elbe 5 CMS - A Java based modular Content Management System
   Copyright (C) 2009-2018 Michael Roennau
 
@@ -6,10 +6,10 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="de.elbe5.cms.servlet.RequestReader" %>
 <%
-    String redirectUrl = RequestReader.getString(request, "redirectUrl");
-    if (redirectUrl.length() > 0) {
+    RequestData rdata= RequestData.getRequestData(request);
+    String redirectUrl = rdata.getString("redirectUrl");
+    if (redirectUrl!=null && redirectUrl.length() > 0) {
 %>
 <html>
 <head></head>

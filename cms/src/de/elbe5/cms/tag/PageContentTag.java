@@ -9,9 +9,9 @@
 package de.elbe5.cms.tag;
 
 import de.elbe5.base.log.Log;
+import de.elbe5.cms.application.Statics;
 import de.elbe5.cms.page.*;
-import de.elbe5.cms.servlet.ActionSet;
-import de.elbe5.cms.servlet.SessionReader;
+import de.elbe5.cms.servlet.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -25,8 +25,9 @@ public class PageContentTag extends BaseTag {
     public int doStartTag() throws JspException {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+            RequestData rdata=RequestData.getRequestData(request);
             JspWriter writer = getContext().getOut();
-            PageData pageData = (PageData) request.getAttribute(ActionSet.KEY_PAGE);
+            PageData pageData = (PageData) rdata.get(Statics.KEY_PAGE);
             switch (pageData.getViewMode()){
                 case PUBLISH: {
                     writer.write("<div id=\"pageContent\" class=\"viewArea\">");
@@ -59,7 +60,7 @@ public class PageContentTag extends BaseTag {
                 }break;
                 default: {
                     writer.write("<div id=\"pageContent\" class=\"viewArea\">");
-                    if (!pageData.isDynamic() && pageData.isPublished() && !SessionReader.isEditMode(request)) {
+                    if (!pageData.isDynamic() && pageData.isPublished() && !rdata.isEditMode()) {
                         writer.write(pageData.getPublishedContent());
                     } else{
                         getContext().include(pageData.getInclude());

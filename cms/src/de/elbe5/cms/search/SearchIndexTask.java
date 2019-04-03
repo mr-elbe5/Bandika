@@ -23,11 +23,6 @@ public class SearchIndexTask extends TimerTaskData {
         return "searchindex";
     }
 
-    @Override
-    public String getDisplayName() {
-        return "Search Index Task";
-    }
-
     public boolean execute(LocalDateTime executionTime, LocalDateTime checkTime) {
         Log.log("indexing content for search at " + StringUtil.toHtmlDateTime(TimerBean.getInstance().getServerTime(), Locales.getInstance().getDefaultLocale()));
         SearchQueue.getInstance().addAction(SearchQueue.ACTION_INDEX_PAGES);

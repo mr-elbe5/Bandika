@@ -197,7 +197,7 @@ public class PagePartBean extends DbBean {
         }
     }
 
-    private static String DELETE_PAGE_PARTS_SQL="DELETE FROM t_page_part2page WHERE page_id=?";
+    private static String DELETE_PAGE_PART_RELATIONS_SQL="DELETE FROM t_page_part2page WHERE page_id=?";
     private static String INSERT_PAGE_PART_SQL="INSERT INTO t_page_part (change_date,template,name,flex_class,css_classes,script,id) VALUES(?,?,?,?,?,?,?)";
     private static String UPDATE_PAGE_PART_SQL="UPDATE t_page_part SET change_date=?,template=?,name=?,flex_class=?,css_classes=?,script=? WHERE id=?";
     private static String INSERT_PAGE_PART_RELATIONS_SQL="INSERT INTO t_page_part2page (part_id,page_id,section,position) VALUES(?,?,?,?)";
@@ -208,7 +208,7 @@ public class PagePartBean extends DbBean {
         PreparedStatement pst;
         PreparedStatement pstInsP2P = null;
         try{
-            pstDelP2P = con.prepareStatement(DELETE_PAGE_PARTS_SQL);
+            pstDelP2P = con.prepareStatement(DELETE_PAGE_PART_RELATIONS_SQL);
             pstDelP2P.setInt(1, page.getId());
             pstDelP2P.executeUpdate();
             pstDelP2P.close();

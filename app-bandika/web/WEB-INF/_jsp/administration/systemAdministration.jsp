@@ -6,16 +6,15 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%><%response.setContentType("text/html;charset=UTF-8");%>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.cms.rights.SystemZone" %>
 <%@ page import="de.elbe5.cms.rights.Right" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
-<%@ page import="de.elbe5.cms.application.AdminActions" %>
-<%@ page import="de.elbe5.cms.file.FileActions" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
+    RequestData rdata=RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
 %>
             <div id="pageContent">
                 <cms:message />
@@ -25,24 +24,23 @@
                             <a class="treeRoot"><%=Strings._system.html(locale)%></a>
                             <ul>
                                 <%
-                                    if (SessionReader.hasSystemRight(request, SystemZone.APPLICATION, Right.EDIT)) {
+                                    if (rdata.hasSystemRight(SystemZone.APPLICATION, Right.EDIT)) {
                                 %>
-                                <li><a href="" onclick="return openModalDialog('/admin.ajx?act=<%=AdminActions.openExecuteDatabaseScript%>');"><%=Strings._executeDatabaseScript.html(locale)%></a></li>
-                                <li><a href="" onclick="if (confirmExecute()) return openModalDialog('/admin.srv?act=<%=AdminActions.restart%>');"><%=Strings._restart.html(locale)%></a>
-                                <li><a href="" onclick="return openModalDialog('/admin.ajx?act=<%=AdminActions.openEditConfiguration%>');"><%=Strings._settings.html(locale)%></a>
+                                <li><a href="" onclick="return openModalDialog('/admin/openExecuteDatabaseScript');"><%=Strings._executeDatabaseScript.html(locale)%></a></li>
+                                <li><a href="" onclick="if (confirmExecute()) return openModalDialog('/admin/restart');"><%=Strings._restart.html(locale)%></a>
                                 <li class="open">
                                     <a><%=Strings._caches.html(locale)%></a>
                                     <ul>
                                         <li>
                                             <span class="dropdown-toggle" data-toggle="dropdown"><%=Strings._binaryFileCache.html(locale)%></span>
                                             <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="/admin.srv?act=<%=AdminActions.clearFileCache%>"><%=Strings._clear.html(locale)%></a>
+                                                <a class="dropdown-item" href="/admin/clearFileCache"><%=Strings._clear.html(locale)%></a>
                                             </div>
                                         </li>
                                         <li>
                                             <span class="dropdown-toggle" data-toggle="dropdown"><%=Strings._fileCache.html(locale)%></span>
                                             <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="/file.srv?act=<%=FileActions.reloadCache%>"><%=Strings._reload.html(locale)%></a>
+                                                <a class="dropdown-item" href="/file/reloadCache"><%=Strings._reload.html(locale)%></a>
                                             </div>
                                         </li>
                                     </ul>

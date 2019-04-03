@@ -14,10 +14,8 @@ import de.elbe5.cms.rights.Right;
 import de.elbe5.cms.rights.RightsCache;
 import de.elbe5.cms.rights.SystemZone;
 import de.elbe5.cms.servlet.IRequestData;
-import de.elbe5.cms.servlet.RequestError;
-import de.elbe5.cms.servlet.RequestReader;
+import de.elbe5.cms.servlet.RequestData;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,7 +28,7 @@ import java.util.List;
 public class GroupData extends BaseIdData implements IRequestData {
 
     public static final int ID_ALL = 0;
-    public static final int ID_GLOBAL_ADINISTRATORS = 1;
+    public static final int ID_GLOBAL_ADMINISTRATORS = 1;
     public static final int ID_GLOBAL_APPROVERS = 2;
     public static final int ID_GLOBAL_EDITORS = 3;
     public static final int ID_GLOBAL_READERS = 4;
@@ -83,18 +81,18 @@ public class GroupData extends BaseIdData implements IRequestData {
         return users;
     }
 
-    public void readRequestData(HttpServletRequest request, RequestError error) {
-        setName(RequestReader.getString(request, "name"));
-        setNotes(RequestReader.getString(request, "notes"));
+    public void readRequestData(RequestData rdata) {
+        setName(rdata.getString("name"));
+        setNotes(rdata.getString("notes"));
         getRights().getSystemRights().clear();
         for (SystemZone zone : SystemZone.values()) {
-            String key = RequestReader.getString(request, "zoneright_" + zone.name());
+            String key = rdata.getString("zoneright_" + zone.name());
             if (!key.isEmpty())
                 getRights().addSystemRight(zone, Right.valueOf(key));
         }
-        setUserIds(RequestReader.getIntegerSet(request, "userIds"));
+        setUserIds(rdata.getIntegerSet("userIds"));
         if (name.isEmpty()){
-            error.addNotCompleteField("name");
+            rdata.addIncompleteField("name");
         }
     }
 

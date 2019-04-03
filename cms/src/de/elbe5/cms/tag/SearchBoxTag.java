@@ -10,7 +10,7 @@ package de.elbe5.cms.tag;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.cms.application.Strings;
-import de.elbe5.cms.servlet.SessionReader;
+import de.elbe5.cms.servlet.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -22,10 +22,10 @@ public class SearchBoxTag extends BaseTag {
     public int doStartTag() {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+            RequestData rdata = RequestData.getRequestData(request);
             JspWriter writer = getContext().getOut();
-            Locale locale= SessionReader.getSessionLocale(request);
-            writer.write("<form action=\"/search.srv\" method=\"post\" id=\"searchboxform\" name=\"searchboxform\" accept-charset=\"UTF-8\">\n" +
-                    "  <input name=\"act\" value=\"search\" type=\"hidden\" />\n" +
+            Locale locale= rdata.getSessionLocale();
+            writer.write("<form action=\"/search/search\" method=\"post\" id=\"searchboxform\" name=\"searchboxform\" accept-charset=\"UTF-8\">\n" +
                     "  <div class=\"input-group\">\n" +
                     "    <input id=\"searchPattern\" name=\"searchPattern\" type=\"text\" class=\"form-control\" placeholder=\"");
             writer.write(Strings._search.html(locale));

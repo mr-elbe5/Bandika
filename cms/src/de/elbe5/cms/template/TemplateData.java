@@ -11,10 +11,8 @@ package de.elbe5.cms.template;
 import de.elbe5.base.data.BaseData;
 import de.elbe5.cms.application.ApplicationPath;
 import de.elbe5.cms.servlet.IRequestData;
-import de.elbe5.cms.servlet.RequestError;
-import de.elbe5.cms.servlet.RequestReader;
+import de.elbe5.cms.servlet.RequestData;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 
 
@@ -27,8 +25,6 @@ public class TemplateData extends BaseData implements IRequestData, Serializable
     public static final String JSP_HEAD="" +
             "<%response.setContentType(\"text/html;charset=UTF-8\");%>\n" +
             "<%@ taglib uri=\"/WEB-INF/cmstags.tld\" prefix=\"cms\" %>\n";
-
-    public static final String SECTION_TYPES_ALL = "all";
 
     public static String getTemplatePath(String type, String name){
         return ApplicationPath.getAppROOTPath() + "/WEB-INF/_jsp/_templates/" + type + "/" + name + ".jsp";
@@ -96,17 +92,17 @@ public class TemplateData extends BaseData implements IRequestData, Serializable
     }
 
     @Override
-    public void readRequestData(HttpServletRequest request, RequestError error) {
+    public void readRequestData(RequestData rdata) {
         if (isNew())
-            setName(RequestReader.getString(request, "name"));
-        setDisplayName(RequestReader.getString(request, "displayName", name));
-        setDescription(RequestReader.getString(request, "description"));
-        setCode(RequestReader.getString(request, "code"));
+            setName(rdata.getString("name"));
+        setDisplayName(rdata.getString("displayName", name));
+        setDescription(rdata.getString("description"));
+        setCode(rdata.getString("code"));
         if (name.isEmpty()) {
-            error.addNotCompleteField("name");
+            rdata.addIncompleteField("name");
         }
         if (code.isEmpty()) {
-            error.addNotCompleteField("code");
+            rdata.addIncompleteField("code");
         }
     }
 

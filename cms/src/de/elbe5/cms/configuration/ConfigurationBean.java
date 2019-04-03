@@ -29,7 +29,7 @@ public class ConfigurationBean extends DbBean {
         return instance;
     }
 
-    public void readLocales(Map<Locale, String> locales) {
+    public void readLocales(Map<Locale, Integer> locales) {
         Connection con = getConnection();
         try {
             readLocales(con, locales);
@@ -40,88 +40,19 @@ public class ConfigurationBean extends DbBean {
         }
     }
 
-    private static String GET_LOCALES_SQL="SELECT locale,home FROM t_locale";
-    public void readLocales(Connection con, Map<Locale, String> locales) throws SQLException {
+    private static String GET_LOCALES_SQL="SELECT locale,home_id FROM t_locale";
+    public void readLocales(Connection con, Map<Locale, Integer> locales) throws SQLException {
         locales.clear();
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement(GET_LOCALES_SQL);
+        try (PreparedStatement pst = con.prepareStatement(GET_LOCALES_SQL)) {
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     try {
-                        locales.put(new Locale(rs.getString(1)), rs.getString(2));
+                        locales.put(new Locale(rs.getString(1)), rs.getInt(2));
                     } catch (Exception e) {
                         Log.error("no appropriate locale", e);
                     }
                 }
             }
-        } finally {
-            try {
-                if (pst != null) {
-                    pst.close();
-                }
-            } catch (SQLException ignored) {
-            }
-        }
-    }
-
-    public Configuration getConfiguration() {
-        Connection con = getConnection();
-        Configuration config = new Configuration();
-        try {
-            readConfiguration(con, config);
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeConnection(con);
-        }
-        config.evaluateConfigs();
-        return config;
-    }
-
-    private static String READ_CONFIG_SQL="SELECT key, value FROM t_configuration";
-    public void readConfiguration(Connection con, Configuration config) throws SQLException {
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement(READ_CONFIG_SQL);
-            try (ResultSet rs = pst.executeQuery()) {
-                while (rs.next()) {
-                    config.getConfigs().put(rs.getString(1),rs.getString(2));
-                }
-            }
-        } finally {
-            try {
-                if (pst != null) {
-                    pst.close();
-                }
-            } catch (SQLException ignored) {
-            }
-        }
-    }
-
-    public boolean saveConfiguration(Configuration config) {
-        Connection con = startTransaction();
-        try {
-            config.putConfigs();
-            writeConfiguration(con, config);
-            return commitTransaction(con);
-        } catch (Exception se) {
-            return rollbackTransaction(con, se);
-        }
-    }
-
-    private static String UPDATE_CONFIG_SQL="UPDATE t_configuration SET value=? WHERE key=?";
-    protected void writeConfiguration(Connection con, Configuration config) throws SQLException {
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement(UPDATE_CONFIG_SQL);
-            for (String key : config.getConfigs().keySet()) {
-                pst.setString(1, config.getConfigs().get(key));
-                pst.setString(2, key);
-                pst.executeUpdate();
-            }
-        } finally {
-            closeStatement(pst);
         }
     }
 }

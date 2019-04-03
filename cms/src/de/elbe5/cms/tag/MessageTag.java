@@ -11,9 +11,9 @@ package de.elbe5.cms.tag;
 import de.elbe5.base.cache.StringCache;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
-import de.elbe5.cms.servlet.Message;
+import de.elbe5.cms.application.Statics;
+import de.elbe5.cms.servlet.RequestData;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import java.io.Writer;
 import java.util.Locale;
@@ -31,18 +31,19 @@ public class MessageTag extends BaseTag {
     @Override
     public int doStartTag() throws JspException {
         try {
-            HttpServletRequest request = getRequest();
-            Message msg = Message.getMessage(request);
-            if (msg!=null) {
-                Locale locale = getLocale(request);
+            RequestData rdata = getRequestData();
+            if (rdata.hasMessage()) {
+                String msg = rdata.getString(Statics.KEY_MESSAGE);
+                String msgType= rdata.getString(Statics.KEY_MESSAGETYPE);
+                Locale locale = rdata.getSessionLocale();
                 Writer writer = getWriter();
-                writer.write(StringUtil.format(controlHtml, msg.getType(), StringCache.getHtml(msg.getTypeKey(), locale), StringUtil.toHtml(msg.getMessage())));
+                writer.write(StringUtil.format(controlHtml, msgType, StringCache.getHtml(Statics.getTypeKey(msgType), locale), StringUtil.toHtml(msg)));
             }
         } catch (Exception e) {
             Log.error("error writing message tag", e);
             throw new JspException(e);
         }
-        return EVAL_BODY_INCLUDE;
+        return SKIP_BODY;
     }
 
 }

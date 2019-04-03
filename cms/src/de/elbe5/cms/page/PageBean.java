@@ -67,7 +67,7 @@ public class PageBean extends DbBean {
     }
 
     private static String GET_PAGES_SQL="SELECT id,creation_date,change_date,parent_id,ranking,name," +
-            "display_name,description,keywords,author_name,in_topnav,in_footer,anonymous,inherits_rights," +
+            "description,keywords,author_name,in_topnav,in_footer,anonymous,inherits_rights," +
             "master,template,dynamic,publish_date,published_content,search_content " +
             "FROM t_page " +
             "ORDER BY parent_id, ranking";
@@ -99,7 +99,7 @@ public class PageBean extends DbBean {
     }
 
     private static String GET_PAGE_SQL="SELECT creation_date,change_date,parent_id,ranking,name," +
-            "display_name,description,keywords,author_name,in_topnav,in_footer,anonymous,inherits_rights," +
+            "description,keywords,author_name,in_topnav,in_footer,anonymous,inherits_rights," +
             "master,template,dynamic,publish_date,published_content,search_content " +
             "FROM t_page " +
             "WHERE id=?";
@@ -138,7 +138,6 @@ public class PageBean extends DbBean {
         data.setParentId(rs.getInt(i++));
         data.setRanking(rs.getInt(i++));
         data.setName(rs.getString(i++));
-        data.setDisplayName(rs.getString(i++));
         data.setDescription(rs.getString(i++));
         data.setKeywords(rs.getString(i++));
         data.setAuthorName(rs.getString(i++));
@@ -178,8 +177,7 @@ public class PageBean extends DbBean {
         Connection con = startTransaction();
         try {
             if (!data.isNew() && changedPage(con, data)) {
-                rollbackTransaction(con);
-                return false;
+                return rollbackTransaction(con);
             }
             data.setChangeDate(getServerTime(con));
             writePage(con, data);
@@ -196,8 +194,7 @@ public class PageBean extends DbBean {
         Connection con = startTransaction();
         try {
             if (!data.isNew() && changedPage(con, data)) {
-                rollbackTransaction(con);
-                return false;
+                return rollbackTransaction(con);
             }
             data.setPublishDate(getServerTime(con));
             publishPage(con, data);
@@ -208,10 +205,10 @@ public class PageBean extends DbBean {
     }
 
     private static String INSERT_PAGE_SQL="insert into t_page (creation_date,change_date,parent_id," +
-            "ranking,name,display_name,description,keywords,author_name,in_topnav,in_footer,anonymous,inherits_rights,master,template,dynamic,id) " +
-            "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            "ranking,name,description,keywords,author_name,in_topnav,in_footer,anonymous,inherits_rights,master,template,dynamic,id) " +
+            "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static String UPDATE_PAGE_SQL="update t_page set creation_date=?,change_date=?,parent_id=?," +
-            "ranking=?,name=?,display_name=?,description=?,keywords=?,author_name=?,in_topnav=?,in_footer=?,anonymous=?,inherits_rights=?,master=?,template=?,dynamic=? " +
+            "ranking=?,name=?,description=?,keywords=?,author_name=?,in_topnav=?,in_footer=?,anonymous=?,inherits_rights=?,master=?,template=?,dynamic=? " +
             "where id=?";
 
     protected void writePage(Connection con, PageData data) throws SQLException {
@@ -233,7 +230,6 @@ public class PageBean extends DbBean {
             }
             pst.setInt(i++, data.getRanking());
             pst.setString(i++, data.getName());
-            pst.setString(i++, data.getDisplayName());
             pst.setString(i++, data.getDescription());
             pst.setString(i++, data.getKeywords());
             pst.setString(i++, data.getAuthorName());

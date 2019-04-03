@@ -7,20 +7,19 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%><%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.util.List" %>
-<%@ page import="de.elbe5.cms.servlet.RequestReader" %>
 <%@ page import="de.elbe5.cms.page.PagePartData" %>
-<%@ page import="de.elbe5.cms.page.PagePartActions" %>
 <%@ page import="de.elbe5.cms.page.PagePartBean" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
+    RequestData rdata=RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
     List<PagePartData> parts = PagePartBean.getInstance().getSharedPageParts();
     List<PagePartData> orphanedParts = PagePartBean.getInstance().getOrphanedPageParts();
-    int partId = RequestReader.getInt(request, "partId");
+    int partId = rdata.getInt("partId");
 %>
 
                             <li class="open">
@@ -33,7 +32,7 @@
                                     <li class="<%=partId==part.getId() ? "open" : ""%>">
                                         <span class="dropdown-toggle" data-toggle="dropdown"><%=part.getId()%>&nbsp;<%=StringUtil.toHtml(part.getName())%>&nbsp;(<%=StringUtil.toHtml(part.getTemplateName())%>)</span>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="" onclick="if (confirmDelete()) return linkTo('/pagepart.srv?act=<%=PagePartActions.deletePagePart%>&partId=<%=part.getId()%>');"><%=Strings._delete.html(locale)%></a>
+                                            <a class="dropdown-item" href="" onclick="if (confirmDelete()) return linkTo('/page/deletePagePart?partId=<%=part.getId()%>');"><%=Strings._delete.html(locale)%></a>
                                         </div>
                                     </li>
                                     <%
@@ -45,7 +44,7 @@
                             <li class="open">
                                 <span class="dropdown-toggle" data-toggle="dropdown"><%=Strings._orphanedParts.html(locale)%></span>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="" onclick="if (confirmDelete()) return openModalDialog('/pagepart.srv?act=<%=PagePartActions.deleteAllOrphanedPageParts%>');"><%=Strings._deleteAll.html(locale)%></a>
+                                    <a class="dropdown-item" href="" onclick="if (confirmDelete()) return openModalDialog('/page/deleteAllOrphanedPageParts');"><%=Strings._deleteAll.html(locale)%></a>
                                 </div>
                                 <ul>
                                     <%
@@ -55,7 +54,7 @@
                                     <li class="<%=partId==part.getId() ? "open" : ""%>">
                                         <span class="dropdown-toggle" data-toggle="dropdown"><%=part.getId()%>&nbsp;(<%=StringUtil.toHtml(part.getName())%> <%=StringUtil.toHtml(part.getTemplateName())%>)</span>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="" onclick="if (confirmDelete()) return openModalDialog('/pagepart.srv?act=<%=PagePartActions.deletePagePart%>&partId=<%=part.getId()%>');"><%=Strings._delete.html(locale)%></a>
+                                            <a class="dropdown-item" href="" onclick="if (confirmDelete()) return openModalDialog('/page/deletePagePart?partId=<%=part.getId()%>');"><%=Strings._delete.html(locale)%></a>
                                         </div>
                                     </li>
                                     <%

@@ -34,7 +34,7 @@ public class DbConnector {
 
     private DataSource dataSource = null;
 
-    public boolean loadDataSource(String name) {
+    public boolean initialize(String name) {
         if (dataSource != null) {
             return true;
         }
@@ -69,10 +69,6 @@ public class DbConnector {
         } else {
             Log.error("cannot create valid connection");
         }
-        return dataSource != null;
-    }
-
-    public boolean isInitialized() {
         return dataSource != null;
     }
 

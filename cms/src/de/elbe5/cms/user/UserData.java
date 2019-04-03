@@ -15,16 +15,14 @@ import de.elbe5.base.log.Log;
 import de.elbe5.base.util.ImageUtil;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.cms.application.Strings;
+import de.elbe5.cms.configuration.Configuration;
 import de.elbe5.cms.rights.RightBean;
 import de.elbe5.cms.rights.RightsCache;
 import de.elbe5.cms.servlet.*;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
-import javax.imageio.stream.ImageOutputStream;
-import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -45,7 +43,6 @@ public class UserData extends BaseIdData implements IRequestData {
     protected String email = "";
     protected String login = "";
     protected String passwordHash = "";
-    protected String passwordKey = "";
     protected String approvalCode = "";
     protected boolean approved = false;
     protected boolean emailVerified = false;
@@ -62,6 +59,8 @@ public class UserData extends BaseIdData implements IRequestData {
     protected String notes = "";
     protected String portraitName = "";
     protected byte[] portrait = null;
+
+    protected Set<Integer> groupIds = new HashSet<>();
 
     UserRightsData rights=new UserRightsData();
 
@@ -139,26 +138,15 @@ public class UserData extends BaseIdData implements IRequestData {
     }
 
     public boolean hasPassword() {
-        return !passwordHash.isEmpty() && !passwordKey.isEmpty();
-    }
-
-    public String getPasswordKey() {
-        return passwordKey;
-    }
-
-    public void setPasswordKey(String passwordKey) {
-        this.passwordKey = passwordKey;
+        return !passwordHash.isEmpty();
     }
 
     public void setPassword(String password){
         if (password.isEmpty()){
             setPasswordHash("");
-            setPasswordKey("");
         }
         else{
-            String key = UserSecurity.generateKey();
-            setPasswordHash(UserSecurity.encryptPassword(password, key));
-            setPasswordKey(key);
+            setPasswordHash(UserSecurity.encryptPassword(password, Configuration.getInstance().getSalt()));
         }
     }
 
@@ -209,8 +197,6 @@ public class UserData extends BaseIdData implements IRequestData {
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
-
-    protected Set<Integer> groupIds = new HashSet<>();
 
     protected List<GroupData> groups = new ArrayList<>();
 
@@ -326,21 +312,21 @@ public class UserData extends BaseIdData implements IRequestData {
         return groups;
     }
 
-    private void readBasicData(HttpServletRequest request) {
-        setTitle(RequestReader.getString(request, "title"));
-        setFirstName(RequestReader.getString(request, "firstName"));
-        setLastName(RequestReader.getString(request, "lastName"));
-        setLocale(new Locale(RequestReader.getString(request, "locale")));
-        setEmail(RequestReader.getString(request, "email"));
-        setStreet(RequestReader.getString(request, "street"));
-        setZipCode(RequestReader.getString(request, "zipCode"));
-        setCity(RequestReader.getString(request, "city"));
-        setCountry(RequestReader.getString(request, "country"));
-        setPhone(RequestReader.getString(request, "phone"));
-        setFax(RequestReader.getString(request, "fax"));
-        setMobile(RequestReader.getString(request, "mobile"));
-        setNotes(RequestReader.getString(request, "notes"));
-        BinaryFileData file = RequestReader.getFile(request, "portrait");
+    private void readBasicData(RequestData rdata) {
+        setTitle(rdata.getString("title"));
+        setFirstName(rdata.getString("firstName"));
+        setLastName(rdata.getString("lastName"));
+        setLocale(new Locale(rdata.getString("locale")));
+        setEmail(rdata.getString("email"));
+        setStreet(rdata.getString("street"));
+        setZipCode(rdata.getString("zipCode"));
+        setCity(rdata.getString("city"));
+        setCountry(rdata.getString("country"));
+        setPhone(rdata.getString("phone"));
+        setFax(rdata.getString("fax"));
+        setMobile(rdata.getString("mobile"));
+        setNotes(rdata.getString("notes"));
+        BinaryFileData file = rdata.getFile("portrait");
         if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringUtil.isNullOrEmpty(file.getContentType())) {
             try {
                 BufferedImage source = ImageUtil.createImage(file.getBytes(), file.getContentType());
@@ -349,13 +335,7 @@ public class UserData extends BaseIdData implements IRequestData {
                     BufferedImage image = ImageUtil.copyImage(source, factor);
                     Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
                     ImageWriter writer = writers.next();
-                    ByteArrayOutputStream bout = new ByteArrayOutputStream();
-                    ImageOutputStream ios = ImageIO.createImageOutputStream(bout);
-                    writer.setOutput(ios);
-                    writer.write(image);
-                    bout.flush();
-                    bout.close();
-                    setPortrait(bout.toByteArray());
+                    setPortrait(ImageUtil.writeImage(writer, image));
                     setPortraitName(file.getFileName());
                 }
             } catch (IOException e) {
@@ -364,53 +344,53 @@ public class UserData extends BaseIdData implements IRequestData {
         }
     }
 
-    private void checkBasics(RequestError error){
+    private void checkBasics(RequestData rdata){
         if (lastName.isEmpty())
-            error.addNotCompleteField("lastName");
+            rdata.addIncompleteField("lastName");
         if (email.isEmpty())
-            error.addNotCompleteField("email");
+            rdata.addIncompleteField("email");
     }
 
     @Override
-    public void readRequestData(HttpServletRequest request, RequestError error) {
-        readBasicData(request);
-        setLogin(RequestReader.getString(request, "login"));
-        setPassword(RequestReader.getString(request, "password"));
-        setApproved(RequestReader.getBoolean(request, "approved"));
-        setEmailVerified(RequestReader.getBoolean(request, "emailVerified"));
-        setGroupIds(RequestReader.getIntegerSet(request, "groupIds"));
+    public void readRequestData(RequestData rdata) {
+        readBasicData(rdata);
+        setLogin(rdata.getString("login"));
+        setPassword(rdata.getString("password"));
+        setApproved(rdata.getBoolean("approved"));
+        setEmailVerified(rdata.getBoolean("emailVerified"));
+        setGroupIds(rdata.getIntegerSet("groupIds"));
         if (login.isEmpty())
-            error.addNotCompleteField("login");
+            rdata.addIncompleteField("login");
         if (isNew() && !hasPassword())
-            error.addNotCompleteField("password");
-        checkBasics(error);
+            rdata.addIncompleteField("password");
+        checkBasics(rdata);
     }
 
-    public void readProfileRequestData(HttpServletRequest request, RequestError error) {
-        readBasicData(request);
-        checkBasics(error);
+    public void readProfileRequestData(RequestData rdata) {
+        readBasicData(rdata);
+        checkBasics(rdata);
     }
 
-    public void readRegistrationRequestData(HttpServletRequest request, RequestError error) {
-        readBasicData(request);
-        Locale locale= SessionReader.getSessionLocale(request);
-        setLogin(RequestReader.getString(request, "login"));
-        String password1 = RequestReader.getString(request, "password1");
-        String password2 = RequestReader.getString(request, "password2");
-        checkBasics(error);
+    public void readRegistrationRequestData(RequestData rdata) {
+        readBasicData(rdata);
+        Locale locale= rdata.getSessionLocale();
+        setLogin(rdata.getString("login"));
+        String password1 = rdata.getString("password1");
+        String password2 = rdata.getString("password2");
+        checkBasics(rdata);
         if (login.isEmpty())
-            error.addNotCompleteField("login");
+            rdata.addIncompleteField("login");
         if (login.length() < UserData.MIN_LOGIN_LENGTH) {
-            error.addErrorField("login");
-            error.addErrorString(Strings._loginLengthError.string(locale));
+            rdata.addFormField("login");
+            rdata.addFormError(Strings._loginLengthError.string(locale));
         }
         if (password1.length() < UserData.MIN_PASSWORD_LENGTH) {
-            error.addErrorField("password1");
-            error.addErrorString(Strings._passwordLengthError.string(locale));
+            rdata.addFormField("password1");
+            rdata.addFormError(Strings._passwordLengthError.string(locale));
         }
         else if (!password1.equals(password2)) {
-            error.addErrorField("password2");
-            error.addErrorString(Strings._passwordsDontMatch.string(locale));
+            rdata.addFormField("password2");
+            rdata.addFormError(Strings._passwordsDontMatch.string(locale));
         }
         else
             setPassword(password1);

@@ -8,9 +8,7 @@
  */
 package de.elbe5.cms.servlet;
 
-import javax.servlet.http.HttpServletRequest;
-
 public interface IRequestData {
 
-    public void readRequestData(HttpServletRequest request, RequestError error);
+    void readRequestData(RequestData rdata);
 }

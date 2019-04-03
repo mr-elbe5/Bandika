@@ -6,13 +6,17 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
+
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.user.UserActions" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
+<%@ page import="de.elbe5.cms.user.UserData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
+    RequestData rdata= RequestData.getRequestData(request);
+    UserData user=rdata.getSessionUser();
+    Locale locale = rdata.getSessionLocale();
+    String url="/user/changePassword/"+user.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -23,10 +27,10 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <cms:form url="/user.ajx" name="changepasswordform" act="<%=UserActions.changePassword%>" ajax="true">
-            <input type="hidden" name="userId" value="<%=SessionReader.getLoginId(request)%>" />
+        <cms:form url="<%=url%>" name="changepasswordform" ajax="true">
+            <input type="hidden" name="userId" value="<%=rdata.getLoginId()%>" />
             <div class="modal-body">
-                <cms:requesterror/>
+                <cms:formerror/>
                 <cms:password name="oldPassword" label="<%=Strings._oldPassword.toString()%>"></cms:password>
                 <cms:password name="newPassword1" label="<%=Strings._newPassword.toString()%>"></cms:password>
                 <cms:password name="newPassword2" label="<%=Strings._retypePassword.toString()%>"></cms:password>

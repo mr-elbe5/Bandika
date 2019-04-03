@@ -7,22 +7,16 @@ import de.elbe5.base.util.FileUtil;
 import de.elbe5.base.util.ImageUtil;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.cms.servlet.IRequestData;
-import de.elbe5.cms.servlet.RequestError;
-import de.elbe5.cms.servlet.RequestReader;
+import de.elbe5.cms.servlet.RequestData;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
-import javax.imageio.stream.ImageOutputStream;
-import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
-public class FileData extends BaseIdData implements IRequestData, Comparable<FileData> {
+public class FileData extends BaseIdData implements IRequestData {
 
     public static int MAX_THUMBNAIL_WIDTH = 200;
     public static int MAX_THUMBNAIL_HEIGHT = 200;
@@ -30,9 +24,7 @@ public class FileData extends BaseIdData implements IRequestData, Comparable<Fil
     protected LocalDateTime creationDate = null;
     protected int folderId = 0;
     protected FolderData folder = null;
-    protected List<Integer> folderIds = new ArrayList<>();
     protected String name = "";
-    protected String path = "";
     protected String displayName = "";
     protected String description = "";
     protected String keywords = "";
@@ -54,8 +46,6 @@ public class FileData extends BaseIdData implements IRequestData, Comparable<Fil
         setId(FileBean.getInstance().getNextId());
         setFolderId(folder.getId());
         setFolder(folder);
-        inheritFolderIdsFromFolder();
-        inheritPathFromFolder();
     }
 
     public LocalDateTime getCreationDate() {
@@ -82,20 +72,6 @@ public class FileData extends BaseIdData implements IRequestData, Comparable<Fil
         this.folder = folder;
     }
 
-    public List<Integer> getFolderIds() {
-        return folderIds;
-    }
-
-    public void setFolderIds(List<Integer> folderIds) {
-        this.folderIds = folderIds;
-    }
-
-    public void inheritFolderIdsFromFolder() {
-        getFolderIds().clear();
-        getFolderIds().addAll(folder.getParentIds());
-        getFolderIds().add(folderId);
-    }
-
     public String getName() {
         return name;
     }
@@ -104,39 +80,12 @@ public class FileData extends BaseIdData implements IRequestData, Comparable<Fil
         this.name = StringUtil.toSafeWebName(name);
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public String getUrl() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public void setPathFromFolderPath(String folderPath) {
-        path = folderPath;
-        if (!path.endsWith("/") && name.length() > 0) {
-            path += '/';
-        }
-        path += name;
-    }
-
-    public void inheritPathFromFolder() {
-        setPathFromFolderPath(folder.getPath());
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getDisplayName() {
-        if (displayName == null || displayName.isEmpty()) {
-            return getName();
-        }
         return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
     }
 
     public String getDescription() {
@@ -224,16 +173,16 @@ public class FileData extends BaseIdData implements IRequestData, Comparable<Fil
     }
 
     @Override
-    public void readRequestData(HttpServletRequest request, RequestError error) {
-        BinaryFileData file = RequestReader.getFile(request, "file");
+    public void readRequestData(RequestData rdata) {
+        BinaryFileData file = rdata.getFile("file");
         if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringUtil.isNullOrEmpty(file.getContentType())) {
             setBytes(file.getBytes());
             setFileSize(file.getBytes().length);
             setName(file.getFileName());
             setContentType(file.getContentType());
             if (isImage()) {
-                int width = RequestReader.getInt(request, "width");
-                int height = RequestReader.getInt(request, "height");
+                int width = rdata.getInt("width");
+                int height = rdata.getInt("height");
                 if (width == getWidth()) {
                     width = 0;
                 }
@@ -263,16 +212,16 @@ public class FileData extends BaseIdData implements IRequestData, Comparable<Fil
                 }
             }
         }
-        String newName = RequestReader.getString(request, "name").trim();
+        String newName = rdata.getString("name").trim();
         if (!newName.isEmpty())
             setName(newName);
-        setDisplayName(RequestReader.getString(request, "displayName").trim());
+        setDisplayName(rdata.getString("displayName").trim());
         if (getDisplayName().isEmpty())
             setDisplayName(getName());
-        setDescription(RequestReader.getString(request, "description"));
-        setKeywords(RequestReader.getString(request, "keywords"));
+        setDescription(rdata.getString("description"));
+        setKeywords(rdata.getString("keywords"));
         if (name.isEmpty()) {
-            error.addNotCompleteField("name");
+            rdata.addIncompleteField("name");
         }
     }
 
@@ -292,14 +241,8 @@ public class FileData extends BaseIdData implements IRequestData, Comparable<Fil
             }
         }
         ImageWriter writer = writers.next();
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        ImageOutputStream ios = ImageIO.createImageOutputStream(bout);
-        writer.setOutput(ios);
-        assert bi != null;
-        writer.write(bi);
-        bout.flush();
-        bout.close();
-        setBytes(bout.toByteArray());
+        assert(bi!=null);
+        setBytes(ImageUtil.writeImage(writer, bi));
         setFileSize(getBytes().length);
         setWidth(bi.getWidth());
         setHeight(bi.getHeight());
@@ -308,19 +251,10 @@ public class FileData extends BaseIdData implements IRequestData, Comparable<Fil
     private void createJpegPreview(BufferedImage image) throws IOException {
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
         ImageWriter writer = writers.next();
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        ImageOutputStream ios = ImageIO.createImageOutputStream(bout);
-        writer.setOutput(ios);
-        writer.write(image);
-        bout.flush();
-        bout.close();
-        setPreviewBytes(bout.toByteArray());
+        assert(image!=null);
+        setPreviewBytes(ImageUtil.writeImage(writer, image));
     }
 
-    @Override
-    public int compareTo(FileData doc) {
-        return getName().compareTo(doc.getName());
-    }
 
 
 }

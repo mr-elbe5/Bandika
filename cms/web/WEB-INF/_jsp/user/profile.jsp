@@ -7,16 +7,17 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
+
 <%@ page import="de.elbe5.cms.user.UserBean" %>
 <%@ page import="de.elbe5.cms.user.UserData" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.user.UserActions" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
-    UserData user = UserBean.getInstance().getUser(SessionReader.getSessionLoginData(request).getId());
+    RequestData rdata=RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
+    UserData user = UserBean.getInstance().getUser(rdata.getSessionUser().getId());
 %>
 <cms:message />
 <section class="contentTop">
@@ -35,7 +36,7 @@
             <cms:line label="<%=Strings._locale.toString()%>"><%=StringUtil.toHtml(user.getLocale().getLanguage())%></cms:line>
             <cms:line label="<%=Strings._notes.toString()%>"><%=StringUtil.toHtml(user.getNotes())%></cms:line>
             <cms:line label="<%=Strings._portrait.toString()%>"><% if (!user.getPortraitName().isEmpty()) {%><img
-                    src="/user.srv?act=<%=UserActions.showPortrait%>&userId=<%=user.getId()%>"
+                    src="/user/showPortrait/<%=user.getId()%>"
                     alt="<%=StringUtil.toHtml(user.getName())%>"/> <%}%></cms:line>
             <h3><%=Strings._address.html(locale)%></h3>
             <cms:line label="<%=Strings._street.toString()%>"><%=StringUtil.toHtml(user.getStreet())%></cms:line>
@@ -53,11 +54,11 @@
         <div class="section">
             <div class="paragraph">
                 <div>
-                    <a class="link" href="#" onclick="return openModalDialog('/user.ajx?act=<%=UserActions.openChangePassword%>');"><%=Strings._changePassword.html(locale)%>
+                    <a class="link" href="#" onclick="return openModalDialog('/user/openChangePassword');"><%=Strings._changePassword.html(locale)%>
                     </a>
                 </div>
                 <div>
-                    <a class="link" href="#" onclick="return openModalDialog('/user.ajx?act=<%=UserActions.openChangeProfile%>');"><%=Strings._changeProfile.html(locale)%>
+                    <a class="link" href="#" onclick="return openModalDialog('/user/openChangeProfile');"><%=Strings._changeProfile.html(locale)%>
                     </a>
                 </div>
             </div>

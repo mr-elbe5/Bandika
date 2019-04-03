@@ -21,7 +21,6 @@ public class FormTag extends BaseTag {
     protected String url="";
     protected String name="";
     protected boolean multi=false;
-    protected String act="";
     protected boolean ajax=false;
 
     public void setUrl(String url) {
@@ -36,16 +35,11 @@ public class FormTag extends BaseTag {
         this.multi = multi;
     }
 
-    public void setAct(String act) {
-        this.act = act;
-    }
-
     public void setAjax(boolean ajax) {
         this.ajax = ajax;
     }
 
     String preHtml="<form action=\"{1}\" method=\"post\" id=\"{2}\" name=\"{3}\" accept-charset=\"UTF-8\"{4}>\n";
-    String actHtml = "<input type=\"hidden\" id=\"act\" name=\"act\" value=\"{1}\"/>\n";
     String postHtml="</form>\n";
     String ajaxHtml="<script type=\"text/javascript\">\n" +
             "  $('#{1}').submit(function (event) {\n" +
@@ -61,8 +55,6 @@ public class FormTag extends BaseTag {
         try {
             Writer writer = getWriter();
             writer.write(StringUtil.format(preHtml, url, name, name, multi ? " enctype=\"multipart/form-data\"" : ""));
-            if (!act.isEmpty())
-                writer.write(StringUtil.format(actHtml, act));
         } catch (Exception e) {
             Log.error("error writing form tag", e);
             throw new JspException(e);

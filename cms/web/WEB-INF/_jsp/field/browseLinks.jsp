@@ -1,13 +1,14 @@
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
+
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.cms.file.FileCache" %>
-<%@ page import="de.elbe5.cms.servlet.RequestReader" %>
 <%@ page import="de.elbe5.cms.page.PageCache" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
-    int callbackNum=RequestReader.getInt(request, "CKEditorFuncNum", -1);
+    RequestData rdata=RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
+    int callbackNum=rdata.getInt("CKEditorFuncNum", -1);
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -32,10 +33,10 @@
             <div class="tab-content" id="pageTabContent">
                 <div class="tab-pane fade show active" id="pages" role="tabpanel" aria-labelledby="pages-tab">
                     <section class="treeSection">
-                        <% if (SessionReader.hasAnyContentRight(request)) { %>
+                        <% if (rdata.hasAnyContentRight()) { %>
                         <ul class="tree filetree">
                             <%
-                                request.setAttribute("pageData", PageCache.getInstance().getHomePage(locale));
+                                rdata.put("pageData", PageCache.getInstance().getHomePage(locale));
                             %>
                             <jsp:include page="/WEB-INF/_jsp/field/pageLinkBrowserFolder.inc.jsp" flush="true"/>
                         </ul>
@@ -45,10 +46,10 @@
                 </div>
                 <div class="tab-pane fade" id="files" role="tabpanel" aria-labelledby="files-tab">
                     <section class="treeSection">
-                        <% if (SessionReader.hasAnyContentRight(request)) { %>
+                        <% if (rdata.hasAnyContentRight()) { %>
                         <ul class="tree filetree">
                             <%
-                                request.setAttribute("folderData",FileCache.getInstance().getRootFolder());
+                                rdata.put("folderData",FileCache.getInstance().getRootFolder());
                             %>
                             <jsp:include page="/WEB-INF/_jsp/field/fileLinkBrowserFolder.inc.jsp" flush="true"/>
                         </ul>

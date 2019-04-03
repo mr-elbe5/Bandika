@@ -10,12 +10,8 @@ package de.elbe5.cms.timer;
 
 import de.elbe5.base.data.BaseData;
 import de.elbe5.cms.application.Strings;
-import de.elbe5.cms.servlet.IRequestData;
-import de.elbe5.cms.servlet.RequestError;
-import de.elbe5.cms.servlet.RequestReader;
-import de.elbe5.cms.servlet.SessionReader;
+import de.elbe5.cms.servlet.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
 /**
@@ -25,6 +21,7 @@ import java.time.LocalDateTime;
 public abstract class TimerTaskData extends BaseData implements IRequestData, Cloneable {
 
 
+    protected String displayName="";
     protected TimerInterval interval = TimerInterval.CONTINOUS;
     protected int day = 0;
     protected int hour = 0;
@@ -41,7 +38,13 @@ public abstract class TimerTaskData extends BaseData implements IRequestData, Cl
 
     public abstract String getName();
 
-    public abstract String getDisplayName() ;
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 
     public TimerInterval getInterval() {
         return interval;
@@ -174,19 +177,19 @@ public abstract class TimerTaskData extends BaseData implements IRequestData, Cl
     }
 
     @Override
-    public void readRequestData(HttpServletRequest request, RequestError error) {
-        setInterval(TimerInterval.valueOf(RequestReader.getString(request, "interval")));
-        setDay(RequestReader.getInt(request, "day"));
-        setHour(RequestReader.getInt(request, "hour"));
-        setMinute(RequestReader.getInt(request, "minute"));
-        setActive(RequestReader.getBoolean(request, "active"));
-        setRegisterExecution(RequestReader.getBoolean(request, "registerExecution"));
+    public void readRequestData(RequestData rdata) {
+        setInterval(TimerInterval.valueOf(rdata.getString("interval")));
+        setDay(rdata.getInt("day"));
+        setHour(rdata.getInt("hour"));
+        setMinute(rdata.getInt("minute"));
+        setActive(rdata.getBoolean("active"));
+        setRegisterExecution(rdata.getBoolean("registerExecution"));
         if (interval!=TimerInterval.CONTINOUS && (day==0 || (hour < 0 || hour >= 24) || (minute < 0 || minute >= 60))){
-            error.addErrorString(Strings._timerSettingsError.string(SessionReader.getSessionLocale(request)));
-            error.addErrorField("interval");
-            error.addErrorField("day");
-            error.addErrorField("hour");
-            error.addErrorField("minute");
+            rdata.addFormError(Strings._timerSettingsError.string(rdata.getSessionLocale()));
+            rdata.addFormField("interval");
+            rdata.addFormField("day");
+            rdata.addFormField("hour");
+            rdata.addFormField("minute");
         }
     }
 

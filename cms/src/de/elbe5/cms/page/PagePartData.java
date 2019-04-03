@@ -10,13 +10,9 @@ package de.elbe5.cms.page;
 
 import de.elbe5.base.data.BaseIdData;
 import de.elbe5.cms.field.*;
-import de.elbe5.cms.servlet.RequestError;
+import de.elbe5.cms.servlet.*;
 import de.elbe5.cms.template.TemplateData;
-import de.elbe5.cms.servlet.IRequestData;
-import de.elbe5.cms.servlet.RequestReader;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -223,21 +219,22 @@ public class PagePartData extends BaseIdData implements IRequestData, Comparable
         this.pageIds = pageIds;
     }
 
-    public boolean executePagePartMethod(String method, HttpServletRequest request, HttpServletResponse response) {
-        return true;
+    public IActionResult executePagePartMethod(String method, RequestData rdata) {
+        //todo
+        return new ErrorActionResult(ResponseCode.OK);
     }
 
     @Override
-    public void readRequestData(HttpServletRequest request, RequestError error) {
+    public void readRequestData(RequestData rdata) {
         for (Field field : getFields().values()) {
-            field.readRequestData(request, error);
+            field.readRequestData(rdata);
         }
     }
 
-    public void readPagePartSettingsData(HttpServletRequest request) {
-        setFlexClass(RequestReader.getString(request, "flexClass"));
-        setCssClasses(RequestReader.getString(request, "cssClasses"));
-        setScript(RequestReader.getString(request, "script"));
+    public void readPagePartSettingsData(RequestData rdata) {
+        setFlexClass(rdata.getString("flexClass"));
+        setCssClasses(rdata.getString("cssClasses"));
+        setScript(rdata.getString("script"));
     }
 
     public void prepareCopy() {

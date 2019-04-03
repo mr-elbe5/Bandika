@@ -10,7 +10,7 @@ public enum PagePartFlexClass {
     COL9("col-md-9"),
     COL12("col-md-12");
 
-    private String cssClass="";
+    private String cssClass;
 
     PagePartFlexClass(String css){
         cssClass=css;

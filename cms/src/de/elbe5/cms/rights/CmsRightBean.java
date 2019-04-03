@@ -10,7 +10,6 @@ package de.elbe5.cms.rights;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
-import de.elbe5.cms.user.User2GroupRelation;
 import de.elbe5.cms.user.UserRightsData;
 
 import java.sql.Connection;
@@ -28,7 +27,7 @@ public class CmsRightBean extends RightBean {
         return (CmsRightBean) RightBean.getInstance();
     }
 
-    private static String GET_GROUPS_SQL="SELECT group_id FROM t_user2group WHERE user_id=? AND relation=?";
+    private static String GET_GROUPS_SQL="SELECT group_id FROM t_user2group WHERE user_id=?";
     private static String GET_SYSTEM_RIGHTS_SQL="select name, value from t_system_right where group_id in({1})";
     private static String GET_PAGE_RIGHTS_SQL="select page_id, value from t_page_right where group_id in({1})";
     public UserRightsData getUserRights(int userId) {
@@ -38,7 +37,6 @@ public class CmsRightBean extends RightBean {
             List<Integer> groupIds = new ArrayList<>();
             pst = con.prepareStatement(GET_GROUPS_SQL);
             pst.setInt(1, userId);
-            pst.setString(2, User2GroupRelation.RIGHTS.name());
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     groupIds.add(rs.getInt(1));

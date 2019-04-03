@@ -9,22 +9,24 @@
 <%@ page import="de.elbe5.base.util.StringUtil" %>
 <%@ page import="de.elbe5.cms.rights.Right" %>
 <%@ page import="de.elbe5.cms.rights.SystemZone" %>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
+
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.util.List" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
 <%@ page import="de.elbe5.cms.user.GroupData" %>
-<%@ page import="de.elbe5.cms.user.UserActions" %>
 <%@ page import="de.elbe5.cms.user.UserBean" %>
 <%@ page import="de.elbe5.cms.user.UserData" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
-    GroupData group = (GroupData) SessionReader.getSessionObject(request, "groupData");
+    RequestData rdata= RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
+    GroupData group = (GroupData) rdata.getSessionObject("groupData");
     assert group != null;
     UserBean ubean = UserBean.getInstance();
     List<UserData> users = ubean.getAllUsers();
     String name,label;
+    String url="/user/saveGroup/"+group.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -35,12 +37,12 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <cms:form url="/user.ajx" name="groupform" act="<%=UserActions.saveGroup%>" ajax="true">
+        <cms:form url="<%=url%>" name="groupform" ajax="true">
             <div class="modal-body">
-                <cms:requesterror/>
+                <cms:formerror/>
                 <h3><%=Strings._settings.html(locale)%></h3>
                 <cms:line label="<%=Strings._id.toString()%>"><%=Integer.toString(group.getId())%></cms:line>
-                <cms:text name="name" label="<%=Strings._name.toString()%>" required="true"><%=StringUtil.toHtml(group.getName())%></cms:text>
+                <cms:text name="name" label="<%=Strings._name.toString()%>" required="true" value="<%=StringUtil.toHtml(group.getName())%>" />
                 <cms:textarea name="notes" label="<%=Strings._notes.toString()%>" height="5rem"><%=StringUtil.toHtml(group.getNotes())%></cms:textarea>
                 <h3><%=Strings._rights.html(locale)%></h3>
                 <cms:line label="<%=Strings._id.toString()%>"><%=Strings._rights.html(locale)%></cms:line>

@@ -32,7 +32,8 @@ public abstract class DbBean {
     }
 
     protected boolean rollbackTransaction(Connection con) {
-        return DbConnector.getInstance().rollbackTransaction(con, null);
+        DbConnector.getInstance().rollbackTransaction(con, null);
+        return false;
     }
 
     protected boolean rollbackTransaction(Connection con, Exception e) {

@@ -6,15 +6,14 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="de.elbe5.cms.application.AdminActions" %>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
-<%@ page import="de.elbe5.cms.servlet.RequestReader" %>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
 <%@ page import="de.elbe5.cms.application.Statics" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
-<%Locale locale = SessionReader.getSessionLocale(request);%>
+<%RequestData rdata=RequestData.getRequestData(request);
+Locale locale = rdata.getSessionLocale();%>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
@@ -24,12 +23,12 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <cms:form url="/admin.ajx" name="executeDbScript" act="<%=AdminActions.executeDatabaseScript%>">
+        <cms:form url="/admin/executeDatabaseScript" name="executeDbScript" >
             <div class="modal-body">
-                <cms:requesterror/>
+                <cms:formerror/>
                 <cms:file name="file" label="<%=Strings._file.toString()%>" />
                 <cms:editor name="script" label="<%=Strings._script.toString()%>" type="pgsql" hint="<%=Strings._sqlHint.toString()%>" height="20rem" required="true">
-                    <%=StringUtil.toHtml(RequestReader.getString(request, "script"))%>
+                    <%=StringUtil.toHtml(rdata.getString("script"))%>
                 </cms:editor>
             </div>
             <div class="modal-footer">
@@ -47,7 +46,7 @@
                 event.preventDefault();
                 $('#script').val(editor.getSession().getValue());
                 var params = $this.serialize();
-                postByAjax('/admin.ajx', params, '<%=Statics.MODAL_DIALOG_JQID%>');
+                postByAjax('/admin/executeDatabaseScript', params, '<%=Statics.MODAL_DIALOG_JQID%>');
             });
             $('#file').change(function(){
                 if (this.files){

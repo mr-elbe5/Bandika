@@ -7,24 +7,25 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
-<%@ page import="de.elbe5.cms.servlet.RequestReader" %>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
+
 <%@ page import="de.elbe5.cms.template.TemplateData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.page.PagePartActions" %>
 <%@ page import="de.elbe5.cms.template.TemplateBean" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
 <%@ page import="de.elbe5.cms.page.PagePartFlexClass" %>
 <%@ page import="de.elbe5.cms.application.Statics" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
-    int pageId = RequestReader.getInt(request, "pageId");
-    String sectionName = RequestReader.getString(request, "sectionName");
-    int partId = RequestReader.getInt(request, "partId");
-    boolean addBelow=RequestReader.getBoolean(request,"addBelow");
+    RequestData rdata=RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
+    int pageId = rdata.getId();
+    String sectionName = rdata.getString("sectionName");
+    int partId = rdata.getInt("partId");
+    boolean addBelow=rdata.getBoolean("addBelow", true);
     List<TemplateData> templates = TemplateBean.getInstance().getAllTemplates(TemplateData.TYPE_PART);
+    String url="/page/addPagePart/"+pageId;
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -35,14 +36,13 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <cms:form url="/pagepart.ajx" name="partform" act="<%=PagePartActions.addPagePart%>" ajax="true">
+        <cms:form url="<%=url%>" name="partform" ajax="true">
         <div class="modal-body">
-            <cms:requesterror/>
-            <input type="hidden" name="pageId" value="<%=pageId%>" />
+            <cms:formerror/>
             <input type="hidden" name="partId" value="<%=partId%>" />
             <input type="hidden" name="sectionName" value="<%=sectionName%>" />
             <cms:line label="<%=Strings._position.toString()%>" padded="true">
-                <cms:radio name="below" value="false" ><%=Strings._above.html(locale)%></cms:radio>&nbsp;<cms:radio name="below" value="true" checked="true"><%=Strings._below.html(locale)%></cms:radio>
+                <cms:radio name="below" value="false" checked="<%=!addBelow%>"><%=Strings._above.html(locale)%></cms:radio>&nbsp;<cms:radio name="below" value="true" checked="<%=addBelow%>"><%=Strings._below.html(locale)%></cms:radio>
             </cms:line>
             <cms:select name="flexClass" label="<%=Strings._flexClass.toString()%>" required="true">
                 <% String selection= Statics.DEFAULT_CLASS.name();

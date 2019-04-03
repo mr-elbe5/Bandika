@@ -6,29 +6,31 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="de.elbe5.cms.servlet.SessionReader" %>
+
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.cms.rights.Right" %>
 <%@ page import="de.elbe5.cms.page.PageData" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    Locale locale = SessionReader.getSessionLocale(request);
-    PageData pageData = (PageData) request.getAttribute("pageData");
+    RequestData rdata= RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();
+    PageData pageData = (PageData) rdata.get("pageData");
     assert pageData !=null;
 %>
-<% if (SessionReader.hasContentRight(request, pageData.getId(), Right.READ)) {%>
+<% if (rdata.hasContentRight(pageData.getId(), Right.READ)) {%>
 <li class="open">
-    <a id="<%=pageData.getId()%>"><%=pageData.getDisplayName()%></a>
-    <a class="fa fa-check" title="<%=Strings._select.html(locale)%>" href="" onclick="return ckLinkCallback('<%=pageData.getUrl()%>');">
+    <a id="<%=pageData.getId()%>"><%=pageData.getName()%></a>
+    <a class="fa fa-check" title="<%=Strings._select.html(locale)%>" href="" onclick="return ckLinkCallback('/page/show/<%=pageData.getId()%>');">
     </a>
     <ul>
     <% if (!pageData.getSubPages().isEmpty()){
         for (PageData subPage : pageData.getSubPages()){
-            request.setAttribute("pageData",subPage); %>
+            rdata.put("pageData",subPage); %>
         <jsp:include  page="/WEB-INF/_jsp/field/pageLinkBrowserFolder.inc.jsp" flush="true"/>
         <%}
-        request.setAttribute("pageData", pageData);%>
+        rdata.put("pageData", pageData);%>
     <%}%>
     </ul>
 </li>

@@ -6,12 +6,14 @@
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
-<%@ page import="de.elbe5.cms.servlet.ActionSet" %>
 <%@ page import="de.elbe5.cms.page.PageData" %>
+<%@ page import="de.elbe5.cms.servlet.RequestData" %>
+<%@ page import="de.elbe5.cms.application.Statics" %>
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    PageData pageData = (PageData) request.getAttribute(ActionSet.KEY_PAGE);
+    RequestData rdata= RequestData.getRequestData(request);
+    PageData pageData = (PageData) rdata.get(Statics.KEY_PAGE);
     assert (pageData!=null);
 %>
 <cms:page/>

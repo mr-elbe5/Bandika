@@ -13,7 +13,7 @@ import de.elbe5.base.util.StringUtil;
 import de.elbe5.cms.page.PageCache;
 import de.elbe5.cms.page.PageData;
 import de.elbe5.cms.application.Strings;
-import de.elbe5.cms.servlet.SessionReader;
+import de.elbe5.cms.servlet.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -25,8 +25,9 @@ public class FooterNavTag extends BaseTag {
     public int doStartTag() {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+            RequestData rdata = RequestData.getRequestData(request);
             JspWriter writer = getContext().getOut();
-            Locale locale= SessionReader.getSessionLocale(request);
+            Locale locale= rdata.getSessionLocale();
 
             PageData rootPage = PageCache.getInstance().getHomePage(locale);
             writer.write("<ul class=\"nav\">");
@@ -34,10 +35,10 @@ public class FooterNavTag extends BaseTag {
                     Strings._copyright.html(locale));
             if (rootPage != null){
                 for (PageData page : rootPage.getSubPages()) {
-                    if (page.isInFooter() && page.isVisibleToUser(request)) {
-                        StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"{1}\">{2}</a></li>",
-                                page.getUrl(),
-                                StringUtil.toHtml(page.getDisplayName()));
+                    if (page.isInFooter() && page.isVisibleToUser(rdata)) {
+                        StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/page/show/{1}\">{2}</a></li>",
+                                Integer.toString(page.getId()),
+                                StringUtil.toHtml(page.getName()));
                     }
                 }
             }

@@ -9,17 +9,17 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                 <cms:head />
                 <link rel="shortcut icon" href="/favicon.ico"/>
-                <link rel="stylesheet" href="/_statics/css/bootstrap.min.css" />
-                <link rel="stylesheet" href="/_statics/css/cms.css"/>
-                <link rel="stylesheet" href="/_statics/css/page.css"/>
-                <script type="text/javascript" src="/_statics/js/jquery-1.12.4.min.js"></script>
-                <script type="text/javascript" src="/_statics/js/bootstrap.bundle.min.js"></script>
-                <script type="text/javascript" src="/_statics/js/bootstrap.tree.js"></script>
-                <script type="text/javascript" src="/_statics/ckeditor/ckeditor.js"></script>
-                <script type="text/javascript" src="/_statics/ckeditor/adapters/jquery.js"></script>
-                <script type="text/javascript" src="/_statics/js/ace.js"></script>
-                <script type="text/javascript" src="/_statics/js/cms.js"></script>
-                <script type="text/javascript" src="/_statics/js/page.js"></script>
+                <link rel="stylesheet" href="/css/bootstrap.min.css" />
+                <link rel="stylesheet" href="/css/cms.css"/>
+                <link rel="stylesheet" href="/css/page.css"/>
+                <script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>
+                <script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
+                <script type="text/javascript" src="/js/bootstrap.tree.js"></script>
+                <script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
+                <script type="text/javascript" src="/ckeditor/adapters/jquery.js"></script>
+                <script type="text/javascript" src="/js/ace.js"></script>
+                <script type="text/javascript" src="/js/cms.js"></script>
+                <script type="text/javascript" src="/js/page.js"></script>
             </head>
             <body>
                 <header>
@@ -29,7 +29,7 @@
                                 <cms:sysnav/>
                             </section>
                             <section class="col-12 logo">
-                                <a href="/"><img src="/_statics/img/logo-light.png" alt="" /></a>
+                                <a href="/"><img src="/img/logo-light.png" alt="" /></a>
                             </section>
                         </div>
                         <div class="menuheader row">
