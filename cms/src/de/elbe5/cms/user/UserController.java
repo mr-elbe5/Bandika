@@ -9,7 +9,7 @@
 package de.elbe5.cms.user;
 
 import de.elbe5.base.data.BaseIdData;
-import de.elbe5.base.data.BinaryFileData;
+import de.elbe5.base.data.BinaryFile;
 import de.elbe5.base.data.Locales;
 import de.elbe5.cms.application.MailHelper;
 import de.elbe5.cms.application.Statics;
@@ -68,7 +68,7 @@ public class UserController extends Controller {
         if (captcha == null) {
             return notFound();
         }
-        BinaryFileData data = UserSecurity.getCaptcha(captcha);
+        BinaryFile data = UserSecurity.getCaptcha(captcha);
         assert data != null;
         return new BinaryActionResult(data, false);
     }
@@ -255,7 +255,7 @@ public class UserController extends Controller {
 
     public IActionResult showPortrait(RequestData rdata) {
         int userId = rdata.getId();
-        BinaryFileData file = UserBean.getInstance().getBinaryPortraitData(userId);
+        BinaryFile file = UserBean.getInstance().getBinaryPortraitData(userId);
         if (file == null)
             return notFound();
         return new BinaryActionResult(file, false);

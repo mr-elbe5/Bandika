@@ -9,8 +9,8 @@
 package de.elbe5.cms.file;
 
 import de.elbe5.base.data.BaseIdData;
-import de.elbe5.base.data.BinaryFileData;
-import de.elbe5.base.data.BinaryFileStreamData;
+import de.elbe5.base.data.BinaryFile;
+import de.elbe5.base.data.BinaryStreamFile;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.cms.application.Statics;
@@ -128,7 +128,7 @@ public class FileController extends Controller {
         FolderData parentNode = FolderBean.getInstance().getFolder(folderId);
         int numFiles = rdata.getInt("numFiles");
         for (int i = 0; i < numFiles; i++) {
-            BinaryFileData file = rdata.getFile("file_" + i);
+            BinaryFile file = rdata.getFile("file_" + i);
             FileData data = new FileData();
             if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringUtil.isNullOrEmpty(file.getContentType())) {
                 data.setBytes(file.getBytes());
@@ -191,7 +191,7 @@ public class FileController extends Controller {
         if (!data.getFolder().isAnonymous() && !rdata.hasContentRight(fileId, Right.READ)) {
             return forbidden(rdata);
         }
-        BinaryFileStreamData streamData = FileBean.getInstance().getBinaryFileStreamData(data.getId());
+        BinaryStreamFile streamData = FileBean.getInstance().getBinaryStreamFile(data.getId());
         if (streamData==null)
             return noData(rdata);
         return new BinaryStreamActionResult(streamData, false);
@@ -204,7 +204,7 @@ public class FileController extends Controller {
         if (!rdata.hasContentRight(data.getFolderId(), Right.READ)) {
             return forbidden(rdata);
         }
-        BinaryFileStreamData streamData = FileBean.getInstance().getBinaryFileStreamData(data.getId());
+        BinaryStreamFile streamData = FileBean.getInstance().getBinaryStreamFile(data.getId());
         if (streamData == null)
             return noData(rdata);
         return new BinaryStreamActionResult(streamData, true);
@@ -220,7 +220,7 @@ public class FileController extends Controller {
         if (!data.getFolder().isAnonymous() && !rdata.hasContentRight(data.getFolderId(), Right.READ)) {
             return forbidden(rdata);
         }
-        BinaryFileData file = FileBean.getInstance().getBinaryPreviewData(fileId);
+        BinaryFile file = FileBean.getInstance().getBinaryPreviewData(fileId);
         if (file == null)
             return noData(rdata);
         return new BinaryActionResult(file, false);

@@ -9,7 +9,7 @@
 package de.elbe5.cms.user;
 
 import de.elbe5.base.crypto.PBKDF2Encryption;
-import de.elbe5.base.data.BinaryFileData;
+import de.elbe5.base.data.BinaryFile;
 import de.elbe5.base.log.Log;
 
 import javax.imageio.ImageIO;
@@ -92,7 +92,7 @@ public class UserSecurity {
         return chars.charAt(random.nextInt(chars.length()));
     }
 
-    public static BinaryFileData getCaptcha(String captcha) {
+    public static BinaryFile getCaptcha(String captcha) {
         int[] ints = getCaptchaInts(captcha);
         if (ints==null)
             return null;
@@ -103,7 +103,7 @@ public class UserSecurity {
         Color yellowColor = new Color(255, 255, 0);
         Color blueColor = new Color(127, 127, 255);
         Color redColor = new Color(255, 127, 127);
-        BinaryFileData data;
+        BinaryFile data;
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = bufferedImage.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -131,7 +131,7 @@ public class UserSecurity {
         g2d.dispose();
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            data = new BinaryFileData();
+            data = new BinaryFile();
             data.setContentType("image/png");
             ImageIO.write(bufferedImage, "png", out);
             out.close();

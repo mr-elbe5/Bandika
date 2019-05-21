@@ -8,8 +8,8 @@
  */
 package de.elbe5.cms.file;
 
-import de.elbe5.base.data.BinaryFileData;
-import de.elbe5.base.data.BinaryFileStreamData;
+import de.elbe5.base.data.BinaryFile;
+import de.elbe5.base.data.BinaryStreamFile;
 import de.elbe5.base.log.Log;
 import de.elbe5.cms.database.DbBean;
 
@@ -212,17 +212,17 @@ public class FileBean extends DbBean {
 
     private static String GET_PREVIEW_SQL="SELECT name, preview_bytes FROM t_file WHERE id=?";
 
-    public BinaryFileData getBinaryPreviewData(int id){
+    public BinaryFile getBinaryPreviewData(int id){
         Connection con = getConnection();
         PreparedStatement pst = null;
-        BinaryFileData data = null;
+        BinaryFile data = null;
         try {
             pst = con.prepareStatement(GET_PREVIEW_SQL);
             pst.setInt(1, id);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
-                    data = new BinaryFileData();
+                    data = new BinaryFile();
                     data.setFileName(rs.getString(i++));
                     data.setContentType("image/jpg");
                     data.setBytes(rs.getBytes(i));
@@ -242,17 +242,17 @@ public class FileBean extends DbBean {
     
     private static String GET_FILE_STREAM_SQL="SELECT name,content_type,file_size,bytes FROM t_file WHERE id=?";
     
-    public BinaryFileStreamData getBinaryFileStreamData(int id){
+    public BinaryStreamFile getBinaryStreamFile(int id){
         Connection con = getConnection();
         PreparedStatement pst = null;
-        BinaryFileStreamData data = null;
+        BinaryStreamFile data = null;
         try {
             pst = con.prepareStatement(GET_FILE_STREAM_SQL);
             pst.setInt(1, id);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
-                    data = new BinaryFileStreamData();
+                    data = new BinaryStreamFile();
                     data.setFileName(rs.getString(i++));
                     data.setContentType(rs.getString(i++));
                     data.setFileSize(rs.getInt(i++));
@@ -271,17 +271,17 @@ public class FileBean extends DbBean {
     }
 
     private static String GET_FILE_DATA_SQL="SELECT name,content_type,file_size,bytes FROM t_file WHERE id=?";
-    public BinaryFileData getBinaryFileData(int id) throws SQLException {
+    public BinaryFile getBinaryFile(int id) throws SQLException {
         Connection con = getConnection();
         PreparedStatement pst = null;
-        BinaryFileData data = null;
+        BinaryFile data = null;
         try {
             pst = con.prepareStatement(GET_FILE_DATA_SQL);
             pst.setInt(1, id);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
-                    data = new BinaryFileData();
+                    data = new BinaryFile();
                     data.setFileName(rs.getString(i++));
                     data.setContentType(rs.getString(i++));
                     data.setFileSize(rs.getInt(i++));

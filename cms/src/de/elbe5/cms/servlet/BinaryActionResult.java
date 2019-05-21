@@ -1,6 +1,6 @@
 package de.elbe5.cms.servlet;
 
-import de.elbe5.base.data.BinaryFileData;
+import de.elbe5.base.data.BinaryFile;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
@@ -9,10 +9,10 @@ import java.io.OutputStream;
 
 public class BinaryActionResult implements IActionResult{
 
-    private BinaryFileData data;
+    private BinaryFile data;
     private boolean forceDownload;
 
-    public BinaryActionResult(BinaryFileData data, boolean forceDownload){
+    public BinaryActionResult(BinaryFile data, boolean forceDownload){
         this.data=data;
         this.forceDownload=forceDownload;
     }

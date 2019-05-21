@@ -1,6 +1,6 @@
 package de.elbe5.cms.servlet;
 
-import de.elbe5.base.data.BinaryFileData;
+import de.elbe5.base.data.BinaryFile;
 import de.elbe5.base.data.KeyValueMap;
 import de.elbe5.base.data.Locales;
 import de.elbe5.base.log.Log;
@@ -180,7 +180,7 @@ public class RequestData extends KeyValueMap {
                 String name = part.getName();
                 String fileName = getFileName(part);
                 if (fileName != null) {
-                    BinaryFileData file = getMultiPartFile(part, fileName);
+                    BinaryFile file = getMultiPartFile(part, fileName);
                     if (file != null) {
                         put(name, file);
                     }
@@ -228,9 +228,9 @@ public class RequestData extends KeyValueMap {
         return null;
     }
 
-    private BinaryFileData getMultiPartFile(Part part, String fileName) {
+    private BinaryFile getMultiPartFile(Part part, String fileName) {
         try {
-            BinaryFileData file = new BinaryFileData();
+            BinaryFile file = new BinaryFile();
             file.setFileName(fileName);
             file.setContentType(part.getContentType());
             file.setFileSize((int) part.getSize());

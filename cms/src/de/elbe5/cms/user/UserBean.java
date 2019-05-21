@@ -8,7 +8,7 @@
  */
 package de.elbe5.cms.user;
 
-import de.elbe5.base.data.BinaryFileData;
+import de.elbe5.base.data.BinaryFile;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.cms.configuration.Configuration;
@@ -286,17 +286,17 @@ public class UserBean extends DbBean {
     }
 
     private static String GET_PORTRAIT_SQL="SELECT portrait_name, portrait FROM t_user WHERE id=?";
-    public BinaryFileData getBinaryPortraitData(int id) {
+    public BinaryFile getBinaryPortraitData(int id) {
         Connection con = getConnection();
         PreparedStatement pst = null;
-        BinaryFileData data = null;
+        BinaryFile data = null;
         try {
             pst = con.prepareStatement(GET_PORTRAIT_SQL);
             pst.setInt(1, id);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
-                    data = new BinaryFileData();
+                    data = new BinaryFile();
                     data.setFileName(rs.getString(i++));
                     data.setContentType("image/jpeg");
                     data.setBytes(rs.getBytes(i));

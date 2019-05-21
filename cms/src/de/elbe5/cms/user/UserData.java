@@ -9,7 +9,7 @@
 package de.elbe5.cms.user;
 
 import de.elbe5.base.data.BaseIdData;
-import de.elbe5.base.data.BinaryFileData;
+import de.elbe5.base.data.BinaryFile;
 import de.elbe5.base.data.Locales;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.ImageUtil;
@@ -326,7 +326,7 @@ public class UserData extends BaseIdData implements IRequestData {
         setFax(rdata.getString("fax"));
         setMobile(rdata.getString("mobile"));
         setNotes(rdata.getString("notes"));
-        BinaryFileData file = rdata.getFile("portrait");
+        BinaryFile file = rdata.getFile("portrait");
         if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringUtil.isNullOrEmpty(file.getContentType())) {
             try {
                 BufferedImage source = ImageUtil.createImage(file.getBytes(), file.getContentType());

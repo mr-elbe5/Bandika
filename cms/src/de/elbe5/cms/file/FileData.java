@@ -1,7 +1,7 @@
 package de.elbe5.cms.file;
 
 import de.elbe5.base.data.BaseIdData;
-import de.elbe5.base.data.BinaryFileData;
+import de.elbe5.base.data.BinaryFile;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.FileUtil;
 import de.elbe5.base.util.ImageUtil;
@@ -174,7 +174,7 @@ public class FileData extends BaseIdData implements IRequestData {
 
     @Override
     public void readRequestData(RequestData rdata) {
-        BinaryFileData file = rdata.getFile("file");
+        BinaryFile file = rdata.getFile("file");
         if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringUtil.isNullOrEmpty(file.getContentType())) {
             setBytes(file.getBytes());
             setFileSize(file.getBytes().length);
