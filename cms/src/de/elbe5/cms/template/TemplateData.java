@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -10,8 +10,8 @@ package de.elbe5.cms.template;
 
 import de.elbe5.base.data.BaseData;
 import de.elbe5.cms.application.ApplicationPath;
-import de.elbe5.cms.servlet.IRequestData;
-import de.elbe5.cms.servlet.RequestData;
+import de.elbe5.cms.request.IRequestData;
+import de.elbe5.cms.request.RequestData;
 
 import java.io.Serializable;
 
@@ -22,15 +22,16 @@ public class TemplateData extends BaseData implements IRequestData, Serializable
     public static final String TYPE_PAGE = "PAGE";
     public static final String TYPE_PART = "PART";
 
-    public static final String JSP_HEAD="" +
+    public static final String JSP_HEAD = "" +
             "<%response.setContentType(\"text/html;charset=UTF-8\");%>\n" +
+            "<%@ page trimDirectiveWhitespaces=\"true\" %>" +
             "<%@ taglib uri=\"/WEB-INF/cmstags.tld\" prefix=\"cms\" %>\n";
 
-    public static String getTemplatePath(String type, String name){
+    public static String getTemplatePath(String type, String name) {
         return ApplicationPath.getAppROOTPath() + "/WEB-INF/_jsp/_templates/" + type + "/" + name + ".jsp";
     }
 
-    public static String getTemplateUrl(String type, String name){
+    public static String getTemplateUrl(String type, String name) {
         return "/WEB-INF/_jsp/_templates/" + type + "/" + name + ".jsp";
     }
 
@@ -60,7 +61,7 @@ public class TemplateData extends BaseData implements IRequestData, Serializable
     }
 
     public String getFilePath() {
-        return getTemplatePath(getType(),getName());
+        return getTemplatePath(getType(), getName());
     }
 
     public String getDisplayName() {
@@ -84,7 +85,7 @@ public class TemplateData extends BaseData implements IRequestData, Serializable
     }
 
     public String getJspCode() {
-        return JSP_HEAD+code;
+        return JSP_HEAD + code;
     }
 
     public void setCode(String code) {

@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -9,8 +9,8 @@
 package de.elbe5.cms.search;
 
 import de.elbe5.base.log.Log;
-import de.elbe5.cms.database.DbBean;
 import de.elbe5.cms.application.ApplicationPath;
+import de.elbe5.cms.database.DbBean;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -59,7 +59,7 @@ public class SearchBean extends DbBean {
         }
     }
 
-    protected void ensureDirectory(String path) throws Exception{
+    protected void ensureDirectory(String path) throws Exception {
         File f = new File(path);
         if (!f.exists()) {
             if (!f.mkdir())
@@ -86,7 +86,8 @@ public class SearchBean extends DbBean {
         return new IndexWriter(dir, iwc);
     }
 
-    private static String INDEX_PAGES_SQL="SELECT id,display_name,description,author_name,keywords,search_content FROM t_page";
+    private static String INDEX_PAGES_SQL = "SELECT id,name,description,author_name,keywords,search_content,anonymous FROM t_page";
+
     protected void indexPages(IndexWriter writer) throws Exception {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -102,7 +103,8 @@ public class SearchBean extends DbBean {
                 data.setDescription(rs.getString(i++));
                 data.setAuthorName(rs.getString(i++));
                 data.setKeywords(rs.getString(i++));
-                data.setContent(rs.getString(i));
+                data.setContent(rs.getString(i++));
+                data.setAnonymous(rs.getBoolean(i));
                 data.setDoc();
                 writer.addDocument(data.getDoc());
                 count++;
@@ -121,7 +123,8 @@ public class SearchBean extends DbBean {
         }
     }
 
-    private static String INDEX_USERS_SQL="SELECT id,first_name,last_name,email FROM t_user";
+    private static String INDEX_USERS_SQL = "SELECT id,first_name,last_name,email FROM t_user";
+
     protected void indexUsers(IndexWriter writer) throws Exception {
         Connection con = getConnection();
         PreparedStatement pst = null;

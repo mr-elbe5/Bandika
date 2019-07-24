@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -15,10 +15,11 @@ import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.cms.application.Statics;
 import de.elbe5.cms.application.Strings;
+import de.elbe5.cms.request.*;
 import de.elbe5.cms.rights.Right;
 import de.elbe5.cms.rights.RightsCache;
 import de.elbe5.cms.rights.SystemZone;
-import de.elbe5.cms.servlet.*;
+import de.elbe5.cms.servlet.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,18 +28,24 @@ public class FileController extends Controller {
 
     public static final String KEY = "file";
 
-    private static FileController instance=new FileController();
+    private static FileController instance = new FileController();
 
     public static FileController getInstance() {
         return instance;
     }
 
     @Override
-    public String getKey(){
+    public String getKey() {
         return KEY;
     }
 
     /********* file *************/
+
+    public IActionResult openFileAdministration(RequestData rdata) {
+        if (!rdata.hasAnyContentRight())
+            return forbidden(rdata);
+        return openAdminPage(rdata, "/WEB-INF/_jsp/file/fileAdministration.jsp", Strings._fileAdministration.string(rdata.getSessionLocale()));
+    }
 
     public IActionResult openCreateFolder(RequestData rdata) {
         int parentId = rdata.getInt("parentId");
@@ -58,7 +65,7 @@ public class FileController extends Controller {
         if (!rdata.hasContentRight(folderId, Right.EDIT))
             return forbidden(rdata);
         FolderData data = FolderBean.getInstance().getFolder(folderId);
-        if (data==null)
+        if (data == null)
             return noData(rdata);
         rdata.setSessionObject("folderData", data);
         return showEditFolder();
@@ -83,7 +90,7 @@ public class FileController extends Controller {
         FileCache.getInstance().setDirty();
         RightsCache.getInstance().setDirty();
         rdata.setMessage(Strings._folderSaved.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/admin/openFileStructure");
+        return new CloseDialogActionResult("/file/openFileAdministration");
     }
 
     public IActionResult inheritFolderRights(RequestData rdata) {
@@ -106,7 +113,7 @@ public class FileController extends Controller {
         FileCache.getInstance().setDirty();
         RightsCache.getInstance().setDirty();
         rdata.setMessage(Strings._allInherited.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new ForwardActionResult("/admin/openFileStructure?folderId=" + folderId);
+        return new ForwardActionResult("/file/openFileAdministration?folderId=" + folderId);
     }
 
     public IActionResult openDropFiles(RequestData rdata) {
@@ -114,7 +121,7 @@ public class FileController extends Controller {
         if (!rdata.hasContentRight(folderId, Right.EDIT))
             return forbidden(rdata);
         FolderData data = FolderBean.getInstance().getFolder(folderId);
-        if (data==null)
+        if (data == null)
             return noData(rdata);
         rdata.setSessionObject("folderData", data);
         return showDropFiles();
@@ -136,14 +143,15 @@ public class FileController extends Controller {
                 data.setName(file.getFileName());
                 data.setName(file.getFileName());
                 data.setContentType(file.getContentType());
+                data.createPreview();
             }
             data.setCreateValues(parentNode);
-            data.setAuthorName(rdata.getLoginName());
+            data.setAuthorName(rdata.getUserName());
             ts.saveFile(data);
             FileCache.getInstance().setDirty();
         }
         rdata.setMessage(Strings._filesSaved.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/admin/openFileStructure");
+        return new CloseDialogActionResult("/file/openFileAdministration");
     }
 
     public IActionResult moveFolder(RequestData rdata) {
@@ -157,7 +165,7 @@ public class FileController extends Controller {
             rdata.setMessage(Strings._saveError.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_ERROR);
         }
         FileCache.getInstance().setDirty();
-        return new ForwardActionResult("/admin/openFileStructure?folderId=" + folderId);
+        return new ForwardActionResult("/file/openFileAdministration?folderId=" + folderId);
     }
 
     public IActionResult deleteFolder(RequestData rdata) {
@@ -166,18 +174,18 @@ public class FileController extends Controller {
             return forbidden(rdata);
         if (folderId < BaseIdData.ID_MIN) {
             rdata.setMessage(Strings._notDeletable.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_ERROR);
-            return new ForwardActionResult("/admin/openFileStructure");
+            return new ForwardActionResult("/file/openFileAdministration");
         }
         FileCache tc = FileCache.getInstance();
         int parentId = tc.getParentFolderId(folderId);
         if (!FolderBean.getInstance().deleteFolder(folderId)) {
             rdata.setMessage(Strings._deleteError.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_ERROR);
-            return new ForwardActionResult("/admin/openFileStructure");
+            return new ForwardActionResult("/file/openFileAdministration");
         }
         FileCache.getInstance().setDirty();
         RightsCache.getInstance().setDirty();
         rdata.setMessage(Strings._folderDeleted.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new ForwardActionResult("/admin/openFileStructure?folderId=" + parentId);
+        return new ForwardActionResult("/file/openFileAdministration?folderId=" + parentId);
     }
 
     /********* file *************/
@@ -192,7 +200,7 @@ public class FileController extends Controller {
             return forbidden(rdata);
         }
         BinaryStreamFile streamData = FileBean.getInstance().getBinaryStreamFile(data.getId());
-        if (streamData==null)
+        if (streamData == null)
             return noData(rdata);
         return new BinaryStreamActionResult(streamData, false);
     }
@@ -262,14 +270,14 @@ public class FileController extends Controller {
         if (!rdata.checkFormErrors()) {
             return showEditFile();
         }
-        data.setAuthorName(rdata.getLoginName());
+        data.setAuthorName(rdata.getUserName());
         if (!FileBean.getInstance().saveFile(data)) {
             rdata.setMessage(Strings._saveError.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_ERROR);
             return showEditFile();
         }
         FileCache.getInstance().setDirty();
         rdata.setMessage(Strings._fileSaved.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/admin/openFileStructure?fileId=" + data.getId());
+        return new CloseDialogActionResult("/file/openFileAdministration?fileId=" + data.getId());
     }
 
     public IActionResult moveFile(RequestData rdata) {
@@ -280,13 +288,13 @@ public class FileController extends Controller {
         FolderData parent = FileCache.getInstance().getFolder(folderId);
         if (parent == null)
             return forbidden(rdata);
-        if (!FileBean.getInstance().moveFile(fileId, folderId)){
+        if (!FileBean.getInstance().moveFile(fileId, folderId)) {
             //todo
         }
         FileCache.getInstance().setDirty();
         RightsCache.getInstance().setDirty();
         rdata.setMessage(Strings._fileMoved.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new ForwardActionResult("/admin/openFileStructure");
+        return new ForwardActionResult("/file/openFileAdministration");
     }
 
     public IActionResult deleteFile(RequestData rdata) {
@@ -298,11 +306,11 @@ public class FileController extends Controller {
         FileCache.getInstance().setDirty();
         rdata.remove("fileId");
         rdata.setMessage(Strings._fileDeleted.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new ForwardActionResult("/admin/openFileStructure?folderId=" + data.getFolderId());
+        return new ForwardActionResult("/file/openFileAdministration?folderId=" + data.getFolderId());
     }
 
     public IActionResult reloadCache(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.CONTENT, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.CONTENT, Right.EDIT))
             return forbidden(rdata);
         FileCache.getInstance().setDirty();
         RightsCache.getInstance().setDirty();

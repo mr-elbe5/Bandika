@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -8,8 +8,8 @@
  */
 package de.elbe5.cms.timer;
 
-import de.elbe5.cms.application.AppContextListener;
 import de.elbe5.base.log.Log;
+import de.elbe5.cms.application.AppContextListener;
 import de.elbe5.cms.configuration.Configuration;
 
 import java.time.LocalDateTime;
@@ -30,8 +30,8 @@ public class Timer {
     protected Map<String, TimerTaskData> tasks = new HashMap<>();
     protected TimerThread timerThread = null;
 
-    public void registerTimerTask(TimerTaskData task){
-        tasks.put(task.getName(),task);
+    public void registerTimerTask(TimerTaskData task) {
+        tasks.put(task.getName(), task);
     }
 
     public void startThread() {
@@ -69,7 +69,7 @@ public class Timer {
     }
 
     public void loadTask(String name) {
-        TimerTaskData task=tasks.get(name);
+        TimerTaskData task = tasks.get(name);
         TimerBean.getInstance().readTimerTask(task);
         LocalDateTime now = TimerBean.getInstance().getServerTime();
         task.setNextExecution(task.computeNextExecution(now));

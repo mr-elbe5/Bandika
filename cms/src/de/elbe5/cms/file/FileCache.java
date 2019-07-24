@@ -3,9 +3,12 @@ package de.elbe5.cms.file;
 import de.elbe5.base.cache.BaseCache;
 import de.elbe5.base.log.Log;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class FileCache extends BaseCache{
+public class FileCache extends BaseCache {
 
     private static FileCache instance = null;
 
@@ -53,7 +56,7 @@ public class FileCache extends BaseCache{
             }
         }
         rootFolder.inheritRightsToChildren();
-        folderMap=folders;
+        folderMap = folders;
         fileMap = files;
     }
 
@@ -87,8 +90,8 @@ public class FileCache extends BaseCache{
 
     public FileData getFile(int id) {
         checkDirty();
-        if (!fileMap.containsKey(id)){
-            Log.warn("file not found, id: "+id);
+        if (!fileMap.containsKey(id)) {
+            Log.warn("file not found, id: " + id);
             return null;
         }
         return fileMap.get(id);

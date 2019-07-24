@@ -10,7 +10,7 @@ package de.elbe5.cms.tag;
 
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.cms.application.Statics;
-import de.elbe5.cms.servlet.RequestData;
+import de.elbe5.cms.request.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -32,11 +32,11 @@ public class BaseTag implements Tag {
         return context;
     }
 
-    public HttpServletRequest getRequest(){
+    public HttpServletRequest getRequest() {
         return (HttpServletRequest) getContext().getRequest();
     }
 
-    public Locale getLocale(RequestData rdata){
+    public Locale getLocale(RequestData rdata) {
         return rdata.getSessionLocale();
     }
 
@@ -68,11 +68,11 @@ public class BaseTag implements Tag {
     public void release() {
     }
 
-    protected String toHtml(String s){
+    protected String toHtml(String s) {
         return StringUtil.toHtml(s);
     }
 
-    protected RequestData getRequestData(){
+    protected RequestData getRequestData() {
         return (RequestData) getRequest().getAttribute(Statics.KEY_REQUESTDATA);
     }
 

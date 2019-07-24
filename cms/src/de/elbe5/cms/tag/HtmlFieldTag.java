@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -11,9 +11,11 @@ package de.elbe5.cms.tag;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.cms.application.Statics;
-import de.elbe5.cms.field.HtmlField;
-import de.elbe5.cms.page.*;
-import de.elbe5.cms.servlet.RequestData;
+import de.elbe5.cms.page.ViewMode;
+import de.elbe5.cms.page.templatepage.TemplatePageData;
+import de.elbe5.cms.page.templatepage.templatepagepart.HtmlField;
+import de.elbe5.cms.page.templatepage.templatepagepart.TemplatePagePartData;
+import de.elbe5.cms.request.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -26,14 +28,28 @@ public class HtmlFieldTag extends FieldTag {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
             RequestData rdata = RequestData.getRequestData(request);
             JspWriter writer = getContext().getOut();
-            PageData pageData = (PageData) rdata.get(Statics.KEY_PAGE);
-            PagePartData partData = (PagePartData) rdata.get(Statics.KEY_PART);
+            TemplatePageData pageData = (TemplatePageData) rdata.getCurrentPage();
+            TemplatePagePartData partData = (TemplatePagePartData) rdata.get(Statics.KEY_PART);
 
             HtmlField field = partData.ensureHtmlField(name);
 
             boolean partEditMode = pageData.getViewMode() == ViewMode.EDIT && partData == pageData.getEditPagePart();
             if (partEditMode) {
-                StringUtil.write(writer, "<div class=\"ckeditField\" id=\"{1}\" contenteditable=\"true\">{2}</div>" + "<input type=\"hidden\" name=\"{3}\" value=\"{4}\" />" + "<script type=\"text/javascript\">$('#{5}').ckeditor({" + "toolbar : 'Full'," + "filebrowserBrowseUrl : '/field/openLinkBrowser?pageId={6}'," + "filebrowserImageBrowseUrl : '/field/openImageBrowser?pageId={7}'" + "});" + "</script>", field.getIdentifier(), field.getContent().isEmpty() ? StringUtil.toHtml(placeholder) : field.getContent(), field.getIdentifier(), StringUtil.toHtml(field.getContent()), field.getIdentifier(), Integer.toString(pageData.getId()), Integer.toString(pageData.getId()));
+                StringUtil.write(writer, "<div class=\"ckeditField\" id=\"{1}\" contenteditable=\"true\">{2}</div>" +
+                                "<input type=\"hidden\" name=\"{3}\" value=\"{4}\" />" +
+                                "<script type=\"text/javascript\">$('#{5}').ckeditor({" +
+                                "toolbar : 'Full'," +
+                                "filebrowserBrowseUrl : '/templatepagepart/openLinkBrowser?pageId={6}'," +
+                                "filebrowserImageBrowseUrl : '/templatepagepart/openImageBrowser?pageId={7}'" +
+                                "});" +
+                                "</script>",
+                        field.getIdentifier(),
+                        field.getContent().isEmpty() ? StringUtil.toHtml(placeholder) : field.getContent(),
+                        field.getIdentifier(), StringUtil.toHtml(field.getContent()),
+                        field.getIdentifier(),
+                        Integer.toString(pageData.getId()),
+                        Integer.toString(pageData.getId())
+                );
             } else {
                 try {
                     if (field.getContent().isEmpty()) {

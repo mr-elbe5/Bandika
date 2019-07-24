@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -24,7 +24,8 @@ public class TimerBean extends DbBean {
         return instance;
     }
 
-    private static String READ_TASK_SQL="SELECT display_name,execution_interval,day,hour,minute,note_execution,last_execution,active FROM t_timer_task WHERE name=?";
+    private static String READ_TASK_SQL = "SELECT display_name,execution_interval,day,hour,minute,note_execution,last_execution,active FROM t_timer_task WHERE name=?";
+
     public void readTimerTask(TimerTaskData task) {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -40,8 +41,8 @@ public class TimerBean extends DbBean {
                     task.setHour(rs.getInt(i++));
                     task.setMinute(rs.getInt(i++));
                     task.setRegisterExecution(rs.getBoolean(i++));
-                    Timestamp ts=rs.getTimestamp(i++);
-                    task.setLastExecution(ts==null ? null : ts.toLocalDateTime());
+                    Timestamp ts = rs.getTimestamp(i++);
+                    task.setLastExecution(ts == null ? null : ts.toLocalDateTime());
                     task.setActive(rs.getBoolean(i));
                 }
             }
@@ -53,7 +54,8 @@ public class TimerBean extends DbBean {
         }
     }
 
-    private static String UPDATE_TASK_DATE_SQL="UPDATE t_timer_task SET last_execution=? WHERE name=?";
+    private static String UPDATE_TASK_DATE_SQL = "UPDATE t_timer_task SET last_execution=? WHERE name=?";
+
     public void updateExcecutionDate(TimerTaskData task) {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -74,7 +76,8 @@ public class TimerBean extends DbBean {
         }
     }
 
-    private static String UPDATE_TASK_SQL="UPDATE t_timer_task SET execution_interval=?,day=?,hour=?,minute=?,active=? WHERE name=?";
+    private static String UPDATE_TASK_SQL = "UPDATE t_timer_task SET execution_interval=?,day=?,hour=?,minute=?,active=? WHERE name=?";
+
     public void updateTaskData(TimerTaskData task) {
         Connection con = getConnection();
         PreparedStatement pst = null;

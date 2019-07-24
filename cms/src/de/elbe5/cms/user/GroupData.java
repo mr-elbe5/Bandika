@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -9,12 +9,12 @@
 package de.elbe5.cms.user;
 
 import de.elbe5.base.data.BaseIdData;
-import de.elbe5.cms.rights.RightBean;
+import de.elbe5.cms.request.IRequestData;
+import de.elbe5.cms.request.RequestData;
 import de.elbe5.cms.rights.Right;
+import de.elbe5.cms.rights.RightBean;
 import de.elbe5.cms.rights.RightsCache;
 import de.elbe5.cms.rights.SystemZone;
-import de.elbe5.cms.servlet.IRequestData;
-import de.elbe5.cms.servlet.RequestData;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -91,7 +91,7 @@ public class GroupData extends BaseIdData implements IRequestData {
                 getRights().addSystemRight(zone, Right.valueOf(key));
         }
         setUserIds(rdata.getIntegerSet("userIds"));
-        if (name.isEmpty()){
+        if (name.isEmpty()) {
             rdata.addIncompleteField("name");
         }
     }

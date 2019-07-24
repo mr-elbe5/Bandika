@@ -16,9 +16,9 @@ import java.io.Writer;
 
 public class FormCheckTag extends BaseTag {
 
-    protected String name="";
-    protected String value="";
-    protected boolean checked=false;
+    protected String name = "";
+    protected String value = "";
+    protected boolean checked = false;
 
     public void setName(String name) {
         this.name = name;
@@ -32,7 +32,7 @@ public class FormCheckTag extends BaseTag {
         this.checked = checked;
     }
 
-    protected String getPreHtml(){
+    protected String getPreHtml() {
         return "<span>\n" +
                 "  <input type=\"checkbox\" name=\"{1}\" value=\"{2}\" {3}/>\n" +
                 "  <label class=\"form-check-label\">";

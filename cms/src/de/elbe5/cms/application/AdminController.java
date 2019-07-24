@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -11,12 +11,16 @@ package de.elbe5.cms.application;
 import de.elbe5.base.cache.BinaryFileCache;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.FileUtil;
-import de.elbe5.cms.servlet.*;
 import de.elbe5.cms.database.DbConnector;
+import de.elbe5.cms.request.CloseDialogActionResult;
+import de.elbe5.cms.request.ForwardActionResult;
+import de.elbe5.cms.request.IActionResult;
+import de.elbe5.cms.request.RequestData;
 import de.elbe5.cms.rights.Right;
 import de.elbe5.cms.rights.SystemZone;
-import de.elbe5.cms.timer.TimerBean;
+import de.elbe5.cms.servlet.Controller;
 import de.elbe5.cms.timer.Timer;
+import de.elbe5.cms.timer.TimerBean;
 import de.elbe5.cms.timer.TimerTaskData;
 
 import java.io.File;
@@ -29,14 +33,14 @@ public class AdminController extends Controller {
 
     public static final String KEY = "admin";
 
-    private static AdminController instance=new AdminController();
+    private static AdminController instance = new AdminController();
 
     public static AdminController getInstance() {
         return instance;
     }
 
     @Override
-    public String getKey(){
+    public String getKey() {
         return KEY;
     }
 
@@ -46,26 +50,8 @@ public class AdminController extends Controller {
         return openAdminPage(rdata, "/WEB-INF/_jsp/administration/systemAdministration.jsp", Strings._systemAdministration.string(rdata.getSessionLocale()));
     }
 
-    public IActionResult openContentAdministration(RequestData rdata) {
-        if (!rdata.hasAnyContentRight())
-            return forbidden(rdata);
-        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/contentAdministration.jsp", Strings._contentAdministration.string(rdata.getSessionLocale()));
-    }
-
-    public IActionResult openPageStructure(RequestData rdata) {
-        if (!rdata.hasAnyContentRight())
-            return forbidden(rdata);
-        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/pageStructure.jsp", Strings._pageStructure.string(rdata.getSessionLocale()));
-    }
-
-    public IActionResult openFileStructure(RequestData rdata) {
-        if (!rdata.hasAnyContentRight())
-            return forbidden(rdata);
-        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/fileStructure.jsp", Strings._fileStructure.string(rdata.getSessionLocale()));
-    }
-
     public IActionResult restart(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.APPLICATION, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.APPLICATION, Right.EDIT))
             return forbidden(rdata);
         String path = ApplicationPath.getAppROOTPath() + "/WEB-INF/web.xml";
         File f = new File(path);
@@ -79,13 +65,13 @@ public class AdminController extends Controller {
     }
 
     public IActionResult openExecuteDatabaseScript(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.APPLICATION, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.APPLICATION, Right.EDIT))
             return forbidden(rdata);
         return showExecuteDatabaseScript();
     }
 
     public IActionResult executeDatabaseScript(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.APPLICATION, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.APPLICATION, Right.EDIT))
             return forbidden(rdata);
         String script = rdata.getString("script");
         if (!DbConnector.getInstance().executeScript(script)) {
@@ -97,7 +83,7 @@ public class AdminController extends Controller {
     }
 
     public IActionResult clearFileCache(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.APPLICATION, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.APPLICATION, Right.EDIT))
             return forbidden(rdata);
         BinaryFileCache cache = BinaryFileCache.getInstance();
         if (cache != null) {
@@ -109,7 +95,7 @@ public class AdminController extends Controller {
     }
 
     public IActionResult openEditTimerTask(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.APPLICATION, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.APPLICATION, Right.EDIT))
             return forbidden(rdata);
         String name = rdata.getString("timerName");
         TimerTaskData task = Timer.getInstance().getTaskCopy(name);
@@ -118,7 +104,7 @@ public class AdminController extends Controller {
     }
 
     public IActionResult saveTimerTask(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.APPLICATION, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.APPLICATION, Right.EDIT))
             return forbidden(rdata);
         TimerTaskData data = (TimerTaskData) rdata.getSessionObject("timerTaskData");
         if (data == null)
@@ -132,12 +118,6 @@ public class AdminController extends Controller {
         Timer.getInstance().loadTask(data.getName());
         rdata.setMessage(Strings._taskSaved.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogActionResult("/admin/openSystemAdministration");
-    }
-
-    private IActionResult openAdminPage(RequestData rdata, String jsp, String title) {
-        rdata.put(Statics.KEY_JSP, jsp);
-        rdata.put(Statics.KEY_TITLE, title);
-        return new ForwardActionResult("/WEB-INF/_jsp/administration/adminMaster.jsp");
     }
 
     protected IActionResult showExecuteDatabaseScript() {

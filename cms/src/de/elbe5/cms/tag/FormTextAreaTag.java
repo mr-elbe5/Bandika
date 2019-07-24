@@ -15,21 +15,21 @@ import java.util.Locale;
 
 public class FormTextAreaTag extends FormLineTag {
 
-    String height="";
+    String height = "";
 
     public void setHeight(String height) {
         this.height = height;
     }
 
-    String controlPreHtml="" +
+    String controlPreHtml = "" +
             "<textarea id=\"{1}\" name=\"{2}\" class=\"form-control\" {3}>";
-    String controlPostHtml="</textarea>\n";
+    String controlPostHtml = "</textarea>\n";
 
-    protected String getPreControlHtml(HttpServletRequest request, Locale locale){
+    protected String getPreControlHtml(HttpServletRequest request, Locale locale) {
         return StringUtil.format(controlPreHtml, name, name, height.isEmpty() ? "" : "style=\"height:" + height + "\"");
     }
 
-    protected String getPostControlHtml(HttpServletRequest request, Locale locale){
+    protected String getPostControlHtml(HttpServletRequest request, Locale locale) {
         return controlPostHtml;
     }
 

@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -27,9 +27,10 @@ public class CmsRightBean extends RightBean {
         return (CmsRightBean) RightBean.getInstance();
     }
 
-    private static String GET_GROUPS_SQL="SELECT group_id FROM t_user2group WHERE user_id=?";
-    private static String GET_SYSTEM_RIGHTS_SQL="select name, value from t_system_right where group_id in({1})";
-    private static String GET_PAGE_RIGHTS_SQL="select page_id, value from t_page_right where group_id in({1})";
+    private static String GET_GROUPS_SQL = "SELECT group_id FROM t_user2group WHERE user_id=?";
+    private static String GET_SYSTEM_RIGHTS_SQL = "select name, value from t_system_right where group_id in({1})";
+    private static String GET_PAGE_RIGHTS_SQL = "select page_id, value from t_page_right where group_id in({1})";
+
     public UserRightsData getUserRights(int userId) {
         Connection con = getConnection();
         PreparedStatement pst = null;

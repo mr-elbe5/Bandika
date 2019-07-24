@@ -12,7 +12,7 @@ import de.elbe5.base.cache.StringCache;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.cms.application.Statics;
-import de.elbe5.cms.servlet.RequestData;
+import de.elbe5.cms.request.RequestData;
 
 import javax.servlet.jsp.JspException;
 import java.io.Writer;
@@ -20,7 +20,7 @@ import java.util.Locale;
 
 public class MessageTag extends BaseTag {
 
-    String controlHtml="" +
+    String controlHtml = "" +
             "<div class=\"alert alert-{1} alert-dismissible fade show\" role=\"alert\">\n" +
             "  <strong>{2}:</strong>&nbsp;{3}\n" +
             "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">\n" +
@@ -34,7 +34,7 @@ public class MessageTag extends BaseTag {
             RequestData rdata = getRequestData();
             if (rdata.hasMessage()) {
                 String msg = rdata.getString(Statics.KEY_MESSAGE);
-                String msgType= rdata.getString(Statics.KEY_MESSAGETYPE);
+                String msgType = rdata.getString(Statics.KEY_MESSAGETYPE);
                 Locale locale = rdata.getSessionLocale();
                 Writer writer = getWriter();
                 writer.write(StringUtil.format(controlHtml, msgType, StringCache.getHtml(Statics.getTypeKey(msgType), locale), StringUtil.toHtml(msg)));

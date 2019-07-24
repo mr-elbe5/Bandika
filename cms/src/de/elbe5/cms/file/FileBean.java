@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -29,21 +29,22 @@ public class FileBean extends DbBean {
         return instance;
     }
 
-    public int getNextId(){
+    public int getNextId() {
         return getNextId("s_file_id");
     }
 
-    private static String CHANGED_FILE_SQL="SELECT change_date FROM t_file WHERE id=?";
+    private static String CHANGED_FILE_SQL = "SELECT change_date FROM t_file WHERE id=?";
 
     protected boolean changedFile(Connection con, FileData data) {
         return changedItem(con, CHANGED_FILE_SQL, data);
     }
 
-    private static String GEL_ALL_FILES_SQL="SELECT id,creation_date,change_date,folder_id,name," +
+    private static String GEL_ALL_FILES_SQL = "SELECT id,creation_date,change_date,folder_id,name," +
             "display_name,description,author_name," +
             "content_type,file_size,width,height,(preview_bytes IS NOT NULL) as has_preview " +
             "FROM t_file " +
             "ORDER BY folder_id";
+
     public List<FileData> getAllFiles() {
         List<FileData> list = new ArrayList<>();
         Connection con = getConnection();
@@ -65,7 +66,7 @@ public class FileBean extends DbBean {
                     data.setContentType(rs.getString(i++));
                     data.setFileSize(rs.getInt(i++));
                     data.setWidth(rs.getInt(i++));
-                    data.setHeight(rs.getInt(i));
+                    data.setHeight(rs.getInt(i++));
                     data.setHasPreview(rs.getBoolean(i));
                     list.add(data);
                 }
@@ -95,12 +96,12 @@ public class FileBean extends DbBean {
         return data;
     }
 
-    private static String READ_FILE_SQL="SELECT creation_date,change_date,folder_id,name,display_name,description, " +
+    private static String READ_FILE_SQL = "SELECT creation_date,change_date,folder_id,name,display_name,description, " +
             "keywords,author_name,content_type,file_size,width,height,(preview_bytes IS NOT NULL) as has_preview " +
             "FROM t_file " +
             "WHERE id=?";
 
-    private static String READ_FILE_WITH_BYTES_SQL="SELECT creation_date,change_date,folder_id,name,display_name,description, " +
+    private static String READ_FILE_WITH_BYTES_SQL = "SELECT creation_date,change_date,folder_id,name,display_name,description, " +
             "keywords,author_name,content_type,file_size,width,height,(preview_bytes IS NOT NULL) as has_preview,bytes,preview_bytes " +
             "FROM t_file " +
             "WHERE id=?";
@@ -109,7 +110,7 @@ public class FileBean extends DbBean {
         PreparedStatement pst = null;
         boolean success = false;
         try {
-            pst = con.prepareStatement(withBytes? READ_FILE_WITH_BYTES_SQL : READ_FILE_SQL);
+            pst = con.prepareStatement(withBytes ? READ_FILE_WITH_BYTES_SQL : READ_FILE_SQL);
             pst.setInt(1, data.getId());
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
@@ -154,10 +155,10 @@ public class FileBean extends DbBean {
         }
     }
 
-    private static String INSERT_FILE_SQL="insert into t_file (creation_date,change_date,folder_id," +
+    private static String INSERT_FILE_SQL = "insert into t_file (creation_date,change_date,folder_id," +
             "name,display_name,description,author_name,content_type,file_size,width,height,bytes,preview_bytes,id) " +
             "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    private static String UPDATE_FILE_SQL="update t_file set creation_date=?,change_date=?,folder_id=?," +
+    private static String UPDATE_FILE_SQL = "update t_file set creation_date=?,change_date=?,folder_id=?," +
             "name=?,display_name=?,description=?,author_name=?,content_type=?,file_size=?,width=?,height=?,bytes=?,preview_bytes=? " +
             "where id=?";
 
@@ -192,7 +193,7 @@ public class FileBean extends DbBean {
         }
     }
 
-    private static String MOVE_FILE_SQL="UPDATE t_file SET folder_id=? WHERE id=?";
+    private static String MOVE_FILE_SQL = "UPDATE t_file SET folder_id=? WHERE id=?";
 
     public boolean moveFile(int docId, int folderId) {
         Connection con = startTransaction();
@@ -210,9 +211,9 @@ public class FileBean extends DbBean {
         }
     }
 
-    private static String GET_PREVIEW_SQL="SELECT name, preview_bytes FROM t_file WHERE id=?";
+    private static String GET_PREVIEW_SQL = "SELECT name, preview_bytes FROM t_file WHERE id=?";
 
-    public BinaryFile getBinaryPreviewData(int id){
+    public BinaryFile getBinaryPreviewData(int id) {
         Connection con = getConnection();
         PreparedStatement pst = null;
         BinaryFile data = null;
@@ -229,8 +230,7 @@ public class FileBean extends DbBean {
                     data.setFileSize(data.getBytes().length);
                 }
             }
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             Log.error("error while downloading file", e);
             return null;
         } finally {
@@ -239,10 +239,10 @@ public class FileBean extends DbBean {
         }
         return data;
     }
-    
-    private static String GET_FILE_STREAM_SQL="SELECT name,content_type,file_size,bytes FROM t_file WHERE id=?";
-    
-    public BinaryStreamFile getBinaryStreamFile(int id){
+
+    private static String GET_FILE_STREAM_SQL = "SELECT name,content_type,file_size,bytes FROM t_file WHERE id=?";
+
+    public BinaryStreamFile getBinaryStreamFile(int id) {
         Connection con = getConnection();
         PreparedStatement pst = null;
         BinaryStreamFile data = null;
@@ -259,8 +259,7 @@ public class FileBean extends DbBean {
                     data.setInputStream(rs.getBinaryStream(i));
                 }
             }
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             Log.error("error while streaming file", e);
             return null;
         } finally {
@@ -270,7 +269,8 @@ public class FileBean extends DbBean {
         return data;
     }
 
-    private static String GET_FILE_DATA_SQL="SELECT name,content_type,file_size,bytes FROM t_file WHERE id=?";
+    private static String GET_FILE_DATA_SQL = "SELECT name,content_type,file_size,bytes FROM t_file WHERE id=?";
+
     public BinaryFile getBinaryFile(int id) throws SQLException {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -294,8 +294,8 @@ public class FileBean extends DbBean {
         }
         return data;
     }
-    
-    private static String DELETE_FILE_SQL="DELETE FROM t_file WHERE id=?";
+
+    private static String DELETE_FILE_SQL = "DELETE FROM t_file WHERE id=?";
 
     public boolean deleteFile(int id) {
         return deleteItem(DELETE_FILE_SQL, id);

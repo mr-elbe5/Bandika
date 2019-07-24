@@ -387,12 +387,6 @@
     </tag>
 
     <tag>
-        <name>searchbox</name>
-        <tag-class>de.elbe5.cms.tag.SearchBoxTag</tag-class>
-        <body-content>empty</body-content>
-    </tag>
-
-    <tag>
         <name>breadcrumb</name>
         <tag-class>de.elbe5.cms.tag.BreadcrumbTag</tag-class>
         <body-content>empty</body-content>

@@ -10,7 +10,7 @@ package de.elbe5.cms.tag;
 
 import de.elbe5.base.cache.StringCache;
 import de.elbe5.base.log.Log;
-import de.elbe5.cms.servlet.RequestData;
+import de.elbe5.cms.request.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -19,10 +19,10 @@ import java.util.Locale;
 
 public class FormLineTag extends BaseTag {
 
-    protected String name="";
-    protected String label="";
-    protected boolean required=false;
-    protected boolean padded=false;
+    protected String name = "";
+    protected String label = "";
+    protected boolean required = false;
+    protected boolean padded = false;
 
     public void setName(String name) {
         this.name = name;
@@ -46,7 +46,7 @@ public class FormLineTag extends BaseTag {
         try {
             HttpServletRequest request = getRequest();
             RequestData rdata = RequestData.getRequestData(request);
-            Locale locale= getLocale(rdata);
+            Locale locale = getLocale(rdata);
             Writer writer = getWriter();
             writer.write("<div class=\"form-group row");
             if (rdata.hasFormErrorField(name))
@@ -54,8 +54,7 @@ public class FormLineTag extends BaseTag {
             writer.write("\">\n");
             if (label.isEmpty()) {
                 writer.write("<div class=\"col-md-3\"></div>");
-            }
-            else{
+            } else {
                 writer.write("<label class=\"col-md-3 col-form-label\"");
                 if (!name.isEmpty()) {
                     writer.write(" for=\"");
@@ -63,7 +62,7 @@ public class FormLineTag extends BaseTag {
                     writer.write("\"");
                 }
                 writer.write(">");
-                writer.write(label.startsWith("_") ? StringCache.getHtml(label,locale) : label);
+                writer.write(label.startsWith("_") ? StringCache.getHtml(label, locale) : label);
                 if (required) {
                     writer.write(" <sup>*</sup>");
                 }
@@ -86,7 +85,7 @@ public class FormLineTag extends BaseTag {
         try {
             HttpServletRequest request = getRequest();
             RequestData rdata = RequestData.getRequestData(request);
-            Locale locale= getLocale(rdata);
+            Locale locale = getLocale(rdata);
             Writer writer = getWriter();
             writer.write(getPostControlHtml(request, locale));
             writer.write("</div></div>");
@@ -96,11 +95,11 @@ public class FormLineTag extends BaseTag {
         return EVAL_PAGE;
     }
 
-    protected String getPreControlHtml(HttpServletRequest request, Locale locale){
+    protected String getPreControlHtml(HttpServletRequest request, Locale locale) {
         return "";
     }
 
-    protected String getPostControlHtml(HttpServletRequest request, Locale locale){
+    protected String getPostControlHtml(HttpServletRequest request, Locale locale) {
         return "";
     }
 

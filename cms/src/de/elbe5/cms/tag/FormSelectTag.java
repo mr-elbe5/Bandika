@@ -15,22 +15,22 @@ import java.util.Locale;
 
 public class FormSelectTag extends FormLineTag {
 
-    private String onchange="";
+    private String onchange = "";
 
     public void setOnchange(String onchange) {
         this.onchange = onchange;
     }
 
-    String controlPreHtml="" +
+    String controlPreHtml = "" +
             "<select id=\"{1}\" name=\"{2}\" class=\"form-control\" {3}>";
-    String controlPostHtml="" +
+    String controlPostHtml = "" +
             "</select>\n";
 
-    protected String getPreControlHtml(HttpServletRequest request, Locale locale){
-        return StringUtil.format(controlPreHtml, name, name, onchange.isEmpty() ? "" : "onchange=\""+onchange+"\"");
+    protected String getPreControlHtml(HttpServletRequest request, Locale locale) {
+        return StringUtil.format(controlPreHtml, name, name, onchange.isEmpty() ? "" : "onchange=\"" + onchange + "\"");
     }
 
-    protected String getPostControlHtml(HttpServletRequest request, Locale locale){
+    protected String getPostControlHtml(HttpServletRequest request, Locale locale) {
         return controlPostHtml;
     }
 

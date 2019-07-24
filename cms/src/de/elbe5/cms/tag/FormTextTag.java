@@ -15,16 +15,16 @@ import java.util.Locale;
 
 public class FormTextTag extends FormLineTag {
 
-    private String value="";
+    private String value = "";
 
     public void setValue(String value) {
         this.value = value;
     }
 
-    String controlPreHtml="" +
+    String controlPreHtml = "" +
             "<input type=\"text\" id=\"{1}\" name=\"{2}\" class=\"form-control\" value=\"{3}\" />\n";
 
-    protected String getPreControlHtml(HttpServletRequest request, Locale locale){
+    protected String getPreControlHtml(HttpServletRequest request, Locale locale) {
         return StringUtil.format(controlPreHtml, name, name, value);
     }
 

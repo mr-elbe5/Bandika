@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -10,8 +10,8 @@ package de.elbe5.cms.template;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.FileUtil;
-import de.elbe5.cms.database.DbBean;
 import de.elbe5.cms.application.ApplicationPath;
+import de.elbe5.cms.database.DbBean;
 
 import java.io.File;
 import java.sql.*;
@@ -35,7 +35,7 @@ public class TemplateBean extends DbBean {
         List<TemplateData> templates = null;
         Connection con = getConnection();
         try {
-            templates=getAllTemplates(con, type);
+            templates = getAllTemplates(con, type);
         } catch (SQLException se) {
             se.printStackTrace();
         } finally {
@@ -44,7 +44,8 @@ public class TemplateBean extends DbBean {
         return templates;
     }
 
-    private static String GET_TEMPLATES_SQL="SELECT name,change_date,display_name,description,code FROM t_template WHERE type=? ORDER BY name";
+    private static String GET_TEMPLATES_SQL = "SELECT name,change_date,display_name,description,code FROM t_template WHERE type=? ORDER BY name";
+
     protected List<TemplateData> getAllTemplates(Connection con, String type) throws SQLException {
         List<TemplateData> list = new ArrayList<>();
         PreparedStatement pst = null;
@@ -75,7 +76,7 @@ public class TemplateBean extends DbBean {
         TemplateData template = null;
         Connection con = getConnection();
         try {
-            template=getTemplate(con, name, type);
+            template = getTemplate(con, name, type);
         } catch (SQLException se) {
             se.printStackTrace();
         } finally {
@@ -84,9 +85,10 @@ public class TemplateBean extends DbBean {
         return template;
     }
 
-    private static String GET_TEMPLATE_SQL="SELECT change_date,display_name,description,code FROM t_template WHERE type=? AND name=?";
+    private static String GET_TEMPLATE_SQL = "SELECT change_date,display_name,description,code FROM t_template WHERE type=? AND name=?";
+
     protected TemplateData getTemplate(Connection con, String name, String type) throws SQLException {
-        TemplateData data=null;
+        TemplateData data = null;
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(GET_TEMPLATE_SQL);
@@ -138,7 +140,8 @@ public class TemplateBean extends DbBean {
         return templateNames;
     }
 
-    private static String GET_TEMPLATE_NAMES_SQL="SELECT name FROM t_template WHERE type=? ORDER BY name";
+    private static String GET_TEMPLATE_NAMES_SQL = "SELECT name FROM t_template WHERE type=? ORDER BY name";
+
     public List<String> getTemplateNames(Connection con, String type) throws SQLException {
         List<String> list = new ArrayList<>();
         PreparedStatement pst = null;
@@ -168,8 +171,9 @@ public class TemplateBean extends DbBean {
         }
     }
 
-    private static String INSERT_TEMPLATE_SQL="insert into t_template (change_date,display_name,description,code,name,type) values(?,?,?,?,?,?)";
-    private static String UPDATE_TEMPLATE_SQL="update t_template set change_date=?, display_name=?, description=?, code=? where name=? and type=?";
+    private static String INSERT_TEMPLATE_SQL = "insert into t_template (change_date,display_name,description,code,name,type) values(?,?,?,?,?,?)";
+    private static String UPDATE_TEMPLATE_SQL = "update t_template set change_date=?, display_name=?, description=?, code=? where name=? and type=?";
+
     protected void writeTemplate(Connection con, TemplateData data) throws SQLException {
         PreparedStatement pst = null;
         try {
@@ -188,7 +192,8 @@ public class TemplateBean extends DbBean {
         }
     }
 
-    private static String DELETE_SQL="DELETE FROM t_template WHERE name=? AND type=?";
+    private static String DELETE_SQL = "DELETE FROM t_template WHERE name=? AND type=?";
+
     public boolean deleteTemplate(String name, String type) {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -207,11 +212,11 @@ public class TemplateBean extends DbBean {
         return true;
     }
 
-    public void writeAllTemplateFiles(){
+    public void writeAllTemplateFiles() {
         ensureTemplateFolders();
         deleteAllTemplateFiles();
         Connection con = getConnection();
-        List<TemplateData> templates=new ArrayList<>();
+        List<TemplateData> templates = new ArrayList<>();
         try {
             templates.addAll(getAllTemplates(con, TemplateData.TYPE_MASTER));
             templates.addAll(getAllTemplates(con, TemplateData.TYPE_PAGE));
@@ -221,16 +226,16 @@ public class TemplateBean extends DbBean {
         } finally {
             closeConnection(con);
         }
-        for (TemplateData data : templates){
+        for (TemplateData data : templates) {
             writeTemplateFile(data);
         }
     }
 
-    public void ensureTemplateFolders(){
+    public void ensureTemplateFolders() {
         String basePath = ApplicationPath.getAppROOTPath() + "/WEB-INF/_jsp/_templates/";
-        ensureTemplateFolder(basePath+TemplateData.TYPE_MASTER);
-        ensureTemplateFolder(basePath+TemplateData.TYPE_PAGE);
-        ensureTemplateFolder(basePath+TemplateData.TYPE_PART);
+        ensureTemplateFolder(basePath + TemplateData.TYPE_MASTER);
+        ensureTemplateFolder(basePath + TemplateData.TYPE_PAGE);
+        ensureTemplateFolder(basePath + TemplateData.TYPE_PART);
     }
 
     public void ensureTemplateFolder(String path) {
@@ -252,15 +257,15 @@ public class TemplateBean extends DbBean {
         Log.log("writing template file " + data.getName());
         if (!data.getName().isEmpty() && !data.getCode().isEmpty()) {
             String path = data.getFilePath();
-            FileUtil.writeTextFile(path,data.getJspCode());
+            FileUtil.writeTextFile(path, data.getJspCode());
         }
     }
 
     public void deleteAllTemplateFiles() {
         String basePath = ApplicationPath.getAppROOTPath() + "/WEB-INF/_jsp/_templates/";
-        deleteAllTemplateFiles(basePath+TemplateData.TYPE_MASTER);
-        deleteAllTemplateFiles(basePath+TemplateData.TYPE_PAGE);
-        deleteAllTemplateFiles(basePath+TemplateData.TYPE_PART);
+        deleteAllTemplateFiles(basePath + TemplateData.TYPE_MASTER);
+        deleteAllTemplateFiles(basePath + TemplateData.TYPE_PAGE);
+        deleteAllTemplateFiles(basePath + TemplateData.TYPE_PART);
     }
 
     public void deleteAllTemplateFiles(String path) {
@@ -268,7 +273,7 @@ public class TemplateBean extends DbBean {
         if (!f.exists() || !f.isDirectory())
             return;
         File[] files = f.listFiles();
-        if (files!=null) {
+        if (files != null) {
             for (File df : files) {
                 if (!df.delete())
                     Log.error("could not delete file " + df.getName());

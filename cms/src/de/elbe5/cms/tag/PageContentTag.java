@@ -9,9 +9,10 @@
 package de.elbe5.cms.tag;
 
 import de.elbe5.base.log.Log;
-import de.elbe5.cms.application.Statics;
-import de.elbe5.cms.page.*;
-import de.elbe5.cms.servlet.RequestData;
+import de.elbe5.cms.page.PageBean;
+import de.elbe5.cms.page.PageData;
+import de.elbe5.cms.page.ViewMode;
+import de.elbe5.cms.request.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -25,48 +26,54 @@ public class PageContentTag extends BaseTag {
     public int doStartTag() throws JspException {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
-            RequestData rdata=RequestData.getRequestData(request);
+            RequestData rdata = RequestData.getRequestData(request);
             JspWriter writer = getContext().getOut();
-            PageData pageData = (PageData) rdata.get(Statics.KEY_PAGE);
-            switch (pageData.getViewMode()){
+            PageData pageData = rdata.getCurrentPage();
+            String include = pageData.getInclude();
+            switch (pageData.getViewMode()) {
                 case PUBLISH: {
                     writer.write("<div id=\"pageContent\" class=\"viewArea\">");
                     PageContext context = getContext();
                     StringWriter stringWriter = new StringWriter();
                     context.pushBody(stringWriter);
-                    context.include(pageData.getInclude());
+                    if (include != null)
+                        context.include(include);
                     String html = stringWriter.toString();
                     pageData.setPublishedContent(html);
                     pageData.extractSearchContent();
                     context.popBody().write(html);
-                    try{
+                    try {
                         PageBean.getInstance().publishPage(pageData);
-                    }
-                    catch (Exception e){
+                    } catch (Exception e) {
                         Log.error("error writing published content", e);
                     }
                     pageData.setViewMode(ViewMode.VIEW);
                     writer.write("</div>");
-                }break;
+                }
+                break;
                 case EDIT: {
                     writer.write("<div id=\"pageContent\" class=\"editArea\">");
-                    getContext().include(pageData.getInclude());
+                    if (include != null)
+                        context.include(include);
                     writer.write("</div>");
-                    if (pageData.getEditPagePart() != null) {
+                    if (pageData.isDetailEditMode()) {
                         writer.write("<script>$('.editControl').hide();</script>");
                     } else {
                         writer.write("<script>$('.editControl').show();</script>");
                     }
-                }break;
+                }
+                break;
                 default: {
                     writer.write("<div id=\"pageContent\" class=\"viewArea\">");
-                    if (!pageData.isDynamic() && pageData.isPublished() && !rdata.isEditMode()) {
+                    if (pageData.isPublished() && !rdata.isEditMode()) {
                         writer.write(pageData.getPublishedContent());
-                    } else{
-                        getContext().include(pageData.getInclude());
+                    } else {
+                        if (include != null)
+                            context.include(include);
                     }
                     writer.write("</div>");
-                }break;
+                }
+                break;
             }
 
         } catch (Exception e) {

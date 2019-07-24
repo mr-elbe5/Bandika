@@ -15,8 +15,8 @@ $indigo: #6610f2 !default;
 $purple: #6f42c1 !default;
 $pink: #e83e8c !default;
 $red: #dc3545 !default;
-$orange: #fd7e14 !default;
-$yellow: #ffc107 !default;
+$orange: #fdbe14 !default;
+$yellow: #ffff07 !default;
 $green: #28a745 !default;
 $teal: #20c997 !default;
 $cyan: #17a2b8 !default;
@@ -48,14 +48,10 @@ $border-radius-sm: .2rem !default;
 
 $modal-dialog-margin-wide: 3rem !default;
 
-$color-droparea: #aaffaa;
-
 $color-dark: $gray-800;
 $color-darkgray: $gray-600;
 $color-lightgray: $gray-300;
 $color-light: $gray-100;
-
-$color-transparent: rgba(255,255,255,0.9);
 
 $nav-tabs-border-color: $gray-300 !default;
 $nav-tabs-border-width: $border-width !default;
@@ -75,6 +71,13 @@ $zindex-tooltip: 11070 !default;
 $font-size-base:              1rem !default; // Assumes the browser default, typically `16px`
 $font-size-lg:                ($font-size-base * 1.25) !default;
 $font-size-sm:                ($font-size-base * .875) !default;
+$font-size-xsm:               ($font-size-base * .8) !default;
+$font-size-xxsm:               ($font-size-base * .7) !default;
+
+// elbe5 entries
+$color-dark-background: rgb(51,51,51);
+$color-light-background: rgb(255,255,255);
+$color-droparea: #aaffaa;
 
 @mixin hpad($amount) {
   padding-left: $amount;
@@ -140,3 +143,5 @@ $font-size-sm:                ($font-size-base * .875) !default;
     @content;
   }
 }
+
+$background-body: $color-dark-background url(img-path('carbon.png'));

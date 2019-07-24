@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -9,13 +9,17 @@
 package de.elbe5.cms.tag;
 
 import de.elbe5.base.log.Log;
+import de.elbe5.cms.application.Statics;
+import de.elbe5.cms.page.templatepage.PagePartData;
+import de.elbe5.cms.request.RequestData;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 
 public class JspTag extends BaseTag {
 
-    private String url="";
+    private String url = "";
 
     public void setUrl(String url) {
         this.url = url;
@@ -24,14 +28,22 @@ public class JspTag extends BaseTag {
     @Override
     public int doStartTag() {
         try {
+            HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+            RequestData rdata = RequestData.getRequestData(request);
             JspWriter writer = getContext().getOut();
+            PagePartData partData = (PagePartData) rdata.get(Statics.KEY_PART);
+            if (partData != null) {
+                writer.write("<div id=\"jspContainer_" + partData.getId() + "\" class=\"jspContainer\">");
+            }
             try {
                 getContext().include(url);
             } catch (ServletException e) {
                 Log.error("could not include jsp:" + url, e);
                 writer.write("<div>JSP missing</div>");
             }
-
+            if (partData != null) {
+                writer.write("</div>");
+            }
         } catch (Exception e) {
             Log.error("could not write tag", e);
         }

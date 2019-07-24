@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -30,17 +30,17 @@ public class FolderBean extends DbBean {
         return instance;
     }
 
-    public int getNextId(){
+    public int getNextId() {
         return getNextId("s_file_folder_id");
     }
 
-    private static String CHANGED_FOLDER_SQL="SELECT change_date FROM t_file_folder WHERE id=?";
+    private static String CHANGED_FOLDER_SQL = "SELECT change_date FROM t_file_folder WHERE id=?";
 
     protected boolean changedFolder(Connection con, FolderData data) {
         return changedItem(con, CHANGED_FOLDER_SQL, data);
     }
 
-    private static String GEL_ALL_FOLDERS_SQL="SELECT id,creation_date,change_date,parent_id,name," +
+    private static String GEL_ALL_FOLDERS_SQL = "SELECT id,creation_date,change_date,parent_id,name," +
             "description,anonymous,inherits_rights " +
             "FROM t_file_folder " +
             "ORDER BY parent_id, name";
@@ -91,7 +91,7 @@ public class FolderBean extends DbBean {
         return data;
     }
 
-    private static String READ_FOLDER_SQL="SELECT creation_date,change_date,parent_id,name," +
+    private static String READ_FOLDER_SQL = "SELECT creation_date,change_date,parent_id,name," +
             "description,anonymous,inherits_rights " +
             "FROM t_file_folder " +
             "WHERE id=?";
@@ -124,7 +124,7 @@ public class FolderBean extends DbBean {
         return success;
     }
 
-    private static String GET_FOLDER_RIGHTS_SQL="SELECT group_id,value FROM t_file_folder_right WHERE folder_id=?";
+    private static String GET_FOLDER_RIGHTS_SQL = "SELECT group_id,value FROM t_file_folder_right WHERE folder_id=?";
 
     public Map<Integer, Right> getFolderRights(Connection con, int folderId) throws SQLException {
         PreparedStatement pst = null;
@@ -158,10 +158,10 @@ public class FolderBean extends DbBean {
         }
     }
 
-    private static String INSERT_FOLDER_SQL="insert into t_file_folder (creation_date,parent_id," +
+    private static String INSERT_FOLDER_SQL = "insert into t_file_folder (creation_date,parent_id," +
             "name,description,anonymous,inherits_rights,id) " +
             "values(?,?,?,?,?,?,?)";
-    private static String UPDATE_FOLDER_SQL="update t_file_folder set creation_date=?,parent_id=?," +
+    private static String UPDATE_FOLDER_SQL = "update t_file_folder set creation_date=?,parent_id=?," +
             "name=?,description=?,anonymous=?,inherits_rights=? " +
             "where id=?";
 
@@ -193,10 +193,10 @@ public class FolderBean extends DbBean {
         }
     }
 
-    private static String DELETE_FOLDER_RIGHTS_SQL="DELETE FROM t_file_folder_right WHERE folder_id=?";
-    private static String INSERT_FOLDER_RIGHT_SQL="INSERT INTO t_file_folder_right (folder_id,group_id,value) VALUES(?,?,?)";
+    private static String DELETE_FOLDER_RIGHTS_SQL = "DELETE FROM t_file_folder_right WHERE folder_id=?";
+    private static String INSERT_FOLDER_RIGHT_SQL = "INSERT INTO t_file_folder_right (folder_id,group_id,value) VALUES(?,?,?)";
 
-    public void writeFolderRights(Connection con, FolderData data) throws SQLException{
+    public void writeFolderRights(Connection con, FolderData data) throws SQLException {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(DELETE_FOLDER_RIGHTS_SQL);
@@ -217,8 +217,9 @@ public class FolderBean extends DbBean {
         }
     }
 
-    private static String GET_FOLDER_ALL_RIGHT_SQL="SELECT value FROM t_file_folder_right WHERE group_id=?";
-    private static String GET_FOLDER_ID_RIGHT_SQL="SELECT folder_id,value FROM t_file_folder_right WHERE group_id=?";
+    private static String GET_FOLDER_ALL_RIGHT_SQL = "SELECT value FROM t_file_folder_right WHERE group_id=?";
+    private static String GET_FOLDER_ID_RIGHT_SQL = "SELECT folder_id,value FROM t_file_folder_right WHERE group_id=?";
+
     //todo!
     public Map<Integer, Integer> getFolderRights(int groupId) {
         Connection con = getConnection();
@@ -250,7 +251,7 @@ public class FolderBean extends DbBean {
         return null;
     }
 
-    private static String MOVE_FOLDER_SQL="UPDATE t_file_folder SET parent_id=? WHERE id=?";
+    private static String MOVE_FOLDER_SQL = "UPDATE t_file_folder SET parent_id=? WHERE id=?";
 
     public boolean moveFileFolder(int folderId, int parentId) {
         Connection con = startTransaction();
@@ -268,7 +269,7 @@ public class FolderBean extends DbBean {
         }
     }
 
-    private static String DELETE_FOLDER_SQL="DELETE FROM t_file_folder WHERE id=?";
+    private static String DELETE_FOLDER_SQL = "DELETE FROM t_file_folder WHERE id=?";
 
     public boolean deleteFolder(int id) {
         return deleteItem(DELETE_FOLDER_SQL, id);

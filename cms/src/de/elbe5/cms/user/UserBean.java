@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -33,24 +33,25 @@ public class UserBean extends DbBean {
         return instance;
     }
 
-    public int getNextId(){
+    public int getNextId() {
         return getNextId("s_user_id");
     }
 
-    private static String CHANGED_SQL="SELECT change_date FROM t_user WHERE id=?";
+    private static String CHANGED_SQL = "SELECT change_date FROM t_user WHERE id=?";
+
     protected boolean changedLogin(Connection con, UserData data) {
         return changedItem(con, CHANGED_SQL, data);
     }
 
 
-
-    private static String SELECT_USER_SQL="SELECT id,change_date,title,first_name,last_name,street,zipCode,city,country,locale,email,phone,mobile,notes,portrait_name,login,approval_code,approved,email_verified,failed_login_count,locked,deleted FROM t_user ";
+    private static String SELECT_USER_SQL = "SELECT id,change_date,title,first_name,last_name,street,zipCode,city,country,locale,email,phone,mobile,notes,portrait_name,login,approval_code,approved,email_verified,failed_login_count,locked,deleted FROM t_user ";
 
     protected boolean changedUser(Connection con, UserData data) {
         return changedLogin(con, data);
     }
 
-    private static String GET_ALL_USERS_SQL=SELECT_USER_SQL + " WHERE deleted=FALSE";
+    private static String GET_ALL_USERS_SQL = SELECT_USER_SQL + " WHERE deleted=FALSE";
+
     public List<UserData> getAllUsers() {
         List<UserData> list = new ArrayList<>();
         Connection con = getConnection();
@@ -75,8 +76,9 @@ public class UserBean extends DbBean {
         return list;
     }
 
-    private static String LOGIN_SQL="SELECT id,pwd,change_date,first_name,last_name,locale,email,failed_login_count FROM t_user WHERE login=? AND approved=TRUE AND locked=FALSE AND deleted=FALSE";
-    private static String UPDATE_LOGINCOUNT_SQL="UPDATE t_user SET failed_login_count=? WHERE id=?";
+    private static String LOGIN_SQL = "SELECT id,pwd,change_date,first_name,last_name,locale,email,failed_login_count FROM t_user WHERE login=? AND approved=TRUE AND locked=FALSE AND deleted=FALSE";
+    private static String UPDATE_LOGINCOUNT_SQL = "UPDATE t_user SET failed_login_count=? WHERE id=?";
+
     public UserData loginUser(String login, String pwd) {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -134,7 +136,8 @@ public class UserBean extends DbBean {
         return data;
     }
 
-    private static String GET_LOGIN_SQL="SELECT id,change_date,pwd,first_name,last_name,email FROM t_user WHERE login=? AND approval_code=?";
+    private static String GET_LOGIN_SQL = "SELECT id,change_date,pwd,first_name,last_name,email FROM t_user WHERE login=? AND approval_code=?";
+
     public UserData getLogin(String login, String approvalCode, String pwd) {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -168,7 +171,8 @@ public class UserBean extends DbBean {
         return passed ? data : null;
     }
 
-    private static String GET_PASSWORD_SQL="SELECT pwd FROM t_user WHERE id=?";
+    private static String GET_PASSWORD_SQL = "SELECT pwd FROM t_user WHERE id=?";
+
     public boolean isSystemPasswordEmpty() {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -191,7 +195,8 @@ public class UserBean extends DbBean {
         return empty;
     }
 
-    private static String GET_X_LOGIN_SQL="SELECT 'x' FROM t_user WHERE login=?";
+    private static String GET_X_LOGIN_SQL = "SELECT 'x' FROM t_user WHERE login=?";
+
     public boolean doesLoginExist(String login) {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -213,7 +218,8 @@ public class UserBean extends DbBean {
         return exists;
     }
 
-    private static String GET_X_EMAIL_SQL="SELECT 'x' FROM t_user WHERE email=?";
+    private static String GET_X_EMAIL_SQL = "SELECT 'x' FROM t_user WHERE email=?";
+
     public boolean doesEmailExist(String login) {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -235,7 +241,8 @@ public class UserBean extends DbBean {
         return exists;
     }
 
-    private static String GET_USER_SQL=SELECT_USER_SQL + " WHERE id=?";
+    private static String GET_USER_SQL = SELECT_USER_SQL + " WHERE id=?";
+
     public UserData getUser(int id) {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -246,7 +253,7 @@ public class UserBean extends DbBean {
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
                 data = new UserData();
-                readUserData(data,rs);
+                readUserData(data, rs);
                 readUserGroups(con, data);
             }
         } catch (SQLException se) {
@@ -258,7 +265,7 @@ public class UserBean extends DbBean {
         return data;
     }
 
-    private void readUserData(UserData data, ResultSet rs) throws SQLException{
+    private void readUserData(UserData data, ResultSet rs) throws SQLException {
         int i = 1;
         data.setId(rs.getInt(i++));
         data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
@@ -285,7 +292,8 @@ public class UserBean extends DbBean {
         data.setDeleted(rs.getBoolean(i));
     }
 
-    private static String GET_PORTRAIT_SQL="SELECT portrait_name, portrait FROM t_user WHERE id=?";
+    private static String GET_PORTRAIT_SQL = "SELECT portrait_name, portrait FROM t_user WHERE id=?";
+
     public BinaryFile getBinaryPortraitData(int id) {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -303,7 +311,7 @@ public class UserBean extends DbBean {
                     data.setFileSize(data.getBytes() == null ? 0 : data.getBytes().length);
                 }
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             return null;
         } finally {
             closeStatement(pst);
@@ -312,7 +320,8 @@ public class UserBean extends DbBean {
         return data;
     }
 
-    private static String READ_USER_GROUPS_SQL="SELECT group_id FROM t_user2group WHERE user_id=?";
+    private static String READ_USER_GROUPS_SQL = "SELECT group_id FROM t_user2group WHERE user_id=?";
+
     protected void readUserGroups(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
         try {
@@ -343,10 +352,11 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String INSERT_USER_SQL="insert into t_user (change_date,title,first_name,last_name,street,zipCode,city,country,locale,email,phone,fax,mobile,notes,portrait_name,portrait,login,pwd,approval_code,approved,email_verified,failed_login_count,locked,deleted,id) " +
+    private static String INSERT_USER_SQL = "insert into t_user (change_date,title,first_name,last_name,street,zipCode,city,country,locale,email,phone,fax,mobile,notes,portrait_name,portrait,login,pwd,approval_code,approved,email_verified,failed_login_count,locked,deleted,id) " +
             "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    private static String UPDATE_USER_PWD_SQL="update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,pwd=?,approval_code=?,approved=?,email_verified=?,failed_login_count=?,locked=?,deleted=? where id=?";
-    private static String UPDATE_USER_NOPWD_SQL="update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,approval_code=?,approved=?,email_verified=?,failed_login_count=?,locked=?,deleted=? where id=?";
+    private static String UPDATE_USER_PWD_SQL = "update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,pwd=?,approval_code=?,approved=?,email_verified=?,failed_login_count=?,locked=?,deleted=? where id=?";
+    private static String UPDATE_USER_NOPWD_SQL = "update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,approval_code=?,approved=?,email_verified=?,failed_login_count=?,locked=?,deleted=? where id=?";
+
     protected void writeUser(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
         try {
@@ -405,7 +415,8 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String UPDATE_PROFILE_SQL="UPDATE t_user SET change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=? WHERE id=?";
+    private static String UPDATE_PROFILE_SQL = "UPDATE t_user SET change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=? WHERE id=?";
+
     protected void writeUserProfile(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
         try {
@@ -438,7 +449,8 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String CHANGE_PASSWORD_SQL="UPDATE t_user SET pwd=? WHERE id=?";
+    private static String CHANGE_PASSWORD_SQL = "UPDATE t_user SET pwd=? WHERE id=?";
+
     public boolean changePassword(int id, String pwd) {
         Connection con = startTransaction();
         PreparedStatement pst = null;
@@ -472,7 +484,8 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String VERIFY_EMAIL_SQL="UPDATE t_user SET change_date=?, email_verified=true WHERE id=?";
+    private static String VERIFY_EMAIL_SQL = "UPDATE t_user SET change_date=?, email_verified=true WHERE id=?";
+
     protected void writeUserVerfiyEmail(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
         try {
@@ -501,7 +514,8 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String UPDATE_PASSWORD_SQL="UPDATE t_user SET change_date=?, pwd=? WHERE id=?";
+    private static String UPDATE_PASSWORD_SQL = "UPDATE t_user SET change_date=?, pwd=? WHERE id=?";
+
     protected void writeUserPassword(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
         try {
@@ -517,8 +531,9 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String DELETE_USERGROUPS_SQL="DELETE FROM t_user2group WHERE user_id=?";
-    private static String INSERT_USERGROUP_SQL="INSERT INTO t_user2group (user_id,group_id) VALUES(?,?)";
+    private static String DELETE_USERGROUPS_SQL = "DELETE FROM t_user2group WHERE user_id=?";
+    private static String INSERT_USERGROUP_SQL = "INSERT INTO t_user2group (user_id,group_id) VALUES(?,?)";
+
     protected void writeUserGroups(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
         try {
@@ -539,8 +554,9 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String DELETE_USER_SQL="UPDATE t_user SET deleted=TRUE WHERE id=?";
-    private static String DELETE_ALL_USERGROUPS_SQL="DELETE FROM t_user2group WHERE user_id=?";
+    private static String DELETE_USER_SQL = "UPDATE t_user SET deleted=TRUE WHERE id=?";
+    private static String DELETE_ALL_USERGROUPS_SQL = "DELETE FROM t_user2group WHERE user_id=?";
+
     public void deleteUser(int id) {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -559,7 +575,6 @@ public class UserBean extends DbBean {
             closeConnection(con);
         }
     }
-
 
 
 }

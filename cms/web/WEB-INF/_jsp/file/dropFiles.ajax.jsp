@@ -1,24 +1,24 @@
 <%--
   Elbe 5 CMS - A Java based modular Content Management System
-  Copyright (C) 2009-2018 Michael Roennau
+  Copyright (C) 2009-2019 Michael Roennau
 
   This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
+<%@ page trimDirectiveWhitespaces="true" %>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
-
-<%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.file.FolderData" %>
 <%@ page import="de.elbe5.cms.application.Strings" %>
-<%@ page import="de.elbe5.cms.servlet.RequestData" %>
+<%@ page import="de.elbe5.cms.file.FolderData" %>
+<%@ page import="de.elbe5.cms.request.RequestData" %>
+<%@ page import="java.util.Locale" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    RequestData rdata= RequestData.getRequestData(request);
+    RequestData rdata = RequestData.getRequestData(request);
     Locale locale = rdata.getSessionLocale();
     FolderData folderData = (FolderData) rdata.getSessionObject("folderData");
-    assert(folderData !=null);
-    String url="/file/dropFiles/"+folderData.getId();
+    assert (folderData != null);
+    String url = "/file/dropFiles/" + folderData.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -32,24 +32,28 @@
         <cms:form url="<%=url%>" name="fileform" multi="true">
             <div class="modal-body">
                 <cms:formerror/>
-                <cms:line label="<%=Strings._id.toString()%>"><%=Integer.toString(folderData.getId())%></cms:line>
-                <cms:line label="<%=Strings._name.toString()%>"><%=StringUtil.toHtml(folderData.getName())%></cms:line>
+                <cms:line label="<%=Strings._id.toString()%>"><%=Integer.toString(folderData.getId())%>
+                </cms:line>
+                <cms:line label="<%=Strings._name.toString()%>"><%=StringUtil.toHtml(folderData.getName())%>
+                </cms:line>
                 <div class="form-group row">
-                    <label class="col-md-3 col-form-label"><%=Strings._dragFilesHere.html(locale)%></label>
+                    <label class="col-md-3 col-form-label"><%=Strings._dragFilesHere.html(locale)%>
+                    </label>
                     <div class="col-md-9">
                         <div id="dropArea" class="form-control"></div>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-md-3 col-form-label"><%=Strings._files.html(locale)%></label>
+                    <label class="col-md-3 col-form-label"><%=Strings._files.html(locale)%>
+                    </label>
                     <div id="fileNames" class="col-md-9"></div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary"
+                <button type="button" class="btn btn-outline-secondary"
                         data-dismiss="modal"><%=Strings._close.html(locale)%>
                 </button>
-                <button type="submit" class="btn btn-primary"><%=Strings._save.html(locale)%>
+                <button type="submit" class="btn btn-outline-primary"><%=Strings._save.html(locale)%>
                 </button>
             </div>
         </cms:form>
@@ -71,7 +75,7 @@
             e.originalEvent.dataTransfer.files.length > 0;
     }
 
-    var $dropArea=$('#dropArea');
+    var $dropArea = $('#dropArea');
     var dropFiles = [];
 
     $dropArea.on('dragenter', function (e) {
@@ -97,9 +101,9 @@
             for (var i = 0; i < files.length; i++) {
                 dropFiles.push(files[i]);
             }
-            var fileNames="";
-            dropFiles.forEach(function(value, index, array){
-                fileNames+=value.name+'<br>';
+            var fileNames = "";
+            dropFiles.forEach(function (value, index, array) {
+                fileNames += value.name + '<br>';
             });
             $('#fileNames').html(fileNames);
         }

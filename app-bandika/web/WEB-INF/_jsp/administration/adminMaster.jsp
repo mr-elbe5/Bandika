@@ -1,6 +1,6 @@
 <%--
   Elbe 5 CMS - A Java based modular Content Management System
-  Copyright (C) 2009-2018 Michael Roennau
+  Copyright (C) 2009-2019 Michael Roennau
 
   This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -10,94 +10,115 @@
 <%@ page import="de.elbe5.cms.application.Strings" %>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
 <%@ page import="de.elbe5.cms.application.Statics" %>
-<%@ page import="de.elbe5.cms.servlet.RequestData" %>
+<%@ page import="de.elbe5.cms.request.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
-    RequestData rdata=RequestData.getRequestData(request);
+    RequestData rdata = RequestData.getRequestData(request);
     Locale locale = rdata.getSessionLocale();
     String title = rdata.getString(Statics.KEY_TITLE);
-    String includeUrl= rdata.getString(Statics.KEY_JSP);
+    String includeUrl = rdata.getString(Statics.KEY_JSP);
 %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title><%=title%></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title><%=title%>
+    </title>
     <link rel="shortcut icon" href="/favicon.ico"/>
-    <link rel="stylesheet" href="/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/css/cms.css" />
-    <link rel="stylesheet" href="/css/admin.css" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/elbe5.css"/>
     <script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/bootstrap.tree.js"></script>
     <script type="text/javascript" src="/js/ace.js"></script>
-    <script type="text/javascript" src="/js/cms.js"></script>
-    <script type="text/javascript" src="/js/admin.js"></script>
+    <script type="text/javascript" src="/js/elbe5.js"></script>
 </head>
 
 <body>
-    <header>
-        <div class="container">
-            <div class="topheader row">
-                <section class="col-12 sysnav">
-                    <ul class="nav justify-content-end">
-                        <li class="nav-item"><a class="nav-link" href="/"><%=Strings._home.html(locale)%></a></li>
-                        <li class="nav-item"><a class="nav-link" href="/user/logout"><%=Strings._logout.html(locale)%></a></li>
-                    </ul>
-                </section>
-                <section class="col-12 logo">
-                    <a href="/"><img src="/img/logo-light.png" alt="" /></a>
-                </section>
-            </div>
-            <div class="menuheader row">
-                <section class="col-12 menu">
-                    <ul class="nav nav-tabs">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin/openSystemAdministration"><%=Strings._systemAdministration.html(locale)%></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin/openContentAdministration"><%=Strings._contentAdministration.html(locale)%></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin/openPageStructure"><%=Strings._pageStructure.html(locale)%></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin/openFileStructure"><%=Strings._fileStructure.html(locale)%></a>
-                        </li>
-                    </ul>
-                </section>
-            </div>
-            <div>
-                <section class="bc">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/"><%=Strings._home.html(locale)%></a></li>
-                            <li class="breadcrumb-item"><a><%=StringUtil.toHtml(title)%></a></li>
-                        </ol>
-                    </nav>
-                </section>
-            </div>
+<header>
+    <div class="container">
+        <div class="top row">
+            <section class="col-12 sysnav">
+                <ul class="nav justify-content-end">
+                    <li class="nav-item"><a class="nav-link" href="/"><%=Strings._home.html(locale)%>
+                    </a></li>
+                    <li class="nav-item"><a class="nav-link" href="/user/logout"><%=Strings._logout.html(locale)%>
+                    </a></li>
+                </ul>
+            </section>
         </div>
-    </header>
-    <main id="main" role="main">
-        <div id="pageContainer" class="container">
-            <jsp:include page="<%=includeUrl%>" flush="true" />
+        <div class="menu row">
+            <section class="col-12 menu">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="navbar-brand" href="/"><img src="/img/logo-light.png" alt=""/></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   href="/admin/openSystemAdministration"><%=Strings._systemAdministration.html(locale)%>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   href="/template/openTemplateAdministration"><%=Strings._templateAdministration.html(locale)%>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/page/openPageAdministration"><%=Strings._pageAdministration.html(locale)%>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   href="/templatepage/openPartAdministration"><%=Strings._partAdministration.html(locale)%>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/file/openFileAdministration"><%=Strings._fileAdministration.html(locale)%>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </section>
         </div>
-    </main>
-    <footer>
-        <div class="container"><%=Strings._copyright.html(locale)%></div>
-    </footer>
-    <div class="modal" id="modalDialog" tabindex="-1" role="dialog">
+        <div>
+            <section class="bc">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/"><%=Strings._home.html(locale)%>
+                        </a></li>
+                        <li class="breadcrumb-item"><a><%=StringUtil.toHtml(title)%>
+                        </a></li>
+                    </ol>
+                </nav>
+            </section>
+        </div>
     </div>
-    <script type="text/javascript">
-        function confirmDelete(){
-            return confirm('<%=Strings._confirmDelete.js(locale)%>');
-        }
-        function confirmExecute(){
-            return confirm('<%=Strings._confirmExecute.js(locale)%>');
-        }
-    </script>
+</header>
+<main id="main" role="main">
+    <div id="pageContainer" class="container">
+        <jsp:include page="<%=includeUrl%>" flush="true"/>
+    </div>
+</main>
+<footer>
+    <div class="container"><%=Strings._copyright.html(locale)%>
+    </div>
+</footer>
+<div class="modal" id="modalDialog" tabindex="-1" role="dialog">
+</div>
+<script type="text/javascript">
+    function confirmDelete() {
+        return confirm('<%=Strings._confirmDelete.js(locale)%>');
+    }
+
+    function confirmExecute() {
+        return confirm('<%=Strings._confirmExecute.js(locale)%>');
+    }
+</script>
 
 </body>
 </html>

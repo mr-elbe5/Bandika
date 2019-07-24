@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -9,8 +9,8 @@
 package de.elbe5.cms.user;
 
 import de.elbe5.base.log.Log;
-import de.elbe5.cms.rights.RightBean;
 import de.elbe5.cms.database.DbBean;
+import de.elbe5.cms.rights.RightBean;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -31,11 +31,12 @@ public class GroupBean extends DbBean {
         return instance;
     }
 
-    public int getNextId(){
+    public int getNextId() {
         return getNextId("s_group_id");
     }
 
-    private static String CHANGED_SQL="SELECT change_date FROM t_group WHERE id=?";
+    private static String CHANGED_SQL = "SELECT change_date FROM t_group WHERE id=?";
+
     protected boolean changedGroup(Connection con, GroupData data) {
         return changedItem(con, CHANGED_SQL, data);
     }
@@ -66,7 +67,8 @@ public class GroupBean extends DbBean {
         return list;
     }
 
-    private static String GET_GROUP_SQL="SELECT change_date,name,notes FROM t_group WHERE id=? ORDER BY name";
+    private static String GET_GROUP_SQL = "SELECT change_date,name,notes FROM t_group WHERE id=? ORDER BY name";
+
     public GroupData getGroup(int id) {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -96,7 +98,8 @@ public class GroupBean extends DbBean {
         return data;
     }
 
-    private static String READ_GROUPUSER_SQL="SELECT user_id FROM t_user2group WHERE group_id=?";
+    private static String READ_GROUPUSER_SQL = "SELECT user_id FROM t_user2group WHERE group_id=?";
+
     protected void readGroupUsers(Connection con, GroupData data) throws SQLException {
         PreparedStatement pst = null;
         try {
@@ -129,8 +132,9 @@ public class GroupBean extends DbBean {
         }
     }
 
-    private static String INSERT_GROUP_SQL="insert into t_group (change_date,name,notes, id) values(?,?,?,?)";
-    private static String UPDATE_GROUP_SQL="update t_group set change_date=?,name=?,notes=? where id=?";
+    private static String INSERT_GROUP_SQL = "insert into t_group (change_date,name,notes, id) values(?,?,?,?)";
+    private static String UPDATE_GROUP_SQL = "update t_group set change_date=?,name=?,notes=? where id=?";
+
     protected void writeGroup(Connection con, GroupData data) throws SQLException {
         PreparedStatement pst = null;
         try {
@@ -148,8 +152,9 @@ public class GroupBean extends DbBean {
         }
     }
 
-    private static String DELETE_GROUPUSERS_SQL="DELETE FROM t_user2group WHERE group_id=?";
-    private static String INSERT_GROUPUSER_SQL="INSERT INTO t_user2group (group_id,user_id) VALUES(?,?)";
+    private static String DELETE_GROUPUSERS_SQL = "DELETE FROM t_user2group WHERE group_id=?";
+    private static String INSERT_GROUPUSER_SQL = "INSERT INTO t_user2group (group_id,user_id) VALUES(?,?)";
+
     protected void writeGroupUsers(Connection con, GroupData data) throws SQLException {
         PreparedStatement pst = null;
         try {
@@ -170,7 +175,8 @@ public class GroupBean extends DbBean {
         }
     }
 
-    private static String DELETE_GROUP_SQL="DELETE FROM t_group WHERE id=?";
+    private static String DELETE_GROUP_SQL = "DELETE FROM t_group WHERE id=?";
+
     public boolean deleteGroup(int id) {
         return deleteItem(DELETE_GROUP_SQL, id);
     }

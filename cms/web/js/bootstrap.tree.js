@@ -1,7 +1,6 @@
-
 // adapted from bootsnipp
 $.fn.extend({
-    treed: function (openedClass,closedClass) {
+    treed: function (openedClass, closedClass) {
 
         //initialize each of the top levels
         var tree = $(this);
@@ -24,7 +23,7 @@ $.fn.extend({
             }
         });
         //fire event from the dynamically added icon
-        tree.find('.branch .indicator').each(function(){
+        tree.find('.branch .indicator').each(function () {
             $(this).on('click', function () {
                 $(this).closest('li').click();
             });

@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -55,18 +55,18 @@ public class UserSecurity {
         Random random = new Random();
         random.setSeed(Instant.now().toEpochMilli());
         char[] chars = new char[6];
-        for (int i=0;i<6;i++)
+        for (int i = 0; i < 6; i++)
             chars[i] = getRandomChar(SMALLNUMBERS, random);
         return new String(chars);
     }
 
-    public static int[] getCaptchaInts(String captchaString){
-        char[] chars=captchaString.toCharArray();
-        if (chars.length!=6)
+    public static int[] getCaptchaInts(String captchaString) {
+        char[] chars = captchaString.toCharArray();
+        if (chars.length != 6)
             return null;
-        int[] ints=new int[6];
-        for (int i=0;i<6;i++)
-            ints[i]=chars[i]-48;
+        int[] ints = new int[6];
+        for (int i = 0; i < 6; i++)
+            ints[i] = chars[i] - 48;
         return ints;
     }
 
@@ -94,7 +94,7 @@ public class UserSecurity {
 
     public static BinaryFile getCaptcha(String captcha) {
         int[] ints = getCaptchaInts(captcha);
-        if (ints==null)
+        if (ints == null)
             return null;
         int width = 300;
         int height = 200;
@@ -110,23 +110,23 @@ public class UserSecurity {
         GradientPaint gp = new GradientPaint(0, 0, gradiantStartColor, 0, height >> 1, gradiantEndColor, true);
         g2d.setPaint(gp);
         g2d.fillRect(0, 0, width, height);
-        for (int i=0;i<ints[0];i++){
-            drawLine(g2d,blueColor,width,height);
+        for (int i = 0; i < ints[0]; i++) {
+            drawLine(g2d, blueColor, width, height);
         }
-        for (int i=0;i<ints[1];i++){
-            drawLine(g2d,yellowColor,width,height);
+        for (int i = 0; i < ints[1]; i++) {
+            drawLine(g2d, yellowColor, width, height);
         }
-        for (int i=0;i<ints[2];i++){
-            drawLine(g2d,redColor,width,height);
+        for (int i = 0; i < ints[2]; i++) {
+            drawLine(g2d, redColor, width, height);
         }
-        for (int i=0;i<ints[3];i++){
-            drawCircle(g2d,blueColor,width,height);
+        for (int i = 0; i < ints[3]; i++) {
+            drawCircle(g2d, blueColor, width, height);
         }
-        for (int i=0;i<ints[4];i++){
-            drawCircle(g2d,yellowColor,width,height);
+        for (int i = 0; i < ints[4]; i++) {
+            drawCircle(g2d, yellowColor, width, height);
         }
-        for (int i=0;i<ints[5];i++){
-            drawCircle(g2d,redColor,width,height);
+        for (int i = 0; i < ints[5]; i++) {
+            drawCircle(g2d, redColor, width, height);
         }
         g2d.dispose();
         try {
@@ -142,21 +142,21 @@ public class UserSecurity {
         return data;
     }
 
-    private static void drawLine(Graphics2D g2d, Color col, int width, int height){
+    private static void drawLine(Graphics2D g2d, Color col, int width, int height) {
         Random r = new Random();
-        int x1 = 10*r.nextInt(width/10);
-        int y1 = 10*r.nextInt(height/10);
-        int x2 = 10*r.nextInt(width/10);
-        int y2 = 10*r.nextInt(height/10);
+        int x1 = 10 * r.nextInt(width / 10);
+        int y1 = 10 * r.nextInt(height / 10);
+        int x2 = 10 * r.nextInt(width / 10);
+        int y2 = 10 * r.nextInt(height / 10);
         g2d.setColor(col);
-        g2d.drawLine(x1,y1,x2,y2);
+        g2d.drawLine(x1, y1, x2, y2);
     }
 
-    private static void drawCircle(Graphics2D g2d, Color col, int width, int height){
+    private static void drawCircle(Graphics2D g2d, Color col, int width, int height) {
         Random r = new Random();
-        int x1 = width/10+r.nextInt(8*width/10);
-        int y1 = height/10+r.nextInt(8*height/10);
-        int radius = 10+r.nextInt(height/10);
+        int x1 = width / 10 + r.nextInt(8 * width / 10);
+        int y1 = height / 10 + r.nextInt(8 * height / 10);
+        int radius = 10 + r.nextInt(height / 10);
         g2d.setColor(col);
         Shape circle = new Ellipse2D.Double(x1 - radius, y1 - radius, 2.0 * radius, 2.0 * radius);
         g2d.draw(circle);

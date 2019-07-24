@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -53,7 +53,7 @@ public abstract class DbBean {
         int id = 0;
         Connection con = getConnection();
         try {
-            id = getNextId(con,sequence);
+            id = getNextId(con, sequence);
         } catch (Exception ignored) {
         } finally {
             closeConnection(con);
@@ -66,7 +66,7 @@ public abstract class DbBean {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement("SELECT nextval(?)");
-            pst.setString(1,sequence);
+            pst.setString(1, sequence);
             try (ResultSet rs = pst.executeQuery()) {
                 rs.next();
                 id = rs.getInt(1);

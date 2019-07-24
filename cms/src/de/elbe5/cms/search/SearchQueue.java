@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -8,8 +8,8 @@
  */
 package de.elbe5.cms.search;
 
-import de.elbe5.cms.application.AppContextListener;
 import de.elbe5.base.thread.BaseThread;
+import de.elbe5.cms.application.AppContextListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +37,7 @@ public class SearchQueue {
     public void addAction(int actionId) {
         if (actionList.size() > 0) {
             int lastData = actionList.get(actionList.size() - 1);
-            if (lastData==actionId) {
+            if (lastData == actionId) {
                 return;
             }
         }

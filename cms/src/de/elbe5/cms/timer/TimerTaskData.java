@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -10,18 +10,15 @@ package de.elbe5.cms.timer;
 
 import de.elbe5.base.data.BaseData;
 import de.elbe5.cms.application.Strings;
-import de.elbe5.cms.servlet.*;
+import de.elbe5.cms.request.IRequestData;
+import de.elbe5.cms.request.RequestData;
 
 import java.time.LocalDateTime;
 
-/**
- * Class TimerTaskData is the data class for timer tasks groups. <br>
- * Usage:
- */
 public abstract class TimerTaskData extends BaseData implements IRequestData, Cloneable {
 
 
-    protected String displayName="";
+    protected String displayName = "";
     protected TimerInterval interval = TimerInterval.CONTINOUS;
     protected int day = 0;
     protected int hour = 0;
@@ -108,48 +105,48 @@ public abstract class TimerTaskData extends BaseData implements IRequestData, Cl
 
     protected LocalDateTime computeNextExecution(LocalDateTime now) {
         LocalDateTime next;
-        if (lastExecution==null)
-            lastExecution=LocalDateTime.now();
+        if (lastExecution == null)
+            lastExecution = LocalDateTime.now();
         switch (interval) {
             case CONTINOUS: {
-                next=lastExecution.plusDays(getDay());
-                next=next.plusHours(getHour());
-                next=next.plusMinutes(getMinute());
+                next = lastExecution.plusDays(getDay());
+                next = next.plusHours(getHour());
+                next = next.plusMinutes(getMinute());
                 return next;
             }
             case MONTH: {
-                next=now.withDayOfMonth(getDay());
-                next=next.withHour(getHour());
-                next=next.withMinute(getMinute());
-                next=next.withSecond(0);
+                next = now.withDayOfMonth(getDay());
+                next = next.withHour(getHour());
+                next = next.withMinute(getMinute());
+                next = next.withSecond(0);
                 if (next.isAfter(now)) {
-                    next=next.minusMonths(1);
+                    next = next.minusMonths(1);
                 }
                 if (!(lastExecution.isBefore(next))) {
-                    next=next.plusMonths(1);
+                    next = next.plusMonths(1);
                 }
                 return next;
             }
             case DAY: {
-                next=now.withHour(getHour());
-                next=next.withMinute(getMinute());
-                next=next.withSecond(0);
+                next = now.withHour(getHour());
+                next = next.withMinute(getMinute());
+                next = next.withSecond(0);
                 if (next.isAfter(now)) {
-                    next=next.minusDays(1);
+                    next = next.minusDays(1);
                 }
                 if (!(lastExecution.isBefore(next))) {
-                    next=next.plusDays(1);
+                    next = next.plusDays(1);
                 }
                 return next;
             }
             case HOUR: {
-                next=now.withMinute(getMinute());
-                next=next.withSecond(0);
+                next = now.withMinute(getMinute());
+                next = next.withSecond(0);
                 if (next.isAfter(now)) {
-                    next=next.minusHours(1);
+                    next = next.minusHours(1);
                 }
                 if (!(lastExecution.isBefore(next))) {
-                    next=next.plusHours(1);
+                    next = next.plusHours(1);
                 }
                 return next;
             }
@@ -184,7 +181,7 @@ public abstract class TimerTaskData extends BaseData implements IRequestData, Cl
         setMinute(rdata.getInt("minute"));
         setActive(rdata.getBoolean("active"));
         setRegisterExecution(rdata.getBoolean("registerExecution"));
-        if (interval!=TimerInterval.CONTINOUS && (day==0 || (hour < 0 || hour >= 24) || (minute < 0 || minute >= 60))){
+        if (interval != TimerInterval.CONTINOUS && (day == 0 || (hour < 0 || hour >= 24) || (minute < 0 || minute >= 60))) {
             rdata.addFormError(Strings._timerSettingsError.string(rdata.getSessionLocale()));
             rdata.addFormField("interval");
             rdata.addFormField("day");

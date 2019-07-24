@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -10,10 +10,10 @@ package de.elbe5.cms.page;
 
 import de.elbe5.base.data.BaseIdData;
 import de.elbe5.base.log.Log;
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.cms.application.Statics;
+import de.elbe5.cms.request.IRequestData;
+import de.elbe5.cms.request.RequestData;
 import de.elbe5.cms.rights.Right;
-import de.elbe5.cms.servlet.*;
-import de.elbe5.cms.template.TemplateData;
 import de.elbe5.cms.user.GroupBean;
 import de.elbe5.cms.user.GroupData;
 import org.jsoup.Jsoup;
@@ -22,13 +22,12 @@ import org.jsoup.nodes.Document;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class PageData extends BaseIdData implements IRequestData, Comparable<PageData>{
+public class PageData extends BaseIdData implements IRequestData, Comparable<PageData> {
 
     public static final int ID_ALL = 0;
     public static final int ID_ROOT = 1;
 
     // base data
-    protected LocalDateTime creationDate = null;
     protected String name = "";
     protected String description = "";
     protected String keywords = "";
@@ -36,8 +35,7 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
     protected boolean inTopNav = true;
     protected boolean inFooter = false;
     protected boolean anonymous = true;
-    protected String masterName = "";
-    protected String templateName = "";
+    protected String masterName = Statics.DEFAULT_MASTER;
     protected boolean inheritsRights = true;
     protected Map<Integer, Right> rights = new HashMap<>();
 
@@ -46,15 +44,13 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
     protected PageData parent = null;
     protected int ranking = 0;
     protected List<PageData> subPages = new ArrayList<>();
-    protected List<Integer> subpageIds=new ArrayList<>();
+    protected List<Integer> subpageIds = new ArrayList<>();
 
-    // part data
-    protected Map<String, SectionData> sections = new HashMap<>();
-    protected PagePartData editPagePart = null;
+    // jsp File
+    protected String jsp = "";
 
     //display data
-    protected ViewMode viewMode=ViewMode.VIEW;
-    protected boolean dynamic=false;
+    protected ViewMode viewMode = ViewMode.VIEW;
     protected LocalDateTime publishDate = null;
     protected String publishedContent = "";
     protected String searchContent = "";
@@ -72,7 +68,6 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
         setInFooter(data.isInFooter());
         setAnonymous(data.isAnonymous());
         setMasterName(data.getMasterName());
-        setTemplateName(data.getTemplateName());
         setInheritsRights(data.inheritsRights());
         getRights().clear();
         getRights().putAll(data.getRights());
@@ -80,19 +75,11 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
         setParentId(data.getParentId());
         setParent(data.getParent());
         setRanking(data.getRanking() + 1);
-
-        for (String sectionName : data.sections.keySet()) {
-            SectionData section = new SectionData();
-            section.setPageId(getId());
-            section.cloneData(data.sections.get(sectionName));
-            sections.put(sectionName, section);
-        }
     }
 
     public void setCreateValues(PageData parent) {
         setNew(true);
         setId(PageBean.getInstance().getNextId());
-
         setParentId(parent.getId());
         setParent(parent);
         setMasterName(parent.getMasterName());
@@ -102,7 +89,7 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
     }
 
     public void setEditValues(PageData cachedData) {
-        if (cachedData==null)
+        if (cachedData == null)
             return;
         if (!isNew()) {
             for (PageData subpage : cachedData.getSubPages()) {
@@ -111,12 +98,8 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
         }
     }
 
-    public LocalDateTime getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDateTime d) {
-        creationDate = d;
+    public String getType() {
+        return getClass().getSimpleName();
     }
 
     public String getName() {
@@ -181,18 +164,6 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
 
     public void setMasterName(String masterName) {
         this.masterName = masterName;
-    }
-
-    public String getTemplateName() {
-        return templateName;
-    }
-
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
-    }
-
-    public String getInclude(){
-        return TemplateData.getTemplateUrl(TemplateData.TYPE_PAGE, getTemplateName());
     }
 
     public boolean inheritsRights() {
@@ -292,79 +263,25 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
         return subpageIds;
     }
 
-    // part data
+    // jsp
 
-    public SectionData ensureSection(String sectionName) {
-        if (!sections.containsKey(sectionName)) {
-            SectionData section = new SectionData();
-            section.setPageId(getId());
-            section.setName(sectionName);
-            section.setInTemplate(true);
-            sections.put(sectionName, section);
-            return section;
-        }
-        return sections.get(sectionName);
+    public String getJsp() {
+        return jsp;
     }
 
-    public SectionData getSection(String sectionName) {
-        return sections.get(sectionName);
+    public boolean hasJsp() {
+        return jsp != null && !jsp.isEmpty();
     }
 
-    public Map<String, SectionData> getSections() {
-        return sections;
+    public void setJsp(String jsp) {
+        this.jsp = jsp;
     }
 
-    public void sortPageParts() {
-        for (SectionData section : sections.values()) {
-            section.sortPageParts();
-        }
+    public String getInclude() {
+        if (hasJsp())
+            return getJsp();
+        return null;
     }
-
-    public PagePartData getPagePart(String sectionName, int pid) {
-        SectionData section = getSection(sectionName);
-        return section.getPart(pid);
-    }
-
-    public PagePartData getEditPagePart() {
-        return editPagePart;
-    }
-
-    public void setEditPagePart(PagePartData editPagePart) {
-        this.editPagePart = editPagePart;
-    }
-
-    public void setEditPagePart(String sectionName, int id) {
-        setEditPagePart(getPagePart(sectionName, id));
-    }
-
-    public void addSharedPagePart(PagePartData part, int fromPartId, boolean below, boolean setRanking) {
-        //todo?
-        addPagePart(part,fromPartId,below,setRanking);
-    }
-
-    public void addPagePart(PagePartData part, int fromPartId, boolean below, boolean setRanking) {
-        SectionData section = getSection(part.getSectionName());
-        if (section == null) {
-            section = new SectionData();
-            section.setPageId(getId());
-            section.setName(part.getSectionName());
-            sections.put(part.getSectionName(), section);
-        }
-        section.addPagePart(part, fromPartId, below, setRanking);
-    }
-
-    public void movePagePart(String sectionName, int id, int dir) {
-        editPagePart = null;
-        SectionData section = getSection(sectionName);
-        section.movePagePart(id, dir);
-    }
-
-    public void removePagePart(String sectionName, int id) {
-        SectionData section = getSection(sectionName);
-        section.removePagePart(id);
-        editPagePart = null;
-    }
-
 
     // display data
 
@@ -382,33 +299,23 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
         this.viewMode = viewMode;
     }
 
-    public boolean isDynamic() {
-        return dynamic;
+    public void unsetDetailEditMode() {
     }
 
-    public void setDynamic(boolean dynamic) {
-        this.dynamic = dynamic;
-    }
-
-    public void setDynamic() {
-        dynamic=false;
-        for (SectionData section : sections.values())
-            if (section.isDynamic()){
-                dynamic=true;
-                break;
-            }
+    public boolean isDetailEditMode() {
+        return false;
     }
 
     public LocalDateTime getPublishDate() {
         return publishDate;
     }
 
-    public boolean hasUnpublishedDraft(){
-        return publishDate==null || publishDate.isBefore(getChangeDate());
+    public boolean hasUnpublishedDraft() {
+        return publishDate == null || publishDate.isBefore(getChangeDate());
     }
 
-    public boolean isPublished(){
-        return publishDate!=null;
+    public boolean isPublished() {
+        return publishDate != null;
     }
 
     public void setPublishDate(LocalDateTime publishDate) {
@@ -433,7 +340,7 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
 
     public void extractSearchContent() {
         Document doc = Jsoup.parse(getPublishedContent());
-        String text=doc.body().text();
+        String text = doc.body().text();
         setSearchContent(text);
     }
 
@@ -442,7 +349,6 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
         setName(rdata.getString("name").trim());
         setDescription(rdata.getString("description"));
         setKeywords(rdata.getString("keywords"));
-        setTemplateName(rdata.getString("templateName"));
         setInTopNav(rdata.getBoolean("inTopNav"));
         setInFooter(rdata.getBoolean("inFooter"));
         setAnonymous(rdata.getBoolean("anonymous"));
@@ -461,8 +367,8 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
         if (!subpageIds.isEmpty()) {
             int[] subIds = new int[subpageIds.size()];
             for (int subId : subpageIds) {
-                int idx=rdata.getInt("select"+subId);
-                subIds[idx]=subId;
+                int idx = rdata.getInt("select" + subId);
+                subIds[idx] = subId;
             }
             subpageIds.clear();
             for (int subId : subIds)
@@ -471,14 +377,11 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
         if (name.isEmpty()) {
             rdata.addIncompleteField("name");
         }
-        if (templateName.isEmpty()) {
-            rdata.addIncompleteField("templateName");
-        }
     }
 
     @Override
     public int compareTo(PageData page) {
-        return getRanking()-page.getRanking();
+        return getRanking() - page.getRanking();
     }
 
 }

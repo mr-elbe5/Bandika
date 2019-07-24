@@ -10,18 +10,17 @@ package de.elbe5.cms.tag;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
+import de.elbe5.cms.application.Statics;
 
 import javax.servlet.jsp.JspException;
 import java.io.Writer;
 
-import de.elbe5.cms.application.Statics;
-
 public class FormTag extends BaseTag {
 
-    protected String url="";
-    protected String name="";
-    protected boolean multi=false;
-    protected boolean ajax=false;
+    protected String url = "";
+    protected String name = "";
+    protected boolean multi = false;
+    protected boolean ajax = false;
 
     public void setUrl(String url) {
         this.url = url;
@@ -39,9 +38,9 @@ public class FormTag extends BaseTag {
         this.ajax = ajax;
     }
 
-    String preHtml="<form action=\"{1}\" method=\"post\" id=\"{2}\" name=\"{3}\" accept-charset=\"UTF-8\"{4}>\n";
-    String postHtml="</form>\n";
-    String ajaxHtml="<script type=\"text/javascript\">\n" +
+    String preHtml = "<form action=\"{1}\" method=\"post\" id=\"{2}\" name=\"{3}\" accept-charset=\"UTF-8\"{4}>\n";
+    String postHtml = "</form>\n";
+    String ajaxHtml = "<script type=\"text/javascript\">\n" +
             "  $('#{1}').submit(function (event) {\n" +
             "    var $this = $(this);\n" +
             "    event.preventDefault();\n" +
@@ -74,7 +73,7 @@ public class FormTag extends BaseTag {
                         multi ? "postMultiByAjax" : "postByAjax",
                         url,
                         Statics.MODAL_DIALOG_JQID
-                        ));
+                ));
             }
         } catch (Exception e) {
             Log.error("error writing form tag", e);

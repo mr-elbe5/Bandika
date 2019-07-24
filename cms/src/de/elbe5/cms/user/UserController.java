@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -15,11 +15,13 @@ import de.elbe5.cms.application.MailHelper;
 import de.elbe5.cms.application.Statics;
 import de.elbe5.cms.application.Strings;
 import de.elbe5.cms.configuration.Configuration;
-import de.elbe5.cms.page.JspPageData;
-import de.elbe5.cms.servlet.*;
+import de.elbe5.cms.page.PageData;
+import de.elbe5.cms.page.PageFactory;
+import de.elbe5.cms.request.*;
 import de.elbe5.cms.rights.Right;
 import de.elbe5.cms.rights.RightsCache;
 import de.elbe5.cms.rights.SystemZone;
+import de.elbe5.cms.servlet.Controller;
 
 import java.util.Locale;
 
@@ -27,14 +29,14 @@ public class UserController extends Controller {
 
     public static final String KEY = "user";
 
-    private static UserController instance=new UserController();
+    private static UserController instance = new UserController();
 
     public static UserController getInstance() {
         return instance;
     }
 
     @Override
-    public String getKey(){
+    public String getKey() {
         return KEY;
     }
 
@@ -79,8 +81,8 @@ public class UserController extends Controller {
     }
 
     public IActionResult logout(RequestData rdata) {
-        Locale locale=rdata.getSessionLocale();
-        rdata.setSessionUser( null);
+        Locale locale = rdata.getSessionLocale();
+        rdata.setSessionUser(null);
         rdata.resetSession();
         rdata.setMessage(Strings._loggedOut.string(locale), Statics.MESSAGE_TYPE_SUCCESS);
         return showHome();
@@ -152,7 +154,7 @@ public class UserController extends Controller {
     }
 
     public IActionResult openEditGroup(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.USER, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.USER, Right.EDIT))
             return forbidden(rdata);
         int groupId = rdata.getId();
         GroupData data = GroupBean.getInstance().getGroup(groupId);
@@ -162,7 +164,7 @@ public class UserController extends Controller {
     }
 
     public IActionResult openCreateGroup(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.USER, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.USER, Right.EDIT))
             return forbidden(rdata);
         GroupData data = new GroupData();
         data.setNew(true);
@@ -172,7 +174,7 @@ public class UserController extends Controller {
     }
 
     public IActionResult saveGroup(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.USER, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.USER, Right.EDIT))
             return forbidden(rdata);
         GroupData data = (GroupData) rdata.getSessionObject("groupData");
         if (data == null)
@@ -188,7 +190,7 @@ public class UserController extends Controller {
     }
 
     public IActionResult deleteGroup(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.USER, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.USER, Right.EDIT))
             return forbidden(rdata);
         int id = rdata.getId();
         if (id < BaseIdData.ID_MIN) {
@@ -202,7 +204,7 @@ public class UserController extends Controller {
     }
 
     public IActionResult openEditUser(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.USER, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.USER, Right.EDIT))
             return forbidden(rdata);
         int userId = rdata.getId();
         UserData data = UserBean.getInstance().getUser(userId);
@@ -211,7 +213,7 @@ public class UserController extends Controller {
     }
 
     public IActionResult openCreateUser(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.USER, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.USER, Right.EDIT))
             return forbidden(rdata);
         UserData data = new UserData();
         data.setNew(true);
@@ -221,7 +223,7 @@ public class UserController extends Controller {
     }
 
     public IActionResult saveUser(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.USER, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.USER, Right.EDIT))
             return forbidden(rdata);
         UserData data = (UserData) rdata.getSessionObject("userData");
         if (data == null)
@@ -232,7 +234,7 @@ public class UserController extends Controller {
         }
         UserBean.getInstance().saveUser(data);
         RightsCache.getInstance().setDirty();
-        if (rdata.getLoginId() == data.getId()) {
+        if (rdata.getUserId() == data.getId()) {
             data.checkRights();
             rdata.setSessionUser(data);
         }
@@ -241,7 +243,7 @@ public class UserController extends Controller {
     }
 
     public IActionResult deleteUser(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.USER, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.USER, Right.EDIT))
             return forbidden(rdata);
         int id = rdata.getId();
         if (id < BaseIdData.ID_MIN) {
@@ -264,9 +266,9 @@ public class UserController extends Controller {
     public IActionResult changeLocale(RequestData rdata) {
         String language = rdata.getString("language");
         Locale locale = new Locale(language);
-        rdata.setSessionLocale( locale);
+        rdata.setSessionLocale(locale);
         int homeId = Locales.getInstance().getLocaleRoot(rdata.getSessionLocale());
-        return new RedirectActionResult("/page/show/"+homeId);
+        return new RedirectActionResult("/page/show/" + homeId);
     }
 
     public IActionResult openProfile(RequestData rdata) {
@@ -282,7 +284,7 @@ public class UserController extends Controller {
     }
 
     public IActionResult changePassword(RequestData rdata) {
-        if (!rdata.isLoggedIn() || rdata.getLoginId() != rdata.getId())
+        if (!rdata.isLoggedIn() || rdata.getUserId() != rdata.getId())
             return forbidden(rdata);
         UserData user = UserBean.getInstance().getUser(rdata.getSessionUser().getId());
         if (user == null)
@@ -317,7 +319,7 @@ public class UserController extends Controller {
 
     public IActionResult changeProfile(RequestData rdata) {
         int userId = rdata.getId();
-        if (!rdata.isLoggedIn() || rdata.getLoginId() != userId)
+        if (!rdata.isLoggedIn() || rdata.getUserId() != userId)
             return forbidden(rdata);
         UserData data = UserBean.getInstance().getUser(userId);
         data.readProfileRequestData(rdata);
@@ -325,7 +327,7 @@ public class UserController extends Controller {
             return showChangeProfile();
         }
         UserBean.getInstance().saveUserProfile(data);
-        rdata.setSessionUser( data);
+        rdata.setSessionUser(data);
         rdata.setMessage(Strings._userSaved.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogActionResult("/user/openProfile");
     }
@@ -343,7 +345,7 @@ public class UserController extends Controller {
     }
 
     protected IActionResult showProfile() {
-        JspPageData pageData = new JspPageData();
+        PageData pageData = PageFactory.getPageData("PageData");
         pageData.setJsp("/WEB-INF/_jsp/user/profile.jsp");
         return new PageActionResult(pageData);
     }
@@ -357,19 +359,19 @@ public class UserController extends Controller {
     }
 
     protected IActionResult showRegistration() {
-        JspPageData pageData = new JspPageData();
+        PageData pageData = PageFactory.getPageData("PageData");
         pageData.setJsp("/WEB-INF/_jsp/user/registration.jsp");
         return new PageActionResult(pageData);
     }
 
     protected IActionResult showRegistrationDone() {
-        JspPageData pageData = new JspPageData();
+        PageData pageData = PageFactory.getPageData("PageData");
         pageData.setJsp("/WEB-INF/_jsp/user/registrationDone.jsp");
         return new PageActionResult(pageData);
     }
 
     protected IActionResult showEmailVerification() {
-        JspPageData pageData = new JspPageData();
+        PageData pageData = PageFactory.getPageData("PageData");
         pageData.setJsp("/WEB-INF/_jsp/user/verifyRegistrationEmail.jsp");
         return new PageActionResult(pageData);
     }

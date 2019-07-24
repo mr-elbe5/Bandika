@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -16,9 +16,10 @@ import de.elbe5.base.util.ImageUtil;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.cms.application.Strings;
 import de.elbe5.cms.configuration.Configuration;
+import de.elbe5.cms.request.IRequestData;
+import de.elbe5.cms.request.RequestData;
 import de.elbe5.cms.rights.RightBean;
 import de.elbe5.cms.rights.RightsCache;
-import de.elbe5.cms.servlet.*;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
@@ -62,7 +63,7 @@ public class UserData extends BaseIdData implements IRequestData {
 
     protected Set<Integer> groupIds = new HashSet<>();
 
-    UserRightsData rights=new UserRightsData();
+    UserRightsData rights = new UserRightsData();
 
     public String getTitle() {
         return title;
@@ -141,11 +142,10 @@ public class UserData extends BaseIdData implements IRequestData {
         return !passwordHash.isEmpty();
     }
 
-    public void setPassword(String password){
-        if (password.isEmpty()){
+    public void setPassword(String password) {
+        if (password.isEmpty()) {
             setPasswordHash("");
-        }
-        else{
+        } else {
             setPasswordHash(UserSecurity.encryptPassword(password, Configuration.getInstance().getSalt()));
         }
     }
@@ -289,7 +289,7 @@ public class UserData extends BaseIdData implements IRequestData {
     }
 
     public boolean checkRights() {
-        if (rights==null)
+        if (rights == null)
             return false;
         int ver = RightsCache.getInstance().getVersion();
         if (ver == rights.getVersion())
@@ -344,7 +344,7 @@ public class UserData extends BaseIdData implements IRequestData {
         }
     }
 
-    private void checkBasics(RequestData rdata){
+    private void checkBasics(RequestData rdata) {
         if (lastName.isEmpty())
             rdata.addIncompleteField("lastName");
         if (email.isEmpty())
@@ -373,7 +373,7 @@ public class UserData extends BaseIdData implements IRequestData {
 
     public void readRegistrationRequestData(RequestData rdata) {
         readBasicData(rdata);
-        Locale locale= rdata.getSessionLocale();
+        Locale locale = rdata.getSessionLocale();
         setLogin(rdata.getString("login"));
         String password1 = rdata.getString("password1");
         String password2 = rdata.getString("password2");
@@ -387,12 +387,10 @@ public class UserData extends BaseIdData implements IRequestData {
         if (password1.length() < UserData.MIN_PASSWORD_LENGTH) {
             rdata.addFormField("password1");
             rdata.addFormError(Strings._passwordLengthError.string(locale));
-        }
-        else if (!password1.equals(password2)) {
+        } else if (!password1.equals(password2)) {
             rdata.addFormField("password2");
             rdata.addFormError(Strings._passwordsDontMatch.string(locale));
-        }
-        else
+        } else
             setPassword(password1);
     }
 

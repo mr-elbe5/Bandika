@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -11,9 +11,13 @@ package de.elbe5.cms.template;
 import de.elbe5.base.log.Log;
 import de.elbe5.cms.application.Statics;
 import de.elbe5.cms.application.Strings;
-import de.elbe5.cms.servlet.*;
+import de.elbe5.cms.request.CloseDialogActionResult;
+import de.elbe5.cms.request.ForwardActionResult;
+import de.elbe5.cms.request.IActionResult;
+import de.elbe5.cms.request.RequestData;
 import de.elbe5.cms.rights.Right;
 import de.elbe5.cms.rights.SystemZone;
+import de.elbe5.cms.servlet.Controller;
 
 import java.util.List;
 
@@ -21,29 +25,35 @@ public class TemplateController extends Controller {
 
     public static final String KEY = "template";
 
-    private static TemplateController instance=new TemplateController();
+    private static TemplateController instance = new TemplateController();
 
     public static TemplateController getInstance() {
         return instance;
     }
 
     @Override
-    public String getKey(){
+    public String getKey() {
         return KEY;
     }
 
-    public IActionResult openImportTemplates(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.CONTENT, Right.EDIT))
+    public IActionResult openTemplateAdministration(RequestData rdata) {
+        if (!rdata.hasAnyContentRight())
             return forbidden(rdata);
-        return showImportTemplates(rdata);
+        return openAdminPage(rdata, "/WEB-INF/_jsp/template/templateAdministration.jsp", Strings._templateAdministration.string(rdata.getSessionLocale()));
+    }
+
+    public IActionResult openImportTemplates(RequestData rdata) {
+        if (!rdata.hasSystemRight(SystemZone.CONTENT, Right.EDIT))
+            return forbidden(rdata);
+        return showImportTemplates();
     }
 
     public IActionResult importTemplates(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.CONTENT, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.CONTENT, Right.EDIT))
             return forbidden(rdata);
         String code = rdata.getString("code");
         List<TemplateData> templates = TemplateParser.parseTemplates(code);
-        boolean success=true;
+        boolean success = true;
         for (TemplateData template : templates) {
             template.setNew(TemplateBean.getInstance().getTemplate(template.getName(), template.getType()) == null);
             if (!TemplateBean.getInstance().saveTemplate(template)) {
@@ -53,25 +63,25 @@ public class TemplateController extends Controller {
         }
         if (!success) {
             rdata.setMessage(Strings._importError.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_ERROR);
-            return showImportTemplates(rdata);
+            return showImportTemplates();
         }
         TemplateBean.getInstance().writeAllTemplateFiles();
         rdata.setMessage(Strings._templatesImported.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/admin/openContentAdministration");
+        return new CloseDialogActionResult("/template/openTemplateAdministration");
     }
 
     public IActionResult openCreateTemplate(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.CONTENT, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.CONTENT, Right.EDIT))
             return forbidden(rdata);
         TemplateData data = new TemplateData();
         data.setType(rdata.getString("templateType"));
         data.setNew(true);
         rdata.setSessionObject("templateData", data);
-        return showEditTemplate(rdata);
+        return showEditTemplate();
     }
 
     public IActionResult openEditTemplate(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.CONTENT, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.CONTENT, Right.EDIT))
             return forbidden(rdata);
         String templateName = rdata.getString("templateName");
         String templateType = rdata.getString("templateType");
@@ -80,27 +90,27 @@ public class TemplateController extends Controller {
             return forbidden(rdata);
         }
         rdata.setSessionObject("templateData", data);
-        return showEditTemplate(rdata);
+        return showEditTemplate();
     }
 
     public IActionResult saveTemplate(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.CONTENT, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.CONTENT, Right.EDIT))
             return forbidden(rdata);
         TemplateData data = (TemplateData) rdata.getSessionObject("templateData");
         if (data == null)
             return noData(rdata);
         data.readRequestData(rdata);
         if (!rdata.checkFormErrors()) {
-            return showEditTemplate(rdata);
+            return showEditTemplate();
         }
         TemplateBean.getInstance().saveTemplate(data);
         TemplateBean.getInstance().writeTemplateFile(data);
         rdata.setMessage(Strings._templateSaved.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/admin/openContentAdministration");
+        return new CloseDialogActionResult("/template/openTemplateAdministration");
     }
 
     public IActionResult deleteTemplate(RequestData rdata) {
-        if (!rdata.hasSystemRight( SystemZone.CONTENT, Right.EDIT))
+        if (!rdata.hasSystemRight(SystemZone.CONTENT, Right.EDIT))
             return forbidden(rdata);
         String templateName = rdata.getString("templateName");
         String templateType = rdata.getString("templateType");
@@ -108,14 +118,14 @@ public class TemplateController extends Controller {
             return forbidden(rdata);
         TemplateBean.getInstance().deleteTemplateFile(templateName, templateType);
         rdata.setMessage(Strings._templateDeleted.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new ForwardActionResult("/admin/openContentAdministration");
+        return new ForwardActionResult("/template/openTemplateAdministration");
     }
 
-    private IActionResult showImportTemplates(RequestData rdata) {
+    private IActionResult showImportTemplates() {
         return new ForwardActionResult("/WEB-INF/_jsp/template/importTemplates.ajax.jsp");
     }
 
-    private IActionResult showEditTemplate(RequestData rdata) {
+    private IActionResult showEditTemplate() {
         return new ForwardActionResult("/WEB-INF/_jsp/template/editTemplate.ajax.jsp");
     }
 

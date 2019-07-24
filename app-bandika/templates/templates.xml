@@ -10,38 +10,38 @@
                 <cms:head />
                 <link rel="shortcut icon" href="/favicon.ico"/>
                 <link rel="stylesheet" href="/css/bootstrap.min.css" />
-                <link rel="stylesheet" href="/css/cms.css"/>
-                <link rel="stylesheet" href="/css/page.css"/>
+                <link rel="stylesheet" href="/css/elbe5.css"/>
                 <script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>
                 <script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
                 <script type="text/javascript" src="/js/bootstrap.tree.js"></script>
                 <script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
                 <script type="text/javascript" src="/ckeditor/adapters/jquery.js"></script>
                 <script type="text/javascript" src="/js/ace.js"></script>
-                <script type="text/javascript" src="/js/cms.js"></script>
-                <script type="text/javascript" src="/js/page.js"></script>
+                <script type="text/javascript" src="/js/elbe5.js"></script>
             </head>
             <body>
                 <header>
                     <div class="container">
-                        <div class="topheader row">
+                        <div class="top row">
                             <section class="col-12 sysnav">
                                 <cms:sysnav/>
                             </section>
-                            <section class="col-12 logo">
-                                <a href="/"><img src="/img/logo-light.png" alt="" /></a>
+                        </div>
+                        <div class="menu row">
+                            <section class="col-12 menu">
+                                <nav class="navbar navbar-expand-lg navbar-light">
+                                    <a class="navbar-brand" href="/"><img src="/img/logo-light.png" alt=""/></a>
+                                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                        <span class="navbar-toggler-icon"></span>
+                                    </button>
+                                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                        <cms:topnav />
+                                    </div>
+                                </nav>
                             </section>
                         </div>
-                        <div class="menuheader row">
-                            <section class="col-9 menu">
-                                <cms:topnav />
-                            </section>
-                            <div class="col-3 searchbox">
-                                <cms:searchbox />
-                            </div>
-                        </div>
-                        <div>
-                            <section class="bc">
+                        <div class="breadcrumbheader row">
+                            <section class="col-12 bc">
                                 <cms:breadcrumb />
                             </section>
                         </div>
@@ -131,6 +131,11 @@
     <cms:template type="PART" name="Image" displayName="Image">
         <div class="imageBox">
             <cms:htmlfield name="html" placeholder="Image"/>
+        </div>
+    </cms:template>
+    <cms:template type="PART" name="Project" displayName="Projects">
+        <div class="project">
+            <cms:jsp url="/WEB-INF/_jsp/project/project.jsp" />
         </div>
     </cms:template>
 

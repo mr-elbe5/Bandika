@@ -1,6 +1,6 @@
 package de.elbe5.cms.application;
 
-import de.elbe5.cms.page.PagePartFlexClass;
+import de.elbe5.cms.page.templatepage.PagePartFlexClass;
 
 public class Statics {
 
@@ -20,29 +20,34 @@ public class Statics {
     public static final String KEY_PAGE = "pageData";
     public static final String KEY_PART = "partData";
 
-    public static final String MESSAGE_TYPE_NONE ="";
-    public static final String MESSAGE_TYPE_INFO ="info";
-    public static final String MESSAGE_TYPE_SUCCESS ="success";
-    public static final String MESSAGE_TYPE_ERROR ="danger";
+    public static final String MESSAGE_TYPE_NONE = "";
+    public static final String MESSAGE_TYPE_INFO = "info";
+    public static final String MESSAGE_TYPE_SUCCESS = "success";
+    public static final String MESSAGE_TYPE_ERROR = "danger";
 
     public static String MODAL_DIALOG_ID = "modalDialog";
-    public static String MODAL_DIALOG_JQID = "#"+MODAL_DIALOG_ID;
+    public static String MODAL_DIALOG_JQID = "#" + MODAL_DIALOG_ID;
 
-
+    public static String DEFAULT_METHOD = "default";
+    public static String DEFAULT_MASTER = "defaultMaster";
 
     public static String ENCODING = "UTF-8";
     public static String PAGE_CONTAINER_ID = "pageContainer";
-    public static String PAGE_CONTAINER_JQID = "#"+PAGE_CONTAINER_ID;
+    public static String PAGE_CONTAINER_JQID = "#" + PAGE_CONTAINER_ID;
     public static String PAGE_CONTENT_ID = "pageContent";
-    public static String PAGE_CONTENT_JQID = "#"+PAGE_CONTENT_ID;
-    public static PagePartFlexClass DEFAULT_CLASS= PagePartFlexClass.COL12;
+    public static String PAGE_CONTENT_JQID = "#" + PAGE_CONTENT_ID;
+    public static PagePartFlexClass DEFAULT_CLASS = PagePartFlexClass.COL12;
 
-    public static String getTypeKey(String msgType){
-        switch (msgType){
-            case MESSAGE_TYPE_INFO: return Strings._info.toString();
-            case MESSAGE_TYPE_SUCCESS: return Strings._success.toString();
-            case MESSAGE_TYPE_ERROR: return Strings._error.toString();
-            default: return "";
+    public static String getTypeKey(String msgType) {
+        switch (msgType) {
+            case MESSAGE_TYPE_INFO:
+                return Strings._info.toString();
+            case MESSAGE_TYPE_SUCCESS:
+                return Strings._success.toString();
+            case MESSAGE_TYPE_ERROR:
+                return Strings._error.toString();
+            default:
+                return "";
         }
     }
 }

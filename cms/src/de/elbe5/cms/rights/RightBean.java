@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -34,8 +34,9 @@ public class RightBean extends DbBean {
         RightBean.instance = instance;
     }
 
-    private static String GET_GROUPS_SQL="SELECT group_id FROM t_user2group WHERE user_id=?";
-    private static String GET_SYSTEM_RIGHTS_SQL="select name, value from t_system_right where group_id in({1})";
+    private static String GET_GROUPS_SQL = "SELECT group_id FROM t_user2group WHERE user_id=?";
+    private static String GET_SYSTEM_RIGHTS_SQL = "select name, value from t_system_right where group_id in({1})";
+
     public UserRightsData getUserRights(int userId) {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -77,7 +78,8 @@ public class RightBean extends DbBean {
         return null;
     }
 
-    private static String GET_SYSTEM_RIGHT_SQL="SELECT name, value FROM t_system_right WHERE group_id=?";
+    private static String GET_SYSTEM_RIGHT_SQL = "SELECT name, value FROM t_system_right WHERE group_id=?";
+
     public GroupRightsData getGroupRights(int groupId) {
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -100,8 +102,9 @@ public class RightBean extends DbBean {
         return null;
     }
 
-    private static String DELETE_SYSTEM_RIGHTS_SQL="DELETE FROM t_system_right WHERE group_id=?";
-    private static String INSERT_SYSTEM_RIGHT_SQL="INSERT INTO t_system_right (name,group_id,value) VALUES(?,?,?)";
+    private static String DELETE_SYSTEM_RIGHTS_SQL = "DELETE FROM t_system_right WHERE group_id=?";
+    private static String INSERT_SYSTEM_RIGHT_SQL = "INSERT INTO t_system_right (name,group_id,value) VALUES(?,?,?)";
+
     public void writeGroupRights(Connection con, GroupData data) throws SQLException {
         PreparedStatement pst = null;
         try {

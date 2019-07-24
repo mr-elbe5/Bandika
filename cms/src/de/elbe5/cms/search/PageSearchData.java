@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -32,6 +32,7 @@ public class PageSearchData extends SearchData {
     protected String authorContext = "";
     protected String content = "";
     protected String contentContext = "";
+    protected boolean anonymous=false;
 
     public void setDoc() {
         doc = new Document();
@@ -41,14 +42,11 @@ public class PageSearchData extends SearchData {
         doc.add(new Field("keywords", getKeywords(), TextField.TYPE_STORED));
         doc.add(new Field("authorName", getAuthorName(), TextField.TYPE_STORED));
         doc.add(new Field("content", getContent(), TextField.TYPE_STORED));
+        doc.add(new Field("anonymous", isAnonymous() ? "true" : "false", TextField.TYPE_STORED));
     }
 
     public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
+        return "/page/show/"+getId();
     }
 
     public String getDescription() {
@@ -107,6 +105,14 @@ public class PageSearchData extends SearchData {
         this.contentContext = contentContext;
     }
 
+    public boolean isAnonymous() {
+        return anonymous;
+    }
+
+    public void setAnonymous(boolean anonymous) {
+        this.anonymous = anonymous;
+    }
+
     public void setContexts(Query query, Analyzer analyzer) {
         Highlighter highlighter = new Highlighter(new SearchContextFormatter(), new QueryScorer(query));
         String context = getContext(highlighter, analyzer, "name", CONTEXT_LENGTH_NAME);
@@ -130,6 +136,7 @@ public class PageSearchData extends SearchData {
         keywords = doc.get("keywords");
         authorName = doc.get("authorName");
         content = doc.get("content");
+        anonymous = doc.get("anonymous").equalsIgnoreCase("true");
     }
 
 }

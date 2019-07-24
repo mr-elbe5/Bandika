@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2018 Michael Roennau
+ Copyright (C) 2009-2019 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -10,8 +10,9 @@ package de.elbe5.cms.tag;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
-import de.elbe5.cms.page.*;
-import de.elbe5.cms.servlet.RequestData;
+import de.elbe5.cms.page.PageCache;
+import de.elbe5.cms.page.PageData;
+import de.elbe5.cms.request.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -26,10 +27,10 @@ public class TopNavTag extends BaseTag {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
             RequestData rdata = RequestData.getRequestData(request);
             JspWriter writer = getContext().getOut();
-            Locale locale= rdata.getSessionLocale();
+            Locale locale = rdata.getSessionLocale();
 
             PageData rootPage = PageCache.getInstance().getHomePage(locale);
-            writer.write("<ul class=\"nav nav-tabs\">");
+            writer.write("<ul class=\"navbar-nav mr-auto\">");
             if (rootPage != null)
                 addTopNodes(writer, rdata, rootPage);
             writer.write("</ul>");
@@ -50,10 +51,12 @@ public class TopNavTag extends BaseTag {
                             Integer.toString(page.getId()),
                             StringUtil.toHtml(page.getName()));
                     writer.write("<div class=\"dropdown-menu carbon\">");
+                    StringUtil.write(writer, "<a class=\"dropdown-item\" href=\"/page/show/{1}\">{2}</a>",
+                            Integer.toString(page.getId()),
+                            StringUtil.toHtml(page.getName()));
                     addSubPages(writer, rdata, page);
                     writer.write("</div></li>");
-                }
-                else{
+                } else {
                     StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/page/show/{1}\">{2}</a></li>",
                             Integer.toString(page.getId()),
                             StringUtil.toHtml(page.getName()));

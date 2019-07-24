@@ -10,7 +10,7 @@ package de.elbe5.cms.tag;
 
 public class FormRadioTag extends FormCheckTag {
 
-    protected String getPreHtml(){
+    protected String getPreHtml() {
         return "<span>\n" +
                 "  <input type=\"radio\" name=\"{1}\" value=\"{2}\" {3}/>\n" +
                 "  <label class=\"form-check-label\">";

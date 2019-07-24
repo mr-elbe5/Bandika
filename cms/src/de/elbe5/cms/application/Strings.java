@@ -2,9 +2,11 @@ package de.elbe5.cms.application;
 
 import de.elbe5.base.cache.StringCache;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
-public enum Strings{
+public enum Strings {
 
     _above,
     _active,
@@ -55,6 +57,7 @@ public enum Strings{
     _cssClass,
     _cssClasses,
     _daily,
+    _dataId,
     _day,
     _dbAlmostReadyHint,
     _dbErrorHint,
@@ -78,6 +81,7 @@ public enum Strings{
     _editPage,
     _editPageSettings,
     _editProfile,
+    _editProject,
     _editUser,
     _email,
     _emailError,
@@ -93,12 +97,12 @@ public enum Strings{
     _executeDatabaseScript,
     _fax,
     _file,
+    _fileAdministration,
     _fileCache,
     _fileCreated,
     _fileDeleted,
     _fileMoved,
     _fileSaved,
-    _fileStructure,
     _files,
     _filesSaved,
     _firstName,
@@ -136,6 +140,8 @@ public enum Strings{
     _installation,
     _interval,
     _intervalType,
+    _issue,
+    _issues,
     _javascriptHint,
     _keywords,
     _lastName,
@@ -160,6 +166,7 @@ public enum Strings{
     _newPagePart,
     _newPassword,
     _noData,
+    _noResults,
     _notComplete,
     _notDeletable,
     _notes,
@@ -167,9 +174,12 @@ public enum Strings{
     _oldPassword,
     _orphanedParts,
     _page,
+    _pageAdministration,
     _pageCloned,
     _pageDeleted,
     _pageMoved,
+    _pagePart,
+    _pageParts,
     _pagePartAdded,
     _pagePartDeleted,
     _pagePartSettings,
@@ -178,12 +188,12 @@ public enum Strings{
     _pagePartsDeleted,
     _pagePublished,
     _pageSaved,
-    _pageStructure,
     _pageTemplate,
     _pageTemplates,
     _pages,
     _parentFolder,
     _parentPage,
+    _partAdministration,
     _partTemplates,
     _password,
     _passwordChanged,
@@ -197,6 +207,9 @@ public enum Strings{
     _print,
     _profile,
     _profileChanged,
+    _project,
+    _projectSaved,
+    _projects,
     _publish,
     _ready,
     _register,
@@ -251,6 +264,7 @@ public enum Strings{
     _taskSaved,
     _taskSettings,
     _template,
+    _templateAdministration,
     _templateDeleted,
     _templateSaved,
     _templateSnippets,
@@ -271,30 +285,31 @@ public enum Strings{
     _userSaved,
     _users,
     _view,
+    _workflow,
     _zipCode;
 
-    public String toString(){
+    public String toString() {
         return name();
     }
 
-    public String string(Locale locale){
-        return StringCache.getString(name(),locale);
+    public String string(Locale locale) {
+        return StringCache.getString(name(), locale);
     }
 
-    public String html(Locale locale){
-        return StringCache.getHtml(name(),locale);
+    public String html(Locale locale) {
+        return StringCache.getHtml(name(), locale);
     }
 
-    public String htmlMultiline(Locale locale){
-        return StringCache.getHtmlMultiline(name(),locale);
+    public String htmlMultiline(Locale locale) {
+        return StringCache.getHtmlMultiline(name(), locale);
     }
 
-    public String js(Locale locale){
-        return StringCache.getJavascript(name(),locale);
+    public String js(Locale locale) {
+        return StringCache.getJavascript(name(), locale);
     }
 
-    public static void ensureStrings(){
-        StringCache.readFromCsv(ApplicationPath.getAppWEBINFPath()+ "/strings.csv");
+    public static void ensureStrings() {
+        StringCache.readFromCsv(ApplicationPath.getAppWEBINFPath() + "/strings.csv");
         List<String> list = new ArrayList();
         for (Strings e : Strings.values())
             list.add(e.name());

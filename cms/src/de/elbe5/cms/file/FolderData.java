@@ -2,14 +2,17 @@ package de.elbe5.cms.file;
 
 import de.elbe5.base.data.BaseIdData;
 import de.elbe5.base.log.Log;
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.cms.request.IRequestData;
+import de.elbe5.cms.request.RequestData;
 import de.elbe5.cms.rights.Right;
-import de.elbe5.cms.servlet.*;
 import de.elbe5.cms.user.GroupBean;
 import de.elbe5.cms.user.GroupData;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FolderData extends BaseIdData implements IRequestData, Comparable<FolderData> {
 
@@ -199,7 +202,7 @@ public class FolderData extends BaseIdData implements IRequestData, Comparable<F
         setDescription(rdata.getString("description"));
         setAnonymous(rdata.getBoolean("anonymous"));
         setInheritsRights(rdata.getBoolean("inheritsRights"));
-        if (anonymous && !inheritsRights){
+        if (anonymous && !inheritsRights) {
             List<GroupData> groups = GroupBean.getInstance().getAllGroups();
             getRights().clear();
             if (!inheritsRights()) {
