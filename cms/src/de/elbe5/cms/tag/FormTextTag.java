@@ -21,8 +21,7 @@ public class FormTextTag extends FormLineTag {
         this.value = value;
     }
 
-    String controlPreHtml = "" +
-            "<input type=\"text\" id=\"{1}\" name=\"{2}\" class=\"form-control\" value=\"{3}\" />\n";
+    String controlPreHtml = "<input type=\"text\" id=\"{1}\" name=\"{2}\" class=\"form-control\" value=\"{3}\" />\n";
 
     protected String getPreControlHtml(HttpServletRequest request, Locale locale) {
         return StringUtil.format(controlPreHtml, name, name, value);

@@ -14,12 +14,10 @@
 <%@ page import="de.elbe5.cms.request.RequestData" %>
 <%@ page import="java.util.Locale" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
-<%
-    RequestData rdata = RequestData.getRequestData(request);
+<%RequestData rdata = RequestData.getRequestData(request);
     Locale locale = rdata.getSessionLocale();
     String msg = rdata.getString(Statics.KEY_MESSAGE);
-    String msgType = rdata.getString(Statics.KEY_MESSAGETYPE);
-%>
+    String msgType = rdata.getString(Statics.KEY_MESSAGETYPE);%>
 <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
         <div class="modal-header">
@@ -33,8 +31,7 @@
             <%=StringUtil.toHtml(msg)%>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary"
-                    data-dismiss="modal"><%=Strings._close.html(locale)%>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=Strings._close.html(locale)%>
             </button>
         </div>
     </div>

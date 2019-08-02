@@ -20,13 +20,7 @@ import java.util.Locale;
 
 public class MessageTag extends BaseTag {
 
-    String controlHtml = "" +
-            "<div class=\"alert alert-{1} alert-dismissible fade show\" role=\"alert\">\n" +
-            "  <strong>{2}:</strong>&nbsp;{3}\n" +
-            "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">\n" +
-            "    <span aria-hidden=\"true\">&times;</span>\n" +
-            "  </button>\n" +
-            "</div>";
+    String controlHtml = "<div class=\"alert alert-{1} alert-dismissible fade show\" role=\"alert\">\n  <strong>{2}:</strong>&nbsp;{3}\n  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">\n    <span aria-hidden=\"true\">&times;</span>\n  </button>\n</div>";
 
     @Override
     public int doStartTag() throws JspException {

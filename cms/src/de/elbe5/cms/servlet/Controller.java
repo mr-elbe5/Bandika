@@ -14,7 +14,7 @@ public abstract class Controller {
 
     protected IActionResult forbidden(RequestData rdata) {
         rdata.setMessage(Strings._forbidden.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_ERROR);
-        return new ForwardActionResult("/user/openLogin");
+        return new ForwardActionResult("/ctrl/user/openLogin");
     }
 
     protected IActionResult notFound() {
@@ -27,12 +27,12 @@ public abstract class Controller {
 
     protected IActionResult noData(RequestData rdata) {
         rdata.setMessage(Strings._noData.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_ERROR);
-        return new RedirectActionResult("/user/openLogin");
+        return new RedirectActionResult("/ctrl/user/openLogin");
     }
 
     protected IActionResult badData(RequestData rdata) {
         rdata.setMessage(Strings._badData.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_ERROR);
-        return new RedirectActionResult("/user/openLogin");
+        return new RedirectActionResult("/ctrl/user/openLogin");
     }
 
     protected IActionResult openAdminPage(RequestData rdata, String jsp, String title) {

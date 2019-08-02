@@ -18,23 +18,19 @@
     Locale locale = rdata.getSessionLocale();
     PageData pageData = (PageData) rdata.get("treePage");
     assert pageData != null;
-%>
-<% if (rdata.hasContentRight(pageData.getId(), Right.READ)) {%>
+%><% if (rdata.hasContentRight(pageData.getId(), Right.READ)) {%>
 <li class="open">
-    <a id="<%=pageData.getId()%>" href=""
-        onclick="return ckLinkCallback('/page/show/<%=pageData.getId()%>');"><%=pageData.getName()%>
+    <a id="<%=pageData.getId()%>" href="" onclick="return ckLinkCallback('/ctrl/page/show/<%=pageData.getId()%>');"><%=pageData.getName()%>
     </a>
     <ul>
         <% if (!pageData.getSubPages().isEmpty()) {
             for (PageData subPage : pageData.getSubPages()) {
                 rdata.put("treePage", subPage); %>
-        <jsp:include page="/WEB-INF/_jsp/page/templatepage/templatepagepart/pageLinkBrowserFolder.inc.jsp"
-                     flush="true"/>
+        <jsp:include page="/WEB-INF/_jsp/page/templatepage/templatepagepart/pageLinkBrowserFolder.inc.jsp" flush="true"/>
         <%
             }
             rdata.put("treePage", pageData);
-        %>
-        <%}%>
+        %><%}%>
     </ul>
 </li>
 <%}%>

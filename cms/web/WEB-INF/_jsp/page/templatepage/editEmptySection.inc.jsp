@@ -28,20 +28,16 @@
         Section <%=StringUtil.toHtml(sectionData.getName())%>
     </button>
     <div class="dropdown-menu">
-        <% for (String partType : PagePartFactory.getTypes()){%>
-        <a class="dropdown-item"
-           onclick="return openModalDialog('/templatepage/openAddPagePart/<%=pageData.getId()%>?sectionName=<%=sectionData.getName()%>&partType=<%=partType%>');"><%=Strings._newPagePart.html(locale)%> (<%=StringUtil.toHtml(partType)%>)
-        </a>
+        <% for (String partType : PagePartFactory.getTypes()) {%>
+        <a class="dropdown-item" onclick="return openModalDialog('/ctrl/templatepage/openAddPagePart/<%=pageData.getId()%>?sectionName=<%=sectionData.getName()%>&partType=<%=partType%>');"><%=Strings._newPagePart.html(locale)%> (<%=StringUtil.toHtml(partType)%>) </a>
         <%}%>
-        <a class="dropdown-item"
-           onclick="return openModalDialog('/templatepage/openAddSharedPagePart/<%=pageData.getId()%>?sectionName=<%=sectionData.getName()%>&addBelow=true');"><%=Strings._addSharedPagePart.html(locale)%>
+        <a class="dropdown-item" onclick="return openModalDialog('/ctrl/templatepage/openAddSharedPagePart/<%=pageData.getId()%>?sectionName=<%=sectionData.getName()%>&addBelow=true');"><%=Strings._addSharedPagePart.html(locale)%>
         </a>
     </div>
     <span class=pull-right><i class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="<%=Strings._newPagePart.html(locale)%>"></i>
                 <div class="dropdown-menu">
-                    <% for (String partType : PagePartFactory.getTypes()){%>
-                <a class="dropdown-item"
-                   onclick="return openModalDialog('/templatepage/openAddPagePart/<%=pageData.getId()%>?sectionName=<%=sectionData.getName()%>&partType=<%=partType%>');"><%=StringUtil.toHtml(partType)%>
+                    <% for (String partType : PagePartFactory.getTypes()) {%>
+                <a class="dropdown-item" onclick="return openModalDialog('/ctrl/templatepage/openAddPagePart/<%=pageData.getId()%>?sectionName=<%=sectionData.getName()%>&partType=<%=partType%>');"><%=StringUtil.toHtml(partType)%>
                 </a>
                 <%}%>
                 </div>

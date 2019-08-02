@@ -32,8 +32,7 @@
                 <a class="treeRoot"><%=Strings._pageParts.html(locale)%>
                 </a>
                 <ul>
-                    <% if (rdata.hasSystemRight(SystemZone.CONTENT, Right.EDIT)) {
-                    %>
+                    <% if (rdata.hasSystemRight(SystemZone.CONTENT, Right.EDIT)) {%>
                     <li class="open">
                         <%=Strings._sharedParts.html(locale)%>
                         <ul>
@@ -44,9 +43,7 @@
                             <li class="<%=partId==part.getId() ? "open" : ""%>">
                                 <span><%=part.getId()%>&nbsp;<%=StringUtil.toHtml(part.getName())%>&nbsp;(<%=StringUtil.toHtml(part.getEditTitle(locale))%>)</span>
                                 <div class="icons">
-                                    <a class="icon fa fa-trash-o" href=""
-                                       onclick="if (confirmDelete()) return linkTo('/templatepage/deletePagePart?partId=<%=part.getId()%>');" title="<%=Strings._delete.html(locale)%>">
-                                    </a>
+                                    <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/templatepage/deletePagePart?partId=<%=part.getId()%>');" title="<%=Strings._delete.html(locale)%>"> </a>
                                 </div>
                             </li>
                             <%
@@ -58,9 +55,7 @@
                     <li class="open">
                         <span><%=Strings._orphanedParts.html(locale)%></span>
                         <div class="icons">
-                            <a class="icon fa fa-trash-o" href=""
-                               onclick="if (confirmDelete()) return openModalDialog('/templatepage/deleteAllOrphanedPageParts');" title="<%=Strings._deleteAll.html(locale)%>">
-                            </a>
+                            <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return openModalDialog('/ctrl/templatepage/deleteAllOrphanedPageParts');" title="<%=Strings._deleteAll.html(locale)%>"> </a>
                         </div>
                         <ul>
                             <%
@@ -70,9 +65,7 @@
                             <li class="<%=partId==part.getId() ? "open" : ""%>">
                                 <span><%=part.getId()%>&nbsp;(<%=StringUtil.toHtml(part.getName())%> <%=StringUtil.toHtml(part.getEditTitle(locale))%>)</span>
                                 <div class="icons">
-                                    <a class="icon fa fa-trash-o" href=""
-                                       onclick="if (confirmDelete()) return openModalDialog('/templatepage/deletePagePart?partId=<%=part.getId()%>');" title="<%=Strings._delete.html(locale)%>">
-                                    </a>
+                                    <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return openModalDialog('/ctrl/templatepage/deletePagePart?partId=<%=part.getId()%>');" title="<%=Strings._delete.html(locale)%>"> </a>
                                 </div>
                             </li>
                             <%

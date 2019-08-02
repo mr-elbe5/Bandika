@@ -33,11 +33,8 @@ public class FormEditorTag extends FormLineTag {
         this.height = height;
     }
 
-    String controlPreHtml = "" +
-            "<textarea id=\"{1}\" name=\"{2}\" data-editor=\"{3}\" data-gutter=\"1\" {4}>";
-    String controlPostHtml = "" +
-            "</textarea>\n" +
-            "<small id=\"{1}Hint\" class=\"form-text text-muted\">{2}</small>\n";
+    String controlPreHtml = "<textarea id=\"{1}\" name=\"{2}\" data-editor=\"{3}\" data-gutter=\"1\" {4}>";
+    String controlPostHtml = "</textarea>\n<small id=\"{1}Hint\" class=\"form-text text-muted\">{2}</small>\n";
 
     protected String getPreControlHtml(HttpServletRequest request, Locale locale) {
         return StringUtil.format(controlPreHtml, name, name, type, height.isEmpty() ? "" : "style=\"height:" + height + "\"");

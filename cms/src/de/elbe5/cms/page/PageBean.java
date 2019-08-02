@@ -37,7 +37,7 @@ public class PageBean extends DbBean {
         return changedItem(con, CHANGED_SQL, data);
     }
 
-    private static String READ_LANG_ROOTS_SQL = "SELECT t1.id,t2.locale FROM t_page t1, t_locale t2 WHERE t1.id=t2.home_id";
+    private static String READ_LANG_ROOTS_SQL = "SELECT t1.id,t2.locale FROM t_page t1, t_locale t2 WHERE t1.name=t2.locale AND t1.parent_id=" + PageData.ID_ROOT;
 
     public Map<Locale, Integer> readLanguageRootIds() {
         Map<Locale, Integer> map = new HashMap<>();
@@ -66,11 +66,7 @@ public class PageBean extends DbBean {
         return map;
     }
 
-    private static String GET_ALL_PAGES_SQL = "SELECT type,id,creation_date,change_date,parent_id,ranking,name," +
-            "description,keywords,author_name,in_topnav,in_footer,anonymous,inherits_rights," +
-            "master,publish_date,published_content,search_content " +
-            "FROM t_page " +
-            "ORDER BY parent_id, ranking";
+    private static String GET_ALL_PAGES_SQL = "SELECT type,id,creation_date,change_date,parent_id,ranking,name,display_name,description,keywords,author_name,in_topnav,in_footer,anonymous,inherits_rights,master,publish_date,published_content,search_content FROM t_page ORDER BY parent_id, ranking";
 
     public List<PageData> getAllPages() {
         List<PageData> list = new ArrayList<>();
@@ -90,6 +86,7 @@ public class PageBean extends DbBean {
                         data.setParentId(rs.getInt(i++));
                         data.setRanking(rs.getInt(i++));
                         data.setName(rs.getString(i++));
+                        data.setDisplayName(rs.getString(i++));
                         data.setDescription(rs.getString(i++));
                         data.setKeywords(rs.getString(i++));
                         data.setAuthorName(rs.getString(i++));
@@ -137,11 +134,7 @@ public class PageBean extends DbBean {
         return data;
     }
 
-    private static String GET_PAGE_SQL = "SELECT type,id,creation_date,change_date,parent_id,ranking,name," +
-            "description,keywords,author_name,in_topnav,in_footer,anonymous,inherits_rights," +
-            "master,publish_date,published_content,search_content " +
-            "FROM t_page " +
-            "WHERE id=?";
+    private static String GET_PAGE_SQL = "SELECT type,id,creation_date,change_date,parent_id,ranking,name,display_name,description,keywords,author_name,in_topnav,in_footer,anonymous,inherits_rights,master,publish_date,published_content,search_content FROM t_page WHERE id=?";
 
     public PageData readPage(Connection con, int id) throws SQLException {
         PageData data = null;
@@ -161,6 +154,7 @@ public class PageBean extends DbBean {
                         data.setParentId(rs.getInt(i++));
                         data.setRanking(rs.getInt(i++));
                         data.setName(rs.getString(i++));
+                        data.setDisplayName(rs.getString(i++));
                         data.setDescription(rs.getString(i++));
                         data.setKeywords(rs.getString(i++));
                         data.setAuthorName(rs.getString(i++));
@@ -237,12 +231,8 @@ public class PageBean extends DbBean {
         }
     }
 
-    private static String INSERT_PAGE_SQL = "insert into t_page (type,creation_date,change_date,parent_id," +
-            "ranking,name,description,keywords,author_name,in_topnav,in_footer,anonymous,inherits_rights,master,id) " +
-            "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    private static String UPDATE_PAGE_SQL = "update t_page set type=?,creation_date=?,change_date=?,parent_id=?," +
-            "ranking=?,name=?,description=?,keywords=?,author_name=?,in_topnav=?,in_footer=?,anonymous=?,inherits_rights=?,master=? " +
-            "where id=?";
+    private static String INSERT_PAGE_SQL = "insert into t_page (type,creation_date,change_date,parent_id,ranking,name,display_name,description,keywords,author_name,in_topnav,in_footer,anonymous,inherits_rights,master,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static String UPDATE_PAGE_SQL = "update t_page set type=?,creation_date=?,change_date=?,parent_id=?,ranking=?,name=?,display_name=?,description=?,keywords=?,author_name=?,in_topnav=?,in_footer=?,anonymous=?,inherits_rights=?,master=? where id=?";
 
     protected void writePage(Connection con, PageData data) throws SQLException {
         LocalDateTime now = getServerTime(con);
@@ -264,6 +254,7 @@ public class PageBean extends DbBean {
             }
             pst.setInt(i++, data.getRanking());
             pst.setString(i++, data.getName());
+            pst.setString(i++, data.getDisplayName());
             pst.setString(i++, data.getDescription());
             pst.setString(i++, data.getKeywords());
             pst.setString(i++, data.getAuthorName());

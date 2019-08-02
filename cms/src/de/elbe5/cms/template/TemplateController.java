@@ -67,7 +67,7 @@ public class TemplateController extends Controller {
         }
         TemplateBean.getInstance().writeAllTemplateFiles();
         rdata.setMessage(Strings._templatesImported.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/template/openTemplateAdministration");
+        return new CloseDialogActionResult("/ctrl/template/openTemplateAdministration");
     }
 
     public IActionResult openCreateTemplate(RequestData rdata) {
@@ -106,7 +106,7 @@ public class TemplateController extends Controller {
         TemplateBean.getInstance().saveTemplate(data);
         TemplateBean.getInstance().writeTemplateFile(data);
         rdata.setMessage(Strings._templateSaved.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/template/openTemplateAdministration");
+        return new CloseDialogActionResult("/ctrl/template/openTemplateAdministration");
     }
 
     public IActionResult deleteTemplate(RequestData rdata) {
@@ -118,7 +118,7 @@ public class TemplateController extends Controller {
             return forbidden(rdata);
         TemplateBean.getInstance().deleteTemplateFile(templateName, templateType);
         rdata.setMessage(Strings._templateDeleted.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new ForwardActionResult("/template/openTemplateAdministration");
+        return new ForwardActionResult("/ctrl/template/openTemplateAdministration");
     }
 
     private IActionResult showImportTemplates() {

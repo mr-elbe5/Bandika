@@ -34,14 +34,11 @@
     } catch (Exception ignore) {
     }
     int userId = rdata.getInt("userId");
-%>
-<!--groups-->
+%><!--groups-->
 <li class="open">
     <span><%=Strings._groups.html(locale)%></span>
     <div class="icons">
-        <a class="icon fa fa-plus" href=""
-           onclick="return openModalDialog('/user/openCreateGroup');" title="<%=Strings._new.html(locale)%>">
-        </a>
+        <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/ctrl/user/openCreateGroup');" title="<%=Strings._new.html(locale)%>"> </a>
     </div>
     <ul>
         <%
@@ -51,10 +48,8 @@
         <li class="<%=groupId==group.getId() ? "open" : ""%>">
             <span><%=StringUtil.toHtml(group.getName())%></span>
             <div class="icons">
-                <a class="icon fa fa-pencil" href=""
-                   onclick="return openModalDialog('/user/openEditGroup/<%=group.getId()%>');" title="<%=Strings._edit.html(locale)%>" ></a>
-                <a class="icon fa fa-trash-o" href=""
-                   onclick="if (confirmDelete()) return linkTo('/user/deleteGroup/<%=group.getId()%>');" title="<%=Strings._delete.html(locale)%>"></a>
+                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/user/openEditGroup/<%=group.getId()%>');" title="<%=Strings._edit.html(locale)%>"></a>
+                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/user/deleteGroup/<%=group.getId()%>');" title="<%=Strings._delete.html(locale)%>"></a>
             </div>
         </li>
         <%
@@ -66,9 +61,7 @@
 <li class="open">
     <span><%=Strings._users.html(locale)%></span>
     <div class="icons">
-        <a class="icon fa fa-plus" href=""
-               onclick="return openModalDialog('/user/openCreateUser');" title="<%=Strings._new.html(locale)%>">
-        </a>
+        <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/ctrl/user/openCreateUser');" title="<%=Strings._new.html(locale)%>"> </a>
     </div>
     <ul>
         <%
@@ -76,15 +69,11 @@
                 for (UserData user : users) {
         %>
         <li class="<%=userId==user.getId() ? "selected" : ""%>">
-            <span ><%=StringUtil.toHtml(user.getName())%>&nbsp;(<%=user.getId()%>)</span>
+            <span><%=StringUtil.toHtml(user.getName())%>&nbsp;(<%=user.getId()%>)</span>
             <div class="icons">
-                <a class="icon fa fa-pencil" href=""
-                   onclick="return openModalDialog('/user/openEditUser/<%=user.getId()%>');" title="<%=Strings._edit.html(locale)%>">
-                </a>
+                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/user/openEditUser/<%=user.getId()%>');" title="<%=Strings._edit.html(locale)%>"> </a>
                 <% if (user.getId() != UserData.ID_SYSTEM) {%>
-                <a class="icon fa fa-trash-o" href=""
-                   onclick="if (confirmDelete()) return linkTo('/user/deleteUser/<%=user.getId()%>');" title="<%=Strings._delete.html(locale)%>">
-                </a>
+                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/user/deleteUser/<%=user.getId()%>');" title="<%=Strings._delete.html(locale)%>"> </a>
             </div>
             <%}%>
         </li>

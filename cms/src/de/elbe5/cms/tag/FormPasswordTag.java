@@ -15,8 +15,7 @@ import java.util.Locale;
 
 public class FormPasswordTag extends FormLineTag {
 
-    String controlPreHtml = "" +
-            "<input type=\"password\" id=\"{1}\" name=\"{2}\" class=\"form-control\" />\n";
+    String controlPreHtml = "<input type=\"password\" id=\"{1}\" name=\"{2}\" class=\"form-control\" />\n";
 
     protected String getPreControlHtml(HttpServletRequest request, Locale locale) {
         return StringUtil.format(controlPreHtml, name, name);

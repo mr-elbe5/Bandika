@@ -23,7 +23,7 @@
     String sectionName = rdata.getString("sectionName");
     String sectionType = rdata.getString("sectionType");
     List<PagePartData> parts = TemplatePageBean.getInstance().getSharedPageParts();
-    String url = "/templatepage/addSharedPagePart/" + pageId;
+    String url = "/ctrl/templatepage/addSharedPagePart/" + pageId;
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -43,21 +43,18 @@
 
                 <cms:line label="<%=Strings._position.toString()%>" padded="true">
                     <cms:radio name="below" value="false"><%=Strings._above.html(locale)%>
-                    </cms:radio>&nbsp;<cms:radio name="below" value="true"
-                                                 checked="true"><%=Strings._below.html(locale)%>
+                    </cms:radio>&nbsp;<cms:radio name="below" value="true" checked="true"><%=Strings._below.html(locale)%>
                 </cms:radio>
                 </cms:line>
                 <cms:line label="<%=Strings._sharedPart.toString()%>" padded="true" required="true">
                     <% for (PagePartData data : parts) {%>
-                    <cms:radio name="sharedPartId"
-                               value="<%=String.valueOf(data.getId())%>"><%=StringUtil.toHtml(data.getName())%>
+                    <cms:radio name="sharedPartId" value="<%=String.valueOf(data.getId())%>"><%=StringUtil.toHtml(data.getName())%>
                     </cms:radio><br/>
                     <%}%>
                 </cms:line>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary"
-                        data-dismiss="modal"><%=Strings._cancel.html(locale)%>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=Strings._cancel.html(locale)%>
                 </button>
                 <button type="submit" class="btn btn-primary"><%=Strings._add.html(locale)%>
                 </button>

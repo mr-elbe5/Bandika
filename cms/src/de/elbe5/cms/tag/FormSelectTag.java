@@ -21,10 +21,8 @@ public class FormSelectTag extends FormLineTag {
         this.onchange = onchange;
     }
 
-    String controlPreHtml = "" +
-            "<select id=\"{1}\" name=\"{2}\" class=\"form-control\" {3}>";
-    String controlPostHtml = "" +
-            "</select>\n";
+    String controlPreHtml = "<select id=\"{1}\" name=\"{2}\" class=\"form-control\" {3}>";
+    String controlPostHtml = "</select>\n";
 
     protected String getPreControlHtml(HttpServletRequest request, Locale locale) {
         return StringUtil.format(controlPreHtml, name, name, onchange.isEmpty() ? "" : "onchange=\"" + onchange + "\"");

@@ -32,11 +32,12 @@ public class PageSearchData extends SearchData {
     protected String authorContext = "";
     protected String content = "";
     protected String contentContext = "";
-    protected boolean anonymous=false;
+    protected boolean anonymous = false;
 
     public void setDoc() {
         doc = new Document();
         doc.add(new Field("id", Integer.toString(getId()), TextField.TYPE_STORED));
+        doc.add(new Field("url", getUrl(), TextField.TYPE_STORED));
         doc.add(new Field("name", getName(), TextField.TYPE_STORED));
         doc.add(new Field("description", getDescription(), TextField.TYPE_STORED));
         doc.add(new Field("keywords", getKeywords(), TextField.TYPE_STORED));
@@ -46,7 +47,11 @@ public class PageSearchData extends SearchData {
     }
 
     public String getUrl() {
-        return "/page/show/"+getId();
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getDescription() {
@@ -131,6 +136,7 @@ public class PageSearchData extends SearchData {
         if (doc == null)
             return;
         id = Integer.parseInt(doc.get("id"));
+        url = doc.get("url");
         name = doc.get("name");
         description = doc.get("description");
         keywords = doc.get("keywords");

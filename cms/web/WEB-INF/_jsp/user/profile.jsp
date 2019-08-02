@@ -38,13 +38,10 @@
             </cms:line>
             <cms:line label="<%=Strings._lastName.toString()%>"><%=StringUtil.toHtml(user.getLastName())%>
             </cms:line>
-            <cms:line label="<%=Strings._locale.toString()%>"><%=StringUtil.toHtml(user.getLocale().getLanguage())%>
-            </cms:line>
             <cms:line label="<%=Strings._notes.toString()%>"><%=StringUtil.toHtml(user.getNotes())%>
             </cms:line>
-            <cms:line label="<%=Strings._portrait.toString()%>"><% if (!user.getPortraitName().isEmpty()) {%><img
-                    src="/user/showPortrait/<%=user.getId()%>"
-                    alt="<%=StringUtil.toHtml(user.getName())%>"/> <%}%></cms:line>
+            <cms:line label="<%=Strings._portrait.toString()%>"><% if (!user.getPortraitName().isEmpty()) {%><img src="/ctrl/user/showPortrait/<%=user.getId()%>" alt="<%=StringUtil.toHtml(user.getName())%>"/> <%}%>
+            </cms:line>
             <h3><%=Strings._address.html(locale)%>
             </h3>
             <cms:line label="<%=Strings._street.toString()%>"><%=StringUtil.toHtml(user.getStreet())%>
@@ -71,13 +68,11 @@
         <div class="section">
             <div class="paragraph">
                 <div>
-                    <a class="link" href="#"
-                       onclick="return openModalDialog('/user/openChangePassword');"><%=Strings._changePassword.html(locale)%>
+                    <a class="link" href="#" onclick="return openModalDialog('/ctrl/user/openChangePassword');"><%=Strings._changePassword.html(locale)%>
                     </a>
                 </div>
                 <div>
-                    <a class="link" href="#"
-                       onclick="return openModalDialog('/user/openChangeProfile');"><%=Strings._changeProfile.html(locale)%>
+                    <a class="link" href="#" onclick="return openModalDialog('/ctrl/user/openChangeProfile');"><%=Strings._changeProfile.html(locale)%>
                     </a>
                 </div>
             </div>

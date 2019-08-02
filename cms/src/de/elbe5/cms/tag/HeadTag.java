@@ -28,12 +28,7 @@ public class HeadTag extends BaseTag {
             PageData pageData = rdata.getCurrentPage();
             assert (pageData != null);
 
-            StringUtil.write(writer, "<title>{1}</title>\n" +
-                            "<meta name=\"keywords\" content=\"{2}\">" +
-                            "<meta name=\"description\" content=\"{3}\">\n",
-                    Configuration.getInstance().getAppTitle(),
-                    StringUtil.toHtml(pageData.getKeywords()),
-                    StringUtil.toHtml(pageData.getDescription()));
+            StringUtil.write(writer, "<title>{1}</title>\n<meta name=\"keywords\" content=\"{2}\"><meta name=\"description\" content=\"{3}\">\n", Configuration.getInstance().getAppTitle(), StringUtil.toHtml(pageData.getKeywords()), StringUtil.toHtml(pageData.getDescription()));
 
         } catch (Exception e) {
             Log.error("could not write tag", e);

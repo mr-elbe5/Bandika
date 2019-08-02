@@ -29,17 +29,6 @@ public abstract class WebServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding(Statics.ENCODING);
-        RequestData rdata = new RequestData(request, getController());
-        request.setAttribute(Statics.KEY_REQUESTDATA, rdata);
-        rdata.readUri();
-        rdata.readRequestParams();
-        rdata.initSession();
-        IActionResult result = rdata.invokeAction();
-        result.processAction(getServletContext(), rdata, response);
-    }
-
-    protected abstract Controller getController();
+    protected abstract void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
 }

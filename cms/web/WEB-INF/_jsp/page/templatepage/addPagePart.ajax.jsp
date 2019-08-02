@@ -26,13 +26,12 @@
     int partId = rdata.getInt("partId");
     String partType = rdata.getString("partType");
     boolean addBelow = rdata.getBoolean("addBelow", true);
-    String url = "/templatepage/addPagePart/" + pageId;
+    String url = "/ctrl/templatepage/addPagePart/" + pageId;
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title"><%=Strings._newPagePart.html(locale)%> (<%=partType%>)
-            </h5>
+            <h5 class="modal-title"><%=Strings._newPagePart.html(locale)%> (<%=partType%>) </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -45,8 +44,7 @@
                 <input type="hidden" name="sectionName" value="<%=sectionName%>"/>
                 <cms:line label="<%=Strings._position.toString()%>" padded="true">
                     <cms:radio name="below" value="false" checked="<%=!addBelow%>"><%=Strings._above.html(locale)%>
-                    </cms:radio>&nbsp;<cms:radio name="below" value="true"
-                                                 checked="<%=addBelow%>"><%=Strings._below.html(locale)%>
+                    </cms:radio>&nbsp;<cms:radio name="below" value="true" checked="<%=addBelow%>"><%=Strings._below.html(locale)%>
                 </cms:radio>
                 </cms:line>
                 <cms:select name="flexClass" label="<%=Strings._flexClass.toString()%>" required="true">
@@ -56,14 +54,12 @@
                     </option>
                     <%}%>
                 </cms:select>
-                <% if (partType.equals(TemplatePagePartData.class.getSimpleName())){
-                    List<TemplateData> templates = TemplateBean.getInstance().getAllTemplates(TemplateData.TYPE_PART);
-                %>
+                <% if (partType.equals(TemplatePagePartData.class.getSimpleName())) {
+                    List<TemplateData> templates = TemplateBean.getInstance().getAllTemplates(TemplateData.TYPE_PART);%>
                 <cms:line label="<%=Strings._template.toString()%>" padded="true">
-                    <div >
+                    <div>
                         <% for (TemplateData tdata : templates) {%>
-                        <cms:radio name="template"
-                                   value="<%=tdata.getName()%>"><%=StringUtil.toHtml(tdata.getDisplayName())%>
+                        <cms:radio name="template" value="<%=tdata.getName()%>"><%=StringUtil.toHtml(tdata.getDisplayName())%>
                         </cms:radio><br/>
                         <%}%>
                     </div>
@@ -71,8 +67,7 @@
                 <%}%>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary"
-                        data-dismiss="modal"><%=Strings._cancel.html(locale)%>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=Strings._cancel.html(locale)%>
                 </button>
                 <button type="submit" class="btn btn-outline-primary"><%=Strings._add.html(locale)%>
                 </button>

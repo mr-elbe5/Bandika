@@ -79,7 +79,7 @@ public class AdminController extends Controller {
             return showExecuteDatabaseScript();
         }
         rdata.setMessage(Strings._scriptExecuted.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/admin/openSystemAdministration");
+        return new CloseDialogActionResult("/ctrl/admin/openSystemAdministration");
     }
 
     public IActionResult clearFileCache(RequestData rdata) {
@@ -117,7 +117,7 @@ public class AdminController extends Controller {
         ts.updateTaskData(data);
         Timer.getInstance().loadTask(data.getName());
         rdata.setMessage(Strings._taskSaved.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/admin/openSystemAdministration");
+        return new CloseDialogActionResult("/ctrl/admin/openSystemAdministration");
     }
 
     protected IActionResult showExecuteDatabaseScript() {

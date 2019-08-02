@@ -31,16 +31,12 @@ public class SubNavTag extends BaseTag {
             writer.write("<nav class=\"subNav\"><ul>");
             for (PageData page : parentPage.getSubPages()) {
                 if (page.isInTopNav() && page.isVisibleToUser(rdata)) {
-                    StringUtil.write(writer, "<li class=\"icn isite\"><a href=\"/page/show/{1}\">{2}</a>",
-                            Integer.toString(page.getId()),
-                            StringUtil.toHtml(page.getName()));
+                    StringUtil.write(writer, "<li class=\"icn isite\"><a href=\"/ctrl/page/show/{1}\">{2}</a>", Integer.toString(page.getId()), StringUtil.toHtml(page.getName()));
                     if (page.getSubPages().size() > 1) {
                         writer.write("<ul>");
                         for (PageData subPage : page.getSubPages()) {
                             if (subPage.isInTopNav() && subPage.isVisibleToUser(rdata)) {
-                                StringUtil.write(writer, "<li class=\"icn ipage\"><a href=\"/page/show/{1}\">{2}</a></li>",
-                                        Integer.toString(subPage.getId()),
-                                        StringUtil.toHtml(subPage.getName()));
+                                StringUtil.write(writer, "<li class=\"icn ipage\"><a href=\"/ctrl/page/show/{1}\">{2}</a></li>", Integer.toString(subPage.getId()), StringUtil.toHtml(subPage.getName()));
                             }
                         }
                         writer.write("</ul>");

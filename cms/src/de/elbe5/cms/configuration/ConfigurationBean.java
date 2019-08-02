@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 public class ConfigurationBean extends DbBean {
 
@@ -29,10 +30,21 @@ public class ConfigurationBean extends DbBean {
         return instance;
     }
 
-    public void readLocales(Map<Locale, Integer> locales) {
+    private static String GET_LOCALES_SQL = "SELECT locale FROM t_locale";
+
+    public void readLocales(Set<Locale> locales) {
+        locales.clear();
         Connection con = getConnection();
-        try {
-            readLocales(con, locales);
+        try (PreparedStatement pst = con.prepareStatement(GET_LOCALES_SQL)) {
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    try {
+                        locales.add(new Locale(rs.getString(1)));
+                    } catch (Exception e) {
+                        Log.error("no appropriate locale", e);
+                    }
+                }
+            }
         } catch (SQLException se) {
             Log.error("sql error", se);
         } finally {
@@ -40,20 +52,4 @@ public class ConfigurationBean extends DbBean {
         }
     }
 
-    private static String GET_LOCALES_SQL = "SELECT locale,home_id FROM t_locale";
-
-    public void readLocales(Connection con, Map<Locale, Integer> locales) throws SQLException {
-        locales.clear();
-        try (PreparedStatement pst = con.prepareStatement(GET_LOCALES_SQL)) {
-            try (ResultSet rs = pst.executeQuery()) {
-                while (rs.next()) {
-                    try {
-                        locales.put(new Locale(rs.getString(1)), rs.getInt(2));
-                    } catch (Exception e) {
-                        Log.error("no appropriate locale", e);
-                    }
-                }
-            }
-        }
-    }
 }

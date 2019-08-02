@@ -10,11 +10,11 @@ package de.elbe5.cms.user;
 
 import de.elbe5.base.data.BaseIdData;
 import de.elbe5.base.data.BinaryFile;
-import de.elbe5.base.data.Locales;
 import de.elbe5.cms.application.MailHelper;
 import de.elbe5.cms.application.Statics;
 import de.elbe5.cms.application.Strings;
 import de.elbe5.cms.configuration.Configuration;
+import de.elbe5.cms.page.PageCache;
 import de.elbe5.cms.page.PageData;
 import de.elbe5.cms.page.PageFactory;
 import de.elbe5.cms.request.*;
@@ -60,7 +60,6 @@ public class UserController extends Controller {
             return openLogin(rdata);
         }
         rdata.setSessionUser(data);
-        rdata.setSessionLocale(data.getLocale());
         data.checkRights();
         return showHome();
     }
@@ -120,14 +119,12 @@ public class UserController extends Controller {
         user.setApproved(false);
         user.setApprovalCode(UserSecurity.getApprovalString());
         user.setId(UserBean.getInstance().getNextId());
-        user.setLocale(rdata.getSessionLocale());
-        user.setNew(true);
         if (!UserBean.getInstance().saveUser(user)) {
             rdata.setMessage(Strings._saveError.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_ERROR);
             return showRegistration();
         }
         Locale locale = rdata.getSessionLocale();
-        String mailText = Strings._registrationVerifyMail.string(locale) + " " + rdata.getSessionHost() + "/user/verifyEmail/" + user.getId() + "?approvalCode=" + user.getApprovalCode();
+        String mailText = Strings._registrationVerifyMail.string(locale) + " " + rdata.getSessionHost() + "/ctrl/user/verifyEmail/" + user.getId() + "?approvalCode=" + user.getApprovalCode();
         if (!MailHelper.sendPlainMail(user.getEmail(), Strings._registrationRequest.string(locale), mailText)) {
             rdata.setMessage(Strings._emailError.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_ERROR);
             return showRegistration();
@@ -186,7 +183,7 @@ public class UserController extends Controller {
         GroupBean.getInstance().saveGroup(data);
         RightsCache.getInstance().setDirty();
         rdata.setMessage(Strings._groupSaved.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/admin/openSystemAdministration?groupId=" + data.getId());
+        return new CloseDialogActionResult("/ctrl/admin/openSystemAdministration?groupId=" + data.getId());
     }
 
     public IActionResult deleteGroup(RequestData rdata) {
@@ -195,12 +192,12 @@ public class UserController extends Controller {
         int id = rdata.getId();
         if (id < BaseIdData.ID_MIN) {
             rdata.setMessage(Strings._notDeletable.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_ERROR);
-            return new ForwardActionResult("/admin/openSystemAdministration");
+            return new ForwardActionResult("/ctrl/admin/openSystemAdministration");
         }
         GroupBean.getInstance().deleteGroup(id);
         RightsCache.getInstance().setDirty();
         rdata.setMessage(Strings._groupDeleted.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new ForwardActionResult("/admin/openSystemAdministration");
+        return new ForwardActionResult("/ctrl/admin/openSystemAdministration");
     }
 
     public IActionResult openEditUser(RequestData rdata) {
@@ -239,7 +236,7 @@ public class UserController extends Controller {
             rdata.setSessionUser(data);
         }
         rdata.setMessage(Strings._userSaved.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/admin/openSystemAdministration?userId=" + data.getId());
+        return new CloseDialogActionResult("/ctrl/admin/openSystemAdministration?userId=" + data.getId());
     }
 
     public IActionResult deleteUser(RequestData rdata) {
@@ -248,11 +245,11 @@ public class UserController extends Controller {
         int id = rdata.getId();
         if (id < BaseIdData.ID_MIN) {
             rdata.setMessage(Strings._notDeletable.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_ERROR);
-            return new ForwardActionResult("/admin/openSystemAdministration");
+            return new ForwardActionResult("/ctrl/admin/openSystemAdministration");
         }
         UserBean.getInstance().deleteUser(id);
         rdata.setMessage(Strings._userDeleted.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new ForwardActionResult("/admin/openSystemAdministration");
+        return new ForwardActionResult("/ctrl/admin/openSystemAdministration");
     }
 
     public IActionResult showPortrait(RequestData rdata) {
@@ -267,8 +264,8 @@ public class UserController extends Controller {
         String language = rdata.getString("language");
         Locale locale = new Locale(language);
         rdata.setSessionLocale(locale);
-        int homeId = Locales.getInstance().getLocaleRoot(rdata.getSessionLocale());
-        return new RedirectActionResult("/page/show/" + homeId);
+        PageData homePage = PageCache.getInstance().getHomePage(rdata.getSessionLocale());
+        return new RedirectActionResult(homePage.getUrl());
     }
 
     public IActionResult openProfile(RequestData rdata) {
@@ -308,7 +305,7 @@ public class UserController extends Controller {
         data.setPassword(newPassword);
         UserBean.getInstance().saveUserPassword(data);
         rdata.setMessage(Strings._passwordChanged.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/user/openProfile");
+        return new CloseDialogActionResult("/ctrl/user/openProfile");
     }
 
     public IActionResult openChangeProfile(RequestData rdata) {
@@ -329,7 +326,7 @@ public class UserController extends Controller {
         UserBean.getInstance().saveUserProfile(data);
         rdata.setSessionUser(data);
         rdata.setMessage(Strings._userSaved.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/user/openProfile");
+        return new CloseDialogActionResult("/ctrl/user/openProfile");
     }
 
     protected IActionResult showLogin() {

@@ -36,12 +36,9 @@ public class ScriptFieldTag extends FieldTag {
             boolean partEditMode = pageData.getViewMode() == ViewMode.EDIT && partData == pageData.getEditPagePart();
             String content = field.getContent();
             if (partEditMode) {
-                StringUtil.write(writer, "<textarea class=\"editField\" name=\"{1}\" rows=\"5\" >{2}</textarea>",
-                        field.getIdentifier(),
-                        StringUtil.toHtml(content));
+                StringUtil.write(writer, "<textarea class=\"editField\" name=\"{1}\" rows=\"5\" >{2}</textarea>", field.getIdentifier(), StringUtil.toHtml(content));
             } else if (!content.isEmpty()) {
-                StringUtil.write(writer, "<script type=\"text/javascript\">{1}</script>",
-                        content);
+                StringUtil.write(writer, "<script type=\"text/javascript\">{1}</script>", content);
             }
 
         } catch (Exception e) {

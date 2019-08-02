@@ -47,11 +47,21 @@ public class PageController extends Controller {
         int pageId = rdata.getId();
         if (pageId == 0)
             pageId = PageCache.getInstance().getHomePageId(rdata.getSessionLocale());
-        return new ForwardActionResult("/page/show/" + pageId);
+        return new ForwardActionResult("/ctrl/page/show/" + pageId);
     }
 
     public IActionResult show(RequestData rdata) {
         PageData data = getPageData(rdata);
+        if (data == null)
+            return noData(rdata);
+        if (!data.isAnonymous() && !rdata.hasContentRight(data.getId(), Right.READ)) {
+            return forbidden(rdata);
+        }
+        return new PageActionResult(data);
+    }
+
+    public IActionResult show(String url, RequestData rdata) {
+        PageData data = PageCache.getInstance().getPage(url);
         if (data == null)
             return noData(rdata);
         if (!data.isAnonymous() && !rdata.hasContentRight(data.getId(), Right.READ)) {
@@ -109,7 +119,7 @@ public class PageController extends Controller {
         data.unsetDetailEditMode();
         PageCache.getInstance().setDirty();
         rdata.setMessage(Strings._pageSaved.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/page/openPageAdministration/" + data.getId());
+        return new CloseDialogActionResult("/ctrl/page/openPageAdministration/" + data.getId());
     }
 
     public IActionResult clonePage(RequestData rdata) {
@@ -133,7 +143,7 @@ public class PageController extends Controller {
         data.unsetDetailEditMode();
         PageCache.getInstance().setDirty();
         rdata.setMessage(Strings._pageCloned.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new ForwardActionResult("/page/openPageAdministration?pageId=" + data.getId());
+        return new ForwardActionResult("/ctrl/page/openPageAdministration?pageId=" + data.getId());
     }
 
     public IActionResult movePage(RequestData rdata) {
@@ -148,7 +158,7 @@ public class PageController extends Controller {
         PageBean.getInstance().movePage(pageId, parentId);
         PageCache.getInstance().setDirty();
         rdata.setMessage(Strings._pageMoved.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new ForwardActionResult("/page/openPageAdministration?pageId=" + pageId);
+        return new ForwardActionResult("/ctrl/page/openPageAdministration?pageId=" + pageId);
     }
 
     public IActionResult deletePage(RequestData rdata) {
@@ -157,7 +167,7 @@ public class PageController extends Controller {
             return forbidden(rdata);
         if (pageId < BaseIdData.ID_MIN) {
             rdata.setMessage(Strings._notDeletable.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_ERROR);
-            return new ForwardActionResult("/page/openPageAdministration");
+            return new ForwardActionResult("/ctrl/page/openPageAdministration");
         }
         PageCache cache = PageCache.getInstance();
         int parentId = cache.getParentPageId(pageId);
@@ -166,7 +176,7 @@ public class PageController extends Controller {
         rdata.put("pageId", Integer.toString(parentId));
         PageCache.getInstance().setDirty();
         rdata.setMessage(Strings._pageDeleted.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new ForwardActionResult("/page/openPageAdministration?pageId=" + parentId);
+        return new ForwardActionResult("/ctrl/page/openPageAdministration?pageId=" + parentId);
     }
 
     public IActionResult inheritAll(RequestData rdata) {
@@ -189,7 +199,7 @@ public class PageController extends Controller {
         }
         PageCache.getInstance().setDirty();
         rdata.setMessage(Strings._allInherited.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new ForwardActionResult("/page/openPageAdministration?pageId=" + pageId);
+        return new ForwardActionResult("/ctrl/page/openPageAdministration?pageId=" + pageId);
     }
 
     public IActionResult openEditPageContent(RequestData rdata) {

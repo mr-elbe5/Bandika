@@ -20,7 +20,7 @@
 <li class="open">
     <span><%=Strings._search.html(locale)%></span>
     <div class="icons">
-        <a class="icon fa fa-globe" href="/search/indexAllContent" title="<%=Strings._indexAllContent.html(locale)%>"></a>
-        <a class="icon fa fa-users" href="/search/indexAllUsers" title="<%=Strings._indexAllUsers.html(locale)%>"></a>
+        <a class="icon fa fa-globe" href="/ctrl/search/indexAllContent" title="<%=Strings._indexAllContent.html(locale)%>"></a>
+        <a class="icon fa fa-users" href="/ctrl/search/indexAllUsers" title="<%=Strings._indexAllUsers.html(locale)%>"></a>
     </div>
 </li>

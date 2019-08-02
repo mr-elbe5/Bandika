@@ -31,7 +31,7 @@ public class TemplatePagePartData extends PagePartData {
     public TemplatePagePartData() {
     }
 
-    public String getJspPath(){
+    public String getJspPath() {
         return jspBasePath + "/templatepagepart";
     }
 
@@ -167,7 +167,7 @@ public class TemplatePagePartData extends PagePartData {
     }
 
     @Override
-    public void setCreateValues(RequestData rdata){
+    public void setCreateValues(RequestData rdata) {
         setTemplateName(rdata.getString("template"));
     }
 

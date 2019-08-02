@@ -13,10 +13,8 @@
 <%@ page import="de.elbe5.cms.request.RequestData" %>
 <%@ page import="java.util.Locale" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
-<%
-    RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getSessionLocale();
-%>
+<%RequestData rdata = RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();%>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
@@ -26,18 +24,16 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <cms:form url="/admin/executeDatabaseScript" name="executeDbScript">
+        <cms:form url="/ctrl/admin/executeDatabaseScript" name="executeDbScript">
             <div class="modal-body">
                 <cms:formerror/>
                 <cms:file name="file" label="<%=Strings._file.toString()%>"/>
-                <cms:editor name="script" label="<%=Strings._script.toString()%>" type="pgsql"
-                            hint="<%=Strings._sqlHint.toString()%>" height="20rem" required="true">
+                <cms:editor name="script" label="<%=Strings._script.toString()%>" type="pgsql" hint="<%=Strings._sqlHint.toString()%>" height="20rem" required="true">
                     <%=StringUtil.toHtml(rdata.getString("script"))%>
                 </cms:editor>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary"
-                        data-dismiss="modal"><%=Strings._close.html(locale)%>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=Strings._close.html(locale)%>
                 </button>
                 <button type="submit" class="btn btn-outline-primary"><%=Strings._execute.html(locale)%>
                 </button>
@@ -50,7 +46,7 @@
                 event.preventDefault();
                 $('#script').val(editor.getSession().getValue());
                 var params = $this.serialize();
-                postByAjax('/admin/executeDatabaseScript', params, '<%=Statics.MODAL_DIALOG_JQID%>');
+                postByAjax('/ctrl/admin/executeDatabaseScript', params, '<%=Statics.MODAL_DIALOG_JQID%>');
             });
             $('#file').change(function () {
                 if (this.files) {

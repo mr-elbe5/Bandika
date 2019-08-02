@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Set;
 
-public class PagePartData extends BaseIdData implements IRequestData, Comparable<PagePartData> {
+public abstract class PagePartData extends BaseIdData implements IRequestData, Comparable<PagePartData> {
 
     protected String name = "";
     protected String sectionName = "";
@@ -27,7 +27,7 @@ public class PagePartData extends BaseIdData implements IRequestData, Comparable
 
     protected Set<Integer> pageIds = null;
 
-    public static String jspBasePath="/WEB-INF/_jsp/page/templatepage";
+    public static String jspBasePath = "/WEB-INF/_jsp/page/templatepage";
 
     public PagePartData() {
     }
@@ -47,7 +47,7 @@ public class PagePartData extends BaseIdData implements IRequestData, Comparable
         return name.compareTo(data.name);
     }
 
-    public String getJspPath(){
+    public String getJspPath() {
         return jspBasePath;
     }
 
@@ -88,16 +88,16 @@ public class PagePartData extends BaseIdData implements IRequestData, Comparable
         return getJspPath() + "/edit.jsp";
     }
 
-    public String getSettingsInclude(){
+    public String getSettingsInclude() {
         return getJspPath() + "/partSettings.ajax.jsp";
     }
 
-    public String getPartWrapperId(){
-        return "partWrapper_"+getId();
+    public String getPartWrapperId() {
+        return "partWrapper_" + getId();
     }
 
-    public String getPartWrapperJqId(){
-        return "#"+getPartWrapperId();
+    public String getPartWrapperJqId() {
+        return "#" + getPartWrapperId();
     }
 
     public boolean isEditable() {
@@ -138,7 +138,7 @@ public class PagePartData extends BaseIdData implements IRequestData, Comparable
         setId(PageBean.getInstance().getNextId());
     }
 
-    public void setCreateValues(RequestData rdata){
+    public void setCreateValues(RequestData rdata) {
 
     }
 

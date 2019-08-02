@@ -37,28 +37,19 @@
     <div title="<%=title%>" id="part_<%=partData.getId()%>" class="<%=partData.getCss(sectionData.isFlex())%>">
         <% if (partData == editPagePart) { %>
         <a id="current" name="current"></a>
-        <form action="/templatepage/savePagePart/<%=pageData.getId()%>" method="post" id="partform" name="partform"
-              accept-charset="UTF-8">
+        <form action="/ctrl/templatepage/savePagePart/<%=pageData.getId()%>" method="post" id="partform" name="partform" accept-charset="UTF-8">
             <input type="hidden" name="sectionName" value="<%=partData.getSectionName()%>"/>
             <input type="hidden" name="partId" value="<%=partData.getId()%>"/>
             <div class="editpartheader active">
-                <a class="btn btn-outline-primary"
-                   onclick="evaluateEditFields();return postByAjax('/templatepage/savePagePart/<%=pageData.getId()%>',
-                           $('#partform').serialize(),
-                           '<%=Statics.PAGE_CONTAINER_JQID%>');"><%=Strings._ok.html(locale)%>
+                <a class="btn btn-outline-primary" onclick="evaluateEditFields();return postByAjax('/ctrl/templatepage/savePagePart/<%=pageData.getId()%>',$('#partform').serialize(),'<%=Statics.PAGE_CONTAINER_JQID%>');"><%=Strings._ok.html(locale)%>
                 </a>
-                <a class="btn btn-outline-secondary"
-                   onclick="return postByAjax('/templatepage/cancelEditPagePart/<%=pageData.getId()%>',
-                           {},
-                           '<%=Statics.PAGE_CONTAINER_JQID%>');"><%=Strings._cancel.html(locale)%>
+                <a class="btn btn-outline-secondary" onclick="return postByAjax('/ctrl/templatepage/cancelEditPagePart/<%=pageData.getId()%>',{},'<%=Statics.PAGE_CONTAINER_JQID%>');"><%=Strings._cancel.html(locale)%>
                 </a>
             </div>
-            <jsp:include page="<%=partData.getEditPartInclude()%>"
-                         flush="true"/>
+            <jsp:include page="<%=partData.getEditPartInclude()%>" flush="true"/>
         </form>
         <%} else {%>
-        <div class="editpartheader">section <%=StringUtil.toHtml(sectionData.getName())%>,
-            <%=title%>
+        <div class="editpartheader">section <%=StringUtil.toHtml(sectionData.getName())%>,<%=title%>
         </div>
         <% if (include != null) {%>
         <div id="<%=partData.getPartWrapperId()%>">

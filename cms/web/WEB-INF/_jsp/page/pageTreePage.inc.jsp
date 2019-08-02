@@ -22,38 +22,25 @@
     assert pageData != null;
 %>
 <li class="open">
-    <span class="pagedrag <%=pageData.hasUnpublishedDraft() ? "unpublished" : "published"%>"
-          data-dragid="<%=Integer.toString(pageData.getId())%>">
-        <%=pageData.getName()%>
+    <span class="pagedrag <%=pageData.hasUnpublishedDraft() ? "unpublished" : "published"%>" data-dragid="<%=Integer.toString(pageData.getId())%>">
+        <%=pageData.getName()%> (<%=StringUtil.toHtml(pageData.getDisplayName())%>)
     </span>
     <%if (rdata.hasContentRight(pageData.getId(), Right.EDIT)) {%>
     <div class="icons">
-        <a class="icon fa fa-eye" href=""
-           onclick="return linkTo('/page/show/<%=pageData.getId()%>');" title="<%=Strings._view.html(locale)%>">
-        </a>
-        <a class="icon fa fa-pencil" href=""
-           onclick="return openModalDialog('/page/openEditPage/<%=pageData.getId()%>');" title="<%=Strings._edit.html(locale)%>">
-        </a>
-        <a class="icon fa fa-clone" href=""
-           onclick="return linkTo('/page/clonePage/<%=pageData.getId()%>');" title="<%=Strings._clone.html(locale)%>">
-        </a>
-        <a class="icon fa fa-long-arrow-down" href=""
-           onclick="return linkTo('/page/inheritAll/<%=pageData.getId()%>');" title="<%=Strings._inheritAll.html(locale)%>">
-        </a>
-        <a class="icon fa fa-trash-o" href=""
-           onclick="if (confirmDelete()) return linkTo('/page/deletePage/<%=pageData.getId()%>');" title="<%=Strings._delete.html(locale)%>">
-        </a>
+        <a class="icon fa fa-eye" href="" onclick="return linkTo('/ctrl/page/show/<%=pageData.getId()%>');" title="<%=Strings._view.html(locale)%>"> </a>
+        <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/page/openEditPage/<%=pageData.getId()%>');" title="<%=Strings._edit.html(locale)%>"> </a>
+        <a class="icon fa fa-clone" href="" onclick="return linkTo('/ctrl/page/clonePage/<%=pageData.getId()%>');" title="<%=Strings._clone.html(locale)%>"> </a>
+        <a class="icon fa fa-long-arrow-down" href="" onclick="return linkTo('/ctrl/page/inheritAll/<%=pageData.getId()%>');" title="<%=Strings._inheritAll.html(locale)%>"> </a>
+        <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/page/deletePage/<%=pageData.getId()%>');" title="<%=Strings._delete.html(locale)%>"> </a>
         <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="<%=Strings._newPage.html(locale)%>"></a>
         <div class="dropdown-menu">
-            <% for (String pageType : PageFactory.getTypes()){%>
-        <a class="dropdown-item"
-           onclick="return openModalDialog('/page/openCreatePage?parentId=<%=pageData.getId()%>&pageType=<%=pageType%>');"><%=StringUtil.toHtml(pageType)%>
-        </a>
-        <%}%>
+            <% for (String pageType : PageFactory.getTypes()) {%>
+            <a class="dropdown-item" onclick="return openModalDialog('/ctrl/page/openCreatePage?parentId=<%=pageData.getId()%>&pageType=<%=pageType%>');"><%=StringUtil.toHtml(pageType)%>
+            </a>
+            <%}%>
         </div>
     </div>
-    <%}%>
-    <% if (!pageData.getSubPages().isEmpty()) {%>
+    <%}%><% if (!pageData.getSubPages().isEmpty()) {%>
     <ul>
         <% for (PageData childData : pageData.getSubPages()) {
             if (rdata.hasContentRight(childData.getId(), Right.READ)) {
@@ -62,8 +49,7 @@
         <%
                     rdata.put("treePage", pageData);
                 }
-            }
-        %>
+            }%>
     </ul>
     <%}%>
 </li>

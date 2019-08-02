@@ -10,6 +10,7 @@ package de.elbe5.cms.page;
 
 import de.elbe5.base.data.BaseIdData;
 import de.elbe5.base.log.Log;
+import de.elbe5.base.util.StringUtil;
 import de.elbe5.cms.application.Statics;
 import de.elbe5.cms.request.IRequestData;
 import de.elbe5.cms.request.RequestData;
@@ -29,6 +30,8 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
 
     // base data
     protected String name = "";
+    protected String path = "";
+    protected String displayName = "";
     protected String description = "";
     protected String keywords = "";
     protected String authorName = "";
@@ -62,6 +65,7 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
         setNew(true);
         setId(PageBean.getInstance().getNextId());
         setName(data.getName() + "_clone");
+        setDisplayName(data.getDisplayName() + " Clone");
         setDescription(data.getDescription());
         setKeywords(data.getKeywords());
         setInTopNav(data.isInTopNav());
@@ -74,6 +78,7 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
 
         setParentId(data.getParentId());
         setParent(data.getParent());
+        generatePath();
         setRanking(data.getRanking() + 1);
     }
 
@@ -82,6 +87,7 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
         setId(PageBean.getInstance().getNextId());
         setParentId(parent.getId());
         setParent(parent);
+        generatePath();
         setMasterName(parent.getMasterName());
         setAnonymous(parent.isAnonymous());
         setInheritsRights(true);
@@ -92,6 +98,7 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
         if (cachedData == null)
             return;
         if (!isNew()) {
+            setPath(cachedData.getPath());
             for (PageData subpage : cachedData.getSubPages()) {
                 subpageIds.add(subpage.getId());
             }
@@ -108,6 +115,32 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public void generatePath() {
+        if (parent == null)
+            return;
+        setPath(parent.getPath() + "/" + StringUtil.toUrl(getName()));
+    }
+
+    public String getUrl() {
+        return getPath() + ".html";
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getDescription() {
@@ -244,15 +277,16 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
         subPages.add(page);
     }
 
-    public void inheritToChildren() {
+    public void updateChildren() {
         for (PageData child : subPages) {
-            inheritToChild(child);
-            child.inheritToChildren();
+            updateChild(child);
+            child.updateChildren();
         }
         Collections.sort(subPages);
     }
 
-    public void inheritToChild(PageData child) {
+    public void updateChild(PageData child) {
+        child.generatePath();
         if (child.inheritsRights()) {
             child.getRights().clear();
             child.getRights().putAll(rights);
@@ -347,6 +381,7 @@ public class PageData extends BaseIdData implements IRequestData, Comparable<Pag
     @Override
     public void readRequestData(RequestData rdata) {
         setName(rdata.getString("name").trim());
+        setDisplayName(rdata.getString("displayName").trim());
         setDescription(rdata.getString("description"));
         setKeywords(rdata.getString("keywords"));
         setInTopNav(rdata.getBoolean("inTopNav"));

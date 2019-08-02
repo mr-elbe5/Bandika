@@ -1,4 +1,5 @@
-
+/apps/*
+!/apps/app-bandika
 /out
 /.idea
 /.sass-cache

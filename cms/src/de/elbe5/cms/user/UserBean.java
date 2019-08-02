@@ -44,7 +44,7 @@ public class UserBean extends DbBean {
     }
 
 
-    private static String SELECT_USER_SQL = "SELECT id,change_date,title,first_name,last_name,street,zipCode,city,country,locale,email,phone,mobile,notes,portrait_name,login,approval_code,approved,email_verified,failed_login_count,locked,deleted FROM t_user ";
+    private static String SELECT_USER_SQL = "SELECT id,change_date,title,first_name,last_name,street,zipCode,city,country,email,phone,mobile,notes,portrait_name,login,approval_code,approved,email_verified,failed_login_count,locked,deleted FROM t_user ";
 
     protected boolean changedUser(Connection con, UserData data) {
         return changedLogin(con, data);
@@ -76,7 +76,7 @@ public class UserBean extends DbBean {
         return list;
     }
 
-    private static String LOGIN_SQL = "SELECT id,pwd,change_date,first_name,last_name,locale,email,failed_login_count FROM t_user WHERE login=? AND approved=TRUE AND locked=FALSE AND deleted=FALSE";
+    private static String LOGIN_SQL = "SELECT id,pwd,change_date,first_name,last_name,email,failed_login_count FROM t_user WHERE login=? AND approved=TRUE AND locked=FALSE AND deleted=FALSE";
     private static String UPDATE_LOGINCOUNT_SQL = "UPDATE t_user SET failed_login_count=? WHERE id=?";
 
     public UserData loginUser(String login, String pwd) {
@@ -100,7 +100,6 @@ public class UserBean extends DbBean {
                     data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     data.setFirstName(rs.getString(i++));
                     data.setLastName(rs.getString(i++));
-                    data.setLocale(rs.getString(i++));
                     data.setEmail(rs.getString(i++));
                     data.setFailedLoginCount(rs.getInt(i));
                     data.setApproved(true);
@@ -276,7 +275,6 @@ public class UserBean extends DbBean {
         data.setZipCode(rs.getString(i++));
         data.setCity(rs.getString(i++));
         data.setCountry(rs.getString(i++));
-        data.setLocale(rs.getString(i++));
         data.setEmail(rs.getString(i++));
         data.setPhone(rs.getString(i++));
         data.setMobile(rs.getString(i++));
@@ -352,16 +350,14 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String INSERT_USER_SQL = "insert into t_user (change_date,title,first_name,last_name,street,zipCode,city,country,locale,email,phone,fax,mobile,notes,portrait_name,portrait,login,pwd,approval_code,approved,email_verified,failed_login_count,locked,deleted,id) " +
-            "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    private static String UPDATE_USER_PWD_SQL = "update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,pwd=?,approval_code=?,approved=?,email_verified=?,failed_login_count=?,locked=?,deleted=? where id=?";
-    private static String UPDATE_USER_NOPWD_SQL = "update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,approval_code=?,approved=?,email_verified=?,failed_login_count=?,locked=?,deleted=? where id=?";
+    private static String INSERT_USER_SQL = "insert into t_user (change_date,title,first_name,last_name,street,zipCode,city,country,email,phone,fax,mobile,notes,portrait_name,portrait,login,pwd,approval_code,approved,email_verified,failed_login_count,locked,deleted,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static String UPDATE_USER_PWD_SQL = "update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,pwd=?,approval_code=?,approved=?,email_verified=?,failed_login_count=?,locked=?,deleted=? where id=?";
+    private static String UPDATE_USER_NOPWD_SQL = "update t_user set change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=?,login=?,approval_code=?,approved=?,email_verified=?,failed_login_count=?,locked=?,deleted=? where id=?";
 
     protected void writeUser(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(data.isNew() ? INSERT_USER_SQL :
-                    data.hasPassword() ? UPDATE_USER_PWD_SQL : UPDATE_USER_NOPWD_SQL);
+            pst = con.prepareStatement(data.isNew() ? INSERT_USER_SQL : data.hasPassword() ? UPDATE_USER_PWD_SQL : UPDATE_USER_NOPWD_SQL);
             int i = 1;
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getTitle());
@@ -371,7 +367,6 @@ public class UserBean extends DbBean {
             pst.setString(i++, data.getZipCode());
             pst.setString(i++, data.getCity());
             pst.setString(i++, data.getCountry());
-            pst.setString(i++, data.getLocale().getLanguage());
             pst.setString(i++, data.getEmail());
             pst.setString(i++, data.getPhone());
             pst.setString(i++, data.getFax());
@@ -415,7 +410,7 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String UPDATE_PROFILE_SQL = "UPDATE t_user SET change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,locale=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=? WHERE id=?";
+    private static String UPDATE_PROFILE_SQL = "UPDATE t_user SET change_date=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait_name=?,portrait=? WHERE id=?";
 
     protected void writeUserProfile(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
@@ -430,7 +425,6 @@ public class UserBean extends DbBean {
             pst.setString(i++, data.getZipCode());
             pst.setString(i++, data.getCity());
             pst.setString(i++, data.getCountry());
-            pst.setString(i++, data.getLocale().getLanguage());
             pst.setString(i++, data.getEmail());
             pst.setString(i++, data.getPhone());
             pst.setString(i++, data.getFax());

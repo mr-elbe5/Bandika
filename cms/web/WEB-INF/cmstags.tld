@@ -375,8 +375,8 @@
     </tag>
 
     <tag>
-        <name>topnav</name>
-        <tag-class>de.elbe5.cms.tag.TopNavTag</tag-class>
+        <name>mainnav</name>
+        <tag-class>de.elbe5.cms.tag.MainNavTag</tag-class>
         <body-content>empty</body-content>
     </tag>
 

@@ -31,14 +31,11 @@ public class FooterNavTag extends BaseTag {
 
             PageData rootPage = PageCache.getInstance().getHomePage(locale);
             writer.write("<ul class=\"nav\">");
-            StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\">{1}</a></li>",
-                    Strings._copyright.html(locale));
+            StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\">{1}</a></li>", Strings._copyright.html(locale));
             if (rootPage != null) {
                 for (PageData page : rootPage.getSubPages()) {
                     if (page.isInFooter() && page.isVisibleToUser(rdata)) {
-                        StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/page/show/{1}\">{2}</a></li>",
-                                Integer.toString(page.getId()),
-                                StringUtil.toHtml(page.getName()));
+                        StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/ctrl/page/show/{1}\">{2}</a></li>", Integer.toString(page.getId()), StringUtil.toHtml(page.getName()));
                     }
                 }
             }

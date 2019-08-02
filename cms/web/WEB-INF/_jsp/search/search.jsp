@@ -23,10 +23,9 @@
 <section class="contentTop">
     <h1><%=Strings._search.html(locale)%>
     </h1>
-    <form action="/search/search" method="post" id="searchboxform" name="searchboxform" accept-charset="UTF-8">
+    <form action="/ctrl/search/search" method="post" id="searchboxform" name="searchboxform" accept-charset="UTF-8">
         <div class="input-group">
-            <input class="form-control mr-sm-2" id="searchPattern" name="searchPattern" maxlength="60"
-                   value="<%=StringUtil.toHtml(pageResult.getPattern())%>"/>
+            <input class="form-control mr-sm-2" id="searchPattern" name="searchPattern" maxlength="60" value="<%=StringUtil.toHtml(pageResult.getPattern())%>"/>
             <button class="btn btn-outline-primary my-2 my-sm-0" type="submit"><%=Strings._search.html(locale)%>
             </button>
         </div>
@@ -37,21 +36,19 @@
         <% if (!pageResult.getResults().isEmpty()) {%>
         <h2><%=Strings._searchResults.html(locale)%>
         </h2>
-        <%    for (PageSearchData data : pageResult.getResults()) {
-                String description = data.getDescriptionContext();
-                String content = data.getContentContext();
-        %>
+        <% for (PageSearchData data : pageResult.getResults()) {
+            String description = data.getDescriptionContext();
+            String content = data.getContentContext();%>
         <div class="searchResult">
-            <div class="searchTitle"><a href="<%=data.getUrl()%>"
-                                        title="<%=Strings._show.html(locale)%>"><%=data.getNameContext()%>
-            </a>
+            <div class="searchTitle">
+                <a href="<%=data.getUrl()%>" title="<%=Strings._show.html(locale)%>"><%=data.getNameContext()%>
+                </a>
             </div>
             <% if (!description.isEmpty()) {%>
             <div class="searchDescription"><%=data.getDescriptionContext()%>
             </div>
             <% }
-                if (!content.isEmpty()) {
-            %>
+                if (!content.isEmpty()) {%>
             <div class="searchContent"><%=data.getContentContext()%>
             </div>
             <% }%>

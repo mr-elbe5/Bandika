@@ -27,9 +27,7 @@ public class TemplatePagePartBean extends PagePartExtrasBean {
         return instance;
     }
 
-    private static String READ_PAGE_PART_EXTRAS_SQL = "SELECT template,css_classes,script " +
-            "FROM t_template_page_part " +
-            "WHERE id=? ";
+    private static String READ_PAGE_PART_EXTRAS_SQL = "SELECT template,css_classes,script FROM t_template_page_part WHERE id=? ";
 
     public void readPagePartExtras(Connection con, PagePartData partData) throws SQLException {
         if (!(partData instanceof TemplatePagePartData))
@@ -53,9 +51,7 @@ public class TemplatePagePartBean extends PagePartExtrasBean {
         }
     }
 
-    private static String READ_PART_FIELDS_SQL = "SELECT field_type, name, content " +
-            "FROM t_part_field " +
-            "WHERE part_id=?";
+    private static String READ_PART_FIELDS_SQL = "SELECT field_type, name, content FROM t_part_field WHERE part_id=?";
 
     public void readAllPartFields(Connection con, TemplatePagePartData data) throws SQLException {
         PreparedStatement pst = null;

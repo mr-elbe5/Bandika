@@ -7,11 +7,9 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ page trimDirectiveWhitespaces="true" %>
-<%
-    RequestData rdata = RequestData.getRequestData(request);
+<%RequestData rdata = RequestData.getRequestData(request);
     String redirectUrl = rdata.getString("redirectUrl");
-    if (redirectUrl != null && redirectUrl.length() > 0) {
-%>
+    if (redirectUrl != null && redirectUrl.length() > 0) {%>
 <html>
 <head></head>
 <body>

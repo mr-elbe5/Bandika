@@ -42,7 +42,7 @@
         }
     }
     String label, name, onchange;
-    String url = "/page/savePage/" + pageData.getId();
+    String url = "/ctrl/page/savePage/" + pageData.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -60,29 +60,25 @@
                 </h3>
                 <cms:line label="<%=Strings._id.toString()%>"><%=Integer.toString(pageData.getId())%>
                 </cms:line>
-                <cms:line
-                        label="<%=Strings._creationDate.toString()%>"><%=StringUtil.toHtmlDateTime(pageData.getCreationDate(), locale)%>
+                <cms:line label="<%=Strings._creationDate.toString()%>"><%=StringUtil.toHtmlDateTime(pageData.getCreationDate(), locale)%>
                 </cms:line>
-                <cms:line
-                        label="<%=Strings._changeDate.toString()%>"><%=StringUtil.toHtmlDateTime(pageData.getChangeDate(), locale)%>
+                <cms:line label="<%=Strings._changeDate.toString()%>"><%=StringUtil.toHtmlDateTime(pageData.getChangeDate(), locale)%>
                 </cms:line>
-                <cms:line
-                        label="<%=Strings._parentPage.toString()%>"><%=(parentPage == null) ? "-" : StringUtil.toHtml(parentPage.getName()) + "&nbsp;(" + parentPage.getId() + ')'%>
+                <cms:line label="<%=Strings._parentPage.toString()%>"><%=(parentPage == null) ? "-" : StringUtil.toHtml(parentPage.getName()) + "&nbsp;(" + parentPage.getId() + ')'%>
+                </cms:line>
+                <cms:line label="<%=Strings._url.toString()%>"><%=StringUtil.toHtml(pageData.getUrl())%>
                 </cms:line>
                 <cms:line label="<%=Strings._position.toString()%>"><%=Integer.toString(pageData.getRanking())%>
                 </cms:line>
 
-                <cms:text name="name" label="<%=Strings._name.toString()%>" required="true"
-                          value="<%=StringUtil.toHtml(pageData.getName())%>"/>
-                <cms:text name="description" label="<%=Strings._description.toString()%>"
-                          value="<%=StringUtil.toHtml(pageData.getDescription())%>"/>
-                <cms:text name="keywords" label="<%=Strings._keywords.toString()%>"
-                          value="<%=StringUtil.toHtml(pageData.getKeywords())%>"/>
+                <cms:text name="name" label="<%=Strings._name.toString()%>" required="true" value="<%=StringUtil.toHtml(pageData.getName())%>"/>
+                <cms:text name="displayName" label="<%=Strings._displayName.toString()%>" required="true" value="<%=StringUtil.toHtml(pageData.getDisplayName())%>"/>
+                <cms:text name="description" label="<%=Strings._description.toString()%>" value="<%=StringUtil.toHtml(pageData.getDescription())%>"/>
+                <cms:text name="keywords" label="<%=Strings._keywords.toString()%>" value="<%=StringUtil.toHtml(pageData.getKeywords())%>"/>
                 <cms:line label="<%=Strings._author.toString()%>"><%=StringUtil.toHtml(pageData.getAuthorName())%>
                 </cms:line>
                 <% if (pageData instanceof TemplatePageData) {
-                    TemplatePageData templatePageData = (TemplatePageData) pageData;
-                %>
+                    TemplatePageData templatePageData = (TemplatePageData) pageData;%>
                 <cms:select name="templateName" label="<%=Strings._pageTemplate.toString()%>" required="true">
                     <option value="" <%=templatePageData.getTemplateName().isEmpty() ? "selected" : ""%>><%=Strings._pleaseSelect.html(locale)%>
                     </option>
@@ -111,30 +107,23 @@
                         if (group.getId() <= GroupData.ID_MAX_FINAL)
                             continue;
                         {
-                %>
-                <%
-                    label = StringUtil.toHtml(group.getName());
-                    name = "groupright_" + group.getId();
-                %>
+                %><%
+                label = StringUtil.toHtml(group.getName());
+                name = "groupright_" + group.getId();%>
                 <cms:line label="<%=label%>" padded="true">
-                    <cms:radio name="<%=name%>" value=""
-                               checked="<%=!pageData.hasAnyGroupRight(group.getId())%>"><%=Strings._rightnone.html(locale)%>
+                    <cms:radio name="<%=name%>" value="" checked="<%=!pageData.hasAnyGroupRight(group.getId())%>"><%=Strings._rightnone.html(locale)%>
                     </cms:radio><br/>
-                    <cms:radio name="<%=name%>" value="<%=Right.READ.name()%>"
-                               checked="<%=pageData.isGroupRight(group.getId(), Right.READ)%>"><%=Strings._rightread.html(locale)%>
+                    <cms:radio name="<%=name%>" value="<%=Right.READ.name()%>" checked="<%=pageData.isGroupRight(group.getId(), Right.READ)%>"><%=Strings._rightread.html(locale)%>
                     </cms:radio><br/>
-                    <cms:radio name="<%=name%>" value="<%=Right.EDIT.name()%>"
-                               checked="<%=pageData.isGroupRight(group.getId(), Right.EDIT)%>"><%=Strings._rightedit.html(locale)%>
+                    <cms:radio name="<%=name%>" value="<%=Right.EDIT.name()%>" checked="<%=pageData.isGroupRight(group.getId(), Right.EDIT)%>"><%=Strings._rightedit.html(locale)%>
                     </cms:radio><br/>
-                    <cms:radio name="<%=name%>" value="<%=Right.APPROVE.name()%>"
-                               checked="<%=pageData.isGroupRight(group.getId(), Right.APPROVE)%>"><%=Strings._rightapprove.html(locale)%>
+                    <cms:radio name="<%=name%>" value="<%=Right.APPROVE.name()%>" checked="<%=pageData.isGroupRight(group.getId(), Right.APPROVE)%>"><%=Strings._rightapprove.html(locale)%>
                     </cms:radio><br/>
                 </cms:line>
                 <%
                         }
                     }
-                %>
-                <% if (!pageData.isNew() && !pageData.getSubPages().isEmpty()) {%>
+                %><% if (!pageData.isNew() && !pageData.getSubPages().isEmpty()) {%>
                 <h3><%=Strings._subpages.html(locale)%>
                 </h3>
                 <cms:line label="<%=Strings._name.toString()%>" padded="true"><%=Strings._position.html(locale)%>
@@ -153,13 +142,10 @@
                 </cms:select>
                 <%
                         idx++;
-                    }
-                %>
-                <%}%>
+                    }%><%}%>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary"
-                        data-dismiss="modal"><%=Strings._close.html(locale)%>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=Strings._close.html(locale)%>
                 </button>
                 <button type="submit" class="btn btn-primary"><%=Strings._save.html(locale)%>
                 </button>

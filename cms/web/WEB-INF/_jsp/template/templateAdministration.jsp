@@ -17,107 +17,72 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
-<%
-    RequestData rdata = RequestData.getRequestData(request);
+<%RequestData rdata = RequestData.getRequestData(request);
     Locale locale = rdata.getSessionLocale();
     Map<String, List<String>> templateNames = TemplateBean.getInstance().getAllTemplateNames();
-    assert (templateNames != null);
-%>
+    assert (templateNames != null);%>
 
 <div id="pageContent">
     <cms:message/>
     <section class="treeSection">
-        <% if (rdata.hasSystemRight(SystemZone.CONTENT, Right.EDIT)) {
-        %>
+        <% if (rdata.hasSystemRight(SystemZone.CONTENT, Right.EDIT)) {%>
         <ul class="tree">
             <li class="open">
                 <a class="treeRoot"><%=Strings._templates.html(locale)%>
                 </a>
                 <div class="icons">
-                    <a class="icon fa fa-upload" href=""
-                       onclick="return openModalDialog('/template/openImportTemplates');" title="<%=Strings._import.html(locale)%>">
-                    </a>
+                    <a class="icon fa fa-upload" href="" onclick="return openModalDialog('/ctrl/template/openImportTemplates');" title="<%=Strings._import.html(locale)%>"> </a>
                 </div>
                 <ul>
                     <li class="open">
                         <span><%=Strings._masterTemplates.html(locale)%></span>
                         <div class="icons">
-                            <a class="icon fa fa-plus" href=""
-                               onclick="return openModalDialog('/template/openCreateTemplate?templateType=<%=TemplateData.TYPE_MASTER%>');" title="<%=Strings._new.html(locale)%>">
-                            </a>
+                            <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/ctrl/template/openCreateTemplate?templateType=<%=TemplateData.TYPE_MASTER%>');" title="<%=Strings._new.html(locale)%>"> </a>
                         </div>
                         <ul>
-                            <%
-                                for (String templateName : templateNames.get(TemplateData.TYPE_MASTER)) {
-                            %>
+                            <%for (String templateName : templateNames.get(TemplateData.TYPE_MASTER)) {%>
                             <li>
                                 <span><%=StringUtil.toHtml(templateName)%></span>
                                 <div class="icons">
-                                    <a class="icon fa fa-pencil" href=""
-                                       onclick="return openModalDialog('/template/openEditTemplate?templateType=<%=TemplateData.TYPE_MASTER%>&templateName=<%=templateName%>');" title="<%=Strings._edit.html(locale)%>">
-                                    </a>
-                                    <a class="icon fa fa-trash-o" href=""
-                                       onclick="if (confirmDelete()) return linkTo('/template/deleteTemplate?templateType=<%=TemplateData.TYPE_MASTER%>&templateName=<%=templateName%>');" title="<%=Strings._delete.html(locale)%>">
-                                    </a>
+                                    <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/template/openEditTemplate?templateType=<%=TemplateData.TYPE_MASTER%>&templateName=<%=templateName%>');" title="<%=Strings._edit.html(locale)%>"> </a>
+                                    <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/template/deleteTemplate?templateType=<%=TemplateData.TYPE_MASTER%>&templateName=<%=templateName%>');" title="<%=Strings._delete.html(locale)%>"> </a>
                                 </div>
                             </li>
-                            <%
-                                }
-                            %>
+                            <%}%>
                         </ul>
                     </li>
                     <li class="open">
                         <span><%=Strings._pageTemplates.html(locale)%></span>
                         <div class="icons">
-                            <a class="icon fa fa-plus" href=""
-                               onclick="return openModalDialog('/template/openCreateTemplate?templateType=<%=TemplateData.TYPE_PAGE%>');" title="<%=Strings._new.html(locale)%>">
-                            </a>
+                            <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/ctrl/template/openCreateTemplate?templateType=<%=TemplateData.TYPE_PAGE%>');" title="<%=Strings._new.html(locale)%>"> </a>
                         </div>
                         <ul>
-                            <%
-                                for (String templateName : templateNames.get(TemplateData.TYPE_PAGE)) {
-                            %>
+                            <%for (String templateName : templateNames.get(TemplateData.TYPE_PAGE)) {%>
                             <li>
                                 <span><%=StringUtil.toHtml(templateName)%></span>
                                 <div class="icons">
-                                    <a class="icon fa fa-pencil" href=""
-                                       onclick="return openModalDialog('/template/openEditTemplate?templateType=<%=TemplateData.TYPE_PAGE%>&templateName=<%=templateName%>');" title="<%=Strings._edit.html(locale)%>">
-                                    </a>
-                                    <a class="icon fa fa-trash-o" href=""
-                                       onclick="if (confirmDelete()) return linkTo('/template/deleteTemplate?templateType=<%=TemplateData.TYPE_PAGE%>&templateName=<%=templateName%>');" title="<%=Strings._delete.html(locale)%>">
-                                    </a>
+                                    <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/template/openEditTemplate?templateType=<%=TemplateData.TYPE_PAGE%>&templateName=<%=templateName%>');" title="<%=Strings._edit.html(locale)%>"> </a>
+                                    <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/template/deleteTemplate?templateType=<%=TemplateData.TYPE_PAGE%>&templateName=<%=templateName%>');" title="<%=Strings._delete.html(locale)%>"> </a>
                                 </div>
                             </li>
-                            <%
-                                }
-                            %>
+                            <%}%>
                         </ul>
                     </li>
                     <li class="open">
                         <span><%=Strings._partTemplates.html(locale)%></span>
                         <div class="icons">
-                            <a class="icon fa fa-plus" href=""
-                               onclick="return openModalDialog('/template/openCreateTemplate?templateType=<%=TemplateData.TYPE_PART%>');" title="<%=Strings._new.html(locale)%>">
-                            </a>
+                            <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/ctrl/template/openCreateTemplate?templateType=<%=TemplateData.TYPE_PART%>');" title="<%=Strings._new.html(locale)%>"> </a>
                         </div>
                         <ul>
-                            <%
-                                for (String templateName : templateNames.get(TemplateData.TYPE_PART)) {
-                            %>
+                            <%for (String templateName : templateNames.get(TemplateData.TYPE_PART)) {%>
                             <li>
                                 <span><%=StringUtil.toHtml(templateName)%></span>
                                 <div class="icons">
-                                    <a class="icon fa fa-pencil" href=""
-                                       onclick="return openModalDialog('/template/openEditTemplate?templateType=<%=TemplateData.TYPE_PART%>&templateName=<%=templateName%>');" title="<%=Strings._edit.html(locale)%>">
-                                    </a>
-                                    <a class="icon fa fa-trash-o" href=""
-                                       onclick="if (confirmDelete()) return linkTo('/template/deleteTemplate?templateType=<%=TemplateData.TYPE_PART%>&templateName=<%=templateName%>');" title="<%=Strings._delete.html(locale)%>">
-                                    </a>
+                                    <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/template/openEditTemplate?templateType=<%=TemplateData.TYPE_PART%>&templateName=<%=templateName%>');" title="<%=Strings._edit.html(locale)%>"> </a>
+                                    <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/template/deleteTemplate?templateType=<%=TemplateData.TYPE_PART%>&templateName=<%=templateName%>');" title="<%=Strings._delete.html(locale)%>"> </a>
                                 </div>
                             </li>
-                            <%
-                                }
-                            %>
+                            <%}%>
                         </ul>
                     </li>
                 </ul>

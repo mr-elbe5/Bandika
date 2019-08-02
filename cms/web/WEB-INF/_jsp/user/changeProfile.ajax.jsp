@@ -18,7 +18,7 @@
     RequestData rdata = RequestData.getRequestData(request);
     Locale locale = rdata.getSessionLocale();
     UserData user = UserBean.getInstance().getUser(rdata.getSessionUser().getId());
-    String url = "/user/changeProfile/" + user.getId();
+    String url = "/ctrl/user/changeProfile/" + user.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -37,45 +37,28 @@
                 </cms:line>
                 <cms:line label="<%=Strings._login.toString()%>" required="true"><%=StringUtil.toHtml(user.getLogin())%>
                 </cms:line>
-                <cms:text name="title" label="<%=Strings._title.toString()%>"
-                          value="<%=StringUtil.toHtml(user.getTitle())%>"/>
-                <cms:text name="firstName" label="<%=Strings._firstName.toString()%>"
-                          value="<%=StringUtil.toHtml(user.getFirstName())%>"/>
-                <cms:text name="lastName" label="<%=Strings._lastName.toString()%>" required="true"
-                          value="<%=StringUtil.toHtml(user.getLastName())%>"/>
-                <cms:text name="locale" label="<%=Strings._locale.toString()%>"
-                          value="<%=StringUtil.toHtml(user.getLocale().getLanguage())%>"/>
-                <cms:textarea name="notes" label="<%=Strings._notes.toString()%>"
-                              height="5rem"><%=StringUtil.toHtml(user.getNotes())%>
+                <cms:text name="title" label="<%=Strings._title.toString()%>" value="<%=StringUtil.toHtml(user.getTitle())%>"/>
+                <cms:text name="firstName" label="<%=Strings._firstName.toString()%>" value="<%=StringUtil.toHtml(user.getFirstName())%>"/>
+                <cms:text name="lastName" label="<%=Strings._lastName.toString()%>" required="true" value="<%=StringUtil.toHtml(user.getLastName())%>"/>
+                <cms:textarea name="notes" label="<%=Strings._notes.toString()%>" height="5rem"><%=StringUtil.toHtml(user.getNotes())%>
                 </cms:textarea>
-                <cms:file name="portrait"
-                          label="<%=Strings._portrait.toString()%>"><% if (!user.getPortraitName().isEmpty()) {%><img
-                        src="/user/showPortrait/<%=user.getId()%>"
-                        alt="<%=StringUtil.toHtml(user.getName())%>"/> <%}%></cms:file>
+                <cms:file name="portrait" label="<%=Strings._portrait.toString()%>"><% if (!user.getPortraitName().isEmpty()) {%><img src="/ctrl/user/showPortrait/<%=user.getId()%>" alt="<%=StringUtil.toHtml(user.getName())%>"/> <%}%>
+                </cms:file>
                 <h3><%=Strings._address.html(locale)%>
                 </h3>
-                <cms:text name="street" label="<%=Strings._street.toString()%>"
-                          value="<%=StringUtil.toHtml(user.getStreet())%>"/>
-                <cms:text name="zipCode" label="<%=Strings._zipCode.toString()%>"
-                          value="<%=StringUtil.toHtml(user.getZipCode())%>"/>
-                <cms:text name="city" label="<%=Strings._city.toString()%>"
-                          value="<%=StringUtil.toHtml(user.getCity())%>"/>
-                <cms:text name="country" label="<%=Strings._country.toString()%>"
-                          value="<%=StringUtil.toHtml(user.getCountry())%>"/>
+                <cms:text name="street" label="<%=Strings._street.toString()%>" value="<%=StringUtil.toHtml(user.getStreet())%>"/>
+                <cms:text name="zipCode" label="<%=Strings._zipCode.toString()%>" value="<%=StringUtil.toHtml(user.getZipCode())%>"/>
+                <cms:text name="city" label="<%=Strings._city.toString()%>" value="<%=StringUtil.toHtml(user.getCity())%>"/>
+                <cms:text name="country" label="<%=Strings._country.toString()%>" value="<%=StringUtil.toHtml(user.getCountry())%>"/>
                 <h3><%=Strings._contact.html(locale)%>
                 </h3>
-                <cms:text name="email" label="<%=Strings._email.toString()%>" required="true"
-                          value="<%=StringUtil.toHtml(user.getEmail())%>"/>
-                <cms:text name="phone" label="<%=Strings._phone.toString()%>"
-                          value="<%=StringUtil.toHtml(user.getPhone())%>"/>
-                <cms:text name="fax" label="<%=Strings._fax.toString()%>"
-                          value="<%=StringUtil.toHtml(user.getFax())%>"/>
-                <cms:text name="mobile" label="<%=Strings._mobile.toString()%>"
-                          value="<%=StringUtil.toHtml(user.getMobile())%>"/>
+                <cms:text name="email" label="<%=Strings._email.toString()%>" required="true" value="<%=StringUtil.toHtml(user.getEmail())%>"/>
+                <cms:text name="phone" label="<%=Strings._phone.toString()%>" value="<%=StringUtil.toHtml(user.getPhone())%>"/>
+                <cms:text name="fax" label="<%=Strings._fax.toString()%>" value="<%=StringUtil.toHtml(user.getFax())%>"/>
+                <cms:text name="mobile" label="<%=Strings._mobile.toString()%>" value="<%=StringUtil.toHtml(user.getMobile())%>"/>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary"
-                        data-dismiss="modal"><%=Strings._close.html(locale)%>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=Strings._close.html(locale)%>
                 </button>
                 <button type="submit" class="btn btn-outline-primary"><%=Strings._save.html(locale)%>
                 </button>

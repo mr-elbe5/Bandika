@@ -28,10 +28,8 @@
             <th class="col3"><%=Strings._email.html(locale)%>
             </th>
         </tr>
-        <%
-            if (userResult != null && !userResult.getResults().isEmpty()) {%>
-        <tr>
-                <%for (UserSearchData data : userResult.getResults()) {%>
+        <%if (userResult != null && !userResult.getResults().isEmpty()) {%>
+        <tr> <%for (UserSearchData data : userResult.getResults()) {%>
         <tr>
             <td><%=data.getNameContext()%>
             </td>

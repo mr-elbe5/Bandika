@@ -37,13 +37,11 @@ public class BreadcrumbTag extends BaseTag {
                 parentIds.add(0, pageId);
             writer.write("<ol class=\"breadcrumb\">");
             for (int i = parentIds.size() - 1; i >= 0; i--) {
-                PageData bcnode = PageCache.getInstance().getPage(parentIds.get(i));
-                if (bcnode == null) {
+                PageData page = PageCache.getInstance().getPage(parentIds.get(i));
+                if (page == null) {
                     continue;
                 }
-                StringUtil.write(writer, "<li class=\"breadcrumb-item\"><a href=\"/page/show/{1}\">{2}</a></li>",
-                        Integer.toString(bcnode.getId()),
-                        StringUtil.toHtml(bcnode.getName()));
+                StringUtil.write(writer, "<li class=\"breadcrumb-item\"><a href=\"{1}\">{2}</a></li>", page.getUrl(), StringUtil.toHtml(page.getDisplayName()));
             }
             writer.write("</ol>");
         } catch (Exception e) {

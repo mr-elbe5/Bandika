@@ -40,48 +40,30 @@
                 <%=title%>
             </button>
             <div class="dropdown-menu">
-                <a class="dropdown-item" onclick="return postByAjax('/templatepage/editPagePart/<%=pageData.getId()%>',
-                        {pageId:'<%=pageData.getId()%>',sectionName:'<%=partData.getSectionName()%>',partId:'<%=partData.getId()%>'},
-                        '<%=Statics.PAGE_CONTAINER_JQID%>')"><%=Strings._edit.html(locale)%>
+                <a class="dropdown-item" onclick="return postByAjax('/ctrl/templatepage/editPagePart/<%=pageData.getId()%>',{pageId:'<%=pageData.getId()%>',sectionName:'<%=partData.getSectionName()%>',partId:'<%=partData.getId()%>'},'<%=Statics.PAGE_CONTAINER_JQID%>')"><%=Strings._edit.html(locale)%>
                 </a>
-                <a class="dropdown-item"
-                   onclick="return openModalDialog('/templatepage/openEditPagePartSettings/<%=pageData.getId()%>?sectionName=<%=partData.getSectionName()%>&partId=<%=partData.getId()%>');"><%=Strings._settings.html(locale)%>
+                <a class="dropdown-item" onclick="return openModalDialog('/ctrl/templatepage/openEditPagePartSettings/<%=pageData.getId()%>?sectionName=<%=partData.getSectionName()%>&partId=<%=partData.getId()%>');"><%=Strings._settings.html(locale)%>
                 </a>
-                <% for (String partType : PagePartFactory.getTypes()){%>
-                <a class="dropdown-item"
-                   onclick="return openModalDialog('/templatepage/openAddPagePart/<%=pageData.getId()%>?sectionName=<%=partData.getSectionName()%>&partId=<%=partData.getId()%>&partType=<%=partType%>');"><%=Strings._newPagePart.html(locale)%> (<%=StringUtil.toHtml(partType)%>)
-                </a>
+                <% for (String partType : PagePartFactory.getTypes()) {%>
+                <a class="dropdown-item" onclick="return openModalDialog('/ctrl/templatepage/openAddPagePart/<%=pageData.getId()%>?sectionName=<%=partData.getSectionName()%>&partId=<%=partData.getId()%>&partType=<%=partType%>');"><%=Strings._newPagePart.html(locale)%> (<%=StringUtil.toHtml(partType)%>) </a>
                 <%}%>
-                <a class="dropdown-item"
-                   onclick="return openModalDialog('/templatepage/openAddSharedPagePart/<%=pageData.getId()%>?sectionName=<%=partData.getSectionName()%>&partId=<%=partData.getId()%>');"><%=Strings._addSharedPagePart.html(locale)%>
+                <a class="dropdown-item" onclick="return openModalDialog('/ctrl/templatepage/openAddSharedPagePart/<%=pageData.getId()%>?sectionName=<%=partData.getSectionName()%>&partId=<%=partData.getId()%>');"><%=Strings._addSharedPagePart.html(locale)%>
                 </a>
-                <a class="dropdown-item"
-                   onclick="return openModalDialog('/templatepage/openSharePagePart/<%=pageData.getId()%>?sectionName=<%=partData.getSectionName()%>&partId=<%=partData.getId()%>');"><%=Strings._share.html(locale)%>
+                <a class="dropdown-item" onclick="return openModalDialog('/ctrl/templatepage/openSharePagePart/<%=pageData.getId()%>?sectionName=<%=partData.getSectionName()%>&partId=<%=partData.getId()%>');"><%=Strings._share.html(locale)%>
                 </a>
-                <a class="dropdown-item" onclick="return postByAjax('/templatepage/movePagePart/<%=pageData.getId()%>',
-                        {sectionName:'<%=partData.getSectionName()%>',partId:'<%=partData.getId()%>',dir:'-1'},
-                        '<%=Statics.PAGE_CONTAINER_JQID%>');"><%=Strings._up.html(locale)%>
+                <a class="dropdown-item" onclick="return postByAjax('/ctrl/templatepage/movePagePart/<%=pageData.getId()%>',{sectionName:'<%=partData.getSectionName()%>',partId:'<%=partData.getId()%>',dir:'-1'},'<%=Statics.PAGE_CONTAINER_JQID%>');"><%=Strings._up.html(locale)%>
                 </a>
-                <a class="dropdown-item" onclick="return postByAjax('/templatepage/movePagePart/<%=pageData.getId()%>',
-                        {sectionName:'<%=partData.getSectionName()%>',partId:'<%=partData.getId()%>',dir:'1'},
-                        '<%=Statics.PAGE_CONTAINER_JQID%>');"><%=Strings._down.html(locale)%>
+                <a class="dropdown-item" onclick="return postByAjax('/ctrl/templatepage/movePagePart/<%=pageData.getId()%>',{sectionName:'<%=partData.getSectionName()%>',partId:'<%=partData.getId()%>',dir:'1'},'<%=Statics.PAGE_CONTAINER_JQID%>');"><%=Strings._down.html(locale)%>
                 </a>
-                <a class="dropdown-item"
-                   onclick="return postByAjax('/templatepage/removePagePart/<%=pageData.getId()%>',
-                           {sectionName:'<%=partData.getSectionName()%>',partId:'<%=partData.getId()%>'},
-                           '<%=Statics.PAGE_CONTAINER_JQID%>');"><%=Strings._remove.html(locale)%>
+                <a class="dropdown-item" onclick="return postByAjax('/ctrl/templatepage/removePagePart/<%=pageData.getId()%>',{sectionName:'<%=partData.getSectionName()%>',partId:'<%=partData.getId()%>'},'<%=Statics.PAGE_CONTAINER_JQID%>');"><%=Strings._remove.html(locale)%>
                 </a>
             </div>
             <span class=pull-right>
-                <i class="icon fa fa-pencil" title="<%=Strings._edit.html(locale)%>"
-                   onclick="return postByAjax('/templatepage/editPagePart/<%=pageData.getId()%>',
-                           {pageId:'<%=pageData.getId()%>',sectionName:'<%=partData.getSectionName()%>',partId:'<%=partData.getId()%>'},
-                           '<%=Statics.PAGE_CONTAINER_JQID%>')"></i>
+                <i class="icon fa fa-pencil" title="<%=Strings._edit.html(locale)%>" onclick="return postByAjax('/ctrl/templatepage/editPagePart/<%=pageData.getId()%>',{pageId:'<%=pageData.getId()%>',sectionName:'<%=partData.getSectionName()%>',partId:'<%=partData.getId()%>'},'<%=Statics.PAGE_CONTAINER_JQID%>')"></i>
                 <i class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="<%=Strings._newPagePart.html(locale)%>"></i>
                 <div class="dropdown-menu">
-                    <% for (String partType : PagePartFactory.getTypes()){%>
-                <a class="dropdown-item"
-                   onclick="return openModalDialog('/templatepage/openAddPagePart/<%=pageData.getId()%>?sectionName=<%=partData.getSectionName()%>&partId=<%=partData.getId()%>&partType=<%=partType%>');"><%=StringUtil.toHtml(partType)%>
+                    <% for (String partType : PagePartFactory.getTypes()) {%>
+                <a class="dropdown-item" onclick="return openModalDialog('/ctrl/templatepage/openAddPagePart/<%=pageData.getId()%>?sectionName=<%=partData.getSectionName()%>&partId=<%=partData.getId()%>&partType=<%=partType%>');"><%=StringUtil.toHtml(partType)%>
                 </a>
                 <%}%>
                 </div>

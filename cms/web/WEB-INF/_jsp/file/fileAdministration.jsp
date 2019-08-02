@@ -57,11 +57,11 @@
         var id = ev.originalEvent.dataTransfer.getData('dragId');
         $.ajax({
             type: 'POST',
-            url: '/file/moveFolder/' + id,
+            url: '/ctrl/file/moveFolder/' + id,
             data: {'parentId': parentid},
             dataType: 'html',
             success: function (data) {
-                linkTo('/admin/openFileStructure?folderId=' + parentid);
+                linkTo('/ctrl/admin/openFileStructure?folderId=' + parentid);
             }
         });
     }
@@ -71,11 +71,11 @@
         var id = ev.originalEvent.dataTransfer.getData('dragId');
         $.ajax({
             type: 'POST',
-            url: '/file/moveFile/' + id,
+            url: '/ctrl/file/moveFile/' + id,
             data: {'folderId': folderid},
             dataType: 'html',
             success: function (data) {
-                linkTo('/admin/openFileStructure?folderId=' + folderid);
+                linkTo('/ctrl/admin/openFileStructure?folderId=' + folderid);
             }
         });
     }
@@ -94,12 +94,12 @@
             }
             $.ajax({
                 type: 'POST',
-                url: '/file/addFiles',
+                url: '/ctrl/file/addFiles',
                 data: fd,
                 processData: false,
                 contentType: false,
                 success: function (data) {
-                    linkTo('/admin/openFileStructure?folderId=' + folderid);
+                    linkTo('/ctrl/admin/openFileStructure?folderId=' + folderid);
                 }
             });
         }

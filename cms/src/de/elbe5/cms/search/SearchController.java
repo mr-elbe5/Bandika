@@ -12,10 +12,7 @@ import de.elbe5.cms.application.Statics;
 import de.elbe5.cms.application.Strings;
 import de.elbe5.cms.page.PageData;
 import de.elbe5.cms.page.PageFactory;
-import de.elbe5.cms.request.ForwardActionResult;
-import de.elbe5.cms.request.IActionResult;
-import de.elbe5.cms.request.PageActionResult;
-import de.elbe5.cms.request.RequestData;
+import de.elbe5.cms.request.*;
 import de.elbe5.cms.rights.Right;
 import de.elbe5.cms.rights.SystemZone;
 import de.elbe5.cms.servlet.Controller;
@@ -50,9 +47,9 @@ public class SearchController extends Controller {
         String pattern = rdata.getString("searchPattern");
         contentResult.setPattern(pattern);
         SearchBean.getInstance().searchPages(contentResult);
-        for (int i=contentResult.results.size()-1; i>=0; i--){
-            PageSearchData result=contentResult.results.get(i);
-            if (!result.isAnonymous() && !rdata.hasContentRight(result.getId(),Right.READ))
+        for (int i = contentResult.results.size() - 1; i >= 0; i--) {
+            PageSearchData result = contentResult.results.get(i);
+            if (!result.isAnonymous() && !rdata.hasContentRight(result.getId(), Right.READ))
                 contentResult.results.remove(i);
         }
         rdata.put("searchResultData", contentResult);
@@ -72,7 +69,7 @@ public class SearchController extends Controller {
             return forbidden(rdata);
         SearchQueue.getInstance().addAction(SearchQueue.ACTION_INDEX_PAGES);
         rdata.setMessage(Strings._indexingContentQueued.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new ForwardActionResult("/admin/openSystemAdministration");
+        return new ForwardActionResult("/ctrl/admin/openSystemAdministration");
     }
 
     public IActionResult indexAllUsers(RequestData rdata) {
@@ -80,17 +77,23 @@ public class SearchController extends Controller {
             return forbidden(rdata);
         SearchQueue.getInstance().addAction(SearchQueue.ACTION_INDEX_USERS);
         rdata.setMessage(Strings._indexingUsersQueued.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new ForwardActionResult("/admin/openSystemAdministration");
+        return new ForwardActionResult("/ctrl/admin/openSystemAdministration");
     }
 
     protected IActionResult showSearch() {
         PageData pageData = PageFactory.getPageData("PageData");
+        if (pageData == null)
+            return new ErrorActionResult(ResponseCode.NO_CONTENT);
+        pageData.setMasterName(Statics.DEFAULT_MASTER);
         pageData.setJsp("/WEB-INF/_jsp/search/search.jsp");
         return new PageActionResult(pageData);
     }
 
     protected IActionResult showUserSearch() {
         PageData pageData = PageFactory.getPageData("PageData");
+        if (pageData == null)
+            return new ErrorActionResult(ResponseCode.NO_CONTENT);
+        pageData.setMasterName(Statics.DEFAULT_MASTER);
         pageData.setJsp("/WEB-INF/_jsp/search/userSearch.jsp");
         return new PageActionResult(pageData);
     }

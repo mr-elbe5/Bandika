@@ -31,13 +31,11 @@
             <cms:message/>
             <ul class="nav nav-tabs" id="selectTab" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" id="pages-tab" data-toggle="tab" href="#pages" role="tab"
-                       aria-controls="pages" aria-selected="true"><%=Strings._pages.html(locale)%>
+                    <a class="nav-link active" id="pages-tab" data-toggle="tab" href="#pages" role="tab" aria-controls="pages" aria-selected="true"><%=Strings._pages.html(locale)%>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="files-tab" data-toggle="tab" href="#files" role="tab" aria-controls="files"
-                       aria-selected="false"><%=Strings._files.html(locale)%>
+                    <a class="nav-link" id="files-tab" data-toggle="tab" href="#files" role="tab" aria-controls="files" aria-selected="false"><%=Strings._files.html(locale)%>
                     </a>
                 </li>
             </ul>
@@ -47,37 +45,30 @@
                     <section class="treeSection">
                         <% if (rdata.hasAnyContentRight()) { %>
                         <ul class="tree filetree">
-                            <%
-                                rdata.put("treePage", PageCache.getInstance().getHomePage(locale));
-                            %>
-                            <jsp:include
-                                    page="/WEB-INF/_jsp/page/templatepage/templatepagepart/pageLinkBrowserFolder.inc.jsp"
-                                    flush="true"/>
+                            <%rdata.put("treePage", PageCache.getInstance().getHomePage(locale));%>
+                            <jsp:include page="/WEB-INF/_jsp/page/templatepage/templatepagepart/pageLinkBrowserFolder.inc.jsp" flush="true"/>
                         </ul>
-                        <% rdata.remove("treePage");
-                        }%>
+                        <%
+                                rdata.remove("treePage");
+                            }%>
                     </section>
                 </div>
                 <div class="tab-pane fade" id="files" role="tabpanel" aria-labelledby="files-tab">
                     <section class="treeSection">
                         <% if (rdata.hasAnyContentRight()) { %>
                         <ul class="tree filetree">
-                            <%
-                                rdata.put("folderData", FileCache.getInstance().getRootFolder());
-                            %>
-                            <jsp:include
-                                    page="/WEB-INF/_jsp/page/templatepage/templatepagepart/fileLinkBrowserFolder.inc.jsp"
-                                    flush="true"/>
+                            <%rdata.put("folderData", FileCache.getInstance().getRootFolder());%>
+                            <jsp:include page="/WEB-INF/_jsp/page/templatepage/templatepagepart/fileLinkBrowserFolder.inc.jsp" flush="true"/>
                         </ul>
-                        <% rdata.remove("folderData");
-                        }%>
+                        <%
+                                rdata.remove("folderData");
+                            }%>
                     </section>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary"
-                    data-dismiss="modal"><%=Strings._cancel.html(locale)%>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=Strings._cancel.html(locale)%>
             </button>
         </div>
     </div>

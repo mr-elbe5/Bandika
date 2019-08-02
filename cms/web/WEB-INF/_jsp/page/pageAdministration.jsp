@@ -56,11 +56,11 @@
         var id = ev.originalEvent.dataTransfer.getData('dragId');
         $.ajax({
             type: 'POST',
-            url: '/page/movePage/' + id,
+            url: '/ctrl/page/movePage/' + id,
             data: {'parentId': parentid},
             dataType: 'html',
             success: function (data) {
-                linkTo('/page/openPageAdministration/' + parentid);
+                linkTo('/ctrl/page/openPageAdministration/' + parentid);
             }
         });
     }

@@ -43,15 +43,9 @@ public class TextFieldTag extends FieldTag {
             String content = field.getContent();
             if (partEditMode) {
                 if (rows > 1)
-                    StringUtil.write(writer, "<textarea class=\"editField\" name=\"{1}\" rows=\"{2}\">{3}</textarea>",
-                            field.getIdentifier(),
-                            Integer.toString(rows),
-                            StringUtil.toHtml(content.isEmpty() ? placeholder : content));
+                    StringUtil.write(writer, "<textarea class=\"editField\" name=\"{1}\" rows=\"{2}\">{3}</textarea>", field.getIdentifier(), Integer.toString(rows), StringUtil.toHtml(content.isEmpty() ? placeholder : content));
                 else
-                    StringUtil.write(writer, "<input type=\"text\" class=\"editField\" name=\"{1}\" placeholder=\"{2}\" value=\"{3}\" />",
-                            field.getIdentifier(),
-                            field.getIdentifier(),
-                            StringUtil.toHtml(content));
+                    StringUtil.write(writer, "<input type=\"text\" class=\"editField\" name=\"{1}\" placeholder=\"{2}\" value=\"{3}\" />", field.getIdentifier(), field.getIdentifier(), StringUtil.toHtml(content));
             } else {
                 if (content.length() == 0) {
                     writer.write("&nbsp;");

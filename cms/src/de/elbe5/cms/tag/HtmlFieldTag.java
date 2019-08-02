@@ -35,21 +35,7 @@ public class HtmlFieldTag extends FieldTag {
 
             boolean partEditMode = pageData.getViewMode() == ViewMode.EDIT && partData == pageData.getEditPagePart();
             if (partEditMode) {
-                StringUtil.write(writer, "<div class=\"ckeditField\" id=\"{1}\" contenteditable=\"true\">{2}</div>" +
-                                "<input type=\"hidden\" name=\"{3}\" value=\"{4}\" />" +
-                                "<script type=\"text/javascript\">$('#{5}').ckeditor({" +
-                                "toolbar : 'Full'," +
-                                "filebrowserBrowseUrl : '/templatepagepart/openLinkBrowser?pageId={6}'," +
-                                "filebrowserImageBrowseUrl : '/templatepagepart/openImageBrowser?pageId={7}'" +
-                                "});" +
-                                "</script>",
-                        field.getIdentifier(),
-                        field.getContent().isEmpty() ? StringUtil.toHtml(placeholder) : field.getContent(),
-                        field.getIdentifier(), StringUtil.toHtml(field.getContent()),
-                        field.getIdentifier(),
-                        Integer.toString(pageData.getId()),
-                        Integer.toString(pageData.getId())
-                );
+                StringUtil.write(writer, "<div class=\"ckeditField\" id=\"{1}\" contenteditable=\"true\">{2}</div><input type=\"hidden\" name=\"{3}\" value=\"{4}\" /><script type=\"text/javascript\">$('#{5}').ckeditor({toolbar : 'Full',filebrowserBrowseUrl : '/ctrl/templatepagepart/openLinkBrowser?pageId={6}',filebrowserImageBrowseUrl : '/ctrl/templatepagepart/openImageBrowser?pageId={7}'});</script>", field.getIdentifier(), field.getContent().isEmpty() ? StringUtil.toHtml(placeholder) : field.getContent(), field.getIdentifier(), StringUtil.toHtml(field.getContent()), field.getIdentifier(), Integer.toString(pageData.getId()), Integer.toString(pageData.getId()));
             } else {
                 try {
                     if (field.getContent().isEmpty()) {

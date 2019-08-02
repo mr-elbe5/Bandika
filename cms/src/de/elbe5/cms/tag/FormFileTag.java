@@ -15,8 +15,7 @@ import java.util.Locale;
 
 public class FormFileTag extends FormLineTag {
 
-    String controlPreHtml = "" +
-            "<input type=\"file\" class=\"form-control-file\" id=\"{1}\" name=\"{2}\" >";
+    String controlPreHtml = "<input type=\"file\" class=\"form-control-file\" id=\"{1}\" name=\"{2}\" >";
 
     protected String getPreControlHtml(HttpServletRequest request, Locale locale) {
         return StringUtil.format(controlPreHtml, name, name);

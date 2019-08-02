@@ -28,9 +28,7 @@ public class TemplatePageBean extends PageExtrasBean {
         return instance;
     }
 
-    private static String GET_TEMPLATE_PAGE_SQL = "SELECT template " +
-            "FROM t_template_page " +
-            "WHERE id=?";
+    private static String GET_TEMPLATE_PAGE_SQL = "SELECT template FROM t_template_page WHERE id=?";
 
     public void readPageExtras(Connection con, PageData pageData) throws SQLException {
         if (!(pageData instanceof TemplatePageData))
@@ -44,7 +42,7 @@ public class TemplatePageBean extends PageExtrasBean {
                 if (rs.next()) {
                     int i = 1;
                     data.setTemplateName(rs.getString(i));
-                    readAllPageParts(con,data);
+                    readAllPageParts(con, data);
                     data.sortPageParts();
                 }
             }
@@ -53,10 +51,8 @@ public class TemplatePageBean extends PageExtrasBean {
         }
     }
 
-    private static String INSERT_PAGE_EXTRAS_SQL = "insert into t_template_page (template,id) " +
-            "values(?,?)";
-    private static String UPDATE_PAGE_EXTRAS_SQL = "update t_template_page set template=? " +
-            "where id=?";
+    private static String INSERT_PAGE_EXTRAS_SQL = "insert into t_template_page (template,id) values(?,?)";
+    private static String UPDATE_PAGE_EXTRAS_SQL = "update t_template_page set template=? where id=?";
 
     public void writePageExtras(Connection con, PageData pageData) throws Exception {
         if (!(pageData instanceof TemplatePageData))
@@ -78,7 +74,7 @@ public class TemplatePageBean extends PageExtrasBean {
         } finally {
             closeStatement(pst);
         }
-        writeAllPageParts(con,data);
+        writeAllPageParts(con, data);
     }
 
     public int getNextId() {
@@ -124,9 +120,7 @@ public class TemplatePageBean extends PageExtrasBean {
         return list;
     }
 
-    private static String READ_PART_SQL = "SELECT type,id,name,change_date,flex_class " +
-            "FROM t_page_part " +
-            "WHERE id=? ";
+    private static String READ_PART_SQL = "SELECT type,id,name,change_date,flex_class FROM t_page_part WHERE id=? ";
 
     public PagePartData readPagePart(Connection con, int id) throws SQLException {
         PreparedStatement pst = null;
@@ -156,10 +150,7 @@ public class TemplatePageBean extends PageExtrasBean {
         return part;
     }
 
-    private static String READ_SHARED_PARTS_SQL = "SELECT type,id,name,change_date,flex_class " +
-            "FROM t_page_part " +
-            "WHERE length(name)>0 " +
-            "ORDER BY name";
+    private static String READ_SHARED_PARTS_SQL = "SELECT type,id,name,change_date,flex_class FROM t_page_part WHERE length(name)>0 ORDER BY name";
 
     public void readSharedPageParts(Connection con, List<PagePartData> list) throws SQLException {
         PreparedStatement pst = null;
@@ -185,9 +176,7 @@ public class TemplatePageBean extends PageExtrasBean {
         }
     }
 
-    private static String READ_ORPHANED_PARTS_SQL = "SELECT t1.id,t1.name,t1.change_date,t1.flex_class " +
-            "FROM t_page_part t1 WHERE NOT EXISTS(SELECT 'x' FROM t_page_part2page t2 WHERE t1.id=t2.part_id) " +
-            "ORDER BY t1.name";
+    private static String READ_ORPHANED_PARTS_SQL = "SELECT t1.id,t1.name,t1.change_date,t1.flex_class FROM t_page_part t1 WHERE NOT EXISTS(SELECT 'x' FROM t_page_part2page t2 WHERE t1.id=t2.part_id) ORDER BY t1.name";
 
     public void readOrphanedPageParts(Connection con, List<PagePartData> list) throws SQLException {
         PreparedStatement pst = null;
@@ -213,9 +202,7 @@ public class TemplatePageBean extends PageExtrasBean {
         }
     }
 
-    private static String READ_ALL_PAGE_PARTS_SQL = "SELECT t1.type,t2.section,t2.position,t1.id,t1.name,t1.change_date,t1.flex_class " +
-            "FROM t_page_part t1, t_page_part2page t2 " +
-            "WHERE t1.id=t2.part_id AND t2.page_id=? ORDER BY t2.position";
+    private static String READ_ALL_PAGE_PARTS_SQL = "SELECT t1.type,t2.section,t2.position,t1.id,t1.name,t1.change_date,t1.flex_class FROM t_page_part t1, t_page_part2page t2 WHERE t1.id=t2.part_id AND t2.page_id=? ORDER BY t2.position";
 
     public void readAllPageParts(Connection con, TemplatePageData pageData) throws SQLException {
         PreparedStatement pst = null;

@@ -56,7 +56,7 @@ public class TimerController extends Controller {
         ts.updateTaskData(data);
         Timer.getInstance().loadTask(data.getName());
         rdata.setMessage(Strings._taskSaved.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/admin/openSystemAdministration");
+        return new CloseDialogActionResult("/ctrl/admin/openSystemAdministration");
     }
 
     private IActionResult showEditTimerTask() {

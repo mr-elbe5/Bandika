@@ -10,7 +10,6 @@ package de.elbe5.cms.user;
 
 import de.elbe5.base.data.BaseIdData;
 import de.elbe5.base.data.BinaryFile;
-import de.elbe5.base.data.Locales;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.ImageUtil;
 import de.elbe5.base.util.StringUtil;
@@ -40,7 +39,6 @@ public class UserData extends BaseIdData implements IRequestData {
     protected String title = "";
     protected String firstName = "";
     protected String lastName = "";
-    protected Locale locale = null;
     protected String email = "";
     protected String login = "";
     protected String passwordHash = "";
@@ -94,24 +92,6 @@ public class UserData extends BaseIdData implements IRequestData {
             return lastName;
         }
         return firstName + ' ' + lastName;
-    }
-
-    public Locale getLocale() {
-        if (locale != null)
-            return locale;
-        return Locales.getInstance().getDefaultLocale();
-    }
-
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-    }
-
-    public void setLocale(String localeName) {
-        try {
-            locale = new Locale(localeName);
-        } catch (Exception e) {
-            Log.error("locale not found: " + localeName);
-        }
     }
 
     public String getEmail() {
@@ -316,7 +296,6 @@ public class UserData extends BaseIdData implements IRequestData {
         setTitle(rdata.getString("title"));
         setFirstName(rdata.getString("firstName"));
         setLastName(rdata.getString("lastName"));
-        setLocale(new Locale(rdata.getString("locale")));
         setEmail(rdata.getString("email"));
         setStreet(rdata.getString("street"));
         setZipCode(rdata.getString("zipCode"));

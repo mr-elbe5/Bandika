@@ -19,7 +19,7 @@
     Locale locale = rdata.getSessionLocale();
     UserData user = (UserData) rdata.get("userData");
     assert (user != null);
-    String url = "/user/register/" + user.getId();
+    String url = "/ctrl/user/register/" + user.getId();
 %>
 <cms:message/>
 <section class="contentTop">
@@ -31,41 +31,30 @@
     <cms:form url="<%=url%>" name="registerform">
         <div class="paragraph">
             <cms:formerror/>
-            <cms:line
-                    padded="true"><%=Strings._registrationHint.html(locale)%>&nbsp;<%=Strings._mandatoryHint.html(locale)%>
+            <cms:line padded="true"><%=Strings._registrationHint.html(locale)%>&nbsp;<%=Strings._mandatoryHint.html(locale)%>
             </cms:line>
-            <cms:text name="login" label="<%=Strings._loginName.toString()%>" required="true"
-                      value="<%=StringUtil.toHtml(user.getLogin())%>"/>
+            <cms:text name="login" label="<%=Strings._loginName.toString()%>" required="true" value="<%=StringUtil.toHtml(user.getLogin())%>"/>
             <cms:password name="password1" label="<%=Strings._password.toString()%>" required="true"/>
             <cms:password name="password2" label="<%=Strings._retypePassword.toString()%>" required="true"/>
-            <cms:text name="title" label="<%=Strings._title.toString()%>"
-                      value="<%=StringUtil.toHtml(user.getTitle())%>"/>
-            <cms:text name="firstName" label="<%=Strings._firstName.toString()%>"
-                      value="<%=StringUtil.toHtml(user.getFirstName())%>"/>
-            <cms:text name="lastName" label="<%=Strings._lastName.toString()%>" required="true"
-                      value="<%=StringUtil.toHtml(user.getLastName())%>"/>
+            <cms:text name="title" label="<%=Strings._title.toString()%>" value="<%=StringUtil.toHtml(user.getTitle())%>"/>
+            <cms:text name="firstName" label="<%=Strings._firstName.toString()%>" value="<%=StringUtil.toHtml(user.getFirstName())%>"/>
+            <cms:text name="lastName" label="<%=Strings._lastName.toString()%>" required="true" value="<%=StringUtil.toHtml(user.getLastName())%>"/>
             <h3><%=Strings._address.html(locale)%>
             </h3>
-            <cms:text name="street" label="<%=Strings._street.toString()%>"
-                      value="<%=StringUtil.toHtml(user.getStreet())%>"/>
-            <cms:text name="zipCode" label="<%=Strings._zipCode.toString()%>"
-                      value="<%=StringUtil.toHtml(user.getZipCode())%>"/>
+            <cms:text name="street" label="<%=Strings._street.toString()%>" value="<%=StringUtil.toHtml(user.getStreet())%>"/>
+            <cms:text name="zipCode" label="<%=Strings._zipCode.toString()%>" value="<%=StringUtil.toHtml(user.getZipCode())%>"/>
             <cms:text name="city" label="<%=Strings._city.toString()%>" value="<%=StringUtil.toHtml(user.getCity())%>"/>
-            <cms:text name="country" label="<%=Strings._country.toString()%>"
-                      value="<%=StringUtil.toHtml(user.getCountry())%>"/>
+            <cms:text name="country" label="<%=Strings._country.toString()%>" value="<%=StringUtil.toHtml(user.getCountry())%>"/>
             <h3><%=Strings._contact.html(locale)%>
             </h3>
-            <cms:text name="email" label="<%=Strings._email.toString()%>" required="true"
-                      value="<%=StringUtil.toHtml(user.getEmail())%>"/>
-            <cms:text name="phone" label="<%=Strings._phone.toString()%>"
-                      value="<%=StringUtil.toHtml(user.getPhone())%>"/>
+            <cms:text name="email" label="<%=Strings._email.toString()%>" required="true" value="<%=StringUtil.toHtml(user.getEmail())%>"/>
+            <cms:text name="phone" label="<%=Strings._phone.toString()%>" value="<%=StringUtil.toHtml(user.getPhone())%>"/>
             <cms:text name="fax" label="<%=Strings._fax.toString()%>" value="<%=StringUtil.toHtml(user.getFax())%>"/>
-            <cms:text name="mobile" label="<%=Strings._mobile.toString()%>"
-                      value="<%=StringUtil.toHtml(user.getMobile())%>"/>
+            <cms:text name="mobile" label="<%=Strings._mobile.toString()%>" value="<%=StringUtil.toHtml(user.getMobile())%>"/>
             <hr/>
             <cms:line padded="true">
                 <div class="imgBox left50">
-                    <img id="captchaImg" src="/user/showCaptcha?timestamp=<%=new Date().getTime()%>" alt="captcha"/>
+                    <img id="captchaImg" src="/ctrl/user/showCaptcha?timestamp=<%=new Date().getTime()%>" alt="captcha"/>
                     <%=Strings._captchaHint.htmlMultiline(locale)%>
                     <br/><br/>
                     <a class="link" href="#" onclick="return renewCaptcha();"><%=Strings._captchaRenew.html(locale)%>
@@ -82,9 +71,13 @@
     <script type="text/javascript">
         function renewCaptcha() {
             $.ajax({
-                url: '/user/renewCaptcha', type: 'POST', data: {}, cache: false, dataType: 'html'
+                url: '/ctrl/user/renewCaptcha',
+                type: 'POST',
+                data: {},
+                cache: false,
+                dataType: 'html'
             }).success(function (html, textStatus) {
-                $('#captchaImg').attr("src", "/user/showCaptcha?timestamp=" + new Date().getTime());
+                $('#captchaImg').attr("src", "/ctrl/user/showCaptcha?timestamp=" + new Date().getTime());
             });
             return false;
         }

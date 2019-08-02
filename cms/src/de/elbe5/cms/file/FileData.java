@@ -94,7 +94,7 @@ public class FileData extends FileBaseData implements IRequestData {
         }
     }
 
-    public void createPreview(){
+    public void createPreview() {
         if (isImage()) {
             try {
                 BufferedImage source = ImageUtil.createImage(bytes, contentType);

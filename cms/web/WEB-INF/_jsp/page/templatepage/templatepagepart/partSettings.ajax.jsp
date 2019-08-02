@@ -22,7 +22,7 @@
     TemplatePageData data = (TemplatePageData) rdata.getCurrentPage();
     assert (data != null);
     TemplatePagePartData part = (TemplatePagePartData) data.getEditPagePart();
-    String url = "/templatepage/savePagePartSettings/" + data.getId();
+    String url = "/ctrl/templatepage/savePagePartSettings/" + data.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -45,15 +45,12 @@
                 </option>
                 <%}%>
             </cms:select>
-            <cms:text name="cssClasses" label="<%=Strings._cssClass.toString()%>"
-                      value="<%=StringUtil.toHtml(part.getCssClasses())%>"/>
-            <cms:editor name="script" label="<%=Strings._script.toString()%>" type="javascript"
-                        hint="<%=Strings._javascriptHint.toString()%>" height="10rem">
+            <cms:text name="cssClasses" label="<%=Strings._cssClass.toString()%>" value="<%=StringUtil.toHtml(part.getCssClasses())%>"/>
+            <cms:editor name="script" label="<%=Strings._script.toString()%>" type="javascript" hint="<%=Strings._javascriptHint.toString()%>" height="10rem">
                 <%=StringUtil.toHtml(part.getScript())%>
             </cms:editor>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary"
-                        data-dismiss="modal"><%=Strings._close.html(locale)%>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=Strings._close.html(locale)%>
                 </button>
                 <button type="submit" class="btn btn-primary"><%=Strings._save.html(locale)%>
                 </button>
@@ -66,7 +63,7 @@
                 event.preventDefault();
                 $('#script').val(editor.getSession().getValue());
                 var params = $this.serialize();
-                postByAjax('/templatepage/savePagePartSettings/<%=data.getId()%>', params, '<%=Statics.MODAL_DIALOG_JQID%>');
+                postByAjax('/ctrl/templatepage/savePagePartSettings/<%=data.getId()%>', params, '<%=Statics.MODAL_DIALOG_JQID%>');
             });
         </script>
     </div>

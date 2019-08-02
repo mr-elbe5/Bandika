@@ -33,14 +33,11 @@ public class FormCheckTag extends BaseTag {
     }
 
     protected String getPreHtml() {
-        return "<span>\n" +
-                "  <input type=\"checkbox\" name=\"{1}\" value=\"{2}\" {3}/>\n" +
-                "  <label class=\"form-check-label\">";
+        return "<span>\n  <input type=\"checkbox\" name=\"{1}\" value=\"{2}\" {3}/>\n  <label class=\"form-check-label\">";
     }
 
     protected String getPostHtml() {
-        return "</label>\n" +
-                "</span>";
+        return "</label>\n</span>";
     }
 
     @Override

@@ -25,7 +25,7 @@
         FileCache tc = FileCache.getInstance();
         parentFolder = tc.getFolder(fileData.getFolderId());
     }
-    String url = "/file/saveFile/" + fileData.getId();
+    String url = "/ctrl/file/saveFile/" + fileData.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -41,31 +41,23 @@
                 <cms:formerror/>
                 <cms:line label="<%=Strings._id.toString()%>"><%=Integer.toString(fileData.getId())%>
                 </cms:line>
-                <cms:line
-                        label="<%=Strings._creationDate.toString()%>"><%=StringUtil.toHtmlDateTime(fileData.getCreationDate(), locale)%>
+                <cms:line label="<%=Strings._creationDate.toString()%>"><%=StringUtil.toHtmlDateTime(fileData.getCreationDate(), locale)%>
                 </cms:line>
-                <cms:line
-                        label="<%=Strings._changeDate.toString()%>"><%=StringUtil.toHtmlDateTime(fileData.getChangeDate(), locale)%>
+                <cms:line label="<%=Strings._changeDate.toString()%>"><%=StringUtil.toHtmlDateTime(fileData.getChangeDate(), locale)%>
                 </cms:line>
-                <cms:line
-                        label="<%=Strings._parentFolder.toString()%>"><%=(parentFolder == null) ? "-" : StringUtil.toHtml(parentFolder.getName()) + "&nbsp;(" + parentFolder.getId() + ')'%>
+                <cms:line label="<%=Strings._parentFolder.toString()%>"><%=(parentFolder == null) ? "-" : StringUtil.toHtml(parentFolder.getName()) + "&nbsp;(" + parentFolder.getId() + ')'%>
                 </cms:line>
 
                 <cms:file name="file" label="<%=Strings._file.toString()%>" required="true"/>
-                <cms:text name="name" label="<%=Strings._name.toString()%>" required="true"
-                          value="<%=StringUtil.toHtml(fileData.getName())%>"/>
-                <cms:text name="displayName" label="<%=Strings._displayName.toString()%>"
-                          value="<%=StringUtil.toHtml(fileData.getDisplayName())%>"/>
-                <cms:text name="description" label="<%=Strings._description.toString()%>"
-                          value="<%=StringUtil.toHtml(fileData.getDescription())%>"/>
-                <cms:text name="keywords" label="<%=Strings._keywords.toString()%>"
-                          value="<%=StringUtil.toHtml(fileData.getKeywords())%>"/>
+                <cms:text name="name" label="<%=Strings._name.toString()%>" required="true" value="<%=StringUtil.toHtml(fileData.getName())%>"/>
+                <cms:text name="displayName" label="<%=Strings._displayName.toString()%>" value="<%=StringUtil.toHtml(fileData.getDisplayName())%>"/>
+                <cms:text name="description" label="<%=Strings._description.toString()%>" value="<%=StringUtil.toHtml(fileData.getDescription())%>"/>
+                <cms:text name="keywords" label="<%=Strings._keywords.toString()%>" value="<%=StringUtil.toHtml(fileData.getKeywords())%>"/>
                 <cms:line label="<%=Strings._author.toString()%>"><%=StringUtil.toHtml(fileData.getAuthorName())%>
                 </cms:line>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary"
-                        data-dismiss="modal"><%=Strings._close.html(locale)%>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=Strings._close.html(locale)%>
                 </button>
                 <button type="submit" class="btn btn-primary"><%=Strings._save.html(locale)%>
                 </button>

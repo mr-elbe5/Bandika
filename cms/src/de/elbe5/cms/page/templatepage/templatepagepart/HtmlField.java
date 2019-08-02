@@ -17,9 +17,9 @@ public class HtmlField extends Field {
 
     public static final String FIELDTYPE = "html";
 
-    public static final String SRC_PATTERN = " src=\"/file/show/";
-    public static final String PAGE_LINK_PATTERN = " href=\"/page/show/";
-    public static final String FILE_LINK_PATTERN = " href=\"/file/show/";
+    public static final String SRC_PATTERN = " src=\"/ctrl/file/show/";
+    public static final String PAGE_LINK_PATTERN = " href=\"/ctrl/page/show/";
+    public static final String FILE_LINK_PATTERN = " href=\"/ctrl/file/show/";
 
     @Override
     public String getFieldType() {

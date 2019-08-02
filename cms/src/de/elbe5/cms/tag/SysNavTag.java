@@ -51,61 +51,42 @@ public class SysNavTag extends BaseTag {
 
             writer.write("<ul class=\"nav justify-content-end\">");
             if (pageId != 0 && pageEditMode & hasEditRight) {
-                StringUtil.write(writer, "<li class=\"nav-item editControl\"><a class=\"nav-link\" href=\"/page/savePageContent/{1}\">{2}</a></li>",
-                        String.valueOf(pageId),
-                        Strings._save.html(locale));
+                StringUtil.write(writer, "<li class=\"nav-item editControl\"><a class=\"nav-link\" href=\"/ctrl/page/savePageContent/{1}\">{2}</a></li>", String.valueOf(pageId), Strings._save.html(locale));
 
-                StringUtil.write(writer, "<li class=\"nav-item editControl\"><a class=\"nav-link\" href=\"/page/stopEditing/{1}\">{2}</a></li>",
-                        String.valueOf(pageId),
-                        Strings._cancel.html(locale));
+                StringUtil.write(writer, "<li class=\"nav-item editControl\"><a class=\"nav-link\" href=\"/ctrl/page/stopEditing/{1}\">{2}</a></li>", String.valueOf(pageId), Strings._cancel.html(locale));
             } else {
                 if (editMode) {
                     if (pageId != 0 && hasEditRight) {
-                        StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/page/openEditPageContent/{1}\" >{2}</span></a></li>",
-                                String.valueOf(pageId),
-                                Strings._editPage.html(locale));
+                        StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/ctrl/page/openEditPageContent/{1}\" >{2}</span></a></li>", String.valueOf(pageId), Strings._editPage.html(locale));
                     }
                     if (pageId != 0 && hasApproveRight && pageData.hasUnpublishedDraft()) {
-                        StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/page/publishPage/{1}\" >{2}</a></li>",
-                                String.valueOf(pageId),
-                                Strings._publish.html(locale));
+                        StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/ctrl/page/publishPage/{1}\" >{2}</a></li>", String.valueOf(pageId), Strings._publish.html(locale));
                     }
                     if (hasAdminRight || hasAnyEditRight) {
-                        StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/admin/openSystemAdministration\" >{1}</a></li>",
-                                Strings._administration.html(locale));
+                        StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/ctrl/admin/openSystemAdministration\" >{1}</a></li>", Strings._administration.html(locale));
                     }
                 }
                 if (hasAnyEditRight || hasAdminRight) {
-                    StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link toggle\" href=\"/page/toggleEditMode/{1}\" title=\"{2}\"><span class=\"fa fa-chevron-{3}\"></span></a></li>",
-                            String.valueOf(pageId),
-                            editMode ? Strings._editModeOff.html(locale) : Strings._editModeOn.html(locale),
-                            editMode ? "right" : "left");
+                    StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link toggle\" href=\"/ctrl/page/toggleEditMode/{1}\" title=\"{2}\"><span class=\"fa fa-chevron-{3}\"></span></a></li>", String.valueOf(pageId), editMode ? Strings._editModeOff.html(locale) : Strings._editModeOn.html(locale), editMode ? "right" : "left");
                 }
                 if (homePage != null) {
                     if (otherLocales != null) {
                         for (Locale loc : otherLocales) {
-                            StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/user/changeLocale?language={1}\">{2}</a></li>",
-                                    loc.getLanguage(),
-                                    StringUtil.toHtml(loc.getDisplayName(loc)));
+                            StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/ctrl/user/changeLocale?language={1}\">{2}</a></li>", loc.getLanguage(), StringUtil.toHtml(loc.getDisplayName(loc)));
                         }
                     }
                 }
-                StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/search/openSearch\">{1}</a></li>",
-                        Strings._search.html(locale));
+                StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/ctrl/search/openSearch\">{1}</a></li>", Strings._search.html(locale));
                 if (rdata.isLoggedIn()) {
                     if (Configuration.getInstance().isEditProfile()) {
-                        StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/user/openProfile\">{1}</a></li>",
-                                Strings._profile.html(locale));
+                        StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/ctrl/user/openProfile\">{1}</a></li>", Strings._profile.html(locale));
                     }
-                    StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/user/logout\">{1}</a></li>",
-                            Strings._logout.html(locale));
+                    StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/ctrl/user/logout\">{1}</a></li>", Strings._logout.html(locale));
                 } else {
                     if (Configuration.getInstance().isSelfRegistration()) {
-                        StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/user/openRegistration\">{1}</a></li>",
-                                Strings._register.html(locale));
+                        StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/ctrl/user/openRegistration\">{1}</a></li>", Strings._register.html(locale));
                     }
-                    StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/user/openLogin\">{1}</a></li>",
-                            Strings._login.html(locale));
+                    StringUtil.write(writer, "<li class=\"nav-item\"><a class=\"nav-link\" href=\"/ctrl/user/openLogin\">{1}</a></li>", Strings._login.html(locale));
                 }
             }
             writer.write("</ul>");

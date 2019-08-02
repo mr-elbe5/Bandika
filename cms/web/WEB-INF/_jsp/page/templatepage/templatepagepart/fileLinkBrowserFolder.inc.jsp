@@ -20,28 +20,22 @@
     Locale locale = rdata.getSessionLocale();
     FolderData folder = (FolderData) rdata.get("folderData");
     assert folder != null;
-%>
-<% if (rdata.hasContentRight(folder.getId(), Right.READ)) {%>
+%><% if (rdata.hasContentRight(folder.getId(), Right.READ)) {%>
 <li class="open">
     <a id="<%=folder.getId()%>"><%=folder.getName()%>
     </a>
     <ul>
-        <% if (!folder.getSubFolders().isEmpty() || !folder.getFiles().isEmpty()) {%>
-        <% for (FileData file : folder.getFiles()) {
-        %>
+        <% if (!folder.getSubFolders().isEmpty() || !folder.getFiles().isEmpty()) {%><% for (FileData file : folder.getFiles()) {%>
         <li>
             <div class="treeline">
-                <a id="<%=file.getId()%>" href=""
-                   onclick="return ckImgCallback('/file/show/<%=file.getId()%>');">
-                    <% if (file.isImage()){%>
-                    <img src="/file/showPreview/<%=file.getId()%>" alt="<%=StringUtil.toHtml(file.getName())%>" />
-                    <%}else{%>
-                    <img src="/img/document-50.png" alt="<%=StringUtil.toHtml(file.getName())%>" />
+                <a id="<%=file.getId()%>" href="" onclick="return ckImgCallback('/ctrl/file/show/<%=file.getId()%>');">
+                    <% if (file.isImage()) {%>
+                    <img src="/ctrl/file/showPreview/<%=file.getId()%>" alt="<%=StringUtil.toHtml(file.getName())%>"/>
+                    <%} else {%>
+                    <img src="/static-content/img/document-50.png" alt="<%=StringUtil.toHtml(file.getName())%>"/>
                     <%}%> <%=file.getName()%>
                 </a>
-                <a class="fa fa-eye" title="<%=Strings._view.html(locale)%>" href="/file/show/<%=file.getId()%>"
-                   target="_blank">
-                </a>
+                <a class="fa fa-eye" title="<%=Strings._view.html(locale)%>" href="/ctrl/file/show/<%=file.getId()%>" target="_blank"> </a>
             </div>
         </li>
         <%
@@ -49,13 +43,11 @@
             for (FolderData subFolder : folder.getSubFolders()) {
                 rdata.put("folderData", subFolder);
         %>
-        <jsp:include page="/WEB-INF/_jsp/page/templatepage/templatepagepart/fileLinkBrowserFolder.inc.jsp"
-                     flush="true"/>
+        <jsp:include page="/WEB-INF/_jsp/page/templatepage/templatepagepart/fileLinkBrowserFolder.inc.jsp" flush="true"/>
         <%
             }
             rdata.put("folderData", folder);
-        %>
-        <%}%>
+        %><%}%>
     </ul>
 </li>
 <%}%>

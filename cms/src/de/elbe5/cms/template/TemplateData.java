@@ -22,10 +22,7 @@ public class TemplateData extends BaseData implements IRequestData, Serializable
     public static final String TYPE_PAGE = "PAGE";
     public static final String TYPE_PART = "PART";
 
-    public static final String JSP_HEAD = "" +
-            "<%response.setContentType(\"text/html;charset=UTF-8\");%>\n" +
-            "<%@ page trimDirectiveWhitespaces=\"true\" %>" +
-            "<%@ taglib uri=\"/WEB-INF/cmstags.tld\" prefix=\"cms\" %>\n";
+    public static final String JSP_HEAD = "<%response.setContentType(\"text/html;charset=UTF-8\");%>\n<%@ page trimDirectiveWhitespaces=\"true\" %><%@ taglib uri=\"/WEB-INF/cmstags.tld\" prefix=\"cms\" %>\n";
 
     public static String getTemplatePath(String type, String name) {
         return ApplicationPath.getAppROOTPath() + "/WEB-INF/_jsp/_templates/" + type + "/" + name + ".jsp";

@@ -40,14 +40,7 @@ public class FormTag extends BaseTag {
 
     String preHtml = "<form action=\"{1}\" method=\"post\" id=\"{2}\" name=\"{3}\" accept-charset=\"UTF-8\"{4}>\n";
     String postHtml = "</form>\n";
-    String ajaxHtml = "<script type=\"text/javascript\">\n" +
-            "  $('#{1}').submit(function (event) {\n" +
-            "    var $this = $(this);\n" +
-            "    event.preventDefault();\n" +
-            "    var params = $this.{2}();\n" +
-            "    {3}('{4}', params,'{5}');\n" +
-            "  });\n" +
-            "</script>\n";
+    String ajaxHtml = "<script type=\"text/javascript\">\n  $('#{1}').submit(function (event) {\n    var $this = $(this);\n    event.preventDefault();\n    var params = $this.{2}();\n    {3}('{4}', params,'{5}');\n  });\n</script>\n";
 
     @Override
     public int doStartTag() throws JspException {
@@ -67,13 +60,7 @@ public class FormTag extends BaseTag {
             Writer writer = getWriter();
             writer.write(postHtml);
             if (ajax) {
-                writer.write(StringUtil.format(ajaxHtml,
-                        name,
-                        multi ? "serializeFiles" : "serialize",
-                        multi ? "postMultiByAjax" : "postByAjax",
-                        url,
-                        Statics.MODAL_DIALOG_JQID
-                ));
+                writer.write(StringUtil.format(ajaxHtml, name, multi ? "serializeFiles" : "serialize", multi ? "postMultiByAjax" : "postByAjax", url, Statics.MODAL_DIALOG_JQID));
             }
         } catch (Exception e) {
             Log.error("error writing form tag", e);

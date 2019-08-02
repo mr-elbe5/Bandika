@@ -39,11 +39,7 @@ public class FileBean extends DbBean {
         return changedItem(con, CHANGED_FILE_SQL, data);
     }
 
-    private static String GEL_ALL_FILES_SQL = "SELECT id,creation_date,change_date,folder_id,name," +
-            "display_name,description,author_name," +
-            "content_type,file_size,width,height,(preview_bytes IS NOT NULL) as has_preview " +
-            "FROM t_file " +
-            "ORDER BY folder_id";
+    private static String GEL_ALL_FILES_SQL = "SELECT id,creation_date,change_date,folder_id,name,display_name,description,author_name,content_type,file_size,width,height,(preview_bytes IS NOT NULL) as has_preview FROM t_file ORDER BY folder_id";
 
     public List<FileData> getAllFiles() {
         List<FileData> list = new ArrayList<>();
@@ -96,15 +92,9 @@ public class FileBean extends DbBean {
         return data;
     }
 
-    private static String READ_FILE_SQL = "SELECT creation_date,change_date,folder_id,name,display_name,description, " +
-            "keywords,author_name,content_type,file_size,width,height,(preview_bytes IS NOT NULL) as has_preview " +
-            "FROM t_file " +
-            "WHERE id=?";
+    private static String READ_FILE_SQL = "SELECT creation_date,change_date,folder_id,name,display_name,description, keywords,author_name,content_type,file_size,width,height,(preview_bytes IS NOT NULL) as has_preview FROM t_file WHERE id=?";
 
-    private static String READ_FILE_WITH_BYTES_SQL = "SELECT creation_date,change_date,folder_id,name,display_name,description, " +
-            "keywords,author_name,content_type,file_size,width,height,(preview_bytes IS NOT NULL) as has_preview,bytes,preview_bytes " +
-            "FROM t_file " +
-            "WHERE id=?";
+    private static String READ_FILE_WITH_BYTES_SQL = "SELECT creation_date,change_date,folder_id,name,display_name,description, keywords,author_name,content_type,file_size,width,height,(preview_bytes IS NOT NULL) as has_preview,bytes,preview_bytes FROM t_file WHERE id=?";
 
     public boolean readFileData(Connection con, FileData data, boolean withBytes) throws SQLException {
         PreparedStatement pst = null;
@@ -141,55 +131,44 @@ public class FileBean extends DbBean {
         return success;
     }
 
+    private static String INSERT_FILE_SQL = "insert into t_file (creation_date,change_date,folder_id,name,display_name,description,author_name,content_type,file_size,width,height,bytes,preview_bytes,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static String UPDATE_FILE_SQL = "update t_file set change_date=?,folder_id=?,name=?,display_name=?,description=?,author_name=?,content_type=?,file_size=?,width=?,height=?,bytes=?,preview_bytes=? where id=?";
+    private static String UPDATE_FILE_NOBYTES_SQL = "update t_file set change_date=?,folder_id=?,name=?,display_name=?,description=?,author_name=? where id=?";
+
     public boolean saveFile(FileData data) {
         Connection con = startTransaction();
+        PreparedStatement pst;
         try {
             if (!data.isNew() && changedFile(con, data)) {
                 return rollbackTransaction(con);
             }
             data.setChangeDate(getServerTime(con));
-            writeFileData(con, data);
-            return commitTransaction(con);
-        } catch (Exception se) {
-            return rollbackTransaction(con, se);
-        }
-    }
-
-    private static String INSERT_FILE_SQL = "insert into t_file (creation_date,change_date,folder_id," +
-            "name,display_name,description,author_name,content_type,file_size,width,height,bytes,preview_bytes,id) " +
-            "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    private static String UPDATE_FILE_SQL = "update t_file set creation_date=?,change_date=?,folder_id=?," +
-            "name=?,display_name=?,description=?,author_name=?,content_type=?,file_size=?,width=?,height=?,bytes=?,preview_bytes=? " +
-            "where id=?";
-
-    protected void writeFileData(Connection con, FileData data) throws SQLException {
-        LocalDateTime now = getServerTime(con);
-        data.setChangeDate(now);
-        if (data.isNew()) {
-            data.setCreationDate(now);
-        }
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement(data.isNew() ? INSERT_FILE_SQL : UPDATE_FILE_SQL);
             int i = 1;
-            pst.setTimestamp(i++, Timestamp.valueOf(data.getCreationDate()));
+            pst = con.prepareStatement(data.isNew() ? INSERT_FILE_SQL : (data.getBytes() != null ? UPDATE_FILE_SQL : UPDATE_FILE_NOBYTES_SQL));
+            if (data.isNew()) {
+                data.setCreationDate(data.getChangeDate());
+                pst.setTimestamp(i++, Timestamp.valueOf(data.getCreationDate()));
+            }
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setInt(i++, data.getFolderId());
             pst.setString(i++, data.getName());
             pst.setString(i++, data.getDisplayName());
             pst.setString(i++, data.getDescription());
             pst.setString(i++, data.getAuthorName());
-            pst.setString(i++, data.getContentType());
-            pst.setInt(i++, data.getFileSize());
-            pst.setInt(i++, data.getWidth());
-            pst.setInt(i++, data.getHeight());
-            pst.setBytes(i++, data.getBytes());
-            pst.setBytes(i++, data.getPreviewBytes());
+            if (data.getBytes() != null) {
+                pst.setString(i++, data.getContentType());
+                pst.setInt(i++, data.getFileSize());
+                pst.setInt(i++, data.getWidth());
+                pst.setInt(i++, data.getHeight());
+                pst.setBytes(i++, data.getBytes());
+                pst.setBytes(i++, data.getPreviewBytes());
+            }
             pst.setInt(i, data.getId());
             pst.executeUpdate();
             pst.close();
-        } finally {
-            closeStatement(pst);
+            return commitTransaction(con);
+        } catch (Exception se) {
+            return rollbackTransaction(con, se);
         }
     }
 

@@ -11,14 +11,11 @@
 <%@ page import="de.elbe5.cms.application.Statics" %>
 <%@ page import="de.elbe5.cms.request.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
-<%
-    RequestData rdata = RequestData.getRequestData(request);
+<%RequestData rdata = RequestData.getRequestData(request);
     String url = rdata.getString(Statics.KEY_URL);
     String targetId = rdata.getString(Statics.KEY_TARGETID);
     String msg = rdata.getString(Statics.KEY_MESSAGE);
-    String msgType = rdata.getString(Statics.KEY_MESSAGETYPE);
-%>
-<% if (targetId.isEmpty()) {%>
+    String msgType = rdata.getString(Statics.KEY_MESSAGETYPE);%><% if (targetId.isEmpty()) {%>
 <div id="pageContent">
 
     <form action="<%=url%>" method="POST" id="forwardform" accept-charset="UTF-8">
@@ -32,17 +29,14 @@
 <script type="text/javascript">
     $('#forwardform').submit();
 </script>
-<%
-} else {
+<%} else {
     StringBuilder sb = new StringBuilder("{");
     if (!msg.isEmpty()) {
         sb.append(Statics.KEY_MESSAGE).append(" : '").append(StringUtil.toJs(msg)).append("',");
         sb.append(Statics.KEY_MESSAGETYPE).append(" : '").append(StringUtil.toJs(msgType)).append("'");
     }
-    sb.append("}");
-%>
-<div id="pageContent">
-</div>
+    sb.append("}");%>
+<div id="pageContent"></div>
 <script type="text/javascript">
     var $dlg = $(MODAL_DLG_JQID);
     $dlg.html('');

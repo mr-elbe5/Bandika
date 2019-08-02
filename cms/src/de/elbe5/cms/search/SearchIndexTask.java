@@ -8,9 +8,9 @@
  */
 package de.elbe5.cms.search;
 
-import de.elbe5.base.data.Locales;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
+import de.elbe5.cms.configuration.Configuration;
 import de.elbe5.cms.timer.TimerBean;
 import de.elbe5.cms.timer.TimerTaskData;
 
@@ -24,7 +24,7 @@ public class SearchIndexTask extends TimerTaskData {
     }
 
     public boolean execute(LocalDateTime executionTime, LocalDateTime checkTime) {
-        Log.log("indexing content for search at " + StringUtil.toHtmlDateTime(TimerBean.getInstance().getServerTime(), Locales.getInstance().getDefaultLocale()));
+        Log.log("indexing content for search at " + StringUtil.toHtmlDateTime(TimerBean.getInstance().getServerTime(), Configuration.getInstance().getDefaultLocale()));
         SearchQueue.getInstance().addAction(SearchQueue.ACTION_INDEX_PAGES);
         SearchQueue.getInstance().addAction(SearchQueue.ACTION_INDEX_USERS);
         return true;

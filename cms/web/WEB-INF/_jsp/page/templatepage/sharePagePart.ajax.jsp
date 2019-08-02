@@ -19,7 +19,7 @@
     TemplatePageData pageData = (TemplatePageData) rdata.getCurrentPage();
     assert (pageData != null);
     PagePartData part = pageData.getEditPagePart();
-    String url = "/templatepage/sharePagePart/" + pageData.getId();
+    String url = "/ctrl/templatepage/sharePagePart/" + pageData.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -37,8 +37,7 @@
                 <cms:text name="name" label="<%=Strings._name.toString()%>" required="true" value=""/>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary"
-                        data-dismiss="modal"><%=Strings._close.html(locale)%>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=Strings._close.html(locale)%>
                 </button>
                 <button type="submit" class="btn btn-primary"><%=Strings._save.html(locale)%>
                 </button>

@@ -19,8 +19,7 @@
     assert pageData != null;
     SectionData sectionData = (SectionData) rdata.get("sectionData");
     assert sectionData != null;
-%>
-<% if (!sectionData.getParts().isEmpty()) {%>
+%><% if (!sectionData.getParts().isEmpty()) {%>
 <div class="section <%=sectionData.getCss()%>">
     <% for (PagePartData partData : sectionData.getParts()) {
         rdata.put(Statics.KEY_PART, partData);

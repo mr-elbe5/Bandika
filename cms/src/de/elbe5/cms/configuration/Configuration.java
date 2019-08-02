@@ -9,12 +9,13 @@
 package de.elbe5.cms.configuration;
 
 import de.elbe5.base.data.BaseData;
-import de.elbe5.base.data.Locales;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.mail.Mailer;
 
 import javax.servlet.ServletContext;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 public class Configuration extends BaseData {
 
@@ -36,6 +37,8 @@ public class Configuration extends BaseData {
     protected int timerInterval = 30;
     protected boolean editProfile = true;
     protected boolean selfRegistration = false;
+    protected Locale defaultLocale = Locale.ENGLISH;
+    protected Set<Locale> locales = new HashSet<>();
 
     public Configuration() {
     }
@@ -51,6 +54,13 @@ public class Configuration extends BaseData {
         setMailReceiver(servletContext.getInitParameter("mailReceiver"));
         setTimerInterval(Integer.parseInt(servletContext.getInitParameter("timerInterval")));
         setEditProfile(servletContext.getInitParameter("editProfile").equalsIgnoreCase("true"));
+        setSelfRegistration(servletContext.getInitParameter("selfRegistration").equalsIgnoreCase("true"));
+        String language = servletContext.getInitParameter("defaultLanguage");
+        try {
+            setDefaultLocale(new Locale(language));
+        } catch (Exception e) {
+            Log.warn("no default locale set");
+        }
         setSelfRegistration(servletContext.getInitParameter("selfRegistration").equalsIgnoreCase("true"));
     }
 
@@ -142,6 +152,25 @@ public class Configuration extends BaseData {
         this.selfRegistration = selfRegistration;
     }
 
+    public Locale getDefaultLocale() {
+        return defaultLocale;
+    }
+
+    public void setDefaultLocale(Locale defaultLocale) {
+        if (defaultLocale == null)
+            return;
+        this.defaultLocale = defaultLocale;
+        locales.add(defaultLocale);
+    }
+
+    public Set<Locale> getLocales() {
+        return locales;
+    }
+
+    public boolean hasLocale(Locale locale) {
+        return locales.contains(locale);
+    }
+
     public Mailer getMailer() {
         Mailer mailer = new Mailer();
         mailer.setSmtpHost(getSmtpHost());
@@ -163,11 +192,11 @@ public class Configuration extends BaseData {
     }
 
     public void loadLocales() {
-        ConfigurationBean.getInstance().readLocales(Locales.getInstance().getLocales());
-        for (Locale locale : Locales.getInstance().getLocales().keySet()) {
+        ConfigurationBean.getInstance().readLocales(locales);
+        for (Locale locale : locales) {
             Log.log("found locale: " + locale.getLanguage() + '(' + locale.getDisplayName() + ')');
         }
-        Log.log("default locale is " + Locales.getInstance().getDefaultLocale().getLanguage());
+        Log.log("default locale is " + getDefaultLocale().getLanguage());
     }
 
 }

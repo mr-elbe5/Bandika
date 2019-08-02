@@ -13,10 +13,8 @@
 <%@ page import="de.elbe5.cms.request.RequestData" %>
 <%@ page import="java.util.Locale" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
-<%
-    RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getSessionLocale();
-%>
+<%RequestData rdata = RequestData.getRequestData(request);
+    Locale locale = rdata.getSessionLocale();%>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
@@ -26,18 +24,16 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <cms:form url="/template/importTemplates" name="importTemplates">
+        <cms:form url="/ctrl/template/importTemplates" name="importTemplates">
             <div class="modal-body">
                 <cms:formerror/>
                 <cms:file name="file" label="<%=Strings._file.toString()%>"/>
-                <cms:editor name="code" label="<%=Strings._code.toString()%>" type="html"
-                            hint="<%=Strings._htmlHint.toString()%>" height="20rem" required="true">
+                <cms:editor name="code" label="<%=Strings._code.toString()%>" type="html" hint="<%=Strings._htmlHint.toString()%>" height="20rem" required="true">
                     <%=StringUtil.toHtml(rdata.getString("code"))%>
                 </cms:editor>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary"
-                        data-dismiss="modal"><%=Strings._close.html(locale)%>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=Strings._close.html(locale)%>
                 </button>
                 <button type="submit" class="btn btn-outline-primary"><%=Strings._execute.html(locale)%>
                 </button>
@@ -50,7 +46,7 @@
                 event.preventDefault();
                 $('#code').val(editor.getSession().getValue());
                 var params = $this.serialize();
-                postByAjax('/template/importTemplates', params, '<%=Statics.MODAL_DIALOG_JQID%>');
+                postByAjax('/ctrl/template/importTemplates', params, '<%=Statics.MODAL_DIALOG_JQID%>');
             });
             $('#file').change(function () {
                 if (this.files) {

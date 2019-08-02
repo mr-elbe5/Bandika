@@ -39,27 +39,19 @@
                 <cms:line label="<%=Strings._displayName.toString()%>"><%=StringUtil.toHtml(data.getDisplayName())%>
                 </cms:line>
                 <cms:line label="<%=Strings._intervalType.toString()%>" padded="true" required="true">
-                    <cms:radio name="interval" value="<%=TimerInterval.CONTINOUS.name()%>"
-                               checked="<%=data.getInterval() == TimerInterval.CONTINOUS%>"><%=Strings._continous.html(locale)%>
+                    <cms:radio name="interval" value="<%=TimerInterval.CONTINOUS.name()%>" checked="<%=data.getInterval() == TimerInterval.CONTINOUS%>"><%=Strings._continous.html(locale)%>
                     </cms:radio><br/>
-                    <cms:radio name="interval" value="<%=TimerInterval.MONTH.name()%>"
-                               checked="<%=data.getInterval() == TimerInterval.MONTH%>"><%=Strings._monthly.html(locale)%>
+                    <cms:radio name="interval" value="<%=TimerInterval.MONTH.name()%>" checked="<%=data.getInterval() == TimerInterval.MONTH%>"><%=Strings._monthly.html(locale)%>
                     </cms:radio><br/>
-                    <cms:radio name="interval" value="<%=TimerInterval.DAY.name()%>"
-                               checked="<%=data.getInterval() == TimerInterval.DAY%>"><%=Strings._daily.html(locale)%>
+                    <cms:radio name="interval" value="<%=TimerInterval.DAY.name()%>" checked="<%=data.getInterval() == TimerInterval.DAY%>"><%=Strings._daily.html(locale)%>
                     </cms:radio><br/>
-                    <cms:radio name="interval" value="<%=TimerInterval.HOUR.name()%>"
-                               checked="<%=data.getInterval() == TimerInterval.HOUR%>"><%=Strings._everyHour.html(locale)%>
+                    <cms:radio name="interval" value="<%=TimerInterval.HOUR.name()%>" checked="<%=data.getInterval() == TimerInterval.HOUR%>"><%=Strings._everyHour.html(locale)%>
                     </cms:radio>
                 </cms:line>
-                <cms:text name="day" label="<%=Strings._day.toString()%>" required="true"
-                          value="<%=Integer.toString(data.getDay())%>"/>
-                <cms:text name="hour" label="<%=Strings._hour.toString()%>" required="true"
-                          value="<%=Integer.toString(data.getHour())%>"/>
-                <cms:text name="minute" label="<%=Strings._minute.toString()%>" required="true"
-                          value="<%=Integer.toString(data.getMinute())%>"/>
-                <cms:line label="<%=Strings._active.toString()%>" padded="true"><cms:check name="active" value="true"
-                                                                                           checked="<%=data.isActive()%>"/></cms:line>
+                <cms:text name="day" label="<%=Strings._day.toString()%>" required="true" value="<%=Integer.toString(data.getDay())%>"/>
+                <cms:text name="hour" label="<%=Strings._hour.toString()%>" required="true" value="<%=Integer.toString(data.getHour())%>"/>
+                <cms:text name="minute" label="<%=Strings._minute.toString()%>" required="true" value="<%=Integer.toString(data.getMinute())%>"/>
+                <cms:line label="<%=Strings._active.toString()%>" padded="true"><cms:check name="active" value="true" checked="<%=data.isActive()%>"/></cms:line>
                 <cms:line label="<%=Strings._register.toString()%>" padded="true">
                     <cms:check name="registerExecution" value="true" checked="<%=data.registerExecution()%>"/>
                 </cms:line>

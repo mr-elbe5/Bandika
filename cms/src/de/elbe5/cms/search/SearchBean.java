@@ -11,6 +11,8 @@ package de.elbe5.cms.search;
 import de.elbe5.base.log.Log;
 import de.elbe5.cms.application.ApplicationPath;
 import de.elbe5.cms.database.DbBean;
+import de.elbe5.cms.page.PageCache;
+import de.elbe5.cms.page.PageData;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -86,41 +88,27 @@ public class SearchBean extends DbBean {
         return new IndexWriter(dir, iwc);
     }
 
-    private static String INDEX_PAGES_SQL = "SELECT id,name,description,author_name,keywords,search_content,anonymous FROM t_page";
-
     protected void indexPages(IndexWriter writer) throws Exception {
-        Connection con = getConnection();
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement(INDEX_PAGES_SQL);
-            ResultSet rs = pst.executeQuery();
-            int count = 0;
-            while (rs.next()) {
-                PageSearchData data = new PageSearchData();
-                int i = 1;
-                data.setId(rs.getInt(i++));
-                data.setName(rs.getString(i++));
-                data.setDescription(rs.getString(i++));
-                data.setAuthorName(rs.getString(i++));
-                data.setKeywords(rs.getString(i++));
-                data.setContent(rs.getString(i++));
-                data.setAnonymous(rs.getBoolean(i));
-                data.setDoc();
-                writer.addDocument(data.getDoc());
-                count++;
-                if ((count % 100) == 0) {
-                    writer.commit();
-                }
+        int count = 0;
+        for (PageData page : PageCache.getInstance().getPageSet()) {
+            PageSearchData data = new PageSearchData();
+            data.setId(page.getId());
+            data.setUrl(page.getUrl());
+            data.setName(page.getDisplayName());
+            data.setDescription(page.getDescription());
+            data.setAuthorName(page.getAuthorName());
+            data.setKeywords(page.getKeywords());
+            data.setContent(page.getSearchContent());
+            data.setAnonymous(page.isAnonymous());
+            data.setDoc();
+            writer.addDocument(data.getDoc());
+            count++;
+            if ((count % 100) == 0) {
+                writer.commit();
             }
-            rs.close();
-            writer.commit();
-            Log.log("finished indexing " + count + " pages");
-        } catch (SQLException se) {
-            se.printStackTrace();
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
         }
+        writer.commit();
+        Log.log("finished indexing " + count + " pages");
     }
 
     private static String INDEX_USERS_SQL = "SELECT id,first_name,last_name,email FROM t_user";

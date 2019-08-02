@@ -21,8 +21,7 @@ public class FormTextAreaTag extends FormLineTag {
         this.height = height;
     }
 
-    String controlPreHtml = "" +
-            "<textarea id=\"{1}\" name=\"{2}\" class=\"form-control\" {3}>";
+    String controlPreHtml = "<textarea id=\"{1}\" name=\"{2}\" class=\"form-control\" {3}>";
     String controlPostHtml = "</textarea>\n";
 
     protected String getPreControlHtml(HttpServletRequest request, Locale locale) {

@@ -16,7 +16,7 @@
     RequestData rdata = RequestData.getRequestData(request);
     UserData user = rdata.getSessionUser();
     Locale locale = rdata.getSessionLocale();
-    String url = "/user/changePassword/" + user.getId();
+    String url = "/ctrl/user/changePassword/" + user.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -36,8 +36,7 @@
                 <cms:password name="newPassword2" label="<%=Strings._retypePassword.toString()%>"></cms:password>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary"
-                        data-dismiss="modal"><%=Strings._close.html(locale)%>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=Strings._close.html(locale)%>
                 </button>
                 <button type="submit" class="btn btn-primary"><%=Strings._save.html(locale)%>
                 </button>

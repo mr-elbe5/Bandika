@@ -9,6 +9,7 @@
 package de.elbe5.cms.page;
 
 import de.elbe5.base.cache.BaseCache;
+import de.elbe5.base.log.Log;
 import de.elbe5.cms.rights.RightsCache;
 
 import java.util.*;
@@ -29,14 +30,15 @@ public class PageCache extends BaseCache {
 
     protected Map<Locale, Integer> homePageIds = new HashMap<>();
     protected Map<Integer, PageData> pageMap = new HashMap<>();
+    protected Map<String, PageData> pathMap = new HashMap<>();
 
     @Override
     public synchronized void load() {
-        //Log.info("loading pages");
         PageBean bean = PageBean.getInstance();
         Map<Locale, Integer> homeMap = bean.readLanguageRootIds();
         List<PageData> pageList = PageBean.getInstance().getAllPages();
         Map<Integer, PageData> pages = new HashMap<>();
+        Map<String, PageData> paths = new HashMap<>();
         for (PageData node : pageList) {
             pages.put(node.getId(), node);
         }
@@ -50,7 +52,12 @@ public class PageCache extends BaseCache {
                 parent.addSubPage(page);
             }
         }
-        rootPage.inheritToChildren();
+        rootPage.updateChildren();
+        for (PageData page : pageList) {
+            if (page != rootPage)
+                paths.put(page.getUrl(), page);
+        }
+        pathMap = paths;
         pageMap = pages;
         homePageIds = homeMap;
     }
@@ -94,6 +101,11 @@ public class PageCache extends BaseCache {
         return pageMap.get(id);
     }
 
+    public PageData getPage(String url) {
+        checkDirty();
+        return pathMap.get(url);
+    }
+
     public int getParentPageId(int id) {
         checkDirty();
         PageData page = getPage(id);
@@ -115,6 +127,10 @@ public class PageCache extends BaseCache {
             page = page.getParent();
         }
         return list;
+    }
+
+    public Collection<PageData> getPageSet() {
+        return pathMap.values();
     }
 
     public List<Locale> getOtherLocales(Locale locale) {

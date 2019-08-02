@@ -8,6 +8,8 @@
  */
 package de.elbe5.cms.page;
 
+import de.elbe5.base.log.Log;
+
 import java.lang.reflect.Constructor;
 import java.util.*;
 
@@ -26,12 +28,15 @@ public class PageFactory {
     }
 
     public static PageData getPageData(String type) {
-        if (!infos.containsKey(type))
+        if (!infos.containsKey(type)) {
+            Log.error("no page info for type"+type);
             return null;
+        }
         Constructor<? extends PageData> ctor = infos.get(type).getCtor();
         try {
             return ctor.newInstance();
-        } catch (Exception ignore) {
+        } catch (Exception e) {
+            Log.error("could not create page data for type "+type);
         }
         return null;
     }

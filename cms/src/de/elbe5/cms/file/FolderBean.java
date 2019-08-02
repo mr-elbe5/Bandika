@@ -40,10 +40,7 @@ public class FolderBean extends DbBean {
         return changedItem(con, CHANGED_FOLDER_SQL, data);
     }
 
-    private static String GEL_ALL_FOLDERS_SQL = "SELECT id,creation_date,change_date,parent_id,name," +
-            "description,anonymous,inherits_rights " +
-            "FROM t_file_folder " +
-            "ORDER BY parent_id, name";
+    private static String GEL_ALL_FOLDERS_SQL = "SELECT id,creation_date,change_date,parent_id,name,description,anonymous,inherits_rights FROM t_file_folder ORDER BY parent_id, name";
 
     public List<FolderData> getAllFolders() {
         List<FolderData> list = new ArrayList<>();
@@ -91,10 +88,7 @@ public class FolderBean extends DbBean {
         return data;
     }
 
-    private static String READ_FOLDER_SQL = "SELECT creation_date,change_date,parent_id,name," +
-            "description,anonymous,inherits_rights " +
-            "FROM t_file_folder " +
-            "WHERE id=?";
+    private static String READ_FOLDER_SQL = "SELECT creation_date,change_date,parent_id,name,description,anonymous,inherits_rights FROM t_file_folder WHERE id=?";
 
     public boolean readFolder(Connection con, FolderData data) throws SQLException {
         PreparedStatement pst = null;
@@ -158,12 +152,8 @@ public class FolderBean extends DbBean {
         }
     }
 
-    private static String INSERT_FOLDER_SQL = "insert into t_file_folder (creation_date,parent_id," +
-            "name,description,anonymous,inherits_rights,id) " +
-            "values(?,?,?,?,?,?,?)";
-    private static String UPDATE_FOLDER_SQL = "update t_file_folder set creation_date=?,parent_id=?," +
-            "name=?,description=?,anonymous=?,inherits_rights=? " +
-            "where id=?";
+    private static String INSERT_FOLDER_SQL = "insert into t_file_folder (creation_date,parent_id,name,description,anonymous,inherits_rights,id) values(?,?,?,?,?,?,?)";
+    private static String UPDATE_FOLDER_SQL = "update t_file_folder set parent_id=?,name=?,description=?,anonymous=?,inherits_rights=? where id=?";
 
     protected void writeFolder(Connection con, FolderData data) throws SQLException {
         LocalDateTime now = getServerTime(con);
@@ -175,7 +165,9 @@ public class FolderBean extends DbBean {
         try {
             pst = con.prepareStatement(data.isNew() ? INSERT_FOLDER_SQL : UPDATE_FOLDER_SQL);
             int i = 1;
-            pst.setTimestamp(i++, Timestamp.valueOf(data.getCreationDate()));
+            if (data.isNew()) {
+                pst.setTimestamp(i++, Timestamp.valueOf(data.getCreationDate()));
+            }
             if (data.getParentId() == 0) {
                 pst.setNull(i++, Types.INTEGER);
             } else {

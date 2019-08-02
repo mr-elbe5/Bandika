@@ -31,19 +31,16 @@
             <section class="treeSection">
                 <% if (rdata.hasAnyContentRight()) { %>
                 <ul class="tree filetree">
-                    <%
-                        rdata.put("folderData", FileCache.getInstance().getRootFolder());
-                    %>
-                    <jsp:include page="/WEB-INF/_jsp/page/templatepage/templatepagepart/imageBrowserFolder.inc.jsp"
-                                 flush="true"/>
+                    <%rdata.put("folderData", FileCache.getInstance().getRootFolder());%>
+                    <jsp:include page="/WEB-INF/_jsp/page/templatepage/templatepagepart/imageBrowserFolder.inc.jsp" flush="true"/>
                 </ul>
-                <% request.removeAttribute("folderData");
-                }%>
+                <%
+                        request.removeAttribute("folderData");
+                    }%>
             </section>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary"
-                    data-dismiss="modal"><%=Strings._cancel.html(locale)%>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=Strings._cancel.html(locale)%>
             </button>
         </div>
     </div>

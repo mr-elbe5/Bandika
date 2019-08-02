@@ -36,8 +36,7 @@
         <li>
             <span><%=StringUtil.toHtml(task.getDisplayName())%></span>
             <div class="icons">
-                <a class="icon fa fa-pencil" href=""
-                   onclick="return openModalDialog('/timer/openEditTimerTask?timerName=<%=task.getName()%>');" title="<%=Strings._edit.html(locale)%>"></a>
+                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/timer/openEditTimerTask?timerName=<%=task.getName()%>');" title="<%=Strings._edit.html(locale)%>"></a>
             </div>
         </li>
         <%

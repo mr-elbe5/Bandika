@@ -18,7 +18,7 @@
     Locale locale = rdata.getSessionLocale();
     FolderData folderData = (FolderData) rdata.getSessionObject("folderData");
     assert (folderData != null);
-    String url = "/file/dropFiles/" + folderData.getId();
+    String url = "/ctrl/file/dropFiles/" + folderData.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -50,8 +50,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary"
-                        data-dismiss="modal"><%=Strings._close.html(locale)%>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=Strings._close.html(locale)%>
                 </button>
                 <button type="submit" class="btn btn-outline-primary"><%=Strings._save.html(locale)%>
                 </button>
@@ -119,16 +118,15 @@
         }
         $.ajax({
             type: 'POST',
-            url: '/file/dropFiles/<%=folderData.getId()%>',
+            url: '/ctrl/file/dropFiles/<%=folderData.getId()%>',
             data: fd,
             processData: false,
             contentType: false,
             success: function (data) {
-                linkTo('/admin/openFileStructure?folderId=' + <%=folderData.getId()%>);
+                linkTo('/ctrl/admin/openFileStructure?folderId=' + <%=folderData.getId()%>);
             }
         });
     });
-
 
 </script>
 

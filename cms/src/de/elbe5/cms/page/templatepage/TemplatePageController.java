@@ -65,7 +65,7 @@ public class TemplatePageController extends PageController {
         data.addPagePart(pdata, fromPartId, below, true);
         data.setEditPagePart(pdata);
         rdata.setMessage(Strings._pagePartAdded.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/page/showEditPageContent/" + pageId, Statics.PAGE_CONTAINER_JQID);
+        return new CloseDialogActionResult("/ctrl/page/showEditPageContent/" + pageId, Statics.PAGE_CONTAINER_JQID);
     }
 
     public IActionResult openAddSharedPagePart(RequestData rdata) {
@@ -92,7 +92,7 @@ public class TemplatePageController extends PageController {
         pdata.setSectionName(sectionName);
         data.addSharedPagePart(pdata, fromPartId, below, true);
         rdata.setMessage(Strings._pagePartAdded.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/page/showEditPageContent/" + pageId, Statics.PAGE_CONTAINER_JQID);
+        return new CloseDialogActionResult("/ctrl/page/showEditPageContent/" + pageId, Statics.PAGE_CONTAINER_JQID);
     }
 
     public IActionResult editPagePart(RequestData rdata) {
@@ -172,7 +172,7 @@ public class TemplatePageController extends PageController {
         part.readPagePartSettingsData(rdata);
         data.setEditPagePart(null);
         rdata.setMessage(Strings._pagePartSettingsSaved.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/page/showEditPageContent/" + pageId, Statics.PAGE_CONTAINER_JQID);
+        return new CloseDialogActionResult("/ctrl/page/showEditPageContent/" + pageId, Statics.PAGE_CONTAINER_JQID);
     }
 
     public IActionResult openSharePagePart(RequestData rdata) {
@@ -202,7 +202,7 @@ public class TemplatePageController extends PageController {
         part.setName(rdata.getString("name"));
         data.setEditPagePart(null);
         rdata.setMessage(Strings._pagePartShared.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/page/showEditPageContent/" + pageId, Statics.PAGE_CONTAINER_JQID);
+        return new CloseDialogActionResult("/ctrl/page/showEditPageContent/" + pageId, Statics.PAGE_CONTAINER_JQID);
     }
 
     public IActionResult movePagePart(RequestData rdata) {
@@ -239,7 +239,7 @@ public class TemplatePageController extends PageController {
             return forbidden(rdata);
         }
         rdata.setMessage(Strings._pagePartDeleted.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/page/templatepage/openPartAdministration");
+        return new CloseDialogActionResult("/ctrl/templatepage/openPartAdministration");
     }
 
     public IActionResult deleteAllOrphanedPageParts(RequestData rdata) {
@@ -248,7 +248,7 @@ public class TemplatePageController extends PageController {
             return forbidden(rdata);
         }
         rdata.setMessage(Strings._pagePartsDeleted.string(rdata.getSessionLocale()), Statics.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogActionResult("/page/templatepage/openPartAdministration");
+        return new CloseDialogActionResult("/ctrl/templatepage/openPartAdministration");
     }
 
     protected IActionResult showAddPagePart() {

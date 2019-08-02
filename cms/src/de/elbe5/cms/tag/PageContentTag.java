@@ -10,6 +10,7 @@ package de.elbe5.cms.tag;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.cms.page.PageBean;
+import de.elbe5.cms.page.PageCache;
 import de.elbe5.cms.page.PageData;
 import de.elbe5.cms.page.ViewMode;
 import de.elbe5.cms.request.RequestData;
@@ -44,6 +45,7 @@ public class PageContentTag extends BaseTag {
                     context.popBody().write(html);
                     try {
                         PageBean.getInstance().publishPage(pageData);
+                        PageCache.getInstance().setDirty();
                     } catch (Exception e) {
                         Log.error("error writing published content", e);
                     }

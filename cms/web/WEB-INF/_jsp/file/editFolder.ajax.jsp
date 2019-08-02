@@ -31,7 +31,7 @@
     List<GroupData> groups = GroupBean.getInstance().getAllGroups();
     String label;
     String name;
-    String url = "/file/saveFolder/" + folderData.getId();
+    String url = "/ctrl/file/saveFolder/" + folderData.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -49,20 +49,15 @@
                 </h3>
                 <cms:line label="<%=Strings._id.toString()%>"><%=Integer.toString(folderData.getId())%>
                 </cms:line>
-                <cms:line
-                        label="<%=Strings._creationDate.toString()%>"><%=StringUtil.toHtmlDateTime(folderData.getCreationDate(), locale)%>
+                <cms:line label="<%=Strings._creationDate.toString()%>"><%=StringUtil.toHtmlDateTime(folderData.getCreationDate(), locale)%>
                 </cms:line>
-                <cms:line
-                        label="<%=Strings._changeDate.toString()%>"><%=StringUtil.toHtmlDateTime(folderData.getChangeDate(), locale)%>
+                <cms:line label="<%=Strings._changeDate.toString()%>"><%=StringUtil.toHtmlDateTime(folderData.getChangeDate(), locale)%>
                 </cms:line>
-                <cms:line
-                        label="<%=Strings._parentFolder.toString()%>"><%=(parentFolder == null) ? "-" : StringUtil.toHtml(parentFolder.getName()) + "&nbsp;(" + parentFolder.getId() + ')'%>
+                <cms:line label="<%=Strings._parentFolder.toString()%>"><%=(parentFolder == null) ? "-" : StringUtil.toHtml(parentFolder.getName()) + "&nbsp;(" + parentFolder.getId() + ')'%>
                 </cms:line>
 
-                <cms:text name="name" label="<%=Strings._name.toString()%>" required="true"
-                          value="<%=StringUtil.toHtml(folderData.getName())%>"/>
-                <cms:text name="description" label="<%=Strings._description.toString()%>"
-                          value="<%=StringUtil.toHtml(folderData.getDescription())%>"/>
+                <cms:text name="name" label="<%=Strings._name.toString()%>" required="true" value="<%=StringUtil.toHtml(folderData.getName())%>"/>
+                <cms:text name="description" label="<%=Strings._description.toString()%>" value="<%=StringUtil.toHtml(folderData.getDescription())%>"/>
                 <cms:line label="<%=Strings._anonymous.toString()%>" padded="true">
                     <cms:check name="anonymous" value="true" checked="<%=folderData.isAnonymous()%>"/>
                 </cms:line>
@@ -76,23 +71,17 @@
                         if (group.getId() <= GroupData.ID_MAX_FINAL)
                             continue;
                         {
-                %>
-                <%
-                    label = StringUtil.toHtml(group.getName());
-                    name = "groupright_" + group.getId();
-                %>
+                %><%
+                label = StringUtil.toHtml(group.getName());
+                name = "groupright_" + group.getId();%>
                 <cms:line label="<%=label%>" padded="true">
-                    <cms:radio name="<%=name%>" value=""
-                               checked="<%=!folderData.hasAnyGroupRight(group.getId())%>"><%=Strings._rightnone.html(locale)%>
+                    <cms:radio name="<%=name%>" value="" checked="<%=!folderData.hasAnyGroupRight(group.getId())%>"><%=Strings._rightnone.html(locale)%>
                     </cms:radio><br/>
-                    <cms:radio name="<%=name%>" value="<%=Right.READ.name()%>"
-                               checked="<%=folderData.isGroupRight(group.getId(), Right.READ)%>"><%=Strings._rightread.html(locale)%>
+                    <cms:radio name="<%=name%>" value="<%=Right.READ.name()%>" checked="<%=folderData.isGroupRight(group.getId(), Right.READ)%>"><%=Strings._rightread.html(locale)%>
                     </cms:radio><br/>
-                    <cms:radio name="<%=name%>" value="<%=Right.EDIT.name()%>"
-                               checked="<%=folderData.isGroupRight(group.getId(), Right.EDIT)%>"><%=Strings._rightedit.html(locale)%>
+                    <cms:radio name="<%=name%>" value="<%=Right.EDIT.name()%>" checked="<%=folderData.isGroupRight(group.getId(), Right.EDIT)%>"><%=Strings._rightedit.html(locale)%>
                     </cms:radio><br/>
-                    <cms:radio name="<%=name%>" value="<%=Right.APPROVE.name()%>"
-                               checked="<%=folderData.isGroupRight(group.getId(), Right.APPROVE)%>"><%=Strings._rightapprove.html(locale)%>
+                    <cms:radio name="<%=name%>" value="<%=Right.APPROVE.name()%>" checked="<%=folderData.isGroupRight(group.getId(), Right.APPROVE)%>"><%=Strings._rightapprove.html(locale)%>
                     </cms:radio>
                 </cms:line>
                 <%
@@ -101,8 +90,7 @@
                 %>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary"
-                        data-dismiss="modal"><%=Strings._close.html(locale)%>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=Strings._close.html(locale)%>
                 </button>
                 <button type="submit" class="btn btn-outline-primary"><%=Strings._save.html(locale)%>
                 </button>

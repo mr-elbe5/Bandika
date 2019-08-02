@@ -2,16 +2,13 @@ package de.elbe5.cms.request;
 
 import de.elbe5.base.data.BinaryFile;
 import de.elbe5.base.data.KeyValueMap;
-import de.elbe5.base.data.Locales;
 import de.elbe5.base.log.Log;
-import de.elbe5.base.util.StringUtil;
 import de.elbe5.cms.application.Statics;
 import de.elbe5.cms.application.Strings;
+import de.elbe5.cms.configuration.Configuration;
 import de.elbe5.cms.page.PageData;
 import de.elbe5.cms.rights.Right;
 import de.elbe5.cms.rights.SystemZone;
-import de.elbe5.cms.servlet.Controller;
-import de.elbe5.cms.servlet.ControllerCache;
 import de.elbe5.cms.user.UserData;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,8 +17,6 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
 
 public class RequestData extends KeyValueMap {
@@ -33,8 +28,6 @@ public class RequestData extends KeyValueMap {
     private HttpServletRequest request;
     private HttpSession session;
 
-    private String controllerName;
-    private String methodName = Statics.DEFAULT_METHOD;
     private int id = 0;
     private int id2 = 0;
 
@@ -42,11 +35,8 @@ public class RequestData extends KeyValueMap {
 
     private FormError formError = null;
 
-    private Controller controller;
-
-    public RequestData(HttpServletRequest request, Controller controller) {
+    public RequestData(HttpServletRequest request) {
         this.request = request;
-        this.controller = controller;
         method = request.getMethod().toUpperCase();
     }
 
@@ -54,25 +44,21 @@ public class RequestData extends KeyValueMap {
         return request;
     }
 
-    public IActionResult invokeAction() {
-        assert (controller.getKey().equals(controllerName));
-        try {
-            Method controllerMethod = controller.getClass().getMethod(methodName, RequestData.class);
-            Object result = controllerMethod.invoke(controller, this);
-            if (result instanceof IActionResult)
-                return (IActionResult) result;
-            return new ErrorActionResult(ResponseCode.BAD_REQUEST);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            return new ErrorActionResult(ResponseCode.BAD_REQUEST);
-        }
-    }
 
     public int getId() {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getId2() {
         return id2;
+    }
+
+    public void setId2(int id2) {
+        this.id2 = id2;
     }
 
     public boolean isPostback() {
@@ -127,38 +113,6 @@ public class RequestData extends KeyValueMap {
         if (formError.isFormIncomplete())
             formError.addFormError(Strings._notComplete.string(getSessionLocale()));
         return formError.isEmpty();
-    }
-
-    /************** uri path *****************/
-
-    public void readUri() {
-        String uri = request.getRequestURI();
-        StringTokenizer stk = new StringTokenizer(uri, "/", false);
-        if (stk.hasMoreTokens()) {
-            controllerName = stk.nextToken();
-            if (stk.hasMoreTokens()) {
-                methodName = stk.nextToken();
-                if (stk.hasMoreTokens()) {
-                    id = StringUtil.toInt(stk.nextToken());
-                    if (stk.hasMoreTokens()) {
-                        id2 = StringUtil.toInt(stk.nextToken());
-                    }
-                }
-            }
-        }
-    }
-
-    public Controller getController() {
-        return ControllerCache.getController(controllerName);
-    }
-
-    public Method getAction(Controller controller) {
-        try {
-            return controller.getClass().getMethod(methodName, RequestData.class);
-        } catch (NoSuchMethodException e) {
-            Log.error("Controller " + controller.getClass().getSimpleName() + " does not have the method " + methodName, e);
-            return null;
-        }
     }
 
     /************** request attributes *****************/
@@ -276,7 +230,7 @@ public class RequestData extends KeyValueMap {
         session = request.getSession(true);
         if (session.isNew()) {
             Locale requestLocale = request.getLocale();
-            if (Locales.getInstance().hasLocale(requestLocale))
+            if (Configuration.getInstance().hasLocale(requestLocale))
                 setSessionLocale(requestLocale);
             StringBuffer url = request.getRequestURL();
             String uri = request.getRequestURI();
@@ -370,22 +324,22 @@ public class RequestData extends KeyValueMap {
     }
 
     public void setSessionLocale() {
-        setSessionLocale(Locales.getInstance().getDefaultLocale());
+        setSessionLocale(Configuration.getInstance().getDefaultLocale());
     }
 
     public Locale getSessionLocale() {
         Locale locale = (Locale) getSessionObject(Statics.KEY_LOCALE);
         if (locale == null) {
-            return Locales.getInstance().getDefaultLocale();
+            return Configuration.getInstance().getDefaultLocale();
         }
         return locale;
     }
 
     public void setSessionLocale(Locale locale) {
-        if (Locales.getInstance().hasLocale(locale)) {
+        if (Configuration.getInstance().hasLocale(locale)) {
             setSessionObject(Statics.KEY_LOCALE, locale);
         } else {
-            setSessionObject(Statics.KEY_LOCALE, Locales.getInstance().getDefaultLocale());
+            setSessionObject(Statics.KEY_LOCALE, Configuration.getInstance().getDefaultLocale());
         }
     }
 

@@ -9,8 +9,5 @@
 package de.elbe5.cms.timer;
 
 public enum TimerInterval {
-    CONTINOUS,
-    MONTH,
-    DAY,
-    HOUR
+    CONTINOUS, MONTH, DAY, HOUR
 }
