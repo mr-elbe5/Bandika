@@ -1,4 +1,4 @@
 # Bandika
 A Java CMS and framework
-version 9 - 2019
+version 10 - 2019
 
