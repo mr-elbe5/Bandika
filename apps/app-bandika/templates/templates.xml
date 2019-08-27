@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cms:templates xmlns:cms="https://elbe5.de" >
+<cms:templates xmlns:cms="https://elbe5.de" xmlns:cmspart="https://elbe5.de">
     <!-- master -->
     <cms:template type="MASTER" name="defaultMaster" displayName="Default Master Page">
         <!DOCTYPE html>
@@ -23,7 +23,7 @@
                     <div class="container">
                         <div class="top row">
                             <section class="col-12 sysnav">
-                                <cms:sysnav/>
+                                <cms:sysnav toggle="true" pageEdit="true" search="true" languages="true" profile="true" registration="true"/>
                             </section>
                         </div>
                         <div class="menu row">
@@ -34,7 +34,9 @@
                                         <span class="fa fa-2x fa-bars"></span>
                                     </button>
                                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                        <ul class="navbar-nav mr-auto">
                                         <cms:mainnav />
+                                        </ul>
                                     </div>
                                 </nav>
                             </section>
@@ -64,77 +66,72 @@
     <cms:template type="PAGE" name="homePage" displayName="Home Page Layout">
         <cms:message />
         <section class="contentTop">
-            <cms:section name="top"></cms:section>
+            <cmspart:section name="top"></cmspart:section>
         </section>
         <div class="row">
             <section class="col-md-8 contentSection">
-                <cms:section name="main"></cms:section>
+                <cmspart:section name="main"></cmspart:section>
             </section>
             <aside class="col-md-4 asideSection">
-                <cms:section name="aside" ></cms:section>
+                <cmspart:section name="aside" ></cmspart:section>
             </aside>
         </div>
     </cms:template>
     <cms:template type="PAGE" name="fullPage" displayName="Full Page Layout">
         <cms:message />
         <section class="contentTop">
-            <cms:section name="top"></cms:section>
+            <cmspart:section name="top"></cmspart:section>
         </section>
         <section class="contentSection">
-            <cms:section flex="true" name="main"></cms:section>
+            <cmspart:section flex="true" name="main"></cmspart:section>
         </section>
     </cms:template>
     <cms:template type="PAGE" name="articlePage" displayName="Article Page Layout">
         <cms:message />
         <section class="contentTop">
-            <cms:section name="top"></cms:section>
+            <cmspart:section name="top"></cmspart:section>
         </section>
         <div class="row">
             <section class="col-md-8 contentSection">
-                <cms:section name="main"></cms:section>
+                <cmspart:section name="main"></cmspart:section>
             </section>
             <aside class="col-md-4 asideSection">
-                <cms:section name="aside"></cms:section>
+                <cmspart:section name="aside"></cmspart:section>
             </aside>
         </div>
     </cms:template>
     <!-- content parts -->
     <cms:template type="PART" name="H1" displayName="Headline 1">
         <h1>
-            <cms:textfield name="header" placeholder="Lorem ipsum"/>
+            <cmspart:textfield name="header" placeholder="Lorem ipsum"/>
         </h1>
     </cms:template>
     <cms:template type="PART" name="H2" displayName="Headline 2">
         <h2>
-            <cms:textfield name="header" placeholder="Lorem ipsum"/>
+            <cmspart:textfield name="header" placeholder="Lorem ipsum"/>
         </h2>
     </cms:template>
     <cms:template type="PART" name="H3" displayName="Headline 3">
         <h3>
-            <cms:textfield name="header" placeholder="Lorem ipsum"/>
+            <cmspart:textfield name="header" placeholder="Lorem ipsum"/>
         </h3>
     </cms:template>
     <cms:template type="PART" name="Paragraph" displayName="Paragraph">
         <div class="paragraph">
-            <cms:htmlfield name="html" placeholder="Lorem ipsum"/>
+            <cmspart:htmlfield name="html" placeholder="Lorem ipsum"/>
         </div>
     </cms:template>
     <cms:template type="PART" name="ParagraphWithHeader" displayName="Paragraph with Header">
         <div class="paragraph">
             <h2>
-                <cms:textfield name="header" placeholder="Lorem ipsum"/>
+                <cmspart:textfield name="header" placeholder="Lorem ipsum"/>
             </h2>
-            <cms:htmlfield name="html" placeholder="Lorem ipsum"/>
+            <cmspart:htmlfield name="html" placeholder="Lorem ipsum"/>
         </div>
     </cms:template>
     <cms:template type="PART" name="Image" displayName="Image">
         <div class="imageBox">
-            <cms:htmlfield name="html" placeholder="Image"/>
-        </div>
-    </cms:template>
-    <cms:template type="PART" name="Project" displayName="Projects">
-        <div class="project">
-            <cms:jsp url="/WEB-INF/_jsp/project/project.jsp" />
+            <cmspart:htmlfield name="html" placeholder="Image"/>
         </div>
     </cms:template>
 

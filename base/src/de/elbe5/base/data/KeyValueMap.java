@@ -65,7 +65,8 @@ public class KeyValueMap extends HashMap<String, Object> {
         int value = defaultValue;
         try {
             String str = getString(key);
-            value = Integer.parseInt(str);
+            if (!str.isEmpty())
+                value = Integer.parseInt(str);
         } catch (Exception ignore) {/* do nothing */
         }
         return value;
@@ -114,7 +115,8 @@ public class KeyValueMap extends HashMap<String, Object> {
         long value = defaultValue;
         try {
             String str = getString(key);
-            value = Long.parseLong(str);
+            if (!str.isEmpty())
+                value = Long.parseLong(str);
         } catch (Exception ignore) {/* do nothing */
         }
         return value;
@@ -128,7 +130,8 @@ public class KeyValueMap extends HashMap<String, Object> {
         double value = defaultValue;
         try {
             String str = getString(key);
-            value = Double.parseDouble(str);
+            if (!str.isEmpty())
+                value = Double.parseDouble(str);
         } catch (Exception ignore) {/* do nothing */
         }
         return value;
@@ -142,7 +145,8 @@ public class KeyValueMap extends HashMap<String, Object> {
         boolean value = defaultValue;
         try {
             String str = getString(key);
-            value = str.equalsIgnoreCase("true");
+            if (!str.isEmpty())
+                value = str.equalsIgnoreCase("true");
         } catch (Exception ignore) {/* do nothing */
         }
         return value;

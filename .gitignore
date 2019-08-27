@@ -1,7 +1,12 @@
-/apps/*
-!/apps/app-bandika
 /out
-/.idea
+/.idea/dataSources
+/.idea/dictionaries
+/.idea/dataSources.local.xml
+/.idea/dataSources.xml
+/.idea/misc.xml
+/.idea/workspace.xml
 /.sass-cache
 *.scssc
-*.iml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/codeStyles/codeStyleConfig.xml
+.idea/vcs.xml

@@ -40,11 +40,11 @@
     </servlet>
     <servlet>
         <servlet-name>page</servlet-name>
-        <servlet-class>de.elbe5.application.PageServlet</servlet-class>
+        <servlet-class>de.elbe5.servlet.PageServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>controller</servlet-name>
-        <servlet-class>de.elbe5.application.ControllerServlet</servlet-class>
+        <servlet-class>de.elbe5.servlet.ControllerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>default</servlet-name>
@@ -65,6 +65,10 @@
     </servlet-mapping>
 
     <listener>
-        <listener-class>de.elbe5.cms.application.AppContextListener</listener-class>
+        <listener-class>de.elbe5.application.AppContextListener</listener-class>
     </listener>
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
 </web-app>

@@ -9325,6 +9325,15 @@ button:focus, a:focus, .btn:focus {
 .alert, .alert-dismissible .close {
   padding: 0.5rem 1.25rem; }
 
+a.link::before {
+  content: "\203A";
+  padding-right: 0.25em; }
+
+a.mail::before {
+  content: "\f003";
+  font-family: FontAwesome;
+  padding-right: 0.25em; }
+
 .form-group {
   margin-bottom: 0.5rem; }
 
@@ -9531,50 +9540,8 @@ form .form-control-file, form .form-control-range {
 .subtypeBlock {
   padding-left: 3rem; }
 
-div.imgBox, p.imgBox {
-  overflow: hidden; }
-  div.imgBox img, p.imgBox img {
-    display: block;
-    width: 100%;
-    margin: 0; }
-  div.imgBox.left66 img, p.imgBox.left66 img {
-    width: 66%;
-    float: left;
-    margin-right: 1rem;
-    margin-bottom: 1rem; }
-  div.imgBox.left50 img, p.imgBox.left50 img {
-    width: 50%;
-    float: left;
-    margin-right: 1rem;
-    margin-bottom: 1rem; }
-  div.imgBox.right66 img, p.imgBox.right66 img {
-    width: 66%;
-    float: right;
-    margin-left: 1rem;
-    margin-bottom: 1rem; }
-  div.imgBox.right50 img, p.imgBox.right50 img {
-    width: 50%;
-    float: right;
-    margin-left: 1rem;
-    margin-bottom: 1rem; }
-
-div.codeBox, p.codeBox {
-  font-family: 'Courier New', Monospace, sans-serif;
-  padding: 0.5em;
-  max-height: 20em;
-  overflow: scroll; }
-
-a.link::before {
-  content: "\203A";
-  padding-right: 0.25em; }
-
-a.mail::before {
-  content: "\f003";
-  font-family: FontAwesome;
-  padding-right: 0.25em; }
-
 body {
-  background: #27446a url("../img/pattern.svg");
+  background: #343a40 url("../img/carbon.png");
   color: #343a40;
   height: 100%; }
 
@@ -9618,7 +9585,7 @@ header {
       header div.menu section.menu nav.navbar .dropdown-toggle::after {
         vertical-align: 0.1em; }
       header div.menu section.menu nav.navbar .dropdown-menu {
-        background: #27446a url("../img/pattern.svg");
+        background: #343a40 url("../img/carbon.png");
         padding: 0.25rem 0;
         margin: 0;
         border-color: #f8f9fa;

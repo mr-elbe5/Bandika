@@ -1,0 +1,24 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="bandika">
+    <output-path>$PROJECT_DIR$/out/production</output-path>
+    <root id="archive" name="ROOT.war">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="webserver" />
+          <element id="module-output" name="app-bandika" />
+          <element id="module-output" name="base" />
+          <element id="module-output" name="templatepage" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="commons" />
+          <element id="library" level="project" name="jsoup" />
+          <element id="library" level="project" name="lucene" />
+          <element id="library" level="project" name="mail" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="webserver/web/Web" />
+      <element id="javaee-facet-resources" facet="app-bandika/web/Web" />
+      <element id="javaee-facet-resources" facet="templatepage/web/Web" />
+    </root>
+  </artifact>
+</component>

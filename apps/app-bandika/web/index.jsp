@@ -1,8 +1,8 @@
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.application.Statics" %>
-<%@ page import="de.elbe5.cms.configuration.Configuration" %>
-<%@ page import="de.elbe5.cms.page.PageCache" %>
-<%@ page import="de.elbe5.cms.page.PageData" %>
+<%@ page import="de.elbe5.application.Statics" %>
+<%@ page import="de.elbe5.configuration.Configuration" %>
+<%@ page import="de.elbe5.page.PageCache" %>
+<%@ page import="de.elbe5.page.PageData" %>
 <%
     Locale locale=null;
     if (session!=null)

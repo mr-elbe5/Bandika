@@ -7,10 +7,10 @@
   You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 --%><%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.cms.application.Strings" %>
+<%@ page import="de.elbe5.base.cache.Strings" %>
 <%@ page import="de.elbe5.base.util.StringUtil" %>
-<%@ page import="de.elbe5.cms.application.Statics" %>
-<%@ page import="de.elbe5.cms.request.RequestData" %>
+<%@ page import="de.elbe5.application.Statics" %>
+<%@ page import="de.elbe5.request.RequestData" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
@@ -40,9 +40,9 @@
         <div class="top row">
             <section class="col-12 sysnav">
                 <ul class="nav justify-content-end">
-                    <li class="nav-item"><a class="nav-link" href="/"><%=Strings._home.html(locale)%>
+                    <li class="nav-item"><a class="nav-link" href="/"><%=Strings.html("_home",locale)%>
                     </a></li>
-                    <li class="nav-item"><a class="nav-link" href="/ctrl/user/logout"><%=Strings._logout.html(locale)%>
+                    <li class="nav-item"><a class="nav-link" href="/ctrl/user/logout"><%=Strings.html("_logout",locale)%>
                     </a></li>
                 </ul>
             </section>
@@ -58,25 +58,25 @@
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
                                 <a class="nav-link"
-                                   href="/ctrl/admin/openSystemAdministration"><%=Strings._systemAdministration.html(locale)%>
+                                   href="/ctrl/admin/openSystemAdministration"><%=Strings.html("_systemAdministration",locale)%>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link"
-                                   href="/ctrl/template/openTemplateAdministration"><%=Strings._templateAdministration.html(locale)%>
+                                   href="/ctrl/template/openTemplateAdministration"><%=Strings.html("_templateAdministration",locale)%>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/ctrl/page/openPageAdministration"><%=Strings._pageAdministration.html(locale)%>
+                                <a class="nav-link" href="/ctrl/page/openPageAdministration"><%=Strings.html("_pageAdministration",locale)%>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link"
-                                   href="/ctrl/templatepage/openPartAdministration"><%=Strings._partAdministration.html(locale)%>
+                                   href="/ctrl/templatepage/openPartAdministration"><%=Strings.html("_partAdministration",locale)%>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/ctrl/file/openFileAdministration"><%=Strings._fileAdministration.html(locale)%>
+                                <a class="nav-link" href="/ctrl/file/openFileAdministration"><%=Strings.html("_fileAdministration",locale)%>
                                 </a>
                             </li>
                         </ul>
@@ -88,7 +88,7 @@
             <section class="bc">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/"><%=Strings._home.html(locale)%>
+                        <li class="breadcrumb-item"><a href="/"><%=Strings.html("_home",locale)%>
                         </a></li>
                         <li class="breadcrumb-item"><a><%=StringUtil.toHtml(title)%>
                         </a></li>
@@ -104,18 +104,18 @@
     </div>
 </main>
 <footer>
-    <div class="container"><%=Strings._copyright.html(locale)%>
+    <div class="container"><%=Strings.html("_copyright",locale)%>
     </div>
 </footer>
 <div class="modal" id="modalDialog" tabindex="-1" role="dialog">
 </div>
 <script type="text/javascript">
     function confirmDelete() {
-        return confirm('<%=Strings._confirmDelete.js(locale)%>');
+        return confirm('<%=Strings.js("_confirmDelete",locale)%>');
     }
 
     function confirmExecute() {
-        return confirm('<%=Strings._confirmExecute.js(locale)%>');
+        return confirm('<%=Strings.js("_confirmExecute",locale)%>');
     }
 </script>
 

@@ -1,6 +1,6 @@
 @import "app_variables";
-@import "../../../cms/scss/bootstrap_ext/cms_variables";
-@import "../../../cms/scss/bootstrap/variables";
+@import "../../../../webserver/scss/bootstrap_ext/cms_variables";
+@import "../../../../webserver/scss/bootstrap/variables";
 
 body {
   background: $background-body;

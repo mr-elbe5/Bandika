@@ -1,4 +1,4 @@
-@import "../../../cms/scss/bootstrap_ext/cms_variables";
+@import "../../../../webserver/scss/bootstrap_ext/cms_variables";
 
 $dark-blue: #222a43;
 $mid-blue: #27446a;
@@ -32,7 +32,7 @@ $color-light-background: rgb(255,255,255);
 $color-droparea: #aaffaa;
 
 $main-background: #ffffff;
-$background-body: $mid-blue url(img-path('pattern.svg'));
+$background-body: $dark url(img-path('carbon.png'));
 
 
 

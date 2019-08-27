@@ -1,58 +1,57 @@
-@import "../../../cms/scss/bootstrap_ext/cms_variables";
+@import "../../../webserver/scss/bootstrap_ext/cms_variables";
 @import "app/app_variables";
 
 // Configuration
 
-@import "../../../cms/scss/bootstrap/functions";
-@import "../../../cms/scss/bootstrap/variables";
-@import "../../../cms/scss/bootstrap/mixins";
-@import "../../../cms/scss/bootstrap/utilities";
+@import "../../../webserver/scss/bootstrap/functions";
+@import "../../../webserver/scss/bootstrap/variables";
+@import "../../../webserver/scss/bootstrap/mixins";
+@import "../../../webserver/scss/bootstrap/utilities";
 
 // Layout & components
 
-@import "../../../cms/scss/bootstrap/root";
-@import "../../../cms/scss/bootstrap/reboot";
-@import "../../../cms/scss/bootstrap/type";
-@import "../../../cms/scss/bootstrap/images";
-@import "../../../cms/scss/bootstrap/grid";
-@import "../../../cms/scss/bootstrap/tables";
-@import "../../../cms/scss/bootstrap/forms";
-@import "../../../cms/scss/bootstrap/buttons";
-@import "../../../cms/scss/bootstrap/transitions";
-@import "../../../cms/scss/bootstrap/dropdown";
-@import "../../../cms/scss/bootstrap/button-group";
-@import "../../../cms/scss/bootstrap/nav";
-@import "../../../cms/scss/bootstrap/navbar";
+@import "../../../webserver/scss/bootstrap/root";
+@import "../../../webserver/scss/bootstrap/reboot";
+@import "../../../webserver/scss/bootstrap/type";
+@import "../../../webserver/scss/bootstrap/images";
+@import "../../../webserver/scss/bootstrap/grid";
+@import "../../../webserver/scss/bootstrap/tables";
+@import "../../../webserver/scss/bootstrap/forms";
+@import "../../../webserver/scss/bootstrap/buttons";
+@import "../../../webserver/scss/bootstrap/transitions";
+@import "../../../webserver/scss/bootstrap/dropdown";
+@import "../../../webserver/scss/bootstrap/button-group";
+@import "../../../webserver/scss/bootstrap/nav";
+@import "../../../webserver/scss/bootstrap/navbar";
 //@import "../../../cms/scss/bootstrap/card";
-@import "../../../cms/scss/bootstrap/breadcrumb";
+@import "../../../webserver/scss/bootstrap/breadcrumb";
 //@import "../../../cms/scss/bootstrap/pagination";
 //@import "../../../cms/scss/bootstrap/badge";
-@import "../../../cms/scss/bootstrap/alert";
-@import "../../../cms/scss/bootstrap/progress";
-@import "../../../cms/scss/bootstrap/list-group";
-@import "../../../cms/scss/bootstrap/close";
+@import "../../../webserver/scss/bootstrap/alert";
+@import "../../../webserver/scss/bootstrap/progress";
+@import "../../../webserver/scss/bootstrap/list-group";
+@import "../../../webserver/scss/bootstrap/close";
 //@import "../../../cms/scss/bootstrap/toasts";
-@import "../../../cms/scss/bootstrap/modal";
-@import "../../../cms/scss/bootstrap/tooltip";
-@import "../../../cms/scss/bootstrap/popover";
+@import "../../../webserver/scss/bootstrap/modal";
+@import "../../../webserver/scss/bootstrap/tooltip";
+@import "../../../webserver/scss/bootstrap/popover";
 //@import "../../../cms/scss/bootstrap/carousel";
 //@import "../../../cms/scss/bootstrap/spinners";
 
 
 // Helpers
 
-@import "../../../cms/scss/bootstrap/helpers";
+@import "../../../webserver/scss/bootstrap/helpers";
 
 
 // Utilities
 
-@import "../../../cms/scss/bootstrap/utilities/api";
-@import "../../../cms/scss/bootstrap/utilities/sizing";
-@import "../../../cms/scss/bootstrap/utilities/text";
-@import "../../../cms/scss/bootstrap/utilities/visibility";
+@import "../../../webserver/scss/bootstrap/utilities/api";
+@import "../../../webserver/scss/bootstrap/utilities/sizing";
+@import "../../../webserver/scss/bootstrap/utilities/text";
+@import "../../../webserver/scss/bootstrap/utilities/visibility";
 
-@import "../../../cms/scss/bootstrap_ext/font-awesome";
-@import "../../../cms/scss/bootstrap_ext/extras";
+@import "../../../webserver/scss/bootstrap_ext/font-awesome";
+@import "../../../webserver/scss/bootstrap_ext/extras";
 
-@import "app/ckeditor";
 @import "app/layout";

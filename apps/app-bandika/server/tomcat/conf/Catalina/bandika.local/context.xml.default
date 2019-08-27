@@ -10,8 +10,6 @@
     <Parameter name="mailSender" value="me@myhost.tld" override="false" />
     <Parameter name="mailReceiver" value="me@myhost.tld" override="false" />
     <Parameter name="timerInterval" value="30" override="false" />
-    <Parameter name="editProfile" value="true" override="false" />
-    <Parameter name="selfRegistration" value="true" override="false" />
     <Parameter name="defaultLanguage" value="de" override="false" />
     
     <Resource 

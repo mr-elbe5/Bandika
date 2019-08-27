@@ -9,9 +9,9 @@
 <!DOCTYPE html>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%response.setContentType("text/html;charset=UTF-8");%>
-<%@ page import="de.elbe5.cms.application.Strings" %>
-<%@ page import="de.elbe5.cms.configuration.Configuration" %>
-<%@ page import="de.elbe5.cms.request.RequestData" %>
+<%@ page import="de.elbe5.base.cache.Strings" %>
+<%@ page import="de.elbe5.configuration.Configuration" %>
+<%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="java.util.Locale" %>
 <%@ taglib uri="/WEB-INF/cmstags.tld" prefix="cms" %>
 
@@ -41,25 +41,25 @@
         <section class="mainSection loginSection text-center">
             <form class="form" action="/ctrl/user/login" method="post" name="loginForm" accept-charset="UTF-8">
                 <img class="mb-4" src="/static-content/img/logo-dark.png" alt="<%=Configuration.getInstance().getAppTitle()%>">
-                <label for="login" class="sr-only"><%=Strings._loginName.html(locale)%>
+                <label for="login" class="sr-only"><%=Strings.html("_loginName",locale)%>
                 </label>
                 <input type="text" id="login" name="login" class="form-control"
-                       placeholder="<%=Strings._loginName.html(locale)%>" required autofocus>
-                <label for="password" class="sr-only"><%=Strings._password.html(locale)%>
+                       placeholder="<%=Strings.html("_loginName",locale)%>" required autofocus>
+                <label for="password" class="sr-only"><%=Strings.html("_password",locale)%>
                 </label>
                 <input type="password" id="password" name="password" class="form-control"
-                       placeholder="<%=Strings._password.html(locale)%>" required>
-                <button class="btn btn-outline-primary" type="submit"><%=Strings._login.html(locale)%>
+                       placeholder="<%=Strings.html("_password",locale)%>" required>
+                <button class="btn btn-outline-primary" type="submit"><%=Strings.html("_login",locale)%>
                 </button>
                 <button class="btn btn-outline-secondary"
-                        onclick="$(location).attr('href','/');"><%=Strings._cancel.html(locale)%>
+                        onclick="$(location).attr('href','/');"><%=Strings.html("_cancel",locale)%>
                 </button>
             </form>
         </section>
     </div>
 </main>
 <footer>
-    <div class="container"><%=Strings._copyright.html(locale)%>
+    <div class="container"><%=Strings.html("_copyright",locale)%>
     </div>
 </footer>
 </body>
