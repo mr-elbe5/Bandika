@@ -1,14 +1,14 @@
 <component name="libraryTable">
   <library name="lucene">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/lucene-codecs-6.5.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/lucene-core-6.5.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/lucene-highlighter-6.5.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/lucene-join-6.5.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/lucene-memory-6.5.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/lucene-misc-6.5.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/lucene-queries-6.5.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/lucene-queryparser-6.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/javalibs/lucene-codecs-6.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/javalibs/lucene-core-6.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/javalibs/lucene-highlighter-6.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/javalibs/lucene-join-6.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/javalibs/lucene-memory-6.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/javalibs/lucene-misc-6.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/javalibs/lucene-queries-6.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/javalibs/lucene-queryparser-6.5.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

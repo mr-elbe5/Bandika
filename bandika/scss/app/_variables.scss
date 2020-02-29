@@ -1,0 +1,36 @@
+@function img-path($name) {
+  @return '../img/'+$name;
+}
+@function font-path($name) {
+  @return '../fonts/'+$name;
+}
+
+$link-decoration:             none;
+
+$dark-blue: #222a43;
+$mid-blue: #27446a;
+$light-blue: #617fb3;
+
+
+$light:         #f8f9fa; //gray-100
+$dark:          #343a40; //gray-800
+
+$body-color: $dark;
+$header-color: $light;
+$main-color: $dark;
+$footer-color: $light;
+
+$primary: $mid-blue;
+
+$headings-font-weight:        400;
+
+$color-dark-background: rgb(51,51,51);
+$color-light-background: rgb(255,255,255);
+$color-droparea: #aaffaa;
+
+$main-background: transparent;
+$background-color: $mid-blue;
+$background-body: $mid-blue url(img-path('pattern.svg'));
+
+
+
