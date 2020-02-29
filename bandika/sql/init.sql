@@ -167,6 +167,9 @@ CREATE TABLE IF NOT EXISTS t_content_right
     CONSTRAINT t_content_right_fk2 FOREIGN KEY (group_id) REFERENCES t_group (id) ON DELETE CASCADE
 );
 
+-- root user
+INSERT INTO t_user (id,first_name,last_name,email,login,pwd,approval_code,approved)
+VALUES (1,'System','Administrator','root@localhost','root','','',TRUE);
 
 -- timer
 INSERT INTO t_timer_task (name,display_name,execution_interval,minute,active)

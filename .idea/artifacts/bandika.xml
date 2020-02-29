@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="war" build-on-make="true" name="bandika">
-    <output-path>$PROJECT_DIR$/out</output-path>
+    <output-path>$USER_HOME$/Library/Tomcat9/bandika</output-path>
     <root id="archive" name="ROOT.war">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
