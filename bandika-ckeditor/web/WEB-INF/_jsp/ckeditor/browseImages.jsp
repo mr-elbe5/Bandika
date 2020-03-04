@@ -20,7 +20,8 @@
     SessionRequestData rdata = SessionRequestData.getRequestData(request);
     Locale locale = rdata.getLocale();
     ContentData data=rdata.getCurrentSessionContent();
-    List<Integer> parentIds=ContentCache.getParentContentIds(data);
+    List<Integer> parentIds=ContentCache.getParentContentIds(data.getId());
+    parentIds.add(data.getId());
     rdata.setRequestObject("parentIds",parentIds);
     int callbackNum = rdata.getInt("CKEditorFuncNum", -1);
 %>
@@ -36,13 +37,11 @@
         <div class="modal-body">
             <form:message/>
             <section class="treeSection">
-                <% if (rdata.hasAnyContentRight()) { %>
                 <ul class="tree filetree">
                     <% rdata.setRequestObject(RequestData.KEY_CONTENT, ContentCache.getContentRoot());%>
                     <jsp:include page="/WEB-INF/_jsp/ckeditor/imageBrowserFolder.inc.jsp" flush="true"/>
+                    <% rdata.removeRequestObject(RequestData.KEY_CONTENT);%>
                 </ul>
-                    <% rdata.removeRequestObject(RequestData.KEY_CONTENT);
-                }%>
             </section>
             <section class="addImage">
                 <div><input type="file" name="file" id="addedFile"/>&nbsp;<button class="btn btn-sm btn-outline-primary" onclick="return addImage()"><%=$SH("_add",locale)%></button></div>

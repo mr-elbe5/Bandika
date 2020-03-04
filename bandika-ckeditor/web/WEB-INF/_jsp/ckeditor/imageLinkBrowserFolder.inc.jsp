@@ -21,13 +21,13 @@
     Locale locale = rdata.getLocale();
     ContentData contentData = (ContentData) rdata.getRequestObject(RequestData.KEY_CONTENT);
     assert contentData != null;
-    //todo
-%><% if (contentData.hasUserReadRight(rdata)) {%>
+%>
 <li class="open">
     <a id="<%=contentData.getId()%>"><%=contentData.getName()%>
     </a>
     <ul>
-        <% List<ImageData> images = contentData.getFiles(ImageData.class);
+        <% if (contentData.hasUserReadRight(rdata)) {
+            List<ImageData> images = contentData.getFiles(ImageData.class);
             for (ImageData image : images) {%>
         <li>
             <div class="treeline">
@@ -38,14 +38,13 @@
                 <a class="fa fa-eye" title="<%=$SH("_view",locale)%>" href="/ctrl/image/show/<%=image.getId()%>" target="_blank"> </a>
             </div>
         </li>
-        <%
-            }
-            for (ContentData subPage : contentData.getChildren()) {
-                rdata.setRequestObject(RequestData.KEY_CONTENT, subPage);
-        %>
+        <%}
+        }
+        for (ContentData subPage : contentData.getChildren()) {
+            rdata.setRequestObject(RequestData.KEY_CONTENT, subPage);%>
         <jsp:include page="/WEB-INF/_jsp/ckeditor/imageLinkBrowserFolder.inc.jsp" flush="true"/>
         <%}
-            rdata.setRequestObject(RequestData.KEY_CONTENT, contentData);
-        }%>
+        rdata.setRequestObject(RequestData.KEY_CONTENT, contentData);
+        %>
     </ul>
 </li>

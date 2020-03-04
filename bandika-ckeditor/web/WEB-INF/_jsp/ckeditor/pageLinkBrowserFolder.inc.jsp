@@ -18,7 +18,7 @@
     SessionRequestData rdata = SessionRequestData.getRequestData(request);
     ContentData contentData = (ContentData) rdata.getRequestObject("treePage");
     assert contentData != null;
-%><% if (contentData.hasUserReadRight(rdata)) {%>
+%>
 <li class="open">
     <a id="<%=contentData.getId()%>" href="" onclick="return ckLinkCallback('/ctrl/content/show/<%=contentData.getId()%>');"><%=contentData.getName()%>
     </a>
@@ -27,11 +27,10 @@
             List<PageData> children = contentData.getChildren(PageData.class);
             for (ContentData subPage : children) {
                 rdata.setRequestObject("treePage", subPage); %>
-        <jsp:include page="/WEB-INF/_jsp/ckeditor/pageLinkBrowserFolder.inc.jsp" flush="true"/>
-        <%
-            }
+                <jsp:include page="/WEB-INF/_jsp/ckeditor/pageLinkBrowserFolder.inc.jsp" flush="true"/>
+            <%}
             rdata.setRequestObject("treePage", contentData);
-        %><%}%>
+        }%>
     </ul>
 </li>
-<%}%>
+

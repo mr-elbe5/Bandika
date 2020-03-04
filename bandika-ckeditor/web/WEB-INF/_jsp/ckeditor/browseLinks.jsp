@@ -48,14 +48,11 @@
             <div class="tab-content" id="pageTabContent">
                 <div class="tab-pane fade show active" id="pages" role="tabpanel" aria-labelledby="pages-tab">
                     <section class="treeSection">
-                        <% if (rdata.hasAnyContentRight()) { %>
                         <ul class="tree filetree">
                             <%rdata.setRequestObject("treePage", ContentCache.getContentRoot());%>
                             <jsp:include page="/WEB-INF/_jsp/ckeditor/pageLinkBrowserFolder.inc.jsp" flush="true"/>
+                            <%rdata.removeRequestObject("treePage");%>
                         </ul>
-                        <%
-                            rdata.removeRequestObject("treePage");
-                        }%>
                     </section>
                 </div>
                 <div class="tab-pane fade" id="documents" role="tabpanel" aria-labelledby="documents-tab">

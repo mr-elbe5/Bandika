@@ -116,6 +116,8 @@ _editModeOff;Edit mode off;Editiermodus aus
 _editModeOn;Edit mode on;Editiermodus an
 _editPage;Edit Page;Seite bearbeiten
 _editContentData;Edit Data;Daten bearbeiten
+_editDocumentSettings;Edit Settings;Einstellungen bearbeiten
+_editImageSettings;Edit Settings;Einstellungen bearbeiten
 _editProfile;Edit Profile;Profil ändern
 _editProject;Edit Project;Projekt ändern
 _editUser;Edit User;Benutzer bearbeiten

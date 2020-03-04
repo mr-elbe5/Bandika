@@ -20,15 +20,15 @@
     SessionRequestData rdata = SessionRequestData.getRequestData(request);
     Locale locale = rdata.getLocale();
     ContentData contentData = rdata.getRequestObject(RequestData.KEY_CONTENT,ContentData.class);
-    assert contentData != null;
-    //todo
-%><% if (contentData.hasUserReadRight(rdata)) {%>
+    assert contentData != null;%>
 <li class="open">
     <a id="<%=contentData.getId()%>"><%=contentData.getName()%>
     </a>
     <ul>
-        <% List<DocumentData> documents = contentData.getFiles(DocumentData.class);
-            for (DocumentData document : documents) {%>
+        <% if (contentData.hasUserReadRight(rdata)){
+            List<DocumentData> documents = contentData.getFiles(DocumentData.class);
+            for (DocumentData document : documents) {
+        %>
         <li>
             <div class="treeline">
                 <a id="<%=document.getId()%>" href="" onclick="return ckLinkCallback('/ctrl/document/download/<%=document.getId()%>');">
@@ -38,12 +38,13 @@
             </div>
         </li>
         <%}
+        }
         for (ContentData subFolder : contentData.getChildren()) {
-            rdata.setRequestObject(RequestData.KEY_CONTENT, subFolder);
-        %>
+            rdata.setRequestObject(RequestData.KEY_CONTENT, subFolder);%>
         <jsp:include page="/WEB-INF/_jsp/ckeditor/documentLinkBrowserFolder.inc.jsp" flush="true"/>
-        <%}
-            rdata.setRequestObject(RequestData.KEY_CONTENT, contentData);
-        %><%}%>
+        <% }
+        rdata.setRequestObject(RequestData.KEY_CONTENT, contentData);
+        %>
     </ul>
 </li>
+

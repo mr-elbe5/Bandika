@@ -24,13 +24,13 @@
     List<Integer> parentIds=(List<Integer>) rdata.getRequestObject("parentIds");
     assert(parentIds!=null);
     boolean isParent=parentIds.contains(contentData.getId());
-    if (contentData.hasUserReadRight(rdata) && (isParent || contentData.hasFiles())) {
 %>
 <li class="<%=isParent ? "open" : ""%>">
     <a id="page_<%=contentData.getId()%>"><%=contentData.getName()%>
     </a>
     <ul id="page_ul_<%=contentData.getId()%>">
-        <% List<ImageData> images = contentData.getFiles(ImageData.class);
+        <% if (contentData.hasUserReadRight(rdata)){
+            List<ImageData> images = contentData.getFiles(ImageData.class);
             for (ImageData image : images) {%>
         <li>
             <div class="treeline">
@@ -42,13 +42,12 @@
             </div>
         </li>
         <%}
+        }
         for (ContentData subPage : contentData.getChildren()) {
             rdata.setRequestObject(RequestData.KEY_CONTENT, subPage);
         %>
         <jsp:include page="/WEB-INF/_jsp/ckeditor/imageBrowserFolder.inc.jsp" flush="true"/>
-        <%
-        }
+        <%}
         rdata.setRequestObject(RequestData.KEY_CONTENT, contentData);%>
     </ul>
 </li>
-<%}%>

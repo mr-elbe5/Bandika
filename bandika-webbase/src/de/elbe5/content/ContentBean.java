@@ -37,14 +37,13 @@ public class ContentBean extends DbBean {
     }
 
     private static String GET_ALL_CONTENT_SQL = "SELECT type,id,creation_date,change_date,parent_id,ranking,name,display_name,description,creator_id,changer_id, language, access_type, nav_type, active FROM t_content";
-    private static String GET_ACTIVE_CONTENT_SQL = "SELECT type,id,creation_date,change_date,parent_id,ranking,name,display_name,description,creator_id,changer_id, language, access_type, nav_type, active FROM t_content where active=true";
 
-    public List<ContentData> getAllContents(boolean onlyActive) {
+    public List<ContentData> getAllContents() {
         List<ContentData> list = new ArrayList<>();
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(onlyActive ? GET_ACTIVE_CONTENT_SQL : GET_ALL_CONTENT_SQL);
+            pst = con.prepareStatement(GET_ALL_CONTENT_SQL);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     ContentData data=readContentData(rs);

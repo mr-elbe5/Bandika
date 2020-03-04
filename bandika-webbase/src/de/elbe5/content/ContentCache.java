@@ -27,7 +27,7 @@ public class ContentCache {
     private static List<ContentData> footerList = new ArrayList<>();
 
     public static synchronized void load() {
-        List<ContentData> contentList = ContentBean.getInstance().getAllContents(true);
+        List<ContentData> contentList = ContentBean.getInstance().getAllContents();
         List<FileData> fileList = FileBean.getInstance().getAllFiles();
         Map<Integer, ContentData> contents = new HashMap<>();
         Map<String, ContentData> paths = new HashMap<>();
@@ -57,7 +57,7 @@ public class ContentCache {
         contentRoot.initializeChildren();
         for (ContentData contentData : contentList) {
             paths.put(contentData.getUrl(), contentData);
-            if (contentData.isInFooterNav()){
+            if (contentData.isActive() && contentData.isInFooterNav()){
                 footer.add(contentData);
             }
         }
@@ -155,17 +155,16 @@ public class ContentCache {
     public static List<Integer> getParentContentIds(ContentData data) {
         checkDirty();
         List<Integer> list = new ArrayList<>();
-        int id = data == null ? 0 : data.getId();
-        if (id <= ContentData.ID_ROOT) {
-            list.add(ContentData.ID_ROOT);
-        }
-        else {
-            while (data!=null) {
-                list.add(data.getId());
-                data = data.getParent();
-            }
+        while (data!=null) {
+            list.add(data.getId());
+            data = data.getParent();
         }
         return list;
+    }
+
+    public static List<Integer> getParentContentIds(int contentId) {
+        ContentData data=getContent(contentId);
+        return getParentContentIds(data);
     }
 
     public static List<ContentData> getFooterList() {
