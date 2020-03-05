@@ -29,5 +29,7 @@ CKEDITOR.editorConfig = function( config ) {
 
 	config.baseFloatZIndex = 1035;
 
+	config.extraAllowedContent = '*(*);*{*}';
+
 };
 

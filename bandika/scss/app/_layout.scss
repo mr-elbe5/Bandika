@@ -215,6 +215,21 @@ main {
         padding: 0.5rem 0;
         margin: 0.5rem 0;
       }
+
+      img{
+        max-width : 100%;
+      }
+
+      img[style*="float: left;"], img[style*="float:left;"]{
+        margin-right: 0.5em;
+        margin-bottom: 0.5em;
+      }
+
+      img[style*="float: right;"], img[style*="float:right;"]{
+        margin-left: 0.5em;
+        margin-bottom: 0.5em;
+      }
+
     }
 
     .asideSection {
@@ -345,35 +360,6 @@ body.login {
 
 
 // in ckeditor
-
-div.imgBox, p.imgBox{
-  overflow: hidden;
-
-  img{
-    display: block;
-    width: 100%;
-    float: left;
-    margin:0;
-  }
-
-  &.left66{
-    img{
-      width: 66%;
-      float: left;
-      margin-right: 1rem;
-      margin-bottom: 1rem;
-    }
-  }
-
-  &.left50{
-    img{
-      width: 50%;
-      float: left;
-      margin-right: 1rem;
-      margin-bottom: 1rem;
-    }
-  }
-}
 
 a.link::before{
   content : "\203A";

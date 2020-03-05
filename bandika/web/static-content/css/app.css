@@ -117,6 +117,14 @@ main {
       border-style: solid;
       padding: 0.5rem 0;
       margin: 0.5rem 0; }
+    main div#pageContent .paragraph img {
+      max-width: 100%; }
+    main div#pageContent .paragraph img[style*="float: left;"], main div#pageContent .paragraph img[style*="float:left;"] {
+      margin-right: 0.5em;
+      margin-bottom: 0.5em; }
+    main div#pageContent .paragraph img[style*="float: right;"], main div#pageContent .paragraph img[style*="float:right;"] {
+      margin-left: 0.5em;
+      margin-bottom: 0.5em; }
   main div#pageContent .asideSection .paragraph {
     background: rgba(255, 255, 255, 0.9);
     border-color: #343a40; }
@@ -190,24 +198,6 @@ body.login {
       margin-bottom: 0.5rem; }
     body.login #main .loginSection .form input[type="password"] {
       margin-bottom: 2rem; }
-
-div.imgBox, p.imgBox {
-  overflow: hidden; }
-  div.imgBox img, p.imgBox img {
-    display: block;
-    width: 100%;
-    float: left;
-    margin: 0; }
-  div.imgBox.left66 img, p.imgBox.left66 img {
-    width: 66%;
-    float: left;
-    margin-right: 1rem;
-    margin-bottom: 1rem; }
-  div.imgBox.left50 img, p.imgBox.left50 img {
-    width: 50%;
-    float: left;
-    margin-right: 1rem;
-    margin-bottom: 1rem; }
 
 a.link::before {
   content: "\203A";

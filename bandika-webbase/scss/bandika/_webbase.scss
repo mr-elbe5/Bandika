@@ -336,6 +336,10 @@ div#pageContainer {
 
   .editArea {
 
+    .section{
+      min-height: 2rem;
+    }
+
     .addPartButtons{
       position: absolute;
       margin-top: -1.6em;
