@@ -3,14 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/bandika/bandika.iml" filepath="$PROJECT_DIR$/bandika/bandika.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bandika-apibase/bandika-apibase.iml" filepath="$PROJECT_DIR$/bandika-apibase/bandika-apibase.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bandika-base/bandika-base.iml" filepath="$PROJECT_DIR$/bandika-base/bandika-base.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bandika-ckeditor/bandika-ckeditor.iml" filepath="$PROJECT_DIR$/bandika-ckeditor/bandika-ckeditor.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bandika-docexport/bandika-docexport.iml" filepath="$PROJECT_DIR$/bandika-docexport/bandika-docexport.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bandika-page/bandika-page.iml" filepath="$PROJECT_DIR$/bandika-page/bandika-page.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bandika-search/bandika-search.iml" filepath="$PROJECT_DIR$/bandika-search/bandika-search.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bandika-sectionpage/bandika-sectionpage.iml" filepath="$PROJECT_DIR$/bandika-sectionpage/bandika-sectionpage.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bandika-webbase/bandika-webbase.iml" filepath="$PROJECT_DIR$/bandika-webbase/bandika-webbase.iml" />
     </modules>
   </component>
 </project>

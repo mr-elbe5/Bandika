@@ -25,11 +25,8 @@
     <orderEntry type="library" name="basics" level="project" />
     <orderEntry type="library" name="lucene" level="project" />
     <orderEntry type="library" name="jsoup" level="project" />
-    <orderEntry type="module" module-name="bandika-base" />
-    <orderEntry type="module" module-name="bandika-webbase" />
-    <orderEntry type="module" module-name="bandika-page" />
-    <orderEntry type="module" module-name="bandika-search" />
-    <orderEntry type="module" module-name="bandika-ckeditor" />
-    <orderEntry type="module" module-name="bandika-sectionpage" />
+    <orderEntry type="library" name="json" level="project" />
+    <orderEntry type="library" name="docconvert" level="project" />
+    <orderEntry type="library" name="xml" level="project" />
   </component>
 </module>

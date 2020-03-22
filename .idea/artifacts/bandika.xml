@@ -4,14 +4,7 @@
     <root id="archive" name="ROOT.war">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="bandika-webbase" />
-          <element id="module-output" name="bandika-sectionpage" />
           <element id="module-output" name="bandika" />
-          <element id="module-output" name="bandika-base" />
-          <element id="module-output" name="bandika-search" />
-          <element id="module-output" name="bandika-page" />
-          <element id="module-output" name="bandika-apibase" />
-          <element id="module-output" name="bandika-ckeditor" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="commons" />
@@ -19,14 +12,11 @@
           <element id="library" level="project" name="json" />
           <element id="library" level="project" name="jsoup" />
           <element id="library" level="project" name="lucene" />
+          <element id="library" level="project" name="docconvert" />
+          <element id="library" level="project" name="xml" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="bandika/web/Web" />
-      <element id="javaee-facet-resources" facet="bandika-sectionpage/web/Web" />
-      <element id="javaee-facet-resources" facet="bandika-page/web/Web" />
-      <element id="javaee-facet-resources" facet="bandika-webbase/web/Web" />
-      <element id="javaee-facet-resources" facet="bandika-search/web/Web" />
-      <element id="javaee-facet-resources" facet="bandika-ckeditor/web/Web" />
     </root>
   </artifact>
 </component>
