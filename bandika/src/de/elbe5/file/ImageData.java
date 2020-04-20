@@ -6,7 +6,6 @@ import de.elbe5.base.util.FileUtil;
 import de.elbe5.base.util.ImageUtil;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.request.SessionRequestData;
-import org.json.simple.JSONObject;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
@@ -38,6 +37,10 @@ public class ImageData extends FileData {
     }
 
     // base data
+
+    public String getPreviewURL(){
+        return "/previews/"+getPreviewName();
+    }
 
     public int getWidth() {
         return width;
@@ -247,18 +250,6 @@ public class ImageData extends FileData {
         ImageWriter writer = writers.next();
         assert (image != null);
         setPreviewBytes(ImageUtil.writeImage(writer, image));
-    }
-
-    @SuppressWarnings("unchecked")
-    public JSONObject getJson(Locale locale){
-        JSONObject json = new JSONObject();
-        json.put("id",getId());
-        json.put("fileName",getFileName());
-        json.put("name",getDisplayName());
-        json.put("contentType",getContentType());
-        json.put("width", getWidth());
-        json.put("height", getHeight());
-        return json;
     }
 
 }

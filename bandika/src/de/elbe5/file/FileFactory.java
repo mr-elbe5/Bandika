@@ -16,6 +16,7 @@ public class FileFactory {
 
     private static List<String> defaultDocumentTypes=new ArrayList<>();
     private static List<String> defaultImageTypes=new ArrayList<>();
+    private static List<String> defaultMediaTypes=new ArrayList<>();
     private static Map<String, FileClassInfo> infos = new HashMap<>();
 
     public static List<String> getTypes() {
@@ -44,6 +45,16 @@ public class FileFactory {
         return list;
     }
 
+    public static List<String> getMediaTypes() {
+        List<String> list = new ArrayList<>();
+        for (FileClassInfo info : infos.values()){
+            if (info instanceof MediaClassInfo)
+                list.add(info.getType());
+        }
+        Collections.sort(list);
+        return list;
+    }
+
     public static void addDocumentClassInfo(Class<? extends DocumentData> fileClass, FileBean bean) {
         DocumentClassInfo fileClassInfo = new DocumentClassInfo(fileClass,bean);
         String type=fileClass.getSimpleName();
@@ -52,6 +63,12 @@ public class FileFactory {
 
     public static void addImageClassInfo(Class<? extends ImageData> fileClass, FileBean bean) {
         ImageClassInfo fileClassInfo = new ImageClassInfo(fileClass,bean);
+        String type=fileClass.getSimpleName();
+        infos.put(type,fileClassInfo);
+    }
+
+    public static void addMediaClassInfo(Class<? extends MediaData> fileClass, FileBean bean) {
+        MediaClassInfo fileClassInfo = new MediaClassInfo(fileClass,bean);
         String type=fileClass.getSimpleName();
         infos.put(type,fileClassInfo);
     }
@@ -100,5 +117,13 @@ public class FileFactory {
 
     public static List<String> getDefaultImageTypes() {
         return defaultImageTypes;
+    }
+
+    public static void addDefaultMediaType(Class<? extends MediaData> imageClass) {
+        defaultMediaTypes.add(imageClass.getSimpleName());
+    }
+
+    public static List<String> getDefaultMediaTypes() {
+        return defaultMediaTypes;
     }
 }

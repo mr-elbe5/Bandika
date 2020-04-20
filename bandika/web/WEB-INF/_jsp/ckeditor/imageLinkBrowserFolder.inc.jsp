@@ -31,11 +31,11 @@
             for (ImageData image : images) {%>
         <li>
             <div class="treeline">
-                <a id="<%=image.getId()%>" href="" onclick="return ckLinkCallback('/ctrl/image/show/<%=image.getId()%>');">
-                    <img src="/ctrl/image/showPreview/<%=image.getId()%>" alt="<%=$H(image.getDisplayName())%>"/>
+                <a id="<%=image.getId()%>" href="" onclick="return ckLinkCallback('<%=image.getURL()%>');">
+                    <img src="<%=image.getPreviewURL()%>" alt="<%=$H(image.getDisplayName())%>"/>
                     <%=$H(image.getDisplayName())%>
                 </a>
-                <a class="fa fa-eye" title="<%=$SH("_view",locale)%>" href="/ctrl/image/show/<%=image.getId()%>" target="_blank"> </a>
+                <a class="fa fa-eye" title="<%=$SH("_view",locale)%>" href="<%=image.getURL()%>" target="_blank"> </a>
             </div>
         </li>
         <%}

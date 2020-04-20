@@ -43,6 +43,10 @@
                     <a class="nav-link" id="images-tab" data-toggle="tab" href="#images" role="tab" aria-controls="images" aria-selected="false"><%=$SH("_images",locale)%>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="media-tab" data-toggle="tab" href="#media" role="tab" aria-controls="media" aria-selected="false"><%=$SH("_media",locale)%>
+                    </a>
+                </li>
             </ul>
 
             <div class="tab-content" id="pageTabContent">
@@ -71,6 +75,16 @@
                         <ul class="tree filetree">
                             <%rdata.setRequestObject(RequestData.KEY_CONTENT, ContentCache.getContentRoot());%>
                             <jsp:include page="/WEB-INF/_jsp/ckeditor/imageLinkBrowserFolder.inc.jsp" flush="true"/>
+                        </ul>
+                        <%rdata.removeRequestObject(RequestData.KEY_CONTENT); }%>
+                    </section>
+                </div>
+                <div class="tab-pane fade" id="media" role="tabpanel" aria-labelledby="media-tab">
+                    <section class="treeSection">
+                        <% if (rdata.hasAnyContentRight()) { %>
+                        <ul class="tree filetree">
+                            <%rdata.setRequestObject(RequestData.KEY_CONTENT, ContentCache.getContentRoot());%>
+                            <jsp:include page="/WEB-INF/_jsp/ckeditor/mediaLinkBrowserFolder.inc.jsp" flush="true"/>
                         </ul>
                         <%rdata.removeRequestObject(RequestData.KEY_CONTENT); }%>
                     </section>

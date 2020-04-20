@@ -368,6 +368,10 @@ public class ContentData extends BaseData implements Comparable<ContentData> {
         return FileFactory.getDefaultImageTypes();
     }
 
+    public List<String> getMediaClasses(){
+        return FileFactory.getDefaultMediaTypes();
+    }
+
     public void addFile(FileData data) {
         files.add(data);
     }

@@ -57,6 +57,7 @@
     <ul>
         <jsp:include page="/WEB-INF/_jsp/content/treeContentDocuments.inc.jsp" flush="true" />
         <jsp:include page="/WEB-INF/_jsp/content/treeContentImages.inc.jsp" flush="true" />
+        <jsp:include page="/WEB-INF/_jsp/content/treeContentMedia.inc.jsp" flush="true" />
         <%if (contentData.hasChildren()) {
             for (ContentData childData : contentData.getChildren()) {
                 childData.displayTreeContent(pageContext, rdata);

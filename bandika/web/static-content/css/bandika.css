@@ -10314,7 +10314,7 @@ form .form-control-file, form .form-control-range {
       padding: 0 0.5em 1px 0.25em;
       position: relative;
       top: 1px; }
-    .treeSection ul.tree li.documents, .treeSection ul.tree li.images {
+    .treeSection ul.tree li.documents, .treeSection ul.tree li.images, .treeSection ul.tree li.media {
       font-size: .75rem;
       font-style: italic; }
     .treeSection ul.tree li.parts {
@@ -10378,10 +10378,14 @@ div#pageContainer .editArea .textBox input[type="text"], div#pageContainer .edit
   background-color: inherit;
   text-align: inherit; }
 
-body {
-  background: #27446a url("../img/pattern.svg");
-  color: #343a40;
+html {
   height: 100%; }
+
+body {
+  background: #f8f9fa url("../img/papier2560.jpg");
+  color: #343a40;
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif; }
 
 a, a:active, a:hover, a:visited {
   color: #343a40; }
@@ -10391,167 +10395,149 @@ button:focus, a:focus, .btn:focus {
   box-shadow: none; }
 
 header {
+  position: relative;
   background: transparent;
-  color: #f8f9fa;
-  padding: 0 1rem; }
-  header section.sysnav {
+  color: #f8f9fa; }
+  header div.top {
     background: transparent; }
-    header section.sysnav a {
+    header div.top a {
       text-decoration: none;
       color: #f8f9fa; }
-    header section.sysnav a.nav-link {
+    header div.top section.sysnav a.nav-link {
       padding: 0;
       margin: 0.25rem 0 0.25rem 0.5rem;
-      font-size: 0.8rem;
-      color: #f8f9fa; }
-    header section.sysnav .dropdown-menu {
+      font-size: 0.875rem;
+      color: #343a40; }
+    header div.top section.sysnav .dropdown-menu {
       padding: 0; }
-      header section.sysnav .dropdown-menu .dropdown-item {
+      header div.top section.sysnav .dropdown-menu .dropdown-item {
         color: #343a40;
         font-size: 0.8rem; }
   header div.menu {
-    border-bottom: 1px solid #f8f9fa; }
+    background: transparent;
+    border-bottom: 1px solid #555555; }
     header div.menu section.menu nav.navbar {
-      padding: 0; }
+      padding: .25rem 0; }
       header div.menu section.menu nav.navbar .navbar-toggler span {
-        color: #f8f9fa; }
-      header div.menu section.menu nav.navbar a.navbar-brand {
-        color: #f8f9fa; }
-        header div.menu section.menu nav.navbar a.navbar-brand img {
-          height: 3rem; }
+        color: #343a40; }
+      header div.menu section.menu nav.navbar a.navbar-brand img {
+        height: 4rem; }
       header div.menu section.menu nav.navbar .navbar-collapse {
-        margin-top: 44px; }
+        margin-top: 2rem; }
       header div.menu section.menu nav.navbar .nav-item a {
-        color: #f8f9fa; }
+        color: #343a40; }
+      header div.menu section.menu nav.navbar .nav-item.active a {
+        text-decoration: underline; }
       header div.menu section.menu nav.navbar .nav-link {
         padding: 0.25rem 1rem; }
       header div.menu section.menu nav.navbar .dropdown-toggle::after {
         vertical-align: 0.1em; }
       header div.menu section.menu nav.navbar .dropdown-menu {
-        background: #27446a url("../img/pattern.svg");
+        background: #f8f9fa url("../img/papier2560.jpg");
         padding: 0.25rem 0;
         margin: 0;
-        border-color: #f8f9fa;
+        border-color: #343a40;
         border-width: 0 1px 1px 1px;
         border-radius: 0; }
-        header div.menu section.menu nav.navbar .dropdown-menu .dropdown-item:focus, header div.menu section.menu nav.navbar .dropdown-menu .dropdown-item:hover, header div.menu section.menu nav.navbar .dropdown-menu .dropdown-item.active {
+        header div.menu section.menu nav.navbar .dropdown-menu .dropdown-item:focus, header div.menu section.menu nav.navbar .dropdown-menu .dropdown-item:hover {
           background: rgba(255, 255, 255, 0.2); }
         header div.menu section.menu nav.navbar .dropdown-menu .dropdown-item.subitem {
           padding-left: 3rem;
           font-size: 0.875rem; }
         header div.menu section.menu nav.navbar .dropdown-menu .nav-item a {
-          color: #f8f9fa; }
-      header div.menu section.menu nav.navbar .nav-item.dropdown.hover:hover .dropdown-menu {
-        display: block; }
-  header div.bc .breadcrumb {
-    background: transparent;
-    color: #f8f9fa;
+          color: #343a40; }
+  header section.bc .breadcrumb {
+    background: #f8f9fa url("../img/papier2560.jpg");
+    color: #343a40;
     margin: 0;
     font-size: 0.8rem;
     padding: 0.25rem 0; }
-    header div.bc .breadcrumb .breadcrumb-item.active {
+    header section.bc .breadcrumb .breadcrumb-item.active {
       color: #f8f9fa; }
-    header div.bc .breadcrumb a {
-      color: #f8f9fa;
+    header section.bc .breadcrumb a {
+      color: #343a40;
       text-decoration: none; }
 
-main {
-  padding-bottom: 3rem; }
-  main div#pageContent h1, main div#pageContent .h1, main div#pageContent h2, main div#pageContent .h2, main div#pageContent h3, main div#pageContent .h3 {
+div#pageContainer {
+  position: relative;
+  background: transparent;
+  color: #343a40;
+  border-radius: 5px; }
+
+div#pageContainer.admin {
+  background: white; }
+
+div#pageContent {
+  padding-top: 1rem; }
+  div#pageContent h1, div#pageContent .h1, div#pageContent h2, div#pageContent .h2, div#pageContent h3, div#pageContent .h3 {
     margin: 0; }
-  main div#pageContent h1.title, main div#pageContent .title.h1 {
+  div#pageContent .title {
+    font-size: 3rem;
+    margin-top: 1rem;
     margin-bottom: 1rem;
     text-align: center;
-    color: #f8f9fa; }
-  main div#pageContent .contentTop {
-    color: #f8f9fa; }
-  main div#pageContent .headerBox {
+    color: #555555; }
+  div#pageContent .headerBox {
     padding: 0.5rem 1rem; }
-  main div#pageContent .headerBox h1, main div#pageContent .headerBox .h1 {
+  div#pageContent .headerBox h1, div#pageContent .headerBox .h1 {
     text-align: center; }
-  main div#pageContent .htmlBox {
+  div#pageContent .htmlBox {
     background: #fff;
     padding: 1rem; }
-  main div#pageContent .imageBox {
+  div#pageContent .imageBox {
     background: #fff;
     padding: 0; }
-    main div#pageContent .imageBox img {
+    div#pageContent .imageBox img {
       width: 100%; }
-  main div#pageContent h3.partHeader, main div#pageContent .partHeader.h3 {
+  div#pageContent h3.partHeader, div#pageContent .partHeader.h3 {
     background: #343a40;
     padding: 0.5rem 1rem; }
-  main div#pageContent .paragraph {
-    background-color: rgba(255, 255, 255, 0.95);
-    border: solid 1px #343a40;
-    border-radius: 15px;
+  div#pageContent .subheader_points img {
+    display: inline-block;
+    margin-right: 2em; }
+  div#pageContent .subheader_points h2, div#pageContent .subheader_points .h2 {
+    display: inline-block;
+    width: calc(100% - 200px); }
+  div#pageContent .paragraph {
+    border: solid 1px darkgrey;
+    border-radius: 5px;
     padding: 1rem;
-    height: calc(100% - 30px);
-    margin-top: 15px;
-    overflow: hidden; }
-    main div#pageContent .paragraph h2, main div#pageContent .paragraph .h2 {
+    margin: 1rem 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    color: #343a40; }
+    div#pageContent .paragraph h2, div#pageContent .paragraph .h2 {
       border-bottom: 1px solid;
       padding-bottom: 0.5rem;
       margin-bottom: 0.5rem; }
-    main div#pageContent .paragraph h3, main div#pageContent .paragraph .h3 {
+    div#pageContent .paragraph h3, div#pageContent .paragraph .h3 {
       border-width: 1px 0;
       border-style: solid;
       padding: 0.5rem 0;
       margin: 0.5rem 0; }
-    main div#pageContent .paragraph img {
+    div#pageContent .paragraph img {
       max-width: 100%; }
-    main div#pageContent .paragraph img[style*="float: left;"], main div#pageContent .paragraph img[style*="float:left;"] {
+    div#pageContent .paragraph img[style*="float: left;"], div#pageContent .paragraph img[style*="float:left;"] {
       margin-right: 0.5em;
       margin-bottom: 0.5em; }
-    main div#pageContent .paragraph img[style*="float: right;"], main div#pageContent .paragraph img[style*="float:right;"] {
+    div#pageContent .paragraph img[style*="float: right;"], div#pageContent .paragraph img[style*="float:right;"] {
       margin-left: 0.5em;
       margin-bottom: 0.5em; }
-  main div#pageContent .asideSection .paragraph {
-    background: rgba(255, 255, 255, 0.9);
-    border-color: #343a40; }
 
 .container.fixed-bottom {
-  background: #27446a url("../img/pattern.svg");
-  border-top: 1px solid #f8f9fa;
+  background: #f8f9fa url("../img/papier2560.jpg");
+  border-top: 1px solid #343a40;
   height: 2.25rem; }
 
 footer {
-  color: #f8f9fa;
+  background: transparent;
+  color: #343a40;
   font-size: 0.8rem;
   padding: 0; }
   footer a, footer a:active, footer a:hover, footer a:focus, footer a:visited {
-    color: #f8f9fa; }
-
-#searchboxform {
-  padding: 1rem 0; }
-  #searchboxform .form-control {
-    height: auto;
-    padding: 0 0.75rem; }
-
-div.searchResults {
-  padding-top: 1rem; }
-  div.searchResults div.searchResult {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #343a40; }
-    div.searchResults div.searchResult div.searchTitle {
-      font-size: 1.2em; }
-    div.searchResults div.searchResult div.searchDescription {
-      padding-top: 0.5em;
-      font-style: italic; }
-    div.searchResults div.searchResult div.searchContent {
-      padding-top: 0.5em; }
-
-.searchHighlight {
-  background: #ffc107; }
-
-body.admin main {
-  top: 6.5rem; }
-body.admin div#pageContainer {
-  background: white; }
+    color: #343a40; }
 
 /* admin */
 body.admin div#pageContainer {
-  margin-top: 1rem;
   background: white;
   min-height: 500px; }
 
@@ -10562,22 +10548,24 @@ body.login {
   bottom: 0;
   left: 0;
   right: 0; }
-  body.login #main .loginSection .form {
-    width: 100%;
-    max-width: 360px;
-    padding: 30px;
-    margin: 20% auto;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid #f8f9fa;
-    border-radius: 5px; }
-    body.login #main .loginSection .form img {
-      height: 40px; }
-    body.login #main .loginSection .form .form-control:focus {
-      z-index: 2; }
-    body.login #main .loginSection .form input[type="text"] {
-      margin-bottom: 0.5rem; }
-    body.login #main .loginSection .form input[type="password"] {
-      margin-bottom: 2rem; }
+  body.login #main {
+    top: 0; }
+    body.login #main .loginSection .form {
+      width: 100%;
+      max-width: 360px;
+      padding: 30px;
+      margin: 20% auto;
+      background: #f8f9fa;
+      border: 1px solid #f8f9fa;
+      border-radius: 5px; }
+      body.login #main .loginSection .form img {
+        height: 50px; }
+      body.login #main .loginSection .form .form-control:focus {
+        z-index: 2; }
+      body.login #main .loginSection .form input[type="text"] {
+        margin-bottom: 0.5rem; }
+      body.login #main .loginSection .form input[type="password"] {
+        margin-bottom: 2rem; }
 
 a.link::before {
   content: "\203A";

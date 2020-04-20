@@ -35,7 +35,7 @@
                             <% for (String partType : SectionPartFactory.getTypes()) {
                                 if (SectionPartFactory.useLayouts(partType)){
                                     for (LayoutData layout : partLayouts){%>
-                            <a class="dropdown-item" href="" onclick="return addPart(<%=partData.getId()%>,'<%=$H(partData.getSectionName())%>','<%=partType%>','<%=$H(layout.getName())%>');"><%=$H(layout.getName())%>
+                            <a class="dropdown-item" href="" onclick="return addPart(<%=partData.getId()%>,'<%=$H(partData.getSectionName())%>','<%=partType%>','<%=$H(layout.getName())%>');"><%=$SH(layout.getName(),locale)%>
                             </a>
                                     <%}
                                 } else {%>

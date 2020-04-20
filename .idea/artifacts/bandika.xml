@@ -5,6 +5,7 @@
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="bandika" />
+          <element id="module-output" name="bandika-app" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="commons" />
@@ -16,6 +17,7 @@
           <element id="library" level="project" name="xml" />
         </element>
       </element>
+      <element id="javaee-facet-resources" facet="bandika-app/web/Web" />
       <element id="javaee-facet-resources" facet="bandika/web/Web" />
     </root>
   </artifact>

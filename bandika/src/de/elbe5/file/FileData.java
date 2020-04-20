@@ -22,6 +22,8 @@ public abstract class FileData extends BaseData {
     protected int parentId = 0;
     protected ContentData parent = null;
 
+    protected String oldFileName = "";
+
     public FileData() {
     }
 
@@ -43,7 +45,25 @@ public abstract class FileData extends BaseData {
     }
 
     public void setFileName(String fileName) {
+        if (!this.fileName.isEmpty() && !this.fileName.equals(fileName))
+            oldFileName=this.fileName;
         this.fileName = fileName;
+    }
+
+    public String getOldFileName() {
+        return oldFileName;
+    }
+
+    public boolean fileNameChanged(){
+        return !oldFileName.isEmpty() && !oldFileName.equals(fileName);
+    }
+
+    public String getUniqueFileName(){
+       return Integer.toString(getId())+"_"+getFileName();
+    }
+
+    public String getURL(){
+        return "/files/"+getUniqueFileName();
     }
 
     public String getDisplayName() {

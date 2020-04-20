@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/bandika/bandika.iml" filepath="$PROJECT_DIR$/bandika/bandika.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bandika-app/bandika-app.iml" filepath="$PROJECT_DIR$/bandika-app/bandika-app.iml" />
     </modules>
   </component>
 </project>

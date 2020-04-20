@@ -2,6 +2,7 @@
 ContentData;Blank Page;Leere Seite
 DocumentData;Document;Dokument
 ImageData;Image;Bild
+MediaData;Media;Media
 FileData;File;Datei
 LayoutPageData;Page with Layout;Seite mit Layout
 PageData;Page;Seite
@@ -29,6 +30,7 @@ _addDocument;Add Document;Dokument hinzufügen
 _addDocuments;Add Documents;Dokumente hinzufügen
 _addImage;Add Image;Bild hinzufügen
 _addImages;Add Images;Bilder hinzufügen
+_addMedia;Add Media;Media hinzufügen
 _address;Address;Addresse
 _administration;Administration;Administration
 _allInherited;Rights inherited to all subitems;An alle Unterelemente vererbt
@@ -110,6 +112,7 @@ _edit;Edit;Bearbeiten
 _editCompany;Company Data;Firmendaten
 _editDocument;Edit Document;Dokument bearbeiten
 _editImage;Edit Image;Bild bearbeiten
+_editMedia;Edit Media;Media bearbeiten
 _editGroup;Edit Group;Gruppe bearbeiten
 _editGroupRights;Edit Group Rights;Gruppenrechte ändern
 _editModeOff;Edit mode off;Editiermodus aus
@@ -118,6 +121,7 @@ _editPage;Edit Page;Seite bearbeiten
 _editContentData;Edit Data;Daten bearbeiten
 _editDocumentSettings;Edit Settings;Einstellungen bearbeiten
 _editImageSettings;Edit Settings;Einstellungen bearbeiten
+_editMediaSettings;Edit Settings;Einstellungen bearbeiten
 _editProfile;Edit Profile;Profil ändern
 _editProject;Edit Project;Projekt ändern
 _editUser;Edit User;Benutzer bearbeiten
@@ -209,6 +213,7 @@ _logout;Logout;Abmelden
 _mandatoryHint;Fields with an * asterix are mandatory.;Felder mit einm * Sternchen sind Pflichtfelder.
 _masterLayout;Master Layout;Master-Layout
 _masterLayouts;Master Layouts;Master-Layouts
+_media;Media;Media
 _minute;Minute;Minute
 _mobile;Mobile;Mobil
 _monthly;Monthly;Monatlich
@@ -222,6 +227,7 @@ _newDocument;New Document;Neues Dokument
 _newDocuments;New Documents;Neue Dokumente
 _newImage;New Image;Neues Bild
 _newImages;New Images;Neue Bilder
+_newMedia;New Media;Neue Media
 _newPage;New Page;Neue Seite
 _newPart;New part;Neuer Abschnitt
 _newPassword;New Password;Neues Passwort

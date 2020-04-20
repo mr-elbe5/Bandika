@@ -35,27 +35,25 @@
     <script type="text/javascript" src="/static-content/js/bandika-webbase.js"></script>
 </head>
 
-<body class="admin">
-<div class="container">
-    <header>
-        <section class="sysnav">
-            <ul class="nav justify-content-end">
-                <li class="nav-item"><a class="nav-link fa fa-home" href="/" title="<%=$SH("_home", locale)%>"></a></li>
-            </ul>
-        </section>
-        <div class="menu row">
-            <section class="col-12 menu">
-                <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="/"><img src="/static-content/img/logo-light.png" alt=""/></a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="fa fa-2x fa-bars"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav mr-auto">
+<body>
+    <div class="container">
+        <header>
+            <div class="top row">
+                <section class="col-12 sysnav">
+                    <ul class="nav justify-content-end">
+                        <li class="nav-item"><a class="nav-link fa fa-home" href="/" title="<%=$SH("_home", locale)%>"></a></li>
+                    </ul>
+                </section>
+            </div>
+            <div class="menu row">
+                <section class="col-12 menu">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <a class="navbar-brand" href="/"><img src="/static-content/img/logo.png" alt=""/></a>
+                        <ul class="nav">
                             <% if (rdata.hasSystemRight(SystemZone.APPLICATION)){%>
                             <li class="nav-item">
                                 <a class="nav-link"
-                                   href="/ctrl/admin/openSystemAdministration"><%=$SH("_systemAdministration",locale)%>
+                                        href="/ctrl/admin/openSystemAdministration"><%=$SH("_systemAdministration",locale)%>
                                 </a>
                             </li>
                             <%}%>
@@ -73,34 +71,38 @@
                             </li>
                             <%}%>
                         </ul>
-                    </div>
-                </nav>
-            </section>
-        </div>
-        <div class="bc row">
-            <section class="col-12">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/"><%=$SH("_home",locale)%>
-                    </a></li>
-                    <li class="breadcrumb-item"><a><%=$H(title)%>
-                    </a></li>
-                </ol>
-            </section>
-        </div>
-    </header>
-    <main id="main" role="main">
-        <div id="pageContainer">
-            <jsp:include page="<%=includeUrl%>" flush="true"/>
-        </div>
-    </main>
-</div>
-<div class="container fixed-bottom">
-    <footer>
-        <div><%=$SH("_copyright",locale)%>
-        </div>
-    </footer>
-</div>
-<div class="modal" id="modalDialog" tabindex="-1" role="dialog">
+                    </nav>
+                </section>
+            </div>
+            <div>
+                <section class="bc">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/"><%=$SH("_home",locale)%>
+                            </a></li>
+                            <li class="breadcrumb-item"><a><%=$H(title)%>
+                            </a></li>
+                        </ol>
+                    </nav>
+                </section>
+            </div>
+        </header>
+        <main id="main" role="main">
+            <div id="pageContainer" class="container admin">
+                <jsp:include page="<%=includeUrl%>" flush="true"/>
+            </div>
+        </main>
+    </div>
+    <div class="container fixed-bottom">
+        <footer>
+            <div class="container">
+                <ul class="nav">
+                    <%=$SH("_copyright",locale)%>
+                </ul>
+            </div>
+        </footer>
+    </div>
+    <div class="modal" id="modalDialog" tabindex="-1" role="dialog">
 </div>
 <script type="text/javascript">
     function confirmDelete() {

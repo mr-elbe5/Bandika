@@ -21,7 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.StringTokenizer;
 
-@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024 * 50 * 5)
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 100, maxFileSize = 1024 * 1024 * 200, maxRequestSize = 1024 * 1024 * 200 * 5)
 public class ControllerServlet extends WebServlet {
 
     protected void processRequest(String method, HttpServletRequest request, HttpServletResponse response) throws IOException {

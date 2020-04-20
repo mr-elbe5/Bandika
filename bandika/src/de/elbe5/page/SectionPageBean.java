@@ -73,12 +73,25 @@ public class SectionPageBean extends PageBean {
         writeAllParts(con, data);
     }
 
+    private static String UPDATE_CONTENT_EXTRAS_SQL = "update t_section_page set layout=? where id=?";
+
     @Override
     public void updateContentExtras(Connection con, ContentData contentData) throws SQLException {
         super.updateContentExtras(con, contentData);
         if (!(contentData instanceof SectionPageData))
             return;
         SectionPageData data = (SectionPageData) contentData;
+        PreparedStatement pst = null;
+        try {
+            pst = con.prepareStatement(UPDATE_CONTENT_EXTRAS_SQL);
+            int i = 1;
+            pst.setString(i++, data.getLayout());
+            pst.setInt(i, data.getId());
+            pst.executeUpdate();
+            pst.close();
+        } finally {
+            closeStatement(pst);
+        }
         writeAllParts(con, data);
     }
 

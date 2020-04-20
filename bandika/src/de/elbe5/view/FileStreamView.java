@@ -39,7 +39,7 @@ public class FileStreamView  implements IView {
             return;
         }
         String contentType = file.getContentType();
-        if (contentType != null && !contentType.isEmpty()) {
+        if (contentType == null || contentType.isEmpty()) {
             contentType = "*/*";
         }
         StringBuilder contentDisposition = new StringBuilder();

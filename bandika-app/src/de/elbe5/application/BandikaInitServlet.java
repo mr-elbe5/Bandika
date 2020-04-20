@@ -81,6 +81,7 @@ public class BandikaInitServlet extends InitServlet {
         ContentFactory.addDefaultType(SectionPageData.class);
         FileFactory.addDefaultDocumentType(DocumentData.class);
         FileFactory.addDefaultImageType(ImageData.class);ContentCache.load();
+        ContentCentral.setInstance(new AppContentCentral());
         CompanyCache.load();
         UserCache.load();
         LayoutCache.load();
@@ -91,7 +92,6 @@ public class BandikaInitServlet extends InitServlet {
         Timer.getInstance().loadTasks();
         Timer.getInstance().startThread();
         Log.log("Bandika initialized");
-        //generatePassword();
     }
 
 }

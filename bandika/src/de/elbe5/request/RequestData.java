@@ -30,6 +30,7 @@ public abstract class RequestData extends KeyValueMap {
     public static final String KEY_CONTENT = "contentData";
     public static final String KEY_DOCUMENT = "documentData";
     public static final String KEY_IMAGE = "imageData";
+    public static final String KEY_MEDIA = "mediaData";
 
     public static final String MESSAGE_TYPE_INFO = "info";
     public static final String MESSAGE_TYPE_SUCCESS = "success";

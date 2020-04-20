@@ -120,4 +120,18 @@ public class FieldSectionPartBean extends SectionPartBean {
         }
     }
 
+    private static String REPLACE_IN_FIELD_SQL = "UPDATE t_part_field set content = REPLACE(content,?,?)";
+
+    public void replaceStringInContent(Connection con, String current, String replacement) throws SQLException {
+        PreparedStatement pst = null;
+        try {
+            pst = con.prepareStatement(REPLACE_IN_FIELD_SQL);
+            pst.setString(1, current);
+            pst.setString(2, replacement);
+            pst.executeUpdate();
+        } finally {
+            closeStatement(pst);
+        }
+    }
+
 }

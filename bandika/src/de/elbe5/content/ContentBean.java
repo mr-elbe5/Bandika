@@ -349,4 +349,7 @@ public class ContentBean extends DbBean {
         return deleteItem(DELETE_SQL, id);
     }
 
+    public void replaceStringInContent(String oldFileName,String fileName){
+    }
+
 }

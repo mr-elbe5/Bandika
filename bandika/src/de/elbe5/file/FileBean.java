@@ -8,11 +8,15 @@
  */
 package de.elbe5.file;
 
+import de.elbe5.application.ApplicationPath;
 import de.elbe5.base.data.BinaryFile;
 import de.elbe5.base.data.BinaryStreamFile;
 import de.elbe5.base.log.Log;
+import de.elbe5.base.util.FileUtil;
+import de.elbe5.content.ContentCentral;
 import de.elbe5.database.FileBasedDbBean;
 
+import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -152,7 +156,15 @@ public class FileBean extends FileBasedDbBean {
         try {
             if (!saveFile(con, data, complete))
                 return rollbackTransaction(con);
-            return commitTransaction(con);
+            if (data.fileNameChanged()){
+                ContentCentral.getInstance().replaceStringInContent(con, data.getOldFileName(), data.getFileName());
+            }
+            if (!commitTransaction(con))
+                return false;
+            if (complete) {
+                writeFile(data, true);
+            }
+            return true;
         } catch (Exception se) {
             return rollbackTransaction(con, se);
         }
@@ -270,6 +282,35 @@ public class FileBean extends FileBasedDbBean {
 
     public boolean deleteFile(int id) {
         return deleteItem(DELETE_SQL, id);
+    }
+
+    /******** file cache *********/
+
+    public boolean assertFileDirectories(){
+        File f = new File(ApplicationPath.getAppFilePath());
+        return f.exists() || f.mkdir();
+    }
+
+    public boolean assertFiles(){
+        List<FileData> files = getAllFiles();
+        for (FileData data : files){
+            writeFile(data, false);
+        }
+        return true;
+    }
+
+    public void writeFile(FileData data, boolean replace){
+        BinaryFile binaryFile = getBinaryFile(data.getId());
+        String path = ApplicationPath.getAppFilePath()+"/"+data.getUniqueFileName();
+        if (!replace && FileUtil.fileExists(path))
+            return;
+        FileUtil.writeBinaryFile(path,binaryFile.getBytes());
+        FileBean extBean = FileFactory.getBean(data.getType());
+        if (extBean != null)
+            extBean.writeExtraFiles(data, replace);
+    }
+
+    public void writeExtraFiles(FileData data, boolean replace){
     }
 
 }

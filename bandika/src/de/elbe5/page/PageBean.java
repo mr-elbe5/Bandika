@@ -128,4 +128,18 @@ public class PageBean extends ContentBean {
             closeStatement(pst);
         }
     }
+
+    private static String REPLACE_IN_PAGE_SQL = "UPDATE t_page set published_content = REPLACE(published_content,?,?)";
+
+    public void replaceStringInContent(Connection con, String current, String replacement) throws SQLException {
+        PreparedStatement pst = null;
+        try {
+            pst = con.prepareStatement(REPLACE_IN_PAGE_SQL);
+            pst.setString(1, current);
+            pst.setString(2, replacement);
+            pst.executeUpdate();
+        } finally {
+            closeStatement(pst);
+        }
+    }
 }

@@ -14,6 +14,11 @@ import java.io.*;
 
 public class FileUtil {
 
+    public static boolean fileExists(String path){
+        File f = new File(path);
+        return f.exists();
+    }
+
     public static String readTextFile(String path) {
         File f = new File(path);
         return readTextFile(f);

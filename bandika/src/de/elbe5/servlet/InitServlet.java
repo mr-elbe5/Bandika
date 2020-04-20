@@ -8,8 +8,6 @@
  */
 package de.elbe5.servlet;
 
-import de.elbe5.base.crypto.PBKDF2Encryption;
-import de.elbe5.base.log.Log;
 import de.elbe5.request.ResponseCode;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,16 +20,5 @@ public abstract class InitServlet extends WebServlet {
     protected void processRequest(String method, HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.sendError(ResponseCode.NOT_FOUND);
     }
-
-    protected void generatePassword() {
-        try {
-            String salt = PBKDF2Encryption.generateSaltBase64();
-            String password = PBKDF2Encryption.getEncryptedPasswordBase64("pass", salt);
-            Log.info("salt= " + salt + " password= " + password);
-        } catch (Exception e) {
-            Log.warn("password generation failed");
-        }
-    }
-
 
 }

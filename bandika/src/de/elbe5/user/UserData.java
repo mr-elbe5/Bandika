@@ -18,7 +18,6 @@ import de.elbe5.application.Configuration;
 import de.elbe5.group.GroupData;
 import de.elbe5.request.SessionRequestData;
 import de.elbe5.rights.SystemZone;
-import org.json.simple.JSONObject;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
@@ -407,14 +406,6 @@ public class UserData extends BaseData {
             rdata.addFormError(Strings.string("_passwordsDontMatch",locale));
         } else
             setPassword(password1);
-    }
-
-    @SuppressWarnings("unchecked")
-    public JSONObject getJsonShort(Locale locale){
-        JSONObject json = new JSONObject();
-        json.put("id",getId());
-        json.put("name",getName());
-        return json;
     }
 
 }

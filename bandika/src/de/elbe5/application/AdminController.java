@@ -52,12 +52,12 @@ public class AdminController extends Controller {
     }
 
     public IView openAdministration(SessionRequestData rdata){
-        if (rdata.hasSystemRight(SystemZone.APPLICATION))
-            return openSystemAdministration(rdata);
-        if (rdata.hasSystemRight(SystemZone.USER))
-            return openPersonAdministration(rdata);
         if (rdata.hasSystemRight(SystemZone.CONTENTEDIT))
             return openContentAdministration(rdata);
+        if (rdata.hasSystemRight(SystemZone.USER))
+            return openPersonAdministration(rdata);
+        if (rdata.hasSystemRight(SystemZone.APPLICATION))
+            return openSystemAdministration(rdata);
         throw new CmsAuthorizationException();
     }
 

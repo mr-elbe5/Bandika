@@ -17,6 +17,8 @@ public class ApplicationPath {
     private static String appPath = "";
     private static String appROOTPath = "";
     private static String appWEBINFPath = "";
+    private static String appFilePath = "";
+    private static String appPreviewPath = "";
 
     public static String getAppName() {
         return appName;
@@ -34,6 +36,14 @@ public class ApplicationPath {
         return appWEBINFPath;
     }
 
+    public static String getAppFilePath() {
+        return appFilePath;
+    }
+
+    public static String getAppPreviewPath() {
+        return appPreviewPath;
+    }
+
     public static void initializePath(File appDir, File appROOTDir) {
         if (appDir == null || appROOTDir == null) {
             return;
@@ -44,6 +54,8 @@ public class ApplicationPath {
         System.out.println("application path is: " + getAppPath());
         appROOTPath = appROOTDir.getAbsolutePath().replace('\\', '/');
         appWEBINFPath = appROOTPath + "/WEB-INF";
+        appFilePath = appROOTPath + "/files";
+        appPreviewPath = appROOTPath + "/previews";
     }
 
     public static File getCatalinaBaseDir() {
