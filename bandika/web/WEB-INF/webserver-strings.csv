@@ -61,6 +61,8 @@ _changePassword;Change Password;Passwort ändern
 _changeProfile;Change Profile;Profil ändern
 _city;City;Stadt
 _clear;Clear;Leeren
+_clicks;Clicks;Klicks
+_clicksPerDay;Clicks per Day;Klicks pro Tag
 _clone;Clone;Klonen
 _close;Close;Schliessen
 _code;Code;Code
@@ -77,6 +79,7 @@ _contentAdministration;Contents;Inhalte
 _contentCache;Content Cache;Inhalte-Speicher
 _contentCopied;Content copied;Inhalt kopiert
 _contentDeleted;Content deleted;Inhalt gelöscht.
+_contentLog;Content Log;Inhalts-Log
 _contentMoved;Content moved;Inhalt verschoben
 _contentPublished;Content published;Inhalt veröffentlicht
 _contentSaved;Content saved;Inhalt wurde gespeichert
@@ -293,6 +296,7 @@ _registrationApprovedMail;Your registration request has been approved. You can l
 _relevance;Relevance;Relevanz
 _reload;Reload;Neu laden
 _remove;Remove;Entfernen
+_reset;Reset;Zurücksetzen
 _restart;Restart;Neu starten
 _restartHint;After restarting the application, please wait for a about 30 seconds and login again.;Nach dem Neustart der Applikation warten Sie bitte 30 Sekunden und melden sich dann neu an.
 _retypePassword;Retype Password;Passwort wiederholen

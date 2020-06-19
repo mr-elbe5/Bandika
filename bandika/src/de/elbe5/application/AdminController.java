@@ -8,6 +8,7 @@
  */
 package de.elbe5.application;
 
+import de.elbe5.content.ContentBean;
 import de.elbe5.content.ContentCache;
 import de.elbe5.file.BinaryFileCache;
 import de.elbe5.base.cache.Strings;
@@ -76,6 +77,11 @@ public class AdminController extends Controller {
         return showContentAdministration(rdata);
     }
 
+    public IView openContentLog(SessionRequestData rdata) {
+        checkRights(rdata.hasAnyContentRight());
+        return showContentLog(rdata);
+    }
+
     public IView restart(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         String path = ApplicationPath.getAppROOTPath() + "/WEB-INF/web.xml";
@@ -126,6 +132,12 @@ public class AdminController extends Controller {
         BinaryFileCache.setDirty();
         rdata.setMessage(Strings.string("_cacheCleared",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
+    }
+
+    public IView resetContentLog(SessionRequestData rdata) {
+        checkRights(rdata.hasSystemRight(SystemZone.CONTENTEDIT));
+        ContentBean.getInstance().resetContentLog();
+        return showContentLog(rdata);
     }
 
     protected IView showExecuteDatabaseScript() {

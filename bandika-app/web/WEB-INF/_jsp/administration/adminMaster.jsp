@@ -71,6 +71,10 @@
                                 <a class="nav-link" href="/ctrl/admin/openContentAdministration"><%=$SH("_contentAdministration",locale)%>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/ctrl/admin/openContentLog"><%=$SH("_contentLog",locale)%>
+                                </a>
+                            </li>
                             <%}%>
                         </ul>
                     </div>

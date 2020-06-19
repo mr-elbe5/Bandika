@@ -10347,6 +10347,15 @@ form .form-control-file, form .form-control-range {
   .treeSection .dropdown-toggle {
     cursor: context-menu; }
 
+.logSection {
+  padding: 1rem; }
+  .logSection h3, .logSection .h3 {
+    display: inline-block;
+    padding-bottom: 1rem;
+    padding-right: 1rem; }
+  .logSection table td:first-child {
+    padding-right: 2rem; }
+
 /* like button-group */
 div.buttonLine {
   padding: 0.5em 0; }

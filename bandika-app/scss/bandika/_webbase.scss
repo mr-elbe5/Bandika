@@ -314,6 +314,23 @@ form{
 
 }
 
+.logSection{
+
+  padding: 1rem;
+
+  h3{
+    display: inline-block;
+    padding-bottom: 1rem;
+    padding-right: 1rem
+  }
+
+  table{
+    td:first-child{
+      padding-right: 2rem;
+    }
+  }
+}
+
 /* like button-group */
 
 div.buttonLine{

@@ -8,3 +8,12 @@ UPDATE t_page set publish_date=now() where id =1;
 
 
 --local ok
+
+CREATE TABLE IF NOT EXISTS t_content_log
+(
+    content_id INTEGER     NOT NULL,
+    day        DATE        NOT NULL,
+    count      INTEGER 	   NOT NULL,
+    CONSTRAINT t_content_log_pk PRIMARY KEY (content_id, day),
+    CONSTRAINT t_content_log_fk1 FOREIGN KEY (content_id) REFERENCES t_content (id) ON DELETE CASCADE
+);

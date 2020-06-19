@@ -52,6 +52,7 @@ public class ContentController extends Controller {
         ContentData data = ContentCache.getContent(contentId);
         assert(data!=null);
         checkRights(data.hasUserReadRight(rdata));
+        ContentBean.getInstance().increaseViewCount(data.getId());
         return data.getDefaultView();
     }
 
@@ -62,6 +63,7 @@ public class ContentController extends Controller {
         assert(data!=null);
         checkRights(data.hasUserReadRight(rdata));
         //Log.log("show: "+data.getClass().getSimpleName());
+        ContentBean.getInstance().increaseViewCount(data.getId());
         return data.getDefaultView();
     }
 

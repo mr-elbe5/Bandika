@@ -167,6 +167,15 @@ CREATE TABLE IF NOT EXISTS t_content_right
     CONSTRAINT t_content_right_fk2 FOREIGN KEY (group_id) REFERENCES t_group (id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS t_content_log
+(
+    content_id INTEGER     NOT NULL,
+    day        DATE        NOT NULL,
+    count      INTEGER 	   NOT NULL,
+    CONSTRAINT t_content_log_pk PRIMARY KEY (content_id, day),
+    CONSTRAINT t_content_log_fk1 FOREIGN KEY (content_id) REFERENCES t_content (id) ON DELETE CASCADE
+);
+
 -- root user
 INSERT INTO t_user (id,first_name,last_name,email,login,pwd,approval_code,approved)
 VALUES (1,'System','Administrator','root@localhost','root','','',TRUE);

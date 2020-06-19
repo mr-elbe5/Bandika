@@ -42,6 +42,10 @@ public abstract class Controller {
         return openAdminPage(rdata, "/WEB-INF/_jsp/administration/contentAdministration.jsp", Strings.string("_contentAdministration",rdata.getLocale()));
     }
 
+    protected IView showContentLog(SessionRequestData rdata) {
+        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/contentLog.jsp", Strings.string("_contentLog",rdata.getLocale()));
+    }
+
     protected IView openJspPage(String jsp) {
         JspContentData contentData = new JspContentData();
         contentData.setJsp(jsp);
