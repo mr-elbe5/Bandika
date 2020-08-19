@@ -33,5 +33,7 @@ CKEDITOR.editorConfig = function( config ) {
 
 	config.extraPlugins = "html5video,html5audio,widget,widgetselection,clipboard,lineutils";
 
+	config.allowedContent = true;
+
 };
 
