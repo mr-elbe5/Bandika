@@ -12,3 +12,6 @@
 .idea/vcs.xml
 war/ROOT.war
 .idea/sshConfigs.xml
+.idea/artifacts/bandika.xml
+.idea/deployment.xml
+.idea/webServers.xml
