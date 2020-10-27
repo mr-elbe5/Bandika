@@ -59,11 +59,11 @@ public abstract class FileData extends BaseData {
     }
 
     public String getUniqueFileName(){
-       return Integer.toString(getId())+"_"+getFileName();
+        return getId()+"_"+StringUtil.toAsciiName(getFileName());
     }
 
     public String getURL(){
-        return "/files/"+getUniqueFileName();
+        return "/ctrl/file/show/"+getId();
     }
 
     public String getDisplayName() {

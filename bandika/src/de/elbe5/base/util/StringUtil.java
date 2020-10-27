@@ -155,10 +155,15 @@ public class StringUtil {
         }
     }
 
-    public static String toSafeWebName(String src) {
+    public static String toAsciiName(String src) {
         for (String[] match : MATCHES) {
             src = src.replace(match[0], match[1]);
         }
+        return src;
+    }
+
+    public static String toSafeWebName(String src) {
+        src = toAsciiName(src);
         return src.replaceAll("[\\s&]+", "-").replaceAll("['\"><]+", "");
     }
 

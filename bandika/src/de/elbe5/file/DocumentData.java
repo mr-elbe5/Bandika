@@ -8,7 +8,7 @@ public class DocumentData extends FileData {
     public DocumentData() {
     }
 
-    public String getPublishedUrl() {
+    public String getURL(){
         return "/ctrl/document/show/"+getId();
     }
 

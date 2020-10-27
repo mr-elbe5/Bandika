@@ -8,14 +8,10 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.application.ApplicationPath;
 import de.elbe5.base.data.BinaryFile;
 import de.elbe5.base.log.Log;
-import de.elbe5.base.util.FileUtil;
 
-import java.io.File;
 import java.sql.*;
-import java.util.List;
 
 public class ImageBean extends FileBean {
 
@@ -138,22 +134,6 @@ public class ImageBean extends FileBean {
             closeConnection(con);
         }
         return data;
-    }
-
-    public boolean assertFileDirectories(){
-        File f = new File(ApplicationPath.getAppPreviewPath());
-        return f.exists() || f.mkdir();
-    }
-
-    public void writeExtraFiles(FileData data, boolean replace){
-        if (!(data instanceof ImageData))
-            return;
-        ImageData image = (ImageData) data;
-        String path = ApplicationPath.getAppPreviewPath()+"/"+image.getPreviewName();
-        if (!replace && FileUtil.fileExists(path))
-            return;
-        BinaryFile binaryFile = ImageBean.getInstance().getBinaryPreviewFile(data.getId());
-        FileUtil.writeBinaryFile(path,binaryFile.getBytes());
     }
 
 }

@@ -85,6 +85,12 @@ public class BandikaInitServlet extends InitServlet {
         CompanyCache.load();
         UserCache.load();
         LayoutCache.load();
+        if (!FileBean.getInstance().assertMediaFileDirectory()){
+            Log.error("could not create file directories");
+        }
+        if (!FileBean.getInstance().assertMediaFiles()){
+            Log.error("could not create files");
+        }
         Timer.getInstance().registerTimerTask(new HeartbeatTaskData());
         Timer.getInstance().registerTimerTask(new CleanupTaskData());
         Timer.getInstance().registerTimerTask(new SearchIndexTask());

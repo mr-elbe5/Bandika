@@ -161,7 +161,7 @@ public class FileBean extends FileBasedDbBean {
             }
             if (!commitTransaction(con))
                 return false;
-            if (complete) {
+            if (complete && (data instanceof MediaData)) {
                 writeFile(data, true);
             }
             return true;
@@ -286,15 +286,17 @@ public class FileBean extends FileBasedDbBean {
 
     /******** file cache *********/
 
-    public boolean assertFileDirectories(){
+    public boolean assertMediaFileDirectory(){
         File f = new File(ApplicationPath.getAppFilePath());
         return f.exists() || f.mkdir();
     }
 
-    public boolean assertFiles(){
+    public boolean assertMediaFiles(){
         List<FileData> files = getAllFiles();
         for (FileData data : files){
-            writeFile(data, false);
+            if (data instanceof MediaData) {
+                writeFile(data, false);
+            }
         }
         return true;
     }

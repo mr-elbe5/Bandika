@@ -8,8 +8,9 @@ public class MediaData extends FileData {
     public MediaData() {
     }
 
-    public String getPublishedUrl() {
-        return "/ctrl/media/show/"+getId();
+    @Override
+    public String getURL() {
+        return "/files/"+getUniqueFileName();
     }
 
     // multiple data
