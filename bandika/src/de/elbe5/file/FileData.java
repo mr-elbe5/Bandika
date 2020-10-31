@@ -7,12 +7,14 @@ import de.elbe5.base.util.StringUtil;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.SessionRequestData;
-import de.elbe5.view.FileView;
-import de.elbe5.view.IView;
+import de.elbe5.response.FileResponse;
+import de.elbe5.response.IResponse;
 
 public abstract class FileData extends BaseData {
 
     private String fileName = "";
+    private String extension = "";
+    private String tempFileName = "";
     private String displayName = "";
     private String description = "";
     protected String contentType = null;
@@ -48,6 +50,16 @@ public abstract class FileData extends BaseData {
         if (!this.fileName.isEmpty() && !this.fileName.equals(fileName))
             oldFileName=this.fileName;
         this.fileName = fileName;
+        extension = FileUtil.getExtension(fileName);
+        tempFileName = getId() + extension;
+    }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public String getTempFileName() {
+        return tempFileName;
     }
 
     public String getOldFileName() {
@@ -58,12 +70,8 @@ public abstract class FileData extends BaseData {
         return !oldFileName.isEmpty() && !oldFileName.equals(fileName);
     }
 
-    public String getUniqueFileName(){
-        return getId()+"_"+StringUtil.toAsciiName(getFileName());
-    }
-
     public String getURL(){
-        return "/ctrl/file/show/"+getId();
+        return "/files/"+getId() + extension;
     }
 
     public String getDisplayName() {
@@ -126,12 +134,6 @@ public abstract class FileData extends BaseData {
 
     public void setParent(ContentData parent) {
         this.parent = parent;
-    }
-
-    // view
-
-    public IView getDefaultView(){
-        return new FileView(this, false);
     }
 
     // multiple data

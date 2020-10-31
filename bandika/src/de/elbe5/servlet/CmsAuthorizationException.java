@@ -1,11 +1,11 @@
 package de.elbe5.servlet;
 
-import de.elbe5.request.ResponseCode;
+import javax.servlet.http.HttpServletResponse;
 
 public class CmsAuthorizationException extends CmsException{
 
     public CmsAuthorizationException(){
-        super(ResponseCode.UNAUTHORIZED);
+        super(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
 }

@@ -16,8 +16,8 @@ import de.elbe5.file.ImageBean;
 import de.elbe5.file.ImageData;
 import de.elbe5.request.*;
 import de.elbe5.servlet.ControllerCache;
-import de.elbe5.view.IView;
-import de.elbe5.view.UrlView;
+import de.elbe5.response.IResponse;
+import de.elbe5.response.ForwardResponse;
 
 public class PageController extends ContentController {
 
@@ -45,7 +45,7 @@ public class PageController extends ContentController {
 
     //frontend
     @Override
-    public IView openEditContentFrontend(SessionRequestData rdata) {
+    public IResponse openEditContentFrontend(SessionRequestData rdata) {
         int contentId = rdata.getId();
         PageData data = ContentBean.getInstance().getContent(contentId,PageData.class);
         assert(data!=null);
@@ -58,7 +58,7 @@ public class PageController extends ContentController {
 
     //frontend
     @Override
-    public IView showEditContentFrontend(SessionRequestData rdata) {
+    public IResponse showEditContentFrontend(SessionRequestData rdata) {
         PageData data = rdata.getCurrentSessionContent(PageData.class);
         assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
@@ -67,7 +67,7 @@ public class PageController extends ContentController {
 
     //frontend
     @Override
-    public IView saveContentFrontend(SessionRequestData rdata) {
+    public IResponse saveContentFrontend(SessionRequestData rdata) {
         int contentId = rdata.getId();
         PageData data = rdata.getCurrentSessionContent(PageData.class);
         assert(data != null && data.getId() == contentId);
@@ -86,7 +86,7 @@ public class PageController extends ContentController {
 
     //frontend
     @Override
-    public IView cancelEditContentFrontend(SessionRequestData rdata) {
+    public IResponse cancelEditContentFrontend(SessionRequestData rdata) {
         int contentId = rdata.getId();
         PageData data = rdata.getCurrentSessionContent(PageData.class);
         assert(data!=null);
@@ -95,7 +95,7 @@ public class PageController extends ContentController {
         return data.getDefaultView();
     }
 
-    public IView showDraft(SessionRequestData rdata){
+    public IResponse showDraft(SessionRequestData rdata){
         int contentId = rdata.getId();
         ContentData data = ContentCache.getContent(contentId);
         assert(data!=null);
@@ -104,7 +104,7 @@ public class PageController extends ContentController {
         return data.getDefaultView();
     }
 
-    public IView showPublished(SessionRequestData rdata){
+    public IResponse showPublished(SessionRequestData rdata){
         int contentId = rdata.getId();
         ContentData data = ContentCache.getContent(contentId);
         assert(data!=null);
@@ -114,7 +114,7 @@ public class PageController extends ContentController {
     }
 
     //frontend
-    public IView publishPage(SessionRequestData rdata){
+    public IResponse publishPage(SessionRequestData rdata){
         int contentId = rdata.getId();
         PageData data=ContentBean.getInstance().getContent(contentId,PageData.class);
         assert(data != null);
@@ -124,21 +124,21 @@ public class PageController extends ContentController {
         return data.getDefaultView();
     }
 
-    public IView openLinkBrowser(SessionRequestData rdata) {
+    public IResponse openLinkBrowser(SessionRequestData rdata) {
         ContentData data=rdata.getCurrentSessionContent();
         assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
-        return new UrlView("/WEB-INF/_jsp/ckeditor/browseLinks.jsp");
+        return new ForwardResponse("/WEB-INF/_jsp/ckeditor/browseLinks.jsp");
     }
 
-    public IView openImageBrowser(SessionRequestData rdata) {
+    public IResponse openImageBrowser(SessionRequestData rdata) {
         ContentData data=rdata.getCurrentSessionContent();
         assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
-        return new UrlView("/WEB-INF/_jsp/ckeditor/browseImages.jsp");
+        return new ForwardResponse("/WEB-INF/_jsp/ckeditor/browseImages.jsp");
     }
 
-    public IView addImage(SessionRequestData rdata) {
+    public IResponse addImage(SessionRequestData rdata) {
         ContentData data=rdata.getCurrentSessionContent();
         assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
@@ -148,7 +148,7 @@ public class PageController extends ContentController {
         ImageBean.getInstance().saveFile(image,true);
         ContentCache.setDirty();
         rdata.put("imageId", Integer.toString(image.getId()));
-        return new UrlView("/WEB-INF/_jsp/ckeditor/addImage.ajax.jsp");
+        return new ForwardResponse("/WEB-INF/_jsp/ckeditor/addImage.ajax.jsp");
     }
 
 

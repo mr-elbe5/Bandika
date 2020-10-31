@@ -9,12 +9,9 @@
 package de.elbe5.servlet;
 
 import de.elbe5.application.Configuration;
-import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentController;
-import de.elbe5.content.ContentData;
 import de.elbe5.request.SessionRequestData;
-import de.elbe5.view.IView;
-import de.elbe5.view.RedirectView;
+import de.elbe5.response.IResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,15 +25,9 @@ public class ContentServlet extends WebServlet {
         request.setAttribute(SessionRequestData.KEY_REQUESTDATA, rdata);
         rdata.readRequestParams();
         rdata.initSession();
-        String url=request.getRequestURI().toLowerCase();
         try {
-            IView result;
-            if (url.endsWith(".html")) {
-                result = ContentController.getInstance().show(request.getRequestURI(), rdata);
-            }
-            else{
-                result=new RedirectView(getDefaultRoute(rdata));
-            }
+            IResponse result;
+            result = ContentController.getInstance().show(request.getRequestURI(), rdata);
             if (rdata.hasCookies())
                 rdata.setCookies(response);
             result.processView(getServletContext(), rdata, response);
@@ -48,18 +39,5 @@ public class ContentServlet extends WebServlet {
             handleException(request,response, new CmsInternalException(e.getMessage()));
         }
     }
-
-    protected String getDefaultRoute(SessionRequestData rdata){
-        ContentData contentData = ContentCache.getContentRoot();
-        String url;
-        if (contentData!=null)
-            url=contentData.getUrl();
-        else if (rdata.isLoggedIn())
-            url="/ctrl/admin/openSystemAdministration";
-        else
-            url="/ctrl/user/openLogin";
-        return url;
-    }
-
 
 }

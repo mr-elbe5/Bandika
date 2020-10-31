@@ -36,13 +36,13 @@ public class FileBean extends FileBasedDbBean {
         return getNextId("s_file_id");
     }
 
-    private static String CHANGED_SQL = "SELECT change_date FROM t_file WHERE id=?";
+    private static final String CHANGED_SQL = "SELECT change_date FROM t_file WHERE id=?";
 
     public boolean changedFile(Connection con, FileData data) {
         return changedItem(con, CHANGED_SQL, data);
     }
 
-    private static String GET_ALL_FILES_SQL = "SELECT type,id,creation_date,change_date,parent_id,file_name,display_name,description,creator_id,changer_id,content_type,file_size FROM t_file order by file_name";
+    private static final String GET_ALL_FILES_SQL = "SELECT type,id,creation_date,change_date,parent_id,file_name,display_name,description,creator_id,changer_id,content_type,file_size FROM t_file order by file_name";
 
     public List<FileData> getAllFiles() {
         List<FileData> list = new ArrayList<>();
@@ -110,8 +110,8 @@ public class FileBean extends FileBasedDbBean {
         }
     }
 
-    private static String GET_FILE_SQL = "SELECT type,id,creation_date,change_date,parent_id,file_name,display_name,description,creator_id,changer_id,content_type,file_size FROM t_file WHERE id=?";
-    private static String GET_FILE_COMPLETE_SQL = "SELECT type,id,creation_date,change_date,parent_id,file_name,display_name,description,creator_id,changer_id,content_type,file_size,bytes FROM t_file WHERE id=?";
+    private static final String GET_FILE_SQL = "SELECT type,id,creation_date,change_date,parent_id,file_name,display_name,description,creator_id,changer_id,content_type,file_size FROM t_file WHERE id=?";
+    private static final String GET_FILE_COMPLETE_SQL = "SELECT type,id,creation_date,change_date,parent_id,file_name,display_name,description,creator_id,changer_id,content_type,file_size,bytes FROM t_file WHERE id=?";
 
     public FileData readFile(Connection con, int id, boolean complete) throws SQLException {
         FileData data = null;
@@ -161,7 +161,7 @@ public class FileBean extends FileBasedDbBean {
             }
             if (!commitTransaction(con))
                 return false;
-            if (complete && (data instanceof MediaData)) {
+            if (complete) {
                 writeFile(data, true);
             }
             return true;
@@ -183,9 +183,9 @@ public class FileBean extends FileBasedDbBean {
         return true;
     }
 
-    private static String INSERT_FILE_SQL = "insert into t_file (type,creation_date,change_date,parent_id,file_name,display_name,description,creator_id,changer_id,content_type,file_size,bytes,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    private static String UPDATE_FILE_SQL = "update t_file set type=?,creation_date=?,change_date=?,parent_id=?,file_name=?,display_name=?,description=?,creator_id=?,changer_id=?,content_type=?,file_size=?,bytes=? where id=?";
-    private static String UPDATE_FILE_NOBYTES_SQL = "update t_file set type=?,creation_date=?,change_date=?,parent_id=?,file_name=?,display_name=?,description=?,creator_id=?,changer_id=?,content_type=?,file_size=? where id=?";
+    private static final String INSERT_FILE_SQL = "insert into t_file (type,creation_date,change_date,parent_id,file_name,display_name,description,creator_id,changer_id,content_type,file_size,bytes,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static final String UPDATE_FILE_SQL = "update t_file set type=?,creation_date=?,change_date=?,parent_id=?,file_name=?,display_name=?,description=?,creator_id=?,changer_id=?,content_type=?,file_size=?,bytes=? where id=?";
+    private static final String UPDATE_FILE_NOBYTES_SQL = "update t_file set type=?,creation_date=?,change_date=?,parent_id=?,file_name=?,display_name=?,description=?,creator_id=?,changer_id=?,content_type=?,file_size=? where id=?";
 
     public void writeFile(Connection con, FileData data, boolean complete) throws SQLException {
         if (!data.isNew() && data.getBytes()==null)
@@ -220,7 +220,7 @@ public class FileBean extends FileBasedDbBean {
     public void writeFileExtras(Connection con, FileData contentData, boolean complete) throws SQLException {
     }
 
-    private static String GET_FILE_STREAM_SQL = "SELECT file_name,content_type,file_size,bytes FROM t_file WHERE id=?";
+    private static final String GET_FILE_STREAM_SQL = "SELECT file_name,content_type,file_size,bytes FROM t_file WHERE id=?";
 
     public BinaryStreamFile getBinaryStreamFile(int id) {
         Connection con = getConnection();
@@ -249,7 +249,7 @@ public class FileBean extends FileBasedDbBean {
         return data;
     }
 
-    private static String GET_FILE_DATA_SQL = "SELECT file_name,content_type,file_size,bytes FROM t_file WHERE id=?";
+    private static final String GET_FILE_DATA_SQL = "SELECT file_name,content_type,file_size,bytes FROM t_file WHERE id=?";
 
     public BinaryFile getBinaryFile(int id) {
         Connection con = getConnection();
@@ -278,7 +278,7 @@ public class FileBean extends FileBasedDbBean {
         return data;
     }
 
-    private static String DELETE_SQL = "DELETE FROM t_file WHERE id=?";
+    private static final String DELETE_SQL = "DELETE FROM t_file WHERE id=?";
 
     public boolean deleteFile(int id) {
         return deleteItem(DELETE_SQL, id);
@@ -286,33 +286,40 @@ public class FileBean extends FileBasedDbBean {
 
     /******** file cache *********/
 
-    public boolean assertMediaFileDirectory(){
+    public boolean assertFileDirectory(){
         File f = new File(ApplicationPath.getAppFilePath());
-        return f.exists() || f.mkdir();
+        if (f.exists()){
+            return true;
+        }
+        return f.mkdir();
     }
 
-    public boolean assertMediaFiles(){
-        List<FileData> files = getAllFiles();
-        for (FileData data : files){
-            if (data instanceof MediaData) {
-                writeFile(data, false);
-            }
+    public boolean assertTempFile(FileData data){
+        File f = new File(ApplicationPath.getAppFilePath()+"/"+data.getTempFileName());
+        if (f.exists()){
+            return true;
+        }
+        return createFile(f);
+    }
+
+    public boolean createFile(File file){
+        Log.log("creating file " + file.getName());
+        String fileName = file.getName();
+        String name = FileUtil.getFileNameWithoutExtension(fileName);
+        int id = Integer.parseInt(name);
+        BinaryFile binaryFile = getBinaryFile(id);
+        return FileUtil.writeBinaryFile(file.getAbsolutePath(), binaryFile.getBytes());
+    }
+
+    public boolean writeFile(FileData data, boolean replace){
+        BinaryFile binaryFile = getBinaryFile(data.getId());
+        String path = ApplicationPath.getAppFilePath()+"/"+data.getTempFileName();
+        if (!replace && FileUtil.fileExists(path))
+            return true;
+        if (!FileUtil.writeBinaryFile(path,binaryFile.getBytes())){
+            return false;
         }
         return true;
-    }
-
-    public void writeFile(FileData data, boolean replace){
-        BinaryFile binaryFile = getBinaryFile(data.getId());
-        String path = ApplicationPath.getAppFilePath()+"/"+data.getUniqueFileName();
-        if (!replace && FileUtil.fileExists(path))
-            return;
-        FileUtil.writeBinaryFile(path,binaryFile.getBytes());
-        FileBean extBean = FileFactory.getBean(data.getType());
-        if (extBean != null)
-            extBean.writeExtraFiles(data, replace);
-    }
-
-    public void writeExtraFiles(FileData data, boolean replace){
     }
 
 }

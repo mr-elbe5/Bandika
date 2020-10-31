@@ -40,20 +40,20 @@ public class UserBean extends DbBean {
         return getNextId("s_user_id");
     }
 
-    private static String CHANGED_SQL = "SELECT change_date FROM t_user WHERE id=?";
+    private static final String CHANGED_SQL = "SELECT change_date FROM t_user WHERE id=?";
 
     protected boolean changedLogin(Connection con, UserData data) {
         return changedItem(con, CHANGED_SQL, data);
     }
 
 
-    private static String SELECT_USER_SQL = "SELECT id,change_date,company_id,title,first_name,last_name,street,zipCode,city,country,email,phone,mobile,notes,(portrait IS NOT NULL) as has_portrait,login,approval_code,approved,email_verified,locked,deleted FROM t_user ";
+    private static final String SELECT_USER_SQL = "SELECT id,change_date,company_id,title,first_name,last_name,street,zipCode,city,country,email,phone,mobile,notes,(portrait IS NOT NULL) as has_portrait,login,approval_code,approved,email_verified,locked,deleted FROM t_user ";
 
     protected boolean changedUser(Connection con, UserData data) {
         return changedLogin(con, data);
     }
 
-    private static String GET_ALL_USERS_SQL = SELECT_USER_SQL + " WHERE deleted=FALSE";
+    private static final String GET_ALL_USERS_SQL = SELECT_USER_SQL + " WHERE deleted=FALSE";
 
     public List<UserData> getAllUsers() {
         List<UserData> list = new ArrayList<>();
@@ -80,7 +80,7 @@ public class UserBean extends DbBean {
         return list;
     }
 
-    private static String GET_COMPANY_USERS_SQL = SELECT_USER_SQL + " WHERE company_id=? AND deleted=FALSE";
+    private static final String GET_COMPANY_USERS_SQL = SELECT_USER_SQL + " WHERE company_id=? AND deleted=FALSE";
 
     public List<UserData> getCompanyUsers(int companyId) {
         List<UserData> list = new ArrayList<>();
@@ -133,7 +133,7 @@ public class UserBean extends DbBean {
     }
 
 
-    private static String LOGIN_SQL = "SELECT pwd,id,change_date,first_name,last_name,email FROM t_user WHERE login=? AND approved=TRUE AND locked=FALSE AND deleted=FALSE";
+    private static final String LOGIN_SQL = "SELECT pwd,id,change_date,first_name,last_name,email FROM t_user WHERE login=? AND approved=TRUE AND locked=FALSE AND deleted=FALSE";
 
     public UserData loginUser(String login, String pwd) {
         Connection con = getConnection();
@@ -172,9 +172,9 @@ public class UserBean extends DbBean {
         return data;
     }
 
-    private static String API_LOGIN_SQL = "SELECT pwd,id,change_date,first_name,last_name,email,token,token_expiration,now() FROM t_user WHERE login=? AND approved=TRUE AND locked=FALSE AND deleted=FALSE";
+    private static final String API_LOGIN_SQL = "SELECT pwd,id,change_date,first_name,last_name,email,token,token_expiration,now() FROM t_user WHERE login=? AND approved=TRUE AND locked=FALSE AND deleted=FALSE";
 
-    private static String SET_TOKEN_SQL = "UPDATE t_user SET token=?,token_expiration=? WHERE id=?";
+    private static final String SET_TOKEN_SQL = "UPDATE t_user SET token=?,token_expiration=? WHERE id=?";
 
     public UserData loginApiUser(String login, String pwd) {
         Connection con = getConnection();
@@ -244,7 +244,7 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String LOGIN_BY_TOKEN_SQL = "SELECT id,login,change_date,first_name,last_name,email FROM t_user WHERE token=? AND token_expiration > now() AND locked=FALSE AND deleted=FALSE";
+    private static final String LOGIN_BY_TOKEN_SQL = "SELECT id,login,change_date,first_name,last_name,email FROM t_user WHERE token=? AND token_expiration > now() AND locked=FALSE AND deleted=FALSE";
 
     public UserData loginUserByToken(String token) {
         Connection con = getConnection();
@@ -280,7 +280,7 @@ public class UserBean extends DbBean {
         return data;
     }
 
-    private static String GET_LOGIN_SQL = "SELECT id,change_date,pwd,first_name,last_name,email FROM t_user WHERE login=? AND approval_code=?";
+    private static final String GET_LOGIN_SQL = "SELECT id,change_date,pwd,first_name,last_name,email FROM t_user WHERE login=? AND approval_code=?";
 
     public UserData getLogin(String login, String approvalCode, String pwd) {
         Connection con = getConnection();
@@ -315,7 +315,7 @@ public class UserBean extends DbBean {
         return passed ? data : null;
     }
 
-    private static String GET_PASSWORD_SQL = "SELECT pwd FROM t_user WHERE id=?";
+    private static final String GET_PASSWORD_SQL = "SELECT pwd FROM t_user WHERE id=?";
 
     public boolean isSystemPasswordEmpty() {
         Connection con = getConnection();
@@ -339,7 +339,7 @@ public class UserBean extends DbBean {
         return empty;
     }
 
-    private static String GET_X_LOGIN_SQL = "SELECT 'x' FROM t_user WHERE login=?";
+    private static final String GET_X_LOGIN_SQL = "SELECT 'x' FROM t_user WHERE login=?";
 
     public boolean doesLoginExist(String login) {
         Connection con = getConnection();
@@ -362,7 +362,7 @@ public class UserBean extends DbBean {
         return exists;
     }
 
-    private static String GET_X_EMAIL_SQL = "SELECT 'x' FROM t_user WHERE email=?";
+    private static final String GET_X_EMAIL_SQL = "SELECT 'x' FROM t_user WHERE email=?";
 
     public boolean doesEmailExist(String login) {
         Connection con = getConnection();
@@ -385,7 +385,7 @@ public class UserBean extends DbBean {
         return exists;
     }
 
-    private static String GET_USER_SQL = "SELECT id,change_date,company_id,title,first_name,last_name,street,zipCode,city,country,email,phone,mobile,notes,portrait,login,approval_code,approved,email_verified,locked,deleted FROM t_user WHERE id=?";
+    private static final String GET_USER_SQL = "SELECT id,change_date,company_id,title,first_name,last_name,street,zipCode,city,country,email,phone,mobile,notes,portrait,login,approval_code,approved,email_verified,locked,deleted FROM t_user WHERE id=?";
 
     public UserData getUser(int id) {
         Connection con = getConnection();
@@ -433,7 +433,7 @@ public class UserBean extends DbBean {
         return data;
     }
 
-    private static String GET_PORTRAIT_SQL = "SELECT portrait FROM t_user WHERE id=?";
+    private static final String GET_PORTRAIT_SQL = "SELECT portrait FROM t_user WHERE id=?";
 
     public BinaryFile getBinaryPortraitData(int id) {
         Connection con = getConnection();
@@ -460,7 +460,7 @@ public class UserBean extends DbBean {
         return data;
     }
 
-    private static String READ_USER_GROUPS_SQL = "SELECT group_id FROM t_user2group WHERE user_id=?";
+    private static final String READ_USER_GROUPS_SQL = "SELECT group_id FROM t_user2group WHERE user_id=?";
 
     protected void readUserGroups(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
@@ -492,9 +492,9 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String INSERT_USER_SQL = "insert into t_user (change_date,company_id,title,first_name,last_name,street,zipCode,city,country,email,phone,fax,mobile,notes,portrait,login,pwd,approval_code,approved,email_verified,locked,deleted,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    private static String UPDATE_USER_PWD_SQL = "update t_user set change_date=?,company_id=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait=?,login=?,pwd=?,approval_code=?,approved=?,email_verified=?,locked=?,deleted=? where id=?";
-    private static String UPDATE_USER_NOPWD_SQL = "update t_user set change_date=?,company_id=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait=?,login=?,approval_code=?,approved=?,email_verified=?,locked=?,deleted=? where id=?";
+    private static final String INSERT_USER_SQL = "insert into t_user (change_date,company_id,title,first_name,last_name,street,zipCode,city,country,email,phone,fax,mobile,notes,portrait,login,pwd,approval_code,approved,email_verified,locked,deleted,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static final String UPDATE_USER_PWD_SQL = "update t_user set change_date=?,company_id=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait=?,login=?,pwd=?,approval_code=?,approved=?,email_verified=?,locked=?,deleted=? where id=?";
+    private static final String UPDATE_USER_NOPWD_SQL = "update t_user set change_date=?,company_id=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait=?,login=?,approval_code=?,approved=?,email_verified=?,locked=?,deleted=? where id=?";
 
     protected void writeUser(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
@@ -554,7 +554,7 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String UPDATE_PROFILE_SQL = "UPDATE t_user SET change_date=?,company_id=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait=? WHERE id=?";
+    private static final String UPDATE_PROFILE_SQL = "UPDATE t_user SET change_date=?,company_id=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait=? WHERE id=?";
 
     protected void writeUserProfile(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
@@ -590,7 +590,7 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String CHANGE_PASSWORD_SQL = "UPDATE t_user SET pwd=? WHERE id=?";
+    private static final String CHANGE_PASSWORD_SQL = "UPDATE t_user SET pwd=? WHERE id=?";
 
     public boolean changePassword(int id, String pwd) {
         Connection con = startTransaction();
@@ -625,7 +625,7 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String VERIFY_EMAIL_SQL = "UPDATE t_user SET change_date=?, email_verified=true WHERE id=?";
+    private static final String VERIFY_EMAIL_SQL = "UPDATE t_user SET change_date=?, email_verified=true WHERE id=?";
 
     protected void writeUserVerfiyEmail(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
@@ -655,7 +655,7 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String UPDATE_PASSWORD_SQL = "UPDATE t_user SET change_date=?, pwd=? WHERE id=?";
+    private static final String UPDATE_PASSWORD_SQL = "UPDATE t_user SET change_date=?, pwd=? WHERE id=?";
 
     protected void writeUserPassword(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
@@ -672,8 +672,8 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String DELETE_USERGROUPS_SQL = "DELETE FROM t_user2group WHERE user_id=?";
-    private static String INSERT_USERGROUP_SQL = "INSERT INTO t_user2group (user_id,group_id) VALUES(?,?)";
+    private static final String DELETE_USERGROUPS_SQL = "DELETE FROM t_user2group WHERE user_id=?";
+    private static final String INSERT_USERGROUP_SQL = "INSERT INTO t_user2group (user_id,group_id) VALUES(?,?)";
 
     protected void writeUserGroups(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
@@ -695,8 +695,8 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String DELETE_USER_SQL = "UPDATE t_user SET deleted=TRUE WHERE id=?";
-    private static String DELETE_ALL_USERGROUPS_SQL = "DELETE FROM t_user2group WHERE user_id=?";
+    private static final String DELETE_USER_SQL = "UPDATE t_user SET deleted=TRUE WHERE id=?";
+    private static final String DELETE_ALL_USERGROUPS_SQL = "DELETE FROM t_user2group WHERE user_id=?";
 
     public void deleteUser(int id) {
         Connection con = getConnection();
@@ -717,7 +717,7 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static String GET_SYSTEM_RIGHTS_SQL = "select name from t_system_right where group_id in({1})";
+    private static final String GET_SYSTEM_RIGHTS_SQL = "select name from t_system_right where group_id in({1})";
 
     public void readUserRights(Connection con, UserData data) {
         data.clearSystemRights();

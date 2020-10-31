@@ -25,7 +25,7 @@ public class PageBean extends ContentBean {
         return instance;
     }
 
-    private static String GET_CONTENT_EXTRAS_SQL = "SELECT keywords,master, publish_date, published_content FROM t_page WHERE id=?";
+    private static final String GET_CONTENT_EXTRAS_SQL = "SELECT keywords,master, publish_date, published_content FROM t_page WHERE id=?";
 
     @Override
     public void readContentExtras(Connection con, ContentData contentData) throws SQLException {
@@ -51,7 +51,7 @@ public class PageBean extends ContentBean {
         }
     }
 
-    private static String INSERT_CONTENT_EXTRAS_SQL = "insert into t_page (keywords,master,publish_date,published_content,id) values(?,?,?,?,?)";
+    private static final String INSERT_CONTENT_EXTRAS_SQL = "insert into t_page (keywords,master,publish_date,published_content,id) values(?,?,?,?,?)";
 
     @Override
     public void createContentExtras(Connection con, ContentData contentData) throws SQLException {
@@ -69,7 +69,7 @@ public class PageBean extends ContentBean {
         }
     }
 
-    private static String UPDATE_CONTENT_EXTRAS_SQL = "update t_page set keywords=?,master=?,publish_date=?,published_content=? where id=?";
+    private static final String UPDATE_CONTENT_EXTRAS_SQL = "update t_page set keywords=?,master=?,publish_date=?,published_content=? where id=?";
 
     @Override
     public void updateContentExtras(Connection con, ContentData contentData) throws SQLException {
@@ -112,7 +112,7 @@ public class PageBean extends ContentBean {
         }
     }
 
-    private static String PUBLISH_CONTENT_SQL = "update t_page set publish_date=?,published_content=? where id=?";
+    private static final String PUBLISH_CONTENT_SQL = "update t_page set publish_date=?,published_content=? where id=?";
 
     public void publishPage(Connection con, PageData data) throws SQLException {
         PreparedStatement pst = null;
@@ -129,7 +129,7 @@ public class PageBean extends ContentBean {
         }
     }
 
-    private static String REPLACE_IN_PAGE_SQL = "UPDATE t_page set published_content = REPLACE(published_content,?,?)";
+    private static final String REPLACE_IN_PAGE_SQL = "UPDATE t_page set published_content = REPLACE(published_content,?,?)";
 
     public void replaceStringInContent(Connection con, String current, String replacement) throws SQLException {
         PreparedStatement pst = null;

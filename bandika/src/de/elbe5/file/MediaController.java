@@ -14,9 +14,9 @@ import de.elbe5.content.ContentData;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.SessionRequestData;
 import de.elbe5.servlet.ControllerCache;
-import de.elbe5.view.CloseDialogView;
-import de.elbe5.view.IView;
-import de.elbe5.view.UrlView;
+import de.elbe5.response.CloseDialogResponse;
+import de.elbe5.response.IResponse;
+import de.elbe5.response.ForwardResponse;
 
 public class MediaController extends FileController {
 
@@ -42,7 +42,7 @@ public class MediaController extends FileController {
         return KEY;
     }
 
-    public IView openCreateMedia(SessionRequestData rdata) {
+    public IResponse openCreateMedia(SessionRequestData rdata) {
         int parentId = rdata.getInt("parentId");
         ContentData parentData = ContentCache.getContent(parentId);
         assert(parentData!=null);
@@ -55,7 +55,7 @@ public class MediaController extends FileController {
         return showEditMedia();
     }
 
-    public IView openEditMedia(SessionRequestData rdata) {
+    public IResponse openEditMedia(SessionRequestData rdata) {
         FileData data = FileBean.getInstance().getFile(rdata.getId(),true);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
@@ -63,7 +63,7 @@ public class MediaController extends FileController {
         return showEditMedia();
     }
 
-    public IView saveMedia(SessionRequestData rdata) {
+    public IResponse saveMedia(SessionRequestData rdata) {
         int contentId = rdata.getId();
         MediaData data = rdata.getSessionObject(RequestData.KEY_MEDIA,MediaData.class);
         assert(data != null && data.getId() == contentId);
@@ -82,10 +82,10 @@ public class MediaController extends FileController {
         data.setNew(false);
         ContentCache.setDirty();
         rdata.setMessage(Strings.string("_fileSaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogView("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
+        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
     }
 
-    public IView cutMedia(SessionRequestData rdata) {
+    public IResponse cutMedia(SessionRequestData rdata) {
         int contentId = rdata.getId();
         MediaData data = FileBean.getInstance().getFile(contentId,true,MediaData.class);
         assert(data!=null);
@@ -95,7 +95,7 @@ public class MediaController extends FileController {
         return showContentAdministration(rdata,data.getParentId());
     }
 
-    public IView copyMedia(SessionRequestData rdata) {
+    public IResponse copyMedia(SessionRequestData rdata) {
         int contentId = rdata.getId();
         MediaData data = FileBean.getInstance().getFile(contentId,true,MediaData.class);
         assert(data!=null);
@@ -109,7 +109,7 @@ public class MediaController extends FileController {
         return showContentAdministration(rdata,data.getId());
     }
 
-    public IView pasteMedia(SessionRequestData rdata) {
+    public IResponse pasteMedia(SessionRequestData rdata) {
         int parentId = rdata.getInt("parentId");
         ContentData parent=ContentCache.getContent(parentId);
         if (parent == null){
@@ -132,12 +132,12 @@ public class MediaController extends FileController {
         return showContentAdministration(rdata,data.getId());
     }
 
-    public IView deleteMedia(SessionRequestData rdata){
+    public IResponse deleteMedia(SessionRequestData rdata){
         return deleteFile(rdata);
     }
 
-    protected IView showEditMedia() {
-        return new UrlView("/WEB-INF/_jsp/file/editMedia.ajax.jsp");
+    protected IResponse showEditMedia() {
+        return new ForwardResponse("/WEB-INF/_jsp/file/editMedia.ajax.jsp");
     }
 
 }

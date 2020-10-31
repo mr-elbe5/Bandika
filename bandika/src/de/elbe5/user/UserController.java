@@ -21,8 +21,9 @@ import de.elbe5.request.*;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
-import de.elbe5.view.*;
+import de.elbe5.response.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 
 public class UserController extends Controller {
@@ -49,11 +50,11 @@ public class UserController extends Controller {
         return KEY;
     }
 
-    public IView openLogin(SessionRequestData rdata) {
+    public IResponse openLogin(SessionRequestData rdata) {
         return showLogin();
     }
 
-    public IView login(SessionRequestData rdata) {
+    public IResponse login(SessionRequestData rdata) {
         checkRights(rdata.isPostback());
         String login = rdata.getString("login");
         String pwd = rdata.getString("password");
@@ -71,20 +72,20 @@ public class UserController extends Controller {
         return showHome();
     }
 
-    public IView showCaptcha(SessionRequestData rdata) {
+    public IResponse showCaptcha(SessionRequestData rdata) {
         String captcha = (String) rdata.getSessionObject(RequestData.KEY_CAPTCHA);
         assert(captcha!=null);
         BinaryFile data = UserSecurity.getCaptcha(captcha);
         assert data != null;
-        return new BinaryFileView(data);
+        return new BinaryFileResponse(data);
     }
 
-    public IView renewCaptcha(SessionRequestData rdata) {
+    public IResponse renewCaptcha(SessionRequestData rdata) {
         rdata.setSessionObject(RequestData.KEY_CAPTCHA, UserSecurity.generateCaptchaString());
-        return new ResponseCodeView(ResponseCode.OK);
+        return new StatusResponse(HttpServletResponse.SC_OK);
     }
 
-    public IView logout(SessionRequestData rdata) {
+    public IResponse logout(SessionRequestData rdata) {
         Locale locale = rdata.getLocale();
         rdata.setSessionUser(null);
         rdata.resetSession();
@@ -92,13 +93,13 @@ public class UserController extends Controller {
         return showHome();
     }
 
-    public IView openRegistration(SessionRequestData rdata) {
+    public IResponse openRegistration(SessionRequestData rdata) {
         rdata.put("userData", new UserData());
         rdata.setSessionObject(RequestData.KEY_CAPTCHA, UserSecurity.generateCaptchaString());
         return showRegistration();
     }
 
-    public IView register(SessionRequestData rdata) {
+    public IResponse register(SessionRequestData rdata) {
         UserData user = new UserData();
         rdata.put("userData", user);
         user.readRegistrationRequestData(rdata);
@@ -137,7 +138,7 @@ public class UserController extends Controller {
         return showRegistrationDone();
     }
 
-    public IView verifyEmail(SessionRequestData rdata) {
+    public IResponse verifyEmail(SessionRequestData rdata) {
         int userId = rdata.getId();
         String approvalCode = rdata.getString("approvalCode");
         UserData data = UserBean.getInstance().getUser(userId);
@@ -155,7 +156,7 @@ public class UserController extends Controller {
         return showEmailVerification();
     }
 
-    public IView openEditUser(SessionRequestData rdata) {
+    public IResponse openEditUser(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int userId = rdata.getId();
         UserData data = UserBean.getInstance().getUser(userId);
@@ -163,7 +164,7 @@ public class UserController extends Controller {
         return showEditUser();
     }
 
-    public IView openCreateUser(SessionRequestData rdata) {
+    public IResponse openCreateUser(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         UserData data = new UserData();
         data.setNew(true);
@@ -172,7 +173,7 @@ public class UserController extends Controller {
         return showEditUser();
     }
 
-    public IView saveUser(SessionRequestData rdata) {
+    public IResponse saveUser(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         UserData data = (UserData) rdata.getSessionObject("userData");
         assert(data!=null);
@@ -186,48 +187,48 @@ public class UserController extends Controller {
             rdata.setSessionUser(data);
         }
         rdata.setMessage(Strings.string("_userSaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogView("/ctrl/admin/openPersonAdministration?userId=" + data.getId());
+        return new CloseDialogResponse("/ctrl/admin/openPersonAdministration?userId=" + data.getId());
     }
 
-    public IView deleteUser(SessionRequestData rdata) {
+    public IResponse deleteUser(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
             rdata.setMessage(Strings.string("_notDeletable",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_ERROR);
-            return new UrlView("/ctrl/admin/openPersonAdministration");
+            return new ForwardResponse("/ctrl/admin/openPersonAdministration");
         }
         UserBean.getInstance().deleteUser(id);
         UserCache.setDirty();
         rdata.setMessage(Strings.string("_userDeleted",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
-        return new UrlView("/ctrl/admin/openPersonAdministration");
+        return new ForwardResponse("/ctrl/admin/openPersonAdministration");
     }
 
-    public IView showPortrait(SessionRequestData rdata) {
+    public IResponse showPortrait(SessionRequestData rdata) {
         int userId = rdata.getId();
         BinaryFile file = UserBean.getInstance().getBinaryPortraitData(userId);
         assert(file!=null);
-        return new BinaryFileView(file);
+        return new BinaryFileResponse(file);
     }
 
-    public IView changeLocale(SessionRequestData rdata) {
+    public IResponse changeLocale(SessionRequestData rdata) {
         String language = rdata.getString("language");
         Locale locale = new Locale(language);
         rdata.setSessionLocale(locale);
         ContentData home = ContentCache.getContentRoot();
-        return new RedirectView(home.getUrl());
+        return new RedirectResponse(home.getUrl());
     }
 
-    public IView openProfile(SessionRequestData rdata) {
+    public IResponse openProfile(SessionRequestData rdata) {
         checkRights(rdata.isLoggedIn());
         return showProfile();
     }
 
-    public IView openChangePassword(SessionRequestData rdata) {
+    public IResponse openChangePassword(SessionRequestData rdata) {
         checkRights(rdata.isLoggedIn());
         return showChangePassword();
     }
 
-    public IView changePassword(SessionRequestData rdata) {
+    public IResponse changePassword(SessionRequestData rdata) {
         checkRights(rdata.isLoggedIn() && rdata.getUserId() == rdata.getId());
         UserData user = UserBean.getInstance().getUser(rdata.getLoginUser().getId());
         assert(user!=null);
@@ -255,15 +256,15 @@ public class UserController extends Controller {
         data.setPassword(newPassword);
         UserBean.getInstance().saveUserPassword(data);
         rdata.setMessage(Strings.string("_passwordChanged",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogView("/ctrl/user/openProfile");
+        return new CloseDialogResponse("/ctrl/user/openProfile");
     }
 
-    public IView openChangeProfile(SessionRequestData rdata) {
+    public IResponse openChangeProfile(SessionRequestData rdata) {
         checkRights(rdata.isLoggedIn());
         return showChangeProfile();
     }
 
-    public IView changeProfile(SessionRequestData rdata) {
+    public IResponse changeProfile(SessionRequestData rdata) {
         int userId = rdata.getId();
         checkRights(rdata.isLoggedIn() && rdata.getUserId() == userId);
         UserData data = UserBean.getInstance().getUser(userId);
@@ -275,51 +276,51 @@ public class UserController extends Controller {
         rdata.setSessionUser(data);
         UserCache.setDirty();
         rdata.setMessage(Strings.string("_userSaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogView("/ctrl/user/openProfile");
+        return new CloseDialogResponse("/ctrl/user/openProfile");
     }
 
-    protected IView showLogin() {
-        return new UrlView("/WEB-INF/_jsp/user/login.jsp");
+    protected IResponse showLogin() {
+        return new ForwardResponse("/WEB-INF/_jsp/user/login.jsp");
     }
 
-    protected IView showEditGroup() {
-        return new UrlView("/WEB-INF/_jsp/user/editGroup.ajax.jsp");
+    protected IResponse showEditGroup() {
+        return new ForwardResponse("/WEB-INF/_jsp/user/editGroup.ajax.jsp");
     }
 
-    protected IView showEditUser() {
-        return new UrlView("/WEB-INF/_jsp/user/editUser.ajax.jsp");
+    protected IResponse showEditUser() {
+        return new ForwardResponse("/WEB-INF/_jsp/user/editUser.ajax.jsp");
     }
 
-    protected IView showProfile() {
+    protected IResponse showProfile() {
         JspContentData contentData = new JspContentData();
         contentData.setJsp("/WEB-INF/_jsp/user/profile.jsp");
-        return new ContentView(contentData);
+        return new ContentResponse(contentData);
     }
 
-    protected IView showChangePassword() {
-        return new UrlView("/WEB-INF/_jsp/user/changePassword.ajax.jsp");
+    protected IResponse showChangePassword() {
+        return new ForwardResponse("/WEB-INF/_jsp/user/changePassword.ajax.jsp");
     }
 
-    protected IView showChangeProfile() {
-        return new UrlView("/WEB-INF/_jsp/user/changeProfile.ajax.jsp");
+    protected IResponse showChangeProfile() {
+        return new ForwardResponse("/WEB-INF/_jsp/user/changeProfile.ajax.jsp");
     }
 
-    protected IView showRegistration() {
+    protected IResponse showRegistration() {
         JspContentData contentData = new JspContentData();
         contentData.setJsp("/WEB-INF/_jsp/user/registration.jsp");
-        return new ContentView(contentData);
+        return new ContentResponse(contentData);
     }
 
-    protected IView showRegistrationDone() {
+    protected IResponse showRegistrationDone() {
         JspContentData contentData = new JspContentData();
         contentData.setJsp("/WEB-INF/_jsp/user/registrationDone.jsp");
-        return new ContentView(contentData);
+        return new ContentResponse(contentData);
     }
 
-    protected IView showEmailVerification() {
+    protected IResponse showEmailVerification() {
         JspContentData contentData = new JspContentData();
         contentData.setJsp("/WEB-INF/_jsp/user/verifyRegistrationEmail.jsp");
-        return new ContentView(contentData);
+        return new ContentResponse(contentData);
     }
 
 }

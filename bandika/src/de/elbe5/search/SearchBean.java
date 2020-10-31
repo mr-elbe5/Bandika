@@ -102,7 +102,7 @@ public class SearchBean extends FileBasedDbBean {
         Log.log("finished indexing " + count + " pages");
     }
 
-    private static String INDEX_USERS_SQL = "SELECT id,first_name,last_name,email FROM t_user";
+    private static final String INDEX_USERS_SQL = "SELECT id,first_name,last_name,email FROM t_user";
 
     protected void indexUsers(IndexWriter writer) throws Exception {
         Connection con = getConnection();

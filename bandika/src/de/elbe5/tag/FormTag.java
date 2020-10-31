@@ -10,7 +10,7 @@ package de.elbe5.tag;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
-import de.elbe5.view.IView;
+import de.elbe5.response.IResponse;
 
 import javax.servlet.jsp.JspException;
 import java.io.Writer;
@@ -21,7 +21,7 @@ public class FormTag extends BaseTag {
     protected String name = "";
     protected boolean multi = false;
     protected boolean ajax = false;
-    protected String target = IView.MODAL_DIALOG_JQID;
+    protected String target = IResponse.MODAL_DIALOG_JQID;
 
     public void setUrl(String url) {
         this.url = url;

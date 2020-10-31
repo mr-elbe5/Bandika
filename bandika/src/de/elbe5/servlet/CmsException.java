@@ -1,10 +1,10 @@
 package de.elbe5.servlet;
 
-import de.elbe5.request.ResponseCode;
+import javax.servlet.http.HttpServletResponse;
 
 public abstract class CmsException extends RuntimeException{
 
-    private int responseCode=ResponseCode.OK;
+    private int responseCode= HttpServletResponse.SC_OK;
     private String message = "";
 
     protected CmsException(int responseCode){

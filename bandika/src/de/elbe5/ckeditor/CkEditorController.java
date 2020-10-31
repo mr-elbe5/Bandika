@@ -8,18 +8,15 @@
  */
 package de.elbe5.ckeditor;
 
-import de.elbe5.content.ContentBean;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentController;
 import de.elbe5.content.ContentData;
 import de.elbe5.file.ImageBean;
 import de.elbe5.file.ImageData;
-import de.elbe5.page.PageBean;
-import de.elbe5.page.PageData;
 import de.elbe5.request.SessionRequestData;
 import de.elbe5.servlet.ControllerCache;
-import de.elbe5.view.IView;
-import de.elbe5.view.UrlView;
+import de.elbe5.response.IResponse;
+import de.elbe5.response.ForwardResponse;
 
 public class CkEditorController extends ContentController {
 
@@ -45,21 +42,21 @@ public class CkEditorController extends ContentController {
         return KEY;
     }
 
-    public IView openLinkBrowser(SessionRequestData rdata) {
+    public IResponse openLinkBrowser(SessionRequestData rdata) {
         ContentData data=rdata.getCurrentSessionContent();
         assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
-        return new UrlView("/WEB-INF/_jsp/ckeditor/browseLinks.jsp");
+        return new ForwardResponse("/WEB-INF/_jsp/ckeditor/browseLinks.jsp");
     }
 
-    public IView openImageBrowser(SessionRequestData rdata) {
+    public IResponse openImageBrowser(SessionRequestData rdata) {
         ContentData data=rdata.getCurrentSessionContent();
         assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
-        return new UrlView("/WEB-INF/_jsp/ckeditor/browseImages.jsp");
+        return new ForwardResponse("/WEB-INF/_jsp/ckeditor/browseImages.jsp");
     }
 
-    public IView addImage(SessionRequestData rdata) {
+    public IResponse addImage(SessionRequestData rdata) {
         ContentData data=rdata.getCurrentSessionContent();
         assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
@@ -69,7 +66,7 @@ public class CkEditorController extends ContentController {
         ImageBean.getInstance().saveFile(image,true);
         ContentCache.setDirty();
         rdata.put("imageId", Integer.toString(image.getId()));
-        return new UrlView("/WEB-INF/_jsp/ckeditor/addImage.ajax.jsp");
+        return new ForwardResponse("/WEB-INF/_jsp/ckeditor/addImage.ajax.jsp");
     }
 
 

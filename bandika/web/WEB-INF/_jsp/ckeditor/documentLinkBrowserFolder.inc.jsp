@@ -31,10 +31,10 @@
         %>
         <li>
             <div class="treeline">
-                <a id="<%=document.getId()%>" href="" onclick="return ckLinkCallback('/ctrl/document/download/<%=document.getId()%>');">
+                <a id="<%=document.getId()%>" href="" onclick="return ckLinkCallback('<%=document.getURL()%>?download=true');">
                     <%=$H(document.getDisplayName())%>
                 </a>
-                <a class="fa fa-eye" title="<%=$SH("_download",locale)%>" href="/ctrl/document/download/<%=document.getId()%>"> </a>
+                <a class="fa fa-eye" title="<%=$SH("_download",locale)%>" href="<%=document.getURL()%>?download=true"> </a>
             </div>
         </li>
         <%}

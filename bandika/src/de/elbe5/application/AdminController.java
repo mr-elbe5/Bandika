@@ -18,12 +18,12 @@ import de.elbe5.database.DbConnector;
 import de.elbe5.servlet.CmsAuthorizationException;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.user.UserCache;
-import de.elbe5.view.CloseDialogView;
+import de.elbe5.response.CloseDialogResponse;
 import de.elbe5.request.SessionRequestData;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
-import de.elbe5.view.IView;
-import de.elbe5.view.UrlView;
+import de.elbe5.response.IResponse;
+import de.elbe5.response.ForwardResponse;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class AdminController extends Controller {
         return KEY;
     }
 
-    public IView openAdministration(SessionRequestData rdata){
+    public IResponse openAdministration(SessionRequestData rdata){
         if (rdata.hasSystemRight(SystemZone.CONTENTEDIT))
             return openContentAdministration(rdata);
         if (rdata.hasSystemRight(SystemZone.USER))
@@ -62,27 +62,27 @@ public class AdminController extends Controller {
         throw new CmsAuthorizationException();
     }
 
-    public IView openSystemAdministration(SessionRequestData rdata) {
+    public IResponse openSystemAdministration(SessionRequestData rdata) {
         checkRights(rdata.hasAnySystemRight());
         return showSystemAdministration(rdata);
     }
 
-    public IView openPersonAdministration(SessionRequestData rdata) {
+    public IResponse openPersonAdministration(SessionRequestData rdata) {
         checkRights(rdata.hasAnySystemRight());
         return showPersonAdministration(rdata);
     }
 
-    public IView openContentAdministration(SessionRequestData rdata) {
+    public IResponse openContentAdministration(SessionRequestData rdata) {
         checkRights(rdata.hasAnyContentRight());
         return showContentAdministration(rdata);
     }
 
-    public IView openContentLog(SessionRequestData rdata) {
+    public IResponse openContentLog(SessionRequestData rdata) {
         checkRights(rdata.hasAnyContentRight());
         return showContentLog(rdata);
     }
 
-    public IView restart(SessionRequestData rdata) {
+    public IResponse restart(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         String path = ApplicationPath.getAppROOTPath() + "/WEB-INF/web.xml";
         File f = new File(path);
@@ -95,12 +95,12 @@ public class AdminController extends Controller {
         return openSystemAdministration(rdata);
     }
 
-    public IView openExecuteDatabaseScript(SessionRequestData rdata) {
+    public IResponse openExecuteDatabaseScript(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         return showExecuteDatabaseScript();
     }
 
-    public IView executeDatabaseScript(SessionRequestData rdata) {
+    public IResponse executeDatabaseScript(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         String script = rdata.getString("script");
         if (!DbConnector.getInstance().executeScript(script)) {
@@ -108,10 +108,10 @@ public class AdminController extends Controller {
             return showExecuteDatabaseScript();
         }
         rdata.setMessage(Strings.string("_scriptExecuted",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogView("/ctrl/admin/openSystemAdministration");
+        return new CloseDialogResponse("/ctrl/admin/openSystemAdministration");
     }
 
-    public IView reloadContentCache(SessionRequestData rdata) {
+    public IResponse reloadContentCache(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         ContentCache.setDirty();
         ContentCache.checkDirty();
@@ -119,7 +119,7 @@ public class AdminController extends Controller {
         return openSystemAdministration(rdata);
     }
 
-    public IView reloadUserCache(SessionRequestData rdata) {
+    public IResponse reloadUserCache(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         UserCache.setDirty();
         UserCache.checkDirty();
@@ -127,25 +127,25 @@ public class AdminController extends Controller {
         return openSystemAdministration(rdata);
     }
 
-    public IView clearFileCache(SessionRequestData rdata) {
+    public IResponse clearFileCache(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         BinaryFileCache.setDirty();
         rdata.setMessage(Strings.string("_cacheCleared",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
-    public IView resetContentLog(SessionRequestData rdata) {
+    public IResponse resetContentLog(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.CONTENTEDIT));
         ContentBean.getInstance().resetContentLog();
         return showContentLog(rdata);
     }
 
-    protected IView showExecuteDatabaseScript() {
-        return new UrlView("/WEB-INF/_jsp/administration/executeDatabaseScript.ajax.jsp");
+    protected IResponse showExecuteDatabaseScript() {
+        return new ForwardResponse("/WEB-INF/_jsp/administration/executeDatabaseScript.ajax.jsp");
     }
 
-    private IView showEditConfiguration() {
-        return new UrlView("/WEB-INF/_jsp/administration/editConfiguration.ajax.jsp");
+    private IResponse showEditConfiguration() {
+        return new ForwardResponse("/WEB-INF/_jsp/administration/editConfiguration.ajax.jsp");
     }
 
 }

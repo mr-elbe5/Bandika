@@ -32,13 +32,13 @@ public class ContentBean extends DbBean {
         return getNextId("s_content_id");
     }
 
-    private static String CHANGED_SQL = "SELECT change_date FROM t_content WHERE id=?";
+    private static final String CHANGED_SQL = "SELECT change_date FROM t_content WHERE id=?";
 
     public boolean changedContent(Connection con, ContentData data) {
         return changedItem(con, CHANGED_SQL, data);
     }
 
-    private static String GET_ALL_CONTENT_SQL = "SELECT type,id,creation_date,change_date,parent_id,ranking,name,display_name,description,creator_id,changer_id, language, access_type, nav_type, active FROM t_content";
+    private static final String GET_ALL_CONTENT_SQL = "SELECT type,id,creation_date,change_date,parent_id,ranking,name,display_name,description,creator_id,changer_id, language, access_type, nav_type, active FROM t_content";
 
     public List<ContentData> getAllContents() {
         List<ContentData> list = new ArrayList<>();
@@ -91,7 +91,7 @@ public class ContentBean extends DbBean {
         }
     }
 
-    private static String GET_CONTENT_SQL = "SELECT type, id, creation_date, change_date, parent_id, ranking, name, display_name, description, creator_id, changer_id, access_type, language, nav_type, active FROM t_content WHERE id=?";
+    private static final String GET_CONTENT_SQL = "SELECT type, id, creation_date, change_date, parent_id, ranking, name, display_name, description, creator_id, changer_id, access_type, language, nav_type, active FROM t_content WHERE id=?";
 
     public ContentData readContent(Connection con, int id) throws SQLException {
         ContentData data = null;
@@ -139,7 +139,7 @@ public class ContentBean extends DbBean {
         return data;
     }
 
-    private static String GET_CONTENT_RIGHTS_SQL = "SELECT group_id,value FROM t_content_right WHERE content_id=?";
+    private static final String GET_CONTENT_RIGHTS_SQL = "SELECT group_id,value FROM t_content_right WHERE content_id=?";
 
     public Map<Integer, Right> getContentRights(Connection con, int contentId) throws SQLException {
         PreparedStatement pst = null;
@@ -207,7 +207,7 @@ public class ContentBean extends DbBean {
         }
     }
 
-    private static String INSERT_CONTENT_SQL = "insert into t_content (type,creation_date,change_date,parent_id,ranking,name,display_name,description,creator_id,changer_id,language,access_type,nav_type,active,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static final String INSERT_CONTENT_SQL = "insert into t_content (type,creation_date,change_date,parent_id,ranking,name,display_name,description,creator_id,changer_id,language,access_type,nav_type,active,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     protected void createContent(Connection con, ContentData data) throws SQLException {
         PreparedStatement pst = null;
@@ -240,7 +240,7 @@ public class ContentBean extends DbBean {
         }
     }
 
-    private static String UPDATE_CONTENT_SQL = "update t_content set change_date=?,ranking=?,name=?,display_name=?,description=?,changer_id=?,language=?,access_type=?,nav_type=?,active=? where id=?";
+    private static final String UPDATE_CONTENT_SQL = "update t_content set change_date=?,ranking=?,name=?,display_name=?,description=?,changer_id=?,language=?,access_type=?,nav_type=?,active=? where id=?";
 
     protected void updateContent(Connection con, ContentData data) throws SQLException {
         PreparedStatement pst = null;
@@ -271,7 +271,7 @@ public class ContentBean extends DbBean {
     public void updateContentExtras(Connection con, ContentData contentData) throws SQLException{
     }
 
-    private static String UPDATE_RANKING_SQL = "UPDATE t_content SET ranking=? WHERE id=?";
+    private static final String UPDATE_RANKING_SQL = "UPDATE t_content SET ranking=? WHERE id=?";
 
     public void updateChildRankings(ContentData data) {
         Connection con = startTransaction();
@@ -293,7 +293,7 @@ public class ContentBean extends DbBean {
         }
     }
 
-    private static String GET_GROUP_RIGHT_SQL = "SELECT content_id,value FROM t_content_right WHERE group_id=?";
+    private static final String GET_GROUP_RIGHT_SQL = "SELECT content_id,value FROM t_content_right WHERE group_id=?";
 
     public Map<Integer, Integer> getGroupRights(int groupId) {
         Connection con = getConnection();
@@ -317,8 +317,8 @@ public class ContentBean extends DbBean {
         return null;
     }
 
-    private static String DELETE_RIGHTS_SQL = "DELETE FROM t_content_right WHERE content_id=?";
-    private static String INSERT_RIGHT_SQL = "INSERT INTO t_content_right (content_id,group_id,value) VALUES(?,?,?)";
+    private static final String DELETE_RIGHTS_SQL = "DELETE FROM t_content_right WHERE content_id=?";
+    private static final String INSERT_RIGHT_SQL = "INSERT INTO t_content_right (content_id,group_id,value) VALUES(?,?,?)";
 
     public boolean saveRights(ContentData data) {
         PreparedStatement pst = null;
@@ -345,7 +345,7 @@ public class ContentBean extends DbBean {
         }
     }
 
-    private static String DELETE_SQL = "DELETE FROM t_content WHERE id=?";
+    private static final String DELETE_SQL = "DELETE FROM t_content WHERE id=?";
 
     public boolean deleteContent(int id) {
         return deleteItem(DELETE_SQL, id);

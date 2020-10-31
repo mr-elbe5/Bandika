@@ -10,19 +10,21 @@ package de.elbe5.file;
 
 import de.elbe5.base.cache.Strings;
 import de.elbe5.base.data.Token;
+import de.elbe5.base.log.Log;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.SessionRequestData;
 import de.elbe5.servlet.Controller;
-import de.elbe5.view.FileStreamView;
-import de.elbe5.view.IView;
-import de.elbe5.view.UrlView;
+import de.elbe5.response.FileResponse;
+import de.elbe5.response.IResponse;
+import de.elbe5.response.ForwardResponse;
 
 public abstract class FileController extends Controller {
 
-    public IView show(SessionRequestData rdata) {
+    public IResponse show(SessionRequestData rdata) {
         FileData data;
         int id = rdata.getId();
+        Log.warn("deprecated call of file show for id " + id);
         data = ContentCache.getFile(id);
         assert(data!=null);
         ContentData parent=ContentCache.getContent(data.getParentId());
@@ -30,22 +32,25 @@ public abstract class FileController extends Controller {
             String token = rdata.getString("token");
             checkRights(Token.matchToken(id, token));
         }
-        return new FileStreamView(data, false);
+        FileBean.getInstance().assertTempFile(data);
+        return new FileResponse(data, false);
     }
 
-    public IView download(SessionRequestData rdata) {
+    public IResponse download(SessionRequestData rdata) {
         FileData data;
         int id = rdata.getId();
+        Log.warn("deprecated call of file download for id " + id);
         data = ContentCache.getFile(id);
         ContentData parent=ContentCache.getContent(data.getParentId());
         if (!parent.hasUserReadRight(rdata)) {
             String token = rdata.getString("token");
             checkRights(Token.matchToken(id, token));
         }
-        return new FileStreamView(data, true);
+        FileBean.getInstance().assertTempFile(data);
+        return new FileResponse(data, true);
     }
 
-    public IView deleteFile(SessionRequestData rdata) {
+    public IResponse deleteFile(SessionRequestData rdata) {
         int contentId = rdata.getId();
         int parentId = ContentCache.getFileParentId(contentId);
         ContentData parent=ContentCache.getContent(parentId);
@@ -57,8 +62,8 @@ public abstract class FileController extends Controller {
         return showContentAdministration(rdata,parentId);
     }
 
-    protected IView showContentAdministration(SessionRequestData rdata, int contentId) {
-        return new UrlView("/ctrl/admin/openContentAdministration?contentId=" + contentId);
+    protected IResponse showContentAdministration(SessionRequestData rdata, int contentId) {
+        return new ForwardResponse("/ctrl/admin/openContentAdministration?contentId=" + contentId);
     }
 
 }

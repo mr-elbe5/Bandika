@@ -10,7 +10,7 @@ package de.elbe5.servlet;
 
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.application.Configuration;
-import de.elbe5.view.IView;
+import de.elbe5.response.IResponse;
 import de.elbe5.request.SessionRequestData;
 
 import javax.servlet.annotation.MultipartConfig;
@@ -46,7 +46,7 @@ public class ControllerServlet extends WebServlet {
         rdata.readRequestParams();
         rdata.initSession();
         try {
-            IView result = getView(controller, methodName, rdata);
+            IResponse result = getView(controller, methodName, rdata);
             if (rdata.hasCookies())
                 rdata.setCookies(response);
             result.processView(getServletContext(), rdata, response);
@@ -59,14 +59,14 @@ public class ControllerServlet extends WebServlet {
         }
     }
 
-    public IView getView(Controller controller, String methodName, SessionRequestData rdata) {
+    public IResponse getView(Controller controller, String methodName, SessionRequestData rdata) {
         if (controller==null)
             throw new CmsRequestException();
         try {
             Method controllerMethod = controller.getClass().getMethod(methodName, SessionRequestData.class);
             Object result = controllerMethod.invoke(controller, rdata);
-            if (result instanceof IView)
-                return (IView) result;
+            if (result instanceof IResponse)
+                return (IResponse) result;
             throw new CmsRequestException();
         } catch (NoSuchMethodException | InvocationTargetException e){
             throw new CmsRequestException();

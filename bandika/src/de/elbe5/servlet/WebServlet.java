@@ -8,8 +8,6 @@
  */
 package de.elbe5.servlet;
 
-import de.elbe5.request.ResponseCode;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -40,7 +38,7 @@ public abstract class WebServlet extends HttpServlet {
             request.setAttribute("exception",ce);
             rd.forward(request, response);
         } catch (ServletException | IOException e) {
-            response.setStatus(ResponseCode.BAD_REQUEST);
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 }

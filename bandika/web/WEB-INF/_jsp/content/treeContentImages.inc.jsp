@@ -23,7 +23,7 @@
     List<String> imageTypes=contentData.getImageClasses();
     int fileId=rdata.getInt("fileId");
 %>
-        <li class="images">
+        <li class="images open">
             <span>[<%=$SH("_images", locale)%>]</span>
             <%if (contentData.hasUserEditRight(rdata)) {%>
             <div class="icons">

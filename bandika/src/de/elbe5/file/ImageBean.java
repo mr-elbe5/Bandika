@@ -24,8 +24,8 @@ public class ImageBean extends FileBean {
         return instance;
     }
 
-    private static String GET_CONTENT_EXTRAS_SQL = "SELECT width,height,(preview_bytes IS NOT NULL) as has_preview FROM t_image WHERE id=?";
-    private static String GET_CONTENT_EXTRAS_COMPLETE_SQL = "SELECT width,height,preview_bytes FROM t_image WHERE id=?";
+    private static final String GET_CONTENT_EXTRAS_SQL = "SELECT width,height,(preview_bytes IS NOT NULL) as has_preview FROM t_image WHERE id=?";
+    private static final String GET_CONTENT_EXTRAS_COMPLETE_SQL = "SELECT width,height,preview_bytes FROM t_image WHERE id=?";
 
     @Override
     public void readFileExtras(Connection con, FileData contentData, boolean complete) throws SQLException {
@@ -54,9 +54,9 @@ public class ImageBean extends FileBean {
         }
     }
 
-    private static String INSERT_CONTENT_EXTRAS_SQL = "insert into t_image (width,height,preview_bytes,id) values(?,?,?,?)";
-    private static String UPDATE_CONTENT_EXTRAS_SQL = "update t_image set width=?,height=?,preview_bytes=? where id=?";
-    private static String UPDATE_CONTENT_EXTRAS_NOBYTES_SQL = "update t_image set width=?,height=? where id=?";
+    private static final String INSERT_CONTENT_EXTRAS_SQL = "insert into t_image (width,height,preview_bytes,id) values(?,?,?,?)";
+    private static final String UPDATE_CONTENT_EXTRAS_SQL = "update t_image set width=?,height=?,preview_bytes=? where id=?";
+    private static final String UPDATE_CONTENT_EXTRAS_NOBYTES_SQL = "update t_image set width=?,height=? where id=?";
 
     @Override
     public void writeFileExtras(Connection con, FileData contentData, boolean complete) throws SQLException {
@@ -79,7 +79,7 @@ public class ImageBean extends FileBean {
         pst.close();
     }
 
-    private static String GET_PREVIEW_SQL = "SELECT preview_bytes FROM t_image WHERE id=?";
+    private static final String GET_PREVIEW_SQL = "SELECT preview_bytes FROM t_image WHERE id=?";
 
     public BinaryFile getBinaryPreviewFile(int id) {
         Connection con = getConnection();
@@ -107,7 +107,7 @@ public class ImageBean extends FileBean {
         return data;
     }
 
-    private static String GET_FILE_DATA_SQL = "SELECT file_name,content_type,preview_bytes FROM v_preview_file WHERE id=?";
+    private static final String GET_FILE_DATA_SQL = "SELECT file_name,content_type,preview_bytes FROM v_preview_file WHERE id=?";
 
     public BinaryFile getBinaryFile(int id) {
         Connection con = getConnection();

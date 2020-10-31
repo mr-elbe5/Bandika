@@ -8,16 +8,15 @@
  */
 package de.elbe5.company;
 
-import de.elbe5.application.AdminController;
 import de.elbe5.base.cache.Strings;
 import de.elbe5.base.data.BaseData;
 import de.elbe5.request.*;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
-import de.elbe5.view.CloseDialogView;
-import de.elbe5.view.IView;
-import de.elbe5.view.UrlView;
+import de.elbe5.response.CloseDialogResponse;
+import de.elbe5.response.IResponse;
+import de.elbe5.response.ForwardResponse;
 
 public class CompanyController extends Controller {
 
@@ -43,7 +42,7 @@ public class CompanyController extends Controller {
         return KEY;
     }
 
-    public IView openEditCompany(SessionRequestData rdata) {
+    public IResponse openEditCompany(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int companyId = rdata.getId();
         CompanyData data = CompanyBean.getInstance().getCompany(companyId);
@@ -51,7 +50,7 @@ public class CompanyController extends Controller {
         return showEditCompany();
     }
 
-    public IView openCreateCompany(SessionRequestData rdata) {
+    public IResponse openCreateCompany(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         CompanyData data = new CompanyData();
         data.setNew(true);
@@ -60,7 +59,7 @@ public class CompanyController extends Controller {
         return showEditCompany();
     }
 
-    public IView saveCompany(SessionRequestData rdata) {
+    public IResponse saveCompany(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         CompanyData data = (CompanyData) rdata.getSessionObject("companyData");
         assert(data!=null);
@@ -71,23 +70,23 @@ public class CompanyController extends Controller {
         CompanyBean.getInstance().saveCompany(data);
         CompanyCache.setDirty();
         rdata.setMessage(Strings.string("_companySaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogView("/ctrl/admin/openPersonAdministration?companyId=" + data.getId());
+        return new CloseDialogResponse("/ctrl/admin/openPersonAdministration?companyId=" + data.getId());
     }
 
-    public IView deleteCompany(SessionRequestData rdata) {
+    public IResponse deleteCompany(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
             rdata.setMessage(Strings.string("_notDeletable",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_ERROR);
-            return new UrlView("/ctrl/admin/openPersonAdministration");
+            return new ForwardResponse("/ctrl/admin/openPersonAdministration");
         }
         CompanyBean.getInstance().deleteCompany(id);
         CompanyCache.setDirty();
         rdata.setMessage(Strings.string("_companyDeleted",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
-        return new UrlView("/ctrl/admin/openPersonAdministration");
+        return new ForwardResponse("/ctrl/admin/openPersonAdministration");
     }
 
-    protected IView showEditCompany() {
-        return new UrlView("/WEB-INF/_jsp/company/editCompany.ajax.jsp");
+    protected IResponse showEditCompany() {
+        return new ForwardResponse("/WEB-INF/_jsp/company/editCompany.ajax.jsp");
     }
 }

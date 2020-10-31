@@ -8,10 +8,13 @@
  */
 package de.elbe5.base.cache;
 
+import de.elbe5.application.ApplicationPath;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.data.CsvFile;
 import org.apache.commons.text.StringEscapeUtils;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.*;
 
 public class Strings {
@@ -46,6 +49,28 @@ public class Strings {
             for (int k = 0; k < csvLine.Values.size(); k++) {
                 String value = csvLine.Values.get(k);
                 caches.get(k).allStrings.put(csvLine.Key, value);
+            }
+        }
+    }
+
+    public static void writeProperties(){
+        for (Locale locale : cacheMap.keySet()){
+            File f = new File(ApplicationPath.getAppPath()+"/strings_"+locale.getLanguage()+".properties");
+            if (f.exists())
+                f.delete();
+            try {
+                f.createNewFile();
+                FileWriter fout = new FileWriter(f);
+                Strings strings = cacheMap.get(locale);
+                for (String key : strings.allStrings.keySet()){
+                    String line = key + " = " + strings.allStrings.get(key) + "\n";
+                    fout.write(line);
+                }
+                fout.flush();
+                fout.close();
+            }
+            catch (Exception e){
+                Log.error("bundle error", e);
             }
         }
     }

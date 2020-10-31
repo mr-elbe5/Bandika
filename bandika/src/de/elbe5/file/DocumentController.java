@@ -14,9 +14,9 @@ import de.elbe5.content.ContentData;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.SessionRequestData;
 import de.elbe5.servlet.ControllerCache;
-import de.elbe5.view.CloseDialogView;
-import de.elbe5.view.IView;
-import de.elbe5.view.UrlView;
+import de.elbe5.response.CloseDialogResponse;
+import de.elbe5.response.IResponse;
+import de.elbe5.response.ForwardResponse;
 
 public class DocumentController extends FileController {
 
@@ -42,7 +42,7 @@ public class DocumentController extends FileController {
         return KEY;
     }
 
-    public IView openCreateDocument(SessionRequestData rdata) {
+    public IResponse openCreateDocument(SessionRequestData rdata) {
         int parentId = rdata.getInt("parentId");
         ContentData parentData = ContentCache.getContent(parentId);
         assert(parentData!=null);
@@ -55,7 +55,7 @@ public class DocumentController extends FileController {
         return showEditDocument();
     }
 
-    public IView openEditDocument(SessionRequestData rdata) {
+    public IResponse openEditDocument(SessionRequestData rdata) {
         FileData data = FileBean.getInstance().getFile(rdata.getId(),true);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
@@ -63,7 +63,7 @@ public class DocumentController extends FileController {
         return showEditDocument();
     }
 
-    public IView saveDocument(SessionRequestData rdata) {
+    public IResponse saveDocument(SessionRequestData rdata) {
         int contentId = rdata.getId();
         DocumentData data = rdata.getSessionObject(RequestData.KEY_DOCUMENT,DocumentData.class);
         assert(data != null && data.getId() == contentId);
@@ -82,10 +82,10 @@ public class DocumentController extends FileController {
         data.setNew(false);
         ContentCache.setDirty();
         rdata.setMessage(Strings.string("_fileSaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogView("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
+        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
     }
 
-    public IView cutDocument(SessionRequestData rdata) {
+    public IResponse cutDocument(SessionRequestData rdata) {
         int contentId = rdata.getId();
         DocumentData data = FileBean.getInstance().getFile(contentId,true,DocumentData.class);
         assert(data!=null);
@@ -95,7 +95,7 @@ public class DocumentController extends FileController {
         return showContentAdministration(rdata,data.getParentId());
     }
 
-    public IView copyDocument(SessionRequestData rdata) {
+    public IResponse copyDocument(SessionRequestData rdata) {
         int contentId = rdata.getId();
         DocumentData data = FileBean.getInstance().getFile(contentId,true,DocumentData.class);
         assert(data!=null);
@@ -109,7 +109,7 @@ public class DocumentController extends FileController {
         return showContentAdministration(rdata,data.getId());
     }
 
-    public IView pasteDocument(SessionRequestData rdata) {
+    public IResponse pasteDocument(SessionRequestData rdata) {
         int parentId = rdata.getInt("parentId");
         ContentData parent=ContentCache.getContent(parentId);
         if (parent == null){
@@ -132,12 +132,12 @@ public class DocumentController extends FileController {
         return showContentAdministration(rdata,data.getId());
     }
 
-    public IView deleteDocument(SessionRequestData rdata){
+    public IResponse deleteDocument(SessionRequestData rdata){
         return deleteFile(rdata);
     }
 
-    protected IView showEditDocument() {
-        return new UrlView("/WEB-INF/_jsp/file/editDocument.ajax.jsp");
+    protected IResponse showEditDocument() {
+        return new ForwardResponse("/WEB-INF/_jsp/file/editDocument.ajax.jsp");
     }
 
 }

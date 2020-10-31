@@ -1,11 +1,11 @@
 package de.elbe5.servlet;
 
-import de.elbe5.request.ResponseCode;
+import javax.servlet.http.HttpServletResponse;
 
 public class CmsRequestException extends CmsException{
 
     public CmsRequestException(){
-        super(ResponseCode.BAD_REQUEST);
+        super(HttpServletResponse.SC_BAD_REQUEST);
     }
 
 }

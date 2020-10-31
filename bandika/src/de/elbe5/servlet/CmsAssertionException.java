@@ -1,15 +1,15 @@
 package de.elbe5.servlet;
 
-import de.elbe5.request.ResponseCode;
+import javax.servlet.http.HttpServletResponse;
 
 public class CmsAssertionException extends CmsException{
 
     public CmsAssertionException(){
-        super(ResponseCode.CONFLICT);
+        super(HttpServletResponse.SC_CONFLICT);
     }
 
     public CmsAssertionException(String message){
-        super(ResponseCode.CONFLICT, message);
+        super(HttpServletResponse.SC_CONFLICT, message);
     }
 
 }

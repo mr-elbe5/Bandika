@@ -8,22 +8,16 @@
  */
 package de.elbe5.group;
 
-import de.elbe5.application.AdminController;
 import de.elbe5.base.cache.Strings;
 import de.elbe5.base.data.BaseData;
-import de.elbe5.content.ContentCache;
-import de.elbe5.content.ContentData;
 import de.elbe5.request.*;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.user.UserCache;
-import de.elbe5.view.CloseDialogView;
-import de.elbe5.view.IView;
-import de.elbe5.view.RedirectView;
-import de.elbe5.view.UrlView;
-
-import java.util.Locale;
+import de.elbe5.response.CloseDialogResponse;
+import de.elbe5.response.IResponse;
+import de.elbe5.response.ForwardResponse;
 
 public class GroupController extends Controller {
 
@@ -49,7 +43,7 @@ public class GroupController extends Controller {
         return KEY;
     }
 
-    public IView openEditGroup(SessionRequestData rdata) {
+    public IResponse openEditGroup(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int groupId = rdata.getId();
         GroupData data = GroupBean.getInstance().getGroup(groupId);
@@ -57,7 +51,7 @@ public class GroupController extends Controller {
         return showEditGroup();
     }
 
-    public IView openCreateGroup(SessionRequestData rdata) {
+    public IResponse openCreateGroup(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         GroupData data = new GroupData();
         data.setNew(true);
@@ -66,7 +60,7 @@ public class GroupController extends Controller {
         return showEditGroup();
     }
 
-    public IView saveGroup(SessionRequestData rdata) {
+    public IResponse saveGroup(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         GroupData data = (GroupData) rdata.getSessionObject("groupData");
         assert(data!=null);
@@ -77,23 +71,23 @@ public class GroupController extends Controller {
         GroupBean.getInstance().saveGroup(data);
         UserCache.setDirty();
         rdata.setMessage(Strings.string("_groupSaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogView("/ctrl/admin/openPersonAdministration?groupId=" + data.getId());
+        return new CloseDialogResponse("/ctrl/admin/openPersonAdministration?groupId=" + data.getId());
     }
 
-    public IView deleteGroup(SessionRequestData rdata) {
+    public IResponse deleteGroup(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
             rdata.setMessage(Strings.string("_notDeletable",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_ERROR);
-            return new UrlView("/ctrl/admin/openPersonAdministration");
+            return new ForwardResponse("/ctrl/admin/openPersonAdministration");
         }
         GroupBean.getInstance().deleteGroup(id);
         UserCache.setDirty();
         rdata.setMessage(Strings.string("_groupDeleted",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
-        return new UrlView("/ctrl/admin/openPersonAdministration");
+        return new ForwardResponse("/ctrl/admin/openPersonAdministration");
     }
 
-    protected IView showEditGroup() {
-        return new UrlView("/WEB-INF/_jsp/group/editGroup.ajax.jsp");
+    protected IResponse showEditGroup() {
+        return new ForwardResponse("/WEB-INF/_jsp/group/editGroup.ajax.jsp");
     }
 }

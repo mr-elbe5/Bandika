@@ -23,7 +23,7 @@
     List<String> documentTypes=contentData.getDocumentClasses();
     int fileId=rdata.getInt("fileId");
 %>
-        <li class="documents">
+        <li class="documents open">
             <span>[<%=$SH("_documents", locale)%>]</span>
             <%if (contentData.hasUserEditRight(rdata)) {%>
             <div class="icons">

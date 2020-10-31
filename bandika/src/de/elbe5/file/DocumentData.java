@@ -8,10 +8,6 @@ public class DocumentData extends FileData {
     public DocumentData() {
     }
 
-    public String getURL(){
-        return "/ctrl/document/show/"+getId();
-    }
-
     // multiple data
 
     @Override

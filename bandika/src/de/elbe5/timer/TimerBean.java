@@ -24,7 +24,7 @@ public class TimerBean extends DbBean {
         return instance;
     }
 
-    private static String READ_TASK_SQL = "SELECT display_name,execution_interval,day,hour,minute,active FROM t_timer_task WHERE name=?";
+    private static final String READ_TASK_SQL = "SELECT display_name,execution_interval,day,hour,minute,active FROM t_timer_task WHERE name=?";
 
     public void readTimerTask(TimerTaskData task) {
         Connection con = getConnection();
@@ -51,7 +51,7 @@ public class TimerBean extends DbBean {
         }
     }
 
-    private static String UPDATE_TASK_SQL = "UPDATE t_timer_task SET execution_interval=?,day=?,hour=?,minute=?,active=? WHERE name=?";
+    private static final String UPDATE_TASK_SQL = "UPDATE t_timer_task SET execution_interval=?,day=?,hour=?,minute=?,active=? WHERE name=?";
 
     public void updateTaskData(TimerTaskData task) {
         Connection con = getConnection();

@@ -1,36 +1,40 @@
-package de.elbe5.view;
+package de.elbe5.response;
 
 import de.elbe5.base.data.BinaryFile;
-import de.elbe5.file.FileData;
-import de.elbe5.file.FileBean;
+import de.elbe5.request.RequestData;
 import de.elbe5.request.SessionRequestData;
-import de.elbe5.request.ResponseCode;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class FileView  implements IView {
+public class BinaryFileResponse implements IResponse {
 
-    private FileData data;
-    private boolean forceDownload;
+    private final BinaryFile file;
+    private boolean forceDownload=false;
     private boolean noCache=true;
 
-    public FileView(FileData data, boolean forceDownload) {
-        this.data = data;
-        this.forceDownload = forceDownload;
+    public BinaryFileResponse(BinaryFile file) {
+        this.file = file;
     }
 
     public void setNoCache(boolean noCache) {
         this.noCache = noCache;
     }
 
+    public void setForceDownload(boolean forceDownload) {
+        this.forceDownload = forceDownload;
+    }
+
     @Override
     public void processView(ServletContext context, SessionRequestData rdata, HttpServletResponse response)  {
-        BinaryFile file= FileBean.getInstance().getBinaryFile(data.getId());
+        process(context, rdata,response);
+    }
+
+    public void process(ServletContext context, RequestData rdata, HttpServletResponse response)  {
         if (file==null){
-            response.setStatus(ResponseCode.NO_CONTENT);
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
             return;
         }
         String contentType = file.getContentType();
@@ -40,7 +44,7 @@ public class FileView  implements IView {
         response.setContentType(contentType);
         try {
             OutputStream out = response.getOutputStream();
-            if (data.getBytes() == null) {
+            if (file.getBytes() == null) {
                 response.setHeader("Content-Length", "0");
             } else {
                 if (noCache) {
@@ -61,7 +65,7 @@ public class FileView  implements IView {
             }
             out.flush();
         } catch (IOException e) {
-            response.setStatus(ResponseCode.NO_CONTENT);
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         }
     }
 }

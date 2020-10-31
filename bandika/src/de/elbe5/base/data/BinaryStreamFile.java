@@ -15,7 +15,7 @@ import java.io.OutputStream;
 public class BinaryStreamFile extends BinaryFileBase {
 
     protected InputStream inputStream = null;
-    protected int bufferSize = 16384;
+    protected int bufferSize = 0x4000; // 16kb
 
     public BinaryStreamFile() {
     }
@@ -28,10 +28,6 @@ public class BinaryStreamFile extends BinaryFileBase {
         this.inputStream = inputStream;
     }
 
-    public int getBufferSize() {
-        return bufferSize;
-    }
-
     public void setBufferSize(int bufferSize) {
         this.bufferSize = bufferSize;
     }
@@ -40,9 +36,9 @@ public class BinaryStreamFile extends BinaryFileBase {
         if (inputStream == null) {
             return;
         }
-        byte[] bytes = new byte[getBufferSize()];
+        byte[] bytes = new byte[bufferSize];
         int len;
-        while ((len = inputStream.read(bytes, 0, getBufferSize())) > 0) {
+        while ((len = inputStream.read(bytes, 0, bufferSize)) > 0) {
             out.write(bytes, 0, len);
         }
         inputStream.close();

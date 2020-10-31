@@ -23,7 +23,7 @@
     List<String> mediaTypes =contentData.getMediaClasses();
     int fileId=rdata.getInt("fileId");
 %>
-        <li class="media">
+        <li class="media open">
             <span>[<%=$SH("_media", locale)%>]</span>
             <%if (contentData.hasUserEditRight(rdata)) {%>
             <div class="icons">

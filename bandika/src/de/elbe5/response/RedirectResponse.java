@@ -1,19 +1,17 @@
-package de.elbe5.view;
+package de.elbe5.response;
 
 import de.elbe5.request.SessionRequestData;
-import de.elbe5.request.ResponseCode;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class RedirectView implements IView {
+public class RedirectResponse implements IResponse {
 
-    private String url;
+    private final String url;
 
-    public RedirectView(String url) {
+    public RedirectResponse(String url) {
         this.url=url;
     }
 
@@ -24,7 +22,7 @@ public class RedirectView implements IView {
         try {
             rd.forward(rdata.getRequest(), response);
         } catch (ServletException | IOException e) {
-            response.setStatus(ResponseCode.NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 }

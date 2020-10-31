@@ -14,10 +14,10 @@ import de.elbe5.content.ContentData;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.SessionRequestData;
 import de.elbe5.servlet.ControllerCache;
-import de.elbe5.view.CloseDialogView;
-import de.elbe5.view.IView;
-import de.elbe5.view.ImagePreview;
-import de.elbe5.view.UrlView;
+import de.elbe5.response.CloseDialogResponse;
+import de.elbe5.response.IResponse;
+import de.elbe5.response.PreviewResponse;
+import de.elbe5.response.ForwardResponse;
 
 public class ImageController extends FileController {
 
@@ -43,7 +43,7 @@ public class ImageController extends FileController {
         return KEY;
     }
 
-    public IView openCreateImage(SessionRequestData rdata) {
+    public IResponse openCreateImage(SessionRequestData rdata) {
         int parentId = rdata.getInt("parentId");
         ContentData parentData = ContentCache.getContent(parentId);
         assert(parentData!=null);
@@ -56,7 +56,7 @@ public class ImageController extends FileController {
         return showEditImage();
     }
 
-    public IView openEditImage(SessionRequestData rdata) {
+    public IResponse openEditImage(SessionRequestData rdata) {
         FileData data = FileBean.getInstance().getFile(rdata.getId(),true);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
@@ -64,7 +64,7 @@ public class ImageController extends FileController {
         return showEditImage();
     }
 
-    public IView saveImage(SessionRequestData rdata) {
+    public IResponse saveImage(SessionRequestData rdata) {
         int contentId = rdata.getId();
         ImageData data = rdata.getSessionObject(RequestData.KEY_IMAGE,ImageData.class);
         assert(data != null && data.getId() == contentId);
@@ -82,10 +82,10 @@ public class ImageController extends FileController {
         data.setNew(false);
         ContentCache.setDirty();
         rdata.setMessage(Strings.string("_fileSaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogView("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
+        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
     }
 
-    public IView cutImage(SessionRequestData rdata) {
+    public IResponse cutImage(SessionRequestData rdata) {
         int contentId = rdata.getId();
         ImageData data = FileBean.getInstance().getFile(contentId,true, ImageData.class);
         assert(data!=null);
@@ -95,7 +95,7 @@ public class ImageController extends FileController {
         return showContentAdministration(rdata,data.getParentId());
     }
 
-    public IView copyImage(SessionRequestData rdata) {
+    public IResponse copyImage(SessionRequestData rdata) {
         int contentId = rdata.getId();
         ImageData data = FileBean.getInstance().getFile(contentId,true, ImageData.class);
         assert(data!=null);
@@ -109,7 +109,7 @@ public class ImageController extends FileController {
         return showContentAdministration(rdata,data.getId());
     }
 
-    public IView pasteImage(SessionRequestData rdata) {
+    public IResponse pasteImage(SessionRequestData rdata) {
         int parentId = rdata.getInt("parentId");
         ImageData data=rdata.getClipboardData(RequestData.KEY_IMAGE,ImageData.class);
         ContentData parent=ContentCache.getContent(parentId);
@@ -128,19 +128,19 @@ public class ImageController extends FileController {
         return showContentAdministration(rdata,data.getId());
     }
 
-    public IView showPreview(SessionRequestData rdata) {
+    public IResponse showPreview(SessionRequestData rdata) {
         int imageId = rdata.getId();
         ImageData data = ContentCache.getFile(imageId,ImageData.class);
         assert(data!=null);
-        return new ImagePreview(data);
+        return new PreviewResponse(data);
     }
 
-    public IView deleteImage(SessionRequestData rdata){
+    public IResponse deleteImage(SessionRequestData rdata){
         return deleteFile(rdata);
     }
 
-    protected IView showEditImage() {
-        return new UrlView("/WEB-INF/_jsp/file/editImage.ajax.jsp");
+    protected IResponse showEditImage() {
+        return new ForwardResponse("/WEB-INF/_jsp/file/editImage.ajax.jsp");
     }
 
 }

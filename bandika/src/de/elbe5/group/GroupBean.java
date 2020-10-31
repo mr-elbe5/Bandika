@@ -35,7 +35,7 @@ public class GroupBean extends DbBean {
         return getNextId("s_group_id");
     }
 
-    private static String CHANGED_SQL = "SELECT change_date FROM t_group WHERE id=?";
+    private static final String CHANGED_SQL = "SELECT change_date FROM t_group WHERE id=?";
 
     protected boolean changedGroup(Connection con, GroupData data) {
         return changedItem(con, CHANGED_SQL, data);
@@ -69,7 +69,7 @@ public class GroupBean extends DbBean {
         return list;
     }
 
-    private static String GET_GROUP_SQL = "SELECT change_date,name,notes FROM t_group WHERE id=? ORDER BY name";
+    private static final String GET_GROUP_SQL = "SELECT change_date,name,notes FROM t_group WHERE id=? ORDER BY name";
 
     public GroupData getGroup(int id) {
         Connection con = getConnection();
@@ -101,7 +101,7 @@ public class GroupBean extends DbBean {
         return data;
     }
 
-    private static String READ_GROUPUSER_SQL = "SELECT user_id FROM t_user2group WHERE group_id=?";
+    private static final String READ_GROUPUSER_SQL = "SELECT user_id FROM t_user2group WHERE group_id=?";
 
     protected void readGroupUsers(Connection con, GroupData data) throws SQLException {
         PreparedStatement pst = null;
@@ -136,8 +136,8 @@ public class GroupBean extends DbBean {
         }
     }
 
-    private static String INSERT_GROUP_SQL = "insert into t_group (change_date,name,notes, id) values(?,?,?,?)";
-    private static String UPDATE_GROUP_SQL = "update t_group set change_date=?,name=?,notes=? where id=?";
+    private static final String INSERT_GROUP_SQL = "insert into t_group (change_date,name,notes, id) values(?,?,?,?)";
+    private static final String UPDATE_GROUP_SQL = "update t_group set change_date=?,name=?,notes=? where id=?";
 
     protected void writeGroup(Connection con, GroupData data) throws SQLException {
         PreparedStatement pst = null;
@@ -156,8 +156,8 @@ public class GroupBean extends DbBean {
         }
     }
 
-    private static String DELETE_GROUPUSERS_SQL = "DELETE FROM t_user2group WHERE group_id=?";
-    private static String INSERT_GROUPUSER_SQL = "INSERT INTO t_user2group (group_id,user_id) VALUES(?,?)";
+    private static final String DELETE_GROUPUSERS_SQL = "DELETE FROM t_user2group WHERE group_id=?";
+    private static final String INSERT_GROUPUSER_SQL = "INSERT INTO t_user2group (group_id,user_id) VALUES(?,?)";
 
     protected void writeGroupUsers(Connection con, GroupData data) throws SQLException {
         PreparedStatement pst = null;
@@ -179,13 +179,13 @@ public class GroupBean extends DbBean {
         }
     }
 
-    private static String DELETE_GROUP_SQL = "DELETE FROM t_group WHERE id=?";
+    private static final String DELETE_GROUP_SQL = "DELETE FROM t_group WHERE id=?";
 
     public boolean deleteGroup(int id) {
         return deleteItem(DELETE_GROUP_SQL, id);
     }
 
-    private static String GET_SYSTEM_RIGHT_SQL = "SELECT name FROM t_system_right WHERE group_id=?";
+    private static final String GET_SYSTEM_RIGHT_SQL = "SELECT name FROM t_system_right WHERE group_id=?";
 
     public void readGroupRights(Connection con,GroupData data) {
         data.getSystemRights().clear();
@@ -205,8 +205,8 @@ public class GroupBean extends DbBean {
         }
     }
 
-    private static String DELETE_SYSTEM_RIGHTS_SQL = "DELETE FROM t_system_right WHERE group_id=?";
-    private static String INSERT_SYSTEM_RIGHT_SQL = "INSERT INTO t_system_right (name,group_id) VALUES(?,?)";
+    private static final String DELETE_SYSTEM_RIGHTS_SQL = "DELETE FROM t_system_right WHERE group_id=?";
+    private static final String INSERT_SYSTEM_RIGHT_SQL = "INSERT INTO t_system_right (name,group_id) VALUES(?,?)";
 
     public void writeGroupRights(Connection con, GroupData data) throws SQLException {
         PreparedStatement pst = null;

@@ -10,8 +10,8 @@ package de.elbe5.page;
 
 import de.elbe5.request.*;
 import de.elbe5.servlet.ControllerCache;
-import de.elbe5.view.IView;
-import de.elbe5.view.UrlView;
+import de.elbe5.response.IResponse;
+import de.elbe5.response.ForwardResponse;
 
 public class SectionPageController extends PageController {
 
@@ -37,7 +37,7 @@ public class SectionPageController extends PageController {
         return KEY;
     }
 
-    public IView addPart(SessionRequestData rdata) {
+    public IResponse addPart(SessionRequestData rdata) {
         int contentId = rdata.getId();
         SectionPageData data = rdata.getCurrentSessionContent(SectionPageData.class);
         assert(data != null && data.getId() == contentId);
@@ -49,7 +49,7 @@ public class SectionPageController extends PageController {
         pdata.setCreateValues(rdata);
         data.addPart(pdata, fromPartId, true);
         rdata.put(SectionPartData.KEY_PART, pdata);
-        return new UrlView("/WEB-INF/_jsp/sectionpage/newPart.ajax.jsp");
+        return new ForwardResponse("/WEB-INF/_jsp/sectionpage/newPart.ajax.jsp");
     }
 
 }

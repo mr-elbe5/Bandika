@@ -30,15 +30,15 @@ public class CompanyBean extends DbBean {
         return getNextId("s_company_id");
     }
 
-    private static String CHANGED_SQL = "SELECT change_date FROM t_company WHERE id=?";
+    private static final String CHANGED_SQL = "SELECT change_date FROM t_company WHERE id=?";
 
     protected boolean changedCompany(Connection con, CompanyData data) {
         return changedItem(con, CHANGED_SQL, data);
     }
 
-    private static String SELECT_COMPANY_SQL = "SELECT id,change_date,name,street,zipcode,city,country,email,phone,fax FROM t_company";
+    private static final String SELECT_COMPANY_SQL = "SELECT id,change_date,name,street,zipcode,city,country,email,phone,fax FROM t_company";
 
-    private static String GET_ALL_COMPANIES_SQL = SELECT_COMPANY_SQL + " ORDER BY name";
+    private static final String GET_ALL_COMPANIES_SQL = SELECT_COMPANY_SQL + " ORDER BY name";
 
     public List<CompanyData> getAllCompanies() {
         List<CompanyData> list = new ArrayList<>();
@@ -63,7 +63,7 @@ public class CompanyBean extends DbBean {
         return list;
     }
 
-    private static String GET_COMPANY_SQL = SELECT_COMPANY_SQL + " WHERE id=?";
+    private static final String GET_COMPANY_SQL = SELECT_COMPANY_SQL + " WHERE id=?";
 
     public CompanyData getCompany(int id) {
         Connection con = getConnection();
@@ -114,8 +114,8 @@ public class CompanyBean extends DbBean {
         }
     }
 
-    private static String INSERT_COMPANY_SQL = "insert into t_company (change_date,name,street,zipcode,city,country,email,phone,fax,id) values(?,?,?,?,?,?,?,?,?,?)";
-    private static String UPDATE_COMPANY_SQL = "update t_company set change_date=?,name=?,street=?,zipcode=?,city=?,country=?,email=?,phone=?,fax=? where id=?";
+    private static final String INSERT_COMPANY_SQL = "insert into t_company (change_date,name,street,zipcode,city,country,email,phone,fax,id) values(?,?,?,?,?,?,?,?,?,?)";
+    private static final String UPDATE_COMPANY_SQL = "update t_company set change_date=?,name=?,street=?,zipcode=?,city=?,country=?,email=?,phone=?,fax=? where id=?";
 
     protected void writeCompany(Connection con, CompanyData data) throws SQLException {
         PreparedStatement pst = null;
@@ -139,7 +139,7 @@ public class CompanyBean extends DbBean {
         }
     }
 
-    private static String DELETE_COMPANY_SQL = "DELETE FROM t_company WHERE id=?";
+    private static final String DELETE_COMPANY_SQL = "DELETE FROM t_company WHERE id=?";
 
     public void deleteCompany(int id) {
         Connection con = getConnection();

@@ -3,16 +3,16 @@ package de.elbe5.servlet;
 import de.elbe5.base.cache.Strings;
 import de.elbe5.content.JspContentData;
 import de.elbe5.request.*;
-import de.elbe5.view.IView;
-import de.elbe5.view.ContentView;
-import de.elbe5.view.UrlView;
+import de.elbe5.response.IResponse;
+import de.elbe5.response.ContentResponse;
+import de.elbe5.response.ForwardResponse;
 
 public abstract class Controller {
 
     public abstract String getKey();
 
-    protected IView showHome() {
-        return new UrlView("/");
+    protected IResponse showHome() {
+        return new ForwardResponse("/");
     }
 
     protected void checkRights(boolean hasRights){
@@ -24,31 +24,31 @@ public abstract class Controller {
         rdata.setMessage(Strings.string("_saveError",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_ERROR);
     }
 
-    protected IView openAdminPage(SessionRequestData rdata, String jsp, String title) {
+    protected IResponse openAdminPage(SessionRequestData rdata, String jsp, String title) {
         rdata.put(RequestData.KEY_JSP, jsp);
         rdata.put(RequestData.KEY_TITLE, title);
-        return new UrlView("/WEB-INF/_jsp/administration/adminMaster.jsp");
+        return new ForwardResponse("/WEB-INF/_jsp/administration/adminMaster.jsp");
     }
 
-    protected IView showSystemAdministration(SessionRequestData rdata) {
+    protected IResponse showSystemAdministration(SessionRequestData rdata) {
         return openAdminPage(rdata, "/WEB-INF/_jsp/administration/systemAdministration.jsp", Strings.string("_systemAdministration",rdata.getLocale()));
     }
 
-    protected IView showPersonAdministration(SessionRequestData rdata) {
+    protected IResponse showPersonAdministration(SessionRequestData rdata) {
         return openAdminPage(rdata, "/WEB-INF/_jsp/administration/personAdministration.jsp", Strings.string("_personAdministration",rdata.getLocale()));
     }
 
-    protected IView showContentAdministration(SessionRequestData rdata) {
+    protected IResponse showContentAdministration(SessionRequestData rdata) {
         return openAdminPage(rdata, "/WEB-INF/_jsp/administration/contentAdministration.jsp", Strings.string("_contentAdministration",rdata.getLocale()));
     }
 
-    protected IView showContentLog(SessionRequestData rdata) {
+    protected IResponse showContentLog(SessionRequestData rdata) {
         return openAdminPage(rdata, "/WEB-INF/_jsp/administration/contentLog.jsp", Strings.string("_contentLog",rdata.getLocale()));
     }
 
-    protected IView openJspPage(String jsp) {
+    protected IResponse openJspPage(String jsp) {
         JspContentData contentData = new JspContentData();
         contentData.setJsp(jsp);
-        return new ContentView(contentData);
+        return new ContentResponse(contentData);
     }
 }

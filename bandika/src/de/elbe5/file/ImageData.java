@@ -12,7 +12,6 @@ import javax.imageio.ImageWriter;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Locale;
 
 public class ImageData extends FileData {
 
@@ -39,7 +38,7 @@ public class ImageData extends FileData {
     // base data
 
     public String getPreviewURL(){
-        return "/previews/"+getPreviewName();
+        return "/ctrl/image/showPreview/"+getId();
     }
 
     public int getWidth() {
@@ -108,12 +107,6 @@ public class ImageData extends FileData {
 
     public void setMaxPreviewHeight(int maxPreviewHeight) {
         this.maxPreviewHeight = maxPreviewHeight;
-    }
-
-    // view
-
-    public String getPublishedUrl() {
-        return "/ctrl/image/show/"+getId();
     }
 
     // multiple data

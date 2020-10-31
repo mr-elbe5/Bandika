@@ -101,6 +101,7 @@ public class FileUtil {
         return uri.substring(pos + 1);
     }
 
+    //includes leading point
     public static String getExtension(String fileName) {
         if (fileName == null) {
             return null;

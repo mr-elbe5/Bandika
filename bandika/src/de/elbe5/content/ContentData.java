@@ -21,8 +21,8 @@ import de.elbe5.request.SessionRequestData;
 import de.elbe5.rights.Right;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.user.UserData;
-import de.elbe5.view.IView;
-import de.elbe5.view.ContentView;
+import de.elbe5.response.IResponse;
+import de.elbe5.response.ContentResponse;
 
 import javax.servlet.ServletException;
 import javax.servlet.jsp.PageContext;
@@ -421,8 +421,8 @@ public class ContentData extends BaseData implements Comparable<ContentData> {
         return viewType.equals(VIEW_TYPE_SHOW);
     }
 
-    public IView getDefaultView(){
-        return new ContentView(this);
+    public IResponse getDefaultView(){
+        return new ContentResponse(this);
     }
 
     public String getContentDataJsp() {

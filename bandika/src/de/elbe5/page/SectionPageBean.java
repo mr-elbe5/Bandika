@@ -26,7 +26,7 @@ public class SectionPageBean extends PageBean {
         return instance;
     }
 
-    private static String GET_CONTENT_EXTRAS_SQL = "SELECT layout FROM t_section_page WHERE id=?";
+    private static final String GET_CONTENT_EXTRAS_SQL = "SELECT layout FROM t_section_page WHERE id=?";
 
     @Override
     public void readContentExtras(Connection con, ContentData contentData) throws SQLException {
@@ -51,7 +51,7 @@ public class SectionPageBean extends PageBean {
         }
     }
 
-    private static String INSERT_CONTENT_EXTRAS_SQL = "insert into t_section_page (layout,id) values(?,?)";
+    private static final String INSERT_CONTENT_EXTRAS_SQL = "insert into t_section_page (layout,id) values(?,?)";
 
     @Override
     public void createContentExtras(Connection con, ContentData contentData) throws SQLException {
@@ -73,7 +73,7 @@ public class SectionPageBean extends PageBean {
         writeAllParts(con, data);
     }
 
-    private static String UPDATE_CONTENT_EXTRAS_SQL = "update t_section_page set layout=? where id=?";
+    private static final String UPDATE_CONTENT_EXTRAS_SQL = "update t_section_page set layout=? where id=?";
 
     @Override
     public void updateContentExtras(Connection con, ContentData contentData) throws SQLException {
@@ -95,7 +95,7 @@ public class SectionPageBean extends PageBean {
         writeAllParts(con, data);
     }
 
-    private static String READ_PARTS_SQL = "SELECT type,section,position,id,change_date FROM t_section_part WHERE page_id=? ORDER BY position";
+    private static final String READ_PARTS_SQL = "SELECT type,section,position,id,change_date FROM t_section_part WHERE page_id=? ORDER BY position";
 
     public void readParts(Connection con, SectionPageData contentData) throws SQLException {
         PreparedStatement pst = null;
@@ -125,10 +125,10 @@ public class SectionPageBean extends PageBean {
         }
     }
 
-    private static String GET_PART_IDS_SQL = "SELECT id FROM t_section_part where page_id=?";
-    private static String INSERT_PART_SQL = "INSERT INTO t_section_part (type,change_date,page_id,section,position,id) VALUES(?,?,?,?,?,?)";
-    private static String UPDATE_PART_SQL = "UPDATE t_section_part SET type=?,change_date=?,page_id=?,section=?,position=? WHERE id=?";
-    private static String DELETE_PART_SQL = "DELETE FROM t_section_part WHERE id=?";
+    private static final String GET_PART_IDS_SQL = "SELECT id FROM t_section_part where page_id=?";
+    private static final String INSERT_PART_SQL = "INSERT INTO t_section_part (type,change_date,page_id,section,position,id) VALUES(?,?,?,?,?,?)";
+    private static final String UPDATE_PART_SQL = "UPDATE t_section_part SET type=?,change_date=?,page_id=?,section=?,position=? WHERE id=?";
+    private static final String DELETE_PART_SQL = "DELETE FROM t_section_part WHERE id=?";
 
     public void writeAllParts(Connection con, SectionPageData page) throws SQLException {
         PreparedStatement pstIds = null;

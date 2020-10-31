@@ -12,9 +12,9 @@ import de.elbe5.base.log.Log;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.SessionRequestData;
-import de.elbe5.view.IView;
-import de.elbe5.view.ContentView;
-import de.elbe5.view.MasterView;
+import de.elbe5.response.IResponse;
+import de.elbe5.response.ContentResponse;
+import de.elbe5.response.MasterView;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -83,8 +83,8 @@ public class PageData extends ContentData {
 
     // view
 
-    public IView getDefaultView(){
-        return new ContentView(this, getMaster());
+    public IResponse getDefaultView(){
+        return new ContentResponse(this, getMaster());
     }
 
     public void displayContent(PageContext context, SessionRequestData rdata) throws IOException, ServletException {

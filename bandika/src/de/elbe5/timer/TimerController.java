@@ -8,15 +8,14 @@
  */
 package de.elbe5.timer;
 
-import de.elbe5.application.AdminController;
 import de.elbe5.base.cache.Strings;
 import de.elbe5.servlet.ControllerCache;
-import de.elbe5.view.CloseDialogView;
+import de.elbe5.response.CloseDialogResponse;
 import de.elbe5.request.SessionRequestData;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
-import de.elbe5.view.IView;
-import de.elbe5.view.UrlView;
+import de.elbe5.response.IResponse;
+import de.elbe5.response.ForwardResponse;
 
 public class TimerController extends Controller {
 
@@ -42,7 +41,7 @@ public class TimerController extends Controller {
         return KEY;
     }
 
-    public IView openEditTimerTask(SessionRequestData rdata) {
+    public IResponse openEditTimerTask(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         String name = rdata.getString("timerName");
         TimerTaskData task = Timer.getInstance().getTaskCopy(name);
@@ -50,7 +49,7 @@ public class TimerController extends Controller {
         return showEditTimerTask();
     }
 
-    public IView saveTimerTask(SessionRequestData rdata) {
+    public IResponse saveTimerTask(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         TimerTaskData data = (TimerTaskData) rdata.getSessionObject("timerTaskData");
         assert(data!=null);
@@ -62,11 +61,11 @@ public class TimerController extends Controller {
         ts.updateTaskData(data);
         Timer.getInstance().loadTask(data.getName());
         rdata.setMessage(Strings.string("_taskSaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogView("/ctrl/admin/openSystemAdministration");
+        return new CloseDialogResponse("/ctrl/admin/openSystemAdministration");
     }
 
-    private IView showEditTimerTask() {
-        return new UrlView("/WEB-INF/_jsp/timer/editTimerTask.ajax.jsp");
+    private IResponse showEditTimerTask() {
+        return new ForwardResponse("/WEB-INF/_jsp/timer/editTimerTask.ajax.jsp");
     }
 
 }

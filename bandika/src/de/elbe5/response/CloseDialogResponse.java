@@ -1,24 +1,22 @@
-package de.elbe5.view;
+package de.elbe5.response;
 
 import de.elbe5.request.RequestData;
 import de.elbe5.request.SessionRequestData;
-import de.elbe5.request.ResponseCode;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class CloseDialogView extends UrlView {
+public class CloseDialogResponse extends ForwardResponse {
 
     private String targetId = "";
 
-    public CloseDialogView(String url) {
+    public CloseDialogResponse(String url) {
         super(url);
     }
 
-    public CloseDialogView(String url, String targetId) {
+    public CloseDialogResponse(String url, String targetId) {
         super(url);
         this.targetId = targetId;
     }
@@ -32,7 +30,7 @@ public class CloseDialogView extends UrlView {
         try {
             rd.forward(rdata.getRequest(), response);
         } catch (ServletException | IOException e) {
-            response.setStatus(ResponseCode.NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 }

@@ -15,9 +15,9 @@ import de.elbe5.request.SessionRequestData;
 import de.elbe5.servlet.CmsAuthorizationException;
 import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
-import de.elbe5.view.CloseDialogView;
-import de.elbe5.view.IView;
-import de.elbe5.view.UrlView;
+import de.elbe5.response.CloseDialogResponse;
+import de.elbe5.response.IResponse;
+import de.elbe5.response.ForwardResponse;
 
 import java.util.*;
 
@@ -46,7 +46,7 @@ public class ContentController extends Controller {
     }
 
     //frontend
-    public IView show(SessionRequestData rdata) {
+    public IResponse show(SessionRequestData rdata) {
         //Log.log("show");
         int contentId = rdata.getId();
         ContentData data = ContentCache.getContent(contentId);
@@ -57,7 +57,7 @@ public class ContentController extends Controller {
     }
 
     //frontend
-    public IView show(String url, SessionRequestData rdata) {
+    public IResponse show(String url, SessionRequestData rdata) {
         ContentData data;
         data = ContentCache.getContent(url);
         assert(data!=null);
@@ -68,7 +68,7 @@ public class ContentController extends Controller {
     }
 
     //backend
-    public IView openCreateContentData(SessionRequestData rdata) {
+    public IResponse openCreateContentData(SessionRequestData rdata) {
         int parentId = rdata.getInt("parentId");
         ContentData parentData = ContentCache.getContent(parentId);
         assert(parentData!=null);
@@ -83,7 +83,7 @@ public class ContentController extends Controller {
     }
 
     //backend
-    public IView openEditContentData(SessionRequestData rdata) {
+    public IResponse openEditContentData(SessionRequestData rdata) {
         int contentId = rdata.getId();
         ContentData data = ContentBean.getInstance().getContent(contentId);
         checkRights(data.hasUserEditRight(rdata));
@@ -93,7 +93,7 @@ public class ContentController extends Controller {
     }
 
     //backend
-    public IView saveContentData(SessionRequestData rdata) {
+    public IResponse saveContentData(SessionRequestData rdata) {
         int contentId = rdata.getId();
         ContentData data = rdata.getCurrentSessionContent();
         assert(data != null && data.getId() == contentId);
@@ -114,11 +114,11 @@ public class ContentController extends Controller {
         rdata.removeCurrentSessionContent();
         ContentCache.setDirty();
         rdata.setMessage(Strings.string("_contentSaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogView("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
+        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
     }
 
     //backend
-    public IView openEditRights(SessionRequestData rdata) {
+    public IResponse openEditRights(SessionRequestData rdata) {
         int contentId = rdata.getId();
         ContentData data = ContentBean.getInstance().getContent(contentId);
         checkRights(data.hasUserEditRight(rdata));
@@ -128,7 +128,7 @@ public class ContentController extends Controller {
     }
 
     //backend
-    public IView saveRights(SessionRequestData rdata) {
+    public IResponse saveRights(SessionRequestData rdata) {
         int contentId = rdata.getId();
         ContentData data = rdata.getCurrentSessionContent();
         assert(data != null && data.getId() == contentId);
@@ -145,11 +145,11 @@ public class ContentController extends Controller {
         rdata.removeCurrentSessionContent();
         ContentCache.setDirty();
         rdata.setMessage(Strings.string("_rightsSaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogView("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
+        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
     }
 
     //backend
-    public IView cutContent(SessionRequestData rdata) {
+    public IResponse cutContent(SessionRequestData rdata) {
         int contentId = rdata.getId();
         ContentData data = ContentBean.getInstance().getContent(contentId);
         assert(data!=null);
@@ -159,7 +159,7 @@ public class ContentController extends Controller {
     }
 
     //backend
-    public IView copyContent(SessionRequestData rdata) {
+    public IResponse copyContent(SessionRequestData rdata) {
         int contentId = rdata.getId();
         ContentData srcData = ContentBean.getInstance().getContent(contentId);
         assert(srcData!=null);
@@ -173,7 +173,7 @@ public class ContentController extends Controller {
     }
 
     //backend
-    public IView pasteContent(SessionRequestData rdata) {
+    public IResponse pasteContent(SessionRequestData rdata) {
         int parentId = rdata.getInt("parentId");
         ContentData data=rdata.getClipboardData(RequestData.KEY_CONTENT,ContentData.class);
         if (data==null){
@@ -204,7 +204,7 @@ public class ContentController extends Controller {
     }
 
     //backend
-    public IView deleteContent(SessionRequestData rdata) {
+    public IResponse deleteContent(SessionRequestData rdata) {
         int contentId = rdata.getId();
         ContentData data=ContentCache.getContent(contentId);
         checkRights(data.hasUserEditRight(rdata)) ;
@@ -222,7 +222,7 @@ public class ContentController extends Controller {
     }
 
     //backend
-    public IView openSortChildPages(SessionRequestData rdata) {
+    public IResponse openSortChildPages(SessionRequestData rdata) {
         int contentId = rdata.getId();
         ContentData data = ContentCache.getContent(contentId);
         checkRights(data.hasUserEditRight(rdata));
@@ -231,7 +231,7 @@ public class ContentController extends Controller {
     }
 
     //backend
-    public IView saveChildPageRanking(SessionRequestData rdata) {
+    public IResponse saveChildPageRanking(SessionRequestData rdata) {
         int contentId = rdata.getId();
         ContentData data = rdata.getCurrentSessionContent();
         assert(data != null && data.getId() == contentId);
@@ -248,29 +248,29 @@ public class ContentController extends Controller {
         rdata.removeCurrentSessionContent();
         ContentCache.setDirty();
         rdata.setMessage(Strings.string("_newRankingSaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogView("/ctrl/admin/openContentAdministration?contentId=" + contentId);
+        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + contentId);
     }
 
-    public IView openCreateContentFrontend(SessionRequestData rdata) {
+    public IResponse openCreateContentFrontend(SessionRequestData rdata) {
         throw new CmsAuthorizationException();
     }
 
     //frontend
-    public IView openEditContentFrontend(SessionRequestData rdata) {
+    public IResponse openEditContentFrontend(SessionRequestData rdata) {
         throw new CmsAuthorizationException();
     }
 
     //frontend
-    public IView showEditContentFrontend(SessionRequestData rdata) {
+    public IResponse showEditContentFrontend(SessionRequestData rdata) {
         throw new CmsAuthorizationException();
     }
 
     //frontend
-    public IView saveContentFrontend(SessionRequestData rdata) {
+    public IResponse saveContentFrontend(SessionRequestData rdata) {
         throw new CmsAuthorizationException();
     }
 
-    public IView cancelEditContentFrontend(SessionRequestData rdata) {
+    public IResponse cancelEditContentFrontend(SessionRequestData rdata) {
         int contentId = rdata.getId();
         ContentData data = rdata.getCurrentSessionContent();
         assert(data != null && data.getId() == contentId);
@@ -279,20 +279,20 @@ public class ContentController extends Controller {
         return show(rdata);
     }
 
-    protected IView showEditContentData(ContentData contentData) {
-        return new UrlView(contentData.getContentDataJsp());
+    protected IResponse showEditContentData(ContentData contentData) {
+        return new ForwardResponse(contentData.getContentDataJsp());
     }
 
-    protected IView showEditRights(ContentData contentData) {
-        return new UrlView("/WEB-INF/_jsp/content/editGroupRights.ajax.jsp");
+    protected IResponse showEditRights(ContentData contentData) {
+        return new ForwardResponse("/WEB-INF/_jsp/content/editGroupRights.ajax.jsp");
     }
 
-    protected IView showSortChildContents() {
-        return new UrlView("/WEB-INF/_jsp/content/sortChildContents.ajax.jsp");
+    protected IResponse showSortChildContents() {
+        return new ForwardResponse("/WEB-INF/_jsp/content/sortChildContents.ajax.jsp");
     }
 
-    protected IView showContentAdministration(SessionRequestData rdata, int contentId) {
-        return new UrlView("/ctrl/admin/openContentAdministration?contentId=" + contentId);
+    protected IResponse showContentAdministration(SessionRequestData rdata, int contentId) {
+        return new ForwardResponse("/ctrl/admin/openContentAdministration?contentId=" + contentId);
     }
 
 }

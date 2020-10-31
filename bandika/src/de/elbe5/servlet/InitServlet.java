@@ -8,8 +8,6 @@
  */
 package de.elbe5.servlet;
 
-import de.elbe5.request.ResponseCode;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -18,7 +16,7 @@ public abstract class InitServlet extends WebServlet {
 
     @Override
     protected void processRequest(String method, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.sendError(ResponseCode.NOT_FOUND);
+        response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 
 }

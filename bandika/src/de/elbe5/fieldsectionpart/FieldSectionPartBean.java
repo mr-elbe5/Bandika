@@ -27,7 +27,7 @@ public class FieldSectionPartBean extends SectionPartBean {
         return instance;
     }
 
-    private static String READ_PART_EXTRAS_SQL = "SELECT layout FROM t_field_section_part WHERE id=? ";
+    private static final String READ_PART_EXTRAS_SQL = "SELECT layout FROM t_field_section_part WHERE id=? ";
 
     public void readPartExtras(Connection con, SectionPartData partData) throws SQLException {
         if (!(partData instanceof FieldSectionPartData))
@@ -49,7 +49,7 @@ public class FieldSectionPartBean extends SectionPartBean {
         }
     }
 
-    private static String READ_PART_FIELDS_SQL = "SELECT field_type, name, content FROM t_part_field WHERE part_id=?";
+    private static final String READ_PART_FIELDS_SQL = "SELECT field_type, name, content FROM t_part_field WHERE part_id=?";
 
     public void readAllPartFields(Connection con, FieldSectionPartData data) throws SQLException {
         PreparedStatement pst = null;
@@ -74,8 +74,8 @@ public class FieldSectionPartBean extends SectionPartBean {
         }
     }
 
-    private static String INSERT_PART_EXTRAS_SQL = "INSERT INTO t_field_section_part (layout,id) VALUES(?,?)";
-    private static String UPDATE_PART_EXTRAS_SQL = "UPDATE t_field_section_part SET layout=? WHERE id=?";
+    private static final String INSERT_PART_EXTRAS_SQL = "INSERT INTO t_field_section_part (layout,id) VALUES(?,?)";
+    private static final String UPDATE_PART_EXTRAS_SQL = "UPDATE t_field_section_part SET layout=? WHERE id=?";
 
     public void writePartExtras(Connection con, SectionPartData partData) throws SQLException {
         if (!(partData instanceof FieldSectionPartData))
@@ -94,8 +94,8 @@ public class FieldSectionPartBean extends SectionPartBean {
         }
     }
 
-    private static String DELETE_PART_FIELDS_SQL = "DELETE FROM t_part_field WHERE part_id=?";
-    private static String INSERT_PART_FIELD_SQL = "INSERT INTO t_part_field (field_type,name,content,part_id) VALUES(?,?,?,?)";
+    private static final String DELETE_PART_FIELDS_SQL = "DELETE FROM t_part_field WHERE part_id=?";
+    private static final String INSERT_PART_FIELD_SQL = "INSERT INTO t_part_field (field_type,name,content,part_id) VALUES(?,?,?,?)";
 
     public void writeAllPartFields(Connection con, FieldSectionPartData part) throws SQLException {
         PreparedStatement pstDelFields = null;
@@ -120,7 +120,7 @@ public class FieldSectionPartBean extends SectionPartBean {
         }
     }
 
-    private static String REPLACE_IN_FIELD_SQL = "UPDATE t_part_field set content = REPLACE(content,?,?)";
+    private static final String REPLACE_IN_FIELD_SQL = "UPDATE t_part_field set content = REPLACE(content,?,?)";
 
     public void replaceStringInContent(Connection con, String current, String replacement) throws SQLException {
         PreparedStatement pst = null;

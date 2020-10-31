@@ -1,15 +1,13 @@
-package de.elbe5.view;
+package de.elbe5.response;
 
 import de.elbe5.request.SessionRequestData;
-import de.elbe5.request.ResponseCode;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class MasterView implements IView {
+public class MasterView implements IResponse {
 
     public static String DEFAULT_MASTER = "defaultMaster";
 
@@ -28,7 +26,7 @@ public class MasterView implements IView {
         try {
             rd.forward(rdata.getRequest(), response);
         } catch (ServletException | IOException e) {
-            response.setStatus(ResponseCode.NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 }

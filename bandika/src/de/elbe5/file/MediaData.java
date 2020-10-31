@@ -8,11 +8,6 @@ public class MediaData extends FileData {
     public MediaData() {
     }
 
-    @Override
-    public String getURL() {
-        return "/files/"+getUniqueFileName();
-    }
-
     // multiple data
 
     @Override

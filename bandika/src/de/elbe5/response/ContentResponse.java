@@ -1,4 +1,4 @@
-package de.elbe5.view;
+package de.elbe5.response;
 
 import de.elbe5.content.ContentData;
 import de.elbe5.request.SessionRequestData;
@@ -6,15 +6,15 @@ import de.elbe5.request.SessionRequestData;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
-public class ContentView extends MasterView {
+public class ContentResponse extends MasterView {
 
-    private ContentData data;
+    private final ContentData data;
 
-    public ContentView(ContentData data) {
+    public ContentResponse(ContentData data) {
         this.data=data;
     }
 
-    public ContentView(ContentData data, String master) {
+    public ContentResponse(ContentData data, String master) {
         super(master);
         this.data=data;
     }

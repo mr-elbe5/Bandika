@@ -14,10 +14,10 @@ import java.util.*;
 
 public class FileFactory {
 
-    private static List<String> defaultDocumentTypes=new ArrayList<>();
-    private static List<String> defaultImageTypes=new ArrayList<>();
-    private static List<String> defaultMediaTypes=new ArrayList<>();
-    private static Map<String, FileClassInfo> infos = new HashMap<>();
+    private static final List<String> defaultDocumentTypes=new ArrayList<>();
+    private static final List<String> defaultImageTypes=new ArrayList<>();
+    private static final List<String> defaultMediaTypes=new ArrayList<>();
+    private static final Map<String, FileClassInfo> infos = new HashMap<>();
 
     public static List<String> getTypes() {
         List<String> list = new ArrayList<>(infos.keySet());

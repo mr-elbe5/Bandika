@@ -11,7 +11,7 @@
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.request.SessionRequestData" %>
 <%@ page import="java.util.Locale" %>
-<%@ page import="de.elbe5.view.IView" %>
+<%@ page import="de.elbe5.response.IResponse" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     SessionRequestData rdata = SessionRequestData.getRequestData(request);
@@ -47,7 +47,7 @@
                 event.preventDefault();
                 $('#script').val(editor.getSession().getValue());
                 let params = $this.serialize();
-                postByAjax('/ctrl/admin/executeDatabaseScript', params, '<%=IView.MODAL_DIALOG_JQID%>');
+                postByAjax('/ctrl/admin/executeDatabaseScript', params, '<%=IResponse.MODAL_DIALOG_JQID%>');
             });
             $('#file').change(function () {
                 if (this.files) {
