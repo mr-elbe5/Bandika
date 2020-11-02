@@ -11,7 +11,7 @@ package de.elbe5.application;
 import de.elbe5.content.ContentBean;
 import de.elbe5.content.ContentCache;
 import de.elbe5.file.PreviewCache;
-import de.elbe5.base.cache.Strings;
+import de.elbe5.base.data.Strings;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.FileUtil;
 import de.elbe5.database.DbConnector;
