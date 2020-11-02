@@ -62,7 +62,7 @@ public class FileServlet extends HttpServlet {
         }
         File file = new File(fileDir, URLDecoder.decode(requestedFile, StandardCharsets.UTF_8));
         // if not exists, create from database
-        if (!file.exists() && !FileBean.getInstance().createFile(file)) {
+        if (!file.exists() && !FileBean.getInstance().createTempFile(file)) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }

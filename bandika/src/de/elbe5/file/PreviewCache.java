@@ -1,6 +1,6 @@
 /*
  Elbe 5 CMS - A Java based modular Content Management System
- Copyright (C) 2009-2020 Michael Roennau
+ Copyright (C) 2009-2018 Michael Roennau
 
  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -9,26 +9,35 @@
 package de.elbe5.file;
 
 import de.elbe5.base.data.BinaryFile;
-import de.elbe5.request.SessionRequestData;
 
-public class MediaData extends FileData {
+import java.util.HashMap;
+import java.util.Map;
 
-    public MediaData() {
+public class PreviewCache {
+
+    private static final Integer lockObj = 1;
+    private static final Map<Integer, BinaryFile> map = new HashMap<>();
+
+    public static BinaryFile get(Integer id) {
+        synchronized (lockObj) {
+            if (!map.containsKey(id)){
+                BinaryFile file= ImageBean.getInstance().getBinaryPreviewFile(id);
+                if (file != null){
+                    map.put(id,file);
+                }
+            }
+            return map.get(id);
+        }
     }
 
-    // multiple data
+    public static void remove(Integer id) {
+        synchronized (lockObj) {
+            map.remove(id);
+        }
+    }
 
-    @Override
-    public void readSettingsRequestData(SessionRequestData rdata) {
-        super.readSettingsRequestData(rdata);
-        BinaryFile file = rdata.getFile("file");
-        createFromBinaryFile(file);
-        if (getDisplayName().isEmpty()) {
-            setDisplayName(file.getFileNameWithoutExtension());
-        }
-        else{
-            adjustFileNameToDisplayName();
-        }
+    public static void clear(){
+        map.clear();
     }
 
 }

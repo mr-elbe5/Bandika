@@ -6,9 +6,9 @@ import java.lang.reflect.Constructor;
 
 class ContentClassInfo {
 
-    private String type;
+    private final String type;
     private Constructor<? extends ContentData> ctor;
-    private ContentBean bean;
+    private final ContentBean bean;
 
     public ContentClassInfo(Class<? extends ContentData> contentClass, ContentBean bean){
         type = contentClass.getSimpleName();

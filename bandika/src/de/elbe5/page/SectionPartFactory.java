@@ -14,7 +14,7 @@ import java.util.*;
 
 public class SectionPartFactory {
 
-    private static Map<String, SectionPartClassInfo> infos = new HashMap<>();
+    private static final Map<String, SectionPartClassInfo> infos = new HashMap<>();
 
     public static List<String> getTypes() {
         List<String> list = new ArrayList<>(infos.keySet());

@@ -31,7 +31,7 @@ public class XmlData {
     public static String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
     public static String XML_HEADER_START = "<?xml ";
 
-    private static DateTimeFormatter datetimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter datetimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static XmlData create() {
         XmlData data = new XmlData();

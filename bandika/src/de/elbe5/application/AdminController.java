@@ -10,7 +10,7 @@ package de.elbe5.application;
 
 import de.elbe5.content.ContentBean;
 import de.elbe5.content.ContentCache;
-import de.elbe5.file.BinaryFileCache;
+import de.elbe5.file.PreviewCache;
 import de.elbe5.base.cache.Strings;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.FileUtil;
@@ -127,9 +127,9 @@ public class AdminController extends Controller {
         return openSystemAdministration(rdata);
     }
 
-    public IResponse clearFileCache(SessionRequestData rdata) {
+    public IResponse clearPreviewCache(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
-        BinaryFileCache.setDirty();
+        PreviewCache.clear();
         rdata.setMessage(Strings.string("_cacheCleared",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }

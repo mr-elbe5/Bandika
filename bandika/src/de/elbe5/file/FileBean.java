@@ -10,18 +10,22 @@ package de.elbe5.file;
 
 import de.elbe5.application.ApplicationPath;
 import de.elbe5.base.data.BinaryFile;
-import de.elbe5.base.data.BinaryStreamFile;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.FileUtil;
 import de.elbe5.content.ContentCentral;
-import de.elbe5.database.FileBasedDbBean;
+import de.elbe5.database.DbBean;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileBean extends FileBasedDbBean {
+public class FileBean extends DbBean {
+
+    private static final int DEFAULT_BUFFER_SIZE = 0x4000;
 
     private static FileBean instance = null;
 
@@ -220,35 +224,6 @@ public class FileBean extends FileBasedDbBean {
     public void writeFileExtras(Connection con, FileData contentData, boolean complete) throws SQLException {
     }
 
-    private static final String GET_FILE_STREAM_SQL = "SELECT file_name,content_type,file_size,bytes FROM t_file WHERE id=?";
-
-    public BinaryStreamFile getBinaryStreamFile(int id) {
-        Connection con = getConnection();
-        PreparedStatement pst = null;
-        BinaryStreamFile data = null;
-        try {
-            pst = con.prepareStatement(GET_FILE_STREAM_SQL);
-            pst.setInt(1, id);
-            try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    int i = 1;
-                    data = new BinaryStreamFile();
-                    data.setFileName(rs.getString(i++));
-                    data.setContentType(rs.getString(i++));
-                    data.setFileSize(rs.getInt(i++));
-                    data.setInputStream(rs.getBinaryStream(i));
-                }
-            }
-        } catch (SQLException e) {
-            Log.error("error while streaming file", e);
-            return null;
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-        return data;
-    }
-
     private static final String GET_FILE_DATA_SQL = "SELECT file_name,content_type,file_size,bytes FROM t_file WHERE id=?";
 
     public BinaryFile getBinaryFile(int id) {
@@ -278,14 +253,6 @@ public class FileBean extends FileBasedDbBean {
         return data;
     }
 
-    private static final String DELETE_SQL = "DELETE FROM t_file WHERE id=?";
-
-    public boolean deleteFile(int id) {
-        return deleteItem(DELETE_SQL, id);
-    }
-
-    /******** file cache *********/
-
     public boolean assertFileDirectory(){
         File f = new File(ApplicationPath.getAppFilePath());
         if (f.exists()){
@@ -299,27 +266,68 @@ public class FileBean extends FileBasedDbBean {
         if (f.exists()){
             return true;
         }
-        return createFile(f);
+        return createTempFile(f);
     }
 
-    public boolean createFile(File file){
+    private static final String GET_FILE_STREAM_SQL = "SELECT file_size, bytes FROM t_file WHERE id=?";
+
+    public boolean createTempFile(File file){
         Log.log("creating file " + file.getName());
         String fileName = file.getName();
         String name = FileUtil.getFileNameWithoutExtension(fileName);
         int id = Integer.parseInt(name);
-        BinaryFile binaryFile = getBinaryFile(id);
-        return FileUtil.writeBinaryFile(file.getAbsolutePath(), binaryFile.getBytes());
+        Connection con = getConnection();
+        PreparedStatement pst = null;
+        try {
+            pst = con.prepareStatement(GET_FILE_STREAM_SQL);
+            pst.setInt(1, id);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    File f = new File(ApplicationPath.getAppFilePath(), fileName);
+                    if (f.exists() && !f.delete()) {
+                        Log.error("could not delete file " + f.getName());
+                        return false;
+                    }
+                    if (!f.createNewFile())
+                        throw new IOException("file create error");
+                    FileOutputStream fout = new FileOutputStream(f);
+                    long toRead = rs.getInt(1);
+                    InputStream fin = rs.getBinaryStream(2);
+                    byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+                    int read;
+                    while ((read = fin.read(buffer)) > 0) {
+                        if ((toRead -= read) > 0) {
+                            fout.write(buffer, 0, read);
+                        } else {
+                            fout.write(buffer, 0, (int) toRead + read);
+                            break;
+                        }
+                    }
+                    fout.flush();
+                    fout.close();
+                }
+            }
+        } catch (SQLException | IOException e) {
+            Log.error("error while getting file", e);
+            return false;
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+        return true;
     }
 
     public boolean writeFile(FileData data, boolean replace){
-        BinaryFile binaryFile = getBinaryFile(data.getId());
         String path = ApplicationPath.getAppFilePath()+"/"+data.getTempFileName();
         if (!replace && FileUtil.fileExists(path))
             return true;
-        if (!FileUtil.writeBinaryFile(path,binaryFile.getBytes())){
-            return false;
-        }
-        return true;
+        return FileUtil.writeBinaryFile(path, data.getBytes());
+    }
+
+    private static final String DELETE_SQL = "DELETE FROM t_file WHERE id=?";
+
+    public boolean deleteFile(int id) {
+        return deleteItem(DELETE_SQL, id);
     }
 
 }

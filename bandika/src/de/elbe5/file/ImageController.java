@@ -130,9 +130,7 @@ public class ImageController extends FileController {
 
     public IResponse showPreview(SessionRequestData rdata) {
         int imageId = rdata.getId();
-        ImageData data = ContentCache.getFile(imageId,ImageData.class);
-        assert(data!=null);
-        return new PreviewResponse(data);
+        return new PreviewResponse(imageId);
     }
 
     public IResponse deleteImage(SessionRequestData rdata){

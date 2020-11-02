@@ -18,8 +18,8 @@ public class LayoutCache {
     private static boolean dirty = true;
     private static final Integer lockObj = 1;
 
-    private static Map<String, LayoutData> layoutMap = new HashMap<>();
-    private static Map<String, List<LayoutData>> layoutTypeMap = new HashMap<>();
+    private static final Map<String, LayoutData> layoutMap = new HashMap<>();
+    private static final Map<String, List<LayoutData>> layoutTypeMap = new HashMap<>();
 
     public static void addType(String type){
         layoutTypeMap.put(type,new ArrayList<>());

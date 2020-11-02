@@ -15,7 +15,7 @@ import java.util.List;
 public class ContentDayLog {
 
     private LocalDate day;
-    private List<ContentLog> logs = new ArrayList<>();
+    private final List<ContentLog> logs = new ArrayList<>();
 
     public LocalDate getDay() {
         return day;

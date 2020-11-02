@@ -13,8 +13,8 @@ import java.util.*;
 
 public class ContentFactory {
 
-    private static List<String> defaultTypes = new ArrayList<>();
-    private static Map<String, ContentClassInfo> infos = new HashMap<>();
+    private static final List<String> defaultTypes = new ArrayList<>();
+    private static final Map<String, ContentClassInfo> infos = new HashMap<>();
 
     public static List<String> getTypes() {
         List<String> list = new ArrayList<>(infos.keySet());

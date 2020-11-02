@@ -8,7 +8,6 @@
  */
 package de.elbe5.application;
 
-import de.elbe5.base.cache.Strings;
 import de.elbe5.base.log.Log;
 import de.elbe5.ckeditor.CkEditorController;
 import de.elbe5.company.CompanyCache;
@@ -50,13 +49,6 @@ public class BandikaInitServlet extends InitServlet {
         if (!DbConnector.getInstance().initialize("jdbc/bandika"))
             return;
         Configuration.setAppTitle("Bandika");
-        Strings.readFromCsv(ApplicationPath.getAppWEBINFPath() + "/webserver-strings.csv");
-        Strings.readFromCsv(ApplicationPath.getAppWEBINFPath() + "/page-strings.csv");
-        Strings.readFromCsv(ApplicationPath.getAppWEBINFPath() + "/sectionpage-strings.csv");
-        Strings.readFromCsv(ApplicationPath.getAppWEBINFPath() + "/application-strings.csv");
-        if (Strings.hasLocale(Configuration.getDefaultLocale())) {
-            Strings.DEFAULT_LOCALE = Configuration.getDefaultLocale();
-        }
         AdminController.register(new AdminController());
         ContentController.register(new ContentController());
         DocumentController.register(new DocumentController());

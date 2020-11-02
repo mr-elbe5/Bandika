@@ -11,7 +11,6 @@ package de.elbe5.layout;
 public class LayoutData implements Comparable<LayoutData>{
 
     private String name="";
-    private String type="";
     private String code="";
 
     public String getName() {
@@ -20,10 +19,6 @@ public class LayoutData implements Comparable<LayoutData>{
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getType() {
-        return type;
     }
 
     public String getCode() {

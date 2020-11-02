@@ -13,7 +13,7 @@ import java.io.Writer;
 
 public class StringWriteUtil {
 
-    private Writer writer;
+    private final Writer writer;
 
     public StringWriteUtil(Writer writer) {
         assert writer != null;

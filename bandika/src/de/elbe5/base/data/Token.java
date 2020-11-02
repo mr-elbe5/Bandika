@@ -42,9 +42,9 @@ public class Token {
         }
     }
 
-    private int id;
-    private String token;
-    private LocalDateTime time;
+    private final int id;
+    private final String token;
+    private final LocalDateTime time;
 
     public Token(int id, String token) {
         this.id = id;

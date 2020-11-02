@@ -12,11 +12,64 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class BinaryFile extends BinaryFileBase {
+public class BinaryFile {
 
+    protected String fileName = null;
+    protected String contentType = null;
+    protected int size = 0;
     protected byte[] bytes = null;
 
     public BinaryFile() {
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public String getExtension() {
+        if (fileName == null) {
+            return null;
+        }
+        int pos = fileName.lastIndexOf('.');
+        if (pos == -1) {
+            return null;
+        }
+        return fileName.substring(pos + 1).toLowerCase();
+    }
+
+    public String getFileNameWithoutExtension() {
+        if (fileName == null) {
+            return null;
+        }
+        int pos = fileName.lastIndexOf('.');
+        if (pos == -1) {
+            return fileName;
+        }
+        return fileName.substring(0, pos);
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public boolean isImage() {
+        return contentType.startsWith("image/");
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    public int getFileSize() {
+        return size;
+    }
+
+    public void setFileSize(int size) {
+        this.size = size;
     }
 
     public byte[] getBytes() {

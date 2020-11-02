@@ -8,6 +8,7 @@
  */
 package de.elbe5.page;
 
+import de.elbe5.base.log.Log;
 import de.elbe5.content.ContentBean;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentController;
@@ -18,6 +19,13 @@ import de.elbe5.request.*;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.IResponse;
 import de.elbe5.response.ForwardResponse;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 
 public class PageController extends ContentController {
 
@@ -116,6 +124,7 @@ public class PageController extends ContentController {
     //frontend
     public IResponse publishPage(SessionRequestData rdata){
         int contentId = rdata.getId();
+        Log.log("Publishing page" + contentId);
         PageData data=ContentBean.getInstance().getContent(contentId,PageData.class);
         assert(data != null);
         checkRights(data.hasUserApproveRight(rdata));
@@ -151,5 +160,33 @@ public class PageController extends ContentController {
         return new ForwardResponse("/WEB-INF/_jsp/ckeditor/addImage.ajax.jsp");
     }
 
+    public IResponse republishPage(SessionRequestData rdata) {
+        int contentId = rdata.getId();
+
+        PageData page = ContentCache.getContent(contentId, PageData.class);
+        if (page != null){
+            String url = rdata.getRequest().getRequestURL().toString();
+            String uri = rdata.getRequest().getRequestURI();
+            int idx = url.lastIndexOf(uri);
+            url = url.substring(0, idx);
+            url +="/ctrl/page/publishPage/"+contentId;
+            try {
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .timeout(Duration.ofMinutes(2))
+                        .build();
+                HttpClient client = HttpClient.newBuilder()
+                        .version(HttpClient.Version.HTTP_1_1)
+                        .followRedirects(HttpClient.Redirect.NORMAL)
+                        .connectTimeout(Duration.ofSeconds(20))
+                        .build();
+                client.send(request, HttpResponse.BodyHandlers.ofString());
+            }
+            catch (IOException | InterruptedException e){
+                Log.error("could not send publishing request", e);
+            }
+        }
+        return new ForwardResponse("/ctrl/admin/openContentAdministration");
+    }
 
 }

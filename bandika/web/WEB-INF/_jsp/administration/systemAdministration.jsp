@@ -49,9 +49,9 @@
                                 </div>
                             </li>
                             <li>
-                                <span><%=$SH("_fileCache",locale)%></span>
+                                <span><%=$SH("_previewCache",locale)%></span>
                                 <div class="icons">
-                                    <a class="icon fa fa-recycle" href="/ctrl/admin/clearFileCache" title="<%=$SH("_clear",locale)%>"></a>
+                                    <a class="icon fa fa-recycle" href="/ctrl/admin/clearPreviewCache" title="<%=$SH("_clear",locale)%>"></a>
                                 </div>
                             </li>
                         </ul>

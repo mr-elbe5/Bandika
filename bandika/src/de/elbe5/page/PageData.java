@@ -98,6 +98,7 @@ public class PageData extends ContentData {
                 setPublishedContent(stringWriter.toString());
                 reformatPublishedContent();
                 context.popBody();
+                //Log.log("publishing page " + getDisplayName());
                 if (!PageBean.getInstance().publishPage(this)) {
                     Log.error("error writing published content");
                 }

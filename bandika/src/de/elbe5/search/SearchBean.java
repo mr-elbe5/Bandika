@@ -10,7 +10,7 @@ package de.elbe5.search;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.application.ApplicationPath;
-import de.elbe5.database.FileBasedDbBean;
+import de.elbe5.database.DbBean;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -26,13 +26,15 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class SearchBean extends FileBasedDbBean {
+public class SearchBean extends DbBean {
 
     private static SearchBean instance = null;
 
@@ -75,6 +77,16 @@ public class SearchBean extends FileBasedDbBean {
         IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
         iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
         return new IndexWriter(dir, iwc);
+    }
+
+    protected void ensureDirectory(String path) throws IOException {
+        File f = new File(path);
+        if (!f.exists()) {
+            if (!f.mkdir())
+                throw new IOException("could not create directory");
+        }
+        else if (!f.isDirectory())
+            throw new IOException("path is no directory");
     }
 
     protected void indexContent(IndexWriter writer) throws Exception {
