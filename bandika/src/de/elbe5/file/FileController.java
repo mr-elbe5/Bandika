@@ -8,46 +8,56 @@
  */
 package de.elbe5.file;
 
+import de.elbe5.application.ApplicationPath;
 import de.elbe5.base.data.Strings;
 import de.elbe5.base.data.Token;
 import de.elbe5.base.log.Log;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.SessionRequestData;
+import de.elbe5.response.StatusResponse;
 import de.elbe5.servlet.Controller;
-import de.elbe5.response.FileResponse;
 import de.elbe5.response.IResponse;
 import de.elbe5.response.ForwardResponse;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 
 public abstract class FileController extends Controller {
 
     public IResponse show(SessionRequestData rdata) {
-        FileData data;
         int id = rdata.getId();
         Log.warn("deprecated call of file show for id " + id);
-        data = ContentCache.getFile(id);
+        FileData data = ContentCache.getFile(id);
+        return show(data, rdata);
+    }
+
+    public IResponse download(SessionRequestData rdata) {
+        int id = rdata.getId();
+        Log.warn("deprecated call of file download for id " + id);
+        FileData data = ContentCache.getFile(id);
+        rdata.put("download", "true");
+        return show(data, rdata);
+    }
+
+    private IResponse show(FileData data, SessionRequestData rdata){
         assert(data!=null);
         ContentData parent=ContentCache.getContent(data.getParentId());
         if (!parent.hasUserReadRight(rdata)) {
             String token = rdata.getString("token");
-            checkRights(Token.matchToken(id, token));
+            checkRights(Token.matchToken(data.getId(), token));
         }
-        FileBean.getInstance().assertTempFile(data);
-        return new FileResponse(data, false);
-    }
-
-    public IResponse download(SessionRequestData rdata) {
-        FileData data;
-        int id = rdata.getId();
-        Log.warn("deprecated call of file download for id " + id);
-        data = ContentCache.getFile(id);
-        ContentData parent=ContentCache.getContent(data.getParentId());
-        if (!parent.hasUserReadRight(rdata)) {
-            String token = rdata.getString("token");
-            checkRights(Token.matchToken(id, token));
+        File file = new File(ApplicationPath.getAppFilePath(), data.getFileName());
+        // if not exists, create from database
+        if (!file.exists() && !FileBean.getInstance().createTempFile(file)) {
+            return new StatusResponse(HttpServletResponse.SC_NOT_FOUND);
         }
-        FileBean.getInstance().assertTempFile(data);
-        return new FileResponse(data, true);
+        RangeInfo rangeInfo = null;
+        String rangeHeader = rdata.getRequest().getHeader("Range");
+        if (rangeHeader != null) {
+            rangeInfo = new RangeInfo(rangeHeader, file.length());
+        }
+        return new FileResponse(file, rangeInfo);
     }
 
     public IResponse deleteFile(SessionRequestData rdata) {

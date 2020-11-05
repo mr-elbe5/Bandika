@@ -15,8 +15,6 @@ import de.elbe5.base.util.StringUtil;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.SessionRequestData;
-import de.elbe5.response.FileResponse;
-import de.elbe5.response.IResponse;
 
 public abstract class FileData extends BaseData {
 

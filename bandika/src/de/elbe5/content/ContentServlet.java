@@ -6,12 +6,13 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.servlet;
+package de.elbe5.content;
 
 import de.elbe5.application.Configuration;
-import de.elbe5.content.ContentController;
 import de.elbe5.request.SessionRequestData;
 import de.elbe5.response.IResponse;
+import de.elbe5.servlet.ResponseException;
+import de.elbe5.servlet.WebServlet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,11 +33,11 @@ public class ContentServlet extends WebServlet {
                 rdata.setCookies(response);
             result.processView(getServletContext(), rdata, response);
         }
-        catch (CmsException ce){
-            handleException(request,response,ce);
+        catch (ResponseException ce){
+            handleException(request,response,ce.getResponseCode());
         }
         catch (Exception e){
-            handleException(request,response, new CmsInternalException(e.getMessage()));
+            handleException(request,response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 

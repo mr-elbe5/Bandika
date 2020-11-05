@@ -4,8 +4,10 @@ import de.elbe5.base.data.Strings;
 import de.elbe5.content.JspContentData;
 import de.elbe5.request.*;
 import de.elbe5.response.IResponse;
-import de.elbe5.response.ContentResponse;
+import de.elbe5.content.ContentResponse;
 import de.elbe5.response.ForwardResponse;
+
+import javax.servlet.http.HttpServletResponse;
 
 public abstract class Controller {
 
@@ -17,7 +19,7 @@ public abstract class Controller {
 
     protected void checkRights(boolean hasRights){
         if (!hasRights)
-            throw new CmsAuthorizationException();
+            throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
     protected void setSaveError(SessionRequestData rdata) {

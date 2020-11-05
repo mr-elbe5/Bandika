@@ -22,7 +22,6 @@ import de.elbe5.rights.Right;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.user.UserData;
 import de.elbe5.response.IResponse;
-import de.elbe5.response.ContentResponse;
 
 import javax.servlet.ServletException;
 import javax.servlet.jsp.PageContext;

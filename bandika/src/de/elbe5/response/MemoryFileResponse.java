@@ -17,13 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class BinaryFileResponse implements IResponse {
+public class MemoryFileResponse implements IResponse {
 
     private final BinaryFile file;
     private boolean forceDownload=false;
     private boolean noCache=true;
 
-    public BinaryFileResponse(BinaryFile file) {
+    public MemoryFileResponse(BinaryFile file) {
         this.file = file;
     }
 

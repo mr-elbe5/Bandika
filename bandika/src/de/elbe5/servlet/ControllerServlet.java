@@ -50,29 +50,27 @@ public class ControllerServlet extends WebServlet {
             if (rdata.hasCookies())
                 rdata.setCookies(response);
             result.processView(getServletContext(), rdata, response);
-        } catch (CmsException ce) {
-            handleException(request, response, ce);
-        } catch (Exception e) {
-            handleException(request, response, new CmsInternalException(e.getMessage()));
-        } catch (AssertionError ae) {
-            handleException(request, response, new CmsAssertionException(ae.getMessage()));
+        } catch (ResponseException ce) {
+            handleException(request, response, ce.getResponseCode());
+        } catch (Exception | AssertionError e) {
+            handleException(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
     public IResponse getView(Controller controller, String methodName, SessionRequestData rdata) {
         if (controller==null)
-            throw new CmsRequestException();
+            throw new ResponseException(HttpServletResponse.SC_BAD_REQUEST);
         try {
             Method controllerMethod = controller.getClass().getMethod(methodName, SessionRequestData.class);
             Object result = controllerMethod.invoke(controller, rdata);
             if (result instanceof IResponse)
                 return (IResponse) result;
-            throw new CmsRequestException();
+            throw new ResponseException(HttpServletResponse.SC_BAD_REQUEST);
         } catch (NoSuchMethodException | InvocationTargetException e){
-            throw new CmsRequestException();
+            throw new ResponseException(HttpServletResponse.SC_BAD_REQUEST);
         }
         catch (IllegalAccessException e) {
-            throw new CmsAuthorizationException();
+            throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 }

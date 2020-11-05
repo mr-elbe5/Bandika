@@ -6,23 +6,32 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.servlet;
+package de.elbe5.content;
 
+import de.elbe5.content.ContentData;
+import de.elbe5.request.SessionRequestData;
+import de.elbe5.response.MasterView;
+
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
-public abstract class CmsException extends RuntimeException{
+public class ContentResponse extends MasterView {
 
-    private int responseCode= HttpServletResponse.SC_OK;
+    private final ContentData data;
 
-    protected CmsException(int responseCode){
-        this.responseCode=responseCode;
+    public ContentResponse(ContentData data) {
+        this.data=data;
     }
 
-    protected CmsException(int responseCode, String message){
-        this.responseCode=responseCode;
+    public ContentResponse(ContentData data, String master) {
+        super(master);
+        this.data=data;
     }
 
-    public int getResponseCode() {
-        return responseCode;
+    @Override
+    public void processView(ServletContext context, SessionRequestData rdata, HttpServletResponse response)  {
+        //Log.log("process view");
+        rdata.setCurrentRequestContent(data);
+        super.processView(context, rdata, response);
     }
 }

@@ -6,12 +6,14 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.response;
+package de.elbe5.file;
 
 import de.elbe5.base.data.BinaryFile;
 import de.elbe5.file.PreviewCache;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.SessionRequestData;
+import de.elbe5.response.IResponse;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

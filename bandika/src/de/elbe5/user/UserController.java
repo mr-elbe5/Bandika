@@ -16,6 +16,7 @@ import de.elbe5.application.Configuration;
 import de.elbe5.base.log.Log;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
+import de.elbe5.content.ContentResponse;
 import de.elbe5.content.JspContentData;
 import de.elbe5.request.*;
 import de.elbe5.rights.SystemZone;
@@ -77,7 +78,7 @@ public class UserController extends Controller {
         assert(captcha!=null);
         BinaryFile data = UserSecurity.getCaptcha(captcha);
         assert data != null;
-        return new BinaryFileResponse(data);
+        return new MemoryFileResponse(data);
     }
 
     public IResponse renewCaptcha(SessionRequestData rdata) {
@@ -207,7 +208,7 @@ public class UserController extends Controller {
         int userId = rdata.getId();
         BinaryFile file = UserBean.getInstance().getBinaryPortraitData(userId);
         assert(file!=null);
-        return new BinaryFileResponse(file);
+        return new MemoryFileResponse(file);
     }
 
     public IResponse changeLocale(SessionRequestData rdata) {

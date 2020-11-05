@@ -15,7 +15,7 @@ import de.elbe5.servlet.Controller;
 import de.elbe5.request.SessionRequestData;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.IResponse;
-import de.elbe5.response.ContentResponse;
+import de.elbe5.content.ContentResponse;
 import de.elbe5.response.ForwardResponse;
 
 public class SearchController extends Controller {

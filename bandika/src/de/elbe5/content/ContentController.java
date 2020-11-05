@@ -12,13 +12,14 @@ import de.elbe5.base.data.Strings;
 import de.elbe5.base.data.BaseData;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.SessionRequestData;
-import de.elbe5.servlet.CmsAuthorizationException;
 import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.CloseDialogResponse;
 import de.elbe5.response.IResponse;
 import de.elbe5.response.ForwardResponse;
+import de.elbe5.servlet.ResponseException;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 public class ContentController extends Controller {
@@ -252,22 +253,22 @@ public class ContentController extends Controller {
     }
 
     public IResponse openCreateContentFrontend(SessionRequestData rdata) {
-        throw new CmsAuthorizationException();
+        throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
     //frontend
     public IResponse openEditContentFrontend(SessionRequestData rdata) {
-        throw new CmsAuthorizationException();
+        throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
     //frontend
     public IResponse showEditContentFrontend(SessionRequestData rdata) {
-        throw new CmsAuthorizationException();
+        throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
     //frontend
     public IResponse saveContentFrontend(SessionRequestData rdata) {
-        throw new CmsAuthorizationException();
+        throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
     public IResponse cancelEditContentFrontend(SessionRequestData rdata) {

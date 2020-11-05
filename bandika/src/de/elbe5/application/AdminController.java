@@ -15,8 +15,8 @@ import de.elbe5.base.data.Strings;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.FileUtil;
 import de.elbe5.database.DbConnector;
-import de.elbe5.servlet.CmsAuthorizationException;
 import de.elbe5.servlet.ControllerCache;
+import de.elbe5.servlet.ResponseException;
 import de.elbe5.user.UserCache;
 import de.elbe5.response.CloseDialogResponse;
 import de.elbe5.request.SessionRequestData;
@@ -25,6 +25,7 @@ import de.elbe5.servlet.Controller;
 import de.elbe5.response.IResponse;
 import de.elbe5.response.ForwardResponse;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 
@@ -59,7 +60,7 @@ public class AdminController extends Controller {
             return openPersonAdministration(rdata);
         if (rdata.hasSystemRight(SystemZone.APPLICATION))
             return openSystemAdministration(rdata);
-        throw new CmsAuthorizationException();
+        throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
     public IResponse openSystemAdministration(SessionRequestData rdata) {

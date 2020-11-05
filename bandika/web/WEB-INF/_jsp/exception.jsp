@@ -10,15 +10,13 @@
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="de.elbe5.servlet.CmsException" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 
 <%
     Locale locale = request.getLocale();
-    CmsException ex=(CmsException) request.getAttribute("exception");
-    assert(ex!=null);
+    String errorKey = (String) request.getAttribute("errorKey");
     String error=$SH("_error",locale);
-    String errorText=$SH("_error"+ex.getResponseCode(),locale);
+    String errorText = $SH(errorKey, locale);
 %>
 <html lang="en">
 <head>

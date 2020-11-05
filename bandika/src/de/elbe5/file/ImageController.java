@@ -16,7 +16,6 @@ import de.elbe5.request.SessionRequestData;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.CloseDialogResponse;
 import de.elbe5.response.IResponse;
-import de.elbe5.response.PreviewResponse;
 import de.elbe5.response.ForwardResponse;
 
 public class ImageController extends FileController {

@@ -8,12 +8,19 @@
  */
 package de.elbe5.servlet;
 
-import javax.servlet.http.HttpServletResponse;
+public class ResponseException extends RuntimeException{
 
-public class CmsAuthorizationException extends CmsException{
+    private final int responseCode;
 
-    public CmsAuthorizationException(){
-        super(HttpServletResponse.SC_UNAUTHORIZED);
+    public ResponseException(int responseCode){
+        this.responseCode = responseCode;
     }
 
+    public ResponseException(int responseCode, String message){
+        this.responseCode = responseCode;
+    }
+
+    public int getResponseCode() {
+        return responseCode;
+    }
 }

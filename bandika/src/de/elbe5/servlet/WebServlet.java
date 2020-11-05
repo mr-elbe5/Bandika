@@ -8,6 +8,8 @@
  */
 package de.elbe5.servlet;
 
+import de.elbe5.base.data.Strings;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -32,10 +34,10 @@ public abstract class WebServlet extends HttpServlet {
 
     protected abstract void processRequest(String method, HttpServletRequest request, HttpServletResponse response) throws IOException;
 
-    protected void handleException(HttpServletRequest request, HttpServletResponse response, CmsException ce){
+    protected void handleException(HttpServletRequest request, HttpServletResponse response, int code){
         RequestDispatcher rd = request.getServletContext().getRequestDispatcher("/WEB-INF/_jsp/exception.jsp");
         try {
-            request.setAttribute("exception",ce);
+            request.setAttribute("errorKey", "_error"+code);
             rd.forward(request, response);
         } catch (ServletException | IOException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
