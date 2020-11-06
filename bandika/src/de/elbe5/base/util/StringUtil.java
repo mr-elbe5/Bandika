@@ -73,15 +73,15 @@ public class StringUtil {
     }
 
     public static String getDatePattern(Locale locale){
-        return Strings.string("_$datePattern",locale);
+        return Strings.string("system.datePattern",locale);
     }
 
     public static String getDateTimePattern(Locale locale){
-        return Strings.string("_$dateTimePattern",locale);
+        return Strings.string("system.dateTimePattern",locale);
     }
 
     public static String getTimePattern(Locale locale){
-        return Strings.string("_$timePattern",locale);
+        return Strings.string("system.timePattern",locale);
     }
 
     public static String toHtmlDate(LocalDate date, Locale locale) {

@@ -35,11 +35,11 @@
                             <% for (String partType : SectionPartFactory.getTypes()) {
                                 if (SectionPartFactory.useLayouts(partType)){
                                     for (LayoutData layout : partLayouts){%>
-                            <a class="dropdown-item" href="" onclick="return addPart(<%=partData.getId()%>,'<%=$H(partData.getSectionName())%>','<%=partType%>','<%=$H(layout.getName())%>');"><%=$SH(layout.getName(),locale)%>
+                            <a class="dropdown-item" href="" onclick="return addPart(<%=partData.getId()%>,'<%=$H(partData.getSectionName())%>','<%=partType%>','<%=$H(layout.getName())%>');"><%=$SH(layout.getKey(),locale)%>
                             </a>
                                     <%}
                                 } else {%>
-                            <a class="dropdown-item" href="" onclick="return addPart(<%=partData.getId()%>,'<%=$H(partData.getSectionName())%>','<%=partType%>');"><%=$SH(partType, locale)%>
+                            <a class="dropdown-item" href="" onclick="return addPart(<%=partData.getId()%>,'<%=$H(partData.getSectionName())%>','<%=partType%>');"><%=$SH("class."+partType, locale)%>
                             </a>
                             <%}
                             }%>

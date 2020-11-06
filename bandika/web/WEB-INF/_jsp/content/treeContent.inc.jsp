@@ -44,7 +44,7 @@
         <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="<%=$SH("_newContent",locale)%>"></a>
         <div class="dropdown-menu">
             <%for (String pageType : childTypes) {
-                String name = $SH(pageType, locale);%>
+                String name = $SH("class."+pageType, locale);%>
             <a class="dropdown-item" onclick="return openModalDialog('/ctrl/content/openCreateContentData?parentId=<%=contentData.getId()%>&type=<%=pageType%>');"><%=name%>
             </a>
             <%

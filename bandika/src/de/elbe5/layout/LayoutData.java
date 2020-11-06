@@ -17,6 +17,10 @@ public class LayoutData implements Comparable<LayoutData>{
         return name;
     }
 
+    public String getKey() {
+        return "layout."+name.replace(":","_");
+    }
+
     public void setName(String name) {
         this.name = name;
     }

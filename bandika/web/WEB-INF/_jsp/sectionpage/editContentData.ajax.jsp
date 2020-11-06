@@ -60,19 +60,19 @@
                     <%}%>
                 </form:select>
                 <form:select name="accessType" label="_accessType">
-                    <option value="<%=ContentData.ACCESS_TYPE_OPEN%>" <%=contentData.getNavType().equals(ContentData.ACCESS_TYPE_OPEN) ? "selected" : ""%>><%=$SH("_$accessTypeOpen", locale)%>
+                    <option value="<%=ContentData.ACCESS_TYPE_OPEN%>" <%=contentData.getNavType().equals(ContentData.ACCESS_TYPE_OPEN) ? "selected" : ""%>><%=$SH("system.accessTypeOpen", locale)%>
                     </option>
-                    <option value="<%=ContentData.ACCESS_TYPE_INHERITS%>" <%=contentData.getNavType().equals(ContentData.ACCESS_TYPE_INHERITS) ? "selected" : ""%>><%=$SH("_$accessTypeInherits", locale)%>
+                    <option value="<%=ContentData.ACCESS_TYPE_INHERITS%>" <%=contentData.getNavType().equals(ContentData.ACCESS_TYPE_INHERITS) ? "selected" : ""%>><%=$SH("system.accessTypeInherits", locale)%>
                     </option>
-                    <option value="<%=ContentData.ACCESS_TYPE_INDIVIDUAL%>" <%=contentData.getNavType().equals(ContentData.ACCESS_TYPE_INDIVIDUAL) ? "selected" : ""%>><%=$SH("_$accessTypeIndividual", locale)%>
+                    <option value="<%=ContentData.ACCESS_TYPE_INDIVIDUAL%>" <%=contentData.getNavType().equals(ContentData.ACCESS_TYPE_INDIVIDUAL) ? "selected" : ""%>><%=$SH("system.accessTypeIndividual", locale)%>
                     </option>
                 </form:select>
                 <form:select name="navType" label="_navType">
-                    <option value="<%=ContentData.NAV_TYPE_NONE%>" <%=contentData.getNavType().equals(ContentData.NAV_TYPE_NONE) ? "selected" : ""%>><%=$SH("_$navTypeNone", locale)%>
+                    <option value="<%=ContentData.NAV_TYPE_NONE%>" <%=contentData.getNavType().equals(ContentData.NAV_TYPE_NONE) ? "selected" : ""%>><%=$SH("system.navTypeNone", locale)%>
                     </option>
-                    <option value="<%=ContentData.NAV_TYPE_HEADER%>" <%=contentData.getNavType().equals(ContentData.NAV_TYPE_HEADER) ? "selected" : ""%>><%=$SH("_$navTypeHeader", locale)%>
+                    <option value="<%=ContentData.NAV_TYPE_HEADER%>" <%=contentData.getNavType().equals(ContentData.NAV_TYPE_HEADER) ? "selected" : ""%>><%=$SH("system.navTypeHeader", locale)%>
                     </option>
-                    <option value="<%=ContentData.NAV_TYPE_FOOTER%>" <%=contentData.getNavType().equals(ContentData.NAV_TYPE_FOOTER) ? "selected" : ""%>><%=$SH("_$navTypeFooter", locale)%>
+                    <option value="<%=ContentData.NAV_TYPE_FOOTER%>" <%=contentData.getNavType().equals(ContentData.NAV_TYPE_FOOTER) ? "selected" : ""%>><%=$SH("system.navTypeFooter", locale)%>
                     </option>
                 </form:select>
                 <form:line label="_active" padded="true">
@@ -84,7 +84,7 @@
                     <% for (LayoutData layout : masterLayouts) {
                         String layoutName=layout.getName();
                     %>
-                    <option value="<%=$H(layoutName)%>" <%=layoutName.equals(contentData.getMaster()) ? "selected" : ""%>><%=$H(layoutName)%>
+                    <option value="<%=$H(layoutName)%>" <%=layoutName.equals(contentData.getMaster()) ? "selected" : ""%>><%=$SH(layout.getKey(),locale)%>
                     </option>
                     <%}%>
                 </form:select>
@@ -94,7 +94,7 @@
                     <% for (LayoutData layout : pageLayouts) {
                         String layoutName=layout.getName();
                     %>
-                    <option value="<%=$H(layoutName)%>" <%=layoutName.equals(contentData.getLayout()) ? "selected" : ""%>><%=$H(layoutName)%>
+                    <option value="<%=$H(layoutName)%>" <%=layoutName.equals(contentData.getLayout()) ? "selected" : ""%>><%=$SH(layout.getKey(),locale)%>
                     </option>
                     <%}%>
                 </form:select>

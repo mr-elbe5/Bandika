@@ -34,7 +34,7 @@
                 <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="<%=$SH("_newImage",locale)%>"></a>
                 <div class="dropdown-menu">
                     <%for (String imageType : imageTypes) {
-                        String name = $SH(imageType, locale);%>
+                        String name = $SH("class."+imageType, locale);%>
                     <a class="dropdown-item" onclick="return openModalDialog('/ctrl/image/openCreateImage?parentId=<%=contentData.getId()%>&type=<%=imageType%>');"><%=name%>
                     </a>
                     <%
@@ -57,8 +57,8 @@
                             </span>
                         </span>
                         <div class="icons">
-                            <a class="icon fa fa-eye" href="/ctrl/image/show/<%=image.getId()%>" target="_blank" title="<%=$SH("_view",locale)%>"> </a>
-                            <a class="icon fa fa-download" href="/ctrl/image/download/<%=image.getId()%>" title="<%=$SH("_download",locale)%>"> </a>
+                            <a class="icon fa fa-eye" href="<%=image.getURL()%>" target="_blank" title="<%=$SH("_view",locale)%>"> </a>
+                            <a class="icon fa fa-download" href="<%=image.getURL()%>?download=true" title="<%=$SH("_download",locale)%>"> </a>
                             <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/image/openEditImage/<%=image.getId()%>');" title="<%=$SH("_edit",locale)%>"> </a>
                             <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/image/cutImage/<%=image.getId()%>');" title="<%=$SH("_cut",locale)%>"> </a>
                             <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/image/copyImage/<%=image.getId()%>');" title="<%=$SH("_copy",locale)%>"> </a>

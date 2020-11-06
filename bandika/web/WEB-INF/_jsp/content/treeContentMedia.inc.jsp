@@ -34,7 +34,7 @@
                 <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="<%=$SH("_newMedia",locale)%>"></a>
                 <div class="dropdown-menu">
                     <%for (String mediaType : mediaTypes) {
-                        String name = $SH(mediaType, locale);%>
+                        String name = $SH("class."+mediaType, locale);%>
                     <a class="dropdown-item" onclick="return openModalDialog('/ctrl/media/openCreateMedia?parentId=<%=contentData.getId()%>&type=<%=mediaType%>');"><%=name%>
                     </a>
                     <%
@@ -54,8 +54,8 @@
                             <%=media.getDisplayName()%>
                         </span>
                         <div class="icons">
-                            <a class="icon fa fa-eye" href="/ctrl/media/show/<%=media.getId()%>" target="_blank" title="<%=$SH("_view",locale)%>"> </a>
-                            <a class="icon fa fa-download" href="/ctrl/media/download/<%=media.getId()%>" title="<%=$SH("_download",locale)%>"> </a>
+                            <a class="icon fa fa-eye" href="<%=media.getURL()%>" target="_blank" title="<%=$SH("_view",locale)%>"> </a>
+                            <a class="icon fa fa-download" href="<%=media.getURL()%>?download=true" title="<%=$SH("_download",locale)%>"> </a>
                             <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/media/openEditMedia/<%=media.getId()%>');" title="<%=$SH("_edit",locale)%>"> </a>
                             <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/media/cutMedia/<%=media.getId()%>');" title="<%=$SH("_cut",locale)%>"> </a>
                             <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/media/copyMedia/<%=media.getId()%>');" title="<%=$SH("_copy",locale)%>"> </a>
