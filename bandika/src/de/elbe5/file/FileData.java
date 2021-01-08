@@ -86,6 +86,10 @@ public abstract class FileData extends BaseData {
         return displayName;
     }
 
+    public String getDisplayFileName(){
+        return getDisplayName() + extension;
+    }
+
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }

@@ -57,7 +57,7 @@ public abstract class FileController extends Controller {
         if (rangeHeader != null) {
             rangeInfo = new RangeInfo(rangeHeader, file.length());
         }
-        return new FileResponse(file, rangeInfo);
+        return new FileResponse(file, data.getDisplayFileName(), rangeInfo);
     }
 
     public IResponse deleteFile(SessionRequestData rdata) {

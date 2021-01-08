@@ -24,5 +24,8 @@
     <orderEntry type="library" name="json" level="project" />
     <orderEntry type="library" name="lucene" level="project" />
     <orderEntry type="library" name="xml" level="project" />
+    <orderEntry type="library" name="fop" level="project" />
+    <orderEntry type="library" name="lucene" level="project" />
+    <orderEntry type="library" name="xml" level="project" />
   </component>
 </module>

@@ -69,7 +69,7 @@ public class FileServlet extends WebServlet {
             if (rangeHeader != null) {
                 rangeInfo = new RangeInfo(rangeHeader, file.length());
             }
-            IResponse result = new FileResponse(file, rangeInfo);
+            IResponse result = new FileResponse(file, data.getDisplayFileName(), rangeInfo);
             result.processView(getServletContext(), rdata, response);
         }
         catch (Exception e){
