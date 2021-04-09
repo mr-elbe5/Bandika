@@ -8,6 +8,8 @@
  */
 package de.elbe5.page;
 
+import de.elbe5.base.data.Strings;
+import de.elbe5.base.log.Log;
 import de.elbe5.request.*;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.IResponse;
@@ -50,6 +52,23 @@ public class SectionPageController extends PageController {
         data.addPart(pdata, fromPartId, true);
         rdata.put(SectionPartData.KEY_PART, pdata);
         return new ForwardResponse("/WEB-INF/_jsp/sectionpage/newPart.ajax.jsp");
+    }
+
+    public IResponse sendContact(SessionRequestData rdata) {
+        String captcha = rdata.getString("captcha");
+        String sessionCaptcha = rdata.getSessionObject(RequestData.KEY_CAPTCHA, String.class);
+        if (!captcha.equals(sessionCaptcha)){
+            rdata.addFormField("captcha");
+            rdata.addFormError(Strings.string("_captchaError",rdata.getLocale()));
+            return show(rdata);
+        }
+        String name = rdata.getString("contactName");
+        String email = rdata.getString("contactEmail");
+        String message = rdata.getString("contactMessage");
+        Log.log("name = "+name);
+        Log.log("email = "+email);
+        Log.log("message = "+message);
+        return show(rdata);
     }
 
 }

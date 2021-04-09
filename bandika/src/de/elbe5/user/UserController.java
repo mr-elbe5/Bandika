@@ -74,16 +74,11 @@ public class UserController extends Controller {
     }
 
     public IResponse showCaptcha(SessionRequestData rdata) {
-        String captcha = (String) rdata.getSessionObject(RequestData.KEY_CAPTCHA);
-        assert(captcha!=null);
+        String captcha = UserSecurity.generateCaptchaString();
+        rdata.setSessionObject(RequestData.KEY_CAPTCHA, captcha);
         BinaryFile data = UserSecurity.getCaptcha(captcha);
         assert data != null;
         return new MemoryFileResponse(data);
-    }
-
-    public IResponse renewCaptcha(SessionRequestData rdata) {
-        rdata.setSessionObject(RequestData.KEY_CAPTCHA, UserSecurity.generateCaptchaString());
-        return new StatusResponse(HttpServletResponse.SC_OK);
     }
 
     public IResponse logout(SessionRequestData rdata) {

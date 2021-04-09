@@ -89,4 +89,15 @@
         </attribute>
     </tag>
 
+    <tag>
+        <name>contact</name>
+        <tag-class>de.elbe5.tag.ContactTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <name>cssClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
 </taglib>
