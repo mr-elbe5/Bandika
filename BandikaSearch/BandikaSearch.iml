@@ -20,7 +20,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="Bandika" />
     <orderEntry type="library" exported="" name="lucene" level="project" />
+    <orderEntry type="library" exported="" name="jsoup" level="project" />
+    <orderEntry type="module" module-name="Bandika" exported="" />
+    <orderEntry type="module" module-name="BandikaBase" exported="" />
+    <orderEntry type="library" name="catalina" level="project" />
   </component>
 </module>
