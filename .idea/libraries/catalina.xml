@@ -1,10 +1,11 @@
 <component name="libraryTable">
   <library name="catalina">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/javalibs/catalina.jar!/" />
-      <root url="jar://$PROJECT_DIR$/javalibs/jasper.jar!/" />
-      <root url="jar://$PROJECT_DIR$/javalibs/jsp-api.jar!/" />
-      <root url="jar://$PROJECT_DIR$/javalibs/servlet-api.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/catalina.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jasper.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jsp-api.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/log4j-1.2.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/servlet-api.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
