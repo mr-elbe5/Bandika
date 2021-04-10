@@ -276,9 +276,9 @@ $$
 
 
 
---- set pwd 'pass' dependent on salt qczm7vjTmdY=
+--- set pwd 'pass' dependent on salt V3xfgDrxdl8=
 -- root user
-update t_user set pwd='lj31EhPC1JvEvw0/+DghmE/1xzc=' where id=1;
+update t_user set pwd='A0y3+ZmqpMhWA21VFQMkyY6v74Y=' where id=1;
 
 -- de
 SELECT ADDSECTIONPAGE(1, null, 'home', 'Home', 'Home Page', 1, 'defaultSectionPage');
