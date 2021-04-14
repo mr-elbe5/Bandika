@@ -20,7 +20,7 @@
     Locale locale = rdata.getLocale();
     ContentData contentData = rdata.getCurrentContent();
     assert contentData != null;
-    List<String> mediaTypes =contentData.getMediaClasses();
+    List<String> mediaTypes = contentData.getMediaClasses();
     int fileId=rdata.getInt("fileId");
 %>
         <li class="media open">
@@ -30,18 +30,20 @@
                 <% if (rdata.hasClipboardData(RequestData.KEY_MEDIA)) {%>
                 <a class="icon fa fa-paste" href="/ctrl/media/pasteMedia?parentId=<%=contentData.getId()%>" title="<%=$SH("_pasteMedia",locale)%>"> </a>
                 <%}
-                    if (!mediaTypes.isEmpty()) {%>
+                    if (!mediaTypes.isEmpty()) {
+                        if (mediaTypes.size()==1){%>
+                <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/media/openCreateMedia?parentId=<%=contentData.getId()%>&type=<%=mediaTypes.get(0)%>');" title="<%=$SH("_newMedia",locale)%>"></a>
+                    <%}else{%>
                 <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="<%=$SH("_newMedia",locale)%>"></a>
                 <div class="dropdown-menu">
                     <%for (String mediaType : mediaTypes) {
                         String name = $SH("class."+mediaType, locale);%>
                     <a class="dropdown-item" onclick="return openModalDialog('/ctrl/media/openCreateMedia?parentId=<%=contentData.getId()%>&type=<%=mediaType%>');"><%=name%>
                     </a>
-                    <%
-                        }%>
+                    <%}%>
                 </div>
-                <%
-                    }%>
+                    <%}
+                }%>
             </div>
             <%}%>
             <ul>

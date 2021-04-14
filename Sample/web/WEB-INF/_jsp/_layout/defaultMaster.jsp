@@ -34,6 +34,7 @@
     <meta name="description" content="<%=$H(description)%>">
     <link rel="shortcut icon" href="/favicon.ico"/>
     <link rel="stylesheet" href="/static-content/css/bandika.css"/>
+    <link rel="stylesheet" href="/static-content/css/layout.css"/>
     <script type="text/javascript" src="/static-content/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="/static-content/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/static-content/js/bootstrap.tree.js"></script>
@@ -93,7 +94,7 @@
         <footer class="footer">
             <ul class="nav">
                 <li class="nav-item">
-                    <a class="nav-link"><%=$SH("_copyright", locale)%>
+                    <a class="nav-link">&copy; <%=$SH("_copyright", locale)%>
                     </a>
                 </li>
                 <% for (ContentData data : ContentCache.getFooterList()) {

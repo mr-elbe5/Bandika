@@ -8,8 +8,8 @@
  */
 package de.elbe5.content;
 
-import de.elbe5.fieldsectionpart.FieldSectionPartBean;
-import de.elbe5.page.SectionPageBean;
+import de.elbe5.page.PageBean;
+import de.elbe5.page.LayoutPartBean;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -18,8 +18,8 @@ public class AppContentCentral extends ContentCentral{
 
     @Override
     public void replaceStringInContent(Connection con, String oldFileName,String fileName) throws SQLException {
-        SectionPageBean.getInstance().replaceStringInContent(con,oldFileName,fileName);
-        FieldSectionPartBean.getInstance().replaceStringInContent(con,oldFileName,fileName);
+        PageBean.getInstance().replaceStringInContent(con,oldFileName,fileName);
+        LayoutPartBean.getInstance().replaceStringInContent(con,oldFileName,fileName);
     }
 
 }

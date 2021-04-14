@@ -14,16 +14,17 @@
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="de.elbe5.user.UserCache" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="de.elbe5.page.PageData" %>
+<%@ page import="de.elbe5.layout.LayoutData" %>
+<%@ page import="de.elbe5.layout.LayoutCache" %>
+<%@ page import="de.elbe5.application.Configuration" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     SessionRequestData rdata = SessionRequestData.getRequestData(request);
     Locale locale = rdata.getLocale();
     PageData contentData = rdata.getCurrentContent(PageData.class);
     assert (contentData != null);
-    List<String> masterNames = new ArrayList<>();
-    masterNames.add("defaultMaster");
+    List<LayoutData> pageLayouts = LayoutCache.getLayouts(PageData.LAYOUT_TYPE);
     String url = "/ctrl/page/saveContentData/" + contentData.getId();%>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -37,7 +38,7 @@
         <form:form url="<%=url%>" name="pageform" ajax="true" multi="true">
             <div class="modal-body">
                 <form:formerror/>
-                <h3><%=$SH("_settings", locale)%>
+                <h3><%=$SH("_settings",locale)%>
                 </h3>
                 <form:line label="_idAndUrl"><%=$I(contentData.getId())%> - <%=$H(contentData.getUrl())%>
                 </form:line>
@@ -49,13 +50,11 @@
                 <form:text name="displayName" label="_name" required="true" value="<%=$H(contentData.getDisplayName())%>"/>
                 <form:textarea name="description" label="_description" height="5em"><%=$H(contentData.getDescription())%></form:textarea>
                 <form:text name="keywords" label="_keywords" value="<%=$H(contentData.getKeywords())%>"/>
-                <form:select name="navType" label="_navType">
-                    <option value="<%=ContentData.NAV_TYPE_NONE%>" <%=contentData.getNavType().equals(ContentData.NAV_TYPE_NONE) ? "selected" : ""%>><%=$SH("system.navTypeNone", locale)%>
+                <form:select name="language" label="_language">
+                    <% for (Locale loc : Configuration.getLocales()){%>
+                    <option value="<%=loc.getLanguage()%>" <%=contentData.getLocale().equals(loc) ? "selected" : ""%>><%=$H(loc.getDisplayLanguage(locale))%>
                     </option>
-                    <option value="<%=ContentData.NAV_TYPE_HEADER%>" <%=contentData.getNavType().equals(ContentData.NAV_TYPE_HEADER) ? "selected" : ""%>><%=$SH("system.navTypeHeader", locale)%>
-                    </option>
-                    <option value="<%=ContentData.NAV_TYPE_FOOTER%>" <%=contentData.getNavType().equals(ContentData.NAV_TYPE_FOOTER) ? "selected" : ""%>><%=$SH("system.navTypeFooter", locale)%>
-                    </option>
+                    <%}%>
                 </form:select>
                 <form:select name="accessType" label="_accessType">
                     <option value="<%=ContentData.ACCESS_TYPE_OPEN%>" <%=contentData.getNavType().equals(ContentData.ACCESS_TYPE_OPEN) ? "selected" : ""%>><%=$SH("system.accessTypeOpen", locale)%>
@@ -65,19 +64,32 @@
                     <option value="<%=ContentData.ACCESS_TYPE_INDIVIDUAL%>" <%=contentData.getNavType().equals(ContentData.ACCESS_TYPE_INDIVIDUAL) ? "selected" : ""%>><%=$SH("system.accessTypeIndividual", locale)%>
                     </option>
                 </form:select>
-                <form:select name="master" label="_masterLayout" required="true">
-                    <option value="" <%=contentData.getMaster().isEmpty() ? "selected" : ""%>><%=$SH("_pleaseSelect", locale)%>
+                <form:select name="navType" label="_navType">
+                    <option value="<%=ContentData.NAV_TYPE_NONE%>" <%=contentData.getNavType().equals(ContentData.NAV_TYPE_NONE) ? "selected" : ""%>><%=$SH("system.navTypeNone", locale)%>
                     </option>
-                    <% for (String master : masterNames) {%>
-                    <option value="<%=$H(master)%>" <%=master.equals(contentData.getMaster()) ? "selected" : ""%>><%=$SH("class."+master, locale)%>
+                    <option value="<%=ContentData.NAV_TYPE_HEADER%>" <%=contentData.getNavType().equals(ContentData.NAV_TYPE_HEADER) ? "selected" : ""%>><%=$SH("system.navTypeHeader", locale)%>
+                    </option>
+                    <option value="<%=ContentData.NAV_TYPE_FOOTER%>" <%=contentData.getNavType().equals(ContentData.NAV_TYPE_FOOTER) ? "selected" : ""%>><%=$SH("system.navTypeFooter", locale)%>
+                    </option>
+                </form:select>
+                <form:line label="_active" padded="true">
+                    <form:check name="active" value="true" checked="<%=contentData.isActive()%>"/>
+                </form:line>
+                <form:select name="layout" label="_pageLayout" required="true">
+                    <option value="" <%=contentData.getLayout().isEmpty() ? "selected" : ""%>><%=$SH("_pleaseSelect",locale)%>
+                    </option>
+                    <% for (LayoutData layout : pageLayouts) {
+                        String layoutName=layout.getName();
+                    %>
+                    <option value="<%=$H(layoutName)%>" <%=layoutName.equals(contentData.getLayout()) ? "selected" : ""%>><%=$SH(layout.getKey(),locale)%>
                     </option>
                     <%}%>
                 </form:select>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=$SH("_close", locale)%>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=$SH("_close",locale)%>
                 </button>
-                <button type="submit" class="btn btn-primary"><%=$SH("_save", locale)%>
+                <button type="submit" class="btn btn-primary"><%=$SH("_save",locale)%>
                 </button>
             </div>
         </form:form>

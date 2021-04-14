@@ -14,7 +14,6 @@ import de.elbe5.content.ContentData;
 import de.elbe5.request.SessionRequestData;
 import de.elbe5.response.IResponse;
 import de.elbe5.content.ContentResponse;
-import de.elbe5.response.MasterView;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -24,15 +23,19 @@ import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PageData extends ContentData {
 
-    public static String MASTER_TYPE = "Master";
+    public static String LAYOUT_TYPE = "Page";
 
     private String keywords = "";
-    protected String master = MasterView.DEFAULT_MASTER;
+    protected String layout = "";
     protected LocalDateTime publishDate = null;
     protected String publishedContent="";
+
+    protected Map<String, SectionData> sections = new HashMap<>();
 
     // base data
 
@@ -44,12 +47,16 @@ public class PageData extends ContentData {
         this.keywords = keywords;
     }
 
-    public String getMaster() {
-        return master;
+    public String getLayout() {
+        return layout;
     }
 
-    public void setMaster(String master) {
-        this.master = master;
+    public String getLayoutUrl() {
+        return "/WEB-INF/_jsp/_layout/"+ layout +".jsp";
+    }
+
+    public void setLayout(String layout) {
+        this.layout = layout;
     }
 
     public LocalDateTime getPublishDate() {
@@ -81,10 +88,93 @@ public class PageData extends ContentData {
         return getPublishDate() != null;
     }
 
+    public Map<String, SectionData> getSections() {
+        return sections;
+    }
+
+    public SectionData getSection(String sectionName) {
+        return sections.get(sectionName);
+    }
+
+    public SectionData ensureSection(String sectionName) {
+        if (!sections.containsKey(sectionName)) {
+            SectionData section = new SectionData();
+            section.setPageId(getId());
+            section.setName(sectionName);
+            sections.put(sectionName, section);
+            return section;
+        }
+        return sections.get(sectionName);
+    }
+
+    // part data
+
+    public void sortParts() {
+        for (SectionData section : sections.values()) {
+            section.sortParts();
+        }
+    }
+
+    public PagePartData getPart(int pid) {
+        for (SectionData section : getSections().values()) {
+            PagePartData part = section.getPart(pid);
+            if (part!=null)
+                return part;
+        }
+        return null;
+    }
+
+    public void addPart(PagePartData part, int fromPartId, boolean setRanking) {
+        SectionData section = getSection(part.getSectionName());
+        if (section == null) {
+            section = new SectionData();
+            section.setPageId(getId());
+            section.setName(part.getSectionName());
+            sections.put(part.getSectionName(), section);
+        }
+        section.addPart(part, fromPartId, setRanking);
+    }
+
+    public void movePart(String sectionName, int id, int dir) {
+        SectionData section = getSection(sectionName);
+        section.movePart(id, dir);
+    }
+
+    public void deletePart(int pid) {
+        for (SectionData section : getSections().values()) {
+            PagePartData part = section.getPart(pid);
+            if (part!=null) {
+                section.deletePart(pid);
+                break;
+            }
+        }
+    }
+
     // view
 
+    //used in controller
+    @Override
+    public String getContentDataJsp() {
+        return "/WEB-INF/_jsp/page/editContentData.ajax.jsp";
+    }
+
+    //used in jsp
+    protected void displayEditContent(PageContext context, JspWriter writer, SessionRequestData rdata) throws IOException, ServletException {
+        context.include("/WEB-INF/_jsp/page/editPageContent.inc.jsp");
+    }
+
+    //used in jsp
+    protected void displayDraftContent(PageContext context, JspWriter writer, SessionRequestData rdata) throws IOException, ServletException {
+        context.include(getLayoutUrl());
+    }
+
+    //used in jsp
+    protected void displayPublishedContent(PageContext context, JspWriter writer, SessionRequestData rdata) throws IOException, ServletException {
+        writer.write(publishedContent);
+    }
+
     public IResponse getDefaultView(){
-        return new ContentResponse(this, getMaster());
+        return new ContentResponse(this);
     }
 
     public void displayContent(PageContext context, SessionRequestData rdata) throws IOException, ServletException {
@@ -133,16 +223,6 @@ public class PageData extends ContentData {
         }
     }
 
-    protected void displayEditContent(PageContext context, JspWriter writer, SessionRequestData rdata) throws IOException, ServletException {
-    }
-
-    protected void displayDraftContent(PageContext context, JspWriter writer, SessionRequestData rdata) throws IOException, ServletException {
-    }
-
-    protected void displayPublishedContent(PageContext context, JspWriter writer, SessionRequestData rdata) throws IOException, ServletException {
-        writer.write(publishedContent);
-    }
-
     // multiple data
 
     public void copyData(ContentData data, SessionRequestData rdata) {
@@ -151,17 +231,29 @@ public class PageData extends ContentData {
         PageData hcdata=(PageData)data;
         super.copyData(hcdata,rdata);
         setKeywords(hcdata.getKeywords());
-        setMaster(hcdata.getMaster());
+        setLayout(hcdata.getLayout());
+        for (String sectionName : hcdata.sections.keySet()) {
+            SectionData section = new SectionData();
+            section.setPageId(getId());
+            section.copyData(hcdata.sections.get(sectionName));
+            sections.put(sectionName, section);
+        }
     }
 
     @Override
     public void readRequestData(SessionRequestData rdata) {
         super.readRequestData(rdata);
         setKeywords(rdata.getString("keywords"));
-        setMaster(rdata.getString("master"));
+        setLayout(rdata.getString("layout"));
+        if (layout.isEmpty()) {
+            rdata.addIncompleteField("layout");
+        }
     }
 
     public void readFrontendRequestData(SessionRequestData rdata) {
+        for (SectionData section : getSections().values()) {
+            section.readFrontendRequestData(rdata);
+        }
     }
 
 }

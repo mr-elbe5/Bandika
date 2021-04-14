@@ -30,18 +30,20 @@
                 <% if (rdata.hasClipboardData(RequestData.KEY_IMAGE)) {%>
                 <a class="icon fa fa-paste" href="/ctrl/image/pasteImage?parentId=<%=contentData.getId()%>" title="<%=$SH("_pasteImage",locale)%>"> </a>
                 <%}
-                    if (!imageTypes.isEmpty()) {%>
+                    if (!imageTypes.isEmpty()) {
+                        if (imageTypes.size() == 1){%>
+                <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/image/openCreateImage?parentId=<%=contentData.getId()%>&type=<%=imageTypes.get(0)%>');" title="<%=$SH("_newImage",locale)%>"></a>
+                    <%} else {%>
                 <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="<%=$SH("_newImage",locale)%>"></a>
                 <div class="dropdown-menu">
                     <%for (String imageType : imageTypes) {
                         String name = $SH("class."+imageType, locale);%>
                     <a class="dropdown-item" onclick="return openModalDialog('/ctrl/image/openCreateImage?parentId=<%=contentData.getId()%>&type=<%=imageType%>');"><%=name%>
                     </a>
-                    <%
-                        }%>
+                    <%}%>
                 </div>
-                <%
-                    }%>
+                    <%}
+                }%>
             </div>
             <%}%>
             <ul>

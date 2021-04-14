@@ -1,7 +1,7 @@
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="de.elbe5.content.ContentCache" %>
 <%@ page import="de.elbe5.request.RequestData" %>
-<<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
     ContentData contentData = ContentCache.getContentRoot();
@@ -11,7 +11,7 @@
     url = url.substring(0, idx);
     if (contentData!=null)
         url += contentData.getUrl();
-    else if (rdata.isLoggedIn())
+    else if (rdata!= null && rdata.isLoggedIn())
         url +="/ctrl/admin/openSystemAdministration";
     else
         url +="/ctrl/user/openLogin";

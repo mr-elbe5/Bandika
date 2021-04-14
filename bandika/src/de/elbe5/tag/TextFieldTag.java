@@ -11,10 +11,10 @@ package de.elbe5.tag;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.content.ContentData;
-import de.elbe5.fieldsectionpart.FieldSectionPartData;
-import de.elbe5.page.SectionPageData;
-import de.elbe5.page.SectionPartData;
-import de.elbe5.fieldsectionpart.PartTextField;
+import de.elbe5.page.PageData;
+import de.elbe5.page.LayoutPartData;
+import de.elbe5.page.PagePartData;
+import de.elbe5.page.PartTextField;
 import de.elbe5.request.SessionRequestData;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,8 +34,8 @@ public class TextFieldTag extends FieldTag {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
             SessionRequestData rdata = SessionRequestData.getRequestData(request);
             JspWriter writer = getContext().getOut();
-            SectionPageData contentData = rdata.getCurrentContent(SectionPageData.class);
-            FieldSectionPartData partData = rdata.get(SectionPartData.KEY_PART, FieldSectionPartData.class);
+            PageData contentData = rdata.getCurrentContent(PageData.class);
+            LayoutPartData partData = rdata.get(PagePartData.KEY_PART, LayoutPartData.class);
 
             PartTextField field = partData.ensureTextField(name);
 

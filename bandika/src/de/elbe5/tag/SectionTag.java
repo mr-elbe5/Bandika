@@ -9,8 +9,8 @@
 package de.elbe5.tag;
 
 import de.elbe5.base.log.Log;
+import de.elbe5.page.PageData;
 import de.elbe5.page.SectionData;
-import de.elbe5.page.SectionPageData;
 import de.elbe5.request.SessionRequestData;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,16 +32,16 @@ public class SectionTag extends BaseTag {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
             SessionRequestData rdata = SessionRequestData.getRequestData(request);
-            SectionPageData contentData = rdata.getCurrentContent(SectionPageData.class);
+            PageData contentData = rdata.getCurrentContent(PageData.class);
             SectionData sectionData = contentData.ensureSection(name);
             if (sectionData != null) {
                 sectionData.setCssClass(cssClass);
                 rdata.put("sectionData", sectionData);
                 String url;
                 if (contentData.isEditing()) {
-                    url = "/WEB-INF/_jsp/sectionpage/editSection.inc.jsp";
+                    url = "/WEB-INF/_jsp/page/editSection.inc.jsp";
                 } else {
-                    url = "/WEB-INF/_jsp/sectionpage/section.inc.jsp";
+                    url = "/WEB-INF/_jsp/page/section.inc.jsp";
                 }
                 getContext().include(url);
                 request.removeAttribute("sectionData");

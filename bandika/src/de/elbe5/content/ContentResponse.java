@@ -8,7 +8,6 @@
  */
 package de.elbe5.content;
 
-import de.elbe5.content.ContentData;
 import de.elbe5.request.SessionRequestData;
 import de.elbe5.response.MasterView;
 
@@ -20,11 +19,7 @@ public class ContentResponse extends MasterView {
     private final ContentData data;
 
     public ContentResponse(ContentData data) {
-        this.data=data;
-    }
-
-    public ContentResponse(ContentData data, String master) {
-        super(master);
+        super("defaultMaster");
         this.data=data;
     }
 

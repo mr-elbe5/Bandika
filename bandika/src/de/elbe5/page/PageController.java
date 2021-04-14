@@ -8,6 +8,9 @@
  */
 package de.elbe5.page;
 
+import de.elbe5.application.Configuration;
+import de.elbe5.application.MailHelper;
+import de.elbe5.base.data.Strings;
 import de.elbe5.base.log.Log;
 import de.elbe5.content.ContentBean;
 import de.elbe5.content.ContentCache;
@@ -187,6 +190,54 @@ public class PageController extends ContentController {
             }
         }
         return new ForwardResponse("/ctrl/admin/openContentAdministration");
+    }
+
+    public IResponse addPart(SessionRequestData rdata) {
+        int contentId = rdata.getId();
+        PageData data = rdata.getCurrentSessionContent(PageData.class);
+        assert(data != null && data.getId() == contentId);
+        checkRights(data.hasUserEditRight(rdata));
+        int fromPartId = rdata.getInt("fromPartId", -1);
+        String partType = rdata.getString("partType");
+        PagePartData pdata = PagePartFactory.getNewData(partType);
+        assert(pdata != null);
+        pdata.setCreateValues(rdata);
+        data.addPart(pdata, fromPartId, true);
+        rdata.put(PagePartData.KEY_PART, pdata);
+        return new ForwardResponse("/WEB-INF/_jsp/page/newPart.ajax.jsp");
+    }
+
+    public IResponse sendContact(SessionRequestData rdata) {
+        String captcha = rdata.getString("captcha");
+        String sessionCaptcha = rdata.getSessionObject(RequestData.KEY_CAPTCHA, String.class);
+        if (!captcha.equals(sessionCaptcha)){
+            rdata.addFormField("captcha");
+            rdata.addFormError(Strings.string("_captchaError",rdata.getLocale()));
+            return show(rdata);
+        }
+        String name = rdata.getString("contactName");
+        String email = rdata.getString("contactEmail");
+        String message = rdata.getString("contactMessage");
+        if (name.isEmpty()) {
+            rdata.addIncompleteField("contactName");
+        }
+        if (email.isEmpty()) {
+            rdata.addIncompleteField("contactEmail");
+        }
+        if (message.isEmpty()) {
+            rdata.addIncompleteField("contactMessage");
+        }
+        if (!rdata.checkFormErrors()){
+            return show(rdata);
+        }
+        message = String.format(Strings.html("_contactRequestText", rdata.getLocale()),name,email) + message;
+        if (!MailHelper.sendPlainMail(Configuration.getMailReceiver(), Strings.string("_contactRequest",rdata.getLocale()), message)) {
+            rdata.setMessage(Strings.string("_contactRequestError",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_ERROR);
+            return show(rdata);
+        }
+        rdata.setMessage(Strings.string("_contactRequestSent",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.removeSessionObject(RequestData.KEY_CAPTCHA);
+        return show(rdata);
     }
 
 }

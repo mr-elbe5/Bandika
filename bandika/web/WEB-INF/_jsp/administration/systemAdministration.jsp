@@ -26,10 +26,6 @@
                 <ul>
                     <%if (rdata.hasSystemRight(SystemZone.APPLICATION)) {%>
                     <li>
-                        <a href="" onclick="return openModalDialog('/ctrl/admin/openExecuteDatabaseScript');"><%=$SH("_executeDatabaseScript",locale)%>
-                        </a>
-                    </li>
-                    <li>
                         <a href="" onclick="if (confirmExecute()) return openModalDialog('/ctrl/admin/restart');"><%=$SH("_restart",locale)%>
                         </a>
                     <li class="open">

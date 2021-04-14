@@ -19,15 +19,15 @@ public class SectionData {
     protected String name = "";
     protected int contentId = 0;
     protected String cssClass = "";
-    protected List<SectionPartData> parts = new ArrayList<>();
+    protected List<PagePartData> parts = new ArrayList<>();
 
     public SectionData() {
     }
 
     public void copyData(SectionData data) {
         setName(data.getName());
-        for (SectionPartData srcPart : data.parts) {
-            SectionPartData part = SectionPartFactory.getNewData(srcPart.getClass().getSimpleName());
+        for (PagePartData srcPart : data.parts) {
+            PagePartData part = PagePartFactory.getNewData(srcPart.getClass().getSimpleName());
             if (part == null)
                 continue;
             part.setSectionName(getName());
@@ -68,7 +68,7 @@ public class SectionData {
         this.cssClass = cssClass;
     }
 
-    public List<SectionPartData> getParts() {
+    public List<PagePartData> getParts() {
         return parts;
     }
 
@@ -76,8 +76,8 @@ public class SectionData {
         Collections.sort(parts);
     }
 
-    public SectionPartData getPart(int pid) {
-        for (SectionPartData pdata : parts) {
+    public PagePartData getPart(int pid) {
+        for (PagePartData pdata : parts) {
             if (pdata.getId() == pid) {
                 return pdata;
             }
@@ -85,7 +85,7 @@ public class SectionData {
         return null;
     }
 
-    public<T extends SectionPartData> T getPart(int pid,Class<T> cls) {
+    public<T extends PagePartData> T getPart(int pid, Class<T> cls) {
         try{
             return cls.cast(getPart(pid));
         }
@@ -95,11 +95,11 @@ public class SectionData {
         return null;
     }
 
-    public void addPart(SectionPartData part, int fromPartId, boolean setRanking) {
+    public void addPart(PagePartData part, int fromPartId, boolean setRanking) {
         boolean found = false;
         if (fromPartId != -1) {
             for (int i = 0; i < parts.size(); i++) {
-                SectionPartData ppd = parts.get(i);
+                PagePartData ppd = parts.get(i);
                 if (ppd.getId() == fromPartId) {
                     parts.add(i + 1, part);
                     found = true;
@@ -119,7 +119,7 @@ public class SectionData {
 
     public void movePart(int id, int dir) {
         for (int i = 0; i < parts.size(); i++) {
-            SectionPartData ppd = parts.get(i);
+            PagePartData ppd = parts.get(i);
             if (ppd.getId() == id) {
                 parts.remove(i);
                 int idx = i + dir;
@@ -140,7 +140,7 @@ public class SectionData {
 
     public void deletePart(int id) {
         for (int i = 0; i < parts.size(); i++) {
-            SectionPartData ppd = parts.get(i);
+            PagePartData ppd = parts.get(i);
             if (ppd.getId() == id) {
                 parts.remove(i);
                 return;
@@ -149,14 +149,14 @@ public class SectionData {
     }
 
     public void prepareCopy() {
-        for (SectionPartData part : parts) {
+        for (PagePartData part : parts) {
             part.prepareCopy();
         }
     }
 
     public void readFrontendRequestData(SessionRequestData rdata) {
         for (int i=getParts().size()-1;i>=0;i--){
-            SectionPartData part = getParts().get(i);
+            PagePartData part = getParts().get(i);
             part.readFrontendRequestData(rdata);
             if (part.getPosition()==-1) {
                 getParts().remove(i);

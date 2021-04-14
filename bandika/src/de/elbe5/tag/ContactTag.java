@@ -29,7 +29,7 @@ public class ContactTag extends BaseTag {
             SessionRequestData rdata = SessionRequestData.getRequestData(request);
             Writer writer = getWriter();
             writer.write(StringUtil.format("<div class=\"{1}\">", StringUtil.toHtml(cssClass)));
-            getContext().include("/WEB-INF/_jsp/sectionpage/contact.inc.jsp");
+            getContext().include("/WEB-INF/_jsp/page/contact.inc.jsp");
             writer.write("</div>");
         } catch (Exception e) {
             Log.error("could not write tag", e);

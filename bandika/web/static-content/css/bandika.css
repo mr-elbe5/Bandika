@@ -40,7 +40,7 @@ body {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #343a40;
+  color: #212529;
   background-color: #fff;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
@@ -1085,7 +1085,7 @@ main {
 .table {
   width: 100%;
   margin-bottom: 1rem;
-  color: #343a40;
+  color: #212529;
   vertical-align: top; }
   .table th,
   .table td {
@@ -1122,7 +1122,7 @@ main {
   background-color: rgba(0, 0, 0, 0.05); }
 
 .table-hover tbody tr:hover {
-  color: #343a40;
+  color: #212529;
   background-color: rgba(0, 0, 0, 0.075); }
 
 .table-primary,
@@ -1381,7 +1381,7 @@ main {
   padding: 0.375rem 0;
   margin-bottom: 0;
   line-height: 1.5;
-  color: #343a40;
+  color: #212529;
   background-color: transparent;
   border: solid transparent;
   border-width: 1px 0; }
@@ -2015,7 +2015,7 @@ main {
   display: inline-block;
   font-weight: 400;
   line-height: 1.5;
-  color: #343a40;
+  color: #212529;
   text-align: center;
   vertical-align: middle;
   cursor: pointer;
@@ -2027,7 +2027,7 @@ main {
   border-radius: 0.25rem;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; }
   .btn:hover {
-    color: #343a40;
+    color: #212529;
     text-decoration: none; }
   .btn:focus, .btn.focus {
     outline: 0;
@@ -2452,7 +2452,7 @@ main {
   padding: 0.5rem 0;
   margin: 0.125rem 0 0;
   font-size: 1rem;
-  color: #343a40;
+  color: #212529;
   text-align: left;
   list-style: none;
   background-color: #fff;
@@ -3110,7 +3110,7 @@ main {
     text-decoration: none;
     background-color: #f8f9fa; }
   .list-group-item-action:active {
-    color: #343a40;
+    color: #212529;
     background-color: #e9ecef; }
 
 .list-group-item {
@@ -3698,7 +3698,7 @@ button.close {
 
 .popover-body {
   padding: 0.5rem 0.75rem;
-  color: #343a40; }
+  color: #212529; }
 
 .clearfix::after {
   display: block;
@@ -4634,7 +4634,7 @@ button.close {
   color: #fff !important; }
 
 .text-body {
-  color: #343a40 !important; }
+  color: #212529 !important; }
 
 .text-muted {
   color: #6c757d !important; }
@@ -10347,6 +10347,15 @@ form .form-control-file, form .form-control-range {
   .treeSection .dropdown-toggle {
     cursor: context-menu; }
 
+.logSection {
+  padding: 1rem; }
+  .logSection h3, .logSection .h3 {
+    display: inline-block;
+    padding-bottom: 1rem;
+    padding-right: 1rem; }
+  .logSection table td:first-child {
+    padding-right: 2rem; }
+
 /* like button-group */
 div.buttonLine {
   padding: 0.5em 0; }
@@ -10377,203 +10386,5 @@ div#pageContainer .editArea .textBox input[type="text"], div#pageContainer .edit
   color: inherit;
   background-color: inherit;
   text-align: inherit; }
-
-html {
-  height: 100%; }
-
-body {
-  background: #f8f9fa url("../img/papier2560.jpg");
-  color: #343a40;
-  height: 100%;
-  font-family: Arial, Helvetica, sans-serif; }
-
-a, a:active, a:hover, a:visited {
-  color: #343a40; }
-
-button:focus, a:focus, .btn:focus {
-  outline: 0 !important;
-  box-shadow: none; }
-
-header {
-  position: relative;
-  background: transparent;
-  color: #f8f9fa; }
-  header div.top {
-    background: transparent; }
-    header div.top a {
-      text-decoration: none;
-      color: #f8f9fa; }
-    header div.top section.sysnav a.nav-link {
-      padding: 0;
-      margin: 0.25rem 0 0.25rem 0.5rem;
-      font-size: 0.875rem;
-      color: #343a40; }
-    header div.top section.sysnav .dropdown-menu {
-      padding: 0; }
-      header div.top section.sysnav .dropdown-menu .dropdown-item {
-        color: #343a40;
-        font-size: 0.8rem; }
-  header div.menu {
-    background: transparent;
-    border-bottom: 1px solid #555555; }
-    header div.menu section.menu nav.navbar {
-      padding: .25rem 0; }
-      header div.menu section.menu nav.navbar .navbar-toggler span {
-        color: #343a40; }
-      header div.menu section.menu nav.navbar a.navbar-brand img {
-        height: 4rem; }
-      header div.menu section.menu nav.navbar .navbar-collapse {
-        margin-top: 2rem; }
-      header div.menu section.menu nav.navbar .nav-item a {
-        color: #343a40; }
-      header div.menu section.menu nav.navbar .nav-item.active a {
-        text-decoration: underline; }
-      header div.menu section.menu nav.navbar .nav-link {
-        padding: 0.25rem 1rem; }
-      header div.menu section.menu nav.navbar .dropdown-toggle::after {
-        vertical-align: 0.1em; }
-      header div.menu section.menu nav.navbar .dropdown-menu {
-        background: #f8f9fa url("../img/papier2560.jpg");
-        padding: 0.25rem 0;
-        margin: 0;
-        border-color: #343a40;
-        border-width: 0 1px 1px 1px;
-        border-radius: 0; }
-        header div.menu section.menu nav.navbar .dropdown-menu .dropdown-item:focus, header div.menu section.menu nav.navbar .dropdown-menu .dropdown-item:hover {
-          background: rgba(255, 255, 255, 0.2); }
-        header div.menu section.menu nav.navbar .dropdown-menu .dropdown-item.subitem {
-          padding-left: 3rem;
-          font-size: 0.875rem; }
-        header div.menu section.menu nav.navbar .dropdown-menu .nav-item a {
-          color: #343a40; }
-  header section.bc .breadcrumb {
-    background: #f8f9fa url("../img/papier2560.jpg");
-    color: #343a40;
-    margin: 0;
-    font-size: 0.8rem;
-    padding: 0.25rem 0; }
-    header section.bc .breadcrumb .breadcrumb-item.active {
-      color: #f8f9fa; }
-    header section.bc .breadcrumb a {
-      color: #343a40;
-      text-decoration: none; }
-
-div#pageContainer {
-  position: relative;
-  background: transparent;
-  color: #343a40;
-  border-radius: 5px; }
-
-div#pageContainer.admin {
-  background: white; }
-
-div#pageContent {
-  padding-top: 1rem; }
-  div#pageContent h1, div#pageContent .h1, div#pageContent h2, div#pageContent .h2, div#pageContent h3, div#pageContent .h3 {
-    margin: 0; }
-  div#pageContent .title {
-    font-size: 3rem;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    text-align: center;
-    color: #555555; }
-  div#pageContent .headerBox {
-    padding: 0.5rem 1rem; }
-  div#pageContent .headerBox h1, div#pageContent .headerBox .h1 {
-    text-align: center; }
-  div#pageContent .htmlBox {
-    background: #fff;
-    padding: 1rem; }
-  div#pageContent .imageBox {
-    background: #fff;
-    padding: 0; }
-    div#pageContent .imageBox img {
-      width: 100%; }
-  div#pageContent h3.partHeader, div#pageContent .partHeader.h3 {
-    background: #343a40;
-    padding: 0.5rem 1rem; }
-  div#pageContent .subheader_points img {
-    display: inline-block;
-    margin-right: 2em; }
-  div#pageContent .subheader_points h2, div#pageContent .subheader_points .h2 {
-    display: inline-block;
-    width: calc(100% - 200px); }
-  div#pageContent .paragraph {
-    border: solid 1px darkgrey;
-    border-radius: 5px;
-    padding: 1rem;
-    margin: 1rem 0;
-    background-color: rgba(255, 255, 255, 0.5);
-    color: #343a40; }
-    div#pageContent .paragraph h2, div#pageContent .paragraph .h2 {
-      border-bottom: 1px solid;
-      padding-bottom: 0.5rem;
-      margin-bottom: 0.5rem; }
-    div#pageContent .paragraph h3, div#pageContent .paragraph .h3 {
-      border-width: 1px 0;
-      border-style: solid;
-      padding: 0.5rem 0;
-      margin: 0.5rem 0; }
-    div#pageContent .paragraph img {
-      max-width: 100%; }
-    div#pageContent .paragraph img[style*="float: left;"], div#pageContent .paragraph img[style*="float:left;"] {
-      margin-right: 0.5em;
-      margin-bottom: 0.5em; }
-    div#pageContent .paragraph img[style*="float: right;"], div#pageContent .paragraph img[style*="float:right;"] {
-      margin-left: 0.5em;
-      margin-bottom: 0.5em; }
-
-.container.fixed-bottom {
-  background: #f8f9fa url("../img/papier2560.jpg");
-  border-top: 1px solid #343a40;
-  height: 2.25rem; }
-
-footer {
-  background: transparent;
-  color: #343a40;
-  font-size: 0.8rem;
-  padding: 0; }
-  footer a, footer a:active, footer a:hover, footer a:focus, footer a:visited {
-    color: #343a40; }
-
-/* admin */
-body.admin div#pageContainer {
-  background: white;
-  min-height: 500px; }
-
-/* login */
-body.login {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0; }
-  body.login #main {
-    top: 0; }
-    body.login #main .loginSection .form {
-      width: 100%;
-      max-width: 360px;
-      padding: 30px;
-      margin: 20% auto;
-      background: #f8f9fa;
-      border: 1px solid #f8f9fa;
-      border-radius: 5px; }
-      body.login #main .loginSection .form img {
-        height: 50px; }
-      body.login #main .loginSection .form .form-control:focus {
-        z-index: 2; }
-      body.login #main .loginSection .form input[type="text"] {
-        margin-bottom: 0.5rem; }
-      body.login #main .loginSection .form input[type="password"] {
-        margin-bottom: 2rem; }
-
-a.link::before {
-  content: "\203A";
-  padding-right: 0.25em; }
-
-a.mail::before {
-  content: "\f003";
-  font-family: FontAwesome;
-  padding-right: 0.25em; }
 
 /*# sourceMappingURL=bandika.css.map */

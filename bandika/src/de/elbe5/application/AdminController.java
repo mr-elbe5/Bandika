@@ -96,22 +96,6 @@ public class AdminController extends Controller {
         return openSystemAdministration(rdata);
     }
 
-    public IResponse openExecuteDatabaseScript(SessionRequestData rdata) {
-        checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
-        return showExecuteDatabaseScript();
-    }
-
-    public IResponse executeDatabaseScript(SessionRequestData rdata) {
-        checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
-        String script = rdata.getString("script");
-        if (!DbConnector.getInstance().executeScript(script)) {
-            rdata.setMessage("script could not be executed", SessionRequestData.MESSAGE_TYPE_ERROR);
-            return showExecuteDatabaseScript();
-        }
-        rdata.setMessage(Strings.string("_scriptExecuted",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogResponse("/ctrl/admin/openSystemAdministration");
-    }
-
     public IResponse reloadContentCache(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         ContentCache.setDirty();

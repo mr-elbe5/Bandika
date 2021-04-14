@@ -30,18 +30,20 @@
                 <% if (rdata.hasClipboardData(RequestData.KEY_DOCUMENT)) {%>
                 <a class="icon fa fa-paste" href="/ctrl/document/pasteDocument?parentId=<%=contentData.getId()%>" title="<%=$SH("_pasteDocument",locale)%>"> </a>
                 <%}
-                    if (!documentTypes.isEmpty()) {%>
+                    if (!documentTypes.isEmpty()) {
+                        if (documentTypes.size() == 1){%>
+                <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/document/openCreateDocument?parentId=<%=contentData.getId()%>&type=<%=documentTypes.get(0)%>');" title="<%=$SH("_newDocument",locale)%>"></a>
+                        <%} else {%>
                 <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="<%=$SH("_newDocument",locale)%>"></a>
                 <div class="dropdown-menu">
                     <%for (String documentType : documentTypes) {
                         String name = $SH("class."+documentType, locale);%>
                     <a class="dropdown-item" onclick="return openModalDialog('/ctrl/document/openCreateDocument?parentId=<%=contentData.getId()%>&type=<%=documentType%>');"><%=name%>
                     </a>
-                    <%
-                        }%>
+                        <%}%>
                 </div>
-                <%
-                    }%>
+                    <%}
+                }%>
             </div>
             <%}%>
             <ul>

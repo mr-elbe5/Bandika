@@ -17,9 +17,19 @@ public class Strings {
 
     public static Locale defaultLocale = Locale.ENGLISH;
 
+    private final static Map<Locale, Map<String, String>> stringMap = new HashMap<>();
+
+    public static void addBundle(String name, Locale locale){
+        Map<String, String> map = stringMap.computeIfAbsent(locale, k -> new HashMap<>());
+        ResourceBundle bundle = ResourceBundle.getBundle(name, locale);
+        for (String key : bundle.keySet()){
+            map.put(key, bundle.getString(key));
+        }
+    }
+
     public static String string(String key, Locale locale) {
         try {
-            return ResourceBundle.getBundle("strings", locale).getString(key);
+            return stringMap.get(locale).get(key);
         }
         catch (Exception e){
             Log.warn("string not found: " + key);

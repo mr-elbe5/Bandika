@@ -10,8 +10,8 @@ package de.elbe5.tag;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
-import de.elbe5.page.SectionPageData;
-import de.elbe5.page.SectionPartData;
+import de.elbe5.page.PageData;
+import de.elbe5.page.PagePartData;
 import de.elbe5.request.SessionRequestData;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,8 +33,8 @@ public class PartTag extends BaseTag {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
             SessionRequestData rdata = SessionRequestData.getRequestData(request);
-            SectionPageData contentData = rdata.getCurrentContent(SectionPageData.class);
-            SectionPartData partData = rdata.get(SectionPartData.KEY_PART,SectionPartData.class);
+            PageData contentData = rdata.getCurrentContent(PageData.class);
+            PagePartData partData = rdata.get(PagePartData.KEY_PART, PagePartData.class);
             JspWriter writer = getContext().getOut();
             if (partData != null) {
                 partData.setCssClass(cssClass);
@@ -45,7 +45,7 @@ public class PartTag extends BaseTag {
                             StringUtil.toHtml(partData.getCssClass()),
                             StringUtil.toHtml(partData.getEditTitle(rdata.getLocale()))
                     );
-                    getContext().include("/WEB-INF/_jsp/sectionpage/editPartHeader.inc.jsp", true);
+                    getContext().include("/WEB-INF/_jsp/page/editPartHeader.inc.jsp", true);
                 }
                 else{
                     StringUtil.write(writer,viewStart,
