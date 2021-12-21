@@ -11,7 +11,7 @@
 package de.elbe5.file;
 
 import de.elbe5.base.util.StringUtil;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 import de.elbe5.response.IResponse;
 
 import javax.servlet.ServletContext;
@@ -33,8 +33,7 @@ public class FileResponse implements IResponse {
         this.rangeInfo = rangeInfo;
     }
 
-    @Override
-    public void processResponse(ServletContext context, SessionRequestData rsdata, HttpServletResponse response) {
+    public void processResponse(ServletContext context, RequestData rsdata, HttpServletResponse response) {
         if (rangeInfo!=null && !rangeInfo.isValid()){
             response.setHeader("Content-Range", "bytes */" + file.length());
             response.setStatus(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
@@ -100,4 +99,5 @@ public class FileResponse implements IResponse {
             toRead -= read;
         }
     }
+
 }

@@ -9,9 +9,7 @@
 package de.elbe5.file;
 
 import de.elbe5.base.data.BinaryFile;
-import de.elbe5.file.PreviewCache;
 import de.elbe5.request.RequestData;
-import de.elbe5.request.SessionRequestData;
 import de.elbe5.response.IResponse;
 
 import javax.servlet.ServletContext;
@@ -28,7 +26,7 @@ public class PreviewResponse implements IResponse {
     }
 
     @Override
-    public void processResponse(ServletContext context, SessionRequestData rdata, HttpServletResponse response) {
+    public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response) {
         process(context,rdata,response);
     }
 

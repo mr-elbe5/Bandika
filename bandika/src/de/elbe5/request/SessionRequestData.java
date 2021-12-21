@@ -29,6 +29,12 @@ public class SessionRequestData extends RequestData {
         super(method, request);
     }
 
+    @Override
+    public void init(){
+        super.init();
+        initSession();
+    }
+
     /*********** message *********/
 
     public boolean hasMessage() {

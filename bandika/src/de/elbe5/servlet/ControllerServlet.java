@@ -27,7 +27,6 @@ public class ControllerServlet extends WebServlet {
     protected void processRequest(String method, HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding(Configuration.ENCODING);
         SessionRequestData rdata = new SessionRequestData(method, request);
-        request.setAttribute(SessionRequestData.KEY_REQUESTDATA, rdata);
         String uri = request.getRequestURI();
         // skip "/ctrl/"
         StringTokenizer stk = new StringTokenizer(uri.substring(6), "/", false);
@@ -43,10 +42,9 @@ public class ControllerServlet extends WebServlet {
             }
             controller = ControllerCache.getController(controllerName);
         }
-        rdata.readRequestParams();
-        rdata.initSession();
+        rdata.init();
         try {
-            IResponse result = getView(controller, methodName, rdata);
+            IResponse result = getResponse(controller, methodName, rdata);
             if (rdata.hasCookies())
                 rdata.setCookies(response);
             result.processResponse(getServletContext(), rdata, response);
@@ -57,7 +55,7 @@ public class ControllerServlet extends WebServlet {
         }
     }
 
-    public IResponse getView(Controller controller, String methodName, SessionRequestData rdata) {
+    public IResponse getResponse(Controller controller, String methodName, SessionRequestData rdata) {
         if (controller==null)
             throw new ResponseException(HttpServletResponse.SC_BAD_REQUEST);
         try {

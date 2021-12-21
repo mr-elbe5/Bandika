@@ -1,7 +1,6 @@
-package de.elbe5.json.request;
+package de.elbe5.request;
 
 import de.elbe5.application.Configuration;
-import de.elbe5.request.RequestData;
 import de.elbe5.user.UserBean;
 import de.elbe5.user.UserData;
 
@@ -11,7 +10,6 @@ import java.util.Locale;
 
 public class JsonRequestData extends RequestData {
 
-    private String token;
     private UserData user=null;
 
     public static JsonRequestData getRequestData(HttpServletRequest request) {
@@ -20,17 +18,18 @@ public class JsonRequestData extends RequestData {
 
     public JsonRequestData(String method, HttpServletRequest request) {
         super(method, request);
-        token = request.getHeader("Authentication");
+    }
+
+    @Override
+    public void init(){
+        super.init();
+        String token = request.getHeader("Authentication");
         if (token==null || token.isEmpty())
             token = request.getHeader("token");
         if (token==null)
             token="";
-    }
-
-    public void tryLogin(){
-        if (token.isEmpty())
-            return;
-        user = UserBean.getInstance().loginUserByToken(token);
+        if (!token.isEmpty())
+            user = UserBean.getInstance().loginUserByToken(token);
     }
 
     @Override

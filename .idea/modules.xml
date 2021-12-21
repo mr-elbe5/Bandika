@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/Bandika/Bandika.iml" filepath="$PROJECT_DIR$/Bandika/Bandika.iml" />
       <module fileurl="file://$PROJECT_DIR$/BandikaBase/BandikaBase.iml" filepath="$PROJECT_DIR$/BandikaBase/BandikaBase.iml" />
       <module fileurl="file://$PROJECT_DIR$/BandikaDocuments/BandikaDocuments.iml" filepath="$PROJECT_DIR$/BandikaDocuments/BandikaDocuments.iml" />
-      <module fileurl="file://$PROJECT_DIR$/BandikaJson/BandikaJson.iml" filepath="$PROJECT_DIR$/BandikaJson/BandikaJson.iml" />
       <module fileurl="file://$PROJECT_DIR$/BandikaSearch/BandikaSearch.iml" filepath="$PROJECT_DIR$/BandikaSearch/BandikaSearch.iml" />
       <module fileurl="file://$PROJECT_DIR$/Sample/Sample.iml" filepath="$PROJECT_DIR$/Sample/Sample.iml" />
     </modules>

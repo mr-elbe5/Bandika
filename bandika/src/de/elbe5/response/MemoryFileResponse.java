@@ -10,7 +10,6 @@ package de.elbe5.response;
 
 import de.elbe5.base.data.BinaryFile;
 import de.elbe5.request.RequestData;
-import de.elbe5.request.SessionRequestData;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
@@ -36,7 +35,7 @@ public class MemoryFileResponse implements IResponse {
     }
 
     @Override
-    public void processResponse(ServletContext context, SessionRequestData rdata, HttpServletResponse response)  {
+    public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
         process(context, rdata,response);
     }
 

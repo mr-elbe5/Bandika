@@ -8,7 +8,7 @@
  */
 package de.elbe5.response;
 
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -24,7 +24,7 @@ public class RedirectResponse implements IResponse {
     }
 
     @Override
-    public void processResponse(ServletContext context, SessionRequestData rdata, HttpServletResponse response) {
+    public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response) {
         rdata.put("redirectUrl", url);
         RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/_jsp/redirect.jsp");
         try {

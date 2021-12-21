@@ -207,19 +207,19 @@ public class ContentData extends BaseData implements Comparable<ContentData> {
         return false;
     }
 
-    public boolean hasUserReadRight(SessionRequestData rdata) {
+    public boolean hasUserReadRight(RequestData rdata) {
         if (isOpenAccess() && isPublished())
             return true;
         UserData user=rdata.getLoginUser();
         return user!=null && (user.hasSystemRight(SystemZone.CONTENTREAD) || (hasUserRight(user,Right.READ) && isPublished()) || hasUserEditRight(rdata));
     }
 
-    public boolean hasUserEditRight(SessionRequestData rdata) {
+    public boolean hasUserEditRight(RequestData rdata) {
         UserData user=rdata.getLoginUser();
         return (user!=null && (user.hasSystemRight(SystemZone.CONTENTEDIT) || hasUserRight(user,Right.EDIT)));
     }
 
-    public boolean hasUserApproveRight(SessionRequestData rdata) {
+    public boolean hasUserApproveRight(RequestData rdata) {
         UserData user=rdata.getLoginUser();
         return (user!=null && (user.hasSystemRight(SystemZone.CONTENTAPPROVE) || hasUserRight(user,Right.APPROVE)));
     }

@@ -8,7 +8,7 @@
  */
 package de.elbe5.response;
 
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +17,6 @@ public interface IResponse {
 
     String MODAL_DIALOG_JQID = "#modalDialog";
 
-    void processResponse(ServletContext context, SessionRequestData rdata, HttpServletResponse response) ;
+    void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response) ;
 
 }

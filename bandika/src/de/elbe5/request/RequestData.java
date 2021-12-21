@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-public abstract class RequestData extends KeyValueMap {
+public class RequestData extends KeyValueMap {
 
     public static final String KEY_REQUESTDATA = "$REQUESTDATA";
     public static final String KEY_URL = "$URL";
@@ -62,6 +62,11 @@ public abstract class RequestData extends KeyValueMap {
         this.method = method;
     }
 
+    public void init(){
+        request.setAttribute(SessionRequestData.KEY_REQUESTDATA, this);
+        readRequestParams();
+    }
+
     public HttpServletRequest getRequest() {
         return request;
     }
@@ -74,9 +79,13 @@ public abstract class RequestData extends KeyValueMap {
         this.id = id;
     }
 
-    public abstract UserData getLoginUser();
+    public UserData getLoginUser(){
+        return null;
+    }
 
-    public abstract Locale getLocale();
+    public Locale getLocale(){
+        return Configuration.getDefaultLocale();
+    }
 
     public boolean isPostback() {
         return method.equals("POST");
@@ -152,7 +161,7 @@ public abstract class RequestData extends KeyValueMap {
             String type = request.getContentType();
             if (type != null && type.toLowerCase().startsWith("multipart/form-data")) {
                 getMultiPartParams();
-            } else if (type != null && type.toLowerCase().equals("application/octet-stream")) {
+            } else if (type != null && type.equalsIgnoreCase("application/octet-stream")) {
                 getSinglePartParams();
                 getByteStream();
             }

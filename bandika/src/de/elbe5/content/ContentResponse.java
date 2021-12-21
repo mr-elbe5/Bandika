@@ -8,6 +8,7 @@
  */
 package de.elbe5.content;
 
+import de.elbe5.request.RequestData;
 import de.elbe5.request.SessionRequestData;
 import de.elbe5.response.MasterView;
 
@@ -24,9 +25,11 @@ public class ContentResponse extends MasterView {
     }
 
     @Override
-    public void processResponse(ServletContext context, SessionRequestData rdata, HttpServletResponse response)  {
+    public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
         //Log.log("process view");
-        rdata.setCurrentRequestContent(data);
-        super.processResponse(context, rdata, response);
+        if (rdata instanceof SessionRequestData) {
+            ((SessionRequestData) rdata).setCurrentRequestContent(data);
+            super.processResponse(context, rdata, response);
+        }
     }
 }

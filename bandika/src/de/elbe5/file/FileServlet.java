@@ -14,6 +14,7 @@ import de.elbe5.base.log.Log;
 import de.elbe5.base.util.FileUtil;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
+import de.elbe5.request.RequestData;
 import de.elbe5.request.SessionRequestData;
 import de.elbe5.response.IResponse;
 import de.elbe5.servlet.WebServlet;
@@ -37,10 +38,8 @@ public class FileServlet extends WebServlet {
 
     protected void processRequest(String method, HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding(Configuration.ENCODING);
-        SessionRequestData rdata = new SessionRequestData(method, request);
-        request.setAttribute(SessionRequestData.KEY_REQUESTDATA, rdata);
-        rdata.readRequestParams();
-        rdata.initSession();
+        RequestData rdata = new RequestData(method, request);
+        rdata.init();
         try {
             String fileName = request.getPathInfo();
             if (fileName == null) {
@@ -69,7 +68,7 @@ public class FileServlet extends WebServlet {
             if (rangeHeader != null) {
                 rangeInfo = new RangeInfo(rangeHeader, file.length());
             }
-            IResponse result = new FileResponse(file, data.getDisplayFileName(), rangeInfo);
+            FileResponse result = new FileResponse(file, data.getDisplayFileName(), rangeInfo);
             result.processResponse(getServletContext(), rdata, response);
         }
         catch (Exception e){

@@ -24,7 +24,7 @@
     </servlet>
     <servlet>
         <servlet-name>json</servlet-name>
-        <servlet-class>de.elbe5.json.servlet.JsonServlet</servlet-class>
+        <servlet-class>de.elbe5.servlet.JsonServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>

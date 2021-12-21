@@ -6,15 +6,12 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.json.servlet;
+package de.elbe5.servlet;
 
 import de.elbe5.application.Configuration;
 import de.elbe5.base.util.StringUtil;
-import de.elbe5.json.request.JsonRequestData;
-import de.elbe5.json.response.IJsonResponse;
-import de.elbe5.request.SessionRequestData;
-import de.elbe5.servlet.ResponseException;
-import de.elbe5.servlet.WebServlet;
+import de.elbe5.request.JsonRequestData;
+import de.elbe5.response.IResponse;
 
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
@@ -42,13 +39,12 @@ public class JsonServlet extends HttpServlet {
     protected void processRequest(String method, HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding(Configuration.ENCODING);
         JsonRequestData rdata = new JsonRequestData(method, request);
-        request.setAttribute(SessionRequestData.KEY_REQUESTDATA, rdata);
-        rdata.tryLogin();
+        rdata.init();
         String uri = request.getRequestURI();
         // skip "/api/"
         StringTokenizer stk = new StringTokenizer(uri.substring(5), "/", false);
         String methodName = "";
-        JsonController controller = null;
+        Controller controller = null;
         if (stk.hasMoreTokens()) {
             String controllerName = stk.nextToken();
             if (stk.hasMoreTokens()) {
@@ -57,25 +53,24 @@ public class JsonServlet extends HttpServlet {
                     rdata.setId(StringUtil.toInt(stk.nextToken()));
                 }
             }
-            controller = JsonControllerCache.getApiController(controllerName);
+            controller = ControllerCache.getController(controllerName);
         }
-        rdata.readRequestParams();
         try {
-            IJsonResponse result = getResponse(controller, methodName, rdata);
+            IResponse result = getResponse(controller, methodName, rdata);
             result.processResponse(getServletContext(), rdata, response);
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
-    public IJsonResponse getResponse(JsonController controller, String methodName, JsonRequestData rdata) {
+    public IResponse getResponse(Controller controller, String methodName, JsonRequestData rdata) {
         if (controller==null)
             throw new ResponseException(HttpServletResponse.SC_BAD_REQUEST);
         try {
             Method controllerMethod = controller.getClass().getMethod(methodName, JsonRequestData.class);
             Object result = controllerMethod.invoke(controller, rdata);
-            if (result instanceof de.elbe5.json.response.IJsonResponse)
-                return (de.elbe5.json.response.IJsonResponse) result;
+            if (result instanceof de.elbe5.response.IResponse)
+                return (de.elbe5.response.IResponse) result;
             throw new ResponseException(HttpServletResponse.SC_BAD_REQUEST);
         } catch (NoSuchMethodException | InvocationTargetException e){
             throw new ResponseException(HttpServletResponse.SC_BAD_REQUEST);
