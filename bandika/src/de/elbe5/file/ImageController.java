@@ -8,15 +8,22 @@
  */
 package de.elbe5.file;
 
+import de.elbe5.base.data.BinaryFile;
 import de.elbe5.base.data.Strings;
+import de.elbe5.base.log.Log;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
+import de.elbe5.request.JsonRequestData;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.SessionRequestData;
+import de.elbe5.response.*;
+import de.elbe5.rights.Right;
+import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.ControllerCache;
-import de.elbe5.response.CloseDialogResponse;
-import de.elbe5.response.IResponse;
-import de.elbe5.response.ForwardResponse;
+import de.elbe5.user.UserData;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public class ImageController extends FileController {
 

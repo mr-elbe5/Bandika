@@ -14,6 +14,8 @@ import de.elbe5.base.data.Token;
 import de.elbe5.base.log.Log;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
+import de.elbe5.request.JsonRequestData;
+import de.elbe5.request.RequestData;
 import de.elbe5.request.SessionRequestData;
 import de.elbe5.response.StatusResponse;
 import de.elbe5.servlet.Controller;
@@ -25,6 +27,7 @@ import java.io.File;
 
 public abstract class FileController extends Controller {
 
+    @Deprecated
     public IResponse show(SessionRequestData rdata) {
         int id = rdata.getId();
         Log.warn("deprecated call of file show for id " + id);
@@ -32,15 +35,25 @@ public abstract class FileController extends Controller {
         return show(data, rdata);
     }
 
+    @Deprecated
     public IResponse download(SessionRequestData rdata) {
+        return downloadFile(rdata);
+    }
+
+    @Deprecated
+    public IResponse download(JsonRequestData rdata) {
+        return downloadFile(rdata);
+    }
+
+    @Deprecated
+    private IResponse downloadFile(RequestData rdata) {
         int id = rdata.getId();
-        Log.warn("deprecated call of file download for id " + id);
         FileData data = ContentCache.getFile(id);
         rdata.put("download", "true");
         return show(data, rdata);
     }
 
-    private IResponse show(FileData data, SessionRequestData rdata){
+    private IResponse show(FileData data, RequestData rdata){
         assert(data!=null);
         ContentData parent=ContentCache.getContent(data.getParentId());
         if (!parent.hasUserReadRight(rdata)) {
