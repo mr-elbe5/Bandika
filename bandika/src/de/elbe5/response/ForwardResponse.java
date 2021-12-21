@@ -24,7 +24,7 @@ public class ForwardResponse implements IResponse {
     }
 
     @Override
-    public void processView(ServletContext context, SessionRequestData rdata, HttpServletResponse response)  {
+    public void processResponse(ServletContext context, SessionRequestData rdata, HttpServletResponse response)  {
         RequestDispatcher rd = context.getRequestDispatcher(url);
         try {
             rd.forward(rdata.getRequest(), response);

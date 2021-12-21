@@ -31,7 +31,7 @@ public class ContentServlet extends WebServlet {
             result = ContentController.getInstance().show(request.getRequestURI(), rdata);
             if (rdata.hasCookies())
                 rdata.setCookies(response);
-            result.processView(getServletContext(), rdata, response);
+            result.processResponse(getServletContext(), rdata, response);
         }
         catch (ResponseException ce){
             handleException(request,response,ce.getResponseCode());

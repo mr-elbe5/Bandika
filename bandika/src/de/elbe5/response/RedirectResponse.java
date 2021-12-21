@@ -24,7 +24,7 @@ public class RedirectResponse implements IResponse {
     }
 
     @Override
-    public void processView(ServletContext context, SessionRequestData rdata, HttpServletResponse response) {
+    public void processResponse(ServletContext context, SessionRequestData rdata, HttpServletResponse response) {
         rdata.put("redirectUrl", url);
         RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/_jsp/redirect.jsp");
         try {

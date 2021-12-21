@@ -17,6 +17,6 @@ public interface IResponse {
 
     String MODAL_DIALOG_JQID = "#modalDialog";
 
-    void processView(ServletContext context, SessionRequestData rdata, HttpServletResponse response) ;
+    void processResponse(ServletContext context, SessionRequestData rdata, HttpServletResponse response) ;
 
 }

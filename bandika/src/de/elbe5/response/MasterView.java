@@ -29,7 +29,7 @@ public class MasterView implements IResponse {
     }
 
     @Override
-    public void processView(ServletContext context, SessionRequestData rdata, HttpServletResponse response)  {
+    public void processResponse(ServletContext context, SessionRequestData rdata, HttpServletResponse response)  {
         RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/_jsp/_layout/"+master+".jsp");
         try {
             rd.forward(rdata.getRequest(), response);

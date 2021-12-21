@@ -19,7 +19,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="catalina" level="project" />
     <orderEntry type="library" exported="" name="common" level="project" />
-    <orderEntry type="library" exported="" name="jsoup" level="project" />
+    <orderEntry type="library" exported="" name="json" level="project" />
     <orderEntry type="module" module-name="BandikaBase" exported="" />
   </component>
 </module>

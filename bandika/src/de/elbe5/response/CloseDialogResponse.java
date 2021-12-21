@@ -30,7 +30,7 @@ public class CloseDialogResponse extends ForwardResponse {
     }
 
     @Override
-    public void processView(ServletContext context, SessionRequestData rdata, HttpServletResponse response)  {
+    public void processResponse(ServletContext context, SessionRequestData rdata, HttpServletResponse response)  {
         rdata.put(SessionRequestData.KEY_URL, url);
         if (!targetId.isEmpty())
             rdata.put(RequestData.KEY_TARGETID, targetId);

@@ -34,7 +34,7 @@ public class FileResponse implements IResponse {
     }
 
     @Override
-    public void processView(ServletContext context, SessionRequestData rsdata, HttpServletResponse response) {
+    public void processResponse(ServletContext context, SessionRequestData rsdata, HttpServletResponse response) {
         if (rangeInfo!=null && !rangeInfo.isValid()){
             response.setHeader("Content-Range", "bytes */" + file.length());
             response.setStatus(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);

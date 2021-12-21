@@ -70,7 +70,7 @@ public class FileServlet extends WebServlet {
                 rangeInfo = new RangeInfo(rangeHeader, file.length());
             }
             IResponse result = new FileResponse(file, data.getDisplayFileName(), rangeInfo);
-            result.processView(getServletContext(), rdata, response);
+            result.processResponse(getServletContext(), rdata, response);
         }
         catch (Exception e){
             handleException(request,response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

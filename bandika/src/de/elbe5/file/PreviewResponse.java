@@ -28,7 +28,7 @@ public class PreviewResponse implements IResponse {
     }
 
     @Override
-    public void processView(ServletContext context, SessionRequestData rdata, HttpServletResponse response) {
+    public void processResponse(ServletContext context, SessionRequestData rdata, HttpServletResponse response) {
         process(context,rdata,response);
     }
 

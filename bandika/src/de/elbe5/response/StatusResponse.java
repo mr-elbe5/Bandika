@@ -22,7 +22,8 @@ public class StatusResponse implements IResponse {
     }
 
     @Override
-    public void processView(ServletContext context, SessionRequestData rdata, HttpServletResponse response){
+    public void processResponse(ServletContext context, SessionRequestData rdata, HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
         response.setStatus(statusCode);
     }
 

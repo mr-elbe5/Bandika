@@ -22,6 +22,10 @@
         <servlet-name>controller</servlet-name>
         <servlet-class>de.elbe5.servlet.ControllerServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>json</servlet-name>
+        <servlet-class>de.elbe5.json.servlet.JsonServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>content</servlet-name>
@@ -34,6 +38,10 @@
     <servlet-mapping>
         <servlet-name>controller</servlet-name>
         <url-pattern>/ctrl/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>json</servlet-name>
+        <url-pattern>/json/*</url-pattern>
     </servlet-mapping>
 
     <listener>
