@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Sample" default="deploy" basedir=".">
+    <!-- BandikaBase -->
+    <property name="build.dir" location="build" />
+    <property name="buildSrc.dir" location="${build.dir}/src" />
+    <property name="buildClasses.dir" location="${build.dir}/classes" />
+    <property name="buildLibs.dir" location="${build.dir}/libs" />
+    <property name="buildWeb.dir" location="${build.dir}/web" />
+    <property name="deploy.dir" location="/tmp" />
+
+    <path id="classpath">
+        <fileset dir="libs">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <!-- Target for deleting the existing directories-->
+    <target name="clean">
+        <delete dir="${buildSrc.dir}" />
+        <delete dir="${buildClasses.dir}" />
+        <delete dir="${buildLibs.dir}" />
+        <delete dir="${buildWeb.dir}" />
+    </target>
+
+    <target name="makeDirs">
+        <mkdir dir="${build.dir}" />
+        <mkdir dir="${buildSrc.dir}" />
+        <mkdir dir="${buildClasses.dir}" />
+        <mkdir dir="${buildWeb.dir}" />
+    </target>
+
+    <target name="collectFiles" depends="makeDirs">
+        <copy todir="${buildSrc.dir}" overwrite="true">
+            <fileset dir="BandikaBase/src" />
+            <fileset dir="Bandika/src" />
+            <fileset dir="BandikaDocuments/src" />
+            <fileset dir="BandikaSearch/src" />
+            <fileset dir="Sample/src" />
+        </copy>
+        <copy todir="${buildLibs.dir}">
+            <fileset dir="libs" />
+        </copy>
+        <copy todir="${buildWeb.dir}" overwrite="true">
+            <fileset dir="Bandika/web" />
+            <fileset dir="BandikaDocuments/web" />
+            <fileset dir="BandikaSearch/web" />
+            <fileset dir="Sample/web" />
+        </copy>
+    </target>
+
+    <!-- Target for compiling the java code-->
+    <target name="compile" depends="collectFiles">
+        <javac srcdir="${buildSrc.dir}" destdir="${buildClasses.dir}" includeantruntime="false" source="15" target="15">
+            <classpath>
+                <path refid="classpath"/>
+            </classpath>
+        </javac>
+        <copy todir="${buildClasses.dir}" overwrite="true">
+            <fileset dir="${buildSrc.dir}" >
+                <include name="**/*.properties"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="war" depends="collectFiles, compile">
+        <war destfile="${build.dir}\ROOT.war"
+             webxml="${buildWeb.dir}/WEB-INF/web.xml">
+            <classes dir="${buildClasses.dir}"/>
+            <fileset dir="${buildWeb.dir}">
+                <exclude name="WEB-INF/web.xml"/>
+            </fileset>
+            <lib dir="${buildLibs.dir}"/>
+            <manifest>
+                <attribute name="Manifest" value="ROOT" />
+            </manifest>
+        </war>
+    </target>
+
+    <target name="deploy" depends="war">
+        <copy todir="${deploy.dir}" overwrite="true">
+            <file name="${build.dir}\ROOT.war"/>
+        </copy>
+    </target>
+
+</project>
