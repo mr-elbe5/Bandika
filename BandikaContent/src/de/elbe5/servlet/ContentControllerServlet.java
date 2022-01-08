@@ -6,30 +6,19 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.content;
+package de.elbe5.servlet;
 
-import de.elbe5.request.RequestData;
+import de.elbe5.request.ContentSessionRequestData;
 import de.elbe5.request.SessionRequestData;
-import de.elbe5.response.MasterView;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.HttpServletRequest;
 
-public class ContentResponse extends MasterView {
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 100, maxFileSize = 1024 * 1024 * 200, maxRequestSize = 1024 * 1024 * 200 * 5)
+public class ContentControllerServlet extends ControllerServlet {
 
-    private final ContentData data;
-
-    public ContentResponse(ContentData data) {
-        super("defaultMaster");
-        this.data=data;
+    protected SessionRequestData getNewSessionRequestData(String method, HttpServletRequest request){
+        return new ContentSessionRequestData(method, request);
     }
 
-    @Override
-    public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
-        //Log.log("process view");
-        if (rdata instanceof SessionRequestData) {
-            ((SessionRequestData) rdata).setCurrentRequestContent(data);
-            super.processResponse(context, rdata, response);
-        }
-    }
 }

@@ -12,7 +12,7 @@
     </servlet>
     <servlet>
         <servlet-name>content</servlet-name>
-        <servlet-class>de.elbe5.content.ContentServlet</servlet-class>
+        <servlet-class>de.elbe5.servlet.ContentServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>file</servlet-name>
@@ -20,7 +20,7 @@
     </servlet>
     <servlet>
         <servlet-name>controller</servlet-name>
-        <servlet-class>de.elbe5.servlet.ControllerServlet</servlet-class>
+        <servlet-class>de.elbe5.servlet.ContentControllerServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>json</servlet-name>

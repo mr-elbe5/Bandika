@@ -11,44 +11,43 @@ package de.elbe5.application;
 import de.elbe5.base.data.Strings;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.FileUtil;
+import de.elbe5.content.ContentBean;
+import de.elbe5.content.ContentCache;
+import de.elbe5.file.PreviewCache;
+import de.elbe5.request.SessionRequestData;
+import de.elbe5.response.ForwardResponse;
+import de.elbe5.response.IResponse;
+import de.elbe5.rights.SystemZone;
+import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.servlet.ResponseException;
 import de.elbe5.user.UserCache;
-import de.elbe5.request.SessionRequestData;
-import de.elbe5.rights.SystemZone;
-import de.elbe5.servlet.Controller;
-import de.elbe5.response.IResponse;
-import de.elbe5.response.ForwardResponse;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 
-public class AdminController extends Controller {
+public class ContentAdminController extends AdminController {
 
-    public static final String KEY = "admin";
+    private static ContentAdminController instance = null;
 
-    private static AdminController instance = null;
-
-    public static void setInstance(AdminController instance) {
-        AdminController.instance = instance;
+    public static void setInstance(ContentAdminController instance) {
+        ContentAdminController.instance = instance;
     }
 
-    public static AdminController getInstance() {
+    public static ContentAdminController getInstance() {
         return instance;
     }
 
-    public static void register(AdminController controller){
+    public static void register(ContentAdminController controller){
         setInstance(controller);
         ControllerCache.addController(controller.getKey(),getInstance());
     }
 
     @Override
-    public String getKey() {
-        return KEY;
-    }
-
     public IResponse openAdministration(SessionRequestData rdata){
+        if (rdata.hasSystemRight(SystemZone.CONTENTEDIT))
+            return openContentAdministration(rdata);
         if (rdata.hasSystemRight(SystemZone.USER))
             return openPersonAdministration(rdata);
         if (rdata.hasSystemRight(SystemZone.APPLICATION))
@@ -56,43 +55,35 @@ public class AdminController extends Controller {
         throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
-    public IResponse openSystemAdministration(SessionRequestData rdata) {
-        checkRights(rdata.hasAnySystemRight());
-        return showSystemAdministration(rdata);
+    public IResponse openContentAdministration(SessionRequestData rdata) {
+        checkRights(rdata.hasAnyContentRight());
+        return showContentAdministration(rdata);
     }
 
-    public IResponse openPersonAdministration(SessionRequestData rdata) {
-        checkRights(rdata.hasAnySystemRight());
-        return showPersonAdministration(rdata);
+    public IResponse openContentLog(SessionRequestData rdata) {
+        checkRights(rdata.hasAnyContentRight());
+        return showContentLog(rdata);
     }
 
-    public IResponse restart(SessionRequestData rdata) {
+    public IResponse clearPreviewCache(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
-        String path = ApplicationPath.getAppROOTPath() + "/WEB-INF/web.xml";
-        File f = new File(path);
-        try {
-            FileUtil.touch(f);
-        } catch (IOException e) {
-            Log.error("could not touch file " + path, e);
-        }
-        rdata.setMessage(Strings.string("_restartHint",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        PreviewCache.clear();
+        rdata.setMessage(Strings.string("_cacheCleared",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
-    public IResponse reloadUserCache(SessionRequestData rdata) {
+    public IResponse reloadContentCache(SessionRequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
-        UserCache.setDirty();
-        UserCache.checkDirty();
+        ContentCache.setDirty();
+        ContentCache.checkDirty();
         rdata.setMessage(Strings.string("_cacheReloaded",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
-    protected IResponse showExecuteDatabaseScript() {
-        return new ForwardResponse("/WEB-INF/_jsp/administration/executeDatabaseScript.ajax.jsp");
-    }
-
-    private IResponse showEditConfiguration() {
-        return new ForwardResponse("/WEB-INF/_jsp/administration/editConfiguration.ajax.jsp");
+    public IResponse resetContentLog(SessionRequestData rdata) {
+        checkRights(rdata.hasSystemRight(SystemZone.CONTENTEDIT));
+        ContentBean.getInstance().resetContentLog();
+        return showContentLog(rdata);
     }
 
 }

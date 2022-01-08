@@ -25,5 +25,6 @@
     <orderEntry type="module" module-name="Bandika" />
     <orderEntry type="module" module-name="BandikaSearch" />
     <orderEntry type="module" module-name="BandikaCms" />
+    <orderEntry type="module" module-name="BandikaContent" />
   </component>
 </module>

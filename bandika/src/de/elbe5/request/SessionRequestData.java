@@ -11,7 +11,6 @@ package de.elbe5.request;
 import de.elbe5.base.data.BaseData;
 import de.elbe5.base.data.Strings;
 import de.elbe5.application.Configuration;
-import de.elbe5.content.ContentData;
 import de.elbe5.user.UserData;
 
 import javax.servlet.http.*;
@@ -191,53 +190,6 @@ public class SessionRequestData extends RequestData {
 
     public UserData getSessionUser() {
         return (UserData) getSessionObject(KEY_LOGIN);
-    }
-
-    public void setCurrentRequestContent(ContentData data) {
-        //Log.log("set current request content: " + data.getClass().getSimpleName());
-        setRequestObject(KEY_CONTENT, data);
-    }
-
-    public ContentData getCurrentContent() {
-        return getCurrentContent(ContentData.class);
-    }
-
-    public <T extends ContentData> T getCurrentContent(Class<T> cls) {
-        try {
-            Object obj=getRequestObject(KEY_CONTENT);
-            if (obj==null)
-                obj=getSessionObject(KEY_CONTENT);
-            assert(obj!=null);
-            //Log.log("current request content is: " + obj.getClass().getSimpleName());
-            return cls.cast(obj);
-        }
-        catch (ClassCastException e){
-            return null;
-        }
-    }
-
-    public void setCurrentSessionContent(ContentData data) {
-        //Log.log("set current session content: " + data.getClass().getSimpleName());
-        setSessionObject(KEY_CONTENT, data);
-    }
-
-    public void removeCurrentSessionContent() {
-        removeSessionObject(KEY_CONTENT);
-    }
-
-    public ContentData getCurrentSessionContent() {
-        return getCurrentSessionContent(ContentData.class);
-    }
-
-    public <T extends ContentData> T getCurrentSessionContent(Class<T> cls) {
-        try {
-            Object obj=getSessionObject(KEY_CONTENT);
-            //Log.log("current session content is: " + obj.getClass().getSimpleName());
-            return cls.cast(obj);
-        }
-        catch (ClassCastException e){
-            return null;
-        }
     }
 
     public void setSessionLocale() {

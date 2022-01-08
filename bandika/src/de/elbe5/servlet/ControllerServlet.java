@@ -26,7 +26,7 @@ public class ControllerServlet extends WebServlet {
 
     protected void processRequest(String method, HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding(Configuration.ENCODING);
-        SessionRequestData rdata = new SessionRequestData(method, request);
+        SessionRequestData rdata = getNewSessionRequestData(method, request);
         String uri = request.getRequestURI();
         // skip "/ctrl/"
         StringTokenizer stk = new StringTokenizer(uri.substring(6), "/", false);
@@ -53,6 +53,10 @@ public class ControllerServlet extends WebServlet {
         } catch (Exception | AssertionError e) {
             handleException(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    protected SessionRequestData getNewSessionRequestData(String method, HttpServletRequest request){
+        return new SessionRequestData(method, request);
     }
 
     public IResponse getResponse(Controller controller, String methodName, SessionRequestData rdata) {

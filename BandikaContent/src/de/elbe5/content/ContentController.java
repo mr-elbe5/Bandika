@@ -10,6 +10,7 @@ package de.elbe5.content;
 
 import de.elbe5.base.data.Strings;
 import de.elbe5.base.data.BaseData;
+import de.elbe5.request.ContentSessionRequestData;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.SessionRequestData;
 import de.elbe5.servlet.Controller;
@@ -39,6 +40,12 @@ public class ContentController extends Controller {
     public static void register(ContentController controller){
         setInstance(controller);
         ControllerCache.addController(controller.getKey(),getInstance());
+    }
+
+    protected IResponse openJspPage(String jsp) {
+        JspContentData contentData = new JspContentData();
+        contentData.setJsp(jsp);
+        return new ContentResponse(contentData);
     }
 
     @Override
@@ -85,18 +92,22 @@ public class ContentController extends Controller {
 
     //backend
     public IResponse openEditContentData(SessionRequestData rdata) {
+        assert rdata instanceof ContentSessionRequestData;
+        ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
         int contentId = rdata.getId();
         ContentData data = ContentBean.getInstance().getContent(contentId);
         checkRights(data.hasUserEditRight(rdata));
         data.setEditValues(ContentCache.getContent(data.getId()), rdata);
-        rdata.setCurrentSessionContent(data);
+        crdata.setCurrentSessionContent(data);
         return showEditContentData(data);
     }
 
     //backend
     public IResponse saveContentData(SessionRequestData rdata) {
+        assert rdata instanceof ContentSessionRequestData;
+        ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
         int contentId = rdata.getId();
-        ContentData data = rdata.getCurrentSessionContent();
+        ContentData data = crdata.getCurrentSessionContent();
         assert(data != null && data.getId() == contentId);
         checkRights(data.hasUserEditRight(rdata));
         if (data.isNew())
@@ -112,7 +123,7 @@ public class ContentController extends Controller {
             return showEditContentData(data);
         }
         data.setNew(false);
-        rdata.removeCurrentSessionContent();
+        crdata.removeCurrentSessionContent();
         ContentCache.setDirty();
         rdata.setMessage(Strings.string("_contentSaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
@@ -120,18 +131,22 @@ public class ContentController extends Controller {
 
     //backend
     public IResponse openEditRights(SessionRequestData rdata) {
+        assert rdata instanceof ContentSessionRequestData;
+        ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
         int contentId = rdata.getId();
         ContentData data = ContentBean.getInstance().getContent(contentId);
         checkRights(data.hasUserEditRight(rdata));
         data.setEditValues(ContentCache.getContent(data.getId()), rdata);
-        rdata.setCurrentSessionContent(data);
+        crdata.setCurrentSessionContent(data);
         return showEditRights(data);
     }
 
     //backend
     public IResponse saveRights(SessionRequestData rdata) {
+        assert rdata instanceof ContentSessionRequestData;
+        ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
         int contentId = rdata.getId();
-        ContentData data = rdata.getCurrentSessionContent();
+        ContentData data = crdata.getCurrentSessionContent();
         assert(data != null && data.getId() == contentId);
         checkRights(data.hasUserEditRight(rdata));
         data.readRightsRequestData(rdata);
@@ -143,7 +158,7 @@ public class ContentController extends Controller {
             setSaveError(rdata);
             return showEditRights(data);
         }
-        rdata.removeCurrentSessionContent();
+        crdata.removeCurrentSessionContent();
         ContentCache.setDirty();
         rdata.setMessage(Strings.string("_rightsSaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
@@ -224,17 +239,21 @@ public class ContentController extends Controller {
 
     //backend
     public IResponse openSortChildPages(SessionRequestData rdata) {
+        assert rdata instanceof ContentSessionRequestData;
+        ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
         int contentId = rdata.getId();
         ContentData data = ContentCache.getContent(contentId);
         checkRights(data.hasUserEditRight(rdata));
-        rdata.setCurrentSessionContent(data);
+        crdata.setCurrentSessionContent(data);
         return showSortChildContents();
     }
 
     //backend
     public IResponse saveChildPageRanking(SessionRequestData rdata) {
+        assert rdata instanceof ContentSessionRequestData;
+        ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
         int contentId = rdata.getId();
-        ContentData data = rdata.getCurrentSessionContent();
+        ContentData data = crdata.getCurrentSessionContent();
         assert(data != null && data.getId() == contentId);
         checkRights(data.hasUserEditRight(rdata));
         for (ContentData child : data.getChildren()){
@@ -246,7 +265,7 @@ public class ContentController extends Controller {
         }
         Collections.sort(data.getChildren());
         ContentBean.getInstance().updateChildRankings(data);
-        rdata.removeCurrentSessionContent();
+        crdata.removeCurrentSessionContent();
         ContentCache.setDirty();
         rdata.setMessage(Strings.string("_newRankingSaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + contentId);
@@ -272,11 +291,13 @@ public class ContentController extends Controller {
     }
 
     public IResponse cancelEditContentFrontend(SessionRequestData rdata) {
+        assert rdata instanceof ContentSessionRequestData;
+        ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
         int contentId = rdata.getId();
-        ContentData data = rdata.getCurrentSessionContent();
+        ContentData data = crdata.getCurrentSessionContent();
         assert(data != null && data.getId() == contentId);
         checkRights(data.hasUserEditRight(rdata));
-        rdata.removeCurrentSessionContent();
+        crdata.removeCurrentSessionContent();
         return show(rdata);
     }
 

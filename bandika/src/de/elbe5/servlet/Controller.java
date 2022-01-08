@@ -1,10 +1,8 @@
 package de.elbe5.servlet;
 
 import de.elbe5.base.data.Strings;
-import de.elbe5.content.JspContentData;
 import de.elbe5.request.*;
 import de.elbe5.response.IResponse;
-import de.elbe5.content.ContentResponse;
 import de.elbe5.response.ForwardResponse;
 
 import javax.servlet.http.HttpServletResponse;
@@ -46,11 +44,5 @@ public abstract class Controller {
 
     protected IResponse showContentLog(SessionRequestData rdata) {
         return openAdminPage(rdata, "/WEB-INF/_jsp/administration/contentLog.jsp", Strings.string("_contentLog",rdata.getLocale()));
-    }
-
-    protected IResponse openJspPage(String jsp) {
-        JspContentData contentData = new JspContentData();
-        contentData.setJsp(jsp);
-        return new ContentResponse(contentData);
     }
 }

@@ -13,6 +13,7 @@ import de.elbe5.content.ContentController;
 import de.elbe5.content.ContentData;
 import de.elbe5.file.ImageBean;
 import de.elbe5.file.ImageData;
+import de.elbe5.request.ContentSessionRequestData;
 import de.elbe5.request.SessionRequestData;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.IResponse;
@@ -43,21 +44,27 @@ public class CkEditorController extends ContentController {
     }
 
     public IResponse openLinkBrowser(SessionRequestData rdata) {
-        ContentData data=rdata.getCurrentSessionContent();
+        assert rdata instanceof ContentSessionRequestData;
+        ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
+        ContentData data=crdata.getCurrentSessionContent();
         assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
         return new ForwardResponse("/WEB-INF/_jsp/ckeditor/browseLinks.jsp");
     }
 
     public IResponse openImageBrowser(SessionRequestData rdata) {
-        ContentData data=rdata.getCurrentSessionContent();
+        assert rdata instanceof ContentSessionRequestData;
+        ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
+        ContentData data=crdata.getCurrentSessionContent();
         assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
         return new ForwardResponse("/WEB-INF/_jsp/ckeditor/browseImages.jsp");
     }
 
     public IResponse addImage(SessionRequestData rdata) {
-        ContentData data=rdata.getCurrentSessionContent();
+        assert rdata instanceof ContentSessionRequestData;
+        ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
+        ContentData data=crdata.getCurrentSessionContent();
         assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
         ImageData image=new ImageData();

@@ -30,6 +30,7 @@ import de.elbe5.timer.Timer;
 import de.elbe5.timer.TimerController;
 import de.elbe5.user.UserCache;
 import de.elbe5.user.UserController;
+import de.elbe5.user.UserProfileController;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -55,7 +56,7 @@ public class BandikaInitServlet extends InitServlet {
         if (!DbConnector.getInstance().initialize("jdbc/bandika"))
             return;
         Configuration.setAppTitle("Bandika");
-        AdminController.register(new AdminController());
+        AdminController.register(new ContentAdminController());
         ContentController.register(new ContentController());
         DocumentController.register(new DocumentController());
         ImageController.register(new ImageController());
@@ -66,6 +67,7 @@ public class BandikaInitServlet extends InitServlet {
         CkEditorController.register(new CkEditorController());
         TimerController.register(new TimerController());
         UserController.register(new UserController());
+        UserProfileController.register(new UserProfileController());
         SearchController.register(new SearchController());
         ContentFactory.addClassInfo(ContentData.class, ContentBean.getInstance());
         FileFactory.addDocumentClassInfo(DocumentData.class, null);

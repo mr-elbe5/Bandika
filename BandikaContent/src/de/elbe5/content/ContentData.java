@@ -16,6 +16,7 @@ import de.elbe5.file.FileData;
 import de.elbe5.file.FileFactory;
 import de.elbe5.group.GroupBean;
 import de.elbe5.group.GroupData;
+import de.elbe5.request.ContentSessionRequestData;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.SessionRequestData;
 import de.elbe5.rights.Right;
@@ -429,7 +430,7 @@ public class ContentData extends BaseData implements Comparable<ContentData> {
     }
 
     //used in jsp
-    public void displayTreeContent(PageContext context, SessionRequestData rdata) throws IOException, ServletException {
+    public void displayTreeContent(PageContext context, ContentSessionRequestData rdata) throws IOException, ServletException {
         if (hasUserReadRight(rdata)) {
             //backup
             ContentData currentContent=rdata.getCurrentContent();
