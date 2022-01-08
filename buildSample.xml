@@ -46,9 +46,33 @@
         </copy>
     </target>
 
-    <target name="collectBandikaFiles" depends="collectBandikaBaseFiles">
+    <target name="createBootstrapCss">
+        <apply executable="sass" dest="Bandika/web/static-content/css" verbose="true" force="true" failonerror="true">
+            <srcfile />
+            <targetfile />
+            <file name="Bandika/scss/bootstrap.scss" />
+            <mapper type="glob" from="*.scss" to="*.css"/>
+        </apply>
+    </target>
+
+    <target name="createBandikaCss">
+        <apply executable="sass" dest="Bandika/web/static-content/css" verbose="true" force="true" failonerror="true">
+            <srcfile />
+            <targetfile />
+            <file name="Bandika/scss/bandika.scss" />
+            <mapper type="glob" from="*.scss" to="*.css"/>
+        </apply>
+    </target>
+
+    <target name="collectBandikaFiles" depends="collectBandikaBaseFiles, createBootstrapCss, createBandikaCss">
         <copy todir="${buildSrc.dir}" overwrite="true">
             <fileset dir="Bandika/src" />
+        </copy>
+    </target>
+
+    <target name="collectBandikaCmsFiles" depends="collectBandikaFiles">
+        <copy todir="${buildSrc.dir}" overwrite="true">
+            <fileset dir="BandikaCms/src" />
         </copy>
     </target>
 
@@ -94,7 +118,16 @@
         </copy>
     </target>
 
-    <target name="collectProjectFiles" depends="collectBandikaFiles, collectBandikaDocumentsFiles, collectBandikaSearchFiles">
+    <target name="createProjectCss">
+        <apply executable="sass" dest="${project}/web/static-content/css" verbose="true" force="true" failonerror="true">
+            <srcfile />
+            <targetfile />
+            <file name="${project}/scss/layout.scss" />
+            <mapper type="glob" from="*.scss" to="*.css"/>
+        </apply>
+    </target>
+
+    <target name="collectProjectFiles" depends="collectBandikaFiles, collectBandikaCmsFiles, collectBandikaDocumentsFiles, collectBandikaSearchFiles, createProjectCss">
         <copy todir="${buildSrc.dir}" overwrite="true">
             <fileset dir="${project}/src" />
         </copy>
@@ -105,6 +138,7 @@
              webxml="${project}/web/WEB-INF/web.xml">
             <classes dir="${buildClasses.dir}"/>
             <fileset dir="Bandika/web" />
+            <fileset dir="BandikaCms/web" />
             <fileset dir="BandikaDocuments/web" />
             <fileset dir="BandikaSearch/web" />
             <fileset dir="${project}/web" >
@@ -118,24 +152,6 @@
         <copy todir="${deploy.dir}" overwrite="true">
             <file name="${build.dir}/ROOT.war"/>
         </copy>
-    </target>
-
-    <target name="createBandikaCss">
-        <apply executable="sass" dest="Bandika/web/static-content/css" verbose="true" force="true" failonerror="true">
-            <srcfile />
-            <targetfile />
-            <file name="Bandika/scss/bandika.scss" />
-            <mapper type="glob" from="*.scss" to="*.css"/>
-        </apply>
-    </target>
-
-    <target name="createProjectCss">
-        <apply executable="sass" dest="${project}/web/static-content/css" verbose="true" force="true" failonerror="true">
-            <srcfile />
-            <targetfile />
-            <file name="${project}/scss/layout.scss" />
-            <mapper type="glob" from="*.scss" to="*.css"/>
-        </apply>
     </target>
 
 </project>

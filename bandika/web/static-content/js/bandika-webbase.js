@@ -72,29 +72,6 @@ function initAce(textarea) {
     return editor;
 }
 
-/*
-    FlexTable: div with structure
-
-    <div class="flexTable">
-        <div class="tableHead">
-            <div class="tableRow">
-                <div style="flex: x">...</div>
-                ...
-            </div>
-        </div>
-        <div class="tableBody">
-            <div class="tableRow">
-                <div>...</div>
-                ...
-            </div>
-            ...
-    </div>
-
-    and styles (scss)
-
-*/
-
-
 class FlexTable {
     constructor($div, options) {
         /* jquery object of div with structure
