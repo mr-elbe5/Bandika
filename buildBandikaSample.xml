@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Sample" default="createProjectWar" basedir=".">
+<project name="FullSample" default="createProjectWar" basedir=".">
 
-    <property name="project" value="Sample" />
+    <property name="project" value="FullSample" />
     <property name="build.dir" location="build/${project}" />
     <property name="buildSrc.dir" location="${build.dir}/src" />
     <property name="buildClasses.dir" location="${build.dir}/classes" />
