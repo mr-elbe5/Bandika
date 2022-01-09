@@ -19,7 +19,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="fop" level="project" />
+    <orderEntry type="library" name="poi" level="project" />
     <orderEntry type="module" module-name="Bandika" />
-    <orderEntry type="library" exported="" name="fop" level="project" />
+    <orderEntry type="module" module-name="BandikaContent" />
   </component>
 </module>

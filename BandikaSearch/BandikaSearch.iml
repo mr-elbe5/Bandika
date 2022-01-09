@@ -21,7 +21,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Bandika" />
-    <orderEntry type="library" exported="" name="lucene" level="project" />
+    <orderEntry type="library" name="lucene" level="project" />
     <orderEntry type="library" name="json" level="project" />
     <orderEntry type="module" module-name="BandikaContent" />
   </component>

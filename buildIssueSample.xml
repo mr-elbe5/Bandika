@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="BandikaSample" default="createProjectWar" basedir=".">
+<project name="IssueSample" default="createProjectWar" basedir=".">
 
-    <property name="project" value="BandikaSample" />
+    <property name="project" value="IssueSample" />
     <property name="build.dir" location="build/${project}" />
     <property name="buildSrc.dir" location="${build.dir}/src" />
     <property name="buildClasses.dir" location="${build.dir}/classes" />
@@ -70,6 +70,24 @@
         </copy>
     </target>
 
+    <target name="collectBandikaDocumentsFiles" depends="collectBandikaFiles">
+        <copy todir="${buildSrc.dir}" overwrite="true">
+            <fileset dir="BandikaDocuments/src" />
+        </copy>
+        <copy todir="${buildLibs.dir}">
+            <fileset dir="libs" >
+                <include name="fop*.jar"/>
+                <include name="xmlgraphics-commons*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="collectBandikaIssueFiles" depends="collectBandikaFiles">
+        <copy todir="${buildSrc.dir}" overwrite="true">
+            <fileset dir="BandikaIssue/src" />
+        </copy>
+    </target>
+
     <target name="compile" depends="makeDirs">
         <javac srcdir="${buildSrc.dir}" destdir="${buildClasses.dir}" includeantruntime="false" source="15" target="15">
             <classpath>
@@ -93,6 +111,7 @@
     </target>
 
     <target name="collectProjectFiles" depends="collectBandikaFiles,
+    collectBandikaDocumentsFiles, collectBandikaIssueFiles,
     createProjectCss">
         <copy todir="${buildSrc.dir}" overwrite="true">
             <fileset dir="${project}/src" />
@@ -104,6 +123,8 @@
              webxml="${project}/web/WEB-INF/web.xml">
             <classes dir="${buildClasses.dir}"/>
             <fileset dir="Bandika/web" />
+            <fileset dir="BandikaDocuments/web" />
+            <fileset dir="BandikaIssue/web" />
             <fileset dir="${project}/web" >
                 <exclude name="WEB-INF/web.xml"/>
             </fileset>
