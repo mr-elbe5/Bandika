@@ -101,7 +101,7 @@
 </div>
 <div class="container fixed-bottom">
     <footer>
-        <div><%=$SH("_copyright",locale)%>
+        <div><%=$SH("layout.copyright",locale)%>
         </div>
     </footer>
 </div>

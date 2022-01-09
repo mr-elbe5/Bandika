@@ -101,7 +101,7 @@
         <footer>
             <div class="container">
                 <ul class="nav">
-                    <%=$SH("_copyright",locale)%>
+                    <%=$SH("layout.copyright",locale)%>
                 </ul>
             </div>
         </footer>

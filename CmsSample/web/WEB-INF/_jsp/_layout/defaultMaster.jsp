@@ -95,7 +95,7 @@
         <footer class="footer">
             <ul class="nav">
                 <li class="nav-item">
-                    <a class="nav-link">&copy; <%=$SH("_copyright", locale)%>
+                    <a class="nav-link">&copy; <%=$SH("layout.copyright", locale)%>
                     </a>
                 </li>
                 <% for (ContentData data : ContentCache.getFooterList()) {
