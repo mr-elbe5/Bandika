@@ -16,12 +16,12 @@
     <Parameter name="useRegistration" value="false" override="false" />
     
     <Resource 
-				name="jdbc/elbe5"
+				name="jdbc/bandika"
 				auth="Container" 
 				type="javax.sql.DataSource" 
 				driverClassName="org.postgresql.Driver" 
-				url="jdbc:postgresql://127.0.0.1:5432/elbe5"
-				username="elbe5"
+				url="jdbc:postgresql://127.0.0.1:5432/bandika"
+				username="bandika"
 				password="xxx"
 				maxActive="20" 
 				maxIdle="10"

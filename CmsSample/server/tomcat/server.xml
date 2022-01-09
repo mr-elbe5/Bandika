@@ -9,7 +9,7 @@
   <Service name="Catalina">
 
     <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
-		<Engine name="Catalina" defaultHost="localhost">
+		<Engine name="Catalina" defaultHost="">
 
       <Host name="localhost"  appBase="webapps"
             unpackWARs="true" autoDeploy="true">
@@ -20,11 +20,11 @@
 
       </Host>
       
-      <Host name="elbe5.local"  appBase="elbe5"
+      <Host name="bandika.local"  appBase="bandika"
             unpackWARs="true" autoDeploy="true">
 
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
-               prefix="elbe5_access_log" suffix=".txt"
+               prefix="bandika_access_log" suffix=".txt"
                pattern="%h %l %u %t &quot;%r&quot; %s %b" />
 
       </Host>
