@@ -9,12 +9,8 @@
 
 package de.elbe5.base.json;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.json.simple.JSONObject;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface JsonData {
+public interface IJsonData {
+    JSONObject getJson();
 }

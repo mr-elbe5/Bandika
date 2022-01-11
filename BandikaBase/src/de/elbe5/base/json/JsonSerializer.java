@@ -101,32 +101,12 @@ public class JsonSerializer {
             return toJSONArray(coll);
         }
 
-        if (object.getClass().isAnnotationPresent(JsonData.class)) {
-            return toJSONObject(object);
+        if (object instanceof IJsonData) {
+            return ((IJsonData)object).getJson();
         }
 
         Log.warn("Unable to serialize object of type " + object.getClass().getName());
         throw new RuntimeException();
-    }
-
-    @SuppressWarnings("unchecked")
-    private JSONObject toJSONObject(Object object) {
-        JSONObject obj = new JSONObject();
-        for (Class<?> c = object.getClass(); c != null; c = c.getSuperclass()) {
-            if (c.isAnnotationPresent(JsonData.class)) {
-                for (Field field : c.getDeclaredFields()) {
-                    field.setAccessible(true);
-                    if (field.isAnnotationPresent(JsonField.class)) {
-                        try {
-                            obj.put(field.getName(), toJSONInstance(field.get(object)));
-                        } catch (IllegalAccessException e) {
-                            Log.warn("got no json value");
-                        }
-                    }
-                }
-            }
-        }
-        return obj;
     }
 
     @SuppressWarnings("unchecked")

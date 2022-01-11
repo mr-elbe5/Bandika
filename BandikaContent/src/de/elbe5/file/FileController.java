@@ -10,7 +10,6 @@ package de.elbe5.file;
 
 import de.elbe5.application.ApplicationPath;
 import de.elbe5.base.data.Strings;
-import de.elbe5.base.data.Token;
 import de.elbe5.base.log.Log;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
@@ -57,8 +56,9 @@ public abstract class FileController extends Controller {
         assert(data!=null);
         ContentData parent=ContentCache.getContent(data.getParentId());
         if (!parent.hasUserReadRight(rdata)) {
-            String token = rdata.getString("token");
-            checkRights(Token.matchToken(data.getId(), token));
+            //todo
+            //String token = rdata.getString("token");
+            //checkRights(Token.matchToken(data.getId(), token));
         }
         File file = new File(ApplicationPath.getAppFilePath(), data.getFileName());
         // if not exists, create from database

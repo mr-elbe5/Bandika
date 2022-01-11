@@ -8,7 +8,6 @@
  */
 package de.elbe5.timer;
 
-import de.elbe5.base.data.Token;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.application.Configuration;
@@ -29,7 +28,7 @@ public class CleanupTaskData extends TimerTaskData {
     @Override
     public boolean execute(LocalDateTime executionTime, LocalDateTime checkTime) {
         Log.log("Cleanup at " + StringUtil.toHtmlDateTime(TimerBean.getInstance().getServerTime(), Configuration.getDefaultLocale()));
-        Token.cleanup();
+        //todo
         return true;
     }
 }
