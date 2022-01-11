@@ -9,6 +9,7 @@
 package de.elbe5.application;
 
 import de.elbe5.base.data.Strings;
+import de.elbe5.base.json.JsonWebToken;
 import de.elbe5.base.log.Log;
 import de.elbe5.company.CompanyCache;
 import de.elbe5.company.CompanyController;
@@ -44,6 +45,7 @@ public class BandikaInitServlet extends InitServlet {
         if (!DbConnector.getInstance().initialize("jdbc/bandika"))
             return;
         Configuration.setAppTitle("Bandika");
+        JsonWebToken.createSecretKey(Configuration.getSalt());
         AdminController.register(new AdminController());
         CompanyController.register(new CompanyController());
         GroupController.register(new GroupController());
