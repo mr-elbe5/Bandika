@@ -11,7 +11,7 @@ package de.elbe5.tag;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.request.RequestData;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestKeys;
 
 import javax.servlet.jsp.JspException;
 import java.io.Writer;
@@ -24,10 +24,10 @@ public class MessageTag extends BaseTag {
     @Override
     public int doStartTag() throws JspException {
         try {
-            SessionRequestData rdata = getRequestData();
+            RequestData rdata = getRequestData();
             if (rdata.hasMessage()) {
-                String msg = rdata.getString(RequestData.KEY_MESSAGE);
-                String msgType = rdata.getString(RequestData.KEY_MESSAGETYPE);
+                String msg = rdata.getString(RequestKeys.KEY_MESSAGE);
+                String msgType = rdata.getString(RequestKeys.KEY_MESSAGETYPE);
                 Locale locale = rdata.getLocale();
                 Writer writer = getWriter();
                 writer.write(StringUtil.format(controlHtml, msgType, StringUtil.toHtml(msg)));

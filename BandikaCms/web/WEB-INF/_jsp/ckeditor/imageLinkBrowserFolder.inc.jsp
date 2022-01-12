@@ -9,17 +9,17 @@
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
+<%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="de.elbe5.file.ImageData" %>
 <%@ page import="java.util.List" %>
-<%@ page import="de.elbe5.request.RequestData" %>
+<%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
+    RequestData rdata = RequestData.getRequestData(request);
     Locale locale = rdata.getLocale();
-    ContentData contentData = (ContentData) rdata.getRequestObject(RequestData.KEY_CONTENT);
+    ContentData contentData = (ContentData) rdata.getRequestObject(ContentRequestKeys.KEY_CONTENT);
     assert contentData != null;
 %>
 <li class="open">
@@ -41,10 +41,10 @@
         <%}
         }
         for (ContentData subPage : contentData.getChildren()) {
-            rdata.setRequestObject(RequestData.KEY_CONTENT, subPage);%>
+            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, subPage);%>
         <jsp:include page="/WEB-INF/_jsp/ckeditor/imageLinkBrowserFolder.inc.jsp" flush="true"/>
         <%}
-        rdata.setRequestObject(RequestData.KEY_CONTENT, contentData);
+        rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, contentData);
         %>
     </ul>
 </li>

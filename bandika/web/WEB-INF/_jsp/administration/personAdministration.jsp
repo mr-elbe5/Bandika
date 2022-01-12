@@ -11,10 +11,10 @@
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.rights.SystemZone" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
+<%@ page import="de.elbe5.request.RequestData" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
+    RequestData rdata = RequestData.getRequestData(request);
     Locale locale = rdata.getLocale();%>
 <div id="pageContent">
     <form:message/>

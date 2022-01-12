@@ -9,12 +9,14 @@
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
+<%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="de.elbe5.page.PageData" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
-    ContentData contentData = rdata.getCurrentContent();
+    RequestData rdata = RequestData.getRequestData(request);
+    ContentData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
     int contentId = contentData==null ? 0 : contentData.getId();
     Locale locale = rdata.getLocale();
     String userClass=rdata.isLoggedIn() ? "fa-user" : "fa-user-o";

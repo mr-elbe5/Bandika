@@ -10,12 +10,12 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.content.ContentData" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
+<%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.page.PageData" %>
 <%@ page import="java.util.List" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
+    RequestData rdata = RequestData.getRequestData(request);
     ContentData contentData = (ContentData) rdata.getRequestObject("treePage");
     assert contentData != null;
 %>

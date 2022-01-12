@@ -8,13 +8,14 @@
 --%>
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
-<%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
+<%@ include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
+<%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.content.ContentData" %>
-<%@ page import="de.elbe5.page.PageData" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
-    ContentData contentData = rdata.getCurrentContent();
+    RequestData rdata = RequestData.getRequestData(request);
+    ContentData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
     int contentId = contentData==null ? 0 : contentData.getId();
     Locale locale = rdata.getLocale();
     String userClass=rdata.isLoggedIn() ? "fa-user" : "fa-user-o";
@@ -22,23 +23,7 @@
 <ul class="nav justify-content-end">
     <%if (rdata.hasAnyElevatedSystemRight()) {%>
     <li class="nav-item"><a class="nav-link fa fa-cog" href="/ctrl/admin/openAdministration" title="<%=$SH("_administration", locale)%>"></a></li>
-    <%}
-    if (contentData instanceof PageData && !contentData.isEditing() && contentData.hasUserEditRight(rdata)) {%>
-        <li class="nav-item"><a class="nav-link fa fa-edit" href="/ctrl/page/openEditContentFrontend/<%=contentData.getId()%>" title="<%=$SH("_editPage", locale)%>"></a></li>
-    <%
-        if (contentData.hasUnpublishedDraft()) {
-            if (contentData.isPublished()){
-                if (contentData.isPublishedView()){%>
-        <li class="nav-item"><a class="nav-link fa fa-eye-slash" href="/ctrl/page/showDraft/<%=contentId%>" title="<%=$SH("_showDraft", locale)%>" ></a></li>
-        <%} else{%>
-        <li class="nav-item"><a class="nav-link fa fa-eye" href="/ctrl/page/showPublished/<%=contentId%>" title="<%=$SH("_showPublished", locale)%>"></a></li>
-        <%}
-            }
-            if (contentData.hasUserApproveRight(rdata)) {%>
-        <li class="nav-item"><a class="nav-link fa fa-thumbs-up" href="/ctrl/page/publishPage/<%=contentId%>" title="<%=$SH("_publish", locale)%>"></a></li>
-        <%}
-        }
-    }%>
+    <%}%>
     <li class="nav-item">
         <a class="nav-link fa <%=userClass%>" data-toggle="dropdown" title="<%=$SH("_user",locale)%>"></a>
         <div class="dropdown-menu">

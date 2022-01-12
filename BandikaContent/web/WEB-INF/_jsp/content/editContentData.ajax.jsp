@@ -9,16 +9,17 @@
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
+<%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="de.elbe5.user.UserCache" %>
 <%@ page import="de.elbe5.application.Configuration" %>
+<%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
+    RequestData rdata = RequestData.getRequestData(request);
     Locale locale = rdata.getLocale();
-    ContentData contentData = rdata.getCurrentSessionContent();
+    ContentData contentData = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
     assert (contentData != null);
     String url = "/ctrl/content/saveContentData/" + contentData.getId();%>
 <div class="modal-dialog modal-lg" role="document">

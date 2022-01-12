@@ -12,8 +12,8 @@ import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.page.PageData;
 import de.elbe5.page.PagePartData;
-import de.elbe5.request.ContentSessionRequestData;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.ContentRequestKeys;
+import de.elbe5.request.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -33,10 +33,8 @@ public class PartTag extends BaseTag {
     public int doStartTag() {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
-            SessionRequestData rdata = SessionRequestData.getRequestData(request);
-            assert rdata instanceof ContentSessionRequestData;
-            ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
-            PageData contentData = crdata.getCurrentContent(PageData.class);
+            RequestData rdata = RequestData.getRequestData(request);
+            PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
             PagePartData partData = rdata.get(PagePartData.KEY_PART, PagePartData.class);
             JspWriter writer = getContext().getOut();
             if (partData != null) {

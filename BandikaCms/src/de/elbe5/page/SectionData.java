@@ -8,7 +8,7 @@
  */
 package de.elbe5.page;
 
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -154,7 +154,7 @@ public class SectionData {
         }
     }
 
-    public void readFrontendRequestData(SessionRequestData rdata) {
+    public void readFrontendRequestData(RequestData rdata) {
         for (int i=getParts().size()-1;i>=0;i--){
             PagePartData part = getParts().get(i);
             part.readFrontendRequestData(rdata);

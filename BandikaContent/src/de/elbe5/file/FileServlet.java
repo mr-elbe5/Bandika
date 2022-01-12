@@ -15,7 +15,7 @@ import de.elbe5.base.util.FileUtil;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.RequestData;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 import de.elbe5.response.IResponse;
 import de.elbe5.servlet.WebServlet;
 

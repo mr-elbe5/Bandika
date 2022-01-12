@@ -13,9 +13,8 @@ import de.elbe5.base.data.Strings;
 import de.elbe5.base.log.Log;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
-import de.elbe5.request.JsonRequestData;
 import de.elbe5.request.RequestData;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestKeys;
 import de.elbe5.response.StatusResponse;
 import de.elbe5.servlet.Controller;
 import de.elbe5.response.IResponse;
@@ -27,7 +26,7 @@ import java.io.File;
 public abstract class FileController extends Controller {
 
     @Deprecated
-    public IResponse show(SessionRequestData rdata) {
+    public IResponse show(RequestData rdata) {
         int id = rdata.getId();
         Log.warn("deprecated call of file show for id " + id);
         FileData data = ContentCache.getFile(id);
@@ -35,12 +34,7 @@ public abstract class FileController extends Controller {
     }
 
     @Deprecated
-    public IResponse download(SessionRequestData rdata) {
-        return downloadFile(rdata);
-    }
-
-    @Deprecated
-    public IResponse download(JsonRequestData rdata) {
+    public IResponse download(RequestData rdata) {
         return downloadFile(rdata);
     }
 
@@ -73,7 +67,7 @@ public abstract class FileController extends Controller {
         return new FileResponse(file, data.getDisplayFileName(), rangeInfo);
     }
 
-    public IResponse deleteFile(SessionRequestData rdata) {
+    public IResponse deleteFile(RequestData rdata) {
         int contentId = rdata.getId();
         int parentId = ContentCache.getFileParentId(contentId);
         ContentData parent=ContentCache.getContent(parentId);
@@ -81,11 +75,11 @@ public abstract class FileController extends Controller {
         FileBean.getInstance().deleteFile(contentId);
         ContentCache.setDirty();
         rdata.put("contentId", Integer.toString(parentId));
-        rdata.setMessage(Strings.string("_fileDeleted",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_fileDeleted",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,parentId);
     }
 
-    protected IResponse showContentAdministration(SessionRequestData rdata, int contentId) {
+    protected IResponse showContentAdministration(RequestData rdata, int contentId) {
         return new ForwardResponse("/ctrl/admin/openContentAdministration?contentId=" + contentId);
     }
 

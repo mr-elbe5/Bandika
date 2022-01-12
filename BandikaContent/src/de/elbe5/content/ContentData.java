@@ -16,9 +16,8 @@ import de.elbe5.file.FileData;
 import de.elbe5.file.FileFactory;
 import de.elbe5.group.GroupBean;
 import de.elbe5.group.GroupData;
-import de.elbe5.request.ContentSessionRequestData;
+import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
-import de.elbe5.request.SessionRequestData;
 import de.elbe5.rights.Right;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.user.UserData;
@@ -430,19 +429,19 @@ public class ContentData extends BaseData implements Comparable<ContentData> {
     }
 
     //used in jsp
-    public void displayTreeContent(PageContext context, ContentSessionRequestData rdata) throws IOException, ServletException {
+    public void displayTreeContent(PageContext context, RequestData rdata) throws IOException, ServletException {
         if (hasUserReadRight(rdata)) {
             //backup
-            ContentData currentContent=rdata.getCurrentContent();
-            rdata.setCurrentRequestContent(this);
+            ContentData currentContent = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
+            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, this);
             context.include("/WEB-INF/_jsp/content/treeContent.inc.jsp", true);
             //restore
-            rdata.setCurrentRequestContent(currentContent);
+            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, currentContent);
         }
     }
 
     //used in jsp/tag
-    public void displayContent(PageContext context, SessionRequestData rdata) throws IOException, ServletException {
+    public void displayContent(PageContext context, RequestData rdata) throws IOException, ServletException {
     }
 
     // multiple data
@@ -471,7 +470,7 @@ public class ContentData extends BaseData implements Comparable<ContentData> {
         setChangerId(rdata.getUserId());
     }
 
-    public void copyData(ContentData data, SessionRequestData rdata) {
+    public void copyData(ContentData data, RequestData rdata) {
         setNew(true);
         setId(ContentBean.getInstance().getNextId());
         setName(data.getName());
@@ -492,15 +491,15 @@ public class ContentData extends BaseData implements Comparable<ContentData> {
         setRanking(data.getRanking() + 1);
     }
 
-    public void readCreateRequestData(SessionRequestData rdata) {
+    public void readCreateRequestData(RequestData rdata) {
         readRequestData(rdata);
     }
 
-    public void readUpdateRequestData(SessionRequestData rdata) {
+    public void readUpdateRequestData(RequestData rdata) {
         readRequestData(rdata);
     }
 
-    public void readRequestData(SessionRequestData rdata) {
+    public void readRequestData(RequestData rdata) {
         setDisplayName(rdata.getString("displayName").trim());
         setName(StringUtil.toSafeWebName(getDisplayName()));
         setDescription(rdata.getString("description"));
@@ -513,19 +512,19 @@ public class ContentData extends BaseData implements Comparable<ContentData> {
         }
     }
 
-    public void readFrontendCreateRequestData(SessionRequestData rdata) {
+    public void readFrontendCreateRequestData(RequestData rdata) {
         readFrontendRequestData(rdata);
     }
 
-    public void readFrontendUpdateRequestData(SessionRequestData rdata) {
+    public void readFrontendUpdateRequestData(RequestData rdata) {
         readFrontendRequestData(rdata);
     }
 
-    public void readFrontendRequestData(SessionRequestData rdata) {
+    public void readFrontendRequestData(RequestData rdata) {
         readRequestData(rdata);
     }
 
-    public void readRightsRequestData(SessionRequestData rdata) {
+    public void readRightsRequestData(RequestData rdata) {
         List<GroupData> groups = GroupBean.getInstance().getAllGroups();
         getGroupRights().clear();
         for (GroupData group : groups) {

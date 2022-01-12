@@ -9,7 +9,7 @@
 package de.elbe5.tag;
 
 import de.elbe5.base.util.StringUtil;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -35,7 +35,7 @@ public class BaseTag implements Tag {
         return (HttpServletRequest) getContext().getRequest();
     }
 
-    public Locale getLocale(SessionRequestData rdata) {
+    public Locale getLocale(RequestData rdata) {
         return rdata.getLocale();
     }
 
@@ -71,8 +71,8 @@ public class BaseTag implements Tag {
         return StringUtil.toHtml(s);
     }
 
-    protected SessionRequestData getRequestData() {
-        return (SessionRequestData) getRequest().getAttribute(SessionRequestData.KEY_REQUESTDATA);
+    protected RequestData getRequestData() {
+        return RequestData.getRequestData(getRequest());
     }
 
 }

@@ -8,7 +8,7 @@
  */
 package de.elbe5.page;
 
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 
 public class PartHtmlField extends PartField {
 
@@ -22,12 +22,12 @@ public class PartHtmlField extends PartField {
     /******************* HTML part *********************************/
 
     @Override
-    public void readRequestData(SessionRequestData rdata) {
+    public void readRequestData(RequestData rdata) {
         setContent(rdata.getString(getIdentifier()));
     }
 
     @Override
-    public void readFrontendRequestData(SessionRequestData rdata){
+    public void readFrontendRequestData(RequestData rdata){
         setContent(rdata.getString(getIdentifier()));
     }
 

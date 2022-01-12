@@ -9,7 +9,7 @@
 package de.elbe5.group;
 
 import de.elbe5.base.data.BaseData;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.user.UserData;
 
@@ -80,7 +80,7 @@ public class GroupData extends BaseData {
 
     // multiple data
 
-    public void readSettingsRequestData(SessionRequestData rdata) {
+    public void readSettingsRequestData(RequestData rdata) {
         setName(rdata.getString("name"));
         setNotes(rdata.getString("notes"));
         getSystemRights().clear();

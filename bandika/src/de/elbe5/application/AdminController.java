@@ -11,10 +11,11 @@ package de.elbe5.application;
 import de.elbe5.base.data.Strings;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.FileUtil;
+import de.elbe5.request.RequestKeys;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.servlet.ResponseException;
 import de.elbe5.user.UserCache;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.response.IResponse;
@@ -48,7 +49,7 @@ public class AdminController extends Controller {
         return KEY;
     }
 
-    public IResponse openAdministration(SessionRequestData rdata){
+    public IResponse openAdministration(RequestData rdata){
         if (rdata.hasSystemRight(SystemZone.USER))
             return openPersonAdministration(rdata);
         if (rdata.hasSystemRight(SystemZone.APPLICATION))
@@ -56,17 +57,17 @@ public class AdminController extends Controller {
         throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
-    public IResponse openSystemAdministration(SessionRequestData rdata) {
+    public IResponse openSystemAdministration(RequestData rdata) {
         checkRights(rdata.hasAnySystemRight());
         return showSystemAdministration(rdata);
     }
 
-    public IResponse openPersonAdministration(SessionRequestData rdata) {
+    public IResponse openPersonAdministration(RequestData rdata) {
         checkRights(rdata.hasAnySystemRight());
         return showPersonAdministration(rdata);
     }
 
-    public IResponse restart(SessionRequestData rdata) {
+    public IResponse restart(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         String path = ApplicationPath.getAppROOTPath() + "/WEB-INF/web.xml";
         File f = new File(path);
@@ -75,15 +76,15 @@ public class AdminController extends Controller {
         } catch (IOException e) {
             Log.error("could not touch file " + path, e);
         }
-        rdata.setMessage(Strings.string("_restartHint",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_restartHint",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
-    public IResponse reloadUserCache(SessionRequestData rdata) {
+    public IResponse reloadUserCache(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         UserCache.setDirty();
         UserCache.checkDirty();
-        rdata.setMessage(Strings.string("_cacheReloaded",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_cacheReloaded",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 

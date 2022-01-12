@@ -11,8 +11,9 @@ package de.elbe5.file;
 import de.elbe5.base.data.Strings;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
+import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestKeys;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.CloseDialogResponse;
 import de.elbe5.response.IResponse;
@@ -42,7 +43,7 @@ public class MediaController extends FileController {
         return KEY;
     }
 
-    public IResponse openCreateMedia(SessionRequestData rdata) {
+    public IResponse openCreateMedia(RequestData rdata) {
         int parentId = rdata.getInt("parentId");
         ContentData parentData = ContentCache.getContent(parentId);
         assert(parentData!=null);
@@ -51,21 +52,21 @@ public class MediaController extends FileController {
         MediaData data = FileFactory.getNewData(type,MediaData.class);
         assert(data!=null);
         data.setCreateValues(parentData, rdata);
-        rdata.setSessionObject(RequestData.KEY_MEDIA, data);
+        rdata.setSessionObject(ContentRequestKeys.KEY_MEDIA, data);
         return showEditMedia();
     }
 
-    public IResponse openEditMedia(SessionRequestData rdata) {
+    public IResponse openEditMedia(RequestData rdata) {
         FileData data = FileBean.getInstance().getFile(rdata.getId(),true);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
-        rdata.setSessionObject(RequestData.KEY_MEDIA,data);
+        rdata.setSessionObject(ContentRequestKeys.KEY_MEDIA,data);
         return showEditMedia();
     }
 
-    public IResponse saveMedia(SessionRequestData rdata) {
+    public IResponse saveMedia(RequestData rdata) {
         int contentId = rdata.getId();
-        MediaData data = rdata.getSessionObject(RequestData.KEY_MEDIA,MediaData.class);
+        MediaData data = rdata.getSessionObject(ContentRequestKeys.KEY_MEDIA,MediaData.class);
         assert(data != null && data.getId() == contentId);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
@@ -81,21 +82,21 @@ public class MediaController extends FileController {
         }
         data.setNew(false);
         ContentCache.setDirty();
-        rdata.setMessage(Strings.string("_fileSaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_fileSaved",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
     }
 
-    public IResponse cutMedia(SessionRequestData rdata) {
+    public IResponse cutMedia(RequestData rdata) {
         int contentId = rdata.getId();
         MediaData data = FileBean.getInstance().getFile(contentId,true,MediaData.class);
         assert(data!=null);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
-        rdata.setClipboardData(RequestData.KEY_MEDIA, data);
+        rdata.setClipboardData(ContentRequestKeys.KEY_MEDIA, data);
         return showContentAdministration(rdata,data.getParentId());
     }
 
-    public IResponse copyMedia(SessionRequestData rdata) {
+    public IResponse copyMedia(RequestData rdata) {
         int contentId = rdata.getId();
         MediaData data = FileBean.getInstance().getFile(contentId,true,MediaData.class);
         assert(data!=null);
@@ -105,34 +106,34 @@ public class MediaController extends FileController {
         data.setId(FileBean.getInstance().getNextId());
         data.setCreatorId(rdata.getUserId());
         data.setChangerId(rdata.getUserId());
-        rdata.setClipboardData(RequestData.KEY_MEDIA, data);
+        rdata.setClipboardData(ContentRequestKeys.KEY_MEDIA, data);
         return showContentAdministration(rdata,data.getId());
     }
 
-    public IResponse pasteMedia(SessionRequestData rdata) {
+    public IResponse pasteMedia(RequestData rdata) {
         int parentId = rdata.getInt("parentId");
         ContentData parent=ContentCache.getContent(parentId);
         if (parent == null){
-            rdata.setMessage(Strings.string("_actionNotExcecuted", rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.string("_actionNotExcecuted", rdata.getLocale()), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata);
         }
         checkRights(parent.hasUserEditRight(rdata));
-        MediaData data=rdata.getClipboardData(RequestData.KEY_MEDIA,MediaData.class);
+        MediaData data=rdata.getClipboardData(ContentRequestKeys.KEY_MEDIA,MediaData.class);
         if (data==null){
-            rdata.setMessage(Strings.string("_actionNotExcecuted", rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.string("_actionNotExcecuted", rdata.getLocale()), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata);
         }
         data.setParentId(parentId);
         data.setParent(parent);
         data.setChangerId(rdata.getUserId());
         FileBean.getInstance().saveFile(data,true);
-        rdata.clearClipboardData(RequestData.KEY_MEDIA);
+        rdata.clearClipboardData(ContentRequestKeys.KEY_MEDIA);
         ContentCache.setDirty();
-        rdata.setMessage(Strings.string("_mediaPasted",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_mediaPasted",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,data.getId());
     }
 
-    public IResponse deleteMedia(SessionRequestData rdata){
+    public IResponse deleteMedia(RequestData rdata){
         return deleteFile(rdata);
     }
 

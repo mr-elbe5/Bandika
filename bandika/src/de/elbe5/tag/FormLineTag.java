@@ -10,7 +10,7 @@ package de.elbe5.tag;
 
 import de.elbe5.base.data.Strings;
 import de.elbe5.base.log.Log;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -45,7 +45,7 @@ public class FormLineTag extends BaseTag {
     public int doStartTag() throws JspException {
         try {
             HttpServletRequest request = getRequest();
-            SessionRequestData rdata = SessionRequestData.getRequestData(request);
+            RequestData rdata = RequestData.getRequestData(request);
             Locale locale = getLocale(rdata);
             Writer writer = getWriter();
             writer.write("<div class=\"form-group row");
@@ -84,7 +84,7 @@ public class FormLineTag extends BaseTag {
     public int doEndTag() {
         try {
             HttpServletRequest request = getRequest();
-            SessionRequestData rdata = SessionRequestData.getRequestData(request);
+            RequestData rdata = RequestData.getRequestData(request);
             Locale locale = getLocale(rdata);
             Writer writer = getWriter();
             writer.write(getPostControlHtml(request, locale));

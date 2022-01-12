@@ -10,7 +10,7 @@ package de.elbe5.timer;
 
 import de.elbe5.base.data.BaseData;
 import de.elbe5.base.data.Strings;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 
 import java.time.LocalDateTime;
 
@@ -163,7 +163,7 @@ public abstract class TimerTaskData extends BaseData implements Cloneable {
         return true;
     }
 
-    public void readSettingsRequestData(SessionRequestData rdata) {
+    public void readSettingsRequestData(RequestData rdata) {
         setInterval(TimerInterval.valueOf(rdata.getString("interval")));
         setDay(rdata.getInt("day"));
         setHour(rdata.getInt("hour"));

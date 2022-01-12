@@ -42,7 +42,7 @@ public class CompanyController extends Controller {
         return KEY;
     }
 
-    public IResponse openEditCompany(SessionRequestData rdata) {
+    public IResponse openEditCompany(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int companyId = rdata.getId();
         CompanyData data = CompanyBean.getInstance().getCompany(companyId);
@@ -50,7 +50,7 @@ public class CompanyController extends Controller {
         return showEditCompany();
     }
 
-    public IResponse openCreateCompany(SessionRequestData rdata) {
+    public IResponse openCreateCompany(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         CompanyData data = new CompanyData();
         data.setNew(true);
@@ -59,7 +59,7 @@ public class CompanyController extends Controller {
         return showEditCompany();
     }
 
-    public IResponse saveCompany(SessionRequestData rdata) {
+    public IResponse saveCompany(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         CompanyData data = (CompanyData) rdata.getSessionObject("companyData");
         assert(data!=null);
@@ -69,20 +69,20 @@ public class CompanyController extends Controller {
         }
         CompanyBean.getInstance().saveCompany(data);
         CompanyCache.setDirty();
-        rdata.setMessage(Strings.string("_companySaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_companySaved",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/admin/openPersonAdministration?companyId=" + data.getId());
     }
 
-    public IResponse deleteCompany(SessionRequestData rdata) {
+    public IResponse deleteCompany(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
-            rdata.setMessage(Strings.string("_notDeletable",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.string("_notDeletable",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_ERROR);
             return new ForwardResponse("/ctrl/admin/openPersonAdministration");
         }
         CompanyBean.getInstance().deleteCompany(id);
         CompanyCache.setDirty();
-        rdata.setMessage(Strings.string("_companyDeleted",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_companyDeleted",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openPersonAdministration");
     }
 

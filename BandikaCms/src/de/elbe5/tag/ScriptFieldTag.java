@@ -15,8 +15,8 @@ import de.elbe5.page.PageData;
 import de.elbe5.page.LayoutPartData;
 import de.elbe5.page.PagePartData;
 import de.elbe5.page.PartScriptField;
-import de.elbe5.request.ContentSessionRequestData;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.ContentRequestKeys;
+import de.elbe5.request.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -27,11 +27,9 @@ public class ScriptFieldTag extends FieldTag {
     public int doStartTag() {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
-            SessionRequestData rdata = SessionRequestData.getRequestData(request);
-            assert rdata instanceof ContentSessionRequestData;
-            ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
+            RequestData rdata = RequestData.getRequestData(request);
             JspWriter writer = getContext().getOut();
-            PageData contentData = crdata.getCurrentContent(PageData.class);
+            PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
             LayoutPartData partData = rdata.get(PagePartData.KEY_PART, LayoutPartData.class);
 
             PartScriptField field = partData.ensureScriptField(name);

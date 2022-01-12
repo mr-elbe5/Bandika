@@ -8,13 +8,14 @@
 --%><%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
+<%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.page.PageData" %>
 <%@ page import="de.elbe5.page.PagePartData" %>
+<%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
-    PageData contentData = rdata.getCurrentContent(PageData.class);
+    RequestData rdata = RequestData.getRequestData(request);
+    PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
     assert contentData != null;
     PagePartData partData = rdata.get(PagePartData.KEY_PART, PagePartData.class);
     String include = partData.getEditPartInclude();

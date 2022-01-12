@@ -8,7 +8,7 @@
  */
 package de.elbe5.page;
 
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -135,13 +135,13 @@ public class LayoutPartData extends PagePartData {
     }
 
     @Override
-    public void setCreateValues(SessionRequestData rdata) {
+    public void setCreateValues(RequestData rdata) {
         super.setCreateValues(rdata);
         setLayout(rdata.getString("layout"));
     }
 
     @Override
-    public void readFrontendRequestData(SessionRequestData rdata) {
+    public void readFrontendRequestData(RequestData rdata) {
         super.readFrontendRequestData(rdata);
         for (PartField field : getFields().values()) {
             field.readFrontendRequestData(rdata);

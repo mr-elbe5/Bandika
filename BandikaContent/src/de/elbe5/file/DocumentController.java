@@ -11,9 +11,9 @@ package de.elbe5.file;
 import de.elbe5.base.data.Strings;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
-import de.elbe5.request.ContentSessionRequestData;
+import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestKeys;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.CloseDialogResponse;
 import de.elbe5.response.IResponse;
@@ -43,7 +43,7 @@ public class DocumentController extends FileController {
         return KEY;
     }
 
-    public IResponse openCreateDocument(SessionRequestData rdata) {
+    public IResponse openCreateDocument(RequestData rdata) {
         int parentId = rdata.getInt("parentId");
         ContentData parentData = ContentCache.getContent(parentId);
         assert(parentData!=null);
@@ -52,21 +52,21 @@ public class DocumentController extends FileController {
         DocumentData data = FileFactory.getNewData(type,DocumentData.class);
         assert(data!=null);
         data.setCreateValues(parentData, rdata);
-        rdata.setSessionObject(RequestData.KEY_DOCUMENT, data);
+        rdata.setSessionObject(ContentRequestKeys.KEY_DOCUMENT, data);
         return showEditDocument();
     }
 
-    public IResponse openEditDocument(SessionRequestData rdata) {
+    public IResponse openEditDocument(RequestData rdata) {
         FileData data = FileBean.getInstance().getFile(rdata.getId(),true);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
-        rdata.setSessionObject(RequestData.KEY_DOCUMENT,data);
+        rdata.setSessionObject(ContentRequestKeys.KEY_DOCUMENT,data);
         return showEditDocument();
     }
 
-    public IResponse saveDocument(SessionRequestData rdata) {
+    public IResponse saveDocument(RequestData rdata) {
         int contentId = rdata.getId();
-        DocumentData data = rdata.getSessionObject(RequestData.KEY_DOCUMENT,DocumentData.class);
+        DocumentData data = rdata.getSessionObject(ContentRequestKeys.KEY_DOCUMENT,DocumentData.class);
         assert(data != null && data.getId() == contentId);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
@@ -82,21 +82,21 @@ public class DocumentController extends FileController {
         }
         data.setNew(false);
         ContentCache.setDirty();
-        rdata.setMessage(Strings.string("_fileSaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_fileSaved",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
     }
 
-    public IResponse cutDocument(SessionRequestData rdata) {
+    public IResponse cutDocument(RequestData rdata) {
         int contentId = rdata.getId();
         DocumentData data = FileBean.getInstance().getFile(contentId,true,DocumentData.class);
         assert(data!=null);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
-        rdata.setClipboardData(RequestData.KEY_DOCUMENT, data);
+        rdata.setClipboardData(ContentRequestKeys.KEY_DOCUMENT, data);
         return showContentAdministration(rdata,data.getParentId());
     }
 
-    public IResponse copyDocument(SessionRequestData rdata) {
+    public IResponse copyDocument(RequestData rdata) {
         int contentId = rdata.getId();
         DocumentData data = FileBean.getInstance().getFile(contentId,true,DocumentData.class);
         assert(data!=null);
@@ -106,34 +106,34 @@ public class DocumentController extends FileController {
         data.setId(FileBean.getInstance().getNextId());
         data.setCreatorId(rdata.getUserId());
         data.setChangerId(rdata.getUserId());
-        rdata.setClipboardData(RequestData.KEY_DOCUMENT, data);
+        rdata.setClipboardData(ContentRequestKeys.KEY_DOCUMENT, data);
         return showContentAdministration(rdata,data.getId());
     }
 
-    public IResponse pasteDocument(SessionRequestData rdata) {
+    public IResponse pasteDocument(RequestData rdata) {
         int parentId = rdata.getInt("parentId");
         ContentData parent=ContentCache.getContent(parentId);
         if (parent == null){
-            rdata.setMessage(Strings.string("_actionNotExcecuted", rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.string("_actionNotExcecuted", rdata.getLocale()), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata);
         }
         checkRights(parent.hasUserEditRight(rdata));
-        DocumentData data=rdata.getClipboardData(RequestData.KEY_DOCUMENT,DocumentData.class);
+        DocumentData data=rdata.getClipboardData(ContentRequestKeys.KEY_DOCUMENT,DocumentData.class);
         if (data==null){
-            rdata.setMessage(Strings.string("_actionNotExcecuted", rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.string("_actionNotExcecuted", rdata.getLocale()), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata);
         }
         data.setParentId(parentId);
         data.setParent(parent);
         data.setChangerId(rdata.getUserId());
         FileBean.getInstance().saveFile(data,true);
-        rdata.clearClipboardData(RequestData.KEY_DOCUMENT);
+        rdata.clearClipboardData(ContentRequestKeys.KEY_DOCUMENT);
         ContentCache.setDirty();
-        rdata.setMessage(Strings.string("_documentPasted",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_documentPasted",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,data.getId());
     }
 
-    public IResponse deleteDocument(SessionRequestData rdata){
+    public IResponse deleteDocument(RequestData rdata){
         return deleteFile(rdata);
     }
 

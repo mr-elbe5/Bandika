@@ -13,7 +13,7 @@ import de.elbe5.base.log.Log;
 import de.elbe5.base.util.FileUtil;
 import de.elbe5.base.util.ImageUtil;
 import de.elbe5.base.util.StringUtil;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
@@ -120,7 +120,7 @@ public class ImageData extends FileData {
     // multiple data
 
     @Override
-    public void readSettingsRequestData(SessionRequestData rdata) {
+    public void readSettingsRequestData(RequestData rdata) {
         super.readSettingsRequestData(rdata);
         BinaryFile file = rdata.getFile("file");
         if (maxWidth != 0 || maxHeight != 0)

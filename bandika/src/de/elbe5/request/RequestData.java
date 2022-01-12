@@ -9,8 +9,10 @@
 package de.elbe5.request;
 
 import de.elbe5.application.Configuration;
+import de.elbe5.base.data.BaseData;
 import de.elbe5.base.data.BinaryFile;
 import de.elbe5.base.data.KeyValueMap;
+import de.elbe5.base.data.Strings;
 import de.elbe5.base.log.Log;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.user.UserData;
@@ -23,31 +25,11 @@ import java.util.*;
 
 public class RequestData extends KeyValueMap {
 
-    public static final String KEY_REQUESTDATA = "$REQUESTDATA";
-    public static final String KEY_URL = "$URL";
-    public static final String KEY_LOCALE = "$LOCALE";
-    public static final String KEY_HOST = "$HOST";
-    public static final String KEY_JSP = "$JSP";
-    public static final String KEY_MESSAGE = "$MESSAGE";
-    public static final String KEY_MESSAGETYPE = "$MESSAGETYPE";
-    public static final String KEY_TARGETID = "$TARGETID";
-    public static final String KEY_CLIPBOARD = "$CLIPBOARD";
-    public static final String KEY_TITLE = "$TITLE";
-    public static final String KEY_LOGIN = "$LOGIN";
-    public static final String KEY_CAPTCHA = "$CAPTCHA";
-    public static final String KEY_CONTENT = "contentData";
-    public static final String KEY_DOCUMENT = "documentData";
-    public static final String KEY_IMAGE = "imageData";
-    public static final String KEY_MEDIA = "mediaData";
-
-    public static final String MESSAGE_TYPE_INFO = "info";
-    public static final String MESSAGE_TYPE_SUCCESS = "success";
-    public static final String MESSAGE_TYPE_ERROR = "danger";
-
-
     public static RequestData getRequestData(HttpServletRequest request) {
-        return (RequestData) request.getAttribute(KEY_REQUESTDATA);
+        return (RequestData) request.getAttribute(RequestKeys.KEY_REQUESTDATA);
     }
+
+    private final Map<String, Cookie> cookies = new HashMap<>();
 
     protected HttpServletRequest request;
 
@@ -63,8 +45,9 @@ public class RequestData extends KeyValueMap {
     }
 
     public void init(){
-        request.setAttribute(SessionRequestData.KEY_REQUESTDATA, this);
+        request.setAttribute(RequestKeys.KEY_REQUESTDATA, this);
         readRequestParams();
+        initSession();
     }
 
     public HttpServletRequest getRequest() {
@@ -79,19 +62,30 @@ public class RequestData extends KeyValueMap {
         this.id = id;
     }
 
-    public UserData getLoginUser(){
-        return null;
-    }
-
-    public Locale getLocale(){
-        return Configuration.getDefaultLocale();
-    }
-
     public boolean isPostback() {
         return method.equals("POST");
     }
 
+    /*********** message *********/
+
+    public boolean hasMessage() {
+        return containsKey(RequestKeys.KEY_MESSAGE);
+    }
+
+    public void setMessage(String msg, String type) {
+        put(RequestKeys.KEY_MESSAGE, msg);
+        put(RequestKeys.KEY_MESSAGETYPE, type);
+    }
+
     /************ user ****************/
+
+    public UserData getLoginUser() {
+        return getSessionUser();
+    }
+
+    public Locale getLocale() {
+        return getSessionLocale();
+    }
 
     public int getUserId() {
         UserData user = getLoginUser();
@@ -152,6 +146,14 @@ public class RequestData extends KeyValueMap {
         if (formError == null)
             return false;
         return formError.hasFormErrorField(name);
+    }
+
+    public boolean checkFormErrors() {
+        if (formError == null)
+            return true;
+        if (formError.isFormIncomplete())
+            formError.addFormError(Strings.string("_notComplete", getLocale()));
+        return formError.isEmpty();
     }
 
     /************** request attributes *****************/
@@ -323,4 +325,196 @@ public class RequestData extends KeyValueMap {
         }
     }
 
+    public void removeRequestObject(String key){
+        request.removeAttribute(key);
+    }
+
+    /************** session attributes ***************/
+
+    public void initSession() {
+        HttpSession session = request.getSession(true);
+        if (session.isNew()) {
+            Locale requestLocale = request.getLocale();
+            if (Configuration.hasLanguage(requestLocale))
+                setSessionLocale(requestLocale);
+            StringBuffer url = request.getRequestURL();
+            String uri = request.getRequestURI();
+            String host = url.substring(0, url.indexOf(uri));
+            setSessionHost(host);
+        }
+    }
+
+    public void setSessionObject(String key, Object obj) {
+        HttpSession session = request.getSession();
+        if (session == null) {
+            return;
+        }
+        session.setAttribute(key, obj);
+    }
+
+    public Object getSessionObject(String key) {
+        HttpSession session = request.getSession();
+        if (session == null) {
+            return null;
+        }
+        return session.getAttribute(key);
+    }
+
+    private void removeAllSessionObjects(){
+        HttpSession session = request.getSession();
+        if (session == null) {
+            return;
+        }
+        Enumeration<String>  keys = session.getAttributeNames();
+        while (keys.hasMoreElements()){
+            String key=keys.nextElement();
+            session.removeAttribute(key);
+        }
+    }
+
+    public <T> T getSessionObject(String key, Class<T> cls) {
+        HttpSession session = request.getSession();
+        if (session == null) {
+            return null;
+        }
+        try {
+            return cls.cast(request.getSession().getAttribute(key));
+        }
+        catch (NullPointerException | ClassCastException e){
+            return null;
+        }
+    }
+
+    public void removeSessionObject(String key) {
+        HttpSession session = request.getSession();
+        if (session == null) {
+            return;
+        }
+        session.removeAttribute(key);
+    }
+
+    public ClipboardData getClipboard() {
+        ClipboardData data = getSessionObject(RequestKeys.KEY_CLIPBOARD,ClipboardData.class);
+        if (data==null){
+            data=new ClipboardData();
+            setSessionObject(RequestKeys.KEY_CLIPBOARD,data);
+        }
+        return data;
+    }
+
+    public <T extends BaseData> T getCurrentDataInRequestOrSession(String key, Class<T> cls) {
+        try {
+            Object obj=getRequestObject(key);
+            if (obj==null)
+                obj=getSessionObject(key);
+            assert(obj!=null);
+            //Log.log("current request data is: " + obj.getClass().getSimpleName());
+            return cls.cast(obj);
+        }
+        catch (ClassCastException e){
+            return null;
+        }
+    }
+
+    public void setClipboardData(String key, BaseData data){
+        getClipboard().putData(key,data);
+    }
+
+    public boolean hasClipboardData(String key){
+        return getClipboard().hasData(key);
+    }
+
+    public <T> T getClipboardData(String key,Class<T> cls) {
+        try {
+            return cls.cast(getClipboard().getData(key));
+        }
+        catch(NullPointerException | ClassCastException e){
+            return null;
+        }
+    }
+
+    public void clearClipboardData(String key){
+        getClipboard().clearData(key);
+    }
+
+    public void setSessionUser(UserData data) {
+        setSessionObject(RequestKeys.KEY_LOGIN, data);
+    }
+
+    public UserData getSessionUser() {
+        return (UserData) getSessionObject(RequestKeys.KEY_LOGIN);
+    }
+
+    public void setSessionLocale() {
+        setSessionLocale(Configuration.getDefaultLocale());
+    }
+
+    public Locale getSessionLocale() {
+        Locale locale = getSessionObject(RequestKeys.KEY_LOCALE,Locale.class);
+        if (locale == null) {
+            return Configuration.getDefaultLocale();
+        }
+        return locale;
+    }
+
+    public void setSessionLocale(Locale locale) {
+        if (Configuration.hasLanguage(locale)) {
+            setSessionObject(RequestKeys.KEY_LOCALE, locale);
+        } else {
+            setSessionObject(RequestKeys.KEY_LOCALE, Configuration.getDefaultLocale());
+        }
+    }
+
+    public void setSessionHost(String host) {
+        setSessionObject(RequestKeys.KEY_HOST, host);
+    }
+
+    public String getSessionHost() {
+        return getSessionObject(RequestKeys.KEY_HOST,String.class);
+    }
+
+    public void resetSession() {
+        Locale locale = getLocale();
+        removeAllSessionObjects();
+        request.getSession(true);
+        setSessionLocale(locale);
+    }
+
+    /*************** cookie methods ***************/
+
+    public void addLoginCookie(String name, String value, int expirationDays){
+        Cookie cookie=new Cookie("elbe5cms_"+name,value);
+        cookie.setPath("/ctrl/user/login");
+        cookie.setMaxAge(expirationDays*24*60*60);
+        cookies.put(cookie.getName(),cookie);
+    }
+
+    public boolean hasCookies(){
+        return !(cookies.isEmpty());
+    }
+
+    public void setCookies(HttpServletResponse response){
+        for (Cookie cookie : cookies.values()){
+            response.addCookie(cookie);
+        }
+    }
+
+    public Map<String,String> readLoginCookies(){
+        Map<String, String> map=new HashMap<>();
+        for (Cookie cookie : request.getCookies()) {
+            if (cookie.getName().startsWith("elbe5cms_")) {
+                map.put(cookie.getName().substring(9), cookie.getValue());
+            }
+        }
+        return map;
+    }
+
 }
+
+
+
+
+
+
+
+

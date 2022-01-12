@@ -14,7 +14,7 @@ import de.elbe5.base.util.FileUtil;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.RequestData;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 
 public abstract class FileData extends BaseData {
 
@@ -168,7 +168,7 @@ public abstract class FileData extends BaseData {
         }
     }
 
-    public void readSettingsRequestData(SessionRequestData rdata) {
+    public void readSettingsRequestData(RequestData rdata) {
         setDisplayName(rdata.getString("displayName").trim());
         setDescription(rdata.getString("description"));
     }

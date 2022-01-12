@@ -11,7 +11,7 @@ package de.elbe5.page;
 import de.elbe5.base.log.Log;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 import de.elbe5.response.IResponse;
 import de.elbe5.content.ContentResponse;
 import org.jsoup.Jsoup;
@@ -159,17 +159,17 @@ public class PageData extends ContentData {
     }
 
     //used in jsp
-    protected void displayEditContent(PageContext context, JspWriter writer, SessionRequestData rdata) throws IOException, ServletException {
+    protected void displayEditContent(PageContext context, JspWriter writer, RequestData rdata) throws IOException, ServletException {
         context.include("/WEB-INF/_jsp/page/editPageContent.inc.jsp");
     }
 
     //used in jsp
-    protected void displayDraftContent(PageContext context, JspWriter writer, SessionRequestData rdata) throws IOException, ServletException {
+    protected void displayDraftContent(PageContext context, JspWriter writer, RequestData rdata) throws IOException, ServletException {
         context.include(getLayoutUrl());
     }
 
     //used in jsp
-    protected void displayPublishedContent(PageContext context, JspWriter writer, SessionRequestData rdata) throws IOException, ServletException {
+    protected void displayPublishedContent(PageContext context, JspWriter writer, RequestData rdata) throws IOException, ServletException {
         writer.write(publishedContent);
     }
 
@@ -177,7 +177,7 @@ public class PageData extends ContentData {
         return new ContentResponse(this);
     }
 
-    public void displayContent(PageContext context, SessionRequestData rdata) throws IOException, ServletException {
+    public void displayContent(PageContext context, RequestData rdata) throws IOException, ServletException {
         JspWriter writer = context.getOut();
         switch (getViewType()) {
             case VIEW_TYPE_PUBLISH: {
@@ -225,7 +225,7 @@ public class PageData extends ContentData {
 
     // multiple data
 
-    public void copyData(ContentData data, SessionRequestData rdata) {
+    public void copyData(ContentData data, RequestData rdata) {
         if (!(data instanceof PageData))
             return;
         PageData hcdata=(PageData)data;
@@ -241,7 +241,7 @@ public class PageData extends ContentData {
     }
 
     @Override
-    public void readRequestData(SessionRequestData rdata) {
+    public void readRequestData(RequestData rdata) {
         super.readRequestData(rdata);
         setKeywords(rdata.getString("keywords"));
         setLayout(rdata.getString("layout"));
@@ -250,7 +250,7 @@ public class PageData extends ContentData {
         }
     }
 
-    public void readFrontendRequestData(SessionRequestData rdata) {
+    public void readFrontendRequestData(RequestData rdata) {
         for (SectionData section : getSections().values()) {
             section.readFrontendRequestData(rdata);
         }

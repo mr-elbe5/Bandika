@@ -43,7 +43,7 @@ public class GroupController extends Controller {
         return KEY;
     }
 
-    public IResponse openEditGroup(SessionRequestData rdata) {
+    public IResponse openEditGroup(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int groupId = rdata.getId();
         GroupData data = GroupBean.getInstance().getGroup(groupId);
@@ -51,7 +51,7 @@ public class GroupController extends Controller {
         return showEditGroup();
     }
 
-    public IResponse openCreateGroup(SessionRequestData rdata) {
+    public IResponse openCreateGroup(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         GroupData data = new GroupData();
         data.setNew(true);
@@ -60,7 +60,7 @@ public class GroupController extends Controller {
         return showEditGroup();
     }
 
-    public IResponse saveGroup(SessionRequestData rdata) {
+    public IResponse saveGroup(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         GroupData data = (GroupData) rdata.getSessionObject("groupData");
         assert(data!=null);
@@ -70,20 +70,20 @@ public class GroupController extends Controller {
         }
         GroupBean.getInstance().saveGroup(data);
         UserCache.setDirty();
-        rdata.setMessage(Strings.string("_groupSaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_groupSaved",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/admin/openPersonAdministration?groupId=" + data.getId());
     }
 
-    public IResponse deleteGroup(SessionRequestData rdata) {
+    public IResponse deleteGroup(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
-            rdata.setMessage(Strings.string("_notDeletable",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.string("_notDeletable",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_ERROR);
             return new ForwardResponse("/ctrl/admin/openPersonAdministration");
         }
         GroupBean.getInstance().deleteGroup(id);
         UserCache.setDirty();
-        rdata.setMessage(Strings.string("_groupDeleted",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_groupDeleted",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openPersonAdministration");
     }
 

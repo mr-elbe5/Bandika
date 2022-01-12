@@ -10,8 +10,8 @@ package de.elbe5.servlet;
 
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.application.Configuration;
+import de.elbe5.request.RequestData;
 import de.elbe5.response.IResponse;
-import de.elbe5.request.SessionRequestData;
 
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +26,7 @@ public class ControllerServlet extends WebServlet {
 
     protected void processRequest(String method, HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding(Configuration.ENCODING);
-        SessionRequestData rdata = getNewSessionRequestData(method, request);
+        RequestData rdata = new RequestData(method, request);
         String uri = request.getRequestURI();
         // skip "/ctrl/"
         StringTokenizer stk = new StringTokenizer(uri.substring(6), "/", false);
@@ -55,15 +55,11 @@ public class ControllerServlet extends WebServlet {
         }
     }
 
-    protected SessionRequestData getNewSessionRequestData(String method, HttpServletRequest request){
-        return new SessionRequestData(method, request);
-    }
-
-    public IResponse getResponse(Controller controller, String methodName, SessionRequestData rdata) {
+    public IResponse getResponse(Controller controller, String methodName, RequestData rdata) {
         if (controller==null)
             throw new ResponseException(HttpServletResponse.SC_BAD_REQUEST);
         try {
-            Method controllerMethod = controller.getClass().getMethod(methodName, SessionRequestData.class);
+            Method controllerMethod = controller.getClass().getMethod(methodName, RequestData.class);
             Object result = controllerMethod.invoke(controller, rdata);
             if (result instanceof IResponse)
                 return (IResponse) result;

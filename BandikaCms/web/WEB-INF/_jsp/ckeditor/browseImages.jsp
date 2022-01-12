@@ -9,17 +9,17 @@
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
+<%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.content.ContentCache" %>
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="java.util.List" %>
-<%@ page import="de.elbe5.request.RequestData" %>
+<%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
+    RequestData rdata = RequestData.getRequestData(request);
     Locale locale = rdata.getLocale();
-    ContentData data=rdata.getCurrentSessionContent();
+    ContentData data = rdata.getRequestObject(ContentRequestKeys.KEY_CONTENT,ContentData.class);
     List<Integer> parentIds=ContentCache.getParentContentIds(data.getId());
     parentIds.add(data.getId());
     rdata.setRequestObject("parentIds",parentIds);
@@ -38,9 +38,9 @@
             <form:message/>
             <section class="treeSection">
                 <ul class="tree filetree">
-                    <% rdata.setRequestObject(RequestData.KEY_CONTENT, ContentCache.getContentRoot());%>
+                    <% rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, ContentCache.getContentRoot());%>
                     <jsp:include page="/WEB-INF/_jsp/ckeditor/imageBrowserFolder.inc.jsp" flush="true"/>
-                    <% rdata.removeRequestObject(RequestData.KEY_CONTENT);%>
+                    <% rdata.removeRequestObject(ContentRequestKeys.KEY_CONTENT);%>
                 </ul>
             </section>
             <section class="addImage">

@@ -8,17 +8,17 @@
 --%><%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
+<%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.util.List" %>
 <%@ page import="de.elbe5.content.ContentData" %>
-<%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.file.MediaData" %>
+<%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
+    RequestData rdata = RequestData.getRequestData(request);
     Locale locale = rdata.getLocale();
-    ContentData contentData = rdata.getCurrentContent();
+    ContentData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
     assert contentData != null;
     List<String> mediaTypes = contentData.getMediaClasses();
     int fileId=rdata.getInt("fileId");
@@ -27,7 +27,7 @@
             <span>[<%=$SH("_media", locale)%>]</span>
             <%if (contentData.hasUserEditRight(rdata)) {%>
             <div class="icons">
-                <% if (rdata.hasClipboardData(RequestData.KEY_MEDIA)) {%>
+                <% if (rdata.hasClipboardData(ContentRequestKeys.KEY_MEDIA)) {%>
                 <a class="icon fa fa-paste" href="/ctrl/media/pasteMedia?parentId=<%=contentData.getId()%>" title="<%=$SH("_pasteMedia",locale)%>"> </a>
                 <%}
                     if (!mediaTypes.isEmpty()) {

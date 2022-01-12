@@ -10,7 +10,7 @@ package de.elbe5.tag;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.Writer;
@@ -26,7 +26,7 @@ public class ContactTag extends BaseTag {
     public int doStartTag() {
         try {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
-            SessionRequestData rdata = SessionRequestData.getRequestData(request);
+            RequestData rdata = RequestData.getRequestData(request);
             Writer writer = getWriter();
             writer.write(StringUtil.format("<div class=\"{1}\">", StringUtil.toHtml(cssClass)));
             getContext().include("/WEB-INF/_jsp/page/contact.inc.jsp");

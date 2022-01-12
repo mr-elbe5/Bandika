@@ -10,9 +10,10 @@ package de.elbe5.search;
 
 import de.elbe5.base.data.Strings;
 import de.elbe5.content.JspContentData;
+import de.elbe5.request.RequestKeys;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.IResponse;
 import de.elbe5.content.ContentResponse;
@@ -42,17 +43,17 @@ public class SearchController extends Controller {
         return KEY;
     }
 
-    public IResponse openSearch(SessionRequestData rdata) {
+    public IResponse openSearch(RequestData rdata) {
         PageSearchResultData contentResult = new PageSearchResultData();
         rdata.put("searchResultData", contentResult);
         return showSearch();
     }
 
-    public IResponse openUserSearch(SessionRequestData rdata) {
+    public IResponse openUserSearch(RequestData rdata) {
         return showUserSearch();
     }
 
-    public IResponse search(SessionRequestData rdata) {
+    public IResponse search(RequestData rdata) {
         PageSearchResultData contentResult = new PageSearchResultData();
         String pattern = rdata.getString("searchPattern");
         contentResult.setPattern(pattern);
@@ -67,7 +68,7 @@ public class SearchController extends Controller {
         return showSearch();
     }
 
-    public IResponse searchUsers(SessionRequestData rdata) {
+    public IResponse searchUsers(RequestData rdata) {
         UserSearchResultData userResult = new UserSearchResultData();
         userResult.setPattern(rdata.getString("searchPattern"));
         SearchBean.getInstance().searchUsers(userResult);
@@ -75,17 +76,17 @@ public class SearchController extends Controller {
         return showSearch();
     }
 
-    public IResponse indexAllContent(SessionRequestData rdata) {
+    public IResponse indexAllContent(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         SearchQueue.getInstance().addAction(SearchQueue.ACTION_INDEX_PAGES);
-        rdata.setMessage(Strings.string("_indexingContentQueued",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_indexingContentQueued",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openSystemAdministration");
     }
 
-    public IResponse indexAllUsers(SessionRequestData rdata) {
+    public IResponse indexAllUsers(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         SearchQueue.getInstance().addAction(SearchQueue.ACTION_INDEX_USERS);
-        rdata.setMessage(Strings.string("_indexingUsersQueued",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_indexingUsersQueued",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openSystemAdministration");
     }
 

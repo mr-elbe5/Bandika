@@ -9,18 +9,19 @@
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
+<%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="de.elbe5.group.GroupData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="de.elbe5.group.GroupBean" %>
 <%@ page import="de.elbe5.rights.Right" %>
+<%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
+    RequestData rdata = RequestData.getRequestData(request);
     Locale locale = rdata.getLocale();
-    ContentData contentData = rdata.getCurrentSessionContent();
+    ContentData contentData = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
     assert (contentData != null);
     List<GroupData> groups = GroupBean.getInstance().getAllGroups();
     String label, name;

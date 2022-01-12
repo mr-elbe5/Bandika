@@ -9,23 +9,17 @@
 package de.elbe5.application;
 
 import de.elbe5.base.data.Strings;
-import de.elbe5.base.log.Log;
-import de.elbe5.base.util.FileUtil;
 import de.elbe5.content.ContentBean;
 import de.elbe5.content.ContentCache;
 import de.elbe5.file.PreviewCache;
-import de.elbe5.request.SessionRequestData;
-import de.elbe5.response.ForwardResponse;
+import de.elbe5.request.RequestData;
+import de.elbe5.request.RequestKeys;
 import de.elbe5.response.IResponse;
 import de.elbe5.rights.SystemZone;
-import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.servlet.ResponseException;
-import de.elbe5.user.UserCache;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
 
 public class ContentAdminController extends AdminController {
 
@@ -45,7 +39,7 @@ public class ContentAdminController extends AdminController {
     }
 
     @Override
-    public IResponse openAdministration(SessionRequestData rdata){
+    public IResponse openAdministration(RequestData rdata){
         if (rdata.hasSystemRight(SystemZone.CONTENTEDIT))
             return openContentAdministration(rdata);
         if (rdata.hasSystemRight(SystemZone.USER))
@@ -55,32 +49,32 @@ public class ContentAdminController extends AdminController {
         throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
-    public IResponse openContentAdministration(SessionRequestData rdata) {
+    public IResponse openContentAdministration(RequestData rdata) {
         checkRights(rdata.hasAnyContentRight());
         return showContentAdministration(rdata);
     }
 
-    public IResponse openContentLog(SessionRequestData rdata) {
+    public IResponse openContentLog(RequestData rdata) {
         checkRights(rdata.hasAnyContentRight());
         return showContentLog(rdata);
     }
 
-    public IResponse clearPreviewCache(SessionRequestData rdata) {
+    public IResponse clearPreviewCache(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         PreviewCache.clear();
-        rdata.setMessage(Strings.string("_cacheCleared",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_cacheCleared",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
-    public IResponse reloadContentCache(SessionRequestData rdata) {
+    public IResponse reloadContentCache(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         ContentCache.setDirty();
         ContentCache.checkDirty();
-        rdata.setMessage(Strings.string("_cacheReloaded",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_cacheReloaded",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
-    public IResponse resetContentLog(SessionRequestData rdata) {
+    public IResponse resetContentLog(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.CONTENTEDIT));
         ContentBean.getInstance().resetContentLog();
         return showContentLog(rdata);

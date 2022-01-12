@@ -8,9 +8,9 @@
 --%>
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
+<%@ page import="de.elbe5.request.RequestData" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
+    RequestData rdata = RequestData.getRequestData(request);
     String redirectUrl = rdata.getString("redirectUrl");
     if (redirectUrl != null && redirectUrl.length() > 0) {%>
 <html>

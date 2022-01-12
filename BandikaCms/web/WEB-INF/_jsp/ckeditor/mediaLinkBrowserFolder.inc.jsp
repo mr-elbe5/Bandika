@@ -9,17 +9,17 @@
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
+<%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="java.util.List" %>
-<%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.file.MediaData" %>
+<%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
+    RequestData rdata = RequestData.getRequestData(request);
     Locale locale = rdata.getLocale();
-    ContentData contentData = rdata.getRequestObject(RequestData.KEY_CONTENT,ContentData.class);
+    ContentData contentData = rdata.getRequestObject(ContentRequestKeys.KEY_CONTENT,ContentData.class);
     assert contentData != null;%>
 <li class="open">
     <a id="<%=contentData.getId()%>"><%=contentData.getName()%>
@@ -40,10 +40,10 @@
         <%}
         }
         for (ContentData subFolder : contentData.getChildren()) {
-            rdata.setRequestObject(RequestData.KEY_CONTENT, subFolder);%>
+            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, subFolder);%>
         <jsp:include page="/WEB-INF/_jsp/ckeditor/mediaLinkBrowserFolder.inc.jsp" flush="true"/>
         <% }
-        rdata.setRequestObject(RequestData.KEY_CONTENT, contentData);
+        rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, contentData);
         %>
     </ul>
 </li>

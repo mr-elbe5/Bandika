@@ -9,22 +9,22 @@
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
 <%@ page import="de.elbe5.request.RequestData" %>
+<%@ page import="de.elbe5.request.RequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
-    String url = rdata.getString(SessionRequestData.KEY_URL);
-    String targetId = rdata.getString(RequestData.KEY_TARGETID);
-    String msg = rdata.getString(RequestData.KEY_MESSAGE);
-    String msgType = rdata.getString(RequestData.KEY_MESSAGETYPE);
+    RequestData rdata = RequestData.getRequestData(request);
+    String url = rdata.getString(RequestKeys.KEY_URL);
+    String targetId = rdata.getString(RequestKeys.KEY_TARGETID);
+    String msg = rdata.getString(RequestKeys.KEY_MESSAGE);
+    String msgType = rdata.getString(RequestKeys.KEY_MESSAGETYPE);
     if (targetId.isEmpty()) {%>
 <div id="pageContent">
 
     <form action="<%=url%>" method="POST" id="forwardform" accept-charset="UTF-8">
         <%if (!msg.isEmpty()) {%>
-        <input type="hidden" name="<%=RequestData.KEY_MESSAGE%>" value="<%=$H(msg)%>"/>
-        <input type="hidden" name="<%=RequestData.KEY_MESSAGETYPE%>" value="<%=$H(msgType)%>"/>
+        <input type="hidden" name="<%=RequestKeys.KEY_MESSAGE%>" value="<%=$H(msg)%>"/>
+        <input type="hidden" name="<%=RequestKeys.KEY_MESSAGETYPE%>" value="<%=$H(msgType)%>"/>
         <%}%>
     </form>
 
@@ -35,8 +35,8 @@
 <%} else {
     StringBuilder sb = new StringBuilder("{");
     if (!msg.isEmpty()) {
-        sb.append(RequestData.KEY_MESSAGE).append(" : '").append($JS(msg)).append("',");
-        sb.append(RequestData.KEY_MESSAGETYPE).append(" : '").append($JS(msgType)).append("'");
+        sb.append(RequestKeys.KEY_MESSAGE).append(" : '").append($JS(msg)).append("',");
+        sb.append(RequestKeys.KEY_MESSAGETYPE).append(" : '").append($JS(msgType)).append("'");
     }
     sb.append("}");%>
 <div id="pageContent"></div>

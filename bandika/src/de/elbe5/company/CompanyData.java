@@ -9,7 +9,7 @@
 package de.elbe5.company;
 
 import de.elbe5.base.data.BaseData;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 
 public class CompanyData extends BaseData {
 
@@ -99,7 +99,7 @@ public class CompanyData extends BaseData {
 
     // multiple data
 
-    public void readSettingsRequestData(SessionRequestData rdata) {
+    public void readSettingsRequestData(RequestData rdata) {
         setName(rdata.getString("name"));
         setStreet(rdata.getString("street"));
         setZipCode(rdata.getString("zipCode"));

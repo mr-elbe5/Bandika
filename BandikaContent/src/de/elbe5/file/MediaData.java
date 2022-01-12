@@ -9,7 +9,7 @@
 package de.elbe5.file;
 
 import de.elbe5.base.data.BinaryFile;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 
 public class MediaData extends FileData {
 
@@ -19,7 +19,7 @@ public class MediaData extends FileData {
     // multiple data
 
     @Override
-    public void readSettingsRequestData(SessionRequestData rdata) {
+    public void readSettingsRequestData(RequestData rdata) {
         super.readSettingsRequestData(rdata);
         BinaryFile file = rdata.getFile("file");
         createFromBinaryFile(file);

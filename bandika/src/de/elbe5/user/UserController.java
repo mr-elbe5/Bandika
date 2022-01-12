@@ -44,47 +44,47 @@ public class UserController extends Controller {
         return KEY;
     }
 
-    public IResponse openLogin(SessionRequestData rdata) {
+    public IResponse openLogin(RequestData rdata) {
         return showLogin();
     }
 
-    public IResponse login(SessionRequestData rdata) {
+    public IResponse login(RequestData rdata) {
         checkRights(rdata.isPostback());
         String login = rdata.getString("login");
         String pwd = rdata.getString("password");
         if (login.length() == 0 || pwd.length() == 0) {
-            rdata.setMessage(Strings.string("_notComplete",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.string("_notComplete",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_ERROR);
             return openLogin(rdata);
         }
         UserData data = UserBean.getInstance().loginUser(login, pwd);
         if (data == null) {
             Log.info("bad login of "+login);
-            rdata.setMessage(Strings.string("_badLogin",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.string("_badLogin",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_ERROR);
             return openLogin(rdata);
         }
         rdata.setSessionUser(data);
         return showHome();
     }
 
-    public IResponse showCaptcha(SessionRequestData rdata) {
+    public IResponse showCaptcha(RequestData rdata) {
         String captcha = UserSecurity.generateCaptchaString();
-        rdata.setSessionObject(RequestData.KEY_CAPTCHA, captcha);
+        rdata.setSessionObject(RequestKeys.KEY_CAPTCHA, captcha);
         BinaryFile data = UserSecurity.getCaptcha(captcha);
         assert data != null;
         return new MemoryFileResponse(data);
     }
 
-    public IResponse logout(SessionRequestData rdata) {
+    public IResponse logout(RequestData rdata) {
         Locale locale = rdata.getLocale();
         rdata.setSessionUser(null);
         rdata.resetSession();
-        rdata.setMessage(Strings.string("_loggedOut",locale), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_loggedOut",locale), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showHome();
     }
 
 
 
-    public IResponse openEditUser(SessionRequestData rdata) {
+    public IResponse openEditUser(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int userId = rdata.getId();
         UserData data = UserBean.getInstance().getUser(userId);
@@ -92,7 +92,7 @@ public class UserController extends Controller {
         return showEditUser();
     }
 
-    public IResponse openCreateUser(SessionRequestData rdata) {
+    public IResponse openCreateUser(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         UserData data = new UserData();
         data.setNew(true);
@@ -101,7 +101,7 @@ public class UserController extends Controller {
         return showEditUser();
     }
 
-    public IResponse saveUser(SessionRequestData rdata) {
+    public IResponse saveUser(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         UserData data = (UserData) rdata.getSessionObject("userData");
         assert(data!=null);
@@ -114,24 +114,24 @@ public class UserController extends Controller {
         if (rdata.getUserId() == data.getId()) {
             rdata.setSessionUser(data);
         }
-        rdata.setMessage(Strings.string("_userSaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_userSaved",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/admin/openPersonAdministration?userId=" + data.getId());
     }
 
-    public IResponse deleteUser(SessionRequestData rdata) {
+    public IResponse deleteUser(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
-            rdata.setMessage(Strings.string("_notDeletable",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.string("_notDeletable",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_ERROR);
             return new ForwardResponse("/ctrl/admin/openPersonAdministration");
         }
         UserBean.getInstance().deleteUser(id);
         UserCache.setDirty();
-        rdata.setMessage(Strings.string("_userDeleted",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_userDeleted",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openPersonAdministration");
     }
 
-    public IResponse showPortrait(SessionRequestData rdata) {
+    public IResponse showPortrait(RequestData rdata) {
         int userId = rdata.getId();
         BinaryFile file = UserBean.getInstance().getBinaryPortraitData(userId);
         assert(file!=null);

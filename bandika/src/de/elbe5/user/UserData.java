@@ -16,7 +16,7 @@ import de.elbe5.base.util.StringUtil;
 import de.elbe5.base.data.Strings;
 import de.elbe5.application.Configuration;
 import de.elbe5.group.GroupData;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
 
 import javax.imageio.ImageIO;
@@ -328,7 +328,7 @@ public class UserData extends BaseData {
 
     // multiple data
 
-    private void readBasicData(SessionRequestData rdata) {
+    private void readBasicData(RequestData rdata) {
         setCompanyId(rdata.getInt("companyId"));
         setTitle(rdata.getString("title"));
         setFirstName(rdata.getString("firstName"));
@@ -359,14 +359,14 @@ public class UserData extends BaseData {
         }
     }
 
-    private void checkBasics(SessionRequestData rdata) {
+    private void checkBasics(RequestData rdata) {
         if (lastName.isEmpty())
             rdata.addIncompleteField("lastName");
         if (email.isEmpty())
             rdata.addIncompleteField("email");
     }
 
-    public void readSettingsRequestData(SessionRequestData rdata) {
+    public void readSettingsRequestData(RequestData rdata) {
         readBasicData(rdata);
         setLogin(rdata.getString("login"));
         setPassword(rdata.getString("password"));
@@ -380,12 +380,12 @@ public class UserData extends BaseData {
         checkBasics(rdata);
     }
 
-    public void readProfileRequestData(SessionRequestData rdata) {
+    public void readProfileRequestData(RequestData rdata) {
         readBasicData(rdata);
         checkBasics(rdata);
     }
 
-    public void readRegistrationRequestData(SessionRequestData rdata) {
+    public void readRegistrationRequestData(RequestData rdata) {
         readBasicData(rdata);
         Locale locale = rdata.getLocale();
         setLogin(rdata.getString("login"));

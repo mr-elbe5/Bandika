@@ -6,19 +6,13 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.servlet;
+package de.elbe5.request;
 
-import de.elbe5.request.ContentSessionRequestData;
-import de.elbe5.request.SessionRequestData;
+public class ContentRequestKeys {
 
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.http.HttpServletRequest;
-
-@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 100, maxFileSize = 1024 * 1024 * 200, maxRequestSize = 1024 * 1024 * 200 * 5)
-public class ContentControllerServlet extends ControllerServlet {
-
-    protected SessionRequestData getNewSessionRequestData(String method, HttpServletRequest request){
-        return new ContentSessionRequestData(method, request);
-    }
+    public static final String KEY_CONTENT = "contentData";
+    public static final String KEY_DOCUMENT = "documentData";
+    public static final String KEY_IMAGE = "imageData";
+    public static final String KEY_MEDIA = "mediaData";
 
 }

@@ -9,16 +9,16 @@
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
+<%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.user.UserCache" %>
 <%@ page import="de.elbe5.file.ImageData" %>
-<%@ page import="de.elbe5.request.RequestData" %>
+<%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
+    RequestData rdata = RequestData.getRequestData(request);
     Locale locale = rdata.getLocale();
-    ImageData imageData = rdata.getSessionObject(RequestData.KEY_IMAGE,ImageData.class);
+    ImageData imageData = rdata.getSessionObject(ContentRequestKeys.KEY_IMAGE,ImageData.class);
     assert (imageData != null);
     String url = "/ctrl/image/saveImage/" + imageData.getId();
     boolean fileRequired= imageData.isNew();

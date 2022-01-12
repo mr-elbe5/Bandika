@@ -10,12 +10,12 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.content.ContentCache" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
-<%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.request.RequestData" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
+    RequestData rdata = RequestData.getRequestData(request);
     Locale locale = rdata.getLocale();
     int callbackNum = rdata.getInt("CKEditorFuncNum", -1);
 %>
@@ -63,30 +63,30 @@
                     <section class="treeSection">
                         <% if (rdata.hasAnyContentRight()) { %>
                         <ul class="tree filetree">
-                            <%rdata.setRequestObject(RequestData.KEY_CONTENT, ContentCache.getContentRoot());%>
+                            <%rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, ContentCache.getContentRoot());%>
                             <jsp:include page="/WEB-INF/_jsp/ckeditor/documentLinkBrowserFolder.inc.jsp" flush="true"/>
                         </ul>
-                        <%rdata.removeRequestObject(RequestData.KEY_CONTENT); }%>
+                        <%rdata.removeRequestObject(ContentRequestKeys.KEY_CONTENT); }%>
                     </section>
                 </div>
                 <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
                     <section class="treeSection">
                         <% if (rdata.hasAnyContentRight()) { %>
                         <ul class="tree filetree">
-                            <%rdata.setRequestObject(RequestData.KEY_CONTENT, ContentCache.getContentRoot());%>
+                            <%rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, ContentCache.getContentRoot());%>
                             <jsp:include page="/WEB-INF/_jsp/ckeditor/imageLinkBrowserFolder.inc.jsp" flush="true"/>
                         </ul>
-                        <%rdata.removeRequestObject(RequestData.KEY_CONTENT); }%>
+                        <%rdata.removeRequestObject(ContentRequestKeys.KEY_CONTENT); }%>
                     </section>
                 </div>
                 <div class="tab-pane fade" id="media" role="tabpanel" aria-labelledby="media-tab">
                     <section class="treeSection">
                         <% if (rdata.hasAnyContentRight()) { %>
                         <ul class="tree filetree">
-                            <%rdata.setRequestObject(RequestData.KEY_CONTENT, ContentCache.getContentRoot());%>
+                            <%rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, ContentCache.getContentRoot());%>
                             <jsp:include page="/WEB-INF/_jsp/ckeditor/mediaLinkBrowserFolder.inc.jsp" flush="true"/>
                         </ul>
-                        <%rdata.removeRequestObject(RequestData.KEY_CONTENT); }%>
+                        <%rdata.removeRequestObject(ContentRequestKeys.KEY_CONTENT); }%>
                     </section>
                 </div>
             </div>

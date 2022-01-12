@@ -1,14 +1,15 @@
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
+<%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="de.elbe5.content.ContentCache" %>
 <%@ page import="java.util.*" %>
+<%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
+    RequestData rdata = RequestData.getRequestData(request);
     ContentData home = ContentCache.getContentRoot();
-    ContentData currentContent = rdata.getCurrentContent();
+    ContentData currentContent = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
     if (currentContent == null)
         currentContent = home;
     if (home != null) {

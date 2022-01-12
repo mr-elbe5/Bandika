@@ -10,7 +10,7 @@ package de.elbe5.tag;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -22,7 +22,7 @@ public class FormErrorTag extends BaseTag {
     public int doStartTag() throws JspException {
         try {
             HttpServletRequest request = getRequest();
-            SessionRequestData rdata = SessionRequestData.getRequestData(request);
+            RequestData rdata = RequestData.getRequestData(request);
             if (rdata.hasFormError()) {
                 Writer writer = getWriter();
                 writer.write("<div class=\"formError\">\n");

@@ -9,7 +9,7 @@
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
+<%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.company.CompanyData" %>
 <%@ page import="de.elbe5.user.UserBean" %>
 <%@ page import="de.elbe5.user.UserData" %>
@@ -17,7 +17,7 @@
 <%@ page import="java.util.Locale" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
+    RequestData rdata = RequestData.getRequestData(request);
     Locale locale = rdata.getLocale();
     CompanyData company = rdata.getSessionObject("companyData",CompanyData.class);
     assert company != null;

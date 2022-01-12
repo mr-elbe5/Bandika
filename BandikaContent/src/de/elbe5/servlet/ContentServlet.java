@@ -10,10 +10,9 @@ package de.elbe5.servlet;
 
 import de.elbe5.application.Configuration;
 import de.elbe5.content.ContentController;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
+import de.elbe5.request.RequestKeys;
 import de.elbe5.response.IResponse;
-import de.elbe5.servlet.ResponseException;
-import de.elbe5.servlet.WebServlet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,8 +22,8 @@ public class ContentServlet extends WebServlet {
 
     protected void processRequest(String method, HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding(Configuration.ENCODING);
-        SessionRequestData rdata = new SessionRequestData(method, request);
-        request.setAttribute(SessionRequestData.KEY_REQUESTDATA, rdata);
+        RequestData rdata = new RequestData(method, request);
+        request.setAttribute(RequestKeys.KEY_REQUESTDATA, rdata);
         rdata.readRequestParams();
         rdata.initSession();
         try {

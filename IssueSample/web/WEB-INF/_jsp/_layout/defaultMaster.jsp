@@ -9,13 +9,13 @@
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
-<%@ page import="de.elbe5.application.Configuration" %>
 <%@ page import="de.elbe5.request.RequestData" %>
+<%@ page import="de.elbe5.application.Configuration" %>
+<%@ page import="de.elbe5.request.RequestKeys" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
+    RequestData rdata = RequestData.getRequestData(request);
     Locale locale=rdata.getLocale();
-    String title = rdata.getString(RequestData.KEY_TITLE, Configuration.getAppTitle());
+    String title = rdata.getString(RequestKeys.KEY_TITLE, Configuration.getAppTitle());
     String description= "";
 %>
 <!DOCTYPE html>

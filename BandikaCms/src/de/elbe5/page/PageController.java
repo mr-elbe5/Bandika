@@ -56,25 +56,21 @@ public class PageController extends ContentController {
 
     //frontend
     @Override
-    public IResponse openEditContentFrontend(SessionRequestData rdata) {
-        assert rdata instanceof ContentSessionRequestData;
-        ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
+    public IResponse openEditContentFrontend(RequestData rdata) {
         int contentId = rdata.getId();
         PageData data = ContentBean.getInstance().getContent(contentId,PageData.class);
         assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
         data.setEditValues(ContentBean.getInstance().getContent(data.getId()), rdata);
         data.startEditing();
-        crdata.setCurrentSessionContent(data);
+        rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
         return data.getDefaultView();
     }
 
     //frontend
     @Override
-    public IResponse showEditContentFrontend(SessionRequestData rdata) {
-        assert rdata instanceof ContentSessionRequestData;
-        ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
-        PageData data = crdata.getCurrentSessionContent(PageData.class);
+    public IResponse showEditContentFrontend(RequestData rdata) {
+        PageData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, PageData.class);
         assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
         return data.getDefaultView();
@@ -82,11 +78,9 @@ public class PageController extends ContentController {
 
     //frontend
     @Override
-    public IResponse saveContentFrontend(SessionRequestData rdata) {
-        assert rdata instanceof ContentSessionRequestData;
-        ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
+    public IResponse saveContentFrontend(RequestData rdata) {
         int contentId = rdata.getId();
-        PageData data = crdata.getCurrentSessionContent(PageData.class);
+        PageData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, PageData.class);
         assert(data != null && data.getId() == contentId);
         checkRights(data.hasUserEditRight(rdata));
         data.readFrontendRequestData(rdata);
@@ -96,25 +90,23 @@ public class PageController extends ContentController {
             return data.getDefaultView();
         }
         data.setViewType(ContentData.VIEW_TYPE_SHOW);
-        crdata.removeCurrentSessionContent();
+        rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
         ContentCache.setDirty();
         return show(rdata);
     }
 
     //frontend
     @Override
-    public IResponse cancelEditContentFrontend(SessionRequestData rdata) {
-        assert rdata instanceof ContentSessionRequestData;
-        ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
+    public IResponse cancelEditContentFrontend(RequestData rdata) {
         int contentId = rdata.getId();
-        PageData data = crdata.getCurrentSessionContent(PageData.class);
+        PageData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, PageData.class);
         assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
         data.stopEditing();
         return data.getDefaultView();
     }
 
-    public IResponse showDraft(SessionRequestData rdata){
+    public IResponse showDraft(RequestData rdata){
         int contentId = rdata.getId();
         ContentData data = ContentCache.getContent(contentId);
         assert(data!=null);
@@ -123,7 +115,7 @@ public class PageController extends ContentController {
         return data.getDefaultView();
     }
 
-    public IResponse showPublished(SessionRequestData rdata){
+    public IResponse showPublished(RequestData rdata){
         int contentId = rdata.getId();
         ContentData data = ContentCache.getContent(contentId);
         assert(data!=null);
@@ -133,7 +125,7 @@ public class PageController extends ContentController {
     }
 
     //frontend
-    public IResponse publishPage(SessionRequestData rdata){
+    public IResponse publishPage(RequestData rdata){
         int contentId = rdata.getId();
         Log.log("Publishing page" + contentId);
         PageData data=ContentBean.getInstance().getContent(contentId,PageData.class);
@@ -144,28 +136,22 @@ public class PageController extends ContentController {
         return data.getDefaultView();
     }
 
-    public IResponse openLinkBrowser(SessionRequestData rdata) {
-        assert rdata instanceof ContentSessionRequestData;
-        ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
-        ContentData data=crdata.getCurrentSessionContent();
+    public IResponse openLinkBrowser(RequestData rdata) {
+        ContentData data=rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
         return new ForwardResponse("/WEB-INF/_jsp/ckeditor/browseLinks.jsp");
     }
 
-    public IResponse openImageBrowser(SessionRequestData rdata) {
-        assert rdata instanceof ContentSessionRequestData;
-        ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
-        ContentData data=crdata.getCurrentSessionContent();
+    public IResponse openImageBrowser(RequestData rdata) {
+        ContentData data=rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
         return new ForwardResponse("/WEB-INF/_jsp/ckeditor/browseImages.jsp");
     }
 
-    public IResponse addImage(SessionRequestData rdata) {
-        assert rdata instanceof ContentSessionRequestData;
-        ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
-        ContentData data=crdata.getCurrentSessionContent();
+    public IResponse addImage(RequestData rdata) {
+        ContentData data=rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
         ImageData image=new ImageData();
@@ -177,7 +163,7 @@ public class PageController extends ContentController {
         return new ForwardResponse("/WEB-INF/_jsp/ckeditor/addImage.ajax.jsp");
     }
 
-    public IResponse republishPage(SessionRequestData rdata) {
+    public IResponse republishPage(RequestData rdata) {
         int contentId = rdata.getId();
 
         PageData page = ContentCache.getContent(contentId, PageData.class);
@@ -206,11 +192,9 @@ public class PageController extends ContentController {
         return new ForwardResponse("/ctrl/admin/openContentAdministration");
     }
 
-    public IResponse addPart(SessionRequestData rdata) {
-        assert rdata instanceof ContentSessionRequestData;
-        ContentSessionRequestData crdata = (ContentSessionRequestData)rdata;
+    public IResponse addPart(RequestData rdata) {
         int contentId = rdata.getId();
-        PageData data = crdata.getCurrentSessionContent(PageData.class);
+        PageData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, PageData.class);
         assert(data != null && data.getId() == contentId);
         checkRights(data.hasUserEditRight(rdata));
         int fromPartId = rdata.getInt("fromPartId", -1);
@@ -223,9 +207,9 @@ public class PageController extends ContentController {
         return new ForwardResponse("/WEB-INF/_jsp/page/newPart.ajax.jsp");
     }
 
-    public IResponse sendContact(SessionRequestData rdata) {
+    public IResponse sendContact(RequestData rdata) {
         String captcha = rdata.getString("captcha");
-        String sessionCaptcha = rdata.getSessionObject(RequestData.KEY_CAPTCHA, String.class);
+        String sessionCaptcha = rdata.getSessionObject(RequestKeys.KEY_CAPTCHA, String.class);
         if (!captcha.equals(sessionCaptcha)){
             rdata.addFormField("captcha");
             rdata.addFormError(Strings.string("_captchaError",rdata.getLocale()));
@@ -248,11 +232,11 @@ public class PageController extends ContentController {
         }
         message = String.format(Strings.html("_contactRequestText", rdata.getLocale()),name,email) + message;
         if (!MailHelper.sendPlainMail(Configuration.getMailReceiver(), Strings.string("_contactRequest",rdata.getLocale()), message)) {
-            rdata.setMessage(Strings.string("_contactRequestError",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.string("_contactRequestError",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_ERROR);
             return show(rdata);
         }
-        rdata.setMessage(Strings.string("_contactRequestSent",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
-        rdata.removeSessionObject(RequestData.KEY_CAPTCHA);
+        rdata.setMessage(Strings.string("_contactRequestSent",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.removeSessionObject(RequestKeys.KEY_CAPTCHA);
         return show(rdata);
     }
 

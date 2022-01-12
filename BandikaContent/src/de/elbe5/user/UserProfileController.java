@@ -16,7 +16,7 @@ import de.elbe5.content.ContentData;
 import de.elbe5.content.ContentResponse;
 import de.elbe5.content.JspContentData;
 import de.elbe5.request.RequestData;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestKeys;
 import de.elbe5.response.*;
 import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
@@ -47,7 +47,7 @@ public class UserProfileController extends Controller {
         return KEY;
     }
 
-    public IResponse changeLocale(SessionRequestData rdata) {
+    public IResponse changeLocale(RequestData rdata) {
         String language = rdata.getString("language");
         Locale locale = new Locale(language);
         rdata.setSessionLocale(locale);
@@ -55,17 +55,17 @@ public class UserProfileController extends Controller {
         return new RedirectResponse(home.getUrl());
     }
 
-    public IResponse openProfile(SessionRequestData rdata) {
+    public IResponse openProfile(RequestData rdata) {
         checkRights(rdata.isLoggedIn());
         return showProfile();
     }
 
-    public IResponse openChangePassword(SessionRequestData rdata) {
+    public IResponse openChangePassword(RequestData rdata) {
         checkRights(rdata.isLoggedIn());
         return showChangePassword();
     }
 
-    public IResponse changePassword(SessionRequestData rdata) {
+    public IResponse changePassword(RequestData rdata) {
         checkRights(rdata.isLoggedIn() && rdata.getUserId() == rdata.getId());
         UserData user = UserBean.getInstance().getUser(rdata.getLoginUser().getId());
         assert(user!=null);
@@ -92,16 +92,16 @@ public class UserProfileController extends Controller {
         }
         data.setPassword(newPassword);
         UserBean.getInstance().saveUserPassword(data);
-        rdata.setMessage(Strings.string("_passwordChanged",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_passwordChanged",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/user/openProfile");
     }
 
-    public IResponse openChangeProfile(SessionRequestData rdata) {
+    public IResponse openChangeProfile(RequestData rdata) {
         checkRights(rdata.isLoggedIn());
         return showChangeProfile();
     }
 
-    public IResponse changeProfile(SessionRequestData rdata) {
+    public IResponse changeProfile(RequestData rdata) {
         int userId = rdata.getId();
         checkRights(rdata.isLoggedIn() && rdata.getUserId() == userId);
         UserData data = UserBean.getInstance().getUser(userId);
@@ -112,17 +112,17 @@ public class UserProfileController extends Controller {
         UserBean.getInstance().saveUserProfile(data);
         rdata.setSessionUser(data);
         UserCache.setDirty();
-        rdata.setMessage(Strings.string("_userSaved",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_userSaved",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/user/openProfile");
     }
 
-    public IResponse openRegistration(SessionRequestData rdata) {
+    public IResponse openRegistration(RequestData rdata) {
         rdata.put("userData", new UserData());
-        rdata.setSessionObject(RequestData.KEY_CAPTCHA, UserSecurity.generateCaptchaString());
+        rdata.setSessionObject(RequestKeys.KEY_CAPTCHA, UserSecurity.generateCaptchaString());
         return showRegistration();
     }
 
-    public IResponse register(SessionRequestData rdata) {
+    public IResponse register(RequestData rdata) {
         UserData user = new UserData();
         rdata.put("userData", user);
         user.readRegistrationRequestData(rdata);
@@ -138,7 +138,7 @@ public class UserProfileController extends Controller {
             rdata.addFormError(Strings.string("_emailInUseError",rdata.getLocale()));
         }
         String captchaString = rdata.getString("captcha");
-        if (!captchaString.equals(rdata.getSessionObject(RequestData.KEY_CAPTCHA))) {
+        if (!captchaString.equals(rdata.getSessionObject(RequestKeys.KEY_CAPTCHA))) {
             rdata.addFormField("captcha");
             rdata.addFormError(Strings.string("_captchaError",rdata.getLocale()));
         }
@@ -155,25 +155,25 @@ public class UserProfileController extends Controller {
         Locale locale = rdata.getLocale();
         String mailText = Strings.string("_registrationVerifyMail",locale) + " " + rdata.getSessionHost() + "/ctrl/user/verifyEmail/" + user.getId() + "?approvalCode=" + user.getApprovalCode();
         if (!MailHelper.sendPlainMail(user.getEmail(), Strings.string("_registrationRequest",locale), mailText)) {
-            rdata.setMessage(Strings.string("_emailError",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.string("_emailError",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_ERROR);
             return showRegistration();
         }
         return showRegistrationDone();
     }
 
-    public IResponse verifyEmail(SessionRequestData rdata) {
+    public IResponse verifyEmail(RequestData rdata) {
         int userId = rdata.getId();
         String approvalCode = rdata.getString("approvalCode");
         UserData data = UserBean.getInstance().getUser(userId);
         if (approvalCode.isEmpty() || !approvalCode.equals(data.getApprovalCode())) {
-            rdata.setMessage(Strings.string("_emailVerificationFailed",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.string("_emailVerificationFailed",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_ERROR);
             return showHome();
         }
         UserBean.getInstance().saveUserVerifyEmail(data);
         Locale locale = rdata.getLocale();
         String mailText = Strings.string("_registrationRequestMail",locale) + " " + data.getName() + "(" + data.getId() + ")";
         if (!MailHelper.sendPlainMail(Configuration.getMailReceiver(), Strings.string("_registrationRequest",locale), mailText)) {
-            rdata.setMessage(Strings.string("_emailError",rdata.getLocale()), SessionRequestData.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.string("_emailError",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_ERROR);
             return showRegistration();
         }
         return showEmailVerification();

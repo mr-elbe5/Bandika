@@ -8,16 +8,16 @@
 --%><%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
+<%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.util.List" %>
 <%@ page import="de.elbe5.content.ContentData" %>
-<%@ page import="de.elbe5.request.RequestData" %>
+<%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
+    RequestData rdata = RequestData.getRequestData(request);
     Locale locale = rdata.getLocale();
-    ContentData contentData = rdata.getCurrentContent();
+    ContentData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
     assert contentData != null;
     List<String> childTypes=contentData.getChildClasses();
 %>
@@ -40,7 +40,7 @@
         <% if (contentData.getId() != ContentData.ID_ROOT){%>
         <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/content/deleteContent/<%=contentData.getId()%>');" title="<%=$SH("_delete",locale)%>"> </a>
         <%}%>
-        <% if (rdata.hasClipboardData(RequestData.KEY_CONTENT)) {%>
+        <% if (rdata.hasClipboardData(ContentRequestKeys.KEY_CONTENT)) {%>
         <a class="icon fa fa-paste" href="/ctrl/content/pasteContent?parentId=<%=contentData.getId()%>" title="<%=$SH("_pasteContent",locale)%>"> </a>
         <%
         }

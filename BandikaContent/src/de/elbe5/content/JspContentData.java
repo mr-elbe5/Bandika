@@ -8,7 +8,7 @@
  */
 package de.elbe5.content;
 
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 
 import javax.servlet.ServletException;
 import javax.servlet.jsp.JspWriter;
@@ -34,7 +34,7 @@ public class JspContentData extends ContentData {
 
     // view
 
-    public void displayContent(PageContext context, SessionRequestData rdata) throws IOException, ServletException {
+    public void displayContent(PageContext context, RequestData rdata) throws IOException, ServletException {
         JspWriter writer = context.getOut();
         writer.write("<div id=\"pageContent\" class=\"viewArea\">");
         context.include(getJsp());
@@ -44,7 +44,7 @@ public class JspContentData extends ContentData {
     // multiple data
 
     @Override
-    public void copyData(ContentData data, SessionRequestData rdata) {
+    public void copyData(ContentData data, RequestData rdata) {
         super.copyData(data, rdata);
         if (!(data instanceof JspContentData))
             return;

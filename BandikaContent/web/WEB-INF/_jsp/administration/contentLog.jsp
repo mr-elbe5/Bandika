@@ -1,7 +1,7 @@
 <%@ page import="de.elbe5.content.ContentDayLog" %>
 <%@ page import="java.util.List" %>
 <%@ page import="de.elbe5.content.ContentBean" %>
-<%@ page import="de.elbe5.request.SessionRequestData" %>
+<%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.content.ContentLog" %>
 <%@ page import="de.elbe5.content.ContentCache" %><%--
   Bandika CMS - A Java based modular Content Management System
@@ -16,7 +16,7 @@
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
-    SessionRequestData rdata = SessionRequestData.getRequestData(request);
+    RequestData rdata = RequestData.getRequestData(request);
     Locale locale = rdata.getLocale();
     List<ContentDayLog> dayLogs = ContentBean.getInstance().getAllViewCounts();
 %>

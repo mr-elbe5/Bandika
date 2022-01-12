@@ -8,7 +8,7 @@
  */
 package de.elbe5.page;
 
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 
 public abstract class PartField implements Cloneable {
 
@@ -47,9 +47,9 @@ public abstract class PartField implements Cloneable {
 
     public abstract String getFieldType();
 
-    public abstract void readRequestData(SessionRequestData rdata);
+    public abstract void readRequestData(RequestData rdata);
 
-    public abstract void readFrontendRequestData(SessionRequestData rdata);
+    public abstract void readFrontendRequestData(RequestData rdata);
 
     /******************* search part *********************************/
 

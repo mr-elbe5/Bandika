@@ -10,7 +10,7 @@ package de.elbe5.page;
 
 import de.elbe5.base.data.BaseData;
 import de.elbe5.content.ContentBean;
-import de.elbe5.request.SessionRequestData;
+import de.elbe5.request.RequestData;
 
 import java.util.Locale;
 
@@ -104,14 +104,14 @@ public abstract class PagePartData extends BaseData implements Comparable<PagePa
         setId(PagePartBean.getInstance().getNextPartId());
     }
 
-    public void setCreateValues(SessionRequestData rdata) {
+    public void setCreateValues(RequestData rdata) {
         String sectionName = rdata.getString("sectionName");
         setSectionName(sectionName);
         setId(PagePartBean.getInstance().getNextPartId());
         setNew(true);
     }
 
-    public void readFrontendRequestData(SessionRequestData rdata) {
+    public void readFrontendRequestData(RequestData rdata) {
         // -1 if deleted
         setPosition(rdata.getInt(getPartPositionName(),-1));
     }
