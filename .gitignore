@@ -4,3 +4,4 @@
 *.scssc
 /build
 
+build.properties
