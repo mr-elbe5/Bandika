@@ -132,4 +132,8 @@
         </copy>
     </target>
 
+    <target name="undeployProject">
+        <delete file="${deploy.dir}/ROOT.war" />
+    </target>
+
 </project>

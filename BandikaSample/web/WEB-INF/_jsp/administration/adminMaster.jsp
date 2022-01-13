@@ -27,6 +27,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title><%=title%></title>
     <link rel="shortcut icon" href="/favicon.ico"/>
+    <link rel="stylesheet" href="/static-content/css/bootstrap.css"/>
     <link rel="stylesheet" href="/static-content/css/bandika.css"/>
     <link rel="stylesheet" href="/static-content/css/layout.css"/>
     <script type="text/javascript" src="/static-content/js/jquery-1.12.4.min.js"></script>
@@ -40,6 +41,7 @@
     <header>
         <section class="sysnav">
             <ul class="nav justify-content-end">
+                <li class="nav-item"><a class="nav-link fa fa-sign-out" href="/ctrl/user/logout" title="<%=$SH("_logout", locale)%>"></a></li>
                 <li class="nav-item"><a class="nav-link fa fa-home" href="/" title="<%=$SH("_home", locale)%>"></a></li>
             </ul>
         </section>
@@ -63,16 +65,6 @@
                             <li class="nav-item">
                                 <a class="nav-link"
                                         href="/ctrl/admin/openPersonAdministration"><%=$SH("_personAdministration",locale)%>
-                                </a>
-                            </li>
-                            <%}%>
-                            <% if (rdata.hasSystemRight(SystemZone.CONTENTEDIT)){%>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/ctrl/admin/openContentAdministration"><%=$SH("_contentAdministration",locale)%>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/ctrl/admin/openContentLog"><%=$SH("_contentLog",locale)%>
                                 </a>
                             </li>
                             <%}%>

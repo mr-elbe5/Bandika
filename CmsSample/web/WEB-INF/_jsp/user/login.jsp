@@ -26,6 +26,7 @@
     <title><%=title%>
     </title>
     <link rel="shortcut icon" href="/favicon.ico"/>
+    <link rel="stylesheet" href="/static-content/css/bootstrap.css"/>
     <link rel="stylesheet" href="/static-content/css/bandika.css"/>
     <link rel="stylesheet" href="/static-content/css/layout.css"/>
     <script type="text/javascript" src="/static-content/js/jquery-1.12.4.min.js"></script>

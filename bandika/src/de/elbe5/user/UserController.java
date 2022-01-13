@@ -63,6 +63,9 @@ public class UserController extends Controller {
             return openLogin(rdata);
         }
         rdata.setSessionUser(data);
+        String next = rdata.getString("next");
+        if (!next.isEmpty())
+                return new ForwardResponse(next);
         return showHome();
     }
 
@@ -79,10 +82,11 @@ public class UserController extends Controller {
         rdata.setSessionUser(null);
         rdata.resetSession();
         rdata.setMessage(Strings.string("_loggedOut",locale), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        String next = rdata.getString("next");
+        if (!next.isEmpty())
+            return new ForwardResponse(next);
         return showHome();
     }
-
-
 
     public IResponse openEditUser(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));

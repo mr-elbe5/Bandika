@@ -26,6 +26,7 @@
     <title><%=title%>
     </title>
     <link rel="shortcut icon" href="/favicon.ico"/>
+    <link rel="stylesheet" href="/static-content/css/bootstrap.css"/>
     <link rel="stylesheet" href="/static-content/css/bandika.css"/>
     <link rel="stylesheet" href="/static-content/css/layout.css"/>
     <script type="text/javascript" src="/static-content/js/jquery-1.12.4.min.js"></script>
@@ -38,6 +39,7 @@
         <form:message/>
         <section class="mainSection loginSection text-center">
             <form class="form" action="/ctrl/user/login" method="post" name="loginForm" accept-charset="UTF-8">
+                <input type = "hidden" name="next" value="/admin.jsp" />
                 <img class="mb-4" src="/static-content/img/logo-dark.png" alt="<%=Configuration.getAppTitle()%>">
                 <label for="login" class="sr-only"><%=$SH("_loginName",locale)%>
                 </label>
