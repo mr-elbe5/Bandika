@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
-<%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
+<%@ include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.application.Configuration" %>
 <%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="java.util.Locale" %>

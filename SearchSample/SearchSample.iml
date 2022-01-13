@@ -7,7 +7,7 @@
           <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/web/WEB-INF/web.xml" />
         </descriptors>
         <webroots>
-          <root url="file://$MODULE_DIR$/web" relative="/" />
+          <root url="file://$MODULE_DIR$" relative="/" />
         </webroots>
         <sourceRoots />
       </configuration>
@@ -22,10 +22,11 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="catalina" level="project" />
     <orderEntry type="library" name="common" level="project" />
+    <orderEntry type="module" module-name="BandikaBase" />
     <orderEntry type="module" module-name="Bandika" />
-    <orderEntry type="module" module-name="BandikaSearch" />
     <orderEntry type="module" module-name="BandikaCms" />
     <orderEntry type="module" module-name="BandikaContent" />
     <orderEntry type="module" module-name="BandikaDocuments" />
+    <orderEntry type="module" module-name="BandikaSearch" />
   </component>
 </module>
