@@ -44,7 +44,7 @@ public class PartTag extends BaseTag {
                     StringUtil.write(writer,editStart,
                             partData.getPartWrapperId(),
                             StringUtil.toHtml(partData.getCssClass()),
-                            StringUtil.toHtml(partData.getEditTitle(rdata.getLocale()))
+                            StringUtil.toHtml(partData.getEditTitle())
                     );
                     getContext().include("/WEB-INF/_jsp/page/editPartHeader.inc.jsp", true);
                 }

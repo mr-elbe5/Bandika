@@ -12,7 +12,6 @@
 <%@ page import="de.elbe5.content.ContentCache" %>
 <%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="de.elbe5.base.data.Pair" %>
 <%@ page import="java.util.ArrayList" %>
@@ -20,7 +19,6 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
     ContentData contentData = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
     assert (contentData != null);
     //todo js
@@ -28,7 +26,7 @@
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title"><%=$SH("_sortChildPages", locale)%>
+            <h5 class="modal-title"><%=$SH("_sortChildPages")%>
             </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -37,7 +35,7 @@
         <form:form url="<%=url%>" name="pageform" ajax="true" multi="true">
             <div class="modal-body">
                 <form:formerror/>
-                <h3><%=$SH("_settings", locale)%>
+                <h3><%=$SH("_settings")%>
                 </h3>
                 <form:line label="_name"><%=$H(contentData.getDisplayName()) + "&nbsp;(" + contentData.getId() + ')'%>
                 </form:line>
@@ -47,9 +45,9 @@
                         childSortList.add(new Pair<>(subpage.getId(), subpage.getName()));
                     }
                     String name, onchange;%>
-                <h3><%=$SH("_subcontents", locale)%>
+                <h3><%=$SH("_subcontents")%>
                 </h3>
-                <form:line label="_name" padded="true"><%=$SH("_position", locale)%>
+                <form:line label="_name" padded="true"><%=$SH("_position")%>
                 </form:line>
                 <%
                     int idx = 0;
@@ -70,9 +68,9 @@
                     }%>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=$SH("_close", locale)%>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=$SH("_close")%>
                 </button>
-                <button type="submit" class="btn btn-primary"><%=$SH("_save", locale)%>
+                <button type="submit" class="btn btn-primary"><%=$SH("_save")%>
                 </button>
             </div>
         </form:form>

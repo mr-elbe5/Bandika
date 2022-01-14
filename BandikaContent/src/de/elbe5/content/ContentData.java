@@ -8,7 +8,6 @@
  */
 package de.elbe5.content;
 
-import de.elbe5.application.Configuration;
 import de.elbe5.base.data.BaseData;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
@@ -18,6 +17,8 @@ import de.elbe5.group.GroupBean;
 import de.elbe5.group.GroupData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
+import de.elbe5.response.IMasterInclude;
+import de.elbe5.response.MasterResponse;
 import de.elbe5.rights.Right;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.user.UserData;
@@ -28,7 +29,7 @@ import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.*;
 
-public class ContentData extends BaseData implements Comparable<ContentData> {
+public class ContentData extends BaseData implements IMasterInclude, Comparable<ContentData> {
 
     public static final String ACCESS_TYPE_OPEN = "OPEN";
     public static final String ACCESS_TYPE_INHERITS = "INHERIT";
@@ -50,7 +51,6 @@ public class ContentData extends BaseData implements Comparable<ContentData> {
     private String path = "";
     private String displayName = "";
     private String description = "";
-    private Locale locale = Configuration.getDefaultLocale();
     private String accessType = ACCESS_TYPE_OPEN;
     private String navType = NAV_TYPE_NONE;
     private boolean active = true;
@@ -60,8 +60,8 @@ public class ContentData extends BaseData implements Comparable<ContentData> {
     protected int parentId = 0;
     protected ContentData parent = null;
     protected int ranking = 0;
-    private List<ContentData> children = new ArrayList<>();
-    private List<FileData> files = new ArrayList<>();
+    private final List<ContentData> children = new ArrayList<>();
+    private final List<FileData> files = new ArrayList<>();
 
     //runtime
 
@@ -119,24 +119,6 @@ public class ContentData extends BaseData implements Comparable<ContentData> {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Locale getLocale() {
-        return locale;
-    }
-
-    public String getLanguage(){
-        return locale==null ? "" : locale.getLanguage();
-    }
-
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-    }
-
-    public void setLanguage(String language) {
-        if (Configuration.hasLanguage(language)) {
-            setLocale(Configuration.getLocale(language));
-        }
     }
 
     public String getAccessType() {
@@ -453,7 +435,6 @@ public class ContentData extends BaseData implements Comparable<ContentData> {
         setChangerId(rdata.getUserId());
         setParentId(parent.getId());
         setParent(parent);
-        setLanguage(parent.getLanguage());
         inheritRightsFromParent();
     }
 
@@ -476,7 +457,6 @@ public class ContentData extends BaseData implements Comparable<ContentData> {
         setName(data.getName());
         setDisplayName(data.getDisplayName());
         setDescription(data.getDescription());
-        setLocale(data.getLocale());
         setCreatorId(rdata.getUserId());
         setChangerId(rdata.getUserId());
         setAccessType(data.getAccessType());
@@ -503,7 +483,6 @@ public class ContentData extends BaseData implements Comparable<ContentData> {
         setDisplayName(rdata.getString("displayName").trim());
         setName(StringUtil.toSafeWebName(getDisplayName()));
         setDescription(rdata.getString("description"));
-        setLanguage(rdata.getString("language"));
         setAccessType(rdata.getString("accessType"));
         setNavType(rdata.getString("navType"));
         setActive(rdata.getBoolean("active"));

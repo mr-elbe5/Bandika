@@ -10,17 +10,15 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.request.RequestData" %>
-<%@ page import="java.util.Locale" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
 %>
 
 <li class="open">
-    <span><%=$SH("_search",locale)%></span>
+    <span><%=$SH("_search")%></span>
     <div class="icons">
-        <a class="icon fa fa-globe" href="/ctrl/search/indexAllContent" title="<%=$SH("_indexAllContent",locale)%>"></a>
-        <a class="icon fa fa-users" href="/ctrl/search/indexAllUsers" title="<%=$SH("_indexAllUsers",locale)%>"></a>
+        <a class="icon fa fa-globe" href="/ctrl/search/indexAllContent" title="<%=$SH("_indexAllContent")%>"></a>
+        <a class="icon fa fa-users" href="/ctrl/search/indexAllUsers" title="<%=$SH("_indexAllUsers")%>"></a>
     </div>
 </li>

@@ -14,12 +14,12 @@
 <%@ page import="de.elbe5.application.Configuration" %>
 <%@ page import="de.elbe5.content.ContentCache" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.request.RequestKeys" %>
 <%@ page import="de.elbe5.request.ContentRequestKeys" %>
+<%@ page import="de.elbe5.response.IMasterInclude" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale=rdata.getLocale();
+    IMasterInclude masterInclude = rdata.getRequestObject(RequestKeys.KEY_MASTERINCLUDE, IMasterInclude.class);
     ContentData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
     List<Integer> parentIds = ContentCache.getParentContentIds(contentData);
     String title = rdata.getString(RequestKeys.KEY_TITLE, Configuration.getAppTitle()) + (contentData!=null ? " | " + contentData.getDisplayName() : "");
@@ -27,7 +27,7 @@
     String description=contentData!=null ? contentData.getDescription() : "";
 %>
 <!DOCTYPE html>
-<html lang="<%=locale.getLanguage()%>">
+<html lang="<%=Configuration.getLocale().getLanguage()%>">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -84,9 +84,9 @@
         </header>
         <main id="main" role="main">
             <div id="pageContainer">
-                <% if (contentData!=null) {
+                <% if (masterInclude!=null){
                     try {
-                        contentData.displayContent(pageContext, rdata);
+                        masterInclude.displayContent(pageContext, rdata);
                     } catch (Exception ignore) {
                     }
                 }%>
@@ -97,7 +97,7 @@
         <footer class="footer">
             <ul class="nav">
                 <li class="nav-item">
-                    <a class="nav-link">&copy; <%=$SH("layout.copyright", locale)%>
+                    <a class="nav-link">&copy; <%=$SH("layout.copyright")%>
                     </a>
                 </li>
                 <% for (ContentData data : ContentCache.getFooterList()) {

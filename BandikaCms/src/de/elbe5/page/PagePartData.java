@@ -95,7 +95,7 @@ public abstract class PagePartData extends BaseData implements Comparable<PagePa
         this.editable = editable;
     }
 
-    public String getEditTitle(Locale locale) {
+    public String getEditTitle() {
         return "Section Part, ID=" + getId();
     }
 

@@ -9,7 +9,6 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.request.RequestData" %>
-<%@ page import="java.util.Locale" %>
 <%@ page import="java.util.List" %>
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="de.elbe5.file.ImageData" %>
@@ -17,27 +16,27 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
     ContentData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
     assert contentData != null;
     List<String> imageTypes=contentData.getImageClasses();
     int fileId=rdata.getInt("fileId");
 %>
         <li class="images open">
-            <span>[<%=$SH("_images", locale)%>]</span>
+            <span>[<%=$SH("_images")%>]</span>
             <%if (contentData.hasUserEditRight(rdata)) {%>
             <div class="icons">
                 <% if (rdata.hasClipboardData(ContentRequestKeys.KEY_IMAGE)) {%>
-                <a class="icon fa fa-paste" href="/ctrl/image/pasteImage?parentId=<%=contentData.getId()%>" title="<%=$SH("_pasteImage",locale)%>"> </a>
+                <a class="icon fa fa-paste" href="/ctrl/image/pasteImage?parentId=<%=contentData.getId()%>" title="<%=$SH("_pasteImage")%>"> </a>
                 <%}
                     if (!imageTypes.isEmpty()) {
                         if (imageTypes.size() == 1){%>
-                <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/image/openCreateImage?parentId=<%=contentData.getId()%>&type=<%=imageTypes.get(0)%>');" title="<%=$SH("_newImage",locale)%>"></a>
+                <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/image/openCreateImage?parentId=<%=contentData.getId()%>&type=<%=imageTypes.get(0)%>');" title="<%=$SH("_newImage")%>"></a>
                     <%} else {%>
-                <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="<%=$SH("_newImage",locale)%>"></a>
+                <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="<%=$SH("_newImage")%>"></a>
                 <div class="dropdown-menu">
                     <%for (String imageType : imageTypes) {
-                        String name = $SH("class."+imageType, locale);%>
+                        String name = $SH("class."+imageType);
+                    %>
                     <a class="dropdown-item" onclick="return openModalDialog('/ctrl/image/openCreateImage?parentId=<%=contentData.getId()%>&type=<%=imageType%>');"><%=name%>
                     </a>
                     <%}%>
@@ -59,12 +58,12 @@
                             </span>
                         </span>
                         <div class="icons">
-                            <a class="icon fa fa-eye" href="<%=image.getURL()%>" target="_blank" title="<%=$SH("_view",locale)%>"> </a>
-                            <a class="icon fa fa-download" href="<%=image.getURL()%>?download=true" title="<%=$SH("_download",locale)%>"> </a>
-                            <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/image/openEditImage/<%=image.getId()%>');" title="<%=$SH("_edit",locale)%>"> </a>
-                            <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/image/cutImage/<%=image.getId()%>');" title="<%=$SH("_cut",locale)%>"> </a>
-                            <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/image/copyImage/<%=image.getId()%>');" title="<%=$SH("_copy",locale)%>"> </a>
-                            <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/image/deleteImage/<%=image.getId()%>');" title="<%=$SH("_delete",locale)%>"> </a>
+                            <a class="icon fa fa-eye" href="<%=image.getURL()%>" target="_blank" title="<%=$SH("_view")%>"> </a>
+                            <a class="icon fa fa-download" href="<%=image.getURL()%>?download=true" title="<%=$SH("_download")%>"> </a>
+                            <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/image/openEditImage/<%=image.getId()%>');" title="<%=$SH("_edit")%>"> </a>
+                            <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/image/cutImage/<%=image.getId()%>');" title="<%=$SH("_cut")%>"> </a>
+                            <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/image/copyImage/<%=image.getId()%>');" title="<%=$SH("_copy")%>"> </a>
+                            <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/image/deleteImage/<%=image.getId()%>');" title="<%=$SH("_delete")%>"> </a>
                         </div>
                     </div>
                 </li>

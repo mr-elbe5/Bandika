@@ -9,14 +9,12 @@
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.rights.SystemZone" %>
 <%@ page import="de.elbe5.request.RequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
     String title = rdata.getString(RequestKeys.KEY_TITLE);
     String includeUrl = rdata.getString(RequestKeys.KEY_JSP);
 %>
@@ -41,7 +39,7 @@
             <div class="top row">
                 <section class="col-12 sysnav">
                     <ul class="nav justify-content-end">
-                        <li class="nav-item"><a class="nav-link fa fa-home" href="/" title="<%=$SH("_home", locale)%>"></a></li>
+                        <li class="nav-item"><a class="nav-link fa fa-home" href="/" title="<%=$SH("_home")%>"></a></li>
                     </ul>
                 </section>
             </div>
@@ -53,24 +51,24 @@
                             <% if (rdata.hasSystemRight(SystemZone.APPLICATION)){%>
                             <li class="nav-item">
                                 <a class="nav-link"
-                                        href="/ctrl/admin/openSystemAdministration"><%=$SH("_systemAdministration",locale)%>
+                                        href="/ctrl/admin/openSystemAdministration"><%=$SH("_systemAdministration")%>
                                 </a>
                             </li>
                             <%}%>
                             <% if (rdata.hasSystemRight(SystemZone.USER)){%>
                             <li class="nav-item">
                                 <a class="nav-link"
-                                        href="/ctrl/admin/openPersonAdministration"><%=$SH("_personAdministration",locale)%>
+                                        href="/ctrl/admin/openPersonAdministration"><%=$SH("_personAdministration")%>
                                 </a>
                             </li>
                             <%}%>
                             <% if (rdata.hasSystemRight(SystemZone.CONTENTEDIT)){%>
                             <li class="nav-item">
-                                <a class="nav-link" href="/ctrl/admin/openContentAdministration"><%=$SH("_contentAdministration",locale)%>
+                                <a class="nav-link" href="/ctrl/admin/openContentAdministration"><%=$SH("_contentAdministration")%>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/ctrl/admin/openContentLog"><%=$SH("_contentLog",locale)%>
+                                <a class="nav-link" href="/ctrl/admin/openContentLog"><%=$SH("_contentLog")%>
                                 </a>
                             </li>
                             <%}%>
@@ -82,7 +80,7 @@
                 <section class="bc">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/"><%=$SH("_home",locale)%>
+                            <li class="breadcrumb-item"><a href="/"><%=$SH("_home")%>
                             </a></li>
                             <li class="breadcrumb-item"><a><%=$H(title)%>
                             </a></li>
@@ -101,7 +99,7 @@
         <footer>
             <div class="container">
                 <ul class="nav">
-                    <%=$SH("layout.copyright",locale)%>
+                    <%=$SH("layout.copyright")%>
                 </ul>
             </div>
         </footer>
@@ -110,11 +108,11 @@
 </div>
 <script type="text/javascript">
     function confirmDelete() {
-        return confirm('<%=$SJ("_confirmDelete",locale)%>');
+        return confirm('<%=$SJ("_confirmDelete")%>');
     }
 
     function confirmExecute() {
-        return confirm('<%=$SJ("_confirmExecute",locale)%>');
+        return confirm('<%=$SJ("_confirmExecute")%>');
     }
 </script>
 

@@ -11,18 +11,16 @@
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.content.ContentCache" %>
 <%@ page import="de.elbe5.request.RequestData" %>
-<%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
     int callbackNum = rdata.getInt("CKEditorFuncNum", -1);
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title"><%=$SH("_selectLink",locale)%>
+            <h5 class="modal-title"><%=$SH("_selectLink")%>
             </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -32,19 +30,19 @@
             <form:message/>
             <ul class="nav nav-tabs" id="selectTab" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" id="pages-tab" data-toggle="tab" href="#pages" role="tab" aria-controls="pages" aria-selected="true"><%=$SH("_pages",locale)%>
+                    <a class="nav-link active" id="pages-tab" data-toggle="tab" href="#pages" role="tab" aria-controls="pages" aria-selected="true"><%=$SH("_pages")%>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="documents-tab" data-toggle="tab" href="#documents" role="tab" aria-controls="documents" aria-selected="false"><%=$SH("_documents",locale)%>
+                    <a class="nav-link" id="documents-tab" data-toggle="tab" href="#documents" role="tab" aria-controls="documents" aria-selected="false"><%=$SH("_documents")%>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="images-tab" data-toggle="tab" href="#images" role="tab" aria-controls="images" aria-selected="false"><%=$SH("_images",locale)%>
+                    <a class="nav-link" id="images-tab" data-toggle="tab" href="#images" role="tab" aria-controls="images" aria-selected="false"><%=$SH("_images")%>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="media-tab" data-toggle="tab" href="#media" role="tab" aria-controls="media" aria-selected="false"><%=$SH("_media",locale)%>
+                    <a class="nav-link" id="media-tab" data-toggle="tab" href="#media" role="tab" aria-controls="media" aria-selected="false"><%=$SH("_media")%>
                     </a>
                 </li>
             </ul>
@@ -92,7 +90,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=$SH("_cancel",locale)%>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=$SH("_cancel")%>
             </button>
         </div>
     </div>

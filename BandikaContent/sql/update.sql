@@ -1,0 +1,1 @@
+alter table t_content drop column language;

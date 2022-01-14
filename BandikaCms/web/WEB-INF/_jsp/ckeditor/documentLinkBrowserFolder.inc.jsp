@@ -10,7 +10,6 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.request.RequestData" %>
-<%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="de.elbe5.file.DocumentData" %>
 <%@ page import="java.util.List" %>
@@ -18,7 +17,6 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
     ContentData contentData = rdata.getRequestObject(ContentRequestKeys.KEY_CONTENT,ContentData.class);
     assert contentData != null;%>
 <li class="open">
@@ -34,7 +32,7 @@
                 <a id="<%=document.getId()%>" href="" onclick="return ckLinkCallback('<%=document.getURL()%>?download=true');">
                     <%=$H(document.getDisplayName())%>
                 </a>
-                <a class="fa fa-eye" title="<%=$SH("_download",locale)%>" href="<%=document.getURL()%>?download=true"> </a>
+                <a class="fa fa-eye" title="<%=$SH("_download")%>" href="<%=document.getURL()%>?download=true"> </a>
             </div>
         </li>
         <%}

@@ -10,7 +10,6 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.request.RequestData" %>
-<%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="de.elbe5.file.ImageData" %>
 <%@ page import="de.elbe5.content.ContentCache" %>
@@ -18,7 +17,6 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
     ContentData contentData = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT,ContentData.class);
     assert contentData != null;
     int imageId=rdata.getInt("imageId");
@@ -32,7 +30,7 @@
             <img src="/ctrl/image/showPreview/<%=image.getId()%>" alt="<%=$H(image.getDisplayName())%>"/>
             <%=$H(image.getDisplayName())%>
         </a>
-        <a class="fa fa-eye" title="<%=$SH("_view",locale)%>" href="<%=image.getURL()%>" target="_blank"> </a>
+        <a class="fa fa-eye" title="<%=$SH("_view")%>" href="<%=image.getURL()%>" target="_blank"> </a>
     </div>
 </li>
 <%}%>

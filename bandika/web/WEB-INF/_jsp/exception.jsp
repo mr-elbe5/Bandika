@@ -1,4 +1,4 @@
-<%--
+<%@ page import="de.elbe5.application.Configuration" %><%--
   Bandika CMS - A Java based modular Content Management System
   Copyright (C) 2009-2021 Michael Roennau
 
@@ -13,10 +13,9 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 
 <%
-    Locale locale = request.getLocale();
     String errorKey = (String) request.getAttribute("errorKey");
-    String error=$SH("_error",locale);
-    String errorText = $SH(errorKey, locale);
+    String error=$SH("_error");
+    String errorText = $SH(errorKey);
 %>
 <html lang="en">
 <head>
@@ -63,7 +62,7 @@
 <main>
     <h1><%=error%></h1>
     <div class="errorText"><%=errorText%></div>
-    <div class="link"><a href="/" title="Home"><%=$SH("_home",locale)%></a></div>
+    <div class="link"><a href="/" title="Home"><%=$SH("_home")%></a></div>
 </main>
 </body>
 </html>

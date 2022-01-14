@@ -12,12 +12,10 @@
 <%@ page import="de.elbe5.request.RequestData" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
-    String userClass=rdata.isLoggedIn() ? "fa-user" : "fa-user-o";
 %>
 <ul class="nav justify-content-end">
     <%if (rdata.hasAnyElevatedSystemRight()) {%>
-    <li class="nav-item"><a class="nav-link fa fa-cog" href="/ctrl/admin/openAdministration" title="<%=$SH("_administration", locale)%>"></a></li>
+    <li class="nav-item"><a class="nav-link fa fa-cog" href="/ctrl/admin/openAdministration" title="<%=$SH("_administration")%>"></a></li>
     <%}
 
 </ul>

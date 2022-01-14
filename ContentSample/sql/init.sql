@@ -110,7 +110,6 @@ CREATE TABLE IF NOT EXISTS t_content
     description   VARCHAR(2000) NOT NULL DEFAULT '',
     creator_id    INTEGER       NOT NULL DEFAULT 1,
     changer_id    INTEGER       NOT NULL DEFAULT 1,
-    language      VARCHAR(10)   NOT NULL DEFAULT 'de',
     access_type   VARCHAR(10)   NOT NULL DEFAULT 'OPEN',
     nav_type      VARCHAR(10)   NOT NULL DEFAULT 'NONE',
     active        BOOLEAN       NOT NULL DEFAULT TRUE,
@@ -176,6 +175,17 @@ CREATE TABLE IF NOT EXISTS t_content_log
     CONSTRAINT t_content_log_fk1 FOREIGN KEY (content_id) REFERENCES t_content (id) ON DELETE CASCADE
 );
 
+CREATE OR REPLACE FUNCTION ADDCONTENT (id INTEGER,parent_id INTEGER,name VARCHAR,display_name VARCHAR,
+                                    description VARCHAR,user_id INTEGER)
+    RETURNS VOID AS
+$$
+BEGIN
+    INSERT INTO t_content (id,type,parent_id,ranking,name,display_name,description,creator_id,changer_id,access_type,nav_type)
+    VALUES (id,'ContentData',parent_id,0,name,display_name,description,user_id,user_id,'OPEN','HEADER');
+END
+$$
+    LANGUAGE plpgsql;
+
 -- root user
 INSERT INTO t_user (id,first_name,last_name,email,login,pwd,approval_code,approved)
 VALUES (1,'System','Administrator','root@localhost','root','','',TRUE);
@@ -189,3 +199,6 @@ VALUES ('cleanup','Cleanup Task','CONTINOUS',5,FALSE);
 --- set pwd 'pass' dependent on salt V3xfgDrxdl8=
 -- root user
 update t_user set pwd='A0y3+ZmqpMhWA21VFQMkyY6v74Y=' where id=1;
+
+-- de
+SELECT ADDCONTENT(1, null, 'home', 'Home', 'Home Page', 1);

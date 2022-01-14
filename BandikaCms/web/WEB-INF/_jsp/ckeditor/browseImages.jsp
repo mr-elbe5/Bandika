@@ -10,7 +10,6 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.request.RequestData" %>
-<%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.content.ContentCache" %>
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="java.util.List" %>
@@ -18,7 +17,6 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
     ContentData data = rdata.getRequestObject(ContentRequestKeys.KEY_CONTENT,ContentData.class);
     List<Integer> parentIds=ContentCache.getParentContentIds(data.getId());
     parentIds.add(data.getId());
@@ -28,7 +26,7 @@
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title"><%=$SH("_selectImage",locale)%>
+            <h5 class="modal-title"><%=$SH("_selectImage")%>
             </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -44,11 +42,11 @@
                 </ul>
             </section>
             <section class="addImage">
-                <div><input type="file" name="file" id="addedFile"/>&nbsp;<button class="btn btn-sm btn-outline-primary" onclick="return addImage()"><%=$SH("_add",locale)%></button></div>
+                <div><input type="file" name="file" id="addedFile"/>&nbsp;<button class="btn btn-sm btn-outline-primary" onclick="return addImage()"><%=$SH("_add")%></button></div>
             </section>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=$SH("_cancel",locale)%>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=$SH("_cancel")%>
             </button>
         </div>
     </div>

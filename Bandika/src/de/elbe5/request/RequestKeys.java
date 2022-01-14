@@ -12,8 +12,8 @@ package de.elbe5.request;
 public class RequestKeys {
 
     public static final String KEY_REQUESTDATA = "$REQUESTDATA";
+    public static final String KEY_MASTERINCLUDE = "$MASTERINCLUDE";
     public static final String KEY_URL = "$URL";
-    public static final String KEY_LOCALE = "$LOCALE";
     public static final String KEY_HOST = "$HOST";
     public static final String KEY_JSP = "$JSP";
     public static final String KEY_MESSAGE = "$MESSAGE";

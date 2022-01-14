@@ -9,7 +9,6 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.request.RequestData" %>
-<%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.page.PageData" %>
 <%@ page import="de.elbe5.page.SectionData" %>
 <%@ page import="de.elbe5.page.PagePartData" %>
@@ -21,7 +20,6 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
     PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
     assert contentData != null;
     SectionData sectionData = rdata.get("sectionData", SectionData.class);
@@ -32,16 +30,16 @@
     <%-- empty section --%>
     <div class="addPartButtons">
         <div class="btn-group btn-group-sm editheader" title="Section <%=$H(sectionData.getName())%>">
-            <button class="btn  btn-primary dropdown-toggle fa fa-plus" data-toggle="dropdown" title="<%=$SH("_newPart",locale)%>"></button>
+            <button class="btn  btn-primary dropdown-toggle fa fa-plus" data-toggle="dropdown" title="<%=$SH("_newPart")%>"></button>
             <div class="dropdown-menu">
                 <% for (String partType : PagePartFactory.getTypes()) {
                     if (PagePartFactory.useLayouts(partType)){
                         for (LayoutData layout : partLayouts){%>
-                <a class="dropdown-item" href="" onclick="return addPart(-1,'<%=$H(sectionData.getName())%>','<%=partType%>','<%=$H(layout.getName())%>');"><%=$SH(layout.getKey(),locale)%>
+                <a class="dropdown-item" href="" onclick="return addPart(-1,'<%=$H(sectionData.getName())%>','<%=partType%>','<%=$H(layout.getName())%>');"><%=$SH(layout.getKey())%>
                 </a>
                 <%}
                 } else {%>
-                <a class="dropdown-item" href="" onclick="return addPart(-1,'<%=$H(sectionData.getName())%>','<%=partType%>');"><%=$SH("class."+partType, locale)%>
+                <a class="dropdown-item" href="" onclick="return addPart(-1,'<%=$H(sectionData.getName())%>','<%=partType%>');"><%=$SH("class."+partType)%>
                 </a>
                 <%}
                 }%>

@@ -15,21 +15,18 @@ import java.util.*;
 
 public class Strings {
 
-    public static Locale defaultLocale = Locale.ENGLISH;
-
-    private final static Map<Locale, Map<String, String>> stringMap = new HashMap<>();
+    private final static Map<String, String> stringMap = new HashMap<>();
 
     public static void addBundle(String name, Locale locale){
-        Map<String, String> map = stringMap.computeIfAbsent(locale, k -> new HashMap<>());
         ResourceBundle bundle = ResourceBundle.getBundle(name, locale);
         for (String key : bundle.keySet()){
-            map.put(key, bundle.getString(key));
+            stringMap.put(key, bundle.getString(key));
         }
     }
 
-    public static String string(String key, Locale locale) {
+    public static String string(String key) {
         try {
-            return stringMap.get(locale).get(key);
+            return stringMap.get(key);
         }
         catch (Exception e){
             Log.warn("string not found: " + key);
@@ -37,28 +34,20 @@ public class Strings {
         }
     }
 
-    public static String string(String key) {
-        return string(key, defaultLocale);
-    }
-
-    public static String html(String key, Locale locale) {
-        return StringEscapeUtils.escapeHtml4(string(key, locale));
-    }
-
-    public static String htmlMultiline(String key, Locale locale) {
-        return StringEscapeUtils.escapeHtml4(string(key, locale)).replaceAll("\\\\n", "<br/>");
-    }
-
-    public static String js(String key, Locale locale) {
-        return StringEscapeUtils.escapeEcmaScript(string(key, locale));
-    }
-
-    public static String xml(String key, Locale locale) {
-        return StringEscapeUtils.escapeXml11(string(key, locale));
-    }
-
     public static String html(String key) {
-        return html(key, defaultLocale);
+        return StringEscapeUtils.escapeHtml4(string(key));
+    }
+
+    public static String htmlMultiline(String key) {
+        return StringEscapeUtils.escapeHtml4(string(key)).replaceAll("\\\\n", "<br/>");
+    }
+
+    public static String js(String key) {
+        return StringEscapeUtils.escapeEcmaScript(string(key));
+    }
+
+    public static String xml(String key) {
+        return StringEscapeUtils.escapeXml11(string(key));
     }
 
 }

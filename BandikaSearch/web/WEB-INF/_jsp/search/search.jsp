@@ -12,22 +12,20 @@
 <%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.search.PageSearchData" %>
 <%@ page import="de.elbe5.search.PageSearchResultData" %>
-<%@ page import="java.util.Locale" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
     PageSearchResultData pageResult = rdata.get("searchResultData",PageSearchResultData.class);
     assert(pageResult!=null);
 %>
 <form:message/>
 <section class="contentTop">
-    <h1><%=$SH("_search",locale)%>
+    <h1><%=$SH("_search")%>
     </h1>
     <form action="/ctrl/search/search" method="post" id="searchboxform" name="searchboxform" accept-charset="UTF-8">
         <div class="input-group">
             <label for="searchPattern"></label><input class="form-control mr-sm-2" id="searchPattern" name="searchPattern" maxlength="60" value="<%=$H(pageResult.getPattern())%>"/>
-            <button class="btn btn-outline-primary my-2 my-sm-0" type="submit"><%=$SH("_search",locale)%>
+            <button class="btn btn-outline-primary my-2 my-sm-0" type="submit"><%=$SH("_search")%>
             </button>
         </div>
     </form>
@@ -35,14 +33,14 @@
 <section class="searchSection">
     <div class="searchResults">
         <% if (!pageResult.getResults().isEmpty()) {%>
-        <h2><%=$SH("_searchResults",locale)%>
+        <h2><%=$SH("_searchResults")%>
         </h2>
         <% for (PageSearchData data : pageResult.getResults()) {
             String description = data.getDescriptionContext();
             String content = data.getContentContext();%>
         <div class="searchResult">
             <div class="searchTitle">
-                <a href="<%=data.getUrl()%>" title="<%=$SH("_show",locale)%>"><%=data.getNameContext()%>
+                <a href="<%=data.getUrl()%>" title="<%=$SH("_show")%>"><%=data.getNameContext()%>
                 </a>
             </div>
             <% if (!description.isEmpty()) {%>
@@ -56,7 +54,7 @@
         </div>
         <% }
         } else {%>
-        <span><%=$SH("_noResults",locale)%></span>
+        <span><%=$SH("_noResults")%></span>
         <%}%>
     </div>
 </section>

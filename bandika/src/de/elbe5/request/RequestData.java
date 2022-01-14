@@ -83,10 +83,6 @@ public class RequestData extends KeyValueMap {
         return getSessionUser();
     }
 
-    public Locale getLocale() {
-        return getSessionLocale();
-    }
-
     public int getUserId() {
         UserData user = getLoginUser();
         return user == null ? 0 : user.getId();
@@ -152,7 +148,7 @@ public class RequestData extends KeyValueMap {
         if (formError == null)
             return true;
         if (formError.isFormIncomplete())
-            formError.addFormError(Strings.string("_notComplete", getLocale()));
+            formError.addFormError(Strings.string("_notComplete"));
         return formError.isEmpty();
     }
 
@@ -334,9 +330,6 @@ public class RequestData extends KeyValueMap {
     public void initSession() {
         HttpSession session = request.getSession(true);
         if (session.isNew()) {
-            Locale requestLocale = request.getLocale();
-            if (Configuration.hasLanguage(requestLocale))
-                setSessionLocale(requestLocale);
             StringBuffer url = request.getRequestURL();
             String uri = request.getRequestURI();
             String host = url.substring(0, url.indexOf(uri));
@@ -445,26 +438,6 @@ public class RequestData extends KeyValueMap {
         return (UserData) getSessionObject(RequestKeys.KEY_LOGIN);
     }
 
-    public void setSessionLocale() {
-        setSessionLocale(Configuration.getDefaultLocale());
-    }
-
-    public Locale getSessionLocale() {
-        Locale locale = getSessionObject(RequestKeys.KEY_LOCALE,Locale.class);
-        if (locale == null) {
-            return Configuration.getDefaultLocale();
-        }
-        return locale;
-    }
-
-    public void setSessionLocale(Locale locale) {
-        if (Configuration.hasLanguage(locale)) {
-            setSessionObject(RequestKeys.KEY_LOCALE, locale);
-        } else {
-            setSessionObject(RequestKeys.KEY_LOCALE, Configuration.getDefaultLocale());
-        }
-    }
-
     public void setSessionHost(String host) {
         setSessionObject(RequestKeys.KEY_HOST, host);
     }
@@ -474,10 +447,8 @@ public class RequestData extends KeyValueMap {
     }
 
     public void resetSession() {
-        Locale locale = getLocale();
         removeAllSessionObjects();
         request.getSession(true);
-        setSessionLocale(locale);
     }
 
     /*************** cookie methods ***************/

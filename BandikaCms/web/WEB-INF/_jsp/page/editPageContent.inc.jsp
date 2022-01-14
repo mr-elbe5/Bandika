@@ -16,19 +16,18 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
-    Locale locale =rdata.getLocale();
     assert contentData != null;%>
     <form action="/ctrl/page/saveContentFrontend/<%=contentData.getId()%>" method="post" id="pageform" name="pageform" accept-charset="UTF-8">
         <div class="btn-group btn-group-sm pageEditButtons">
-            <button type="submit" class="btn btn-sm btn-success" onclick="updateEditors();"><%=$SH("_savePage", locale)%></button>
-            <button class="btn btn-sm btn-secondary" onclick="return linkTo('/ctrl/page/cancelEditContentFrontend/<%=contentData.getId()%>');"><%=$SH("_cancel", locale)%></button>
+            <button type="submit" class="btn btn-sm btn-success" onclick="updateEditors();"><%=$SH("_savePage")%></button>
+            <button class="btn btn-sm btn-secondary" onclick="return linkTo('/ctrl/page/cancelEditContentFrontend/<%=contentData.getId()%>');"><%=$SH("_cancel")%></button>
         </div>
         <jsp:include page="<%=contentData.getLayoutUrl()%>" flush="true" />
     </form>
     <script type="text/javascript">
 
         function confirmDelete() {
-            return confirm('<%=$SJ("_confirmDelete",locale)%>');
+            return confirm('<%=$SJ("_confirmDelete")%>');
         }
 
         function movePart(id,direction){

@@ -10,14 +10,12 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.request.RequestData" %>
-<%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.user.UserCache" %>
 <%@ page import="de.elbe5.file.MediaData" %>
 <%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
     MediaData mediaData = rdata.getSessionObject(ContentRequestKeys.KEY_MEDIA,MediaData.class);
     assert (mediaData != null);
     String url = "/ctrl/media/saveMedia/" + mediaData.getId();
@@ -26,7 +24,7 @@
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title"><%=$SH("_editMediaSettings",locale)%>
+            <h5 class="modal-title"><%=$SH("_editMediaSettings")%>
             </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -37,9 +35,9 @@
                 <form:formerror/>
                 <form:line label="_idAndFileName"><%=$I(mediaData.getId())%> - <%=$H(mediaData.getFileName())%>
                 </form:line>
-                <form:line label="_creation"><%=$DT(mediaData.getCreationDate(), locale)%> - <%=$H(UserCache.getUser(mediaData.getCreatorId()).getName())%>
+                <form:line label="_creation"><%=$DT(mediaData.getCreationDate())%> - <%=$H(UserCache.getUser(mediaData.getCreatorId()).getName())%>
                 </form:line>
-                <form:line label="_lastChange"><%=$DT(mediaData.getChangeDate(), locale)%> - <%=$H(UserCache.getUser(mediaData.getChangerId()).getName())%>
+                <form:line label="_lastChange"><%=$DT(mediaData.getChangeDate())%> - <%=$H(UserCache.getUser(mediaData.getChangerId()).getName())%>
                 </form:line>
 
                 <form:file name="file" label="_file" required="<%=fileRequired%>"/>
@@ -49,9 +47,9 @@
                 </form:line>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=$SH("_close",locale)%>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=$SH("_close")%>
                 </button>
-                <button type="submit" class="btn btn-primary"><%=$SH("_save",locale)%>
+                <button type="submit" class="btn btn-primary"><%=$SH("_save")%>
                 </button>
             </div>
         </form:form>

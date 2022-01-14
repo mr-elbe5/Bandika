@@ -29,12 +29,10 @@ import de.elbe5.timer.Timer;
 import de.elbe5.timer.TimerController;
 import de.elbe5.user.UserCache;
 import de.elbe5.user.UserController;
-import de.elbe5.user.UserProfileController;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import java.util.Locale;
 
 public class BandikaInitServlet extends InitServlet {
 
@@ -44,13 +42,10 @@ public class BandikaInitServlet extends InitServlet {
         System.out.println("initializing Bandika Application...");
         ServletContext context=servletConfig.getServletContext();
         ApplicationPath.initializePath(ApplicationPath.getCatalinaAppDir(context), ApplicationPath.getCatalinaAppROOTDir(context));
-        Strings.addBundle("bandika", Locale.ENGLISH);
-        Strings.addBundle("bandika", Locale.GERMAN);
-        Strings.addBundle("data", Locale.ENGLISH);
-        Strings.addBundle("data", Locale.GERMAN);
-        Strings.addBundle("layout", Locale.ENGLISH);
-        Strings.addBundle("layout", Locale.GERMAN);
         Configuration.setConfigs(context);
+        Strings.addBundle("bandika", Configuration.getLocale());
+        Strings.addBundle("data", Configuration.getLocale());
+        Strings.addBundle("layout", Configuration.getLocale());
         Log.initLog(ApplicationPath.getAppName());
         if (!DbConnector.getInstance().initialize("jdbc/bandika"))
             return;
@@ -67,7 +62,6 @@ public class BandikaInitServlet extends InitServlet {
         CkEditorController.register(new CkEditorController());
         TimerController.register(new TimerController());
         UserController.register(new UserController());
-        UserProfileController.register(new UserProfileController());
         ContentFactory.addClassInfo(ContentData.class, ContentBean.getInstance());
         FileFactory.addDocumentClassInfo(DocumentData.class, null);
         FileFactory.addImageClassInfo(ImageData.class, ImageBean.getInstance());

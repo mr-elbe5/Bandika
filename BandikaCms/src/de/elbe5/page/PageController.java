@@ -212,7 +212,7 @@ public class PageController extends ContentController {
         String sessionCaptcha = rdata.getSessionObject(RequestKeys.KEY_CAPTCHA, String.class);
         if (!captcha.equals(sessionCaptcha)){
             rdata.addFormField("captcha");
-            rdata.addFormError(Strings.string("_captchaError",rdata.getLocale()));
+            rdata.addFormError(Strings.string("_captchaError"));
             return show(rdata);
         }
         String name = rdata.getString("contactName");
@@ -230,12 +230,12 @@ public class PageController extends ContentController {
         if (!rdata.checkFormErrors()){
             return show(rdata);
         }
-        message = String.format(Strings.html("_contactRequestText", rdata.getLocale()),name,email) + message;
-        if (!MailHelper.sendPlainMail(Configuration.getMailReceiver(), Strings.string("_contactRequest",rdata.getLocale()), message)) {
-            rdata.setMessage(Strings.string("_contactRequestError",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_ERROR);
+        message = String.format(Strings.html("_contactRequestText"),name,email) + message;
+        if (!MailHelper.sendPlainMail(Configuration.getMailReceiver(), Strings.string("_contactRequest"), message)) {
+            rdata.setMessage(Strings.string("_contactRequestError"), RequestKeys.MESSAGE_TYPE_ERROR);
             return show(rdata);
         }
-        rdata.setMessage(Strings.string("_contactRequestSent",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_contactRequestSent"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         rdata.removeSessionObject(RequestKeys.KEY_CAPTCHA);
         return show(rdata);
     }

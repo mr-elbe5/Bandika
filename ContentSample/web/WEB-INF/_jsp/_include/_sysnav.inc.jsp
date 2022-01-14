@@ -10,28 +10,24 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.request.RequestData" %>
-<%@ page import="de.elbe5.content.ContentData" %>
-<%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    ContentData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-    Locale locale = rdata.getLocale();
     String userClass=rdata.isLoggedIn() ? "fa-user" : "fa-user-o";
 %>
 <ul class="nav justify-content-end">
     <%if (rdata.hasAnyElevatedSystemRight()) {%>
-    <li class="nav-item"><a class="nav-link fa fa-cog" href="/ctrl/admin/openAdministration" title="<%=$SH("_administration", locale)%>"></a></li>
+    <li class="nav-item"><a class="nav-link fa fa-cog" href="/ctrl/admin/openAdministration" title="<%=$SH("_administration")%>"></a></li>
     <%}%>
     <li class="nav-item">
-        <a class="nav-link fa <%=userClass%>" data-toggle="dropdown" title="<%=$SH("_user",locale)%>"></a>
+        <a class="nav-link fa <%=userClass%>" data-toggle="dropdown" title="<%=$SH("_user")%>"></a>
         <div class="dropdown-menu">
             <% if (rdata.isLoggedIn()) {%>
-            <a class="dropdown-item" href="/ctrl/user/openProfile"><%=$SH("_profile", locale)%>
+            <a class="dropdown-item" href="/ctrl/user/openProfile"><%=$SH("_profile")%>
             </a>
-            <a class="dropdown-item" href="/ctrl/user/logout"><%=$SH("_logout", locale)%>
+            <a class="dropdown-item" href="/ctrl/user/logout"><%=$SH("_logout")%>
             </a>
             <% } else {%>
-            <a class="dropdown-item" href="/ctrl/user/openLogin"><%=$SH("_login", locale)%>
+            <a class="dropdown-item" href="/ctrl/user/openLogin"><%=$SH("_login")%>
             </a>
             <%}%>
         </div>

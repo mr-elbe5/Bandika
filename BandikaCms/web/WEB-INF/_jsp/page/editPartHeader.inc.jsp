@@ -9,7 +9,6 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.request.RequestData" %>
-<%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.page.PageData" %>
 <%@ page import="de.elbe5.page.PagePartData" %>
 <%@ page import="de.elbe5.page.PagePartFactory" %>
@@ -20,7 +19,6 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
     PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
     assert contentData != null;
     PagePartData partData = rdata.get(PagePartData.KEY_PART, PagePartData.class);
@@ -31,29 +29,29 @@
             <div class="partEditButtons">
                 <div class="btn-group btn-group-sm" role="group">
                     <div class="btn-group btn-group-sm" role="group">
-                        <button type="button" class="btn btn-secondary fa fa-plus dropdown-toggle" data-toggle="dropdown" title="<%=$SH("_newPart",locale)%>"></button>
+                        <button type="button" class="btn btn-secondary fa fa-plus dropdown-toggle" data-toggle="dropdown" title="<%=$SH("_newPart")%>"></button>
                         <div class="dropdown-menu">
                             <% for (String partType : PagePartFactory.getTypes()) {
                                 if (PagePartFactory.useLayouts(partType)){
                                     for (LayoutData layout : partLayouts){%>
-                            <a class="dropdown-item" href="" onclick="return addPart(<%=partData.getId()%>,'<%=$H(partData.getSectionName())%>','<%=partType%>','<%=$H(layout.getName())%>');"><%=$SH(layout.getKey(),locale)%>
+                            <a class="dropdown-item" href="" onclick="return addPart(<%=partData.getId()%>,'<%=$H(partData.getSectionName())%>','<%=partType%>','<%=$H(layout.getName())%>');"><%=$SH(layout.getKey())%>
                             </a>
                                     <%}
                                 } else {%>
-                            <a class="dropdown-item" href="" onclick="return addPart(<%=partData.getId()%>,'<%=$H(partData.getSectionName())%>','<%=partType%>');"><%=$SH("class."+partType, locale)%>
+                            <a class="dropdown-item" href="" onclick="return addPart(<%=partData.getId()%>,'<%=$H(partData.getSectionName())%>','<%=partType%>');"><%=$SH("class."+partType)%>
                             </a>
                             <%}
                             }%>
                         </div>
                     </div>
                     <div class="btn-group btn-group-sm" role="group">
-                        <button type="button" class="btn  btn-secondary dropdown-toggle fa fa-ellipsis-h" data-toggle="dropdown" title="<%=$SH("_more",locale)%>"></button>
+                        <button type="button" class="btn  btn-secondary dropdown-toggle fa fa-ellipsis-h" data-toggle="dropdown" title="<%=$SH("_more")%>"></button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="" onclick="return movePart(<%=partData.getId()%>,-1);"><%=$SH("_up", locale)%>
+                            <a class="dropdown-item" href="" onclick="return movePart(<%=partData.getId()%>,-1);"><%=$SH("_up")%>
                             </a>
-                            <a class="dropdown-item" href="" onclick="return movePart(<%=partData.getId()%>,1);"><%=$SH("_down", locale)%>
+                            <a class="dropdown-item" href="" onclick="return movePart(<%=partData.getId()%>,1);"><%=$SH("_down")%>
                             </a>
-                            <a class="dropdown-item" href="" onclick="if (confirmDelete()) return deletePart(<%=partData.getId()%>);"><%=$SH("_delete", locale)%>
+                            <a class="dropdown-item" href="" onclick="if (confirmDelete()) return deletePart(<%=partData.getId()%>);"><%=$SH("_delete")%>
                             </a>
                         </div>
                     </div>

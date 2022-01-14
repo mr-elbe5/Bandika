@@ -37,7 +37,7 @@
     <header>
         <section class="sysnav">
             <ul class="nav justify-content-end">
-                <li class="nav-item"><a class="nav-link fa fa-home" href="/" title="<%=$SH("_home", locale)%>"></a></li>
+                <li class="nav-item"><a class="nav-link fa fa-home" href="/" title="<%=$SH("_home")%>"></a></li>
             </ul>
         </section>
         <div class="menu row">
@@ -58,7 +58,7 @@
         <div class="bc row">
             <section class="col-12">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/"><%=$SH("_home",locale)%>
+                    <li class="breadcrumb-item"><a href="/"><%=$SH("_home")%>
                     </a></li>
                     <li class="breadcrumb-item"><a><%=$H(title)%>
                     </a></li>
@@ -74,7 +74,7 @@
 </div>
 <div class="container fixed-bottom">
     <footer>
-        <div><%=$SH("layout.copyright",locale)%>
+        <div><%=$SH("layout.copyright")%>
         </div>
     </footer>
 </div>

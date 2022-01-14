@@ -8,7 +8,6 @@
  */
 package de.elbe5.application;
 
-import de.elbe5.base.data.Strings;
 import de.elbe5.base.mail.Mailer;
 
 import javax.servlet.ServletContext;
@@ -28,8 +27,8 @@ public class Configuration {
     private static String mailSender = null;
     private static String mailReceiver = null;
     private static int timerInterval = 30;
-    private static Locale defaultLocale = Locale.GERMAN;
-    private static Map<String,Locale> locales = new HashMap<>();
+    private static Locale locale = Locale.GERMAN;
+    private static final Map<String,Locale> locales = new HashMap<>();
 
     static{
         locales.put("de",Locale.GERMAN);
@@ -110,31 +109,14 @@ public class Configuration {
         Configuration.mailReceiver = mailReceiver;
     }
 
-    public static Locale getDefaultLocale() {
-        return defaultLocale;
+    public static Locale getLocale() {
+        return locale;
     }
 
-    public static void setDefaultLocale(Locale locale) {
+    public static void setLocale(Locale locale) {
         if (locale == null || !locales.containsValue(locale))
             return;
-        defaultLocale = locale;
-        Strings.defaultLocale = defaultLocale;
-    }
-
-    public static Collection<Locale> getLocales() {
-        return locales.values();
-    }
-
-    public static Locale getLocale(String language) {
-        return locales.get(language);
-    }
-
-    public static boolean hasLanguage(Locale locale) {
-        return locales.containsValue(locale);
-    }
-
-    public static boolean hasLanguage(String language) {
-        return locales.containsKey(language);
+        Configuration.locale = locale;
     }
 
     public static int getTimerInterval() {
@@ -164,10 +146,10 @@ public class Configuration {
         setTimerInterval(Integer.parseInt(getSafeInitParameter(servletContext,"timerInterval")));
         String language = getSafeInitParameter(servletContext,"defaultLanguage");
         try {
-            setDefaultLocale(new Locale(language));
+            setLocale(new Locale(language));
         } catch (Exception ignore) {
         }
-        System.out.println("default locale is "+ getDefaultLocale().getDisplayName());
+        System.out.println("language is "+ getLocale().getDisplayName());
     }
 
 }

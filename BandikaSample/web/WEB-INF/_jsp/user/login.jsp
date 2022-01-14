@@ -12,14 +12,12 @@
 <%@ include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.application.Configuration" %>
 <%@ page import="de.elbe5.request.RequestData" %>
-<%@ page import="java.util.Locale" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     String title = Configuration.getAppTitle();
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
 %>
-<html lang="<%=locale.getLanguage()%>">
+<html lang="<%=Configuration.getLocale().getLanguage()%>">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -41,18 +39,18 @@
             <form class="form" action="/ctrl/user/login" method="post" name="loginForm" accept-charset="UTF-8">
                 <input type = "hidden" name="next" value="/admin.jsp" />
                 <img class="mb-4" src="/static-content/img/logo-dark.png" alt="<%=Configuration.getAppTitle()%>">
-                <label for="login" class="sr-only"><%=$SH("_loginName",locale)%>
+                <label for="login" class="sr-only"><%=$SH("_loginName")%>
                 </label>
                 <input type="text" id="login" name="login" class="form-control"
-                        placeholder="<%=$SH("_loginName",locale)%>" required autofocus>
-                <label for="password" class="sr-only"><%=$SH("_password",locale)%>
+                        placeholder="<%=$SH("_loginName")%>" required autofocus>
+                <label for="password" class="sr-only"><%=$SH("_password")%>
                 </label>
                 <input type="password" id="password" name="password" class="form-control"
-                        placeholder="<%=$SH("_password",locale)%>" required>
-                <button class="btn btn-outline-primary" type="submit"><%=$SH("_login",locale)%>
+                        placeholder="<%=$SH("_password")%>" required>
+                <button class="btn btn-outline-primary" type="submit"><%=$SH("_login")%>
                 </button>
                 <button class="btn btn-outline-secondary"
-                        onclick="$(location).attr('href','/');"><%=$SH("_cancel",locale)%>
+                        onclick="$(location).attr('href','/');"><%=$SH("_cancel")%>
                 </button>
             </form>
         </section>

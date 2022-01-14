@@ -65,7 +65,7 @@ public class LayoutPartData extends PagePartData {
         return getTemplateUrl();
     }
 
-    public String getEditTitle(Locale lcale) {
+    public String getEditTitle() {
         return getLayout() + ", ID=" + getId();
     }
 

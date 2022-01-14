@@ -387,7 +387,6 @@ public class UserData extends BaseData {
 
     public void readRegistrationRequestData(RequestData rdata) {
         readBasicData(rdata);
-        Locale locale = rdata.getLocale();
         setLogin(rdata.getString("login"));
         String password1 = rdata.getString("password1");
         String password2 = rdata.getString("password2");
@@ -396,14 +395,14 @@ public class UserData extends BaseData {
             rdata.addIncompleteField("login");
         if (login.length() < UserData.MIN_LOGIN_LENGTH) {
             rdata.addFormField("login");
-            rdata.addFormError(Strings.string("_loginLengthError",locale));
+            rdata.addFormError(Strings.string("_loginLengthError"));
         }
         if (password1.length() < UserData.MIN_PASSWORD_LENGTH) {
             rdata.addFormField("password1");
-            rdata.addFormError(Strings.string("_passwordLengthError",locale));
+            rdata.addFormError(Strings.string("_passwordLengthError"));
         } else if (!password1.equals(password2)) {
             rdata.addFormField("password2");
-            rdata.addFormError(Strings.string("_passwordsDontMatch",locale));
+            rdata.addFormError(Strings.string("_passwordsDontMatch"));
         } else
             setPassword(password1);
     }

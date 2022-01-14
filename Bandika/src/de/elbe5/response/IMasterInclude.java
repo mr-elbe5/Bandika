@@ -6,25 +6,16 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.content;
+package de.elbe5.response;
 
-import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
-import de.elbe5.response.MasterResponse;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.jsp.PageContext;
+import java.io.IOException;
 
-public class ContentResponse extends MasterResponse {
+public interface IMasterInclude {
 
-    public ContentResponse(ContentData data) {
-        super("defaultMaster", data);
-    }
+    void displayContent(PageContext context, RequestData rdata) throws IOException, ServletException;
 
-    @Override
-    public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
-        //Log.log("process view");
-        rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, includeObject);
-        super.processResponse(context, rdata, response);
-    }
 }

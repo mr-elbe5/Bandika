@@ -9,15 +9,9 @@
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="de.elbe5.request.RequestData" %>
-<%@ page import="java.util.Locale" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
-<%
-    RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
-%>
 <div class="paragraph">
-    <h2><%=$SH("_registrationRequest",locale)%>
+    <h2><%=$SH("_registrationRequest")%>
     </h2>
-    <%=$SH("_emailVerifiedText",locale)%>
+    <%=$SH("_emailVerifiedText")%>
 </div>

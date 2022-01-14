@@ -15,11 +15,9 @@
 <%@ page import="de.elbe5.user.UserBean" %>
 <%@ page import="de.elbe5.user.UserData" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.Locale" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
     GroupData group = rdata.getSessionObject("groupData",GroupData.class);
     assert group != null;
     List<UserData> users = UserBean.getInstance().getAllUsers();
@@ -29,7 +27,7 @@
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title"><%=$SH("_editGroup",locale)%>
+            <h5 class="modal-title"><%=$SH("_editGroup")%>
             </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -38,7 +36,7 @@
         <form:form url="<%=url%>" name="groupform" ajax="true">
             <div class="modal-body">
                 <form:formerror/>
-                <h3><%=$SH("_settings",locale)%>
+                <h3><%=$SH("_settings")%>
                 </h3>
                 <form:line label="_id"><%=$I(group.getId())%>
                 </form:line>
@@ -53,9 +51,9 @@
                     </form:check><br/>
                     <%}%>
                 </form:line>
-                <h3><%=$SH("_users",locale)%>
+                <h3><%=$SH("_users")%>
                 </h3>
-                <form:line label="_user"><%=$SH("_inGroup",locale)%>
+                <form:line label="_user"><%=$SH("_inGroup")%>
                 </form:line>
                 <% for (UserData udata : users) {%><%
                 label = udata.getName();%>
@@ -65,9 +63,9 @@
                 <%}%>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=$SH("_close",locale)%>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=$SH("_close")%>
                 </button>
-                <button type="submit" class="btn btn-primary"><%=$SH("_save",locale)%>
+                <button type="submit" class="btn btn-primary"><%=$SH("_save")%>
                 </button>
             </div>
         </form:form>

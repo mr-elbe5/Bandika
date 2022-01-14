@@ -13,22 +13,21 @@
 <%@ page import="de.elbe5.company.CompanyBean" %>
 <%@ page import="de.elbe5.company.CompanyData" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.Locale" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
     List<CompanyData> companys = null;
     try {
         companys = CompanyBean.getInstance().getAllCompanies();
     } catch (Exception ignore) {
     }
     int companyId = rdata.getId();
-%><!--companys-->
+%>
+<!--companies-->
 <li class="open">
-    <span><%=$SH("_companies",locale)%></span>
+    <span><%=$SH("_companies")%></span>
     <div class="icons">
-        <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/ctrl/company/openCreateCompany');" title="<%=$SH("_new",locale)%>"> </a>
+        <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/ctrl/company/openCreateCompany');" title="<%=$SH("_new")%>"> </a>
     </div>
     <ul>
         <%
@@ -38,8 +37,8 @@
         <li class="<%=companyId==company.getId() ? "open" : ""%>">
             <span><%=$H(company.getName())%></span>
             <div class="icons">
-                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/company/openEditCompany/<%=company.getId()%>');" title="<%=$SH("_edit",locale)%>"></a>
-                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/company/deleteCompany/<%=company.getId()%>');" title="<%=$SH("_delete",locale)%>"></a>
+                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/company/openEditCompany/<%=company.getId()%>');" title="<%=$SH("_edit")%>"></a>
+                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/company/deleteCompany/<%=company.getId()%>');" title="<%=$SH("_delete")%>"></a>
             </div>
         </li>
         <%

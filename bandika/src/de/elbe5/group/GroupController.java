@@ -70,7 +70,7 @@ public class GroupController extends Controller {
         }
         GroupBean.getInstance().saveGroup(data);
         UserCache.setDirty();
-        rdata.setMessage(Strings.string("_groupSaved",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_groupSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/admin/openPersonAdministration?groupId=" + data.getId());
     }
 
@@ -78,12 +78,12 @@ public class GroupController extends Controller {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
-            rdata.setMessage(Strings.string("_notDeletable",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
             return new ForwardResponse("/ctrl/admin/openPersonAdministration");
         }
         GroupBean.getInstance().deleteGroup(id);
         UserCache.setDirty();
-        rdata.setMessage(Strings.string("_groupDeleted",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_groupDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openPersonAdministration");
     }
 

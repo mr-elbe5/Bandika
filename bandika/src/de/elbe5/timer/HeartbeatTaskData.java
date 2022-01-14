@@ -10,7 +10,6 @@ package de.elbe5.timer;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
-import de.elbe5.application.Configuration;
 
 import java.time.LocalDateTime;
 
@@ -27,7 +26,7 @@ public class HeartbeatTaskData extends TimerTaskData {
 
     @Override
     public boolean execute(LocalDateTime executionTime, LocalDateTime checkTime) {
-        Log.log("Heartbeat at " + StringUtil.toHtmlDateTime(TimerBean.getInstance().getServerTime(), Configuration.getDefaultLocale()));
+        Log.log("Heartbeat at " + StringUtil.toHtmlDateTime(TimerBean.getInstance().getServerTime()));
         return true;
     }
 }

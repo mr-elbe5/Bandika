@@ -9,19 +9,18 @@
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.rights.SystemZone" %>
 <%@ page import="de.elbe5.request.RequestKeys" %>
+<%@ page import="de.elbe5.application.Configuration" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
     String title = rdata.getString(RequestKeys.KEY_TITLE);
     String includeUrl = rdata.getString(RequestKeys.KEY_JSP);
 %>
 <!DOCTYPE html>
-<html lang="<%=locale.getLanguage()%>">
+<html lang="<%=Configuration.getLocale().getLanguage()%>">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -41,8 +40,8 @@
     <header>
         <section class="sysnav">
             <ul class="nav justify-content-end">
-                <li class="nav-item"><a class="nav-link fa fa-sign-out" href="/ctrl/user/logout" title="<%=$SH("_logout", locale)%>"></a></li>
-                <li class="nav-item"><a class="nav-link fa fa-home" href="/" title="<%=$SH("_home", locale)%>"></a></li>
+                <li class="nav-item"><a class="nav-link fa fa-sign-out" href="/ctrl/user/logout" title="<%=$SH("_logout")%>"></a></li>
+                <li class="nav-item"><a class="nav-link fa fa-home" href="/" title="<%=$SH("_home")%>"></a></li>
             </ul>
         </section>
         <div class="menu row">
@@ -57,14 +56,14 @@
                             <% if (rdata.hasSystemRight(SystemZone.APPLICATION)){%>
                             <li class="nav-item">
                                 <a class="nav-link"
-                                        href="/ctrl/admin/openSystemAdministration"><%=$SH("_systemAdministration",locale)%>
+                                        href="/ctrl/admin/openSystemAdministration"><%=$SH("_systemAdministration")%>
                                 </a>
                             </li>
                             <%}%>
                             <% if (rdata.hasSystemRight(SystemZone.USER)){%>
                             <li class="nav-item">
                                 <a class="nav-link"
-                                        href="/ctrl/admin/openPersonAdministration"><%=$SH("_personAdministration",locale)%>
+                                        href="/ctrl/admin/openPersonAdministration"><%=$SH("_personAdministration")%>
                                 </a>
                             </li>
                             <%}%>
@@ -76,7 +75,7 @@
         <div class="bc row">
             <section class="col-12">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/"><%=$SH("_home",locale)%>
+                    <li class="breadcrumb-item"><a href="/"><%=$SH("_home")%>
                     </a></li>
                     <li class="breadcrumb-item"><a><%=$H(title)%>
                     </a></li>
@@ -92,7 +91,7 @@
 </div>
 <div class="container fixed-bottom">
     <footer>
-        <div><%=$SH("layout.copyright",locale)%>
+        <div><%=$SH("layout.copyright")%>
         </div>
     </footer>
 </div>
@@ -100,11 +99,11 @@
 </div>
 <script type="text/javascript">
     function confirmDelete() {
-        return confirm('<%=$SJ("_confirmDelete",locale)%>');
+        return confirm('<%=$SJ("_confirmDelete")%>');
     }
 
     function confirmExecute() {
-        return confirm('<%=$SJ("_confirmExecute",locale)%>');
+        return confirm('<%=$SJ("_confirmExecute")%>');
     }
 </script>
 

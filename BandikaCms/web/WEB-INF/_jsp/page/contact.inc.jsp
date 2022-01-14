@@ -12,12 +12,10 @@
 <%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.page.PageData" %>
 <%@ page import="java.util.Date" %>
-<%@ page import="java.util.Locale" %>
 <%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
     PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
     assert contentData != null;
     String contactName = rdata.getString("contactName");
@@ -38,11 +36,11 @@
                 </form:line>
                 <form:text name="captcha" required="true" label="_captcha" value=""/>
                 <form:line label="" padded="true">
-                    <div><%=$SH("_captchaHint", locale)%></div>
+                    <div><%=$SH("_captchaHint")%></div>
                 </form:line>
                 <div class="form-group row">
                     <div class = "col-md-12">
-                        <button type="submit" class="btn btn-outline-primary pull-right"><%=$SH("_send",locale)%>
+                        <button type="submit" class="btn btn-outline-primary pull-right"><%=$SH("_send")%>
                         </button>
                     </div>
                 </div>
@@ -57,10 +55,10 @@
             </form:line>
             <form:text name="captcha" required="true" label="_captcha" value=""/>
             <form:line label="" padded="true">
-                <div><%=$SH("_captchaHint", locale)%></div>
+                <div><%=$SH("_captchaHint")%></div>
             </form:line>
             <div class="form-group">
-                <button type="submit" class="btn btn-outline-primary pull-right" disabled><%=$SH("_send",locale)%>
+                <button type="submit" class="btn btn-outline-primary pull-right" disabled><%=$SH("_send")%>
                 </button>
             </div>
 <%}%>

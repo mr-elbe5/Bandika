@@ -62,7 +62,7 @@ public class ContentAdminController extends AdminController {
     public IResponse clearPreviewCache(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         PreviewCache.clear();
-        rdata.setMessage(Strings.string("_cacheCleared",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_cacheCleared"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
@@ -70,7 +70,7 @@ public class ContentAdminController extends AdminController {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         ContentCache.setDirty();
         ContentCache.checkDirty();
-        rdata.setMessage(Strings.string("_cacheReloaded",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.string("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 

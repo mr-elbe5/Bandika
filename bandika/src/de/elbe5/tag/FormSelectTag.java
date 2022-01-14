@@ -11,7 +11,6 @@ package de.elbe5.tag;
 import de.elbe5.base.util.StringUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Locale;
 
 public class FormSelectTag extends FormLineTag {
 
@@ -24,11 +23,11 @@ public class FormSelectTag extends FormLineTag {
     String controlPreHtml = "<select id=\"{1}\" name=\"{2}\" class=\"form-control\" {3}>";
     String controlPostHtml = "</select>\n";
 
-    protected String getPreControlHtml(HttpServletRequest request, Locale locale) {
+    protected String getPreControlHtml(HttpServletRequest request) {
         return StringUtil.format(controlPreHtml, name, name, onchange.isEmpty() ? "" : "onchange=\"" + onchange + "\"");
     }
 
-    protected String getPostControlHtml(HttpServletRequest request, Locale locale) {
+    protected String getPostControlHtml(HttpServletRequest request) {
         return controlPostHtml;
     }
 

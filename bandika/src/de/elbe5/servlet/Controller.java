@@ -21,7 +21,7 @@ public abstract class Controller {
     }
 
     protected void setSaveError(RequestData rdata) {
-        rdata.setMessage(Strings.string("_saveError",rdata.getLocale()), RequestKeys.MESSAGE_TYPE_ERROR);
+        rdata.setMessage(Strings.string("_saveError"), RequestKeys.MESSAGE_TYPE_ERROR);
     }
 
     protected IResponse openAdminPage(RequestData rdata, String jsp, String title) {
@@ -31,18 +31,18 @@ public abstract class Controller {
     }
 
     protected IResponse showSystemAdministration(RequestData rdata) {
-        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/systemAdministration.jsp", Strings.string("_systemAdministration",rdata.getLocale()));
+        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/systemAdministration.jsp", Strings.string("_systemAdministration"));
     }
 
     protected IResponse showPersonAdministration(RequestData rdata) {
-        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/personAdministration.jsp", Strings.string("_personAdministration",rdata.getLocale()));
+        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/personAdministration.jsp", Strings.string("_personAdministration"));
     }
 
     protected IResponse showContentAdministration(RequestData rdata) {
-        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/contentAdministration.jsp", Strings.string("_contentAdministration",rdata.getLocale()));
+        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/contentAdministration.jsp", Strings.string("_contentAdministration"));
     }
 
     protected IResponse showContentLog(RequestData rdata) {
-        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/contentLog.jsp", Strings.string("_contentLog",rdata.getLocale()));
+        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/contentLog.jsp", Strings.string("_contentLog"));
     }
 }

@@ -10,7 +10,6 @@ package de.elbe5.search;
 
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.StringUtil;
-import de.elbe5.application.Configuration;
 import de.elbe5.timer.TimerBean;
 import de.elbe5.timer.TimerTaskData;
 
@@ -28,7 +27,7 @@ public class SearchIndexTask extends TimerTaskData {
     }
 
     public boolean execute(LocalDateTime executionTime, LocalDateTime checkTime) {
-        Log.log("indexing content for search at " + StringUtil.toHtmlDateTime(TimerBean.getInstance().getServerTime(), Configuration.getDefaultLocale()));
+        Log.log("indexing content for search at " + StringUtil.toHtmlDateTime(TimerBean.getInstance().getServerTime()));
         SearchQueue.getInstance().addAction(SearchQueue.ACTION_INDEX_PAGES);
         SearchQueue.getInstance().addAction(SearchQueue.ACTION_INDEX_USERS);
         return true;

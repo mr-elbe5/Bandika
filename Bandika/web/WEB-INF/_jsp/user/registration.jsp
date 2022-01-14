@@ -12,11 +12,9 @@
 <%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.user.UserData" %>
 <%@ page import="java.util.Date" %>
-<%@ page import="java.util.Locale" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
     UserData user = (UserData) rdata.get("userData");
     assert (user != null);
     String url = "/ctrl/user/register/" + user.getId();
@@ -24,14 +22,14 @@
 <form:message/>
 <section class="contentTop">
     <h1>
-        <%=$SH("_register",locale)%>
+        <%=$SH("_register")%>
     </h1>
 </section>
 <div class="contentSection">
     <form:form url="<%=url%>" name="registerform">
         <div class="paragraph">
             <form:formerror/>
-            <form:line padded="true"><%=$SH("_registrationHint",locale)%>&nbsp;<%=$SH("_mandatoryHint",locale)%>
+            <form:line padded="true"><%=$SH("_registrationHint")%>&nbsp;<%=$SH("_mandatoryHint")%>
             </form:line>
             <form:text name="login" label="_loginName" required="true" value="<%=$H(user.getLogin())%>"/>
             <form:password name="password1" label="_password" required="true"/>
@@ -39,13 +37,13 @@
             <form:text name="title" label="_title" value="<%=$H(user.getTitle())%>"/>
             <form:text name="firstName" label="_firstName" value="<%=$H(user.getFirstName())%>"/>
             <form:text name="lastName" label="_lastName" required="true" value="<%=$H(user.getLastName())%>"/>
-            <h3><%=$SH("_address",locale)%>
+            <h3><%=$SH("_address")%>
             </h3>
             <form:text name="street" label="_street" value="<%=$H(user.getStreet())%>"/>
             <form:text name="zipCode" label="_zipCode" value="<%=$H(user.getZipCode())%>"/>
             <form:text name="city" label="_city" value="<%=$H(user.getCity())%>"/>
             <form:text name="country" label="_country" value="<%=$H(user.getCountry())%>"/>
-            <h3><%=$SH("_contact",locale)%>
+            <h3><%=$SH("_contact")%>
             </h3>
             <form:text name="email" label="_email" required="true" value="<%=$H(user.getEmail())%>"/>
             <form:text name="phone" label="_phone" value="<%=$H(user.getPhone())%>"/>
@@ -55,16 +53,16 @@
             <form:line padded="true">
                 <div class="imgBox left50">
                     <img id="captchaImg" src="/ctrl/user/showCaptcha?timestamp=<%=new Date().getTime()%>" alt="captcha"/>
-                    <%=$SHM("_captchaHint",locale)%>
+                    <%=$SHM("_captchaHint")%>
                     <br/><br/>
-                    <a class="link" href="#" onclick="return renewCaptcha();"><%=$SH("_captchaRenew",locale)%>
+                    <a class="link" href="#" onclick="return renewCaptcha();"><%=$SH("_captchaRenew")%>
                     </a>
                 </div>
             </form:line>
             <form:text name="captcha" label="_captcha" value=""/>
         </div>
         <div>
-            <button type="submit" class="btn btn-primary"><%=$SH("_register",locale)%>
+            <button type="submit" class="btn btn-primary"><%=$SH("_register")%>
             </button>
         </div>
     </form:form>

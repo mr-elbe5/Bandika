@@ -14,7 +14,6 @@ CREATE TABLE IF NOT EXISTS t_content
     description   VARCHAR(2000) NOT NULL DEFAULT '',
     creator_id    INTEGER       NOT NULL DEFAULT 1,
     changer_id    INTEGER       NOT NULL DEFAULT 1,
-    language      VARCHAR(10)   NOT NULL DEFAULT 'de',
     access_type   VARCHAR(10)   NOT NULL DEFAULT 'OPEN',
     nav_type      VARCHAR(10)   NOT NULL DEFAULT 'NONE',
     active        BOOLEAN       NOT NULL DEFAULT TRUE,

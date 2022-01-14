@@ -1,9 +1,4 @@
-<%@ page import="de.elbe5.content.ContentDayLog" %>
-<%@ page import="java.util.List" %>
-<%@ page import="de.elbe5.content.ContentBean" %>
-<%@ page import="de.elbe5.request.RequestData" %>
-<%@ page import="de.elbe5.content.ContentLog" %>
-<%@ page import="de.elbe5.content.ContentCache" %><%--
+<%--
   Bandika CMS - A Java based modular Content Management System
   Copyright (C) 2009-2021 Michael Roennau
 
@@ -14,23 +9,28 @@
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
+<%@ page import="de.elbe5.content.ContentDayLog" %>
+<%@ page import="java.util.List" %>
+<%@ page import="de.elbe5.content.ContentBean" %>
+<%@ page import="de.elbe5.request.RequestData" %>
+<%@ page import="de.elbe5.content.ContentLog" %>
+<%@ page import="de.elbe5.content.ContentCache" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
     List<ContentDayLog> dayLogs = ContentBean.getInstance().getAllViewCounts();
 %>
 <div id="pageContent">
     <form:message/>
     <section class="logSection">
-        <h3><%=$SH("_clicksPerDay", locale)%></h3>
-        <a class="icon fa fa-trash-o" href="/ctrl/admin/resetContentLog" title="<%=$SH("_reset",locale)%>"></a>
+        <h3><%=$SH("_clicksPerDay")%></h3>
+        <a class="icon fa fa-trash-o" href="/ctrl/admin/resetContentLog" title="<%=$SH("_reset")%>"></a>
         <% if (rdata.hasAnyContentRight()) { %>
         <table>
             <% for (ContentDayLog dayLog : dayLogs) {%>
             <tr>
                 <th colspan="2">
-                    <%=StringUtil.toHtmlDate(dayLog.getDay(), locale)%>
+                    <%=StringUtil.toHtmlDate(dayLog.getDay())%>
                 </th>
             </tr>
             <% for (ContentLog log : dayLog.getLogs()) {%>

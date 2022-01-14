@@ -12,21 +12,19 @@
 <%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.search.UserSearchData" %>
 <%@ page import="de.elbe5.search.UserSearchResultData" %>
-<%@ page import="java.util.Locale" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    Locale locale = rdata.getLocale();
     UserSearchResultData userResult = rdata.get("searchResultData", UserSearchResultData.class);
 %>
 <section class="mainSection searchResults">
-    <h1><%=$SH("_searchResults",locale)%>
+    <h1><%=$SH("_searchResults")%>
     </h1>
     <table class="padded searchResultsTable">
         <tr>
-            <th class="col2"><%=$SH("_name",locale)%>
+            <th class="col2"><%=$SH("_name")%>
             </th>
-            <th class="col3"><%=$SH("_email",locale)%>
+            <th class="col3"><%=$SH("_email")%>
             </th>
         </tr>
         <%if (userResult != null && !userResult.getResults().isEmpty()) {%>
