@@ -150,8 +150,6 @@ public class PageData extends ContentData {
         }
     }
 
-    // view
-
     //used in controller
     @Override
     public String getContentDataJsp() {

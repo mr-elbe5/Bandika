@@ -249,3 +249,4 @@ update t_user set pwd='A0y3+ZmqpMhWA21VFQMkyY6v74Y=' where id=1;
 
 -- de
 SELECT ADDPAGE(1, null, 'home', 'Home', 'Home Page', 1, 'defaultPage');
+update t_page set publish_date=now(), published_content='' where id=1;

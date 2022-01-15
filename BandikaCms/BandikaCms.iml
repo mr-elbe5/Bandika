@@ -17,11 +17,11 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="common" level="project" />
     <orderEntry type="library" name="catalina" level="project" />
-    <orderEntry type="module" module-name="Bandika" />
-    <orderEntry type="module" module-name="BandikaBase" />
-    <orderEntry type="library" name="json" level="project" />
-    <orderEntry type="module" module-name="BandikaContent" />
+    <orderEntry type="library" exported="" name="common" level="project" />
+    <orderEntry type="library" exported="" name="json" level="project" />
+    <orderEntry type="module" module-name="BandikaBase" exported="" />
+    <orderEntry type="module" module-name="Bandika" exported="" />
+    <orderEntry type="module" module-name="BandikaContent" exported="" />
   </component>
 </module>

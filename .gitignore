@@ -1,5 +1,12 @@
 /out
-/.idea
+/.idea/dataSources
+/.idea/artifacts
+/.idea/dataSources*
+/.idea/deployment*
+/.idea/inspection*
+/.idea/ssh*
+/.idea/work*
+/.idea-backup
 /.sass-cache
 *.scssc
 /build

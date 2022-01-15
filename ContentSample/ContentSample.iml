@@ -20,5 +20,11 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="catalina" level="project" />
+    <orderEntry type="library" name="common" level="project" />
+    <orderEntry type="library" name="json" level="project" />
+    <orderEntry type="module" module-name="Bandika" />
+    <orderEntry type="module" module-name="BandikaBase" />
+    <orderEntry type="module" module-name="BandikaContent" />
   </component>
 </module>
