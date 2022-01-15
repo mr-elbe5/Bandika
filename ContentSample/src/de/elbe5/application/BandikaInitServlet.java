@@ -39,7 +39,7 @@ public class BandikaInitServlet extends InitServlet {
         ApplicationPath.initializePath(ApplicationPath.getCatalinaAppDir(context), ApplicationPath.getCatalinaAppROOTDir(context));
         Configuration.setConfigs(context);
         Strings.addBundle("bandika", Configuration.getLocale());
-        Strings.addBundle("data", Configuration.getLocale());
+        Strings.addBundle("content", Configuration.getLocale());
         Log.initLog(ApplicationPath.getAppName());
         if (!DbConnector.getInstance().initialize("jdbc/bandika"))
             return;
