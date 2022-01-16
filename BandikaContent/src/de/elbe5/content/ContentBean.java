@@ -206,7 +206,7 @@ public class ContentBean extends DbBean {
         }
     }
 
-    private static final String INSERT_CONTENT_SQL = "insert into t_content (type,creation_date,change_date,parent_id,ranking,name,display_name,description,creator_id,changer_id,access_type,nav_type,active,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static final String INSERT_CONTENT_SQL = "insert into t_content (type,creation_date,change_date,parent_id,ranking,name,display_name,description,creator_id,changer_id,access_type,nav_type,active,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     protected void createContent(Connection con, ContentData data) throws SQLException {
         PreparedStatement pst = null;

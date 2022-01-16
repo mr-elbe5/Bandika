@@ -25,7 +25,7 @@ public class PagePartBean extends DbBean {
     }
 
     public int getNextPartId() {
-        return getNextId("s_section_part_id");
+        return getNextId("s_page_part_id");
     }
 
     public void readPartExtras(Connection con, PagePartData partData) throws SQLException{

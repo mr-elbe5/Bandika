@@ -43,7 +43,6 @@
     <script type="text/javascript" src="/static-content/js/bootstrap.tree.js"></script>
     <script type="text/javascript" src="/static-content/ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="/static-content/ckeditor/adapters/jquery.js"></script>
-    <script type="text/javascript" src="/static-content/js/ace.js"></script>
     <script type="text/javascript" src="/static-content/js/bandika-webbase.js"></script>
 </head>
 <body>
