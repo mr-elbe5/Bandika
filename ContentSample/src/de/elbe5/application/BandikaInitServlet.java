@@ -40,6 +40,7 @@ public class BandikaInitServlet extends InitServlet {
         Configuration.setConfigs(context);
         Strings.addBundle("bandika", Configuration.getLocale());
         Strings.addBundle("content", Configuration.getLocale());
+        Strings.addBundle("application", Configuration.getLocale());
         Log.initLog(ApplicationPath.getAppName());
         if (!DbConnector.getInstance().initialize("jdbc/bandika"))
             return;
