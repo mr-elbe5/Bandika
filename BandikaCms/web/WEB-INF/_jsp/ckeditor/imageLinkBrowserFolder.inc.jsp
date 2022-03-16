@@ -17,7 +17,7 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    ContentData contentData = (ContentData) rdata.getRequestObject(ContentRequestKeys.KEY_CONTENT);
+    ContentData contentData = rdata.getRequestObject("treePage", ContentData.class);
     assert contentData != null;
 %>
 <li class="open">
@@ -39,10 +39,10 @@
         <%}
         }
         for (ContentData subPage : contentData.getChildren()) {
-            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, subPage);%>
+            rdata.setRequestObject("treePage", subPage);%>
         <jsp:include page="/WEB-INF/_jsp/ckeditor/imageLinkBrowserFolder.inc.jsp" flush="true"/>
         <%}
-        rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, contentData);
+        rdata.setRequestObject("treePage", contentData);
         %>
     </ul>
 </li>

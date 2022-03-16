@@ -61,30 +61,30 @@
                     <section class="treeSection">
                         <% if (rdata.hasAnyContentRight()) { %>
                         <ul class="tree filetree">
-                            <%rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, ContentCache.getContentRoot());%>
+                            <%rdata.setRequestObject("treePage", ContentCache.getContentRoot());%>
                             <jsp:include page="/WEB-INF/_jsp/ckeditor/documentLinkBrowserFolder.inc.jsp" flush="true"/>
                         </ul>
-                        <%rdata.removeRequestObject(ContentRequestKeys.KEY_CONTENT); }%>
+                        <%rdata.removeRequestObject("treePage"); }%>
                     </section>
                 </div>
                 <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
                     <section class="treeSection">
                         <% if (rdata.hasAnyContentRight()) { %>
                         <ul class="tree filetree">
-                            <%rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, ContentCache.getContentRoot());%>
+                            <%rdata.setRequestObject("treePage", ContentCache.getContentRoot());%>
                             <jsp:include page="/WEB-INF/_jsp/ckeditor/imageLinkBrowserFolder.inc.jsp" flush="true"/>
                         </ul>
-                        <%rdata.removeRequestObject(ContentRequestKeys.KEY_CONTENT); }%>
+                        <%rdata.removeRequestObject("treePage"); }%>
                     </section>
                 </div>
                 <div class="tab-pane fade" id="media" role="tabpanel" aria-labelledby="media-tab">
                     <section class="treeSection">
                         <% if (rdata.hasAnyContentRight()) { %>
                         <ul class="tree filetree">
-                            <%rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, ContentCache.getContentRoot());%>
+                            <%rdata.setRequestObject("treePage", ContentCache.getContentRoot());%>
                             <jsp:include page="/WEB-INF/_jsp/ckeditor/mediaLinkBrowserFolder.inc.jsp" flush="true"/>
                         </ul>
-                        <%rdata.removeRequestObject(ContentRequestKeys.KEY_CONTENT); }%>
+                        <%rdata.removeRequestObject("treePage"); }%>
                     </section>
                 </div>
             </div>

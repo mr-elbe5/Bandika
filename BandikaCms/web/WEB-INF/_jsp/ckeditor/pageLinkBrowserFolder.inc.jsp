@@ -16,7 +16,7 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    ContentData contentData = (ContentData) rdata.getRequestObject("treePage");
+    ContentData contentData = rdata.getRequestObject("treePage", ContentData.class);
     assert contentData != null;
 %>
 <li class="open">

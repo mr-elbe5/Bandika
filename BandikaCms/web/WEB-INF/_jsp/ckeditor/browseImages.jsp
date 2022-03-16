@@ -17,7 +17,7 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    ContentData data = rdata.getRequestObject(ContentRequestKeys.KEY_CONTENT,ContentData.class);
+    ContentData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT,ContentData.class);
     List<Integer> parentIds=ContentCache.getParentContentIds(data.getId());
     parentIds.add(data.getId());
     rdata.setRequestObject("parentIds",parentIds);
@@ -36,9 +36,9 @@
             <form:message/>
             <section class="treeSection">
                 <ul class="tree filetree">
-                    <% rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, ContentCache.getContentRoot());%>
+                    <% rdata.setRequestObject("treePage", ContentCache.getContentRoot());%>
                     <jsp:include page="/WEB-INF/_jsp/ckeditor/imageBrowserFolder.inc.jsp" flush="true"/>
-                    <% rdata.removeRequestObject(ContentRequestKeys.KEY_CONTENT);%>
+                    <% rdata.removeRequestObject("treePage");%>
                 </ul>
             </section>
             <section class="addImage">
