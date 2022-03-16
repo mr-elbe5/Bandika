@@ -13,7 +13,6 @@
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="de.elbe5.file.MediaData" %>
-<%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
@@ -38,10 +37,10 @@
         <%}
         }
         for (ContentData subFolder : contentData.getChildren()) {
-            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, subFolder);%>
+            rdata.setRequestObject("treePage", subFolder);%>
         <jsp:include page="/WEB-INF/_jsp/ckeditor/mediaLinkBrowserFolder.inc.jsp" flush="true"/>
         <% }
-        rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, contentData);
+        rdata.setRequestObject("treePage", contentData);
         %>
     </ul>
 </li>

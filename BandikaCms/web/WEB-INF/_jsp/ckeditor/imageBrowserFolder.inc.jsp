@@ -13,7 +13,6 @@
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="de.elbe5.file.ImageData" %>
 <%@ page import="java.util.List" %>
-<%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
@@ -41,7 +40,8 @@
         </li>
         <%}
         }
-        for (ContentData subPage : contentData.getChildren()) {"treePage"ContentRequestKeys.KEY_CONTENT, subPage);
+        for (ContentData subPage : contentData.getChildren()) {
+            rdata.setRequestObject("treePage", subPage);%>
         %>
         <jsp:include page="/WEB-INF/_jsp/ckeditor/imageBrowserFolder.inc.jsp" flush="true"/>
         <%}

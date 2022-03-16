@@ -84,7 +84,8 @@
                             <%rdata.setRequestObject("treePage", ContentCache.getContentRoot());%>
                             <jsp:include page="/WEB-INF/_jsp/ckeditor/mediaLinkBrowserFolder.inc.jsp" flush="true"/>
                         </ul>
-                        <%rdata.removeRequestObject("treePage"); }%>
+                        <%rdata.removeRequestObject("treePage");
+                        }%>
                     </section>
                 </div>
             </div>
