@@ -13,13 +13,17 @@
 <%@ page import="de.elbe5.user.UserCache" %>
 <%@ page import="de.elbe5.file.ImageData" %>
 <%@ page import="de.elbe5.request.ContentRequestKeys" %>
+<%@ page import="de.elbe5.user.UserData" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
     ImageData imageData = rdata.getSessionObject(ContentRequestKeys.KEY_IMAGE,ImageData.class);
-    assert (imageData != null);
     String url = "/ctrl/image/saveImage/" + imageData.getId();
     boolean fileRequired= imageData.isNew();
+    UserData creator = UserCache.getUser(imageData.getCreatorId());
+    String creatorName = creator == null ? "" : creator.getName();
+    UserData changer = UserCache.getUser(imageData.getChangerId());
+    String changerName = changer == null ? "" : changer.getName();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -35,9 +39,9 @@
                 <form:formerror/>
                 <form:line label="_idAndFileName"><%=$I(imageData.getId())%> - <%=$H(imageData.getFileName())%>
                 </form:line>
-                <form:line label="_creation"><%=$DT(imageData.getCreationDate())%> - <%=$H(UserCache.getUser(imageData.getCreatorId()).getName())%>
+                <form:line label="_creation"><%=$DT(imageData.getCreationDate())%> - <%=$H(creatorName)%>
                 </form:line>
-                <form:line label="_lastChange"><%=$DT(imageData.getChangeDate())%> - <%=$H(UserCache.getUser(imageData.getChangerId()).getName())%>
+                <form:line label="_lastChange"><%=$DT(imageData.getChangeDate())%> - <%=$H(changerName)%>
                 </form:line>
 
                 <form:file name="file" label="_image" required="<%=fileRequired%>"/>

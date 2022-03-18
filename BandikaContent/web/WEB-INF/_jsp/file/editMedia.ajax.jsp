@@ -17,7 +17,6 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     MediaData mediaData = rdata.getSessionObject(ContentRequestKeys.KEY_MEDIA,MediaData.class);
-    assert (mediaData != null);
     String url = "/ctrl/media/saveMedia/" + mediaData.getId();
     boolean fileRequired= mediaData.isNew();
 %>

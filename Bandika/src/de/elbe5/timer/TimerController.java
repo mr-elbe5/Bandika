@@ -10,6 +10,7 @@ package de.elbe5.timer;
 
 import de.elbe5.base.data.Strings;
 import de.elbe5.request.RequestKeys;
+import de.elbe5.response.StatusResponse;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.CloseDialogResponse;
 import de.elbe5.request.RequestData;
@@ -17,6 +18,8 @@ import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.response.IResponse;
 import de.elbe5.response.ForwardResponse;
+
+import javax.servlet.http.HttpServletResponse;
 
 public class TimerController extends Controller {
 
@@ -53,7 +56,9 @@ public class TimerController extends Controller {
     public IResponse saveTimerTask(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         TimerTaskData data = (TimerTaskData) rdata.getSessionObject("timerTaskData");
-        assert(data!=null);
+        if (data==null){
+            return new StatusResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
         data.readSettingsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
             return showEditTimerTask();

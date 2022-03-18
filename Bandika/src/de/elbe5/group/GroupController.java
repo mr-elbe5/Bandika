@@ -11,6 +11,7 @@ package de.elbe5.group;
 import de.elbe5.base.data.Strings;
 import de.elbe5.base.data.BaseData;
 import de.elbe5.request.*;
+import de.elbe5.response.StatusResponse;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
@@ -18,6 +19,8 @@ import de.elbe5.user.UserCache;
 import de.elbe5.response.CloseDialogResponse;
 import de.elbe5.response.IResponse;
 import de.elbe5.response.ForwardResponse;
+
+import javax.servlet.http.HttpServletResponse;
 
 public class GroupController extends Controller {
 
@@ -63,7 +66,9 @@ public class GroupController extends Controller {
     public IResponse saveGroup(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         GroupData data = (GroupData) rdata.getSessionObject("groupData");
-        assert(data!=null);
+        if (data==null){
+            return new StatusResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
         data.readSettingsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
             return showEditGroup();

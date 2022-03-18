@@ -11,17 +11,11 @@
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.page.PagePartData" %>
-<%@ page import="de.elbe5.page.PageData" %>
 <%@ page import="de.elbe5.page.SectionData" %>
-<%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
-    assert contentData != null;
     SectionData sectionData = rdata.get("sectionData", SectionData.class);
-    assert sectionData != null;
-
     if (!sectionData.getParts().isEmpty()) {%>
 <div class="section <%=sectionData.getCssClass()%>">
     <% for (PagePartData partData : sectionData.getParts()) {

@@ -16,7 +16,7 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
-    assert contentData != null;%>
+%>
     <form action="/ctrl/page/saveContentFrontend/<%=contentData.getId()%>" method="post" id="pageform" name="pageform" accept-charset="UTF-8">
         <div class="btn-group btn-group-sm pageEditButtons">
             <button type="submit" class="btn btn-sm btn-success" onclick="updateEditors();"><%=$SH("_savePage")%></button>

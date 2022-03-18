@@ -357,15 +357,15 @@ div#pageContainer {
       min-height: 2rem;
     }
 
-    .addPartButtons{
-      position: absolute;
-      margin-top: -1.6em;
-      margin-left: -1.25em;
-    }
-
     .partEditButtons{
       position: absolute;
-      margin-left: -4.4em;
+      margin-left: -75px;
+    }
+
+    .sectionEditButtons{
+      position: absolute;
+      margin-top: -2.2em;
+      margin-left: -60px;
     }
 
     .editSection {

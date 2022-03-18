@@ -18,7 +18,6 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     CompanyData company = rdata.getSessionObject("companyData",CompanyData.class);
-    assert company != null;
     List<UserData> users = UserBean.getInstance().getCompanyUsers(company.getId());
     String url = "/ctrl/company/saveCompany/" + company.getId();
 %>

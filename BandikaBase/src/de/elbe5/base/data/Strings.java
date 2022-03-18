@@ -26,12 +26,15 @@ public class Strings {
 
     public static String string(String key) {
         try {
-            return stringMap.get(key);
+            String s = stringMap.get(key);
+            if (s!=null)
+                return s;
+
         }
         catch (Exception e){
             Log.warn("string not found: " + key);
-            return "...";
         }
+        return "[" + key + "]";
     }
 
     public static String html(String key) {

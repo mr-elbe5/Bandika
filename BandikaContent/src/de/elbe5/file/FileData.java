@@ -81,7 +81,7 @@ public abstract class FileData extends BaseData {
     }
 
     public String getDisplayName() {
-        if (displayName.isEmpty())
+        if (displayName.isEmpty() )
             return FileUtil.getFileNameWithoutExtension(getFileName());
         return displayName;
     }

@@ -9,20 +9,16 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.request.RequestData" %>
-<%@ page import="de.elbe5.page.PageData" %>
 <%@ page import="de.elbe5.page.PagePartData" %>
 <%@ page import="de.elbe5.page.PagePartFactory" %>
 <%@ page import="de.elbe5.layout.LayoutCache" %>
 <%@ page import="de.elbe5.layout.LayoutData" %>
 <%@ page import="java.util.List" %>
-<%@ page import="de.elbe5.request.ContentRequestKeys" %>
+<%@ page import="de.elbe5.page.SectionData" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
-    assert contentData != null;
     PagePartData partData = rdata.get(PagePartData.KEY_PART, PagePartData.class);
-    assert partData != null;
     List<LayoutData> partLayouts = LayoutCache.getLayouts(PagePartData.LAYOUT_TYPE);
 %>
             <input type="hidden" name="<%=partData.getPartPositionName()%>" value="<%=partData.getPosition()%>" class="partPos"/>

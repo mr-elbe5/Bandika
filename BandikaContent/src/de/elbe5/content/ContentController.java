@@ -13,6 +13,7 @@ import de.elbe5.base.data.BaseData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
+import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.CloseDialogResponse;
@@ -58,7 +59,6 @@ public class ContentController extends Controller {
         //Log.log("show");
         int contentId = rdata.getId();
         ContentData data = ContentCache.getContent(contentId);
-        assert(data!=null);
         checkRights(data.hasUserReadRight(rdata));
         ContentBean.getInstance().increaseViewCount(data.getId());
         return data.getDefaultView();
@@ -68,7 +68,6 @@ public class ContentController extends Controller {
     public IResponse show(String url, RequestData rdata) {
         ContentData data;
         data = ContentCache.getContent(url);
-        assert(data!=null);
         checkRights(data.hasUserReadRight(rdata));
         //Log.log("show: "+data.getClass().getSimpleName());
         ContentBean.getInstance().increaseViewCount(data.getId());
@@ -79,11 +78,9 @@ public class ContentController extends Controller {
     public IResponse openCreateContentData(RequestData rdata) {
         int parentId = rdata.getInt("parentId");
         ContentData parentData = ContentCache.getContent(parentId);
-        assert(parentData!=null);
         checkRights(parentData.hasUserEditRight(rdata));
         String type = rdata.getString("type");
         ContentData data = ContentFactory.getNewData(type);
-        assert(data!=null);
         data.setCreateValues(parentData, rdata);
         data.setRanking(parentData.getChildren().size());
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
@@ -104,7 +101,6 @@ public class ContentController extends Controller {
     public IResponse saveContentData(RequestData rdata) {
         int contentId = rdata.getId();
         ContentData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-        assert(data != null && data.getId() == contentId);
         checkRights(data.hasUserEditRight(rdata));
         if (data.isNew())
             data.readCreateRequestData(rdata);
@@ -139,7 +135,6 @@ public class ContentController extends Controller {
     public IResponse saveRights(RequestData rdata) {
         int contentId = rdata.getId();
         ContentData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-        assert(data != null && data.getId() == contentId);
         checkRights(data.hasUserEditRight(rdata));
         data.readRightsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
@@ -160,7 +155,6 @@ public class ContentController extends Controller {
     public IResponse cutContent(RequestData rdata) {
         int contentId = rdata.getId();
         ContentData data = ContentBean.getInstance().getContent(contentId);
-        assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
         rdata.setClipboardData(ContentRequestKeys.KEY_CONTENT, data);
         return showContentAdministration(rdata,data.getId());
@@ -170,10 +164,8 @@ public class ContentController extends Controller {
     public IResponse copyContent(RequestData rdata) {
         int contentId = rdata.getId();
         ContentData srcData = ContentBean.getInstance().getContent(contentId);
-        assert(srcData!=null);
         checkRights(srcData.hasUserEditRight(rdata));
         ContentData data = ContentFactory.getNewData(srcData.getType());
-        assert(data!=null);
         data.copyData(srcData, rdata);
         data.setChangerId(rdata.getUserId());
         rdata.setClipboardData(ContentRequestKeys.KEY_CONTENT, data);
@@ -212,6 +204,13 @@ public class ContentController extends Controller {
     }
 
     //backend
+    public IResponse clearClipboard(RequestData rdata) {
+        checkRights(rdata.hasSystemRight(SystemZone.CONTENTEDIT));
+        rdata.clearAllClipboardData();
+        return showContentAdministration(rdata);
+    }
+
+    //backend
     public IResponse deleteContent(RequestData rdata) {
         int contentId = rdata.getId();
         ContentData data=ContentCache.getContent(contentId);
@@ -242,7 +241,6 @@ public class ContentController extends Controller {
     public IResponse saveChildPageRanking(RequestData rdata) {
         int contentId = rdata.getId();
         ContentData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-        assert(data != null && data.getId() == contentId);
         checkRights(data.hasUserEditRight(rdata));
         for (ContentData child : data.getChildren()){
             int ranking=rdata.getInt("select"+child.getId(),-1);
@@ -281,7 +279,6 @@ public class ContentController extends Controller {
     public IResponse cancelEditContentFrontend(RequestData rdata) {
         int contentId = rdata.getId();
         ContentData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-        assert(data != null && data.getId() == contentId);
         checkRights(data.hasUserEditRight(rdata));
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
         return show(rdata);

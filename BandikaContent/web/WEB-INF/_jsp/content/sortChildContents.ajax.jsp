@@ -20,7 +20,6 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     ContentData contentData = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-    assert (contentData != null);
     //todo js
     String url = "/ctrl/content/saveChildPageRanking/" + contentData.getId();%>
 <div class="modal-dialog modal-lg" role="document">

@@ -21,7 +21,6 @@ public class ControllerCache {
     }
 
     public static void addController(String key, Controller controller) {
-        assert(controller!=null);
         controllers.put(key, controller);
     }
 

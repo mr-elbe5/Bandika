@@ -17,7 +17,6 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     DocumentData documentData = rdata.getSessionObject(ContentRequestKeys.KEY_DOCUMENT,DocumentData.class);
-    assert (documentData != null);
     String url = "/ctrl/document/saveDocument/" + documentData.getId();
     boolean fileRequired= documentData.isNew();
 %>

@@ -46,11 +46,9 @@ public class DocumentController extends FileController {
     public IResponse openCreateDocument(RequestData rdata) {
         int parentId = rdata.getInt("parentId");
         ContentData parentData = ContentCache.getContent(parentId);
-        assert(parentData!=null);
         checkRights(parentData.hasUserEditRight(rdata));
         String type=rdata.getString("type");
         DocumentData data = FileFactory.getNewData(type,DocumentData.class);
-        assert(data!=null);
         data.setCreateValues(parentData, rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_DOCUMENT, data);
         return showEditDocument();
@@ -67,7 +65,6 @@ public class DocumentController extends FileController {
     public IResponse saveDocument(RequestData rdata) {
         int contentId = rdata.getId();
         DocumentData data = rdata.getSessionObject(ContentRequestKeys.KEY_DOCUMENT,DocumentData.class);
-        assert(data != null && data.getId() == contentId);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         data.readSettingsRequestData(rdata);
@@ -89,7 +86,6 @@ public class DocumentController extends FileController {
     public IResponse cutDocument(RequestData rdata) {
         int contentId = rdata.getId();
         DocumentData data = FileBean.getInstance().getFile(contentId,true,DocumentData.class);
-        assert(data!=null);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         rdata.setClipboardData(ContentRequestKeys.KEY_DOCUMENT, data);
@@ -99,7 +95,6 @@ public class DocumentController extends FileController {
     public IResponse copyDocument(RequestData rdata) {
         int contentId = rdata.getId();
         DocumentData data = FileBean.getInstance().getFile(contentId,true,DocumentData.class);
-        assert(data!=null);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         data.setNew(true);

@@ -16,7 +16,6 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     UserData user = (UserData) rdata.get("userData");
-    assert (user != null);
     String url = "/ctrl/user/register/" + user.getId();
 %>
 <form:message/>

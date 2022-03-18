@@ -12,14 +12,18 @@
 <%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="de.elbe5.user.UserCache" %>
-<%@ page import="de.elbe5.application.Configuration" %>
 <%@ page import="de.elbe5.request.ContentRequestKeys" %>
+<%@ page import="de.elbe5.user.UserData" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
     ContentData contentData = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-    assert (contentData != null);
-    String url = "/ctrl/content/saveContentData/" + contentData.getId();%>
+    String url = "/ctrl/content/saveContentData/" + contentData.getId();
+    UserData creator = UserCache.getUser(contentData.getCreatorId());
+    String creatorName = creator == null ? "" : creator.getName();
+    UserData changer = UserCache.getUser(contentData.getChangerId());
+    String changerName = changer == null ? "" : changer.getName();
+%>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
@@ -36,9 +40,9 @@
                 </h3>
                 <form:line label="_idAndUrl"><%=$I(contentData.getId())%> - <%=$H(contentData.getUrl())%>
                 </form:line>
-                <form:line label="_creation"><%=$DT(contentData.getCreationDate())%> - <%=$H(UserCache.getUser(contentData.getCreatorId()).getName())%>
+                <form:line label="_creation"><%=$DT(contentData.getCreationDate())%> - <%=$H(creatorName)%>
                 </form:line>
-                <form:line label="_lastChange"><%=$DT(contentData.getChangeDate())%> - <%=$H(UserCache.getUser(contentData.getChangerId()).getName())%>
+                <form:line label="_lastChange"><%=$DT(contentData.getChangeDate())%> - <%=$H(changerName)%>
                 </form:line>
 
                 <form:text name="displayName" label="_name" required="true" value="<%=$H(contentData.getDisplayName())%>"/>

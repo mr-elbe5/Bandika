@@ -45,3 +45,5 @@ update t_page_part set type = 'LayoutPartData' where type = 'FieldSectionPartDat
 drop table t_section_page;
 
 --end change to one master page, one page type
+
+ALTER SEQUENCE s_section_part_id RENAME TO s_page_part_id;

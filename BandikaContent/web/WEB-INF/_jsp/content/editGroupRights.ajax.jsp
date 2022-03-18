@@ -20,7 +20,6 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     ContentData contentData = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-    assert (contentData != null);
     List<GroupData> groups = GroupBean.getInstance().getAllGroups();
     String label, name;
     String url = "/ctrl/content/saveRights/" + contentData.getId();%>

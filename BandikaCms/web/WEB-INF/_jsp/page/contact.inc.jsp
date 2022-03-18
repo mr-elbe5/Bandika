@@ -17,7 +17,6 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
-    assert contentData != null;
     String contactName = rdata.getString("contactName");
     String contactEmail = rdata.getString("contactEmail");
     String contactMessage = rdata.getString("contactMessage");

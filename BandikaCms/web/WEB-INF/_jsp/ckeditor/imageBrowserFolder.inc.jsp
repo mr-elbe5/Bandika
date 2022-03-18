@@ -17,9 +17,7 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     ContentData contentData = rdata.getRequestObject("treePage", ContentData.class);
-    assert contentData != null;
     List<Integer> parentIds=(List<Integer>) rdata.getRequestObject("parentIds");
-    assert(parentIds!=null);
     boolean isParent=parentIds.contains(contentData.getId());
 %>
 <li class="<%=isParent ? "open" : ""%>">
@@ -42,7 +40,6 @@
         }
         for (ContentData subPage : contentData.getChildren()) {
             rdata.setRequestObject("treePage", subPage);%>
-        %>
         <jsp:include page="/WEB-INF/_jsp/ckeditor/imageBrowserFolder.inc.jsp" flush="true"/>
         <%}
         rdata.setRequestObject("treePage", contentData);%>

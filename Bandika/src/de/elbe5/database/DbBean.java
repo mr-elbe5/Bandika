@@ -53,11 +53,12 @@ public abstract class DbBean {
     }
 
     public int getNextId(String sequence) {
-        int id = 0;
+        int id = -1;
         Connection con = getConnection();
         try {
             id = getNextId(con, sequence);
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            throw new RuntimeException("no valid id created", e);
         } finally {
             closeConnection(con);
         }

@@ -17,7 +17,6 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     ContentData contentData = rdata.getRequestObject("treePage", ContentData.class);
-    assert contentData != null;
 %>
 <li class="open">
     <a id="<%=contentData.getId()%>" href="" onclick="return ckLinkCallback('/ctrl/content/show/<%=contentData.getId()%>');"><%=contentData.getName()%>

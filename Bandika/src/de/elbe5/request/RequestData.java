@@ -14,6 +14,7 @@ import de.elbe5.base.data.BinaryFile;
 import de.elbe5.base.data.KeyValueMap;
 import de.elbe5.base.data.Strings;
 import de.elbe5.base.log.Log;
+import de.elbe5.response.StatusResponse;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.user.UserData;
 
@@ -400,7 +401,9 @@ public class RequestData extends KeyValueMap {
             Object obj=getRequestObject(key);
             if (obj==null)
                 obj=getSessionObject(key);
-            assert(obj!=null);
+            if (obj==null){
+                return null;
+            }
             //Log.log("current request data is: " + obj.getClass().getSimpleName());
             return cls.cast(obj);
         }
@@ -428,6 +431,10 @@ public class RequestData extends KeyValueMap {
 
     public void clearClipboardData(String key){
         getClipboard().clearData(key);
+    }
+
+    public void clearAllClipboardData(){
+        getClipboard().clear();
     }
 
     public void setSessionUser(UserData data) {

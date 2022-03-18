@@ -226,13 +226,13 @@ div#pageContainer div.pageEditButtons {
   padding-bottom: 0.5em; }
 div#pageContainer .editArea .section {
   min-height: 2rem; }
-div#pageContainer .editArea .addPartButtons {
-  position: absolute;
-  margin-top: -1.6em;
-  margin-left: -1.25em; }
 div#pageContainer .editArea .partEditButtons {
   position: absolute;
-  margin-left: -4.4em; }
+  margin-left: -75px; }
+div#pageContainer .editArea .sectionEditButtons {
+  position: absolute;
+  margin-top: -2.2em;
+  margin-left: -60px; }
 div#pageContainer .editArea .dropdown-menu {
   padding: 0; }
   div#pageContainer .editArea .dropdown-menu .dropdown-item {

@@ -115,7 +115,7 @@ public class FileUtil {
 
     public static String getFileNameWithoutExtension(String fileName) {
         if (fileName == null) {
-            return null;
+            return "";
         }
         int pos = fileName.lastIndexOf('.');
         if (pos == -1) {

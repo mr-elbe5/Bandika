@@ -18,10 +18,8 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     ContentData contentData = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT,ContentData.class);
-    assert contentData != null;
     int imageId=rdata.getInt("imageId");
     ImageData image = ContentCache.getFile(imageId,ImageData.class);
-    assert(image!=null);
     if (contentData.hasUserReadRight(rdata)) {
 %>
 <li>

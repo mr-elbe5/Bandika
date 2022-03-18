@@ -33,7 +33,6 @@ public class FileServlet extends WebServlet {
 
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
-        assert fileDir.exists() || fileDir.mkdir();
     }
 
     protected void processRequest(String method, HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -51,7 +50,6 @@ public class FileServlet extends WebServlet {
             String name = FileUtil.getFileNameWithoutExtension(fileName);
             int id = Integer.parseInt(name);
             FileData data = ContentCache.getFile(id);
-            assert(data!=null);
             ContentData parent=ContentCache.getContent(data.getParentId());
             if (!parent.hasUserReadRight(rdata)) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);

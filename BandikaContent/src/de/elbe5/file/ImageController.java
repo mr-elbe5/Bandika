@@ -44,11 +44,9 @@ public class ImageController extends FileController {
     public IResponse openCreateImage(RequestData rdata) {
         int parentId = rdata.getInt("parentId");
         ContentData parentData = ContentCache.getContent(parentId);
-        assert(parentData!=null);
         checkRights(parentData.hasUserEditRight(rdata));
         String type=rdata.getString("type");
         ImageData data = FileFactory.getNewData(type,ImageData.class);
-        assert(data!=null);
         data.setCreateValues(parentData, rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_IMAGE, data);
         return showEditImage();
@@ -65,7 +63,6 @@ public class ImageController extends FileController {
     public IResponse saveImage(RequestData rdata) {
         int contentId = rdata.getId();
         ImageData data = rdata.getSessionObject(ContentRequestKeys.KEY_IMAGE,ImageData.class);
-        assert(data != null && data.getId() == contentId);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         data.readSettingsRequestData(rdata);
@@ -86,7 +83,6 @@ public class ImageController extends FileController {
     public IResponse cutImage(RequestData rdata) {
         int contentId = rdata.getId();
         ImageData data = FileBean.getInstance().getFile(contentId,true, ImageData.class);
-        assert(data!=null);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         rdata.setClipboardData(ContentRequestKeys.KEY_IMAGE, data);
@@ -96,7 +92,6 @@ public class ImageController extends FileController {
     public IResponse copyImage(RequestData rdata) {
         int contentId = rdata.getId();
         ImageData data = FileBean.getInstance().getFile(contentId,true, ImageData.class);
-        assert(data!=null);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         data.setNew(true);

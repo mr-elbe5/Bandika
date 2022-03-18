@@ -16,13 +16,11 @@
 <%@ page import="de.elbe5.page.PageData" %>
 <%@ page import="de.elbe5.layout.LayoutData" %>
 <%@ page import="de.elbe5.layout.LayoutCache" %>
-<%@ page import="de.elbe5.application.Configuration" %>
 <%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
     PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
-    assert (contentData != null);
     List<LayoutData> pageLayouts = LayoutCache.getLayouts(PageData.LAYOUT_TYPE);
     String url = "/ctrl/page/saveContentData/" + contentData.getId();%>
 <div class="modal-dialog modal-lg" role="document">

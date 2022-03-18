@@ -45,21 +45,18 @@ public class CkEditorController extends ContentController {
 
     public IResponse openLinkBrowser(RequestData rdata) {
         ContentData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-        assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
         return new ForwardResponse("/WEB-INF/_jsp/ckeditor/browseLinks.jsp");
     }
 
     public IResponse openImageBrowser(RequestData rdata) {
         ContentData data=rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-        assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
         return new ForwardResponse("/WEB-INF/_jsp/ckeditor/browseImages.jsp");
     }
 
     public IResponse addImage(RequestData rdata) {
         ContentData data=rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-        assert(data!=null);
         checkRights(data.hasUserEditRight(rdata));
         ImageData image=new ImageData();
         image.setCreateValues(data,rdata);

@@ -16,10 +16,12 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     ContentData rootContent = ContentCache.getContentRoot();
-    assert(rootContent!=null);
 %>
             <section class="treeSection">
                 <% if (rdata.hasAnyContentRight()) { %>
+                <div class = "">
+                    <a class = "btn btn-sm btn-outline-light" href="/ctrl/content/clearClipboard"><%=$SH("_clearClipboard")%></a>
+                </div>
                 <ul class="tree pagetree">
                     <% rootContent.displayTreeContent(pageContext,rdata);%>
                 </ul>

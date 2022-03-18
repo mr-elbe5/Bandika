@@ -19,7 +19,6 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     GroupData group = rdata.getSessionObject("groupData",GroupData.class);
-    assert group != null;
     List<UserData> users = UserBean.getInstance().getAllUsers();
     String name, label;
     String url = "/ctrl/group/saveGroup/" + group.getId();

@@ -16,6 +16,8 @@ import java.util.List;
 
 public class SectionData {
 
+    public static final String KEY_SECTION = "sectionData";
+
     protected String name = "";
     protected int contentId = 0;
     protected String cssClass = "";

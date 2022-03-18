@@ -20,6 +20,8 @@ import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.*;
 
+import javax.servlet.http.HttpServletResponse;
+
 public class UserController extends Controller {
 
     public static final String KEY = "user";
@@ -73,7 +75,9 @@ public class UserController extends Controller {
         String captcha = UserSecurity.generateCaptchaString();
         rdata.setSessionObject(RequestKeys.KEY_CAPTCHA, captcha);
         BinaryFile data = UserSecurity.getCaptcha(captcha);
-        assert data != null;
+        if (data==null){
+            return new StatusResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
         return new MemoryFileResponse(data);
     }
 
@@ -107,7 +111,6 @@ public class UserController extends Controller {
     public IResponse saveUser(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         UserData data = (UserData) rdata.getSessionObject("userData");
-        assert(data!=null);
         data.readSettingsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
             return showEditUser();
@@ -137,7 +140,9 @@ public class UserController extends Controller {
     public IResponse showPortrait(RequestData rdata) {
         int userId = rdata.getId();
         BinaryFile file = UserBean.getInstance().getBinaryPortraitData(userId);
-        assert(file!=null);
+        if (file==null){
+            return new StatusResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
         return new MemoryFileResponse(file);
     }
 
@@ -154,7 +159,9 @@ public class UserController extends Controller {
     public IResponse changePassword(RequestData rdata) {
         checkRights(rdata.isLoggedIn() && rdata.getUserId() == rdata.getId());
         UserData user = UserBean.getInstance().getUser(rdata.getLoginUser().getId());
-        assert(user!=null);
+        if (user==null){
+            return new StatusResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
         String oldPassword = rdata.getString("oldPassword");
         String newPassword = rdata.getString("newPassword1");
         String newPassword2 = rdata.getString("newPassword2");

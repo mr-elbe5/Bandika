@@ -20,7 +20,6 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     UserData user = (UserData) rdata.getSessionObject("userData");
-    assert user != null;
     List<CompanyData> companies = CompanyBean.getInstance().getAllCompanies();
     List<GroupData> groups = GroupBean.getInstance().getAllGroups();
     String label;

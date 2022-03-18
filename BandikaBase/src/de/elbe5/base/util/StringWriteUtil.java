@@ -16,7 +16,6 @@ public class StringWriteUtil {
     private final Writer writer;
 
     public StringWriteUtil(Writer writer) {
-        assert writer != null;
         this.writer = writer;
     }
 

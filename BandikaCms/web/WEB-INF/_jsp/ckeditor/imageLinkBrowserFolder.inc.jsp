@@ -17,7 +17,6 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     ContentData contentData = rdata.getRequestObject("treePage", ContentData.class);
-    assert contentData != null;
 %>
 <li class="open">
     <a id="<%=contentData.getId()%>"><%=contentData.getName()%>

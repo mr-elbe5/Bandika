@@ -47,7 +47,6 @@ public abstract class FileController extends Controller {
     }
 
     private IResponse show(FileData data, RequestData rdata){
-        assert(data!=null);
         ContentData parent=ContentCache.getContent(data.getParentId());
         if (!parent.hasUserReadRight(rdata)) {
             //todo

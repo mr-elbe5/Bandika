@@ -200,7 +200,6 @@ public class ImageData extends FileData {
             }
         }
         ImageWriter writer = writers.next();
-        assert (bi != null);
         setBytes(ImageUtil.writeImage(writer, bi));
         setFileSize(getBytes().length);
         setWidth(bi.getWidth());
@@ -213,7 +212,6 @@ public class ImageData extends FileData {
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
         setContentType("image/jpeg");
         ImageWriter writer = writers.next();
-        assert (bi != null);
         setBytes(ImageUtil.writeImage(writer, bi));
         setFileSize(getBytes().length);
         setWidth(bi.getWidth());
@@ -226,7 +224,6 @@ public class ImageData extends FileData {
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
         setContentType("image/jpeg");
         ImageWriter writer = writers.next();
-        assert (bi != null);
         setBytes(ImageUtil.writeImage(writer, bi));
         setFileSize(getBytes().length);
         setWidth(bi.getWidth());
@@ -249,7 +246,6 @@ public class ImageData extends FileData {
     protected void createJpegPreview(BufferedImage image) throws IOException {
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
         ImageWriter writer = writers.next();
-        assert (image != null);
         setPreviewBytes(ImageUtil.writeImage(writer, image));
     }
 

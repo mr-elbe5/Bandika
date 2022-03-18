@@ -17,7 +17,6 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     ContentData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-    assert contentData != null;
     List<String> mediaTypes = contentData.getMediaClasses();
     int fileId=rdata.getInt("fileId");
 %>

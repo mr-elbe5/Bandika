@@ -46,11 +46,9 @@ public class MediaController extends FileController {
     public IResponse openCreateMedia(RequestData rdata) {
         int parentId = rdata.getInt("parentId");
         ContentData parentData = ContentCache.getContent(parentId);
-        assert(parentData!=null);
         checkRights(parentData.hasUserEditRight(rdata));
         String type=rdata.getString("type");
         MediaData data = FileFactory.getNewData(type,MediaData.class);
-        assert(data!=null);
         data.setCreateValues(parentData, rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_MEDIA, data);
         return showEditMedia();
@@ -67,7 +65,6 @@ public class MediaController extends FileController {
     public IResponse saveMedia(RequestData rdata) {
         int contentId = rdata.getId();
         MediaData data = rdata.getSessionObject(ContentRequestKeys.KEY_MEDIA,MediaData.class);
-        assert(data != null && data.getId() == contentId);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         data.readSettingsRequestData(rdata);
@@ -89,7 +86,6 @@ public class MediaController extends FileController {
     public IResponse cutMedia(RequestData rdata) {
         int contentId = rdata.getId();
         MediaData data = FileBean.getInstance().getFile(contentId,true,MediaData.class);
-        assert(data!=null);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         rdata.setClipboardData(ContentRequestKeys.KEY_MEDIA, data);
@@ -99,7 +95,6 @@ public class MediaController extends FileController {
     public IResponse copyMedia(RequestData rdata) {
         int contentId = rdata.getId();
         MediaData data = FileBean.getInstance().getFile(contentId,true,MediaData.class);
-        assert(data!=null);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         data.setNew(true);
