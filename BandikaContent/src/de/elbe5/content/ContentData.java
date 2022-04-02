@@ -113,6 +113,10 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         this.displayName = displayName;
     }
 
+    public String getNavDisplay(){
+        return StringUtil.toHtml(getDisplayName());
+    }
+
     public String getDescription() {
         return description;
     }

@@ -25,20 +25,20 @@
                 }
                 if (!children.isEmpty()) {%>
 <li class="nav-item dropdown">
-    <a class="nav-link <%=activeIds.contains(contentData.getId())? "active" : ""%> dropdown-toggle" data-toggle="dropdown" href="<%=contentData.getUrl()%>" role="button" aria-haspopup="true" aria-expanded="false"><%=$H(contentData.getDisplayName())%>
+    <a class="nav-link <%=activeIds.contains(contentData.getId())? "active" : ""%> dropdown-toggle" data-toggle="dropdown" href="<%=contentData.getUrl()%>" role="button" aria-haspopup="true" aria-expanded="false"><%=contentData.getNavDisplay()%>
     </a>
     <div class="dropdown-menu">
-        <a class="dropdown-item <%=activeIds.contains(contentData.getId())? "active" : ""%>" href="<%=contentData.getUrl()%>"><%=$H(contentData.getDisplayName())%>
+        <a class="dropdown-item <%=activeIds.contains(contentData.getId())? "active" : ""%>" href="<%=contentData.getUrl()%>"><%=contentData.getNavDisplay()%>
         </a>
         <% for (ContentData child : children){%>
-        <a class="dropdown-item <%=activeIds.contains(contentData.getId())? "active" : ""%>" href="<%=child.getUrl()%>"><%=$H(child.getDisplayName())%></a>
+        <a class="dropdown-item <%=activeIds.contains(contentData.getId())? "active" : ""%>" href="<%=child.getUrl()%>"><%=contentData.getNavDisplay()%></a>
         <%}%>
     </div>
 </li>
 <%
                 } else {%>
 <li class="nav-item <%=activeIds.contains(contentData.getId())? "active" : ""%>">
-    <a class="nav-link <%=activeIds.contains(contentData.getId())? "active" : ""%>" href="<%=contentData.getUrl()%>"><%=$H(contentData.getDisplayName())%>
+    <a class="nav-link <%=activeIds.contains(contentData.getId())? "active" : ""%>" href="<%=contentData.getUrl()%>"><%=contentData.getNavDisplay()%>
     </a>
 </li>
 <%

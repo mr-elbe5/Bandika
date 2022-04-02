@@ -29,6 +29,9 @@ header {
       header section.sysnav .dropdown-menu .dropdown-item {
         color: #343a40;
         font-size: 0.8rem; }
+  header img.navIcon {
+    width: 30px;
+    margin-bottom: 0.25em; }
   header div.menu {
     border-bottom: 1px solid #f8f9fa; }
     header div.menu section.menu nav.navbar {
