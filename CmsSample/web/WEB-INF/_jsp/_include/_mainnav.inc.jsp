@@ -31,7 +31,7 @@
         <a class="dropdown-item <%=activeIds.contains(contentData.getId())? "active" : ""%>" href="<%=contentData.getUrl()%>"><%=contentData.getNavDisplay()%>
         </a>
         <% for (ContentData child : children){%>
-        <a class="dropdown-item <%=activeIds.contains(contentData.getId())? "active" : ""%>" href="<%=child.getUrl()%>"><%=contentData.getNavDisplay()%></a>
+        <a class="dropdown-item <%=activeIds.contains(child.getId())? "active" : ""%>" href="<%=child.getUrl()%>"><%=child.getNavDisplay()%></a>
         <%}%>
     </div>
 </li>
