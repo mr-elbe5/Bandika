@@ -1,6 +1,6 @@
 @import "extras";
-@import "../bootstrap/variables";
-@import "../bootstrap/mixins/grid";
+@import "bootstrap/variables";
+@import "bootstrap/mixins/grid";
 
 button:focus, a:focus, .btn:focus {
   outline: 0 !important;
