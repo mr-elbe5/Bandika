@@ -29,17 +29,16 @@ public class ControllerServlet extends WebServlet {
         request.setCharacterEncoding(Configuration.ENCODING);
         String uri = request.getRequestURI();
         RequestType requestType = RequestType.any;
-        if (uri.startsWith("/ctrl")){
+        if (uri.startsWith("/ctrl/")){
             requestType = RequestType.control;
             uri = uri.substring(6);
         }
-        else if (uri.startsWith("/api")){
+        else if (uri.startsWith("/api/")){
             requestType = RequestType.api;
             uri = uri.substring(5);
         }
         RequestData rdata = new RequestData(method, requestType, request);
-        // skip "/ctrl/"
-        StringTokenizer stk = new StringTokenizer(uri.substring(6), "/", false);
+        StringTokenizer stk = new StringTokenizer(uri, "/", false);
         String methodName = "";
         Controller controller = null;
         if (stk.hasMoreTokens()) {
