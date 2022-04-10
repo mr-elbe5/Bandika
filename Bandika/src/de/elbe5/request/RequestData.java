@@ -38,10 +38,13 @@ public class RequestData extends KeyValueMap {
 
     private final String method;
 
+    private final RequestType type;
+
     protected FormError formError = null;
 
-    public RequestData(String method, HttpServletRequest request) {
+    public RequestData(String method, RequestType type, HttpServletRequest request) {
         this.request = request;
+        this.type = type;
         this.method = method;
     }
 
@@ -63,8 +66,16 @@ public class RequestData extends KeyValueMap {
         this.id = id;
     }
 
+    public String getMethod() {
+        return method;
+    }
+
     public boolean isPostback() {
         return method.equals("POST");
+    }
+
+    public RequestType getType() {
+        return type;
     }
 
     /*********** message *********/

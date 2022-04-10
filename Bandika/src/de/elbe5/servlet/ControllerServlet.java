@@ -11,6 +11,7 @@ package de.elbe5.servlet;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.application.Configuration;
 import de.elbe5.request.RequestData;
+import de.elbe5.request.RequestType;
 import de.elbe5.response.IResponse;
 
 import javax.servlet.annotation.MultipartConfig;
@@ -26,8 +27,17 @@ public class ControllerServlet extends WebServlet {
 
     protected void processRequest(String method, HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding(Configuration.ENCODING);
-        RequestData rdata = new RequestData(method, request);
         String uri = request.getRequestURI();
+        RequestType requestType = RequestType.any;
+        if (uri.startsWith("/ctrl")){
+            requestType = RequestType.control;
+            uri = uri.substring(6);
+        }
+        else if (uri.startsWith("/api")){
+            requestType = RequestType.api;
+            uri = uri.substring(5);
+        }
+        RequestData rdata = new RequestData(method, requestType, request);
         // skip "/ctrl/"
         StringTokenizer stk = new StringTokenizer(uri.substring(6), "/", false);
         String methodName = "";

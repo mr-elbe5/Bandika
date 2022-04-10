@@ -9,7 +9,9 @@
 package de.elbe5.content;
 
 import de.elbe5.base.data.BaseData;
+import de.elbe5.base.json.IJsonData;
 import de.elbe5.base.log.Log;
+import de.elbe5.base.util.DateUtil;
 import de.elbe5.base.util.StringUtil;
 import de.elbe5.file.FileData;
 import de.elbe5.file.FileFactory;
@@ -21,15 +23,17 @@ import de.elbe5.response.IMasterInclude;
 import de.elbe5.response.MasterResponse;
 import de.elbe5.rights.Right;
 import de.elbe5.rights.SystemZone;
+import de.elbe5.user.UserCache;
 import de.elbe5.user.UserData;
 import de.elbe5.response.IResponse;
+import org.json.simple.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.*;
 
-public class ContentData extends BaseData implements IMasterInclude, Comparable<ContentData> {
+public class ContentData extends BaseData implements IMasterInclude, Comparable<ContentData>, IJsonData {
 
     public static final String ACCESS_TYPE_OPEN = "OPEN";
     public static final String ACCESS_TYPE_INHERITS = "INHERIT";
@@ -76,6 +80,20 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     }
 
     //base data
+
+    public String getCreatorName(){
+        UserData user= UserCache.getUser(getCreatorId());
+        if (user!=null)
+            return user.getName();
+        return "";
+    }
+
+    public String getChangerName(){
+        UserData user= UserCache.getUser(getChangerId());
+        if (user!=null)
+            return user.getName();
+        return "";
+    }
 
     public String getName() {
         return name;
@@ -527,4 +545,17 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         return getDisplayName().compareTo(data.getDisplayName());
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public JSONObject getJson() {
+        JSONObject json = new JSONObject();
+        json.put("id",getId());
+        json.put("creationDate", DateUtil.asMillis(getCreationDate()));
+        json.put("creatorId", getCreatorId());
+        json.put("creatorName", getCreatorName());
+        json.put("name",getName());
+        json.put("displayName",getDisplayName());
+        json.put("description",getDescription());
+        return json;
+    }
 }

@@ -10,6 +10,7 @@ package de.elbe5.user;
 
 import de.elbe5.base.data.BaseData;
 import de.elbe5.base.data.BinaryFile;
+import de.elbe5.base.json.IJsonData;
 import de.elbe5.base.log.Log;
 import de.elbe5.base.util.ImageUtil;
 import de.elbe5.base.util.StringUtil;
@@ -18,6 +19,7 @@ import de.elbe5.application.Configuration;
 import de.elbe5.group.GroupData;
 import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
+import org.json.simple.JSONObject;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
@@ -26,7 +28,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class UserData extends BaseData {
+public class UserData extends BaseData implements IJsonData {
 
     public static final int ID_ROOT = 1;
 
@@ -407,4 +409,12 @@ public class UserData extends BaseData {
             setPassword(password1);
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public JSONObject getJson() {
+        JSONObject json = new JSONObject();
+        json.put("id",getId());
+        json.put("name",getName());
+        return json;
+    }
 }

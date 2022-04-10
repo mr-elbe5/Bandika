@@ -12,6 +12,7 @@ import de.elbe5.application.Configuration;
 import de.elbe5.content.ContentController;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
+import de.elbe5.request.RequestType;
 import de.elbe5.response.IResponse;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ public class ContentServlet extends WebServlet {
 
     protected void processRequest(String method, HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding(Configuration.ENCODING);
-        RequestData rdata = new RequestData(method, request);
+        RequestData rdata = new RequestData(method, RequestType.content, request);
         request.setAttribute(RequestKeys.KEY_REQUESTDATA, rdata);
         rdata.readRequestParams();
         rdata.initSession();

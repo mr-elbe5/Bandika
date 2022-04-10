@@ -5,6 +5,15 @@ button:focus, a:focus, .btn:focus {
 th, td {
   text-align: left; }
 
+pre {
+  font-family: Courier New, Monospaced, serif;
+  color: black;
+  border: 1px solid darkgray;
+  padding: 0.5em; }
+
+p:last-child {
+  margin-bottom: 0; }
+
 .padded {
   padding-top: calc(0.375rem + 1px);
   padding-bottom: calc(0.375rem + 1px); }
@@ -232,7 +241,7 @@ div#pageContainer .editArea .partEditButtons {
 div#pageContainer .editArea .sectionEditButtons {
   position: absolute;
   margin-top: -2.2em;
-  margin-left: -60px; }
+  margin-left: -68px; }
 div#pageContainer .editArea .dropdown-menu {
   padding: 0; }
   div#pageContainer .editArea .dropdown-menu .dropdown-item {
