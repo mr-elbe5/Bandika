@@ -11,6 +11,7 @@ package de.elbe5.tag;
 import de.elbe5.base.util.StringUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspException;
 
 public class FormSelectTag extends FormLineTag {
 
@@ -22,6 +23,12 @@ public class FormSelectTag extends FormLineTag {
 
     String controlPreHtml = "<select id=\"{1}\" name=\"{2}\" class=\"form-control\" {3}>";
     String controlPostHtml = "</select>\n";
+
+    @Override
+    public int doStartTag() throws JspException {
+        padded = true;
+        return super.doStartTag();
+    }
 
     protected String getPreControlHtml(HttpServletRequest request) {
         return StringUtil.format(controlPreHtml, name, name, onchange.isEmpty() ? "" : "onchange=\"" + onchange + "\"");

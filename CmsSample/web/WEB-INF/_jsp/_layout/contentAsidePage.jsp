@@ -12,13 +12,13 @@
 <%@ taglib uri="/WEB-INF/sectiontags.tld" prefix="section" %>
         <form:message />
         <section class="contentTop">
-            <section:section name="top"></section:section>
+            <section:section name="top" cssClass="row"></section:section>
         </section>
         <div class="row">
             <section class="col-lg-8 contentSection" id="content">
-                <section:section name="main" cssClass=""></section:section>
+                <section:section name="main" cssClass="row"></section:section>
             </section>
             <aside class="col-lg-4 asideSection" id="aside">
-                <section:section name="aside" cssClass=""></section:section>
+                <section:section name="aside" cssClass="row"></section:section>
             </aside>
         </div>

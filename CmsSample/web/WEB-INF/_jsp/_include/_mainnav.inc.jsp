@@ -32,10 +32,7 @@
         </a>
         <% for (ContentData child : children){%>
         <a class="dropdown-item <%=activeIds.contains(child.getId())? "active" : ""%>" href="<%=child.getUrl()%>"><%=child.getNavDisplay()%></a>
-        <% for (ContentData subchild: child.getChildren()){%>
-            <a class="dropdown-item subitem <%=activeIds.contains(subchild.getId())? "active" : ""%>" href="<%=subchild.getUrl()%>"><%=subchild.getNavDisplay()%></a>
-        <%}
-        }%>
+        <%}%>
     </div>
 </li>
 <%

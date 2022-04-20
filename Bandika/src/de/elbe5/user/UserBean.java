@@ -132,7 +132,6 @@ public class UserBean extends DbBean {
         data.setDeleted(rs.getBoolean(i));
     }
 
-
     private static final String LOGIN_SQL = "SELECT pwd,id,change_date,first_name,last_name,email FROM t_user WHERE login=? AND approved=TRUE AND locked=FALSE AND deleted=FALSE";
 
     public UserData loginUser(String login, String pwd) {

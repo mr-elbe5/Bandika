@@ -1343,7 +1343,7 @@ main {
 .col-form-label-sm {
   padding-top: calc(0.25rem + 1px);
   padding-bottom: calc(0.25rem + 1px);
-  font-size: 0.875rem; }
+  font-size: 0.9rem; }
 
 .form-control {
   display: block;
@@ -1392,7 +1392,7 @@ main {
 .form-control-sm {
   min-height: calc(1.5em + 0.5rem + 2px);
   padding: 0.25rem 0.5rem;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   border-radius: 0.2rem; }
 
 .form-control-lg {
@@ -1450,7 +1450,7 @@ main {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
   padding-left: 0.5rem;
-  font-size: 0.875rem; }
+  font-size: 0.9rem; }
 
 .form-select-lg {
   height: calc(1.5em + 1rem + 2px);
@@ -1852,7 +1852,7 @@ main {
 .input-group-sm > .input-group-prepend > .btn,
 .input-group-sm > .input-group-append > .btn {
   padding: 0.25rem 0.5rem;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   border-radius: 0.2rem; }
 
 .input-group-lg > .form-select,
@@ -1892,7 +1892,7 @@ main {
   max-width: 100%;
   padding: 0.25rem 0.5rem;
   margin-top: .1rem;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   color: #fff;
   background-color: rgba(40, 167, 69, 0.9);
   border-radius: 0.25rem; }
@@ -1959,7 +1959,7 @@ main {
   max-width: 100%;
   padding: 0.25rem 0.5rem;
   margin-top: .1rem;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   color: #fff;
   background-color: rgba(220, 53, 69, 0.9);
   border-radius: 0.25rem; }
@@ -2400,7 +2400,7 @@ main {
 
 .btn-sm, .btn-group-sm > .btn {
   padding: 0.25rem 0.5rem;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   border-radius: 0.2rem; }
 
 .btn-block {
@@ -2604,7 +2604,7 @@ main {
   display: block;
   padding: 0.5rem 1.5rem;
   margin-bottom: 0;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   color: #6c757d;
   white-space: nowrap; }
 
@@ -3514,7 +3514,7 @@ button.close {
   word-spacing: normal;
   white-space: normal;
   line-break: auto;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   word-wrap: break-word;
   opacity: 0; }
   .tooltip.show {
@@ -3599,7 +3599,7 @@ button.close {
   word-spacing: normal;
   white-space: normal;
   line-break: auto;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   word-wrap: break-word;
   background-color: #fff;
   background-clip: padding-box;

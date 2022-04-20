@@ -20,7 +20,6 @@ import de.elbe5.group.GroupData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IMasterInclude;
-import de.elbe5.response.MasterResponse;
 import de.elbe5.rights.Right;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.user.UserCache;
@@ -439,6 +438,18 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
             ContentData currentContent = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
             rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, this);
             context.include("/WEB-INF/_jsp/content/treeContent.inc.jsp", true);
+            //restore
+            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, currentContent);
+        }
+    }
+
+    //used in admin jsp
+    public void displayAdminTreeContent(PageContext context, RequestData rdata) throws IOException, ServletException {
+        if (hasUserReadRight(rdata)) {
+            //backup
+            ContentData currentContent = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
+            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, this);
+            context.include("/WEB-INF/_jsp/content/adminTreeContent.inc.jsp", true);
             //restore
             rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, currentContent);
         }
