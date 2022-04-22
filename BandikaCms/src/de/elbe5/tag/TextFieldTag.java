@@ -8,8 +8,9 @@
  */
 package de.elbe5.tag;
 
-import de.elbe5.base.log.Log;
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.base.Log;
+import de.elbe5.base.StringFormatter;
+import de.elbe5.base.StringHelper;
 import de.elbe5.content.ContentData;
 import de.elbe5.page.PageData;
 import de.elbe5.page.LayoutPartData;
@@ -44,14 +45,14 @@ public class TextFieldTag extends FieldTag {
             String content = field.getContent();
             if (editMode) {
                 if (rows > 1)
-                    StringUtil.write(writer, "<textarea class=\"editField\" name=\"{1}\" rows=\"{2}\">{3}</textarea>", field.getIdentifier(), Integer.toString(rows), StringUtil.toHtml(content.isEmpty() ? placeholder : content));
+                    StringFormatter.write(writer, "<textarea class=\"editField\" name=\"{1}\" rows=\"{2}\">{3}</textarea>", field.getIdentifier(), Integer.toString(rows), StringHelper.toHtml(content.isEmpty() ? placeholder : content));
                 else
-                    StringUtil.write(writer, "<input type=\"text\" class=\"editField\" name=\"{1}\" placeholder=\"{2}\" value=\"{3}\" />", field.getIdentifier(), field.getIdentifier(), StringUtil.toHtml(content));
+                    StringFormatter.write(writer, "<input type=\"text\" class=\"editField\" name=\"{1}\" placeholder=\"{2}\" value=\"{3}\" />", field.getIdentifier(), field.getIdentifier(), StringHelper.toHtml(content));
             } else {
                 if (content.length() == 0) {
                     writer.write("&nbsp;");
                 } else {
-                    writer.write(StringUtil.toHtmlMultiline(content));
+                    writer.write(StringHelper.toHtmlMultiline(content));
                 }
             }
 

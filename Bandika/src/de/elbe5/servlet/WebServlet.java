@@ -8,8 +8,6 @@
  */
 package de.elbe5.servlet;
 
-import de.elbe5.base.data.Strings;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

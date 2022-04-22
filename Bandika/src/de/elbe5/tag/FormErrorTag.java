@@ -8,8 +8,8 @@
  */
 package de.elbe5.tag;
 
-import de.elbe5.base.log.Log;
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.base.Log;
+import de.elbe5.base.StringHelper;
 import de.elbe5.request.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +26,7 @@ public class FormErrorTag extends BaseTag {
             if (rdata.hasFormError()) {
                 Writer writer = getWriter();
                 writer.write("<div class=\"formError\">\n");
-                writer.write(StringUtil.toHtmlMultiline(rdata.getFormError(false).getFormErrorString()));
+                writer.write(StringHelper.toHtmlMultiline(rdata.getFormError(false).getFormErrorString()));
                 writer.write("</div>");
             }
         } catch (Exception e) {

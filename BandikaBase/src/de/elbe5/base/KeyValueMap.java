@@ -6,10 +6,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.base.data;
-
-import de.elbe5.base.log.Log;
-import de.elbe5.base.util.StringUtil;
+package de.elbe5.base;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -171,7 +168,7 @@ public class KeyValueMap extends HashMap<String, Object> {
         LocalDate value = null;
         try {
             String str = getString(key);
-            value = StringUtil.fromDate(str);
+            value = DateHelper.fromDate(str);
 
         } catch (Exception ignore) {/* do nothing */
         }
@@ -182,7 +179,7 @@ public class KeyValueMap extends HashMap<String, Object> {
         LocalTime value = null;
         try {
             String str = getString(key);
-            value = StringUtil.fromTime(str);
+            value = DateHelper.fromTime(str);
         } catch (Exception ignore) {/* do nothing */
         }
         return value;
@@ -192,7 +189,7 @@ public class KeyValueMap extends HashMap<String, Object> {
         LocalDateTime value = null;
         try {
             String str = getString(key);
-            value = StringUtil.fromDateTime(str);
+            value = DateHelper.fromDateTime(str);
         } catch (Exception ignore) {/* do nothing */
         }
         return value;

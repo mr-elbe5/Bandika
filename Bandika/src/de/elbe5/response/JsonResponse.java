@@ -1,7 +1,7 @@
 package de.elbe5.response;
 
 import de.elbe5.application.Configuration;
-import de.elbe5.base.log.Log;
+import de.elbe5.base.Log;
 import de.elbe5.request.RequestData;
 
 import javax.servlet.ServletContext;

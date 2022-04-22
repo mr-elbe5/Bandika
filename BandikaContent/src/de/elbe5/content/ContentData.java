@@ -8,11 +8,11 @@
  */
 package de.elbe5.content;
 
-import de.elbe5.base.data.BaseData;
-import de.elbe5.base.json.IJsonData;
-import de.elbe5.base.log.Log;
-import de.elbe5.base.util.DateUtil;
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.base.BaseData;
+import de.elbe5.base.IJsonData;
+import de.elbe5.base.Log;
+import de.elbe5.base.DateHelper;
+import de.elbe5.base.StringHelper;
 import de.elbe5.file.FileData;
 import de.elbe5.file.FileFactory;
 import de.elbe5.group.GroupBean;
@@ -113,7 +113,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     public void generatePath() {
         if (getParent() == null)
             return;
-        setPath(getParent().getPath() + "/" + StringUtil.toUrl(getName().toLowerCase()));
+        setPath(getParent().getPath() + "/" + StringHelper.toUrl(getName().toLowerCase()));
     }
 
     public String getUrl() {
@@ -131,7 +131,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     }
 
     public String getNavDisplay(){
-        return StringUtil.toHtml(getDisplayName());
+        return StringHelper.toHtml(getDisplayName());
     }
 
     public String getDescription() {
@@ -514,7 +514,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
 
     public void readRequestData(RequestData rdata) {
         setDisplayName(rdata.getString("displayName").trim());
-        setName(StringUtil.toSafeWebName(getDisplayName()));
+        setName(StringHelper.toSafeWebName(getDisplayName()));
         setDescription(rdata.getString("description"));
         setAccessType(rdata.getString("accessType"));
         setNavType(rdata.getString("navType"));
@@ -561,7 +561,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     public JSONObject getJson() {
         JSONObject json = new JSONObject();
         json.put("id",getId());
-        json.put("creationDate", DateUtil.asMillis(getCreationDate()));
+        json.put("creationDate", DateHelper.asMillis(getCreationDate()));
         json.put("creatorId", getCreatorId());
         json.put("creatorName", getCreatorName());
         json.put("name",getName());

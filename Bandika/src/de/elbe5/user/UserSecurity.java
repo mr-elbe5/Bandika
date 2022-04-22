@@ -8,13 +8,12 @@
  */
 package de.elbe5.user;
 
-import de.elbe5.base.crypto.PBKDF2Encryption;
-import de.elbe5.base.data.BinaryFile;
-import de.elbe5.base.log.Log;
+import de.elbe5.base.PBKDF2Encryption;
+import de.elbe5.base.BinaryFile;
+import de.elbe5.base.Log;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

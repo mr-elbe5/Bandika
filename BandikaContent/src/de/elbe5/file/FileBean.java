@@ -9,9 +9,9 @@
 package de.elbe5.file;
 
 import de.elbe5.application.ApplicationPath;
-import de.elbe5.base.data.BinaryFile;
-import de.elbe5.base.log.Log;
-import de.elbe5.base.util.FileUtil;
+import de.elbe5.base.BinaryFile;
+import de.elbe5.base.Log;
+import de.elbe5.base.FileHelper;
 import de.elbe5.content.ContentCentral;
 import de.elbe5.database.DbBean;
 
@@ -274,7 +274,7 @@ public class FileBean extends DbBean {
     public boolean createTempFile(File file){
         Log.log("creating file " + file.getName());
         String fileName = file.getName();
-        String name = FileUtil.getFileNameWithoutExtension(fileName);
+        String name = FileHelper.getFileNameWithoutExtension(fileName);
         int id = Integer.parseInt(name);
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -319,9 +319,9 @@ public class FileBean extends DbBean {
 
     public boolean writeFile(FileData data, boolean replace){
         String path = ApplicationPath.getAppFilePath()+"/"+data.getTempFileName();
-        if (!replace && FileUtil.fileExists(path))
+        if (!replace && FileHelper.fileExists(path))
             return true;
-        return FileUtil.writeBinaryFile(path, data.getBytes());
+        return FileHelper.writeBinaryFile(path, data.getBytes());
     }
 
     private static final String DELETE_SQL = "DELETE FROM t_file WHERE id=?";

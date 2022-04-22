@@ -1,6 +1,6 @@
 package de.elbe5.content;
 
-import de.elbe5.base.log.Log;
+import de.elbe5.base.Log;
 
 import java.lang.reflect.Constructor;
 

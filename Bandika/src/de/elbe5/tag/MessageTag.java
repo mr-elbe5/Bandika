@@ -8,8 +8,9 @@
  */
 package de.elbe5.tag;
 
-import de.elbe5.base.log.Log;
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.base.Log;
+import de.elbe5.base.StringFormatter;
+import de.elbe5.base.StringHelper;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
 
@@ -28,7 +29,7 @@ public class MessageTag extends BaseTag {
                 String msg = rdata.getString(RequestKeys.KEY_MESSAGE);
                 String msgType = rdata.getString(RequestKeys.KEY_MESSAGETYPE);
                 Writer writer = getWriter();
-                writer.write(StringUtil.format(controlHtml, msgType, StringUtil.toHtml(msg)));
+                writer.write(StringFormatter.format(controlHtml, msgType, StringHelper.toHtml(msg)));
             }
         } catch (Exception e) {
             Log.error("error writing message tag", e);

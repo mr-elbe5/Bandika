@@ -15,6 +15,7 @@
 <%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.content.ContentLog" %>
 <%@ page import="de.elbe5.content.ContentCache" %>
+<%@ page import="de.elbe5.base.DateHelper" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
@@ -30,7 +31,7 @@
             <% for (ContentDayLog dayLog : dayLogs) {%>
             <tr>
                 <th colspan="2">
-                    <%=StringUtil.toHtmlDate(dayLog.getDay())%>
+                    <%=DateHelper.toHtmlDate(dayLog.getDay())%>
                 </th>
             </tr>
             <% for (ContentLog log : dayLog.getLogs()) {%>

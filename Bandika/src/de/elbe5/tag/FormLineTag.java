@@ -8,8 +8,8 @@
  */
 package de.elbe5.tag;
 
-import de.elbe5.base.data.Strings;
-import de.elbe5.base.log.Log;
+import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Log;
 import de.elbe5.request.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,7 +60,7 @@ public class FormLineTag extends BaseTag {
                     writer.write("\"");
                 }
                 writer.write(">");
-                writer.write(label.startsWith("_") ? Strings.html(label) : label);
+                writer.write(label.startsWith("_") ? LocalizedStrings.html(label) : label);
                 if (required) {
                     writer.write(" <sup>*</sup>");
                 }

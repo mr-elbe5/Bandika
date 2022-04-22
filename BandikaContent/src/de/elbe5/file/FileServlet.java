@@ -10,14 +10,12 @@ package de.elbe5.file;
 
 import de.elbe5.application.ApplicationPath;
 import de.elbe5.application.Configuration;
-import de.elbe5.base.log.Log;
-import de.elbe5.base.util.FileUtil;
+import de.elbe5.base.Log;
+import de.elbe5.base.FileHelper;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.RequestData;
-import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestType;
-import de.elbe5.response.IResponse;
 import de.elbe5.servlet.WebServlet;
 
 import javax.servlet.ServletConfig;
@@ -48,7 +46,7 @@ public class FileServlet extends WebServlet {
                 return;
             }
             fileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8).substring(1);
-            String name = FileUtil.getFileNameWithoutExtension(fileName);
+            String name = FileHelper.getFileNameWithoutExtension(fileName);
             int id = Integer.parseInt(name);
             FileData data = ContentCache.getFile(id);
             ContentData parent=ContentCache.getContent(data.getParentId());

@@ -6,7 +6,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.base.util;
+package de.elbe5.base;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -25,7 +25,7 @@ import java.util.Iterator;
  * Class ImageTool is a helper class for image manipulation. <br>
  * Usage:
  */
-public class ImageUtil {
+public class ImageHelper {
 
     public static BufferedImage createImage(byte[] bytes, String contentType) throws IOException {
         Iterator<ImageReader> readers = ImageIO.getImageReadersByMIMEType(contentType);

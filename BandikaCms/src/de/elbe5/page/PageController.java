@@ -10,8 +10,8 @@ package de.elbe5.page;
 
 import de.elbe5.application.Configuration;
 import de.elbe5.application.MailHelper;
-import de.elbe5.base.data.Strings;
-import de.elbe5.base.log.Log;
+import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Log;
 import de.elbe5.content.ContentBean;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentController;
@@ -200,7 +200,7 @@ public class PageController extends ContentController {
         String sessionCaptcha = rdata.getSessionObject(RequestKeys.KEY_CAPTCHA, String.class);
         if (!captcha.equals(sessionCaptcha)){
             rdata.addFormField("captcha");
-            rdata.addFormError(Strings.string("_captchaError"));
+            rdata.addFormError(LocalizedStrings.string("_captchaError"));
             return show(rdata);
         }
         String name = rdata.getString("contactName");
@@ -218,12 +218,12 @@ public class PageController extends ContentController {
         if (!rdata.checkFormErrors()){
             return show(rdata);
         }
-        message = String.format(Strings.html("_contactRequestText"),name,email) + message;
-        if (!MailHelper.sendPlainMail(Configuration.getMailReceiver(), Strings.string("_contactRequest"), message)) {
-            rdata.setMessage(Strings.string("_contactRequestError"), RequestKeys.MESSAGE_TYPE_ERROR);
+        message = String.format(LocalizedStrings.html("_contactRequestText"),name,email) + message;
+        if (!MailHelper.sendPlainMail(Configuration.getMailReceiver(), LocalizedStrings.string("_contactRequest"), message)) {
+            rdata.setMessage(LocalizedStrings.string("_contactRequestError"), RequestKeys.MESSAGE_TYPE_ERROR);
             return show(rdata);
         }
-        rdata.setMessage(Strings.string("_contactRequestSent"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(LocalizedStrings.string("_contactRequestSent"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         rdata.removeSessionObject(RequestKeys.KEY_CAPTCHA);
         return show(rdata);
     }

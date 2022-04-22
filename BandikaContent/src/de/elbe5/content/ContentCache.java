@@ -8,7 +8,7 @@
  */
 package de.elbe5.content;
 
-import de.elbe5.base.log.Log;
+import de.elbe5.base.Log;
 import de.elbe5.file.FileBean;
 import de.elbe5.file.FileData;
 

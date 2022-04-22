@@ -9,9 +9,9 @@
 package de.elbe5.database;
 
 import de.elbe5.application.ApplicationPath;
-import de.elbe5.base.data.BaseData;
-import de.elbe5.base.log.Log;
-import de.elbe5.base.util.FileUtil;
+import de.elbe5.base.BaseData;
+import de.elbe5.base.Log;
+import de.elbe5.base.FileHelper;
 
 import java.io.File;
 import java.sql.*;
@@ -169,7 +169,7 @@ public abstract class DbBean {
         String path = ApplicationPath.getAppROOTPath() + "/static-content/img/"+fileName;
         File file=new File(path);
         if (file.exists()) {
-            data= FileUtil.readBinaryFile(file);
+            data= FileHelper.readBinaryFile(file);
         }
         return data;
     }

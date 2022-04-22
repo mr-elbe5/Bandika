@@ -8,7 +8,7 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.base.data.BinaryFile;
+import de.elbe5.base.BinaryFile;
 
 import java.util.HashMap;
 import java.util.Map;

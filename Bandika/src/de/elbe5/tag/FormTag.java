@@ -8,8 +8,8 @@
  */
 package de.elbe5.tag;
 
-import de.elbe5.base.log.Log;
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.base.Log;
+import de.elbe5.base.StringFormatter;
 import de.elbe5.response.IResponse;
 
 import javax.servlet.jsp.JspException;
@@ -58,7 +58,7 @@ public class FormTag extends BaseTag {
     public int doStartTag() throws JspException {
         try {
             Writer writer = getWriter();
-            writer.write(StringUtil.format(preHtml, url, name, name, multi ? " enctype=\"multipart/form-data\"" : ""));
+            writer.write(StringFormatter.format(preHtml, url, name, name, multi ? " enctype=\"multipart/form-data\"" : ""));
         } catch (Exception e) {
             Log.error("error writing form tag", e);
             throw new JspException(e);
@@ -72,7 +72,7 @@ public class FormTag extends BaseTag {
             Writer writer = getWriter();
             writer.write(postHtml);
             if (ajax) {
-                writer.write(StringUtil.format(ajaxHtml,
+                writer.write(StringFormatter.format(ajaxHtml,
                         name,
                         multi ? "serializeFiles" : "serialize",
                         multi ? "postMultiByAjax" : "postByAjax",

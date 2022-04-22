@@ -8,7 +8,7 @@
  */
 package de.elbe5.tag;
 
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.base.StringFormatter;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,7 +24,7 @@ public class FormTextAreaTag extends FormLineTag {
     String controlPostHtml = "</textarea>\n";
 
     protected String getPreControlHtml(HttpServletRequest request) {
-        return StringUtil.format(controlPreHtml, name, name, height.isEmpty() ? "" : "style=\"height:" + height + "\"");
+        return StringFormatter.format(controlPreHtml, name, name, height.isEmpty() ? "" : "style=\"height:" + height + "\"");
     }
 
     protected String getPostControlHtml(HttpServletRequest request) {

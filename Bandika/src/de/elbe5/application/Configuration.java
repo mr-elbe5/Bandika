@@ -8,7 +8,7 @@
  */
 package de.elbe5.application;
 
-import de.elbe5.base.mail.Mailer;
+import de.elbe5.base.Mailer;
 
 import javax.servlet.ServletContext;
 import java.util.*;

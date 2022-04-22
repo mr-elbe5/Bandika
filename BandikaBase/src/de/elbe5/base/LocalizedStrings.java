@@ -6,14 +6,13 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.base.data;
+package de.elbe5.base;
 
-import de.elbe5.base.log.Log;
 import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.*;
 
-public class Strings {
+public class LocalizedStrings {
 
     private final static Map<String, String> stringMap = new HashMap<>();
 

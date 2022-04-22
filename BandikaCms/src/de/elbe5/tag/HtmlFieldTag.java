@@ -8,8 +8,9 @@
  */
 package de.elbe5.tag;
 
-import de.elbe5.base.log.Log;
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.base.Log;
+import de.elbe5.base.StringFormatter;
+import de.elbe5.base.StringHelper;
 import de.elbe5.content.ContentData;
 import de.elbe5.page.PageData;
 import de.elbe5.page.LayoutPartData;
@@ -41,11 +42,11 @@ public class HtmlFieldTag extends FieldTag {
 
             boolean editMode = contentData.getViewType().equals(ContentData.VIEW_TYPE_EDIT);
             if (editMode) {
-                StringUtil.write(writer, script,
+                StringFormatter.write(writer, script,
                         field.getIdentifier(),
-                        field.getContent().isEmpty() ? StringUtil.toHtml(placeholder) : field.getContent(),
+                        field.getContent().isEmpty() ? StringHelper.toHtml(placeholder) : field.getContent(),
                         field.getIdentifier(),
-                        StringUtil.toHtml(field.getContent()),
+                        StringHelper.toHtml(field.getContent()),
                         field.getIdentifier(),
                         Integer.toString(contentData.getId()),
                         Integer.toString(contentData.getId()));

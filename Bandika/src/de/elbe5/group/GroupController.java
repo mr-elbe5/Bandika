@@ -8,8 +8,8 @@
  */
 package de.elbe5.group;
 
-import de.elbe5.base.data.Strings;
-import de.elbe5.base.data.BaseData;
+import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.BaseData;
 import de.elbe5.request.*;
 import de.elbe5.response.StatusResponse;
 import de.elbe5.rights.SystemZone;
@@ -75,7 +75,7 @@ public class GroupController extends Controller {
         }
         GroupBean.getInstance().saveGroup(data);
         UserCache.setDirty();
-        rdata.setMessage(Strings.string("_groupSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(LocalizedStrings.string("_groupSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/admin/openPersonAdministration?groupId=" + data.getId());
     }
 
@@ -83,12 +83,12 @@ public class GroupController extends Controller {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
-            rdata.setMessage(Strings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
             return new ForwardResponse("/ctrl/admin/openPersonAdministration");
         }
         GroupBean.getInstance().deleteGroup(id);
         UserCache.setDirty();
-        rdata.setMessage(Strings.string("_groupDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(LocalizedStrings.string("_groupDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openPersonAdministration");
     }
 

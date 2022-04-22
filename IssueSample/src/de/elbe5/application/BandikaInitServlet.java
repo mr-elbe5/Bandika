@@ -8,9 +8,9 @@
  */
 package de.elbe5.application;
 
-import de.elbe5.base.data.Strings;
-import de.elbe5.base.json.JsonWebToken;
-import de.elbe5.base.log.Log;
+import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.JsonWebToken;
+import de.elbe5.base.Log;
 import de.elbe5.company.CompanyCache;
 import de.elbe5.company.CompanyController;
 import de.elbe5.database.DbConnector;
@@ -36,8 +36,8 @@ public class BandikaInitServlet extends InitServlet {
         ServletContext context=servletConfig.getServletContext();
         ApplicationPath.initializePath(ApplicationPath.getCatalinaAppDir(context), ApplicationPath.getCatalinaAppROOTDir(context));
         Configuration.setConfigs(context);
-        Strings.addBundle("bandika", Configuration.getLocale());
-        Strings.addBundle("application", Configuration.getLocale());
+        LocalizedStrings.addBundle("bandika", Configuration.getLocale());
+        LocalizedStrings.addBundle("application", Configuration.getLocale());
         Log.initLog(ApplicationPath.getAppName());
         if (!DbConnector.getInstance().initialize("jdbc/bandika"))
             return;

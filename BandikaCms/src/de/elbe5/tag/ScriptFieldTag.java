@@ -8,8 +8,9 @@
  */
 package de.elbe5.tag;
 
-import de.elbe5.base.log.Log;
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.base.Log;
+import de.elbe5.base.StringFormatter;
+import de.elbe5.base.StringHelper;
 import de.elbe5.content.ContentData;
 import de.elbe5.page.PageData;
 import de.elbe5.page.LayoutPartData;
@@ -37,9 +38,9 @@ public class ScriptFieldTag extends FieldTag {
             boolean editMode = contentData.getViewType().equals(ContentData.VIEW_TYPE_EDIT);
             String content = field.getContent();
             if (editMode) {
-                StringUtil.write(writer, "<textarea class=\"editField\" name=\"{1}\" rows=\"5\" >{2}</textarea>", field.getIdentifier(), StringUtil.toHtml(content));
+                StringFormatter.write(writer, "<textarea class=\"editField\" name=\"{1}\" rows=\"5\" >{2}</textarea>", field.getIdentifier(), StringHelper.toHtml(content));
             } else if (!content.isEmpty()) {
-                StringUtil.write(writer, "<script type=\"text/javascript\">{1}</script>", content);
+                StringFormatter.write(writer, "<script type=\"text/javascript\">{1}</script>", content);
             }
 
         } catch (Exception e) {

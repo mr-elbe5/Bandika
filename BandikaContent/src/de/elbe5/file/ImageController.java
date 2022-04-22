@@ -8,7 +8,7 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.base.data.Strings;
+import de.elbe5.base.LocalizedStrings;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.ContentRequestKeys;
@@ -76,7 +76,7 @@ public class ImageController extends FileController {
         }
         data.setNew(false);
         ContentCache.setDirty();
-        rdata.setMessage(Strings.string("_fileSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(LocalizedStrings.string("_fileSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
     }
 
@@ -107,7 +107,7 @@ public class ImageController extends FileController {
         ImageData data=rdata.getClipboardData(ContentRequestKeys.KEY_IMAGE,ImageData.class);
         ContentData parent=ContentCache.getContent(parentId);
         if (parent == null){
-            rdata.setMessage(Strings.string("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(LocalizedStrings.string("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata);
         }
         checkRights(parent.hasUserEditRight(rdata));
@@ -117,7 +117,7 @@ public class ImageController extends FileController {
         FileBean.getInstance().saveFile(data, true);
         rdata.clearClipboardData(ContentRequestKeys.KEY_IMAGE);
         ContentCache.setDirty();
-        rdata.setMessage(Strings.string("_imagePasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(LocalizedStrings.string("_imagePasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,data.getId());
     }
 

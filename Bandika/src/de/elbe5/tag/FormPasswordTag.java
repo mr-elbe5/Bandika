@@ -8,7 +8,7 @@
  */
 package de.elbe5.tag;
 
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.base.StringFormatter;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,7 +17,7 @@ public class FormPasswordTag extends FormLineTag {
     String controlPreHtml = "<input type=\"password\" id=\"{1}\" name=\"{2}\" class=\"form-control\" />\n";
 
     protected String getPreControlHtml(HttpServletRequest request) {
-        return StringUtil.format(controlPreHtml, name, name);
+        return StringFormatter.format(controlPreHtml, name, name);
     }
 
 }

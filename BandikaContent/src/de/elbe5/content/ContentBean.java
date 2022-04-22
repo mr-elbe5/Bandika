@@ -8,7 +8,7 @@
  */
 package de.elbe5.content;
 
-import de.elbe5.base.log.Log;
+import de.elbe5.base.Log;
 import de.elbe5.database.DbBean;
 import de.elbe5.rights.Right;
 

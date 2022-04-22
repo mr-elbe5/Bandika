@@ -8,7 +8,7 @@
  */
 package de.elbe5.database;
 
-import de.elbe5.base.log.Log;
+import de.elbe5.base.Log;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;

@@ -9,12 +9,11 @@
 package de.elbe5.request;
 
 import de.elbe5.application.Configuration;
-import de.elbe5.base.data.BaseData;
-import de.elbe5.base.data.BinaryFile;
-import de.elbe5.base.data.KeyValueMap;
-import de.elbe5.base.data.Strings;
-import de.elbe5.base.log.Log;
-import de.elbe5.response.StatusResponse;
+import de.elbe5.base.BaseData;
+import de.elbe5.base.BinaryFile;
+import de.elbe5.base.KeyValueMap;
+import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Log;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.user.UserData;
 
@@ -160,7 +159,7 @@ public class RequestData extends KeyValueMap {
         if (formError == null)
             return true;
         if (formError.isFormIncomplete())
-            formError.addFormError(Strings.string("_notComplete"));
+            formError.addFormError(LocalizedStrings.string("_notComplete"));
         return formError.isEmpty();
     }
 

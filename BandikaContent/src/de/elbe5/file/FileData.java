@@ -8,12 +8,11 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.base.data.BaseData;
-import de.elbe5.base.data.BinaryFile;
-import de.elbe5.base.util.FileUtil;
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.base.BaseData;
+import de.elbe5.base.BinaryFile;
+import de.elbe5.base.FileHelper;
+import de.elbe5.base.StringHelper;
 import de.elbe5.content.ContentData;
-import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestData;
 
 public abstract class FileData extends BaseData {
@@ -45,7 +44,7 @@ public abstract class FileData extends BaseData {
         int pos= getFileName().lastIndexOf('.');
         if (pos==-1)
             return;
-        setFileName(StringUtil.toSafeWebName(getDisplayName())+ getFileName().substring(pos));
+        setFileName(StringHelper.toSafeWebName(getDisplayName())+ getFileName().substring(pos));
     }
 
     public String getFileName() {
@@ -56,7 +55,7 @@ public abstract class FileData extends BaseData {
         if (!this.fileName.isEmpty() && !this.fileName.equals(fileName))
             oldFileName=this.fileName;
         this.fileName = fileName;
-        extension = FileUtil.getExtension(fileName);
+        extension = FileHelper.getExtension(fileName);
         tempFileName = getId() + extension;
     }
 
@@ -82,7 +81,7 @@ public abstract class FileData extends BaseData {
 
     public String getDisplayName() {
         if (displayName.isEmpty() )
-            return FileUtil.getFileNameWithoutExtension(getFileName());
+            return FileHelper.getFileNameWithoutExtension(getFileName());
         return displayName;
     }
 
@@ -160,7 +159,7 @@ public abstract class FileData extends BaseData {
     // helper
 
     public void createFromBinaryFile(BinaryFile file) {
-        if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringUtil.isNullOrEmpty(file.getContentType())) {
+        if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringHelper.isNullOrEmpty(file.getContentType())) {
             setFileName(file.getFileName());
             setBytes(file.getBytes());
             setFileSize(file.getBytes().length);

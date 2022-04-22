@@ -8,8 +8,9 @@
  */
 package de.elbe5.tag;
 
-import de.elbe5.base.log.Log;
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.base.Log;
+import de.elbe5.base.StringFormatter;
+import de.elbe5.base.StringHelper;
 
 import javax.servlet.jsp.JspException;
 import java.io.Writer;
@@ -44,7 +45,7 @@ public class FormCheckTag extends BaseTag {
     public int doStartTag() throws JspException {
         try {
             Writer writer = getWriter();
-            writer.write(StringUtil.format(getPreHtml(), StringUtil.toHtml(name), StringUtil.toHtml(value), checked ? "checked" : ""));
+            writer.write(StringFormatter.format(getPreHtml(), StringHelper.toHtml(name), StringHelper.toHtml(value), checked ? "checked" : ""));
         } catch (Exception e) {
             Log.error("error writing form tag", e);
             throw new JspException(e);

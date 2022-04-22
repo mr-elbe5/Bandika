@@ -8,7 +8,7 @@
  */
 package de.elbe5.content;
 
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.base.StringHelper;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IResponse;
 import de.elbe5.response.RedirectResponse;
@@ -46,9 +46,9 @@ public class LinkData extends ContentData {
     @Override
     public String getNavDisplay(){
         if (!linkIcon.isEmpty()){
-            return "<img src=\"/static-content/img/" + linkIcon +"\" class=\"navIcon\" title=\"" + StringUtil.toHtml(getDisplayName()) + "\" alt=\"" + StringUtil.toHtml(getDisplayName()) + "\" />";
+            return "<img src=\"/static-content/img/" + linkIcon +"\" class=\"navIcon\" title=\"" + StringHelper.toHtml(getDisplayName()) + "\" alt=\"" + StringHelper.toHtml(getDisplayName()) + "\" />";
         }
-        return StringUtil.toHtml(getDisplayName());
+        return StringHelper.toHtml(getDisplayName());
     }
 
     @Override

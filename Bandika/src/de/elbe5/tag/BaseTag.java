@@ -8,7 +8,7 @@
  */
 package de.elbe5.tag;
 
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.base.StringHelper;
 import de.elbe5.request.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
@@ -63,7 +63,7 @@ public class BaseTag implements Tag {
     }
 
     protected String toHtml(String s) {
-        return StringUtil.toHtml(s);
+        return StringHelper.toHtml(s);
     }
 
     protected RequestData getRequestData() {

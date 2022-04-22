@@ -9,7 +9,8 @@
 package de.elbe5.tag;
 
 import de.elbe5.application.Configuration;
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.base.StringFormatter;
+import de.elbe5.base.StringHelper;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,7 +29,7 @@ public class DateTag extends FormLineTag {
             "<script type=\"text/javascript\">$('#{4}').datepicker({language: '{5}'});</script>\n";
 
     protected String getPreControlHtml(HttpServletRequest request) {
-        return StringUtil.format(controlPreHtml, name, name, StringUtil.toHtml(value),name, Configuration.getLocale().getLanguage());
+        return StringFormatter.format(controlPreHtml, name, name, StringHelper.toHtml(value),name, Configuration.getLocale().getLanguage());
     }
 
 }

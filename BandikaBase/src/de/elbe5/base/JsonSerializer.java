@@ -7,9 +7,8 @@
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.elbe5.base.json;
+package de.elbe5.base;
 
-import de.elbe5.base.log.Log;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 

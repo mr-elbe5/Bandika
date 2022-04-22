@@ -8,9 +8,9 @@
  */
 package de.elbe5.application;
 
-import de.elbe5.base.data.Strings;
-import de.elbe5.base.log.Log;
-import de.elbe5.base.util.FileUtil;
+import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Log;
+import de.elbe5.base.FileHelper;
 import de.elbe5.request.RequestKeys;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.servlet.ResponseException;
@@ -72,11 +72,11 @@ public class AdminController extends Controller {
         String path = ApplicationPath.getAppROOTPath() + "/WEB-INF/web.xml";
         File f = new File(path);
         try {
-            FileUtil.touch(f);
+            FileHelper.touch(f);
         } catch (IOException e) {
             Log.error("could not touch file " + path, e);
         }
-        rdata.setMessage(Strings.string("_restartHint"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(LocalizedStrings.string("_restartHint"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
@@ -84,7 +84,7 @@ public class AdminController extends Controller {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         UserCache.setDirty();
         UserCache.checkDirty();
-        rdata.setMessage(Strings.string("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(LocalizedStrings.string("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 

@@ -8,7 +8,7 @@
  */
 package de.elbe5.tag;
 
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.base.StringFormatter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -31,7 +31,7 @@ public class FormSelectTag extends FormLineTag {
     }
 
     protected String getPreControlHtml(HttpServletRequest request) {
-        return StringUtil.format(controlPreHtml, name, name, onchange.isEmpty() ? "" : "onchange=\"" + onchange + "\"");
+        return StringFormatter.format(controlPreHtml, name, name, onchange.isEmpty() ? "" : "onchange=\"" + onchange + "\"");
     }
 
     protected String getPostControlHtml(HttpServletRequest request) {

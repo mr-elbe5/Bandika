@@ -8,9 +8,10 @@
  */
 package de.elbe5.user;
 
-import de.elbe5.base.data.BinaryFile;
-import de.elbe5.base.log.Log;
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.base.BinaryFile;
+import de.elbe5.base.Log;
+import de.elbe5.base.StringFormatter;
+import de.elbe5.base.StringHelper;
 import de.elbe5.application.Configuration;
 import de.elbe5.database.DbBean;
 import de.elbe5.rights.SystemZone;
@@ -326,7 +327,7 @@ public class UserBean extends DbBean {
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     String pwd = rs.getString(1);
-                    empty = StringUtil.isNullOrEmpty(pwd);
+                    empty = StringHelper.isNullOrEmpty(pwd);
                 }
             }
         } catch (SQLException se) {
@@ -732,7 +733,7 @@ public class UserBean extends DbBean {
                 }
                 buffer.append(id);
             }
-            pst = con.prepareStatement(StringUtil.format(GET_SYSTEM_RIGHTS_SQL, buffer.toString()));
+            pst = con.prepareStatement(StringFormatter.format(GET_SYSTEM_RIGHTS_SQL, buffer.toString()));
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 data.addSystemRight(SystemZone.valueOf(rs.getString(1)));

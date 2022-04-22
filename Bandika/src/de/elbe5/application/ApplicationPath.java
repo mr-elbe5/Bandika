@@ -8,8 +8,6 @@
  */
 package de.elbe5.application;
 
-import de.elbe5.base.log.Log;
-
 import javax.servlet.ServletContext;
 import java.io.File;
 

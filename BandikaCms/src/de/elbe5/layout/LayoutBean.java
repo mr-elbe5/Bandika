@@ -9,7 +9,7 @@
 package de.elbe5.layout;
 
 import de.elbe5.application.ApplicationPath;
-import de.elbe5.base.util.FileUtil;
+import de.elbe5.base.FileHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -36,8 +36,8 @@ public class LayoutBean {
         if (files!=null){
             for (File f : files){
                 LayoutData data=new LayoutData();
-                data.setName(FileUtil.getFileNameWithoutExtension(f.getName()));
-                data.setCode(FileUtil.readTextFile(f));
+                data.setName(FileHelper.getFileNameWithoutExtension(f.getName()));
+                data.setCode(FileHelper.readTextFile(f));
                 list.add(data);
             }
         }

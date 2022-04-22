@@ -1,6 +1,6 @@
 package de.elbe5.servlet;
 
-import de.elbe5.base.data.Strings;
+import de.elbe5.base.LocalizedStrings;
 import de.elbe5.request.*;
 import de.elbe5.response.IResponse;
 import de.elbe5.response.ForwardResponse;
@@ -21,7 +21,7 @@ public abstract class Controller {
     }
 
     protected void setSaveError(RequestData rdata) {
-        rdata.setMessage(Strings.string("_saveError"), RequestKeys.MESSAGE_TYPE_ERROR);
+        rdata.setMessage(LocalizedStrings.string("_saveError"), RequestKeys.MESSAGE_TYPE_ERROR);
     }
 
     protected IResponse openAdminPage(RequestData rdata, String jsp, String title) {
@@ -31,18 +31,18 @@ public abstract class Controller {
     }
 
     protected IResponse showSystemAdministration(RequestData rdata) {
-        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/systemAdministration.jsp", Strings.string("_systemAdministration"));
+        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/systemAdministration.jsp", LocalizedStrings.string("_systemAdministration"));
     }
 
     protected IResponse showPersonAdministration(RequestData rdata) {
-        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/personAdministration.jsp", Strings.string("_personAdministration"));
+        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/personAdministration.jsp", LocalizedStrings.string("_personAdministration"));
     }
 
     protected IResponse showContentAdministration(RequestData rdata) {
-        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/contentAdministration.jsp", Strings.string("_contentAdministration"));
+        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/contentAdministration.jsp", LocalizedStrings.string("_contentAdministration"));
     }
 
     protected IResponse showContentLog(RequestData rdata) {
-        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/contentLog.jsp", Strings.string("_contentLog"));
+        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/contentLog.jsp", LocalizedStrings.string("_contentLog"));
     }
 }

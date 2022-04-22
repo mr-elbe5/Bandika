@@ -9,8 +9,8 @@
 package de.elbe5.file;
 
 import de.elbe5.application.ApplicationPath;
-import de.elbe5.base.data.Strings;
-import de.elbe5.base.log.Log;
+import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Log;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.RequestData;
@@ -74,7 +74,7 @@ public abstract class FileController extends Controller {
         FileBean.getInstance().deleteFile(contentId);
         ContentCache.setDirty();
         rdata.put("contentId", Integer.toString(parentId));
-        rdata.setMessage(Strings.string("_fileDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(LocalizedStrings.string("_fileDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,parentId);
     }
 

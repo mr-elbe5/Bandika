@@ -6,10 +6,8 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.base.data;
+package de.elbe5.base;
 
-import de.elbe5.base.log.Log;
-import de.elbe5.base.util.StringUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.w3c.dom.*;
 
@@ -114,11 +112,11 @@ public class XmlData {
 
     public void addText(Element parentNode, String name, String text) {
         Element childNode = addNode(parentNode, name);
-        childNode.appendChild(doc.createTextNode(StringUtil.toXml(text)));
+        childNode.appendChild(doc.createTextNode(StringHelper.toXml(text)));
     }
 
     public Text replaceWithText(Element oldNode, String text) {
-        Text newNode = doc.createTextNode(StringUtil.toXml(text));
+        Text newNode = doc.createTextNode(StringHelper.toXml(text));
         oldNode.getParentNode().replaceChild(newNode, oldNode);
         return newNode;
     }

@@ -8,7 +8,7 @@
  */
 package de.elbe5.response;
 
-import de.elbe5.base.data.BinaryFile;
+import de.elbe5.base.BinaryFile;
 import de.elbe5.request.RequestData;
 
 import javax.servlet.ServletContext;

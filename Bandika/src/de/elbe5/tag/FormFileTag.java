@@ -8,7 +8,7 @@
  */
 package de.elbe5.tag;
 
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.base.StringFormatter;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,7 +23,7 @@ public class FormFileTag extends FormLineTag {
     String controlPreHtml = "<input type=\"file\" class=\"form-control-file\" id=\"{1}\" name=\"{2}\" {3}>";
 
     protected String getPreControlHtml(HttpServletRequest request) {
-        return StringUtil.format(controlPreHtml, name, name, multiple ? "multiple" : "");
+        return StringFormatter.format(controlPreHtml, name, name, multiple ? "multiple" : "");
     }
 
 }

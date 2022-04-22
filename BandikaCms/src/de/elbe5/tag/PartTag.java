@@ -8,8 +8,9 @@
  */
 package de.elbe5.tag;
 
-import de.elbe5.base.log.Log;
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.base.Log;
+import de.elbe5.base.StringFormatter;
+import de.elbe5.base.StringHelper;
 import de.elbe5.page.PageData;
 import de.elbe5.page.PagePartData;
 import de.elbe5.request.ContentRequestKeys;
@@ -41,17 +42,17 @@ public class PartTag extends BaseTag {
                 partData.setCssClass(cssClass);
 
                 if (contentData.isEditing()) {
-                    StringUtil.write(writer,editStart,
+                    StringFormatter.write(writer,editStart,
                             partData.getPartWrapperId(),
-                            StringUtil.toHtml(partData.getCssClass()),
-                            StringUtil.toHtml(partData.getEditTitle())
+                            StringHelper.toHtml(partData.getCssClass()),
+                            StringHelper.toHtml(partData.getEditTitle())
                     );
                     getContext().include("/WEB-INF/_jsp/page/editPartHeader.inc.jsp", true);
                 }
                 else{
-                    StringUtil.write(writer,viewStart,
+                    StringFormatter.write(writer,viewStart,
                             partData.getPartWrapperId(),
-                            StringUtil.toHtml(partData.getCssClass())
+                            StringHelper.toHtml(partData.getCssClass())
                     );
                 }
             }
@@ -64,7 +65,7 @@ public class PartTag extends BaseTag {
     public int doEndTag(){
         try {
             JspWriter writer = getContext().getOut();
-            StringUtil.write(writer,end);
+            StringFormatter.write(writer,end);
         } catch (Exception e) {
             Log.error("could not write tag", e);
         }

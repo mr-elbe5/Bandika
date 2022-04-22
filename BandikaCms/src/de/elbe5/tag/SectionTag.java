@@ -8,7 +8,7 @@
  */
 package de.elbe5.tag;
 
-import de.elbe5.base.log.Log;
+import de.elbe5.base.Log;
 import de.elbe5.page.PageData;
 import de.elbe5.page.SectionData;
 import de.elbe5.request.ContentRequestKeys;

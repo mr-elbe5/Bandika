@@ -8,7 +8,7 @@
  */
 package de.elbe5.layout;
 
-import de.elbe5.base.log.Log;
+import de.elbe5.base.Log;
 
 import java.util.*;
 

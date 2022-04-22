@@ -8,8 +8,9 @@
  */
 package de.elbe5.tag;
 
-import de.elbe5.base.log.Log;
-import de.elbe5.base.util.StringUtil;
+import de.elbe5.base.Log;
+import de.elbe5.base.StringFormatter;
+import de.elbe5.base.StringHelper;
 import de.elbe5.request.RequestData;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +29,7 @@ public class ContactTag extends BaseTag {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
             RequestData rdata = RequestData.getRequestData(request);
             Writer writer = getWriter();
-            writer.write(StringUtil.format("<div class=\"{1}\">", StringUtil.toHtml(cssClass)));
+            writer.write(StringFormatter.format("<div class=\"{1}\">", StringHelper.toHtml(cssClass)));
             getContext().include("/WEB-INF/_jsp/page/contact.inc.jsp");
             writer.write("</div>");
         } catch (Exception e) {

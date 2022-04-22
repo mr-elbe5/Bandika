@@ -1,6 +1,6 @@
 package de.elbe5.issue;
 
-import de.elbe5.base.data.BaseData;
+import de.elbe5.base.BaseData;
 
 import java.util.ArrayList;
 import java.util.List;

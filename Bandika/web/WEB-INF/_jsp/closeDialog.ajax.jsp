@@ -11,6 +11,7 @@
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.request.RequestKeys" %>
+<%@ page import="de.elbe5.base.StringHelper" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
@@ -45,6 +46,6 @@
     $dlg.html('');
     $dlg.modal('hide');
     $('.modal-backdrop').remove();
-    postByAjax('<%=url%>', <%=sb.toString()%>, '<%=StringUtil.toJs(targetId)%>');
+    postByAjax('<%=url%>', <%=sb.toString()%>, '<%=StringHelper.toJs(targetId)%>');
 </script>
 <%}%>

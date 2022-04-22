@@ -8,7 +8,7 @@
  */
 package de.elbe5.search;
 
-import de.elbe5.base.log.Log;
+import de.elbe5.base.Log;
 import de.elbe5.application.ApplicationPath;
 import de.elbe5.database.DbBean;
 import org.apache.lucene.analysis.Analyzer;

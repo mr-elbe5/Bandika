@@ -8,8 +8,8 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.base.data.BinaryFile;
-import de.elbe5.base.log.Log;
+import de.elbe5.base.BinaryFile;
+import de.elbe5.base.Log;
 
 import java.sql.*;
 

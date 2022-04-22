@@ -16,6 +16,7 @@
 <%@ page import="de.elbe5.group.GroupBean" %>
 <%@ page import="de.elbe5.rights.Right" %>
 <%@ page import="de.elbe5.request.ContentRequestKeys" %>
+<%@ page import="de.elbe5.base.StringHelper" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
@@ -39,7 +40,7 @@
                 if (group.getId() <= GroupData.ID_MAX_FINAL)
                     continue;
                     {
-                    label = StringUtil.toHtml(group.getName());
+                    label = StringHelper.toHtml(group.getName());
                     name = "groupright_" + group.getId();%>
                     <form:line label="<%=label%>" padded="true">
                         <form:radio name="<%=name%>" value="" checked="<%=!contentData.hasAnyGroupRight(group.getId())%>"><%=$SH("_rightnone")%>

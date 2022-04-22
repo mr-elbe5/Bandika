@@ -10,10 +10,10 @@ package de.elbe5.user;
 
 import de.elbe5.application.Configuration;
 import de.elbe5.application.MailHelper;
-import de.elbe5.base.data.BaseData;
-import de.elbe5.base.data.BinaryFile;
-import de.elbe5.base.data.Strings;
-import de.elbe5.base.log.Log;
+import de.elbe5.base.BaseData;
+import de.elbe5.base.BinaryFile;
+import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Log;
 import de.elbe5.request.*;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
@@ -55,13 +55,13 @@ public class UserController extends Controller {
         String login = rdata.getString("login");
         String pwd = rdata.getString("password");
         if (login.length() == 0 || pwd.length() == 0) {
-            rdata.setMessage(Strings.string("_notComplete"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(LocalizedStrings.string("_notComplete"), RequestKeys.MESSAGE_TYPE_ERROR);
             return openLogin(rdata);
         }
         UserData data = UserBean.getInstance().loginUser(login, pwd);
         if (data == null) {
             Log.info("bad login of "+login);
-            rdata.setMessage(Strings.string("_badLogin"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(LocalizedStrings.string("_badLogin"), RequestKeys.MESSAGE_TYPE_ERROR);
             return openLogin(rdata);
         }
         rdata.setSessionUser(data);
@@ -84,7 +84,7 @@ public class UserController extends Controller {
     public IResponse logout(RequestData rdata) {
         rdata.setSessionUser(null);
         rdata.resetSession();
-        rdata.setMessage(Strings.string("_loggedOut"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(LocalizedStrings.string("_loggedOut"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         String next = rdata.getString("next");
         if (!next.isEmpty())
             return new ForwardResponse(next);
@@ -120,7 +120,7 @@ public class UserController extends Controller {
         if (rdata.getUserId() == data.getId()) {
             rdata.setSessionUser(data);
         }
-        rdata.setMessage(Strings.string("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(LocalizedStrings.string("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/admin/openPersonAdministration?userId=" + data.getId());
     }
 
@@ -128,12 +128,12 @@ public class UserController extends Controller {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
-            rdata.setMessage(Strings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
             return new ForwardResponse("/ctrl/admin/openPersonAdministration");
         }
         UserBean.getInstance().deleteUser(id);
         UserCache.setDirty();
-        rdata.setMessage(Strings.string("_userDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(LocalizedStrings.string("_userDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openPersonAdministration");
     }
 
@@ -167,24 +167,24 @@ public class UserController extends Controller {
         String newPassword2 = rdata.getString("newPassword2");
         if (newPassword.length() < UserData.MIN_PASSWORD_LENGTH) {
             rdata.addFormField("newPassword1");
-            rdata.addFormError(Strings.string("_passwordLengthError"));
+            rdata.addFormError(LocalizedStrings.string("_passwordLengthError"));
             return showChangePassword();
         }
         if (!newPassword.equals(newPassword2)) {
             rdata.addFormField("newPassword1");
             rdata.addFormField("newPassword2");
-            rdata.addFormError(Strings.string("_passwordsDontMatch"));
+            rdata.addFormError(LocalizedStrings.string("_passwordsDontMatch"));
             return showChangePassword();
         }
         UserData data = UserBean.getInstance().loginUser(user.getLogin(), oldPassword);
         if (data == null) {
             rdata.addFormField("newPassword1");
-            rdata.addFormError(Strings.string("_badLogin"));
+            rdata.addFormError(LocalizedStrings.string("_badLogin"));
             return showChangePassword();
         }
         data.setPassword(newPassword);
         UserBean.getInstance().saveUserPassword(data);
-        rdata.setMessage(Strings.string("_passwordChanged"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(LocalizedStrings.string("_passwordChanged"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/user/openProfile");
     }
 
@@ -204,7 +204,7 @@ public class UserController extends Controller {
         UserBean.getInstance().saveUserProfile(data);
         rdata.setSessionUser(data);
         UserCache.setDirty();
-        rdata.setMessage(Strings.string("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(LocalizedStrings.string("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/user/openProfile");
     }
 
@@ -223,16 +223,16 @@ public class UserController extends Controller {
         }
         if (UserBean.getInstance().doesLoginExist(user.getLogin())) {
             rdata.addFormField("login");
-            rdata.addFormError(Strings.string("_loginExistsError"));
+            rdata.addFormError(LocalizedStrings.string("_loginExistsError"));
         }
         if (UserBean.getInstance().doesEmailExist(user.getEmail())) {
             rdata.addFormField("email");
-            rdata.addFormError(Strings.string("_emailInUseError"));
+            rdata.addFormError(LocalizedStrings.string("_emailInUseError"));
         }
         String captchaString = rdata.getString("captcha");
         if (!captchaString.equals(rdata.getSessionObject(RequestKeys.KEY_CAPTCHA))) {
             rdata.addFormField("captcha");
-            rdata.addFormError(Strings.string("_captchaError"));
+            rdata.addFormError(LocalizedStrings.string("_captchaError"));
         }
         if (!rdata.hasFormError()) {
             return showRegistration();
@@ -244,9 +244,9 @@ public class UserController extends Controller {
             setSaveError(rdata);
             return showRegistration();
         }
-        String mailText = Strings.string("_registrationVerifyMail") + " " + rdata.getSessionHost() + "/ctrl/user/verifyEmail/" + user.getId() + "?approvalCode=" + user.getApprovalCode();
-        if (!MailHelper.sendPlainMail(user.getEmail(), Strings.string("_registrationRequest"), mailText)) {
-            rdata.setMessage(Strings.string("_emailError"), RequestKeys.MESSAGE_TYPE_ERROR);
+        String mailText = LocalizedStrings.string("_registrationVerifyMail") + " " + rdata.getSessionHost() + "/ctrl/user/verifyEmail/" + user.getId() + "?approvalCode=" + user.getApprovalCode();
+        if (!MailHelper.sendPlainMail(user.getEmail(), LocalizedStrings.string("_registrationRequest"), mailText)) {
+            rdata.setMessage(LocalizedStrings.string("_emailError"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showRegistration();
         }
         return showRegistrationDone();
@@ -257,13 +257,13 @@ public class UserController extends Controller {
         String approvalCode = rdata.getString("approvalCode");
         UserData data = UserBean.getInstance().getUser(userId);
         if (approvalCode.isEmpty() || !approvalCode.equals(data.getApprovalCode())) {
-            rdata.setMessage(Strings.string("_emailVerificationFailed"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(LocalizedStrings.string("_emailVerificationFailed"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showHome();
         }
         UserBean.getInstance().saveUserVerifyEmail(data);
-        String mailText = Strings.string("_registrationRequestMail") + " " + data.getName() + "(" + data.getId() + ")";
-        if (!MailHelper.sendPlainMail(Configuration.getMailReceiver(), Strings.string("_registrationRequest"), mailText)) {
-            rdata.setMessage(Strings.string("_emailError"), RequestKeys.MESSAGE_TYPE_ERROR);
+        String mailText = LocalizedStrings.string("_registrationRequestMail") + " " + data.getName() + "(" + data.getId() + ")";
+        if (!MailHelper.sendPlainMail(Configuration.getMailReceiver(), LocalizedStrings.string("_registrationRequest"), mailText)) {
+            rdata.setMessage(LocalizedStrings.string("_emailError"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showRegistration();
         }
         return showEmailVerification();
