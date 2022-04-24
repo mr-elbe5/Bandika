@@ -15,14 +15,20 @@ import java.util.List;
 public class TemplateParser extends DefaultHandler2 {
 
     private final String code;
+
+    private final String prefix;
     private final Template template = new Template();
     private final List<TemplateTag> tagStack = new ArrayList<>();
 
     private StringBuilder buffer = new StringBuilder();
     private boolean tagIsOpen = false;
 
-    public TemplateParser(String code){
+    public TemplateParser(String code) {
+        this(code, "tpl");
+    }
+    public TemplateParser(String code, String prefix){
         this.code = code;
+        this.prefix = prefix + ":";
         tagStack.add(template);
     }
 
@@ -65,13 +71,9 @@ public class TemplateParser extends DefaultHandler2 {
         tagStack.get(tagStack.size()-1).addChildNode(node);
     }
 
-    public void startDTD(String name,  String publicId, String systemId) {
-        template.setDocType(name);
-    }
-
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        if (!localName.equals(qName) && qName.startsWith("spg:")) {
+        if (!localName.equals(qName) && qName.startsWith(prefix)) {
             closeOpenTag();
             flushBuffer();
             pushTag(localName, attributes);
@@ -87,7 +89,7 @@ public class TemplateParser extends DefaultHandler2 {
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (!localName.equals(qName) && qName.startsWith("spg:")) {
+        if (!localName.equals(qName) && qName.startsWith(prefix)) {
             closeOpenTag();
             flushBuffer();
             popTag(localName);
@@ -110,7 +112,7 @@ public class TemplateParser extends DefaultHandler2 {
     }
 
     @Override
-    public void endDocument() throws SAXException {
+    public void endDocument() {
         flushBuffer();
     }
 

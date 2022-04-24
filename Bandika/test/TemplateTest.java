@@ -8,14 +8,13 @@ public class TemplateTest {
     public static void main(String[] args) {
         TemplateParser parser = new TemplateParser(code);
         Template tpl = parser.parse();
-        System.out.println("doctype = " + tpl.getDocType());
         RequestData rdata = new RequestData("GET", RequestType.content, new TestRequest());
         System.out.println(tpl.getHtml(rdata));
     }
 
     static String code = """
             <!DOCTYPE html>
-            <html xmlns:spg="http://elbe5.de" lang="${language}">
+            <html xmlns:tpl="http://elbe5.de" lang="${language}">
                 <head>
                     <meta charset="utf-8"/>
                     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -36,24 +35,24 @@ public class TemplateTest {
                     <div class="container">
                         <header>
                             <section class="sysnav">
-                                <spg:sysnav/>
+                                <tpl:sysnav/>
                             </section>
                             <div class="menu row">
-                                <spg:mainnav/>
+                                <tpl:mainnav/>
                             </div>
                             <div class="bc row">
-                                <spg:breadcrumb/>
+                                <tpl:breadcrumb/>
                             </div>
                         </header>
                         <main id="main" role="main">
                             <div id="pageContainer">
-                                <spg:content/>
+                                <tpl:content/>
                             </div>
                         </main>
                     </div>
                     <div class="container fixed-bottom">
                         <footer class="footer">
-                            <spg:footer/>
+                            <tpl:footer/>
                         </footer>
                     </div>
                     <div class="modal" id="modalDialog" tabindex="-1" role="dialog"></div>
