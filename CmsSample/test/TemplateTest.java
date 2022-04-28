@@ -1,15 +1,16 @@
+import de.elbe5.base.StringMap;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestType;
-import de.elbe5.template.Template;
-import de.elbe5.template.TemplateParser;
+import de.elbe5.serverpage.ServerPage;
+import de.elbe5.serverpage.SPParser;
 
 public class TemplateTest {
 
     public static void main(String[] args) {
-        TemplateParser parser = new TemplateParser(code);
-        Template tpl = parser.parse();
-        RequestData rdata = new RequestData("GET", RequestType.content, new TestRequest());
-        System.out.println(tpl.getHtml(rdata));
+        SPParser parser = new SPParser(code);
+        ServerPage tpl = parser.parse();
+        StringMap params = new StringMap();
+        System.out.println(tpl.getHtml(params));
     }
 
     static String code = """

@@ -1,4 +1,4 @@
-package de.elbe5.template;
+package de.elbe5.serverpage;
 
 import de.elbe5.base.Log;
 import org.xml.sax.Attributes;
@@ -12,27 +12,27 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TemplateParser extends DefaultHandler2 {
+public class SPParser extends DefaultHandler2 {
 
     private final String code;
 
     private final String prefix;
-    private final Template template = new Template();
-    private final List<TemplateTag> tagStack = new ArrayList<>();
+    private final ServerPage template = new ServerPage();
+    private final List<SPTag> tagStack = new ArrayList<>();
 
     private StringBuilder buffer = new StringBuilder();
     private boolean tagIsOpen = false;
 
-    public TemplateParser(String code) {
+    public SPParser(String code) {
         this(code, "tpl");
     }
-    public TemplateParser(String code, String prefix){
+    public SPParser(String code, String prefix){
         this.code = code;
         this.prefix = prefix + ":";
         tagStack.add(template);
     }
 
-    public Template parse(){
+    public ServerPage parse(){
         tagIsOpen = false;
         try {
             SAXParserFactory spf = SAXParserFactory.newInstance();
@@ -48,8 +48,8 @@ public class TemplateParser extends DefaultHandler2 {
     }
 
     private void pushTag(String type, Attributes attr){
-        TemplateTag tag;
-        tag = TemplateTagFactory.createTag(type);
+        SPTag tag;
+        tag = SPTagFactory.createTag(type);
         addChildNode(tag);
         tagStack.add(tag);
         for(int i=0; i<attr.getLength(); i++){
@@ -67,7 +67,7 @@ public class TemplateParser extends DefaultHandler2 {
         tagStack.remove(tagStack.size()-1);
     }
 
-    private void addChildNode(TemplateNode node){
+    private void addChildNode(SPNode node){
         tagStack.get(tagStack.size()-1).addChildNode(node);
     }
 
@@ -125,7 +125,7 @@ public class TemplateParser extends DefaultHandler2 {
 
     private void flushBuffer(){
         if (!buffer.isEmpty()){
-            addChildNode(new TemplateCode(buffer.toString()));
+            addChildNode(new SPText(buffer.toString()));
             buffer = new StringBuilder();
         }
     }

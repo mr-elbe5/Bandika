@@ -1,18 +1,18 @@
-package de.elbe5.template;
+package de.elbe5.serverpage;
 
+import de.elbe5.base.StringMap;
 import de.elbe5.request.RequestData;
 
 import java.util.*;
 
-public class TemplateTag implements TemplateNode{
+public class SPTag implements SPNode {
 
     String type;
-    TagAttributes attributes = new TagAttributes();
+    SPTagAttributes attributes = new SPTagAttributes();
 
-    Map<String, Set<String>> params = new HashMap<>();
-    List<TemplateNode> childNodes = new ArrayList<>();
+    List<SPNode> childNodes = new ArrayList<>();
 
-    public TemplateTag(String type){
+    public SPTag(String type){
         this.type = type;
     }
 
@@ -20,37 +20,31 @@ public class TemplateTag implements TemplateNode{
         return type;
     }
 
-    public TagAttributes getAttributes() {
+    public SPTagAttributes getAttributes() {
         return attributes;
     }
 
     public void addAttribute(String key, String value){
         attributes.put(key, value);
-        Set<String> set = new HashSet<>();
-        addParams(value, set);
-        params.put(key, set);
     }
 
-    public void addChildNode(TemplateNode node){
+    public void addChildNode(SPNode node){
         childNodes.add(node);
     }
 
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata){
-        appendChildHtml(sb, rdata);
+    public void appendHtml(StringBuilder sb, StringMap params){
+        appendChildHtml(sb, params);
     }
 
-    public void appendChildHtml(StringBuilder sb, RequestData rdata){
-        for (TemplateNode node : childNodes) {
-            node.appendHtml(sb, rdata);
+    public void appendChildHtml(StringBuilder sb, StringMap params){
+        for (SPNode node : childNodes) {
+            node.appendHtml(sb, params);
         }
     }
 
     String getAttribute(String key, RequestData rdata){
         String value = attributes.get(key);
-        for (String s: params.get(key)){
-            value = value.replaceAll("${" + key + "}", rdata.getString(s));
-        }
         return value;
     }
 
@@ -71,7 +65,7 @@ public class TemplateTag implements TemplateNode{
     }
 
     public void appendChildCode(StringBuilder sb, String prefix){
-        for (TemplateNode node : childNodes) {
+        for (SPNode node : childNodes) {
             node.appendCode(sb, prefix);
         }
     }
