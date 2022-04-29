@@ -76,10 +76,10 @@ public class ContentController extends Controller {
 
     //backend
     public IResponse openCreateContentData(RequestData rdata) {
-        int parentId = rdata.getInt("parentId");
+        int parentId = rdata.getAttributes().getInt("parentId");
         ContentData parentData = ContentCache.getContent(parentId);
         checkRights(parentData.hasUserEditRight(rdata));
-        String type = rdata.getString("type");
+        String type = rdata.getAttributes().getString("type");
         ContentData data = ContentFactory.getNewData(type);
         data.setCreateValues(parentData, rdata);
         data.setRanking(parentData.getChildren().size());
@@ -174,7 +174,7 @@ public class ContentController extends Controller {
 
     //backend
     public IResponse pasteContent(RequestData rdata) {
-        int parentId = rdata.getInt("parentId");
+        int parentId = rdata.getAttributes().getInt("parentId");
         ContentData data=rdata.getClipboardData(ContentRequestKeys.KEY_CONTENT,ContentData.class);
         if (data==null){
             rdata.setMessage(LocalizedStrings.string("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
@@ -222,7 +222,7 @@ public class ContentController extends Controller {
         int parentId = ContentCache.getParentContentId(contentId);
         ContentBean.getInstance().deleteContent(contentId);
         ContentCache.setDirty();
-        rdata.put("contentId", Integer.toString(parentId));
+        rdata.getAttributes().put("contentId", Integer.toString(parentId));
         ContentCache.setDirty();
         rdata.setMessage(LocalizedStrings.string("_contentDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,parentId);
@@ -243,7 +243,7 @@ public class ContentController extends Controller {
         ContentData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         checkRights(data.hasUserEditRight(rdata));
         for (ContentData child : data.getChildren()){
-            int ranking=rdata.getInt("select"+child.getId(),-1);
+            int ranking=rdata.getAttributes().getInt("select"+child.getId(),-1);
             if (ranking!=-1){
                 child.setRanking(ranking);
 

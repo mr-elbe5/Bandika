@@ -22,7 +22,7 @@
         users = ts.getAllUsers();
     } catch (Exception ignore) {
     }
-    int userId = rdata.getInt("userId");
+    int userId = rdata.getAttributes().getInt("userId");
 %>
 <li class="open">
     <span><%=$SH("_users")%></span>

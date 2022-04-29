@@ -103,7 +103,7 @@ public abstract class PagePartData extends BaseData implements Comparable<PagePa
     }
 
     public void setCreateValues(RequestData rdata) {
-        String sectionName = rdata.getString("sectionName");
+        String sectionName = rdata.getAttributes().getString("sectionName");
         setSectionName(sectionName);
         setId(PagePartBean.getInstance().getNextPartId());
         setNew(true);
@@ -111,7 +111,7 @@ public abstract class PagePartData extends BaseData implements Comparable<PagePa
 
     public void readFrontendRequestData(RequestData rdata) {
         // -1 if deleted
-        setPosition(rdata.getInt(getPartPositionName(),-1));
+        setPosition(rdata.getAttributes().getInt(getPartPositionName(),-1));
     }
 
 }

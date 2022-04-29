@@ -21,7 +21,7 @@ public class MediaData extends FileData {
     @Override
     public void readSettingsRequestData(RequestData rdata) {
         super.readSettingsRequestData(rdata);
-        BinaryFile file = rdata.getFile("file");
+        BinaryFile file = rdata.getAttributes().getFile("file");
         createFromBinaryFile(file);
         if (getDisplayName().isEmpty()) {
             setDisplayName(file.getFileNameWithoutExtension());

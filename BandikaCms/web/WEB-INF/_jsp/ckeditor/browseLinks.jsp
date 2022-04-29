@@ -15,7 +15,7 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    int callbackNum = rdata.getInt("CKEditorFuncNum", -1);
+    int callbackNum = rdata.getAttributes().getInt("CKEditorFuncNum", -1);
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">

@@ -15,7 +15,7 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    UserSearchResultData userResult = rdata.get("searchResultData", UserSearchResultData.class);
+    UserSearchResultData userResult = rdata.getAttributes().get("searchResultData", UserSearchResultData.class);
 %>
 <section class="mainSection searchResults">
     <h1><%=$SH("_searchResults")%>

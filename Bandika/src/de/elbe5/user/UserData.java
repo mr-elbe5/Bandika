@@ -331,20 +331,20 @@ public class UserData extends BaseData implements IJsonData {
     // multiple data
 
     private void readBasicData(RequestData rdata) {
-        setCompanyId(rdata.getInt("companyId"));
-        setTitle(rdata.getString("title"));
-        setFirstName(rdata.getString("firstName"));
-        setLastName(rdata.getString("lastName"));
-        setEmail(rdata.getString("email"));
-        setStreet(rdata.getString("street"));
-        setZipCode(rdata.getString("zipCode"));
-        setCity(rdata.getString("city"));
-        setCountry(rdata.getString("country"));
-        setPhone(rdata.getString("phone"));
-        setFax(rdata.getString("fax"));
-        setMobile(rdata.getString("mobile"));
-        setNotes(rdata.getString("notes"));
-        BinaryFile file = rdata.getFile("portrait");
+        setCompanyId(rdata.getAttributes().getInt("companyId"));
+        setTitle(rdata.getAttributes().getString("title"));
+        setFirstName(rdata.getAttributes().getString("firstName"));
+        setLastName(rdata.getAttributes().getString("lastName"));
+        setEmail(rdata.getAttributes().getString("email"));
+        setStreet(rdata.getAttributes().getString("street"));
+        setZipCode(rdata.getAttributes().getString("zipCode"));
+        setCity(rdata.getAttributes().getString("city"));
+        setCountry(rdata.getAttributes().getString("country"));
+        setPhone(rdata.getAttributes().getString("phone"));
+        setFax(rdata.getAttributes().getString("fax"));
+        setMobile(rdata.getAttributes().getString("mobile"));
+        setNotes(rdata.getAttributes().getString("notes"));
+        BinaryFile file = rdata.getAttributes().getFile("portrait");
         if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringHelper.isNullOrEmpty(file.getContentType())) {
             try {
                 BufferedImage source = ImageHelper.createImage(file.getBytes(), file.getContentType());
@@ -370,11 +370,11 @@ public class UserData extends BaseData implements IJsonData {
 
     public void readSettingsRequestData(RequestData rdata) {
         readBasicData(rdata);
-        setLogin(rdata.getString("login"));
-        setPassword(rdata.getString("password"));
-        setApproved(rdata.getBoolean("approved"));
-        setEmailVerified(rdata.getBoolean("emailVerified"));
-        setGroupIds(rdata.getIntegerSet("groupIds"));
+        setLogin(rdata.getAttributes().getString("login"));
+        setPassword(rdata.getAttributes().getString("password"));
+        setApproved(rdata.getAttributes().getBoolean("approved"));
+        setEmailVerified(rdata.getAttributes().getBoolean("emailVerified"));
+        setGroupIds(rdata.getAttributes().getIntegerSet("groupIds"));
         if (login.isEmpty())
             rdata.addIncompleteField("login");
         if (isNew() && !hasPassword())
@@ -389,9 +389,9 @@ public class UserData extends BaseData implements IJsonData {
 
     public void readRegistrationRequestData(RequestData rdata) {
         readBasicData(rdata);
-        setLogin(rdata.getString("login"));
-        String password1 = rdata.getString("password1");
-        String password2 = rdata.getString("password2");
+        setLogin(rdata.getAttributes().getString("login"));
+        String password1 = rdata.getAttributes().getString("password1");
+        String password2 = rdata.getAttributes().getString("password2");
         checkBasics(rdata);
         if (login.isEmpty())
             rdata.addIncompleteField("login");

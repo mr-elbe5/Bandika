@@ -100,14 +100,14 @@ public class CompanyData extends BaseData {
     // multiple data
 
     public void readSettingsRequestData(RequestData rdata) {
-        setName(rdata.getString("name"));
-        setStreet(rdata.getString("street"));
-        setZipCode(rdata.getString("zipCode"));
-        setCity(rdata.getString("city"));
-        setCountry(rdata.getString("country"));
-        setEmail(rdata.getString("email"));
-        setPhone(rdata.getString("phone"));
-        setFax(rdata.getString("fax"));
-        setDescription(rdata.getString("description"));
+        setName(rdata.getAttributes().getString("name"));
+        setStreet(rdata.getAttributes().getString("street"));
+        setZipCode(rdata.getAttributes().getString("zipCode"));
+        setCity(rdata.getAttributes().getString("city"));
+        setCountry(rdata.getAttributes().getString("country"));
+        setEmail(rdata.getAttributes().getString("email"));
+        setPhone(rdata.getAttributes().getString("phone"));
+        setFax(rdata.getAttributes().getString("fax"));
+        setDescription(rdata.getAttributes().getString("description"));
     }
 }

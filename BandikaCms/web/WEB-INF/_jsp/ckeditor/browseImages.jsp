@@ -21,7 +21,7 @@
     List<Integer> parentIds=ContentCache.getParentContentIds(data.getId());
     parentIds.add(data.getId());
     rdata.setRequestObject("parentIds",parentIds);
-    int callbackNum = rdata.getInt("CKEditorFuncNum", -1);
+    int callbackNum = rdata.getAttributes().getInt("CKEditorFuncNum", -1);
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">

@@ -42,10 +42,10 @@ public class ImageController extends FileController {
     }
 
     public IResponse openCreateImage(RequestData rdata) {
-        int parentId = rdata.getInt("parentId");
+        int parentId = rdata.getAttributes().getInt("parentId");
         ContentData parentData = ContentCache.getContent(parentId);
         checkRights(parentData.hasUserEditRight(rdata));
-        String type=rdata.getString("type");
+        String type=rdata.getAttributes().getString("type");
         ImageData data = FileFactory.getNewData(type,ImageData.class);
         data.setCreateValues(parentData, rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_IMAGE, data);
@@ -103,7 +103,7 @@ public class ImageController extends FileController {
     }
 
     public IResponse pasteImage(RequestData rdata) {
-        int parentId = rdata.getInt("parentId");
+        int parentId = rdata.getAttributes().getInt("parentId");
         ImageData data=rdata.getClipboardData(ContentRequestKeys.KEY_IMAGE,ImageData.class);
         ContentData parent=ContentCache.getContent(parentId);
         if (parent == null){

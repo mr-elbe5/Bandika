@@ -16,8 +16,8 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    String title = rdata.getString(RequestKeys.KEY_TITLE);
-    String includeUrl = rdata.getString(RequestKeys.KEY_JSP);
+    String title = rdata.getAttributes().getString(RequestKeys.KEY_TITLE);
+    String includeUrl = rdata.getAttributes().getString(RequestKeys.KEY_JSP);
 %>
 <!DOCTYPE html>
 <html lang="<%=Configuration.getLocale()

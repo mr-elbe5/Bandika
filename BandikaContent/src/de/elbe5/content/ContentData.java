@@ -513,12 +513,12 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     }
 
     public void readRequestData(RequestData rdata) {
-        setDisplayName(rdata.getString("displayName").trim());
+        setDisplayName(rdata.getAttributes().getString("displayName").trim());
         setName(StringHelper.toSafeWebName(getDisplayName()));
-        setDescription(rdata.getString("description"));
-        setAccessType(rdata.getString("accessType"));
-        setNavType(rdata.getString("navType"));
-        setActive(rdata.getBoolean("active"));
+        setDescription(rdata.getAttributes().getString("description"));
+        setAccessType(rdata.getAttributes().getString("accessType"));
+        setNavType(rdata.getAttributes().getString("navType"));
+        setActive(rdata.getAttributes().getBoolean("active"));
         if (name.isEmpty()) {
             rdata.addIncompleteField("name");
         }
@@ -542,7 +542,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         for (GroupData group : groups) {
             if (group.getId() <= GroupData.ID_MAX_FINAL)
                 continue;
-            String value = rdata.getString("groupright_" + group.getId());
+            String value = rdata.getAttributes().getString("groupright_" + group.getId());
             if (!value.isEmpty())
                 getGroupRights().put(group.getId(), Right.valueOf(value));
         }

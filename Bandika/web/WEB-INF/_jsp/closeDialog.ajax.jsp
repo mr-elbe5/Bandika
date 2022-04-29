@@ -15,10 +15,10 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    String url = rdata.getString(RequestKeys.KEY_URL);
-    String targetId = rdata.getString(RequestKeys.KEY_TARGETID);
-    String msg = rdata.getString(RequestKeys.KEY_MESSAGE);
-    String msgType = rdata.getString(RequestKeys.KEY_MESSAGETYPE);
+    String url = rdata.getAttributes().getString(RequestKeys.KEY_URL);
+    String targetId = rdata.getAttributes().getString(RequestKeys.KEY_TARGETID);
+    String msg = rdata.getAttributes().getString(RequestKeys.KEY_MESSAGE);
+    String msgType = rdata.getAttributes().getString(RequestKeys.KEY_MESSAGETYPE);
     if (targetId.isEmpty()) {%>
 <div id="pageContent">
 

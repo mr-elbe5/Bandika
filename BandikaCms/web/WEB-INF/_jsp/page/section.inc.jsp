@@ -15,11 +15,11 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    SectionData sectionData = rdata.get("sectionData", SectionData.class);
+    SectionData sectionData = rdata.getAttributes().get("sectionData", SectionData.class);
     if (!sectionData.getParts().isEmpty()) {%>
 <div class="section <%=sectionData.getCssClass()%>">
     <% for (PagePartData partData : sectionData.getParts()) {
-        rdata.put(PagePartData.KEY_PART, partData);
+        rdata.getAttributes().put(PagePartData.KEY_PART, partData);
         String include = partData.getPartInclude();%>
         <% if (include != null) {%>
         <jsp:include page="<%=include%>" flush="true"/>

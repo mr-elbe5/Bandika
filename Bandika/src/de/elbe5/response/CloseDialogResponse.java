@@ -32,9 +32,9 @@ public class CloseDialogResponse extends ForwardResponse {
 
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
-        rdata.put(RequestKeys.KEY_URL, url);
+        rdata.getAttributes().put(RequestKeys.KEY_URL, url);
         if (!targetId.isEmpty())
-            rdata.put(RequestKeys.KEY_TARGETID, targetId);
+            rdata.getAttributes().put(RequestKeys.KEY_TARGETID, targetId);
         RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/_jsp/closeDialog.ajax.jsp");
         try {
             rd.forward(rdata.getRequest(), response);

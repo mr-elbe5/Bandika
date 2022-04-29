@@ -11,7 +11,7 @@
 <%@ page import="de.elbe5.request.RequestData" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    String redirectUrl = rdata.getString("redirectUrl");
+    String redirectUrl = rdata.getAttributes().getString("redirectUrl");
     if (redirectUrl != null && redirectUrl.length() > 0) {%>
 <html>
 <head><title></title></head>

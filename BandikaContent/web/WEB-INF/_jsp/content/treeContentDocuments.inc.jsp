@@ -18,7 +18,7 @@
     RequestData rdata = RequestData.getRequestData(request);
     ContentData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
     List<String> documentTypes=contentData.getDocumentClasses();
-    int fileId=rdata.getInt("fileId");
+    int fileId=rdata.getAttributes().getInt("fileId");
 %>
         <li class="documents open">
             <span>[<%=$SH("_documents")%>]</span>

@@ -15,7 +15,7 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    UserData user = (UserData) rdata.get("userData");
+    UserData user = (UserData) rdata.getAttributes().get("userData");
     String url = "/ctrl/user/register/" + user.getId();
 %>
 <form:message/>

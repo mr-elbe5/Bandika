@@ -16,7 +16,7 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     IMasterInclude masterInclude = rdata.getRequestObject(RequestKeys.KEY_MASTERINCLUDE, IMasterInclude.class);
-    String title = rdata.getString(RequestKeys.KEY_TITLE, Configuration.getAppTitle());
+    String title = rdata.getAttributes().getString(RequestKeys.KEY_TITLE, Configuration.getAppTitle());
     String description= "";
 %>
 <!DOCTYPE html>

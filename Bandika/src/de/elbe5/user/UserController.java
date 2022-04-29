@@ -52,8 +52,8 @@ public class UserController extends Controller {
 
     public IResponse login(RequestData rdata) {
         checkRights(rdata.isPostback());
-        String login = rdata.getString("login");
-        String pwd = rdata.getString("password");
+        String login = rdata.getAttributes().getString("login");
+        String pwd = rdata.getAttributes().getString("password");
         if (login.length() == 0 || pwd.length() == 0) {
             rdata.setMessage(LocalizedStrings.string("_notComplete"), RequestKeys.MESSAGE_TYPE_ERROR);
             return openLogin(rdata);
@@ -65,7 +65,7 @@ public class UserController extends Controller {
             return openLogin(rdata);
         }
         rdata.setSessionUser(data);
-        String next = rdata.getString("next");
+        String next = rdata.getAttributes().getString("next");
         if (!next.isEmpty())
                 return new ForwardResponse(next);
         return showHome();
@@ -85,7 +85,7 @@ public class UserController extends Controller {
         rdata.setSessionUser(null);
         rdata.resetSession();
         rdata.setMessage(LocalizedStrings.string("_loggedOut"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        String next = rdata.getString("next");
+        String next = rdata.getAttributes().getString("next");
         if (!next.isEmpty())
             return new ForwardResponse(next);
         return showHome();
@@ -162,9 +162,9 @@ public class UserController extends Controller {
         if (user==null){
             return new StatusResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-        String oldPassword = rdata.getString("oldPassword");
-        String newPassword = rdata.getString("newPassword1");
-        String newPassword2 = rdata.getString("newPassword2");
+        String oldPassword = rdata.getAttributes().getString("oldPassword");
+        String newPassword = rdata.getAttributes().getString("newPassword1");
+        String newPassword2 = rdata.getAttributes().getString("newPassword2");
         if (newPassword.length() < UserData.MIN_PASSWORD_LENGTH) {
             rdata.addFormField("newPassword1");
             rdata.addFormError(LocalizedStrings.string("_passwordLengthError"));
@@ -209,14 +209,14 @@ public class UserController extends Controller {
     }
 
     public IResponse openRegistration(RequestData rdata) {
-        rdata.put("userData", new UserData());
+        rdata.getAttributes().put("userData", new UserData());
         rdata.setSessionObject(RequestKeys.KEY_CAPTCHA, UserSecurity.generateCaptchaString());
         return showRegistration();
     }
 
     public IResponse register(RequestData rdata) {
         UserData user = new UserData();
-        rdata.put("userData", user);
+        rdata.getAttributes().put("userData", user);
         user.readRegistrationRequestData(rdata);
         if (!rdata.checkFormErrors()) {
             return showRegistration();
@@ -229,7 +229,7 @@ public class UserController extends Controller {
             rdata.addFormField("email");
             rdata.addFormError(LocalizedStrings.string("_emailInUseError"));
         }
-        String captchaString = rdata.getString("captcha");
+        String captchaString = rdata.getAttributes().getString("captcha");
         if (!captchaString.equals(rdata.getSessionObject(RequestKeys.KEY_CAPTCHA))) {
             rdata.addFormField("captcha");
             rdata.addFormError(LocalizedStrings.string("_captchaError"));
@@ -254,7 +254,7 @@ public class UserController extends Controller {
 
     public IResponse verifyEmail(RequestData rdata) {
         int userId = rdata.getId();
-        String approvalCode = rdata.getString("approvalCode");
+        String approvalCode = rdata.getAttributes().getString("approvalCode");
         UserData data = UserBean.getInstance().getUser(userId);
         if (approvalCode.isEmpty() || !approvalCode.equals(data.getApprovalCode())) {
             rdata.setMessage(LocalizedStrings.string("_emailVerificationFailed"), RequestKeys.MESSAGE_TYPE_ERROR);

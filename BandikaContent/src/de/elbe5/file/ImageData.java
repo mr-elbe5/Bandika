@@ -124,7 +124,7 @@ public class ImageData extends FileData implements IJsonData {
     @Override
     public void readSettingsRequestData(RequestData rdata) {
         super.readSettingsRequestData(rdata);
-        BinaryFile file = rdata.getFile("file");
+        BinaryFile file = rdata.getAttributes().getFile("file");
         if (maxWidth != 0 || maxHeight != 0)
             createFromBinaryFile(file, maxWidth, maxHeight, getMaxPreviewWidth(), getMaxPreviewHeight(), true);
         else

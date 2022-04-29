@@ -47,7 +47,7 @@ public class TimerController extends Controller {
 
     public IResponse openEditTimerTask(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
-        String name = rdata.getString("timerName");
+        String name = rdata.getAttributes().getString("timerName");
         TimerTaskData task = Timer.getInstance().getTaskCopy(name);
         rdata.setSessionObject("timerTaskData", task);
         return showEditTimerTask();

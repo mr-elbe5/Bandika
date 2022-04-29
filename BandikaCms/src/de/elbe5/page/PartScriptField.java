@@ -33,12 +33,12 @@ public class PartScriptField extends PartField {
 
     @Override
     public void readRequestData(RequestData rdata) {
-        setCode(rdata.getString(getIdentifier()));
+        setCode(rdata.getAttributes().getString(getIdentifier()));
     }
 
     @Override
     public void readFrontendRequestData(RequestData rdata){
-        setCode(rdata.getString(getIdentifier()));
+        setCode(rdata.getAttributes().getString(getIdentifier()));
     }
 
 

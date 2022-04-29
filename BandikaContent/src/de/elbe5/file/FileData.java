@@ -168,8 +168,8 @@ public abstract class FileData extends BaseData {
     }
 
     public void readSettingsRequestData(RequestData rdata) {
-        setDisplayName(rdata.getString("displayName").trim());
-        setDescription(rdata.getString("description"));
+        setDisplayName(rdata.getAttributes().getString("displayName").trim());
+        setDescription(rdata.getAttributes().getString("description"));
     }
 
 }

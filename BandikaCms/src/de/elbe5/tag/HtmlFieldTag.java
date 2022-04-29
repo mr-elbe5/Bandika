@@ -37,7 +37,7 @@ public class HtmlFieldTag extends FieldTag {
             RequestData rdata = RequestData.getRequestData(request);
             JspWriter writer = getContext().getOut();
             PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
-            LayoutPartData partData = (LayoutPartData) rdata.get(PagePartData.KEY_PART);
+            LayoutPartData partData = (LayoutPartData) rdata.getAttributes().get(PagePartData.KEY_PART);
             PartHtmlField field = partData.ensureHtmlField(name);
 
             boolean editMode = contentData.getViewType().equals(ContentData.VIEW_TYPE_EDIT);

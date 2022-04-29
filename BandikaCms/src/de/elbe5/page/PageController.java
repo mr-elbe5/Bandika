@@ -149,7 +149,7 @@ public class PageController extends ContentController {
         image.readSettingsRequestData(rdata);
         ImageBean.getInstance().saveFile(image,true);
         ContentCache.setDirty();
-        rdata.put("imageId", Integer.toString(image.getId()));
+        rdata.getAttributes().put("imageId", Integer.toString(image.getId()));
         return new ForwardResponse("/WEB-INF/_jsp/ckeditor/addImage.ajax.jsp");
     }
 
@@ -186,26 +186,26 @@ public class PageController extends ContentController {
         int contentId = rdata.getId();
         PageData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, PageData.class);
         checkRights(data.hasUserEditRight(rdata));
-        int fromPartId = rdata.getInt("fromPartId", -1);
-        String partType = rdata.getString("partType");
+        int fromPartId = rdata.getAttributes().getInt("fromPartId", -1);
+        String partType = rdata.getAttributes().getString("partType");
         PagePartData pdata = PagePartFactory.getNewData(partType);
         pdata.setCreateValues(rdata);
         data.addPart(pdata, fromPartId, true);
-        rdata.put(PagePartData.KEY_PART, pdata);
+        rdata.getAttributes().put(PagePartData.KEY_PART, pdata);
         return new ForwardResponse("/WEB-INF/_jsp/page/newPart.ajax.jsp");
     }
 
     public IResponse sendContact(RequestData rdata) {
-        String captcha = rdata.getString("captcha");
+        String captcha = rdata.getAttributes().getString("captcha");
         String sessionCaptcha = rdata.getSessionObject(RequestKeys.KEY_CAPTCHA, String.class);
         if (!captcha.equals(sessionCaptcha)){
             rdata.addFormField("captcha");
             rdata.addFormError(LocalizedStrings.string("_captchaError"));
             return show(rdata);
         }
-        String name = rdata.getString("contactName");
-        String email = rdata.getString("contactEmail");
-        String message = rdata.getString("contactMessage");
+        String name = rdata.getAttributes().getString("contactName");
+        String email = rdata.getAttributes().getString("contactEmail");
+        String message = rdata.getAttributes().getString("contactMessage");
         if (name.isEmpty()) {
             rdata.addIncompleteField("contactName");
         }

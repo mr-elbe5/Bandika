@@ -24,12 +24,12 @@ public class PartTextField extends PartField {
 
     @Override
     public void readRequestData(RequestData rdata) {
-        setContent(rdata.getString(getIdentifier()));
+        setContent(rdata.getAttributes().getString(getIdentifier()));
     }
 
     @Override
     public void readFrontendRequestData(RequestData rdata){
-        setContent(rdata.getString(getIdentifier()));
+        setContent(rdata.getAttributes().getString(getIdentifier()));
     }
 
     /******************* search part *********************************/

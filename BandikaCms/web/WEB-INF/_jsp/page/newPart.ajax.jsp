@@ -13,7 +13,7 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    PagePartData partData = rdata.get(PagePartData.KEY_PART, PagePartData.class);
+    PagePartData partData = rdata.getAttributes().get(PagePartData.KEY_PART, PagePartData.class);
     String include = partData.getEditPartInclude();
 %>
     <% if (include != null) {%>

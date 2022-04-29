@@ -81,15 +81,15 @@ public class GroupData extends BaseData {
     // multiple data
 
     public void readSettingsRequestData(RequestData rdata) {
-        setName(rdata.getString("name"));
-        setNotes(rdata.getString("notes"));
+        setName(rdata.getAttributes().getString("name"));
+        setNotes(rdata.getAttributes().getString("notes"));
         getSystemRights().clear();
         for (SystemZone zone : SystemZone.values()) {
-            boolean hasRight = rdata.getBoolean("zoneright_" + zone.name());
+            boolean hasRight = rdata.getAttributes().getBoolean("zoneright_" + zone.name());
             if (hasRight)
                 addSystemRight(zone);
         }
-        setUserIds(rdata.getIntegerSet("userIds"));
+        setUserIds(rdata.getAttributes().getIntegerSet("userIds"));
         if (name.isEmpty()) {
             rdata.addIncompleteField("name");
         }

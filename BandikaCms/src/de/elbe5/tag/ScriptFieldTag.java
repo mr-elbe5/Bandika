@@ -31,7 +31,7 @@ public class ScriptFieldTag extends FieldTag {
             RequestData rdata = RequestData.getRequestData(request);
             JspWriter writer = getContext().getOut();
             PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
-            LayoutPartData partData = rdata.get(PagePartData.KEY_PART, LayoutPartData.class);
+            LayoutPartData partData = rdata.getAttributes().get(PagePartData.KEY_PART, LayoutPartData.class);
 
             PartScriptField field = partData.ensureScriptField(name);
 

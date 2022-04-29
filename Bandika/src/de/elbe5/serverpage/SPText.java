@@ -1,6 +1,6 @@
 package de.elbe5.serverpage;
 
-import de.elbe5.base.StringMap;
+import de.elbe5.request.RequestData;
 
 public class SPText implements SPNode {
 
@@ -19,8 +19,8 @@ public class SPText implements SPNode {
     }
 
     @Override
-    public void appendHtml(StringBuilder sb, StringMap params){
-        String result = replaceParams(code, params);
+    public void appendHtml(StringBuilder sb, RequestData rdata){
+        String result = replaceParams(code, rdata.getPageAttributes());
         sb.append(result);
     }
 

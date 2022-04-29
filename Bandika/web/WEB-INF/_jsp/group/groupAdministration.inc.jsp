@@ -21,7 +21,7 @@
         groups = GroupBean.getInstance().getAllGroups();
     } catch (Exception ignore) {
     }
-    int groupId = rdata.getInt("groupId");
+    int groupId = rdata.getAttributes().getInt("groupId");
 %><!--groups-->
 <li class="open">
     <span><%=$SH("_groups")%></span>

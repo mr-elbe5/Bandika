@@ -64,8 +64,8 @@ public class LinkData extends ContentData {
     @Override
     public void readRequestData(RequestData rdata) {
         super.readRequestData(rdata);
-        setLinkUrl(rdata.getString("linkUrl"));
-        setLinkIcon(rdata.getString("linkIcon"));
+        setLinkUrl(rdata.getAttributes().getString("linkUrl"));
+        setLinkIcon(rdata.getAttributes().getString("linkIcon"));
     }
 
 }

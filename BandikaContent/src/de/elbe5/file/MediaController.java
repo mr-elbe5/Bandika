@@ -44,10 +44,10 @@ public class MediaController extends FileController {
     }
 
     public IResponse openCreateMedia(RequestData rdata) {
-        int parentId = rdata.getInt("parentId");
+        int parentId = rdata.getAttributes().getInt("parentId");
         ContentData parentData = ContentCache.getContent(parentId);
         checkRights(parentData.hasUserEditRight(rdata));
-        String type=rdata.getString("type");
+        String type=rdata.getAttributes().getString("type");
         MediaData data = FileFactory.getNewData(type,MediaData.class);
         data.setCreateValues(parentData, rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_MEDIA, data);
@@ -106,7 +106,7 @@ public class MediaController extends FileController {
     }
 
     public IResponse pasteMedia(RequestData rdata) {
-        int parentId = rdata.getInt("parentId");
+        int parentId = rdata.getAttributes().getInt("parentId");
         ContentData parent=ContentCache.getContent(parentId);
         if (parent == null){
             rdata.setMessage(LocalizedStrings.string("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);

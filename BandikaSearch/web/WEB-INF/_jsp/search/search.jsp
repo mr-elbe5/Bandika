@@ -15,7 +15,7 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    PageSearchResultData pageResult = rdata.get("searchResultData",PageSearchResultData.class);
+    PageSearchResultData pageResult = rdata.getAttributes().get("searchResultData",PageSearchResultData.class);
     assert(pageResult!=null);
 %>
 <form:message/>

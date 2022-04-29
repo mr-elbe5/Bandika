@@ -26,8 +26,8 @@ public class MessageTag extends BaseTag {
         try {
             RequestData rdata = getRequestData();
             if (rdata.hasMessage()) {
-                String msg = rdata.getString(RequestKeys.KEY_MESSAGE);
-                String msgType = rdata.getString(RequestKeys.KEY_MESSAGETYPE);
+                String msg = rdata.getAttributes().getString(RequestKeys.KEY_MESSAGE);
+                String msgType = rdata.getAttributes().getString(RequestKeys.KEY_MESSAGETYPE);
                 Writer writer = getWriter();
                 writer.write(StringFormatter.format(controlHtml, msgType, StringHelper.toHtml(msg)));
             }

@@ -36,7 +36,7 @@ public class PartTag extends BaseTag {
             HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
             RequestData rdata = RequestData.getRequestData(request);
             PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
-            PagePartData partData = rdata.get(PagePartData.KEY_PART, PagePartData.class);
+            PagePartData partData = rdata.getAttributes().get(PagePartData.KEY_PART, PagePartData.class);
             JspWriter writer = getContext().getOut();
             if (partData != null) {
                 partData.setCssClass(cssClass);

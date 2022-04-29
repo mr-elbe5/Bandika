@@ -33,7 +33,7 @@ public class FileResponse implements IResponse {
         this.rangeInfo = rangeInfo;
     }
 
-    public void processResponse(ServletContext context, RequestData rsdata, HttpServletResponse response) {
+    public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response) {
         if (rangeInfo!=null && !rangeInfo.isValid()){
             response.setHeader("Content-Range", "bytes */" + file.length());
             response.setStatus(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
@@ -41,7 +41,7 @@ public class FileResponse implements IResponse {
         }
         response.reset();
         response.setBufferSize(DEFAULT_BUFFER_SIZE);
-        boolean forceDownload = rsdata.getBoolean("download");
+        boolean forceDownload = rdata.getAttributes().getBoolean("download");
         String disposition = (forceDownload ? "attachment" : "inline") + ";filename=\"" + StringHelper.toSafeWebName(fileName) + "\"";
         response.setHeader("Content-Disposition", disposition);
         response.setHeader("Accept-Ranges", "bytes");

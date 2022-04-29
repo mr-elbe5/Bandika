@@ -4,13 +4,16 @@ import de.elbe5.request.RequestType;
 import de.elbe5.serverpage.ServerPage;
 import de.elbe5.serverpage.SPParser;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class SPTest {
 
     public static void main(String[] args) {
         SPParser parser = new SPParser(code);
         ServerPage tpl = parser.parse();
-        StringMap params = new StringMap();
-        System.out.println(tpl.getHtml(params));
+        HttpServletRequest request = new TestRequest();
+        RequestData rdata = new RequestData("GET", RequestType.content, request);
+        System.out.println(tpl.getHtml(rdata));
     }
 
     static String code = """

@@ -9,11 +9,7 @@
 package de.elbe5.request;
 
 import de.elbe5.application.Configuration;
-import de.elbe5.base.BaseData;
-import de.elbe5.base.BinaryFile;
-import de.elbe5.base.KeyValueMap;
-import de.elbe5.base.LocalizedStrings;
-import de.elbe5.base.Log;
+import de.elbe5.base.*;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.user.UserData;
 
@@ -23,15 +19,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-public class RequestData extends KeyValueMap {
+public class RequestData {
 
     public static RequestData getRequestData(HttpServletRequest request) {
         return (RequestData) request.getAttribute(RequestKeys.KEY_REQUESTDATA);
     }
 
+    private final KeyValueMap attributes = new KeyValueMap();
+
+    private final StringMap pageAttributes = new StringMap();
+
     private final Map<String, Cookie> cookies = new HashMap<>();
 
-    protected HttpServletRequest request;
+    private final HttpServletRequest request;
 
     private int id = 0;
 
@@ -39,7 +39,7 @@ public class RequestData extends KeyValueMap {
 
     private final RequestType type;
 
-    protected FormError formError = null;
+    private FormError formError = null;
 
     public RequestData(String method, RequestType type, HttpServletRequest request) {
         this.request = request;
@@ -51,6 +51,14 @@ public class RequestData extends KeyValueMap {
         request.setAttribute(RequestKeys.KEY_REQUESTDATA, this);
         readRequestParams();
         initSession();
+    }
+
+    public KeyValueMap getAttributes() {
+        return attributes;
+    }
+
+    public StringMap getPageAttributes() {
+        return pageAttributes;
     }
 
     public HttpServletRequest getRequest() {
@@ -80,12 +88,12 @@ public class RequestData extends KeyValueMap {
     /*********** message *********/
 
     public boolean hasMessage() {
-        return containsKey(RequestKeys.KEY_MESSAGE);
+        return getAttributes().containsKey(RequestKeys.KEY_MESSAGE);
     }
 
     public void setMessage(String msg, String type) {
-        put(RequestKeys.KEY_MESSAGE, msg);
-        put(RequestKeys.KEY_MESSAGETYPE, type);
+        getAttributes().put(RequestKeys.KEY_MESSAGE, msg);
+        getAttributes().put(RequestKeys.KEY_MESSAGETYPE, type);
     }
 
     /************ user ****************/
@@ -186,7 +194,7 @@ public class RequestData extends KeyValueMap {
             file.setFileSize(file.getBytes().length);
             file.setFileName(request.getHeader("fileName"));
             file.setContentType(request.getHeader("contentType"));
-            put("file", file);
+            getAttributes().put("file", file);
         }
         catch (IOException ioe){
             Log.error("input stream error", ioe);
@@ -198,7 +206,7 @@ public class RequestData extends KeyValueMap {
         while (enm.hasMoreElements()) {
             String key = (String) enm.nextElement();
             String[] strings = request.getParameterValues(key);
-            put(key, strings);
+            getAttributes().put(key, strings);
         }
     }
 
@@ -244,25 +252,25 @@ public class RequestData extends KeyValueMap {
         for (String key : params.keySet()) {
             List<String> list = params.get(key);
             if (list.size() == 1) {
-                put(key, list.get(0));
+                getAttributes().put(key, list.get(0));
             } else {
                 String[] strings = new String[list.size()];
                 for (int i = 0; i < list.size(); i++) {
                     strings[i] = list.get(i);
                 }
-                put(key, strings);
+                getAttributes().put(key, strings);
             }
         }
         for (String key : fileParams.keySet()) {
             List<BinaryFile> list = fileParams.get(key);
             if (list.size() == 1) {
-                put(key, list.get(0));
+                getAttributes().put(key, list.get(0));
             } else {
                 BinaryFile[] files = new BinaryFile[list.size()];
                 for (int i = 0; i < list.size(); i++) {
                     files[i] = list.get(i);
                 }
-                put(key, files);
+                getAttributes().put(key, files);
             }
         }
     }

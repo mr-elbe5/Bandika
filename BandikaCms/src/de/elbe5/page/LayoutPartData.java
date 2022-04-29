@@ -137,7 +137,7 @@ public class LayoutPartData extends PagePartData {
     @Override
     public void setCreateValues(RequestData rdata) {
         super.setCreateValues(rdata);
-        setLayout(rdata.getString("layout"));
+        setLayout(rdata.getAttributes().getString("layout"));
     }
 
     @Override

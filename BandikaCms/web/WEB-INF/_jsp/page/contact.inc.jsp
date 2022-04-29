@@ -17,9 +17,9 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
-    String contactName = rdata.getString("contactName");
-    String contactEmail = rdata.getString("contactEmail");
-    String contactMessage = rdata.getString("contactMessage");
+    String contactName = rdata.getAttributes().getString("contactName");
+    String contactEmail = rdata.getAttributes().getString("contactEmail");
+    String contactMessage = rdata.getAttributes().getString("contactMessage");
     String url = "/ctrl/page/sendContact/" + contentData.getId();
     boolean editing = contentData.isEditing();
 %>

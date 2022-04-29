@@ -1,6 +1,5 @@
 package de.elbe5.serverpage;
 
-import de.elbe5.base.StringMap;
 import de.elbe5.request.RequestData;
 
 import java.util.*;
@@ -33,19 +32,22 @@ public class SPTag implements SPNode {
     }
 
     @Override
-    public void appendHtml(StringBuilder sb, StringMap params){
-        appendChildHtml(sb, params);
+    public void appendHtml(StringBuilder sb, RequestData rdata){
+        appendChildHtml(sb, rdata);
     }
 
-    public void appendChildHtml(StringBuilder sb, StringMap params){
+    public void appendChildHtml(StringBuilder sb, RequestData rdata){
         for (SPNode node : childNodes) {
-            node.appendHtml(sb, params);
+            node.appendHtml(sb, rdata);
         }
     }
 
     String getAttribute(String key, RequestData rdata){
         String value = attributes.get(key);
-        return value;
+        if (value!=null){
+            return replaceParams(value, rdata.getPageAttributes());
+        }
+        return "";
     }
 
     @Override

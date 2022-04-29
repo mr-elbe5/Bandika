@@ -18,7 +18,7 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     ContentData contentData = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT,ContentData.class);
-    int imageId=rdata.getInt("imageId");
+    int imageId=rdata.getAttributes().getInt("imageId");
     ImageData image = ContentCache.getFile(imageId,ImageData.class);
     if (contentData.hasUserReadRight(rdata)) {
 %>

@@ -25,7 +25,7 @@ public class RedirectResponse implements IResponse {
 
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response) {
-        rdata.put("redirectUrl", url);
+        rdata.getAttributes().put("redirectUrl", url);
         RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/_jsp/redirect.jsp");
         try {
             rd.forward(rdata.getRequest(), response);

@@ -241,8 +241,8 @@ public class PageData extends ContentData {
     @Override
     public void readRequestData(RequestData rdata) {
         super.readRequestData(rdata);
-        setKeywords(rdata.getString("keywords"));
-        setLayout(rdata.getString("layout"));
+        setKeywords(rdata.getAttributes().getString("keywords"));
+        setLayout(rdata.getAttributes().getString("layout"));
         if (layout.isEmpty()) {
             rdata.addIncompleteField("layout");
         }

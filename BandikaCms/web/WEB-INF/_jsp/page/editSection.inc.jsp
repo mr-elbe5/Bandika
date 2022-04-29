@@ -18,7 +18,7 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    SectionData sectionData = rdata.get(SectionData.KEY_SECTION, SectionData.class);
+    SectionData sectionData = rdata.getAttributes().get(SectionData.KEY_SECTION, SectionData.class);
     List<LayoutData> partLayouts = LayoutCache.getLayouts(PagePartData.LAYOUT_TYPE);
 %>
 <div class="section <%=sectionData.getCssClass()%>" id="<%=sectionData.getSectionId()%>" title="Section <%=sectionData.getName()%>">
@@ -45,12 +45,12 @@
     </div>
     <%-- existing parts --%>
     <%for (PagePartData partData : sectionData.getParts()) {
-        rdata.put(PagePartData.KEY_PART, partData);
+        rdata.getAttributes().put(PagePartData.KEY_PART, partData);
         String include = partData.getEditPartInclude();
         if (include != null) {%>
             <jsp:include page="<%=include%>" flush="true"/>
         <%}
-        rdata.remove(PagePartData.KEY_PART);
+        rdata.getAttributes().remove(PagePartData.KEY_PART);
     }%>
 </div>
 

@@ -164,11 +164,11 @@ public abstract class TimerTaskData extends BaseData implements Cloneable {
     }
 
     public void readSettingsRequestData(RequestData rdata) {
-        setInterval(TimerInterval.valueOf(rdata.getString("interval")));
-        setDay(rdata.getInt("day"));
-        setHour(rdata.getInt("hour"));
-        setMinute(rdata.getInt("minute"));
-        setActive(rdata.getBoolean("active"));
+        setInterval(TimerInterval.valueOf(rdata.getAttributes().getString("interval")));
+        setDay(rdata.getAttributes().getInt("day"));
+        setHour(rdata.getAttributes().getInt("hour"));
+        setMinute(rdata.getAttributes().getInt("minute"));
+        setActive(rdata.getAttributes().getBoolean("active"));
         if (interval != TimerInterval.CONTINOUS && (day == 0 || (hour < 0 || hour >= 24) || (minute < 0 || minute >= 60))) {
             rdata.addFormError(LocalizedStrings.string("_timerSettingsError"));
             rdata.addFormField("interval");

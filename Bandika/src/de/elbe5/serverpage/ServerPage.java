@@ -1,6 +1,5 @@
 package de.elbe5.serverpage;
 
-import de.elbe5.base.StringMap;
 import de.elbe5.request.RequestData;
 
 public class ServerPage extends SPTag {
@@ -9,9 +8,9 @@ public class ServerPage extends SPTag {
         super("template");
     }
 
-    public String getHtml(StringMap params){
+    public String getHtml(RequestData rdata){
         StringBuilder sb = new StringBuilder();
-        appendChildHtml(sb, params);
+        appendChildHtml(sb, rdata);
         return sb.toString();
     }
 

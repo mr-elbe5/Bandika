@@ -3,10 +3,11 @@ package de.elbe5.serverpage;
 import de.elbe5.base.LocalizedStrings;
 import de.elbe5.base.Log;
 import de.elbe5.base.StringMap;
+import de.elbe5.request.RequestData;
 
 public interface SPNode {
 
-    void appendHtml(StringBuilder sb, StringMap params);
+    void appendHtml(StringBuilder sb, RequestData rdata);
 
     void appendCode(StringBuilder sb, String prefix);
 

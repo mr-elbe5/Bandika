@@ -42,7 +42,7 @@ public abstract class FileController extends Controller {
     private IResponse downloadFile(RequestData rdata) {
         int id = rdata.getId();
         FileData data = ContentCache.getFile(id);
-        rdata.put("download", "true");
+        rdata.getAttributes().put("download", "true");
         return show(data, rdata);
     }
 
@@ -50,7 +50,7 @@ public abstract class FileController extends Controller {
         ContentData parent=ContentCache.getContent(data.getParentId());
         if (!parent.hasUserReadRight(rdata)) {
             //todo
-            //String token = rdata.getString("token");
+            //String token = rdata.getAttributes().getString("token");
             //checkRights(Token.matchToken(data.getId(), token));
         }
         File file = new File(ApplicationPath.getAppFilePath(), data.getFileName());
@@ -73,7 +73,7 @@ public abstract class FileController extends Controller {
         checkRights(parent.hasUserReadRight(rdata));
         FileBean.getInstance().deleteFile(contentId);
         ContentCache.setDirty();
-        rdata.put("contentId", Integer.toString(parentId));
+        rdata.getAttributes().put("contentId", Integer.toString(parentId));
         rdata.setMessage(LocalizedStrings.string("_fileDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,parentId);
     }

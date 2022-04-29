@@ -22,7 +22,7 @@
     IMasterInclude masterInclude = rdata.getRequestObject(RequestKeys.KEY_MASTERINCLUDE, IMasterInclude.class);
     ContentData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
     List<Integer> parentIds = ContentCache.getParentContentIds(contentData);
-    String title = rdata.getString(RequestKeys.KEY_TITLE, Configuration.getAppTitle()) + (contentData!=null ? " | " + contentData.getDisplayName() : "");
+    String title = rdata.getAttributes().getString(RequestKeys.KEY_TITLE, Configuration.getAppTitle()) + (contentData!=null ? " | " + contentData.getDisplayName() : "");
     String keywords=contentData!=null ? contentData.getKeywords() : title;
     String description=contentData!=null ? contentData.getDescription() : "";
 %>

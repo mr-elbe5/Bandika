@@ -14,8 +14,8 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    String msg = rdata.getString(RequestKeys.KEY_MESSAGE);
-    String msgType = rdata.getString(RequestKeys.KEY_MESSAGETYPE);
+    String msg = rdata.getAttributes().getString(RequestKeys.KEY_MESSAGE);
+    String msgType = rdata.getAttributes().getString(RequestKeys.KEY_MESSAGETYPE);
     String msgKey="";
     switch (msgType) {
         case RequestKeys.MESSAGE_TYPE_INFO:

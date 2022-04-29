@@ -63,7 +63,7 @@ public class CkEditorController extends ContentController {
         image.readSettingsRequestData(rdata);
         ImageBean.getInstance().saveFile(image,true);
         ContentCache.setDirty();
-        rdata.put("imageId", Integer.toString(image.getId()));
+        rdata.getAttributes().put("imageId", Integer.toString(image.getId()));
         return new ForwardResponse("/WEB-INF/_jsp/ckeditor/addImage.ajax.jsp");
     }
 
