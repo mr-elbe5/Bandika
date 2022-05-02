@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="BandikaSample" default="common.deployProject" basedir=".">
+
+    <property file="build.properties" />
+
+    <property name="project" value="BandikaSample" />
+    <property name="deploy.dir" location="${deploy.root}/bandika" />
+
+    <import file="commonTasks.xml"/>
+
+</project>

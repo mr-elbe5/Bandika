@@ -2,6 +2,7 @@ package de.elbe5.serverpage;
 
 import de.elbe5.application.ApplicationPath;
 import de.elbe5.base.FileHelper;
+import de.elbe5.base.Log;
 import de.elbe5.request.RequestData;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class ServerPage implements SPNode {
     }
 
     public String getHtml(RequestData rdata){
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder("<!DOCTYPE html>\n");
         appendHtml(sb, rdata);
         return sb.toString();
     }

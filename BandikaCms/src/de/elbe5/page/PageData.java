@@ -17,11 +17,6 @@ import de.elbe5.content.ContentResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import javax.servlet.ServletException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
-import java.io.IOException;
-import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -153,71 +148,64 @@ public class PageData extends ContentData {
     //used in controller
     @Override
     public String getContentDataPage() {
-        return "/WEB-INF/_shtml/page/editContentData.ajax.shtml";
+        return "page/editContentData";
     }
 
     //used in jsp
-    protected void displayEditContent(PageContext context, JspWriter writer, RequestData rdata) throws IOException, ServletException {
-        context.include("/WEB-INF/_shtml/page/editPageContent.inc.shtml");
+    protected void appendEditContent(StringBuilder sb, RequestData rdata) {
+        includePage(sb,"page/editPageContent", rdata);
     }
 
     //used in jsp
-    protected void displayDraftContent(PageContext context, JspWriter writer, RequestData rdata) throws IOException, ServletException {
-        context.include(getLayoutUrl());
+    protected void appendDraftContent(StringBuilder sb, RequestData rdata) {
+        includePage(sb, getLayoutUrl(), rdata);
     }
 
     //used in jsp
-    protected void displayPublishedContent(PageContext context, JspWriter writer, RequestData rdata) throws IOException, ServletException {
-        writer.write(publishedContent);
+    protected void appendPublishedContent(StringBuilder sb, RequestData rdata) {
+        sb.append(publishedContent);
     }
 
     public IResponse getDefaultView(){
         return new ContentResponse(this);
     }
 
-    public void displayContent(PageContext context, RequestData rdata) throws IOException, ServletException {
-        JspWriter writer = context.getOut();
+    public void appendContent(StringBuilder sb, RequestData rdata) {
         switch (getViewType()) {
-            case VIEW_TYPE_PUBLISH: {
-                writer.write("<div id=\"pageContent\" class=\"viewArea\">");
-                StringWriter stringWriter = new StringWriter();
-                context.pushBody(stringWriter);
-                displayDraftContent(context, context.getOut(), rdata);
-                setPublishedContent(stringWriter.toString());
+            case VIEW_TYPE_PUBLISH -> {
+                sb.append("<div id=\"pageContent\" class=\"viewArea\">");
+                StringBuilder sbp = new StringBuilder();
+                appendDraftContent(sbp, rdata);
+                setPublishedContent(sbp.toString());
                 reformatPublishedContent();
-                context.popBody();
                 //Log.log("publishing page " + getDisplayName());
                 if (!PageBean.getInstance().publishPage(this)) {
                     Log.error("error writing published content");
                 }
-                writer.write(getPublishedContent());
+                sb.append(getPublishedContent());
                 setViewType(ContentData.VIEW_TYPE_SHOW);
                 ContentCache.setDirty();
-                writer.write("</div>");
+                sb.append("</div>");
             }
-            break;
-            case VIEW_TYPE_EDIT: {
-                writer.write("<div id=\"pageContent\" class=\"editArea\">");
-                displayEditContent(context, context.getOut(), rdata);
-                writer.write("</div>");
+            case VIEW_TYPE_EDIT -> {
+                sb.append("<div id=\"pageContent\" class=\"editArea\">");
+                appendEditContent(sb, rdata);
+                sb.append("</div>");
             }
-            break;
-            case VIEW_TYPE_SHOWPUBLISHED: {
-                writer.write("<div id=\"pageContent\" class=\"viewArea\">");
+            case VIEW_TYPE_SHOWPUBLISHED -> {
+                sb.append("<div id=\"pageContent\" class=\"viewArea\">");
                 if (isPublished())
-                    displayPublishedContent(context, context.getOut(), rdata);
-                writer.write("</div>");
+                    appendPublishedContent(sb, rdata);
+                sb.append("</div>");
             }
-            break;
-            default: {
-                writer.write("<div id=\"pageContent\" class=\"viewArea\">");
+            default -> {
+                sb.append("<div id=\"pageContent\" class=\"viewArea\">");
                 if (isPublished() && !hasUserEditRight(rdata))
-                    displayPublishedContent(context, context.getOut(), rdata);
+                    appendPublishedContent(sb, rdata);
                 else
-                    displayDraftContent(context, context.getOut(), rdata);
-                writer.write("</div>");
+                    appendDraftContent(sb, rdata);
+                sb.append("</div>");
             }
-            break;
         }
     }
 

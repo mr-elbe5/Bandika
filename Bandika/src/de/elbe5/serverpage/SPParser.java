@@ -45,6 +45,7 @@ public class SPParser extends DefaultHandler2 {
     }
 
     private void pushTag(String type, Attributes attr){
+        Log.log("pushTag " + type);
         SPTag tag;
         tag = SPTagFactory.createTag(type);
         addChildNode(tag);
@@ -55,6 +56,7 @@ public class SPParser extends DefaultHandler2 {
     }
 
     private void popTag(String type) throws SAXException{
+        Log.log("popTag " + type);
         if (tagStack.size()==0){
             throw new SAXException("bad closing tag: " + type);
         }
@@ -85,7 +87,12 @@ public class SPParser extends DefaultHandler2 {
             for (int i=0; i<attributes.getLength(); i++){
                 buffer.append(" ").append(attributes.getQName(i)).append("=\"").append(attributes.getValue(i)).append("\"");
             }
-            tagIsOpen = true;
+            if (qName.equals("script")){
+                buffer.append(">");
+            }
+            else {
+                tagIsOpen = true;
+            }
         }
     }
 

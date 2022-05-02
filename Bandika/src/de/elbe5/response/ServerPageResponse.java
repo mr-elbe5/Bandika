@@ -9,6 +9,7 @@
 package de.elbe5.response;
 
 import de.elbe5.request.RequestData;
+import de.elbe5.serverpage.SPPageCache;
 import de.elbe5.serverpage.ServerPage;
 
 import javax.servlet.ServletContext;
@@ -24,9 +25,9 @@ public class ServerPageResponse extends HtmlResponse {
 
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
-        StringBuilder sb = new StringBuilder();
-        if (ServerPage.includePage(sb, path, rdata)){
-            html = sb.toString();
+        ServerPage page = SPPageCache.getPage(path);
+        if (page != null) {
+            html = page.getHtml(rdata);
             super.processResponse(context, rdata, response);
         }
         else {

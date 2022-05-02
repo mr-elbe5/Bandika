@@ -102,6 +102,15 @@ public class BandikaInitServlet extends InitServlet {
         SPTagFactory.addTagType(SPSysNavTag.TYPE, SPSysNavTag.class);
         SPTagFactory.addTagType(SPTextFieldTag.TYPE, SPTextFieldTag.class);
         SPTagFactory.addTagType(SPUserListTag.TYPE, SPUserListTag.class);
+
+        SPTagFactory.addTagType(SPBreadcrumbTag.TYPE, SPBreadcrumbTag.class);
+        SPTagFactory.addTagType(SPContentTag.TYPE, SPContentTag.class);
+        SPTagFactory.addTagType(SPContentTreeTag.TYPE, SPContentTreeTag.class);
+        SPTagFactory.addTagType(SPFooterTag.TYPE, SPFooterTag.class);
+        SPTagFactory.addTagType(SPMainNavTag.TYPE, SPMainNavTag.class);
+        SPTagFactory.addTagType(SPSysNavTag.TYPE, SPSysNavTag.class);
+
+
         ContentCache.load();
         ContentCentral.setInstance(new AppContentCentral());
         CompanyCache.load();

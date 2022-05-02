@@ -1,5 +1,6 @@
 package de.elbe5.serverpage;
 
+import de.elbe5.base.Log;
 import de.elbe5.serverpagetags.*;
 
 import java.lang.reflect.Constructor;
@@ -18,11 +19,11 @@ public class SPTagFactory {
         Class<? extends SPTag> cls = tagClasses.get(type);
         if (cls != null) {
             try {
-                Constructor<? extends SPTag> ctr = cls.getDeclaredConstructor(String.class);;
-                return ctr.newInstance(type);
+                Constructor<? extends SPTag> ctr = cls.getDeclaredConstructor();
+                return ctr.newInstance();
             }
             catch (Exception e){
-                System.out.println("could n ot create templete tag for type " + type);
+                Log.error("could not create tag for type " + type);
             }
         }
         return new SPTag();

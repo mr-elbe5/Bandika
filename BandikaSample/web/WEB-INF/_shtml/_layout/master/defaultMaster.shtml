@@ -7,16 +7,17 @@
         <meta name="keywords" content="{{keywords}}"/>
         <meta name="description" content="{{description}}"/>
         <link rel="shortcut icon" href="/favicon.ico"/>
-        <link rel="stylesheet" href="/css/bandika.css"/>
-        <link rel="stylesheet" href="/layout/layout.css"/>
-        <script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>
-        <script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
-        <script type="text/javascript" src="/js/bootstrap.tree.js"></script>
-        <script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
-        <script type="text/javascript" src="/ckeditor/adapters/jquery.js"></script>
-        <script type="text/javascript" src="/js/bandika.js"></script>
+        <link rel="stylesheet" href="/static-content/css/bootstrap.css"/>
+        <link rel="stylesheet" href="/static-content/css/bandika.css"/>
+        <link rel="stylesheet" href="/static-content/css/layout.css"/>
+        <script type="text/javascript" src="/static-content/js/jquery-1.12.4.min.js"></script>
+        <script type="text/javascript" src="/static-content/js/bootstrap.bundle.min.js"></script>
+        <script type="text/javascript" src="/static-content/js/bootstrap.tree.js"></script>
+        <script type="text/javascript" src="/static-content/ckeditor/ckeditor.js"></script>
+        <script type="text/javascript" src="/static-content/js/bandika-webbase.js"></script>
     </head>
     <body>
+    TEST1
         <div class="container">
             <header>
                 <section class="sysnav">
