@@ -43,7 +43,7 @@
                 <spg:select name="master" label="_masterLayout" required="true">
                     {{masterOptions}}
                 </spg:select>
-                <jsp:include page = "/WEB-INF/_jsp/fullpage/contentFormFields.inc.jsp" flush="true" />
+                <jsp:include page = "/WEB-INF/_shtml/fullpage/contentFormFields.inc.jsp" flush="true" />
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{_close}}

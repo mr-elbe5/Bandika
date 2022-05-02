@@ -54,7 +54,7 @@ public class LayoutPartData extends PagePartData {
     }
 
     public String getTemplateUrl() {
-        return "/WEB-INF/_jsp/_layout/"+ layout +".jsp";
+        return "/WEB-INF/_shtml/_layout/"+ layout +".shtml";
     }
 
     public String getPartInclude() {

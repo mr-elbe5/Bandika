@@ -9,29 +9,28 @@
 package de.elbe5.response;
 
 import de.elbe5.request.RequestData;
+import de.elbe5.serverpage.ServerPage;
 
-import javax.servlet.ServletException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
-import java.io.IOException;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
 
-public class JspInclude implements IMasterInclude {
+public class ServerPageResponse extends HtmlResponse {
 
-    private final String jsp;
+    protected String path;
 
-    public JspInclude(String jsp) {
-        this.jsp=jsp;
+    public ServerPageResponse(String path) {
+        this.path = path;
     }
 
     @Override
-    public void displayContent(PageContext context, RequestData rdata) throws IOException, ServletException {
-        JspWriter writer = context.getOut();
-        writer.write("<div id=\"pageContent\" class=\"viewArea\">");
-        context.include(jsp);
-        writer.write("</div>");
-    }
-
-    @Override
-    public void appendContent(StringBuilder sb, RequestData rdata) {
+    public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
+        StringBuilder sb = new StringBuilder();
+        if (ServerPage.includePage(sb, path, rdata)){
+            html = sb.toString();
+            super.processResponse(context, rdata, response);
+        }
+        else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
 }

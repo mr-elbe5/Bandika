@@ -11,6 +11,15 @@ public class ServerPage implements SPNode {
 
     public static String shtmlBasePath = ApplicationPath.getAppWEBINFPath()+"/_shtml/";
 
+    public static boolean includePage(StringBuilder sb, String path, RequestData rdata){
+        ServerPage include = SPPageCache.getPage(path);
+        if (include != null) {
+            sb.append(include.getHtml(rdata));
+            return true;
+        }
+        return false;
+    }
+
     final String path;
 
     List<SPNode> childNodes = new ArrayList<>();

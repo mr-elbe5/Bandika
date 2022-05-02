@@ -88,7 +88,7 @@
             <div id="pageContainer">
                 <% if (masterInclude!=null){
                     try {
-                        masterInclude.displayContent(pageContext, rdata);
+                        masterInclude.appendContent(pageContext, rdata);
                     } catch (Exception ignore) {
                     }
                 }%>

@@ -11,13 +11,10 @@ package de.elbe5.company;
 import de.elbe5.base.LocalizedStrings;
 import de.elbe5.base.BaseData;
 import de.elbe5.request.*;
-import de.elbe5.response.StatusResponse;
+import de.elbe5.response.*;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
-import de.elbe5.response.CloseDialogResponse;
-import de.elbe5.response.IResponse;
-import de.elbe5.response.ForwardResponse;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -92,6 +89,6 @@ public class CompanyController extends Controller {
     }
 
     protected IResponse showEditCompany() {
-        return new ForwardResponse("/WEB-INF/_jsp/company/editCompany.ajax.jsp");
+        return new ServerPageResponse("company/editCompany");
     }
 }

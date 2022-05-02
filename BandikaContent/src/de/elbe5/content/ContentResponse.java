@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ContentResponse extends MasterResponse {
 
     public ContentResponse(ContentData data) {
-        super("defaultMaster", data);
+        super(DEFAULT_MASTER, data);
     }
 
     @Override

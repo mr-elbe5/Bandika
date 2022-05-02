@@ -131,7 +131,7 @@ public class ImageController extends FileController {
     }
 
     protected IResponse showEditImage() {
-        return new ForwardResponse("/WEB-INF/_jsp/file/editImage.ajax.jsp");
+        return new ServerPageResponse("file/editImage");
     }
 
 }

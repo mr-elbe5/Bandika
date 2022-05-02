@@ -17,29 +17,25 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class CloseDialogResponse extends ForwardResponse {
+public class CloseDialogResponse extends ServerPageResponse {
 
     private String targetId = "";
 
-    public CloseDialogResponse(String url) {
-        super(url);
+    public CloseDialogResponse(String path) {
+        super(path);
     }
 
-    public CloseDialogResponse(String url, String targetId) {
-        super(url);
+    public CloseDialogResponse(String path, String targetId) {
+        super(path);
         this.targetId = targetId;
     }
 
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
-        rdata.getAttributes().put(RequestKeys.KEY_URL, url);
+        rdata.getAttributes().put(RequestKeys.KEY_URL, path);
         if (!targetId.isEmpty())
             rdata.getAttributes().put(RequestKeys.KEY_TARGETID, targetId);
-        RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/_jsp/closeDialog.ajax.jsp");
-        try {
-            rd.forward(rdata.getRequest(), response);
-        } catch (ServletException | IOException e) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        }
+        path = "closeDialog";
+        super.processResponse(context, rdata, response);
     }
 }

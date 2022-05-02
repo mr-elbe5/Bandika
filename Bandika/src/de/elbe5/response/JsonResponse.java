@@ -32,6 +32,7 @@ public class JsonResponse implements IResponse {
             response.setHeader("Expires", "Tues, 01 Jan 1980 00:00:00 GMT");
             response.setHeader("Cache-Control", "no-cache");
             response.setHeader("Pragma", "no-cache");
+            response.setHeader("Content-Type", "application/json");
             if (json == null || json.length() == 0) {
                 response.setHeader("Content-Length", "0");
             } else {

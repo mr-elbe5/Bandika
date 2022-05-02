@@ -11,12 +11,10 @@ package de.elbe5.response;
 import de.elbe5.request.RequestData;
 
 import javax.servlet.ServletException;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 
 public interface IMasterInclude {
 
-    void displayContent(PageContext context, RequestData rdata) throws IOException, ServletException;
     void appendContent(StringBuilder sb, RequestData rdata);
 
 }

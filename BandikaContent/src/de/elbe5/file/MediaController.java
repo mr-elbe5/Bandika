@@ -17,7 +17,7 @@ import de.elbe5.request.RequestKeys;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.CloseDialogResponse;
 import de.elbe5.response.IResponse;
-import de.elbe5.response.ForwardResponse;
+import de.elbe5.response.ServerPageResponse;
 
 public class MediaController extends FileController {
 
@@ -133,7 +133,7 @@ public class MediaController extends FileController {
     }
 
     protected IResponse showEditMedia() {
-        return new ForwardResponse("/WEB-INF/_jsp/file/editMedia.ajax.jsp");
+        return new ServerPageResponse("file/editMedia");
     }
 
 }

@@ -11,14 +11,11 @@ package de.elbe5.group;
 import de.elbe5.base.LocalizedStrings;
 import de.elbe5.base.BaseData;
 import de.elbe5.request.*;
-import de.elbe5.response.StatusResponse;
+import de.elbe5.response.*;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.user.UserCache;
-import de.elbe5.response.CloseDialogResponse;
-import de.elbe5.response.IResponse;
-import de.elbe5.response.ForwardResponse;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -93,6 +90,6 @@ public class GroupController extends Controller {
     }
 
     protected IResponse showEditGroup() {
-        return new ForwardResponse("/WEB-INF/_jsp/group/editGroup.ajax.jsp");
+        return new ServerPageResponse("group/editGroup");
     }
 }

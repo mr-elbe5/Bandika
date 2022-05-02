@@ -19,7 +19,7 @@ import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.response.IResponse;
-import de.elbe5.response.ForwardResponse;
+import de.elbe5.response.ServerPageResponse;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -89,11 +89,11 @@ public class AdminController extends Controller {
     }
 
     protected IResponse showExecuteDatabaseScript() {
-        return new ForwardResponse("/WEB-INF/_jsp/administration/executeDatabaseScript.ajax.jsp");
+        return new ServerPageResponse("administration/executeDatabaseScript");
     }
 
     private IResponse showEditConfiguration() {
-        return new ForwardResponse("/WEB-INF/_jsp/administration/editConfiguration.ajax.jsp");
+        return new ServerPageResponse("administration/editConfiguration");
     }
 
 }

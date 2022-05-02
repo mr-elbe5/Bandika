@@ -22,14 +22,13 @@ import de.elbe5.request.RequestData;
 import de.elbe5.response.IMasterInclude;
 import de.elbe5.rights.Right;
 import de.elbe5.rights.SystemZone;
+import de.elbe5.serverpage.SPPageCache;
+import de.elbe5.serverpage.ServerPage;
 import de.elbe5.user.UserCache;
 import de.elbe5.user.UserData;
 import de.elbe5.response.IResponse;
 import org.json.simple.JSONObject;
 
-import javax.servlet.ServletException;
-import javax.servlet.jsp.PageContext;
-import java.io.IOException;
 import java.util.*;
 
 public class ContentData extends BaseData implements IMasterInclude, Comparable<ContentData>, IJsonData {
@@ -427,39 +426,40 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         return new ContentResponse(this);
     }
 
-    public String getContentDataJsp() {
-        return "/WEB-INF/_jsp/content/editContentData.ajax.jsp";
+    protected void includePage(StringBuilder sb, String path, RequestData rdata){
+        ServerPage include = SPPageCache.getPage(path);
+        if (include != null) {
+            sb.append(include.getHtml(rdata));
+        }
+    }
+
+    public String getContentDataPage() {
+        return "content/editContentData";
     }
 
     //used in jsp
-    public void displayTreeContent(PageContext context, RequestData rdata) throws IOException, ServletException {
+    public void appendTreeContent(StringBuilder sb, RequestData rdata) {
         if (hasUserReadRight(rdata)) {
             //backup
             ContentData currentContent = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
             rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, this);
-            context.include("/WEB-INF/_jsp/content/treeContent.inc.jsp", true);
+            includePage(sb, "content/treeContent", rdata);
             //restore
             rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, currentContent);
         }
     }
 
     //used in admin jsp
-    public void displayAdminTreeContent(PageContext context, RequestData rdata) throws IOException, ServletException {
+    public void appendAdminTreeContent(StringBuilder sb, RequestData rdata) {
         if (hasUserReadRight(rdata)) {
             //backup
             ContentData currentContent = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
             rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, this);
-            context.include("/WEB-INF/_jsp/content/adminTreeContent.inc.jsp", true);
+            includePage(sb,"content/adminTreeContent", rdata);
             //restore
             rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, currentContent);
         }
     }
-
-    //used in jsp/tag
-    @Override
-    public void displayContent(PageContext context, RequestData rdata) throws IOException, ServletException {
-    }
-
     @Override
     public void appendContent(StringBuilder sb, RequestData rdata) {
 

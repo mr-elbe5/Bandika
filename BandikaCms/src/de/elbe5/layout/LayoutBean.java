@@ -28,7 +28,7 @@ public class LayoutBean {
 
     public List<LayoutData> getAllLayouts(){
         List<LayoutData> list=new ArrayList<>();
-        String layoutPath= ApplicationPath.getAppWEBINFPath()+"/_jsp/_layout";
+        String layoutPath= ApplicationPath.getAppWEBINFPath()+"/_shtml/_layout";
         File dir= new File(layoutPath);
         if (!dir.exists() || !dir.isDirectory())
             return list;

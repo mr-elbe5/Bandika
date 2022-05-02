@@ -6,19 +6,28 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.tag;
+package de.elbe5.response;
 
-public abstract class FieldTag extends BaseTag {
+import de.elbe5.request.RequestData;
+import de.elbe5.serverpage.SPPageCache;
+import de.elbe5.serverpage.ServerPage;
 
-    protected String name = "";
-    protected String placeholder = "";
+public class ServerPageInclude implements IMasterInclude {
 
-    public void setName(String name) {
-        this.name = name;
+    private final String serverpage;
+
+    public ServerPageInclude(String serverpage) {
+        this.serverpage = serverpage;
     }
 
-    public void setPlaceholder(String placeholder) {
-        this.placeholder = placeholder;
+    @Override
+    public void appendContent(StringBuilder sb, RequestData rdata) {
+        sb.append("<div id=\"pageContent\" class=\"viewArea\">");
+        ServerPage page = SPPageCache.getPage(serverpage);
+        if (page!=null) {
+            sb.append(page.getHtml(rdata));
+        }
+        sb.append("</div>");
     }
+
 }
-

@@ -57,8 +57,8 @@ public class LinkData extends ContentData {
     }
 
     @Override
-    public String getContentDataJsp() {
-        return "/WEB-INF/_jsp/content/editLinkData.ajax.jsp";
+    public String getContentDataPage() {
+        return "/WEB-INF/_shtml/content/editLinkData.ajax.shtml";
     }
 
     @Override

@@ -52,7 +52,7 @@ public class PageData extends ContentData {
     }
 
     public String getLayoutUrl() {
-        return "/WEB-INF/_jsp/_layout/"+ layout +".jsp";
+        return "/WEB-INF/_shtml/_layout/"+ layout +".shtml";
     }
 
     public void setLayout(String layout) {
@@ -152,13 +152,13 @@ public class PageData extends ContentData {
 
     //used in controller
     @Override
-    public String getContentDataJsp() {
-        return "/WEB-INF/_jsp/page/editContentData.ajax.jsp";
+    public String getContentDataPage() {
+        return "/WEB-INF/_shtml/page/editContentData.ajax.shtml";
     }
 
     //used in jsp
     protected void displayEditContent(PageContext context, JspWriter writer, RequestData rdata) throws IOException, ServletException {
-        context.include("/WEB-INF/_jsp/page/editPageContent.inc.jsp");
+        context.include("/WEB-INF/_shtml/page/editPageContent.inc.shtml");
     }
 
     //used in jsp

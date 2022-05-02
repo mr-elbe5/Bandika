@@ -74,4 +74,11 @@ public class SPTag implements SPNode {
         }
     }
 
+    protected void includePage(StringBuilder sb, String path, RequestData rdata){
+        ServerPage include = SPPageCache.getPage(path);
+        if (include != null) {
+            sb.append(include.getHtml(rdata));
+        }
+    }
+
 }

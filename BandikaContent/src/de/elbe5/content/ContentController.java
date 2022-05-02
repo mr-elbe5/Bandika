@@ -13,12 +13,13 @@ import de.elbe5.base.BaseData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
+import de.elbe5.response.ForwardResponse;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.CloseDialogResponse;
 import de.elbe5.response.IResponse;
-import de.elbe5.response.ForwardResponse;
+import de.elbe5.response.ServerPageResponse;
 import de.elbe5.servlet.ResponseException;
 
 import javax.servlet.http.HttpServletResponse;
@@ -285,15 +286,15 @@ public class ContentController extends Controller {
     }
 
     protected IResponse showEditContentData(ContentData contentData) {
-        return new ForwardResponse(contentData.getContentDataJsp());
+        return new ServerPageResponse(contentData.getContentDataPage());
     }
 
     protected IResponse showEditRights(ContentData contentData) {
-        return new ForwardResponse("/WEB-INF/_jsp/content/editGroupRights.ajax.jsp");
+        return new ServerPageResponse("content/editGroupRights");
     }
 
     protected IResponse showSortChildContents() {
-        return new ForwardResponse("/WEB-INF/_jsp/content/sortChildContents.ajax.jsp");
+        return new ServerPageResponse("content/sortChildContents");
     }
 
     protected IResponse showContentAdministration(RequestData rdata, int contentId) {

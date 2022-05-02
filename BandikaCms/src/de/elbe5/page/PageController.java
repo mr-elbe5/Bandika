@@ -19,9 +19,10 @@ import de.elbe5.content.ContentData;
 import de.elbe5.file.ImageBean;
 import de.elbe5.file.ImageData;
 import de.elbe5.request.*;
+import de.elbe5.response.ForwardResponse;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.IResponse;
-import de.elbe5.response.ForwardResponse;
+import de.elbe5.response.ServerPageResponse;
 
 import java.io.IOException;
 import java.net.URI;
@@ -132,13 +133,13 @@ public class PageController extends ContentController {
     public IResponse openLinkBrowser(RequestData rdata) {
         ContentData data=rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         checkRights(data.hasUserEditRight(rdata));
-        return new ForwardResponse("/WEB-INF/_jsp/ckeditor/browseLinks.jsp");
+        return new ServerPageResponse("ckeditor/browseLinks");
     }
 
     public IResponse openImageBrowser(RequestData rdata) {
         ContentData data=rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         checkRights(data.hasUserEditRight(rdata));
-        return new ForwardResponse("/WEB-INF/_jsp/ckeditor/browseImages.jsp");
+        return new ServerPageResponse("ckeditor/browseImages");
     }
 
     public IResponse addImage(RequestData rdata) {
@@ -150,7 +151,7 @@ public class PageController extends ContentController {
         ImageBean.getInstance().saveFile(image,true);
         ContentCache.setDirty();
         rdata.getAttributes().put("imageId", Integer.toString(image.getId()));
-        return new ForwardResponse("/WEB-INF/_jsp/ckeditor/addImage.ajax.jsp");
+        return new ServerPageResponse("ckeditor/addImage");
     }
 
     public IResponse republishPage(RequestData rdata) {
@@ -192,7 +193,7 @@ public class PageController extends ContentController {
         pdata.setCreateValues(rdata);
         data.addPart(pdata, fromPartId, true);
         rdata.getAttributes().put(PagePartData.KEY_PART, pdata);
-        return new ForwardResponse("/WEB-INF/_jsp/page/newPart.ajax.jsp");
+        return new ServerPageResponse("page/newPart");
     }
 
     public IResponse sendContact(RequestData rdata) {

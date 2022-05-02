@@ -10,42 +10,33 @@ package de.elbe5.response;
 
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
-
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
-public class MasterResponse implements IResponse {
+public class MasterResponse extends ServerPageResponse {
 
     public static String DEFAULT_MASTER = "defaultMaster";
 
-    protected String master=DEFAULT_MASTER;
     protected IMasterInclude includeObject = null;
 
-    public MasterResponse() {
-    }
-
     public MasterResponse(String master) {
-        this.master=master;
+        super("_layout/master/" + master);
     }
 
     public MasterResponse(String master, IMasterInclude include) {
-        this.master=master;
+        super("_layout/master/" + master);
         this.includeObject = include;
+    }
+
+    public void setMaster(String master){
+        path = "_layout/master/" + master;
     }
 
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
-        RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/_jsp/_layout/"+master+".jsp");
         if (includeObject != null){
             rdata.setRequestObject(RequestKeys.KEY_MASTERINCLUDE, includeObject);
         }
-        try {
-            rd.forward(rdata.getRequest(), response);
-        } catch (ServletException | IOException e) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        }
+        super.processResponse(context, rdata, response);
     }
 }

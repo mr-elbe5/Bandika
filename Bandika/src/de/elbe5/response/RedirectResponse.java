@@ -8,14 +8,12 @@
  */
 package de.elbe5.response;
 
+import de.elbe5.base.StringFormatter;
 import de.elbe5.request.RequestData;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
-public class RedirectResponse implements IResponse {
+public class RedirectResponse extends HtmlResponse {
 
     private final String url;
 
@@ -25,12 +23,21 @@ public class RedirectResponse implements IResponse {
 
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response) {
-        rdata.getAttributes().put("redirectUrl", url);
-        RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/_jsp/redirect.jsp");
-        try {
-            rd.forward(rdata.getRequest(), response);
-        } catch (ServletException | IOException e) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        }
+        html = StringFormatter.format("""
+            <html>
+            <head><title></title></head>
+            <body>
+            &nbsp;
+            </body>
+            </html>
+            <script type="text/javascript">
+                try {
+                    window.location.href = '{1}';
+                } catch (e) {
+                }
+            </script>
+            """,
+                url);
+        super.processResponse(context, rdata, response);
     }
 }

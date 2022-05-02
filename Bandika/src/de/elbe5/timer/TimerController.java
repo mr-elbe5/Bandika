@@ -17,7 +17,7 @@ import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.response.IResponse;
-import de.elbe5.response.ForwardResponse;
+import de.elbe5.response.ServerPageResponse;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -71,7 +71,7 @@ public class TimerController extends Controller {
     }
 
     private IResponse showEditTimerTask() {
-        return new ForwardResponse("/WEB-INF/_jsp/timer/editTimerTask.ajax.jsp");
+        return new ServerPageResponse("timer/editTimerTask");
     }
 
 }

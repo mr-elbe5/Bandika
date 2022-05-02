@@ -270,43 +270,43 @@ public class UserController extends Controller {
     }
 
     protected IResponse showProfile() {
-        JspInclude jsp = new JspInclude("/WEB-INF/_jsp/user/profile.jsp");
+        ServerPageInclude jsp = new ServerPageInclude("user/profile");
         return new MasterResponse(MasterResponse.DEFAULT_MASTER, jsp);
     }
 
     protected IResponse showChangePassword() {
-        return new ForwardResponse("/WEB-INF/_jsp/user/changePassword.ajax.jsp");
+        return new ServerPageResponse("user/changePassword");
     }
 
     protected IResponse showChangeProfile() {
-        return new ForwardResponse("/WEB-INF/_jsp/user/changeProfile.ajax.jsp");
+        return new ServerPageResponse("user/changeProfile");
     }
 
     protected IResponse showRegistration() {
-        JspInclude jsp = new JspInclude("/WEB-INF/_jsp/user/registration.jsp");
+        ServerPageInclude jsp = new ServerPageInclude("user/registration");
         return new MasterResponse(MasterResponse.DEFAULT_MASTER, jsp);
     }
 
     protected IResponse showRegistrationDone() {
-        JspInclude jsp = new JspInclude("/WEB-INF/_jsp/user/registrationDone.jsp");
+        ServerPageInclude jsp = new ServerPageInclude("user/registrationDone");
         return new MasterResponse(MasterResponse.DEFAULT_MASTER, jsp);
     }
 
     protected IResponse showEmailVerification() {
-        JspInclude jsp = new JspInclude("/WEB-INF/_jsp/user/verifyRegistrationEmail.jsp");
+        ServerPageInclude jsp = new ServerPageInclude("user/verifyRegistrationEmail");
         return new MasterResponse(MasterResponse.DEFAULT_MASTER, jsp);
     }
 
     protected IResponse showLogin() {
-        return new ForwardResponse("/WEB-INF/_jsp/user/login.jsp");
+        return new ServerPageResponse("user/login");
     }
 
     protected IResponse showEditGroup() {
-        return new ForwardResponse("/WEB-INF/_jsp/user/editGroup.ajax.jsp");
+        return new ServerPageResponse("user/editGroup");
     }
 
     protected IResponse showEditUser() {
-        return new ForwardResponse("/WEB-INF/_jsp/user/editUser.ajax.jsp");
+        return new ServerPageResponse("user/editUser");
     }
 
 }

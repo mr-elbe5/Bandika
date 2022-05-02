@@ -33,7 +33,7 @@ public abstract class WebServlet extends HttpServlet {
     protected abstract void processRequest(String method, HttpServletRequest request, HttpServletResponse response) throws IOException;
 
     protected void handleException(HttpServletRequest request, HttpServletResponse response, int code){
-        RequestDispatcher rd = request.getServletContext().getRequestDispatcher("/WEB-INF/_jsp/exception.jsp");
+        RequestDispatcher rd = request.getServletContext().getRequestDispatcher("/WEB-INF/_shtml/exception.shtml");
         try {
             request.setAttribute("errorKey", "_error"+code);
             rd.forward(request, response);

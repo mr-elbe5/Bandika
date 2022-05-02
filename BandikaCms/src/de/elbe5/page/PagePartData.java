@@ -22,7 +22,7 @@ public abstract class PagePartData extends BaseData implements Comparable<PagePa
     protected int position = 0;
     protected boolean editable = true;
 
-    public static String jspBasePath = "/WEB-INF/_jsp/_layout";
+    public static String jspBasePath = "/WEB-INF/_shtml/_layout";
 
     public PagePartData() {
     }
@@ -70,11 +70,11 @@ public abstract class PagePartData extends BaseData implements Comparable<PagePa
     }
 
     public String getPartInclude() {
-        return getJspPath() + "/show.jsp";
+        return getJspPath() + "/show.shtml";
     }
 
     public String getEditPartInclude() {
-        return getJspPath() + "/edit.jsp";
+        return getJspPath() + "/edit.shtml";
     }
 
     public String getPartWrapperId() {
