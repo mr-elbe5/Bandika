@@ -25,7 +25,7 @@ public class SPText implements SPNode {
     }
 
     @Override
-    public void appendCode(StringBuilder sb, String prefix){
+    public void appendCode(StringBuilder sb){
         sb.append(code);
     }
 }

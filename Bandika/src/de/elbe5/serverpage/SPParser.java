@@ -16,34 +16,31 @@ public class SPParser extends DefaultHandler2 {
 
     private final String code;
 
-    private final String prefix;
-    private final ServerPage template = new ServerPage();
+    private final String tagPrefix;
+    private final ServerPage page;
     private final List<SPTag> tagStack = new ArrayList<>();
 
     private StringBuilder buffer = new StringBuilder();
     private boolean tagIsOpen = false;
 
-    public SPParser(String code) {
-        this(code, "tpl");
-    }
-    public SPParser(String code, String prefix){
+    public SPParser(String code, ServerPage page){
         this.code = code;
-        this.prefix = prefix + ":";
-        tagStack.add(template);
+        this.page = page;
+        this.tagPrefix = SPNode.TAG_PREFIX + ":";
     }
 
-    public ServerPage parse(){
+    public boolean parse(){
         tagIsOpen = false;
         try {
             SAXParserFactory spf = SAXParserFactory.newInstance();
             spf.setNamespaceAware(true);
             SAXParser parser = spf.newSAXParser();
             parser.parse(new InputSource(new StringReader(code)),this);
-            return template;
+            return true;
         }
         catch (Exception e){
             Log.error("parse error", e);
-            return null;
+            return false;
         }
     }
 
@@ -58,7 +55,7 @@ public class SPParser extends DefaultHandler2 {
     }
 
     private void popTag(String type) throws SAXException{
-        if (tagStack.size()<2){
+        if (tagStack.size()==0){
             throw new SAXException("bad closing tag: " + type);
         }
         if (!tagStack.get(tagStack.size()-1).getType().equals(type)){
@@ -68,12 +65,17 @@ public class SPParser extends DefaultHandler2 {
     }
 
     private void addChildNode(SPNode node){
-        tagStack.get(tagStack.size()-1).addChildNode(node);
+        if (tagStack.size()>0) {
+            tagStack.get(tagStack.size() - 1).addChildNode(node);
+        }
+        else{
+            page.addChildNode(node);
+        }
     }
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        if (!localName.equals(qName) && qName.startsWith(prefix)) {
+        if (!localName.equals(qName) && qName.startsWith(tagPrefix)) {
             closeOpenTag();
             flushBuffer();
             pushTag(localName, attributes);
@@ -89,7 +91,7 @@ public class SPParser extends DefaultHandler2 {
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (!localName.equals(qName) && qName.startsWith(prefix)) {
+        if (!localName.equals(qName) && qName.startsWith(tagPrefix)) {
             closeOpenTag();
             flushBuffer();
             popTag(localName);

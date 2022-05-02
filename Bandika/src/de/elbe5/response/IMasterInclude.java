@@ -17,5 +17,6 @@ import java.io.IOException;
 public interface IMasterInclude {
 
     void displayContent(PageContext context, RequestData rdata) throws IOException, ServletException;
+    void appendContent(StringBuilder sb, RequestData rdata);
 
 }

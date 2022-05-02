@@ -30,4 +30,8 @@ public class JspInclude implements IMasterInclude {
         context.include(jsp);
         writer.write("</div>");
     }
+
+    @Override
+    public void appendContent(StringBuilder sb, RequestData rdata) {
+    }
 }

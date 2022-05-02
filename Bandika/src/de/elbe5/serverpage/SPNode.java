@@ -2,14 +2,47 @@ package de.elbe5.serverpage;
 
 import de.elbe5.base.LocalizedStrings;
 import de.elbe5.base.Log;
+import de.elbe5.base.StringHelper;
 import de.elbe5.base.StringMap;
 import de.elbe5.request.RequestData;
 
 public interface SPNode {
 
+    public static final String TAG_PREFIX = "spg";
+
     void appendHtml(StringBuilder sb, RequestData rdata);
 
-    void appendCode(StringBuilder sb, String prefix);
+    void appendCode(StringBuilder sb);
+
+    default String toHtml(String src){
+        return StringHelper.toHtml(src);
+    }
+
+    default String toHtmlMultiline(String src){
+        return StringHelper.toHtmlMultiline(src);
+    }
+
+    default String localizedString(String key){
+        return LocalizedStrings.html(key);
+    }
+
+    default String format(String src, String... params) {
+        StringBuilder sb = new StringBuilder();
+        int p1 = 0;
+        int p2;
+        String placeholder;
+        for (int i = 0; i < params.length; i++) {
+            placeholder = "{" + (i + 1) + "}";
+            p2 = src.indexOf(placeholder, p1);
+            if (p2 == -1)
+                break;
+            sb.append(src, p1, p2);
+            sb.append(params[i]);
+            p1 = p2 + placeholder.length();
+        }
+        sb.append(src.substring(p1));
+        return sb.toString();
+    }
 
     default String replaceParams(String src, StringMap params)  {
         String s = "";

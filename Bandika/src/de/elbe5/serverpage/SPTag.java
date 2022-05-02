@@ -1,30 +1,26 @@
 package de.elbe5.serverpage;
 
+import de.elbe5.base.StringMap;
 import de.elbe5.request.RequestData;
 
 import java.util.*;
 
 public class SPTag implements SPNode {
 
-    String type;
-    SPTagAttributes attributes = new SPTagAttributes();
+    protected String type = "";
+    protected StringMap attributes = new StringMap();
 
-    List<SPNode> childNodes = new ArrayList<>();
+    protected List<SPNode> childNodes = new ArrayList<>();
 
-    public SPTag(String type){
-        this.type = type;
+    protected SPTag(){
     }
 
     public String getType() {
         return type;
     }
 
-    public SPTagAttributes getAttributes() {
+    public StringMap getAttributes() {
         return attributes;
-    }
-
-    public void addAttribute(String key, String value){
-        attributes.put(key, value);
     }
 
     public void addChildNode(SPNode node){
@@ -33,26 +29,32 @@ public class SPTag implements SPNode {
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata){
-        appendChildHtml(sb, rdata);
+        collectVariables(rdata);
+        appendTagStart(sb, rdata);
+        if (!childNodes.isEmpty()) {
+            appendInner(sb, rdata);
+        }
+        appendTagEnd(sb, rdata);
     }
 
-    public void appendChildHtml(StringBuilder sb, RequestData rdata){
+    public void collectVariables(RequestData rdata){
+    }
+
+    public void appendTagStart(StringBuilder sb, RequestData rdata){
+    }
+
+    public void appendInner(StringBuilder sb, RequestData rdata){
         for (SPNode node : childNodes) {
             node.appendHtml(sb, rdata);
         }
     }
 
-    String getAttribute(String key, RequestData rdata){
-        String value = attributes.get(key);
-        if (value!=null){
-            return replaceParams(value, rdata.getPageAttributes());
-        }
-        return "";
+    public void appendTagEnd(StringBuilder sb, RequestData rdata){
     }
 
     @Override
-    public void appendCode(StringBuilder sb, String prefix){
-        sb.append("<").append(prefix).append(":").append(type);
+    public void appendCode(StringBuilder sb){
+        sb.append("<").append(TAG_PREFIX).append(":").append(type);
         for (String key : attributes.keySet()){
             sb.append(" ").append(key).append("=\"").append(attributes.get(key)).append("\"");
         }
@@ -61,14 +63,14 @@ public class SPTag implements SPNode {
         }
         else {
             sb.append(">");
-            appendChildCode(sb, prefix);
-            sb.append("</").append(prefix).append(":").append(type).append(">");
+            appendChildCode(sb);
+            sb.append("</").append(TAG_PREFIX).append(":").append(type).append(">");
         }
     }
 
-    public void appendChildCode(StringBuilder sb, String prefix){
+    public void appendChildCode(StringBuilder sb){
         for (SPNode node : childNodes) {
-            node.appendCode(sb, prefix);
+            node.appendCode(sb);
         }
     }
 

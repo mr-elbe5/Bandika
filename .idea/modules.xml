@@ -8,13 +8,8 @@
       <module fileurl="file://$PROJECT_DIR$/BandikaContent/BandikaContent.iml" filepath="$PROJECT_DIR$/BandikaContent/BandikaContent.iml" />
       <module fileurl="file://$PROJECT_DIR$/BandikaDocuments/BandikaDocuments.iml" filepath="$PROJECT_DIR$/BandikaDocuments/BandikaDocuments.iml" />
       <module fileurl="file://$PROJECT_DIR$/BandikaIssue/BandikaIssue.iml" filepath="$PROJECT_DIR$/BandikaIssue/BandikaIssue.iml" />
-      <module fileurl="file://$PROJECT_DIR$/BandikaSample/BandikaSample.iml" filepath="$PROJECT_DIR$/BandikaSample/BandikaSample.iml" />
       <module fileurl="file://$PROJECT_DIR$/BandikaSearch/BandikaSearch.iml" filepath="$PROJECT_DIR$/BandikaSearch/BandikaSearch.iml" />
       <module fileurl="file://$PROJECT_DIR$/CmsSample/CmsSample.iml" filepath="$PROJECT_DIR$/CmsSample/CmsSample.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ContentSample/ContentSample.iml" filepath="$PROJECT_DIR$/ContentSample/ContentSample.iml" />
-      <module fileurl="file://$PROJECT_DIR$/DocumentsSample/DocumentsSample.iml" filepath="$PROJECT_DIR$/DocumentsSample/DocumentsSample.iml" />
-      <module fileurl="file://$PROJECT_DIR$/IssueSample/IssueSample.iml" filepath="$PROJECT_DIR$/IssueSample/IssueSample.iml" />
-      <module fileurl="file://$PROJECT_DIR$/SearchSample/SearchSample.iml" filepath="$PROJECT_DIR$/SearchSample/SearchSample.iml" />
     </modules>
   </component>
 </project>

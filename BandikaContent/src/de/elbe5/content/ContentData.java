@@ -456,7 +456,13 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     }
 
     //used in jsp/tag
+    @Override
     public void displayContent(PageContext context, RequestData rdata) throws IOException, ServletException {
+    }
+
+    @Override
+    public void appendContent(StringBuilder sb, RequestData rdata) {
+
     }
 
     // multiple data
