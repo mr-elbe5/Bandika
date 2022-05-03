@@ -113,14 +113,15 @@ public class SPParser {
     // like indexOf, but managing tags in strings
     protected int nextOccurrenceOf(char[] src, char[] target, int startPos){
         boolean inString = false;
+        boolean match;
         for (int i=startPos; i<src.length; i++){
             char ch = src[i];
             if (ch == '\"') {
                 inString = !inString;
             } else {
                 if (!inString && ch == target[0] && i + target.length < src.length) {
-                    boolean match = true;
-                    for (int j = 1; j < target.length; j++) {
+                    match = true;
+                    for (int j = 1; j < target.length && i+j<src.length; j++) {
                         if (target[j] != src[i + j]) {
                             match = false;
                             break;

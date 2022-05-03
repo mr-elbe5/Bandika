@@ -20,7 +20,7 @@
         <div class="container">
             <header>
                 <section class="sysnav">
-                    <spg:sysnav/>
+                    <spg:sysnav />
                 </section>
                 <div class="menu row">
                     <section class="col-12 menu">
