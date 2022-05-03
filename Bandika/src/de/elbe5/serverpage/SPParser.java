@@ -1,69 +1,104 @@
 package de.elbe5.serverpage;
 
-import de.elbe5.base.Log;
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.ext.DefaultHandler2;
+import de.elbe5.base.StringMap;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SPParser extends DefaultHandler2 {
+public class SPParser {
 
     private final String code;
 
-    private final String tagPrefix;
+    private final char[] tagStartChars = ("<" + SPNode.TAG_PREFIX + ":").toCharArray();
+    private final char[] tagEndChars = ("</" + SPNode.TAG_PREFIX + ":").toCharArray();
+    private final char[] endChar = ">".toCharArray();
+
     private final ServerPage page;
     private final List<SPTag> tagStack = new ArrayList<>();
-
-    private StringBuilder buffer = new StringBuilder();
-    private boolean tagIsOpen = false;
 
     public SPParser(String code, ServerPage page){
         this.code = code;
         this.page = page;
-        this.tagPrefix = SPNode.TAG_PREFIX + ":";
     }
 
     public boolean parse(){
-        tagIsOpen = false;
-        try {
-            SAXParserFactory spf = SAXParserFactory.newInstance();
-            spf.setNamespaceAware(true);
-            SAXParser parser = spf.newSAXParser();
-            parser.parse(new InputSource(new StringReader(code)),this);
-            return true;
+        char[] chars = code.toCharArray();
+        List<IndexPair> indices = new ArrayList<>();
+        int p1 = 0;
+        while (true){
+            int tagStart = nextOccurrenceOf(chars, tagStartChars, p1);
+            if (tagStart == -1){
+                break;
+            }
+            int tagEnd = nextOccurrenceOf(chars,endChar, tagStart);
+            if (tagEnd == -1){
+                System.out.println("no tag end");
+                return false;
+            }
+            boolean selfClosing = code.charAt(tagEnd-1) == '/';
+            int contentStart = tagStart + tagStartChars.length;
+            int contentEnd = selfClosing ? tagEnd-1 : tagEnd;
+            indices.add(new IndexPair(tagStart, tagEnd, code.substring(contentStart, contentEnd).trim(), true, selfClosing));
+            p1 = tagEnd+1;
         }
-        catch (Exception e){
-            Log.error("parse error", e);
-            return false;
+        while (true) {
+            int tagStart = nextOccurrenceOf(chars, tagEndChars, p1);
+            if (tagStart == -1){
+                break;
+            }
+            int tagEnd = nextOccurrenceOf(chars,endChar, tagStart);
+            if (tagEnd == -1){
+                System.out.println("no tag end");
+                return false;
+            }
+            int contentStart = tagStart + tagEndChars.length;
+            indices.add(new IndexPair(tagStart, tagEnd, code.substring(contentStart, tagEnd).trim(), false, false));
+            p1 = tagEnd+1;
         }
+        indices.sort(null);
+        int start = 0;
+        for (IndexPair ip : indices){
+            if (ip.start > start){
+                addChildNode(new SPText(code.substring(start, ip.start)));
+            }
+            start = ip.end+1;
+            if (ip.isStartIndex){
+                pushTag(ip.name, ip.getAttributes());
+                if (ip.isSelfClosing){
+                    if (!popTag(ip.name))
+                        return false;
+                }
+            }
+            else{
+                if (!popTag(ip.name))
+                    return false;
+            }
+        }
+        if (start < code.length()-1){
+            addChildNode(new SPText(code.substring(start)));
+        }
+        return true;
     }
 
-    private void pushTag(String type, Attributes attr){
-        Log.log("pushTag " + type);
+    private void pushTag(String type, StringMap attr){
         SPTag tag;
         tag = SPTagFactory.createTag(type);
+        tag.attributes = attr;
         addChildNode(tag);
         tagStack.add(tag);
-        for(int i=0; i<attr.getLength(); i++){
-            tag.getAttributes().put(attr.getQName(i),attr.getValue(i));
-        }
     }
 
-    private void popTag(String type) throws SAXException{
-        Log.log("popTag " + type);
+    private boolean popTag(String type){
         if (tagStack.size()==0){
-            throw new SAXException("bad closing tag: " + type);
+            System.out.println("bad closing tag: " + type);
+            return false;
         }
         if (!tagStack.get(tagStack.size()-1).getType().equals(type)){
-            throw new SAXException("bad closing tag: " + type + " does not match " + tagStack.get(tagStack.size()-1).getType());
+            System.out.println("bad closing tag: " + type + " does not match " + tagStack.get(tagStack.size()-1).getType());
+            return false;
         }
         tagStack.remove(tagStack.size()-1);
+        return true;
     }
 
     private void addChildNode(SPNode node){
@@ -75,67 +110,91 @@ public class SPParser extends DefaultHandler2 {
         }
     }
 
-    @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        if (!localName.equals(qName) && qName.startsWith(tagPrefix)) {
-            closeOpenTag();
-            flushBuffer();
-            pushTag(localName, attributes);
+    // like indexOf, but managing tags in strings
+    protected int nextOccurrenceOf(char[] src, char[] target, int startPos){
+        boolean inString = false;
+        for (int i=startPos; i<src.length; i++){
+            char ch = src[i];
+            if (ch == '\"') {
+                inString = !inString;
+            } else {
+                if (!inString && ch == target[0] && i + target.length < src.length) {
+                    boolean match = true;
+                    for (int j = 1; j < target.length; j++) {
+                        if (target[j] != src[i + j]) {
+                            match = false;
+                            break;
+                        }
+                    }
+                    if (match) {
+                        return i;
+                    }
+                }
+            }
         }
-        else {
-            buffer.append("<").append(qName);
-            for (int i=0; i<attributes.getLength(); i++){
-                buffer.append(" ").append(attributes.getQName(i)).append("=\"").append(attributes.getValue(i)).append("\"");
-            }
-            if (qName.equals("script")){
-                buffer.append(">");
-            }
-            else {
-                tagIsOpen = true;
-            }
-        }
+        return -1;
     }
 
-    @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (!localName.equals(qName) && qName.startsWith(tagPrefix)) {
-            closeOpenTag();
-            flushBuffer();
-            popTag(localName);
-        }
-        else {
-            if (tagIsOpen){
-                buffer.append("/>");
+    static class IndexPair implements Comparable<IndexPair>{
+            int start;
+            int end;
+            boolean isStartIndex;
+            boolean isSelfClosing;
+            String name;
+            String content;
+
+        public IndexPair(int start, int end, String content, boolean isStartIndex, boolean isSelfClosing){
+            this.start = start;
+            this.end = end;
+            this.isStartIndex = isStartIndex;
+            this.isSelfClosing = isSelfClosing;
+            int idx = content.indexOf(" ");
+            if (idx != -1) {
+                name = content.substring(0, idx).trim();
+                this.content = content.substring(idx+1).trim();
             }
-            else {
-                buffer.append("</").append(qName).append(">");
+            else{
+                name = content.trim();
+                this.content = "";
             }
-            tagIsOpen = false;
+
         }
-    }
 
-    @Override
-    public void characters(char[] ch, int start, int length) throws SAXException {
-        closeOpenTag();
-        buffer.append(ch, start, length);
-    }
-
-    @Override
-    public void endDocument() {
-        flushBuffer();
-    }
-
-    private void closeOpenTag(){
-        if (tagIsOpen){
-            buffer.append(">");
-            tagIsOpen = false;
+        public StringMap getAttributes(){
+            StringMap map = new StringMap();
+            StringBuilder sb = new StringBuilder();
+            String key = "";
+            boolean inString = false;
+            for (char ch : content.toCharArray()) {
+                switch (ch) {
+                    case '\"':
+                        if (inString) {
+                            if (!key.isEmpty()) {
+                                map.put(key,sb.toString());
+                                key = "";
+                                sb = new StringBuilder();
+                            }
+                        }
+                        inString = !inString;
+                        break;
+                    case '=':
+                        key = sb.toString();
+                        sb = new StringBuilder();
+                        break;
+                    case ' ':
+                        if (!inString) {
+                        break;
+                    }
+                    default:
+                        sb.append(ch);
+                }
+            }
+            return map;
         }
-    }
 
-    private void flushBuffer(){
-        if (!buffer.isEmpty()){
-            addChildNode(new SPText(buffer.toString()));
-            buffer = new StringBuilder();
+        @Override
+        public int compareTo(IndexPair o) {
+            return start - o.start;
         }
     }
 

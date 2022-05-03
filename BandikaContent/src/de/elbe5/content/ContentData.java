@@ -8,6 +8,7 @@
  */
 package de.elbe5.content;
 
+import de.elbe5.application.Configuration;
 import de.elbe5.base.BaseData;
 import de.elbe5.base.IJsonData;
 import de.elbe5.base.Log;
@@ -463,6 +464,14 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     @Override
     public void appendContent(StringBuilder sb, RequestData rdata) {
 
+    }
+
+    @Override
+    public void prepareMaster(RequestData rdata){
+        rdata.getPageAttributes().put("language", Configuration.getLocale().getLanguage());
+        rdata.getPageAttributes().put("title", StringHelper.toHtml(Configuration.getAppTitle() + " | " + getDisplayName()));
+        rdata.getPageAttributes().put("description", StringHelper.toHtml(getDescription()));
+        rdata.getPageAttributes().put("keywords", StringHelper.toHtml(getKeywords()));
     }
 
     // multiple data

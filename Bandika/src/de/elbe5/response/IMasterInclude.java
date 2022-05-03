@@ -17,4 +17,6 @@ public interface IMasterInclude {
 
     void appendContent(StringBuilder sb, RequestData rdata);
 
+    void prepareMaster(RequestData rdata);
+
 }

@@ -46,7 +46,7 @@ public class ServerPage implements SPNode {
     }
 
     public String getHtml(RequestData rdata){
-        StringBuilder sb = new StringBuilder("<!DOCTYPE html>\n");
+        StringBuilder sb = new StringBuilder();
         appendHtml(sb, rdata);
         return sb.toString();
     }

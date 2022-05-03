@@ -23,8 +23,8 @@ public class ContentResponse extends MasterResponse {
 
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
-        //Log.log("process view");
         rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, includeObject);
+        includeObject.prepareMaster(rdata);
         super.processResponse(context, rdata, response);
     }
 }

@@ -66,6 +66,7 @@ public class BandikaInitServlet extends InitServlet {
         TimerController.register(new TimerController());
         UserController.register(new UserController());
         ContentFactory.addClassInfo(ContentData.class, ContentBean.getInstance());
+        ContentFactory.addClassInfo(LinkData.class, LinkBean.getInstance());
         FileFactory.addDocumentClassInfo(DocumentData.class, null);
         FileFactory.addImageClassInfo(ImageData.class, ImageBean.getInstance());
         FileFactory.addMediaClassInfo(MediaData.class, null);

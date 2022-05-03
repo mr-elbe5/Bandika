@@ -53,12 +53,12 @@ public class CmsTest {
         SPTagFactory.addTagType(SPTextFieldTag.TYPE, SPTextFieldTag.class);
         SPTagFactory.addTagType(SPUserListTag.TYPE, SPUserListTag.class);
         rdata.getPageAttributes().put("language", Configuration.getLocale().getLanguage());
-        rdata.getPageAttributes().put("include", "template/page/defaultPage");
+        rdata.getPageAttributes().put("include", "_layout/page/defaultPage");
     }
 
     void run(){
-        ServerPage page = SPPageCache.getPage("template/master/defaultMaster");
-        System.out.println(page.getHtml(rdata));
+        ServerPage page = SPPageCache.getPage("_layout/master/defaultMaster");
+        System.out.println(page.getCode());
     }
 
 }

@@ -8,6 +8,7 @@
  */
 package de.elbe5.response;
 
+import de.elbe5.application.Configuration;
 import de.elbe5.request.RequestData;
 import de.elbe5.serverpage.SPPageCache;
 import de.elbe5.serverpage.ServerPage;
@@ -28,6 +29,12 @@ public class ServerPageInclude implements IMasterInclude {
             sb.append(page.getHtml(rdata));
         }
         sb.append("</div>");
+    }
+
+    @Override
+    public void prepareMaster(RequestData rdata){
+        rdata.getPageAttributes().put("language", Configuration.getLocale().getLanguage());
+        rdata.getPageAttributes().put("title", Configuration.getAppTitle());
     }
 
 }
