@@ -17,14 +17,27 @@
         <script type="text/javascript" src="/static-content/js/bandika-webbase.js"></script>
     </head>
     <body>
-    TEST1
         <div class="container">
             <header>
                 <section class="sysnav">
                     <spg:sysnav/>
                 </section>
                 <div class="menu row">
-                    <spg:mainnav/>
+                    <section class="col-12 menu">
+                        <nav class="navbar navbar-expand-lg navbar-light">
+                            <a class="navbar-brand" href="/">
+                                <img src="/static-content/img/logo-light.png" alt=""/>
+                            </a>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="fa fa-bars"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                <ul class="navbar-nav mr-auto">
+                                    <spg:mainnav/>
+                                </ul>
+                            </div>
+                        </nav>
+                    </section>
                 </div>
                 <div class="bc row">
                     <spg:breadcrumb/>

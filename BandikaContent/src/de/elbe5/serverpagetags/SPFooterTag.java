@@ -18,7 +18,7 @@ public class SPFooterTag extends SPTag {
         sb.append(format("""
                 <ul class="nav">
                     <li class="nav-item">
-                        <a class="nav-link">&copy; {1}}
+                        <a class="nav-link">&copy; {1}
                         </a>
                     </li>
                     """, localizedString("layout.copyright")));
