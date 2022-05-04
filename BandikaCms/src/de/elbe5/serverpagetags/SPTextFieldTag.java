@@ -19,13 +19,14 @@ public class SPTextFieldTag extends SPFieldTag {
     }
 
     @Override
-    public void collectVariables(RequestData rdata) {
-        super.collectVariables(rdata);
-        rows = rdata.getPageAttributes().getInt("rows", 1);
+    public void collectParameters() {
+        super.collectParameters();
+        rows = getParameters().getInt("rows", 1);
     }
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata){
+        collectParameters();
         PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
         LayoutPartData partData = rdata.getAttributes().get(PagePartData.KEY_PART, LayoutPartData.class);
         PartTextField field = partData.ensureTextField(name);

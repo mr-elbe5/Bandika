@@ -14,12 +14,13 @@ public class SPIfTag extends SPTag {
     boolean condition = false;
 
     @Override
-    public void collectVariables(RequestData rdata) {
-        condition = attributes.getBoolean("condition");
+    public void collectParameters() {
+        condition = getParameters().getBoolean("condition");
     }
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata){
+        collectParameters();
         if (condition) {
             appendInner(sb, rdata);
         }

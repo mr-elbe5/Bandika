@@ -47,7 +47,7 @@ public class UserController extends Controller {
     }
 
     public IResponse openLogin(RequestData rdata) {
-        return showLogin();
+        return showLogin(rdata);
     }
 
     public IResponse login(RequestData rdata) {
@@ -283,21 +283,21 @@ public class UserController extends Controller {
     }
 
     protected IResponse showRegistration() {
-        ServerPageInclude jsp = new ServerPageInclude("user/registration");
-        return new MasterResponse(MasterResponse.DEFAULT_MASTER, jsp);
+        ServerPageInclude include = new ServerPageInclude("user/registration");
+        return new MasterResponse(include);
     }
 
     protected IResponse showRegistrationDone() {
-        ServerPageInclude jsp = new ServerPageInclude("user/registrationDone");
-        return new MasterResponse(MasterResponse.DEFAULT_MASTER, jsp);
+        ServerPageInclude include = new ServerPageInclude("user/registrationDone");
+        return new MasterResponse(include);
     }
 
     protected IResponse showEmailVerification() {
-        ServerPageInclude jsp = new ServerPageInclude("user/verifyRegistrationEmail");
-        return new MasterResponse(MasterResponse.DEFAULT_MASTER, jsp);
+        ServerPageInclude include = new ServerPageInclude("user/verifyRegistrationEmail");
+        return new MasterResponse(include);
     }
 
-    protected IResponse showLogin() {
+    protected IResponse showLogin(RequestData rdata) {
         return new ServerPageResponse("user/login");
     }
 

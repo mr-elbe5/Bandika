@@ -10,12 +10,13 @@ public class SPContactTag extends SPTag {
     private String cssClass = "";
 
     @Override
-    public void collectVariables(RequestData rdata) {
-        cssClass = rdata.getPageAttributes().getString("cssClass", "");
+    public void collectParameters() {
+        cssClass = getParameters().getString("cssClass", "");
     }
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata){
+        collectParameters();
         sb.append(format("<div class=\"{1}\">",
                 StringHelper.toHtml(cssClass)));
         ServerPage.includePage(sb, "page/contact", rdata);

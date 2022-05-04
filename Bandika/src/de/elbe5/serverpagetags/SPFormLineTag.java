@@ -18,11 +18,11 @@ public class SPFormLineTag extends SPTag {
     }
 
     @Override
-    public void collectVariables(RequestData rdata) {
-        name = rdata.getPageAttributes().getString("name", "");
-        label = rdata.getPageAttributes().getString("label", "");
-        required = rdata.getPageAttributes().getBoolean("required", false);
-        padded = rdata.getPageAttributes().getBoolean("padded", false);
+    public void collectParameters() {
+        name = getParameters().getString("name", "");
+        label = getParameters().getString("label", "");
+        required = getParameters().getBoolean("required", false);
+        padded = getParameters().getBoolean("padded", false);
     }
 
     @Override

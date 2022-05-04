@@ -4,11 +4,11 @@
             <h5 class="modal-title">{{_login}}
             </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">x</span>
+                <span aria-hidden="true">&times;</span>
             </button>
         </div>
 
-        <spg:form url="/ajax/user/login" name="loginForm" ajax="true" >
+        <spg:form url="/ctrl/user/login" name="loginForm" ajax="true" >
             <div class="modal-body">
                 <spg:formerror/>
                 <div class="form-group">

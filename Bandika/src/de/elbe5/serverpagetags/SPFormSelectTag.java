@@ -16,10 +16,10 @@ public class SPFormSelectTag extends SPFormLineTag {
     }
 
     @Override
-    public void collectVariables(RequestData rdata) {
-        super.collectVariables(rdata);
+    public void collectParameters() {
+        super.collectParameters();
         padded = true;
-        onchange = rdata.getPageAttributes().getString("onchange", "");
+        onchange = getParameters().getString("onchange", "");
     }
 
     protected void appendPreControlHtml(StringBuilder sb, RequestData rdata) {

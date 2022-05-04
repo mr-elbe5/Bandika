@@ -8,7 +8,7 @@ import java.util.*;
 public class SPTag implements SPNode {
 
     protected String type = "";
-    protected StringMap attributes = new StringMap();
+    protected StringMap parameters = new StringMap();
 
     protected List<SPNode> childNodes = new ArrayList<>();
 
@@ -19,8 +19,8 @@ public class SPTag implements SPNode {
         return type;
     }
 
-    public StringMap getAttributes() {
-        return attributes;
+    public StringMap getParameters() {
+        return parameters;
     }
 
     public void addChildNode(SPNode node){
@@ -29,7 +29,7 @@ public class SPTag implements SPNode {
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata){
-        collectVariables(rdata);
+        collectParameters();
         appendTagStart(sb, rdata);
         if (!childNodes.isEmpty()) {
             appendInner(sb, rdata);
@@ -37,7 +37,7 @@ public class SPTag implements SPNode {
         appendTagEnd(sb, rdata);
     }
 
-    public void collectVariables(RequestData rdata){
+    public void collectParameters(){
     }
 
     public void appendTagStart(StringBuilder sb, RequestData rdata){
@@ -55,8 +55,8 @@ public class SPTag implements SPNode {
     @Override
     public void appendCode(StringBuilder sb){
         sb.append("<").append(TAG_PREFIX).append(":").append(type);
-        for (String key : attributes.keySet()){
-            sb.append(" ").append(key).append("=\"").append(attributes.get(key)).append("\"");
+        for (String key : parameters.keySet()){
+            sb.append(" ").append(key).append("=\"").append(parameters.get(key)).append("\"");
         }
         if (childNodes.isEmpty()){
             sb. append(" />");

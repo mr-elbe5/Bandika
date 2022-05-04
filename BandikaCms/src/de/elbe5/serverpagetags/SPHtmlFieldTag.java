@@ -25,11 +25,6 @@ public class SPHtmlFieldTag extends SPFieldTag {
     }
 
     @Override
-    public void collectVariables(RequestData rdata) {
-        super.collectVariables(rdata);
-    }
-
-    @Override
     public void appendHtml(StringBuilder sb, RequestData rdata){
         PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
         LayoutPartData partData = (LayoutPartData) rdata.getAttributes().get(PagePartData.KEY_PART);

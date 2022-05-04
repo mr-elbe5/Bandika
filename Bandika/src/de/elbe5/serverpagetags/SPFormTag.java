@@ -33,12 +33,12 @@ public class SPFormTag extends SPTag {
             """;
 
     @Override
-    public void collectVariables(RequestData rdata) {
-        url = rdata.getPageAttributes().getString("url", "");
-        name = rdata.getPageAttributes().getString("name", "");
-        multi = rdata.getPageAttributes().getBoolean("multi", false);
-        ajax = rdata.getPageAttributes().getBoolean("ajax", false);
-        target = rdata.getPageAttributes().getString("target", IResponse.MODAL_DIALOG_JQID);
+    public void collectParameters() {
+        url = getParameters().getString("url", "");
+        name = getParameters().getString("name", "");
+        multi = getParameters().getBoolean("multi", false);
+        ajax = getParameters().getBoolean("ajax", false);
+        target = getParameters().getString("target", IResponse.MODAL_DIALOG_JQID);
     }
 
     @Override

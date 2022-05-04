@@ -18,10 +18,10 @@ public class SPFormTextTag extends SPFormLineTag {
     }
 
     @Override
-    public void collectVariables(RequestData rdata) {
-        super.collectVariables(rdata);
-        value = rdata.getPageAttributes().getString("value", "");
-        maxLength = rdata.getPageAttributes().getInt("maxLength", 0);
+    public void collectParameters() {
+        super.collectParameters();
+        value = getParameters().getString("value", "");
+        maxLength = getParameters().getInt("maxLength", 0);
     }
 
     protected void appendPreControlHtml(StringBuilder sb, RequestData rdata) {

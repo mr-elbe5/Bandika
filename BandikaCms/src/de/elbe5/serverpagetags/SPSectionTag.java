@@ -19,13 +19,14 @@ public class SPSectionTag extends SPTag {
     }
 
     @Override
-    public void collectVariables(RequestData rdata) {
-        name = rdata.getPageAttributes().getString("name", "");
-        cssClass = rdata.getPageAttributes().getString("cssClass", "");
+    public void collectParameters() {
+        name = getParameters().getString("name", "");
+        cssClass = getParameters().getString("cssClass", "");
     }
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata){
+        collectParameters();
         PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
         SectionData sectionData = contentData.ensureSection(name);
         if (sectionData != null) {

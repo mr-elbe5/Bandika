@@ -2,6 +2,7 @@ package de.elbe5.servlet;
 
 import de.elbe5.base.LocalizedStrings;
 import de.elbe5.request.*;
+import de.elbe5.response.ForwardResponse;
 import de.elbe5.response.IResponse;
 import de.elbe5.response.ServerPageResponse;
 
@@ -12,7 +13,7 @@ public abstract class Controller {
     public abstract String getKey();
 
     protected IResponse showHome() {
-        return new ServerPageResponse("/");
+        return new ForwardResponse("/");
     }
 
     protected void checkRights(boolean hasRights){

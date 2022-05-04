@@ -16,10 +16,10 @@ public class SPFormCheckTag extends SPTag {
     }
 
     @Override
-    public void collectVariables(RequestData rdata) {
-        name = rdata.getPageAttributes().getString("name", "");
-        value = rdata.getPageAttributes().getString("value", "");
-        checked = rdata.getPageAttributes().getBoolean("checked", false);
+    public void collectParameters() {
+        name = getParameters().getString("name", "");
+        value = getParameters().getString("value", "");
+        checked = getParameters().getBoolean("checked", false);
     }
 
     @Override

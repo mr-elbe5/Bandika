@@ -16,8 +16,8 @@ public class SPPartTag extends SPTag {
     static final String end="</div>";
 
     @Override
-    public void collectVariables(RequestData rdata) {
-        cssClass = rdata.getPageAttributes().getString("cssClass", "");
+    public void collectParameters() {
+        cssClass = getParameters().getString("cssClass", "");
     }
 
     @Override

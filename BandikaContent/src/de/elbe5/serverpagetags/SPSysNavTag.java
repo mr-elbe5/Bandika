@@ -15,45 +15,46 @@ public class SPSysNavTag extends SPTag {
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
-        ContentData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
+        ContentData currentContent = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         String userClass = rdata.isLoggedIn() ? "fa-user" : "fa-user-o";
         sb.append("""
                 <ul class="nav justify-content-end">
                 """);
+
         if (rdata.hasAnyElevatedSystemRight()) {
             sb.append(format("""
                             <li class="nav-item"><a class="nav-link fa fa-cog" href="/ctrl/admin/openAdministration" title="{1}"></a></li>
                             """,
                     localizedString("_administration")));
         }
-        if (!contentData.isEditing() && contentData.hasUserEditRight(rdata)) {
+        if (currentContent!=null && !currentContent.isEditing() && currentContent.hasUserEditRight(rdata)) {
             sb.append(format("""
                             <li class="nav-item"><a class="nav-link fa fa-edit" href="/ctrl/page/openEditContentFrontend/{1}" title="{2}"></a></li>
                             """,
-                    Integer.toString(contentData.getId()),
+                    Integer.toString(currentContent.getId()),
                     localizedString("_editPage")
             ));
-            if (contentData.hasUnpublishedDraft()) {
-                if (contentData.isPublished()) {
-                    if (contentData.isPublishedView()) {
+            if (currentContent.hasUnpublishedDraft()) {
+                if (currentContent.isPublished()) {
+                    if (currentContent.isPublishedView()) {
                         sb.append(format("""
                                         <li class="nav-item"><a class="nav-link fa fa-eye-slash" href="/ctrl/page/showDraft/{1}" title="{2}" ></a></li>
                                         """,
-                                Integer.toString(contentData.getId()),
+                                Integer.toString(currentContent.getId()),
                                 localizedString("_showDraft")));
                     } else {
                         sb.append(format("""
                                         <li class="nav-item"><a class="nav-link fa fa-eye" href="/ctrl/page/showPublished/{1}" title="{2}"></a></li>
                                         """,
-                                Integer.toString(contentData.getId()),
+                                Integer.toString(currentContent.getId()),
                                 localizedString("_showPublished")));
                     }
                 }
-                if (contentData.hasUserApproveRight(rdata)) {
+                if (currentContent.hasUserApproveRight(rdata)) {
                     sb.append(format("""
                                     <li class="nav-item"><a class="nav-link fa fa-thumbs-up" href="/ctrl/page/publishPage/{1}" title="{2}"></a></li>
                                     """,
-                            Integer.toString(contentData.getId()),
+                            Integer.toString(currentContent.getId()),
                             localizedString("_publish")));
                 }
             }
@@ -76,7 +77,7 @@ public class SPSysNavTag extends SPTag {
                     localizedString("_logout")));
         } else {
             sb.append(format("""
-                            <a class="dropdown-item" href="/ctrl/user/openLogin">{1}
+                            <a class="dropdown-item" href="" onclick="return openModalDialog('/ctrl/user/openLogin');">{1}
                             </a>
                             """,
                     localizedString("_login")));

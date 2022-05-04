@@ -27,9 +27,9 @@ public class SPFormDateTag extends SPFormLineTag {
     }
 
     @Override
-    public void collectVariables(RequestData rdata) {
-        super.collectVariables(rdata);
-        value = rdata.getPageAttributes().getString("value", "");
+    public void collectParameters() {
+        super.collectParameters();
+        value = getParameters().getString("value", "");
     }
 
     protected void appendPreControlHtml(StringBuilder sb, RequestData rdata) {
