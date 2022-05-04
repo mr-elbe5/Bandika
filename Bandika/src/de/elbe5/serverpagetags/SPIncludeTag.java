@@ -1,5 +1,6 @@
 package de.elbe5.serverpagetags;
 
+import de.elbe5.base.StringMap;
 import de.elbe5.request.RequestData;
 import de.elbe5.serverpage.SPTag;
 import de.elbe5.serverpage.ServerPage;
@@ -15,13 +16,12 @@ public class SPIncludeTag extends SPTag {
     String pagePath = "";
 
     @Override
-    public void collectParameters() {
-        pagePath = getParameters().getString("include");
+    public void collectParameters(StringMap parameters) {
+        pagePath = parameters.getString("include");
     }
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata){
-        collectParameters();
         if (!pagePath.isEmpty()) {
             ServerPage.includePage(sb, pagePath, rdata);
         }

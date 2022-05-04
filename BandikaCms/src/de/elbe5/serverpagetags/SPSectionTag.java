@@ -1,5 +1,6 @@
 package de.elbe5.serverpagetags;
 
+import de.elbe5.base.StringMap;
 import de.elbe5.page.PageData;
 import de.elbe5.page.SectionData;
 import de.elbe5.request.ContentRequestKeys;
@@ -19,14 +20,13 @@ public class SPSectionTag extends SPTag {
     }
 
     @Override
-    public void collectParameters() {
-        name = getParameters().getString("name", "");
-        cssClass = getParameters().getString("cssClass", "");
+    public void collectParameters(StringMap parameters) {
+        name = parameters.getString("name", "");
+        cssClass = parameters.getString("cssClass", "");
     }
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata){
-        collectParameters();
         PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
         SectionData sectionData = contentData.ensureSection(name);
         if (sectionData != null) {

@@ -19,17 +19,12 @@ public class SPTag implements SPNode {
         return type;
     }
 
-    public StringMap getParameters() {
-        return parameters;
-    }
-
     public void addChildNode(SPNode node){
         childNodes.add(node);
     }
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata){
-        collectParameters();
         appendTagStart(sb, rdata);
         if (!childNodes.isEmpty()) {
             appendInner(sb, rdata);
@@ -37,7 +32,7 @@ public class SPTag implements SPNode {
         appendTagEnd(sb, rdata);
     }
 
-    public void collectParameters(){
+    public void collectParameters(StringMap parameters){
     }
 
     public void appendTagStart(StringBuilder sb, RequestData rdata){

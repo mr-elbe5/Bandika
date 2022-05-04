@@ -1,5 +1,6 @@
 package de.elbe5.serverpagetags;
 
+import de.elbe5.base.StringMap;
 import de.elbe5.request.RequestData;
 
 public class SPFormFileTag extends SPFormLineTag {
@@ -15,9 +16,9 @@ public class SPFormFileTag extends SPFormLineTag {
     }
 
     @Override
-    public void collectParameters() {
-        super.collectParameters();
-        multiple = getParameters().getBoolean("multiple", false);
+    public void collectParameters(StringMap parameters) {
+        super.collectParameters(parameters);
+        multiple = parameters.getBoolean("multiple", false);
     }
 
     protected void appendPreControlHtml(StringBuilder sb, RequestData rdata) {

@@ -1,6 +1,7 @@
 package de.elbe5.serverpagetags;
 
 import de.elbe5.base.StringFormatter;
+import de.elbe5.base.StringMap;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IResponse;
 import de.elbe5.serverpage.SPTag;
@@ -33,12 +34,12 @@ public class SPFormTag extends SPTag {
             """;
 
     @Override
-    public void collectParameters() {
-        url = getParameters().getString("url", "");
-        name = getParameters().getString("name", "");
-        multi = getParameters().getBoolean("multi", false);
-        ajax = getParameters().getBoolean("ajax", false);
-        target = getParameters().getString("target", IResponse.MODAL_DIALOG_JQID);
+    public void collectParameters(StringMap parameters) {
+        url = parameters.getString("url", "");
+        name = parameters.getString("name", "");
+        multi = parameters.getBoolean("multi", false);
+        ajax = parameters.getBoolean("ajax", false);
+        target = parameters.getString("target", IResponse.MODAL_DIALOG_JQID);
     }
 
     @Override

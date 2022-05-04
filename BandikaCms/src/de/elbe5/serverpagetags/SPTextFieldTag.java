@@ -1,5 +1,6 @@
 package de.elbe5.serverpagetags;
 
+import de.elbe5.base.StringMap;
 import de.elbe5.content.ContentData;
 import de.elbe5.page.LayoutPartData;
 import de.elbe5.page.PageData;
@@ -19,14 +20,13 @@ public class SPTextFieldTag extends SPFieldTag {
     }
 
     @Override
-    public void collectParameters() {
-        super.collectParameters();
-        rows = getParameters().getInt("rows", 1);
+    public void collectParameters(StringMap parameters) {
+        super.collectParameters(parameters);
+        rows = parameters.getInt("rows", 1);
     }
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata){
-        collectParameters();
         PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
         LayoutPartData partData = rdata.getAttributes().get(PagePartData.KEY_PART, LayoutPartData.class);
         PartTextField field = partData.ensureTextField(name);

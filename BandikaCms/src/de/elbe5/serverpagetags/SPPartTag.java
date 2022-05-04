@@ -1,5 +1,6 @@
 package de.elbe5.serverpagetags;
 
+import de.elbe5.base.StringMap;
 import de.elbe5.page.PageData;
 import de.elbe5.page.PagePartData;
 import de.elbe5.request.ContentRequestKeys;
@@ -16,8 +17,8 @@ public class SPPartTag extends SPTag {
     static final String end="</div>";
 
     @Override
-    public void collectParameters() {
-        cssClass = getParameters().getString("cssClass", "");
+    public void collectParameters(StringMap parameters) {
+        cssClass = parameters.getString("cssClass", "");
     }
 
     @Override

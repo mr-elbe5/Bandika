@@ -1,5 +1,6 @@
 package de.elbe5.serverpagetags;
 
+import de.elbe5.base.StringMap;
 import de.elbe5.request.RequestData;
 
 public class SPFormTextTag extends SPFormLineTag {
@@ -18,10 +19,10 @@ public class SPFormTextTag extends SPFormLineTag {
     }
 
     @Override
-    public void collectParameters() {
-        super.collectParameters();
-        value = getParameters().getString("value", "");
-        maxLength = getParameters().getInt("maxLength", 0);
+    public void collectParameters(StringMap parameters) {
+        super.collectParameters(parameters);
+        value = parameters.getString("value", "");
+        maxLength = parameters.getInt("maxLength", 0);
     }
 
     protected void appendPreControlHtml(StringBuilder sb, RequestData rdata) {

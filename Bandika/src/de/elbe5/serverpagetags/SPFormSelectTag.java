@@ -1,5 +1,6 @@
 package de.elbe5.serverpagetags;
 
+import de.elbe5.base.StringMap;
 import de.elbe5.request.RequestData;
 
 public class SPFormSelectTag extends SPFormLineTag {
@@ -16,10 +17,10 @@ public class SPFormSelectTag extends SPFormLineTag {
     }
 
     @Override
-    public void collectParameters() {
-        super.collectParameters();
+    public void collectParameters(StringMap parameters) {
+        super.collectParameters(parameters);
         padded = true;
-        onchange = getParameters().getString("onchange", "");
+        onchange = parameters.getString("onchange", "");
     }
 
     protected void appendPreControlHtml(StringBuilder sb, RequestData rdata) {

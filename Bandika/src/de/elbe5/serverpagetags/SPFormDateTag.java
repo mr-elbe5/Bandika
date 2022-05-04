@@ -2,6 +2,7 @@ package de.elbe5.serverpagetags;
 
 import de.elbe5.application.Configuration;
 import de.elbe5.base.StringHelper;
+import de.elbe5.base.StringMap;
 import de.elbe5.request.RequestData;
 
 public class SPFormDateTag extends SPFormLineTag {
@@ -27,9 +28,9 @@ public class SPFormDateTag extends SPFormLineTag {
     }
 
     @Override
-    public void collectParameters() {
-        super.collectParameters();
-        value = getParameters().getString("value", "");
+    public void collectParameters(StringMap parameters) {
+        super.collectParameters(parameters);
+        value = parameters.getString("value", "");
     }
 
     protected void appendPreControlHtml(StringBuilder sb, RequestData rdata) {

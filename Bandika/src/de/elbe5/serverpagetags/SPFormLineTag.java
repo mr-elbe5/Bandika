@@ -1,6 +1,7 @@
 package de.elbe5.serverpagetags;
 
 import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.StringMap;
 import de.elbe5.request.RequestData;
 import de.elbe5.serverpage.SPTag;
 
@@ -18,11 +19,11 @@ public class SPFormLineTag extends SPTag {
     }
 
     @Override
-    public void collectParameters() {
-        name = getParameters().getString("name", "");
-        label = getParameters().getString("label", "");
-        required = getParameters().getBoolean("required", false);
-        padded = getParameters().getBoolean("padded", false);
+    public void collectParameters(StringMap parameters) {
+        name = parameters.getString("name", "");
+        label = parameters.getString("label", "");
+        required = parameters.getBoolean("required", false);
+        padded = parameters.getBoolean("padded", false);
     }
 
     @Override

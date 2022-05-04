@@ -1,5 +1,6 @@
 package de.elbe5.serverpagetags;
 
+import de.elbe5.base.StringMap;
 import de.elbe5.request.RequestData;
 import de.elbe5.serverpage.SPTag;
 
@@ -16,10 +17,10 @@ public class SPFormCheckTag extends SPTag {
     }
 
     @Override
-    public void collectParameters() {
-        name = getParameters().getString("name", "");
-        value = getParameters().getString("value", "");
-        checked = getParameters().getBoolean("checked", false);
+    public void collectParameters(StringMap parameters) {
+        name = parameters.getString("name", "");
+        value = parameters.getString("value", "");
+        checked = parameters.getBoolean("checked", false);
     }
 
     @Override

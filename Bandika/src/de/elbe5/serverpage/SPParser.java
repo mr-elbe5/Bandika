@@ -80,10 +80,10 @@ public class SPParser {
         return true;
     }
 
-    private void pushTag(String type, StringMap attr){
+    private void pushTag(String type, StringMap params){
         SPTag tag;
         tag = SPTagFactory.createTag(type);
-        tag.parameters = attr;
+        tag.collectParameters(params);
         addChildNode(tag);
         tagStack.add(tag);
     }

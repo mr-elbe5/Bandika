@@ -1,6 +1,7 @@
 package de.elbe5.serverpagetags;
 
 import de.elbe5.base.StringFormatter;
+import de.elbe5.base.StringMap;
 import de.elbe5.request.RequestData;
 
 public class SPFormTextAreaTag extends SPFormLineTag {
@@ -18,9 +19,9 @@ public class SPFormTextAreaTag extends SPFormLineTag {
     String controlPostHtml = "</textarea>\n";
 
     @Override
-    public void collectParameters() {
-        super.collectParameters();
-        height = getParameters().getString("height", "");
+    public void collectParameters(StringMap parameters) {
+        super.collectParameters(parameters);
+        height = parameters.getString("height", "");
     }
 
     protected void appendPreControlHtml(StringBuilder sb, RequestData rdata) {
