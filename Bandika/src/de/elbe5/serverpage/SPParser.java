@@ -23,8 +23,9 @@ public class SPParser {
 
     public boolean parse(){
         char[] chars = code.toCharArray();
-        List<IndexPair> indices = new ArrayList<>();
+        List<TagData> indices = new ArrayList<>();
         int p1 = 0;
+        // get start tags
         while (true){
             int tagStart = nextOccurrenceOf(chars, tagStartChars, p1);
             if (tagStart == -1){
@@ -38,9 +39,10 @@ public class SPParser {
             boolean selfClosing = code.charAt(tagEnd-1) == '/';
             int contentStart = tagStart + tagStartChars.length;
             int contentEnd = selfClosing ? tagEnd-1 : tagEnd;
-            indices.add(new IndexPair(tagStart, tagEnd, code.substring(contentStart, contentEnd).trim(), true, selfClosing));
+            indices.add(new TagData(tagStart, tagEnd, code.substring(contentStart, contentEnd).trim(), true, selfClosing));
             p1 = tagEnd+1;
         }
+        // get end tags
         while (true) {
             int tagStart = nextOccurrenceOf(chars, tagEndChars, p1);
             if (tagStart == -1){
@@ -52,18 +54,20 @@ public class SPParser {
                 return false;
             }
             int contentStart = tagStart + tagEndChars.length;
-            indices.add(new IndexPair(tagStart, tagEnd, code.substring(contentStart, tagEnd).trim(), false, false));
+            indices.add(new TagData(tagStart, tagEnd, code.substring(contentStart, tagEnd).trim(), false, false));
             p1 = tagEnd+1;
         }
+        // sort by start index
         indices.sort(null);
         int start = 0;
-        for (IndexPair ip : indices){
+        // create tag and text objects
+        for (TagData ip : indices){
             if (ip.start > start){
                 addChildNode(new SPText(code.substring(start, ip.start)));
             }
             start = ip.end+1;
             if (ip.isStartIndex){
-                pushTag(ip.name, ip.getAttributes());
+                pushTag(ip.name, ip.getParameters());
                 if (ip.isSelfClosing){
                     if (!popTag(ip.name))
                         return false;
@@ -80,6 +84,7 @@ public class SPParser {
         return true;
     }
 
+    // add tag and put on stack top
     private void pushTag(String type, StringMap params){
         SPTag tag;
         tag = SPTagFactory.createTag(type);
@@ -88,6 +93,7 @@ public class SPParser {
         tagStack.add(tag);
     }
 
+    // remove from stack top
     private boolean popTag(String type){
         if (tagStack.size()==0){
             System.out.println("bad closing tag: " + type);
@@ -110,7 +116,7 @@ public class SPParser {
         }
     }
 
-    // like indexOf, but managing tags in strings
+    // like indexOf, but skipping string content
     protected int nextOccurrenceOf(char[] src, char[] target, int startPos){
         boolean inString = false;
         boolean match;
@@ -136,7 +142,7 @@ public class SPParser {
         return -1;
     }
 
-    static class IndexPair implements Comparable<IndexPair>{
+    static class TagData implements Comparable<TagData>{
             int start;
             int end;
             boolean isStartIndex;
@@ -144,7 +150,7 @@ public class SPParser {
             String name;
             String content;
 
-        public IndexPair(int start, int end, String content, boolean isStartIndex, boolean isSelfClosing){
+        public TagData(int start, int end, String content, boolean isStartIndex, boolean isSelfClosing){
             this.start = start;
             this.end = end;
             this.isStartIndex = isStartIndex;
@@ -161,7 +167,7 @@ public class SPParser {
 
         }
 
-        public StringMap getAttributes(){
+        public StringMap getParameters(){
             StringMap map = new StringMap();
             StringBuilder sb = new StringBuilder();
             String key = "";
@@ -194,7 +200,7 @@ public class SPParser {
         }
 
         @Override
-        public int compareTo(IndexPair o) {
+        public int compareTo(TagData o) {
             return start - o.start;
         }
     }
