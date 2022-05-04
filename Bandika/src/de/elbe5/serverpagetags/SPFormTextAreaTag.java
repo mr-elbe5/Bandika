@@ -12,19 +12,13 @@ public class SPFormTextAreaTag extends SPFormLineTag {
         this.type = TYPE;
     }
 
-    String height = "";
-
     String controlPreHtml = """
             <textarea id="{1}" name="{2}" class="form-control" {3}>""";
     String controlPostHtml = "</textarea>\n";
 
     @Override
-    public void collectParameters(StringMap parameters) {
-        super.collectParameters(parameters);
-        height = parameters.getString("height", "");
-    }
-
     protected void appendPreControlHtml(StringBuilder sb, RequestData rdata) {
+        String height = getStringParam("height", rdata, "");
         sb.append(StringFormatter.format(controlPreHtml, name, name, height.isEmpty() ? "" : "style=\"height:" + height + "\""));
     }
 

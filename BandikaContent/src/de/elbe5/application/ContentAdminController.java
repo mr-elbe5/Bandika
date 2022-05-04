@@ -43,7 +43,7 @@ public class ContentAdminController extends AdminController {
         if (rdata.hasSystemRight(SystemZone.CONTENTEDIT))
             return openContentAdministration(rdata);
         if (rdata.hasSystemRight(SystemZone.USER))
-            return openPersonAdministration(rdata);
+            return openUserAdministration(rdata);
         if (rdata.hasSystemRight(SystemZone.APPLICATION))
             return openSystemAdministration(rdata);
         throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);

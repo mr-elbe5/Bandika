@@ -207,68 +207,7 @@ public class UserController extends Controller {
         rdata.setMessage(LocalizedStrings.string("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/user/openProfile");
     }
-
-    public IResponse openRegistration(RequestData rdata) {
-        rdata.getAttributes().put("userData", new UserData());
-        rdata.setSessionObject(RequestKeys.KEY_CAPTCHA, UserSecurity.generateCaptchaString());
-        return showRegistration();
-    }
-
-    public IResponse register(RequestData rdata) {
-        UserData user = new UserData();
-        rdata.getAttributes().put("userData", user);
-        user.readRegistrationRequestData(rdata);
-        if (!rdata.checkFormErrors()) {
-            return showRegistration();
-        }
-        if (UserBean.getInstance().doesLoginExist(user.getLogin())) {
-            rdata.addFormField("login");
-            rdata.addFormError(LocalizedStrings.string("_loginExistsError"));
-        }
-        if (UserBean.getInstance().doesEmailExist(user.getEmail())) {
-            rdata.addFormField("email");
-            rdata.addFormError(LocalizedStrings.string("_emailInUseError"));
-        }
-        String captchaString = rdata.getAttributes().getString("captcha");
-        if (!captchaString.equals(rdata.getSessionObject(RequestKeys.KEY_CAPTCHA))) {
-            rdata.addFormField("captcha");
-            rdata.addFormError(LocalizedStrings.string("_captchaError"));
-        }
-        if (!rdata.hasFormError()) {
-            return showRegistration();
-        }
-        user.setApproved(false);
-        user.setApprovalCode(UserSecurity.getApprovalString());
-        user.setId(UserBean.getInstance().getNextId());
-        if (!UserBean.getInstance().saveUser(user)) {
-            setSaveError(rdata);
-            return showRegistration();
-        }
-        String mailText = LocalizedStrings.string("_registrationVerifyMail") + " " + rdata.getSessionHost() + "/ctrl/user/verifyEmail/" + user.getId() + "?approvalCode=" + user.getApprovalCode();
-        if (!MailHelper.sendPlainMail(user.getEmail(), LocalizedStrings.string("_registrationRequest"), mailText)) {
-            rdata.setMessage(LocalizedStrings.string("_emailError"), RequestKeys.MESSAGE_TYPE_ERROR);
-            return showRegistration();
-        }
-        return showRegistrationDone();
-    }
-
-    public IResponse verifyEmail(RequestData rdata) {
-        int userId = rdata.getId();
-        String approvalCode = rdata.getAttributes().getString("approvalCode");
-        UserData data = UserBean.getInstance().getUser(userId);
-        if (approvalCode.isEmpty() || !approvalCode.equals(data.getApprovalCode())) {
-            rdata.setMessage(LocalizedStrings.string("_emailVerificationFailed"), RequestKeys.MESSAGE_TYPE_ERROR);
-            return showHome();
-        }
-        UserBean.getInstance().saveUserVerifyEmail(data);
-        String mailText = LocalizedStrings.string("_registrationRequestMail") + " " + data.getName() + "(" + data.getId() + ")";
-        if (!MailHelper.sendPlainMail(Configuration.getMailReceiver(), LocalizedStrings.string("_registrationRequest"), mailText)) {
-            rdata.setMessage(LocalizedStrings.string("_emailError"), RequestKeys.MESSAGE_TYPE_ERROR);
-            return showRegistration();
-        }
-        return showEmailVerification();
-    }
-
+    
     protected IResponse showProfile() {
         ServerPageInclude jsp = new ServerPageInclude("user/profile");
         return new MasterResponse(MasterResponse.DEFAULT_MASTER, jsp);

@@ -27,7 +27,9 @@ public class SPMessageTag extends SPTag {
         if (rdata.hasMessage()) {
             String msg = rdata.getAttributes().getString(RequestKeys.KEY_MESSAGE);
             String msgType = rdata.getAttributes().getString(RequestKeys.KEY_MESSAGETYPE);
-            sb.append(StringFormatter.format(controlHtml, msgType, StringHelper.toHtml(msg)));
+            sb.append(StringFormatter.format(controlHtml,
+                    msgType,
+                    toHtml(msg)));
         }
     }
 

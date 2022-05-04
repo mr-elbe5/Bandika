@@ -17,14 +17,10 @@ public class SPFormCheckTag extends SPTag {
     }
 
     @Override
-    public void collectParameters(StringMap parameters) {
-        name = parameters.getString("name", "");
-        value = parameters.getString("value", "");
-        checked = parameters.getBoolean("checked", false);
-    }
-
-    @Override
     public void appendTagStart(StringBuilder sb, RequestData rdata){
+        name = getStringParam("name", rdata, "");
+        value = getStringParam("value", rdata,"");
+        checked = getBooleanParam("checked", rdata, false);
         sb.append(format("""
                        <span>
                             <input type="checkbox" name="{1}" value="{2}" {3}/>

@@ -1,6 +1,5 @@
 package de.elbe5.serverpagetags;
 
-import de.elbe5.base.StringMap;
 import de.elbe5.page.PageData;
 import de.elbe5.page.PagePartData;
 import de.elbe5.request.ContentRequestKeys;
@@ -10,19 +9,13 @@ import de.elbe5.serverpage.ServerPage;
 
 public class SPPartTag extends SPTag {
 
-    private String cssClass = "";
-
     static final String editStart="<div id=\"{1}\" class=\"partWrapper {2}\" title=\"{3}\">";
     static final String viewStart="<div id=\"{1}\" class=\"partWrapper {2}\">";
     static final String end="</div>";
 
     @Override
-    public void collectParameters(StringMap parameters) {
-        cssClass = parameters.getString("cssClass", "");
-    }
-
-    @Override
     public void appendTagStart(StringBuilder sb, RequestData rdata){
+        String cssClass = getStringParam("cssClass", rdata, "");
         PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
         PagePartData partData = rdata.getAttributes().get(PagePartData.KEY_PART, PagePartData.class);
         if (partData != null) {

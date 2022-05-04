@@ -15,6 +15,30 @@ public class SPGroupListTag extends SPTag {
         this.type = TYPE;
     }
 
+    static final String htmlStart = """
+            <li class="open">
+                <span>{1}</span>
+                <div class="icons">
+                    <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/ctrl/group/openCreateGroup');" title="{2}"> </a>
+                </div>
+                <ul>
+            """;
+
+    static final String groupHtml = """
+                    <li class="{1}">
+                        <span>{2}</span>
+                        <div class="icons">
+                            <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/group/openEditGroup/{3}');" title="{4}"></a>
+                            <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/group/deleteGroup/{5}');" title="{6}"></a>
+                        </div>
+                    </li>
+            """;
+
+    static final String htmlEnd = """
+                </ul>
+            </li>
+            """;
+
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
         List<GroupData> groups = null;
@@ -23,27 +47,12 @@ public class SPGroupListTag extends SPTag {
         } catch (Exception ignore) {
         }
         int groupId = rdata.getAttributes().getInt("groupId");
-        sb.append(format("""
-                        <li class="open">
-                            <span>{1}</span>
-                            <div class="icons">
-                                <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/ctrl/group/openCreateGroup');" title="{2}"> </a>
-                            </div>
-                            <ul>
-                            """,
+        sb.append(format(htmlStart,
                 localizedString("_groups"),
                 localizedString("_new")));
         if (groups != null) {
             for (GroupData group : groups) {
-                sb.append(format("""
-                                <li class="{1}">
-                                    <span>{2}</span>
-                                    <div class="icons">
-                                        <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/group/openEditGroup/{3}');" title="{4}"></a>
-                                        <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/group/deleteGroup/{5}');" title="{6}"></a>
-                                    </div>
-                                </li>
-                                """,
+                sb.append(format(groupHtml,
                         groupId == group.getId() ? "open" : "",
                         toHtml(group.getName()),
                         Integer.toString(group.getId()),
@@ -52,10 +61,7 @@ public class SPGroupListTag extends SPTag {
                         localizedString("_delete")));
             }
         }
-        sb.append("""
-                    </ul>
-                </li>
-                """);
+        sb.append(htmlEnd);
     }
 
 }

@@ -19,15 +19,11 @@ public class SPFormLineTag extends SPTag {
     }
 
     @Override
-    public void collectParameters(StringMap parameters) {
-        name = parameters.getString("name", "");
-        label = parameters.getString("label", "");
-        required = parameters.getBoolean("required", false);
-        padded = parameters.getBoolean("padded", false);
-    }
-
-    @Override
     public void appendTagStart(StringBuilder sb, RequestData rdata){
+        name = getStringParam("name", rdata,"");
+        label = getStringParam("label", rdata,"");
+        required = getBooleanParam("required", rdata,false);
+        padded = getBooleanParam("padded", rdata,false);
         sb.append("<div class=\"form-group row");
         if (rdata.hasFormErrorField(name))
             sb.append(" error");

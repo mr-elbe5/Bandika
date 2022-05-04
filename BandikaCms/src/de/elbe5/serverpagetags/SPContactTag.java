@@ -8,15 +8,9 @@ import de.elbe5.serverpage.ServerPage;
 
 public class SPContactTag extends SPTag {
 
-    private String cssClass = "";
-
-    @Override
-    public void collectParameters(StringMap parameters) {
-        cssClass = parameters.getString("cssClass", "");
-    }
-
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata){
+        String cssClass = getStringParam("cssClass", rdata, "");
         sb.append(format("<div class=\"{1}\">",
                 StringHelper.toHtml(cssClass)));
         ServerPage.includePage(sb, "page/contact", rdata);

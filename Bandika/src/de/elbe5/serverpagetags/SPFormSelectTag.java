@@ -1,13 +1,10 @@
 package de.elbe5.serverpagetags;
 
-import de.elbe5.base.StringMap;
 import de.elbe5.request.RequestData;
 
 public class SPFormSelectTag extends SPFormLineTag {
 
     public static final String TYPE = "select";
-
-    private String onchange = "";
 
     String controlPreHtml = "<select id=\"{1}\" name=\"{2}\" class=\"form-control\" {3}>";
     String controlPostHtml = "</select>\n";
@@ -16,23 +13,14 @@ public class SPFormSelectTag extends SPFormLineTag {
         this.type = TYPE;
     }
 
-    @Override
-    public void collectParameters(StringMap parameters) {
-        super.collectParameters(parameters);
-        padded = true;
-        onchange = parameters.getString("onchange", "");
-    }
-
     protected void appendPreControlHtml(StringBuilder sb, RequestData rdata) {
+        padded = true;
+        String onchange = getStringParam("onchange", rdata,"");
         sb.append(format(controlPreHtml, name, name, onchange.isEmpty() ? "" : "onchange=\"" + onchange + "\""));
     }
 
     protected void appendPostControlHtml(StringBuilder sb, RequestData rdata) {
         sb.append(controlPostHtml);
-    }
-
-    public void setOnchange(String onchange) {
-        this.onchange = onchange;
     }
 
 }

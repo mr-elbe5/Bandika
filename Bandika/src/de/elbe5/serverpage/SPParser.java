@@ -3,7 +3,9 @@ package de.elbe5.serverpage;
 import de.elbe5.base.StringMap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SPParser {
 
@@ -85,10 +87,10 @@ public class SPParser {
     }
 
     // add tag and put on stack top
-    private void pushTag(String type, StringMap params){
+    private void pushTag(String type, Map<String,String> params){
         SPTag tag;
         tag = SPTagFactory.createTag(type);
-        tag.collectParameters(params);
+        tag.setParameters(params);
         addChildNode(tag);
         tagStack.add(tag);
     }
@@ -167,8 +169,8 @@ public class SPParser {
 
         }
 
-        public StringMap getParameters(){
-            StringMap map = new StringMap();
+        public Map<String,String> getParameters(){
+            Map<String,String> params = new HashMap<>();
             StringBuilder sb = new StringBuilder();
             String key = "";
             boolean inString = false;
@@ -177,7 +179,7 @@ public class SPParser {
                     case '\"':
                         if (inString) {
                             if (!key.isEmpty()) {
-                                map.put(key,sb.toString());
+                                params.put(key,sb.toString());
                                 key = "";
                                 sb = new StringBuilder();
                             }
@@ -196,7 +198,7 @@ public class SPParser {
                         sb.append(ch);
                 }
             }
-            return map;
+            return params;
         }
 
         @Override

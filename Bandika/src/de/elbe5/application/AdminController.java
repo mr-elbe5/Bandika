@@ -51,7 +51,7 @@ public class AdminController extends Controller {
 
     public IResponse openAdministration(RequestData rdata){
         if (rdata.hasSystemRight(SystemZone.USER))
-            return openPersonAdministration(rdata);
+            return openUserAdministration(rdata);
         if (rdata.hasSystemRight(SystemZone.APPLICATION))
             return openSystemAdministration(rdata);
         throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
@@ -62,9 +62,9 @@ public class AdminController extends Controller {
         return showSystemAdministration(rdata);
     }
 
-    public IResponse openPersonAdministration(RequestData rdata) {
+    public IResponse openUserAdministration(RequestData rdata) {
         checkRights(rdata.hasAnySystemRight());
-        return showPersonAdministration(rdata);
+        return showUserAdministration(rdata);
     }
 
     public IResponse restart(RequestData rdata) {
@@ -86,10 +86,6 @@ public class AdminController extends Controller {
         UserCache.checkDirty();
         rdata.setMessage(LocalizedStrings.string("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
-    }
-
-    protected IResponse showExecuteDatabaseScript() {
-        return new ServerPageResponse("administration/executeDatabaseScript");
     }
 
     private IResponse showEditConfiguration() {

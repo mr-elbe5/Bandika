@@ -1,6 +1,5 @@
 package de.elbe5.serverpage;
 
-import de.elbe5.base.StringMap;
 import de.elbe5.request.RequestData;
 
 import java.util.*;
@@ -8,7 +7,7 @@ import java.util.*;
 public class SPTag implements SPNode {
 
     protected String type = "";
-    protected StringMap parameters = new StringMap();
+    protected Map<String,String> parameters = new HashMap<>();
 
     protected List<SPNode> childNodes = new ArrayList<>();
 
@@ -32,7 +31,62 @@ public class SPTag implements SPNode {
         appendTagEnd(sb, rdata);
     }
 
-    public void collectParameters(StringMap parameters){
+    public void setParameters(Map<String,String> parameters) {
+        this.parameters = parameters;
+    }
+
+    public String getStringParam(String key, RequestData rdata, String def){
+        String result = parameters.get(key);
+        if (result==null){
+            return def;
+        }
+        if (result.contains("{{")){
+            result = replaceParams(result, rdata.getPageAttributes());
+        }
+        return result;
+    }
+
+    public String getStringParam(String key, RequestData rdata){
+        return getStringParam(key, rdata, "");
+    }
+
+    public int getIntParam(String key, RequestData rdata, int def){
+        try{
+            String result = parameters.get(key);
+            if (result==null){
+                return def;
+            }
+            if (result.contains("{{")){
+                result = replaceParams(result, rdata.getPageAttributes());
+            }
+            return Integer.parseInt(result);
+        }
+        catch (Exception e){
+            return def;
+        }
+    }
+    public int getIntParam(String key, RequestData rdata){
+        return getIntParam(key, rdata,0);
+    }
+
+    public boolean getBooleanParam(String key, RequestData rdata, boolean def){
+        try{
+            String result = parameters.get(key);
+            if (result==null){
+                return def;
+            }
+            if (result.contains("{{")){
+                result = replaceParams(result, rdata.getPageAttributes());
+            }
+            return Boolean.parseBoolean(result);
+        }
+        catch (Exception e){
+            return def;
+        }
+    }
+
+    public boolean getBooleanParam(String key, RequestData rdata){
+        return getBooleanParam(key, rdata, false);
     }
 
     public void appendTagStart(StringBuilder sb, RequestData rdata){

@@ -17,8 +17,6 @@ public class SPFormTag extends SPTag {
     protected String url;
     protected String name;
     protected boolean multi;
-    protected boolean ajax;
-    protected String target = IResponse.MODAL_DIALOG_JQID;
 
     String preHtml = "<form action=\"{1}\" method=\"post\" id=\"{2}\" name=\"{3}\" accept-charset=\"UTF-8\"{4}>\n";
     String postHtml = "</form>\n";
@@ -34,21 +32,17 @@ public class SPFormTag extends SPTag {
             """;
 
     @Override
-    public void collectParameters(StringMap parameters) {
-        url = parameters.getString("url", "");
-        name = parameters.getString("name", "");
-        multi = parameters.getBoolean("multi", false);
-        ajax = parameters.getBoolean("ajax", false);
-        target = parameters.getString("target", IResponse.MODAL_DIALOG_JQID);
-    }
-
-    @Override
     public void appendTagStart(StringBuilder sb, RequestData rdata) {
+        url = getStringParam("url", rdata,"");
+        name = getStringParam("name", rdata,"");
+        multi = getBooleanParam("multi", rdata,false);
         sb.append(StringFormatter.format(preHtml, url, name, name, multi ? " enctype=\"multipart/form-data\"" : ""));
     }
 
     @Override
     public void appendTagEnd(StringBuilder sb, RequestData rdata) {
+        boolean ajax = getBooleanParam("ajax", rdata,false);
+        String target = getStringParam("target", rdata, IResponse.MODAL_DIALOG_JQID);
         sb.append(postHtml);
         if (ajax) {
             sb.append(StringFormatter.format(ajaxHtml,

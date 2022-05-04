@@ -8,8 +8,9 @@ import de.elbe5.page.PagePartData;
 import de.elbe5.page.PartHtmlField;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
+import de.elbe5.serverpage.SPTag;
 
-public class SPHtmlFieldTag extends SPFieldTag {
+public class SPHtmlFieldTag extends SPTag {
 
     public static final String TYPE = "htmlfield";
 
@@ -26,6 +27,8 @@ public class SPHtmlFieldTag extends SPFieldTag {
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata){
+        String name = getStringParam("name", rdata, "");
+        String placeholder = getStringParam("placeholder", rdata, "");
         PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
         LayoutPartData partData = (LayoutPartData) rdata.getAttributes().get(PagePartData.KEY_PART);
         PartHtmlField field = partData.ensureHtmlField(name);

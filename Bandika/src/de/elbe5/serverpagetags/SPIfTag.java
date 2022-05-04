@@ -12,15 +12,9 @@ public class SPIfTag extends SPTag {
         this.type = TYPE;
     }
 
-    boolean condition = false;
-
-    @Override
-    public void collectParameters(StringMap parameters) {
-        condition = parameters.getBoolean("condition");
-    }
-
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata){
+        boolean condition = getBooleanParam("condition", rdata, false);
         if (condition) {
             appendInner(sb, rdata);
         }

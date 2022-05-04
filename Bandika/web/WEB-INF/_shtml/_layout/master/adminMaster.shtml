@@ -1,26 +1,29 @@
 <!DOCTYPE html>
-<html xmlns:spg = "" lang="en">
+<html xmlns:spg = "www.elbe5.de" lang="{{language}}">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <title>{{appName}}
-    </title>
+    <title>{{title}}</title>
     <link rel="shortcut icon" href="/favicon.ico"/>
-    <link rel="stylesheet" href="/css/bandika.css"/>
-    <link rel="stylesheet" href="/css/admin.css"/>
-    <script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>
-    <script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript" src="/js/bootstrap.tree.js"></script>
-    <script type="text/javascript" src="/js/bootstrap-datepicker.js"></script>
-    <script type="text/javascript" src="/js/locales/bootstrap-datepicker.de.js"></script>
-    <script type="text/javascript" src="/js/bandika.js"></script>
+    <link rel="stylesheet" href="/static-content/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/static-content/css/bandika.css"/>
+    <link rel="stylesheet" href="/static-content/css/layout.css"/>
+    <script type="text/javascript" src="/static-content/js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="/static-content/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/static-content/js/bootstrap.tree.js"></script>
+    <script type="text/javascript" src="/static-content/ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.config.language = '{{language}}';
+    </script>
+    <script type="text/javascript" src="/static-content/ckeditor/adapters/jquery.js"></script>
+    <script type="text/javascript" src="/static-content/js/bandika-webbase.js"></script>
 </head>
 
-<body>
+<body class="admin">
     <div class="container">
         <header>
-            <div class="top row">
-            <section class="col-12 sysnav">
+            <div class="top">
+            <section class="sysnav">
                 <ul class="nav justify-content-end">
                     <li class="nav-item">
                         <a class="nav-link fa fa-home" href="/" title="{{_home}}>"></a></li>
@@ -39,6 +42,13 @@
                         </button>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav mr-auto">
+                                <spg:if condition="{{hasSystemRights}}">
+                                    <li class="nav-item">
+                                        <a class="nav-link"
+                                           href="/ctrl/admin/openSystemAdministration">{{_systemAdministration}}
+                                        </a>
+                                    </li>
+                                </spg:if>
                                 <spg:if condition="{{hasUserRights}}">
                                 <li class="nav-item">
                                     <a class="nav-link"
@@ -60,7 +70,7 @@
         </header>
         <main id="main" role="main">
             <div id="pageContainer">
-                <spg:include include="{{includeUrl}}" />
+                <spg:content/>
             </div>
         </main>
     </div>

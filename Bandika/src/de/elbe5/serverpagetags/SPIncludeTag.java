@@ -13,17 +13,11 @@ public class SPIncludeTag extends SPTag {
         this.type = TYPE;
     }
 
-    String pagePath = "";
-
-    @Override
-    public void collectParameters(StringMap parameters) {
-        pagePath = parameters.getString("include");
-    }
-
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata){
-        if (!pagePath.isEmpty()) {
-            ServerPage.includePage(sb, pagePath, rdata);
+        String include = getStringParam("include", rdata, "");
+        if (!include.isEmpty()) {
+            ServerPage.includePage(sb, include, rdata);
         }
     }
 

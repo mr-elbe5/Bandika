@@ -9,19 +9,12 @@ public class SPFormFileTag extends SPFormLineTag {
 
     String controlPreHtml = "<input type=\"file\" class=\"form-control-file\" id=\"{1}\" name=\"{2}\" {3}>";
 
-    private boolean multiple=false;
-
     public SPFormFileTag(){
         this.type = TYPE;
     }
 
-    @Override
-    public void collectParameters(StringMap parameters) {
-        super.collectParameters(parameters);
-        multiple = parameters.getBoolean("multiple", false);
-    }
-
     protected void appendPreControlHtml(StringBuilder sb, RequestData rdata) {
+        boolean multiple = getBooleanParam("multiple", rdata, false);
         sb.append(format(controlPreHtml, name, name, multiple ? "multiple" : ""));
     }
 

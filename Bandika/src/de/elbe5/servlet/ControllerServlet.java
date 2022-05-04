@@ -8,6 +8,7 @@
  */
 package de.elbe5.servlet;
 
+import de.elbe5.base.Log;
 import de.elbe5.base.StringHelper;
 import de.elbe5.application.Configuration;
 import de.elbe5.request.RequestData;
@@ -58,8 +59,10 @@ public class ControllerServlet extends WebServlet {
                 rdata.setCookies(response);
             result.processResponse(getServletContext(), rdata, response);
         } catch (ResponseException ce) {
+            Log.error(ce.getMessage());
             handleException(request, response, ce.getResponseCode());
-        } catch (Exception | AssertionError e) {
+        } catch (Exception e) {
+            Log.error(e.getMessage());
             handleException(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
@@ -74,10 +77,16 @@ public class ControllerServlet extends WebServlet {
                 return (IResponse) result;
             throw new ResponseException(HttpServletResponse.SC_BAD_REQUEST);
         } catch (NoSuchMethodException | InvocationTargetException e){
+            Log.error(e.getMessage());
             throw new ResponseException(HttpServletResponse.SC_BAD_REQUEST);
         }
         catch (IllegalAccessException e) {
+            Log.error(e.getMessage());
             throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+        catch (Exception e){
+            Log.error(e.getMessage());
+            throw(e);
         }
     }
 }
