@@ -9,16 +9,12 @@
 package de.elbe5.search;
 
 import de.elbe5.base.LocalizedStrings;
-import de.elbe5.content.JspContentData;
 import de.elbe5.request.RequestKeys;
-import de.elbe5.response.ForwardResponse;
+import de.elbe5.response.*;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.request.RequestData;
 import de.elbe5.servlet.ControllerCache;
-import de.elbe5.response.IResponse;
-import de.elbe5.content.ContentResponse;
-import de.elbe5.response.ServerPageResponse;
 
 public class SearchController extends Controller {
 
@@ -92,15 +88,13 @@ public class SearchController extends Controller {
     }
 
     protected IResponse showSearch() {
-        JspContentData contentData = new JspContentData();
-        contentData.setJsp("/WEB-INF/_shtml/search/search.shtml");
-        return new ContentResponse(contentData);
+        ServerPageInclude pageInclude = new ServerPageInclude("search/search");
+        return new MasterResponse(pageInclude);
     }
 
     protected IResponse showUserSearch() {
-        JspContentData contentData = new JspContentData();
-        contentData.setJsp("/WEB-INF/_shtml/search/userSearch.shtml");
-        return new ContentResponse(contentData);
+        ServerPageInclude pageInclude = new ServerPageInclude("search/userSearch");
+        return new MasterResponse(pageInclude);
     }
 
 }

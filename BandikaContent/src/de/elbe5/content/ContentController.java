@@ -44,12 +44,6 @@ public class ContentController extends Controller {
         ControllerCache.addController(controller.getKey(),getInstance());
     }
 
-    protected IResponse openJspPage(String jsp) {
-        JspContentData contentData = new JspContentData();
-        contentData.setJsp(jsp);
-        return new ContentResponse(contentData);
-    }
-
     @Override
     public String getKey() {
         return KEY;

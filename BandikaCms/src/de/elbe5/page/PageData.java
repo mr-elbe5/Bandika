@@ -173,7 +173,10 @@ public class PageData extends ContentData {
     public void appendContent(StringBuilder sb, RequestData rdata) {
         switch (getViewType()) {
             case VIEW_TYPE_PUBLISH -> {
-                sb.append("<div id=\"pageContent\" class=\"viewArea\">");
+                sb.append("""
+                                
+                                    <div id="pageContent" class="viewArea">
+                """);
                 StringBuilder sbp = new StringBuilder();
                 appendDraftContent(sbp, rdata);
                 setPublishedContent(sbp.toString());
@@ -185,26 +188,43 @@ public class PageData extends ContentData {
                 sb.append(getPublishedContent());
                 setViewType(ContentData.VIEW_TYPE_SHOW);
                 ContentCache.setDirty();
-                sb.append("</div>");
+                sb.append("""
+                                    </div>
+            """);
             }
             case VIEW_TYPE_EDIT -> {
-                sb.append("<div id=\"pageContent\" class=\"editArea\">");
+                sb.append("""
+                                
+                                    <div id="pageContent" class="editArea">
+                """);
                 appendEditContent(sb, rdata);
-                sb.append("</div>");
+                sb.append("""
+                                    </div>
+            """);
             }
             case VIEW_TYPE_SHOWPUBLISHED -> {
-                sb.append("<div id=\"pageContent\" class=\"viewArea\">");
+                sb.append("""
+                                
+                                    <div id="pageContent" class="viewArea">
+                """);
                 if (isPublished())
                     appendPublishedContent(sb, rdata);
-                sb.append("</div>");
+                sb.append("""
+                                    </div>
+            """);
             }
             default -> {
-                sb.append("<div id=\"pageContent\" class=\"viewArea\">");
+                sb.append("""
+                                
+                                    <div id="pageContent" class="viewArea">
+                """);
                 if (isPublished() && !hasUserEditRight(rdata))
                     appendPublishedContent(sb, rdata);
                 else
                     appendDraftContent(sb, rdata);
-                sb.append("</div>");
+                sb.append("""
+                                    </div>
+            """);
             }
         }
     }

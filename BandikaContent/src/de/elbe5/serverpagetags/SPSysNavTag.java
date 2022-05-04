@@ -13,80 +13,87 @@ public class SPSysNavTag extends SPTag {
         this.type = TYPE;
     }
 
+    static final String ulStart = """
+                                
+                                <ul class="nav justify-content-end">
+            """;
+    static final String adminLink = """
+                                    <li class="nav-item"><a class="nav-link fa fa-cog" href="/ctrl/admin/openAdministration" title="{1}"></a></li>
+            """;
+    static final String editContentLink = """
+                                    <li class="nav-item"><a class="nav-link fa fa-edit" href="/ctrl/page/openEditContentFrontend/{1}" title="{2}"></a></li>
+            """;
+    static final String showDraftLink = """
+                                    <li class="nav-item"><a class="nav-link fa fa-eye-slash" href="/ctrl/page/showDraft/{1}" title="{2}" ></a></li>
+            """;
+    static final String showPublishedlink = """
+                                    <li class="nav-item"><a class="nav-link fa fa-eye" href="/ctrl/page/showPublished/{1}" title="{2}"></a></li>
+            """;
+    static final String approveLink = """
+                                    <li class="nav-item"><a class="nav-link fa fa-thumbs-up" href="/ctrl/page/publishPage/{1}" title="{2}"></a></li>
+            """;
+    static final String userDropdownStart = """
+                                    <li class="nav-item">
+                                        <a class="nav-link fa {1}" data-toggle="dropdown" title="{2}"></a>
+                                        <div class="dropdown-menu">
+            """;
+    static final String userDropdownLinks = """
+                                            <a class="dropdown-item" href="/ctrl/user/openProfile">{1}</a>
+                                            <a class="dropdown-item" href="/ctrl/user/logout">{2}</a>
+            """;
+    static final String loginLink = """
+                                            <a class="dropdown-item" href="" onclick="return openModalDialog('/ctrl/user/openLogin');">{1}</a>
+            """;
+    static final String ulEnd = """
+                                        </div>
+                                    </li>
+                                </ul>
+            """;
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
         ContentData currentContent = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         String userClass = rdata.isLoggedIn() ? "fa-user" : "fa-user-o";
-        sb.append("""
-                <ul class="nav justify-content-end">
-                """);
-
+        sb.append(ulStart);
         if (rdata.hasAnyElevatedSystemRight()) {
-            sb.append(format("""
-                            <li class="nav-item"><a class="nav-link fa fa-cog" href="/ctrl/admin/openAdministration" title="{1}"></a></li>
-                            """,
+            sb.append(format(adminLink,
                     localizedString("_administration")));
         }
         if (currentContent!=null && !currentContent.isEditing() && currentContent.hasUserEditRight(rdata)) {
-            sb.append(format("""
-                            <li class="nav-item"><a class="nav-link fa fa-edit" href="/ctrl/page/openEditContentFrontend/{1}" title="{2}"></a></li>
-                            """,
+            sb.append(format(editContentLink,
                     Integer.toString(currentContent.getId()),
                     localizedString("_editPage")
             ));
             if (currentContent.hasUnpublishedDraft()) {
                 if (currentContent.isPublished()) {
                     if (currentContent.isPublishedView()) {
-                        sb.append(format("""
-                                        <li class="nav-item"><a class="nav-link fa fa-eye-slash" href="/ctrl/page/showDraft/{1}" title="{2}" ></a></li>
-                                        """,
+                        sb.append(format(showDraftLink,
                                 Integer.toString(currentContent.getId()),
                                 localizedString("_showDraft")));
                     } else {
-                        sb.append(format("""
-                                        <li class="nav-item"><a class="nav-link fa fa-eye" href="/ctrl/page/showPublished/{1}" title="{2}"></a></li>
-                                        """,
+                        sb.append(format(showPublishedlink,
                                 Integer.toString(currentContent.getId()),
                                 localizedString("_showPublished")));
                     }
                 }
                 if (currentContent.hasUserApproveRight(rdata)) {
-                    sb.append(format("""
-                                    <li class="nav-item"><a class="nav-link fa fa-thumbs-up" href="/ctrl/page/publishPage/{1}" title="{2}"></a></li>
-                                    """,
+                    sb.append(format(approveLink,
                             Integer.toString(currentContent.getId()),
                             localizedString("_publish")));
                 }
             }
         }
-        sb.append(format("""
-                        <li class="nav-item">
-                        <a class="nav-link fa {1}" data-toggle="dropdown" title="{2}"></a>
-                        <div class="dropdown-menu">
-                        """,
+        sb.append(format(userDropdownStart,
                 userClass,
                 localizedString("_user")));
         if (rdata.isLoggedIn()) {
-            sb.append(format("""
-                            <a class="dropdown-item" href="/ctrl/user/openProfile">{1}
-                            </a>
-                            <a class="dropdown-item" href="/ctrl/user/logout">{2}
-                            </a>
-                            """,
+            sb.append(format(userDropdownLinks,
                     localizedString("_profile"),
                     localizedString("_logout")));
         } else {
-            sb.append(format("""
-                            <a class="dropdown-item" href="" onclick="return openModalDialog('/ctrl/user/openLogin');">{1}
-                            </a>
-                            """,
+            sb.append(format(loginLink,
                     localizedString("_login")));
         }
-        sb.append("""
-                </div>
-                </li>
-                </ul>
-                """);
+        sb.append(ulEnd);
     }
 
 }

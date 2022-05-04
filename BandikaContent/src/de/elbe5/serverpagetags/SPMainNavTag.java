@@ -18,6 +18,26 @@ public class SPMainNavTag extends SPTag {
     public SPMainNavTag() {
         this.type = TYPE;
     }
+    static final String dropdownStart = """
+                                        
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link {1} dropdown-toggle" data-toggle="dropdown" href="{2}" role="button" aria-haspopup="true" aria-expanded="false">{3}</a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item {4}" href="{5}">{6}</a>
+            """;
+    static final String dropDownLink = """
+                                                <a class="dropdown-item {1}" href="{2}">{3}</a>
+            """;
+    static final String dropDownEnd = """
+                                            </div>
+                                        </li>
+            """;
+    static final String singleLink = """
+                                        
+                                        <li class="nav-item {1}">
+                                            <a class="nav-link {2}" href="{3}">{4}</a>
+                                        </li>
+            """;
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
@@ -37,14 +57,7 @@ public class SPMainNavTag extends SPTag {
                             children.add(child);
                     }
                     if (!children.isEmpty()) {
-                        sb.append(format("""
-                                        <li class="nav-item dropdown">
-                                            <a class="nav-link {1} dropdown-toggle" data-toggle="dropdown" href="{2}" role="button" aria-haspopup="true" aria-expanded="false">{3}
-                                            </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item {4}" href="{5}">{6}
-                                                </a>
-                                                """,
+                        sb.append(format(dropdownStart,
                                 activeIds.contains(contentData.getId()) ? "active" : "",
                                 contentData.getUrl(),
                                 contentData.getNavDisplay(),
@@ -53,26 +66,15 @@ public class SPMainNavTag extends SPTag {
                                 contentData.getNavDisplay()
                         ));
                         for (ContentData child : children) {
-                            sb.append(format("""
-                                            <a class="dropdown-item {1}" href="{2}">{3}</a>
-                                            """,
+                            sb.append(format(dropDownLink,
                                     activeIds.contains(child.getId()) ? "active" : "",
                                     child.getUrl(),
                                     child.getNavDisplay()
                             ));
                         }
-                        sb.append("""
-                                            </div>
-                                        </li>
-                                """
-                        );
+                        sb.append(dropDownEnd);
                     } else {
-                        sb.append(format("""
-                                                <li class="nav-item {1}">
-                                                    <a class="nav-link {2}" href="{3}">{4}
-                                                    </a>
-                                                </li>
-                                        """,
+                        sb.append(format(singleLink,
                                 activeIds.contains(contentData.getId()) ? "active" : "",
                                 activeIds.contains(contentData.getId()) ? "active" : "",
                                 contentData.getUrl(),
