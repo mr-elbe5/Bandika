@@ -65,8 +65,8 @@ public class SPContentAdminTreeTag extends SPTag {
     static final String childIconStart = """
                                     <div class="icons">
                                         <a class="icon fa fa-eye" href="" onclick="return linkTo('/page/content/show/{1}');" title="{2}"> </a>
-                                        <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/page/content/openEditContentData/{3}');" title="{4}"> </a>
-                                        <a class="icon fa fa-key" href="" onclick="return openModalDialog('/page/content/openEditRights/{5}');" title="{6}"> </a>
+                                        <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/dlgpage/content/openEditContentData/{3}');" title="{4}"> </a>
+                                        <a class="icon fa fa-key" href="" onclick="return openModalDialog('/dlgpage/content/openEditRights/{5}');" title="{6}"> </a>
             """;
     static final String childCutLink = """
                                         <a class="icon fa fa-scissors" href="" onclick="return linkTo('/page/content/cutContent/{1}');" title="{2}"> </a>
@@ -75,7 +75,7 @@ public class SPContentAdminTreeTag extends SPTag {
                                         <a class="icon fa fa-copy" href="" onclick="return linkTo('/page/content/copyContent/{1}');" title="{2}"> </a>
             """;
     static final String childSortLink = """
-                                        <a class="icon fa fa-sort" href="" onclick="return openModalDialog('/page/content/openSortChildPages/{1}');" title="{2}"> </a>
+                                        <a class="icon fa fa-sort" href="" onclick="return openModalDialog('/dlgpage/content/openSortChildPages/{1}');" title="{2}"> </a>
             """;
     static final String childDeleteLink = """
                                         <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/page/content/deleteContent/{1}');" title="{2}>"> </a>
@@ -85,7 +85,7 @@ public class SPContentAdminTreeTag extends SPTag {
                                         <a class="icon fa fa-paste" href="/page/content/pasteContent?parentId={1}" title="{2}"> </a>
             """;
     static final String newChildLink = """
-                                        <a class="icon fa fa-plus" onclick="return openModalDialog('/page/content/openCreateContentData?parentId=&type={1}');" title="{2}"></a>
+                                        <a class="icon fa fa-plus" onclick="return openModalDialog('/dlgpage/content/openCreateContentData?parentId=&type={1}');" title="{2}"></a>
             """;
     static final String newChildDropdownStart = """
                                         <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="{1}"></a>
@@ -93,7 +93,7 @@ public class SPContentAdminTreeTag extends SPTag {
             """;
 
     static final String newChildDropdownLink = """
-                                            <a class="dropdown-item" onclick="return openModalDialog('/page/content/openCreateContentData?parentId={1}&type={2}');">{3}</a>
+                                            <a class="dropdown-item" onclick="return openModalDialog('/dlgpage/content/openCreateContentData?parentId={1}&type={2}');">{3}</a>
             """;
     static final String newChildDropdownEnd = """
                                         </div>
@@ -199,7 +199,7 @@ public class SPContentAdminTreeTag extends SPTag {
                                                 <a class="icon fa fa-paste" href="/page/document/pasteDocument?parentId={1}" title="{2}"> </a>
             """;
     static final String newDocumentLink = """
-                                                <a class="icon fa fa-plus" onclick="return openModalDialog('/page/document/openCreateDocument?parentId={1}&type={2}');" title="{3}"></a>
+                                                <a class="icon fa fa-plus" onclick="return openModalDialog('/dlgpage/document/openCreateDocument?parentId={1}&type={2}');" title="{3}"></a>
             """;
     static final String newDocumentDropdownStart = """
                                                 <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="{1}"></a>
@@ -207,7 +207,7 @@ public class SPContentAdminTreeTag extends SPTag {
             """;
 
     static final String newDocumentDropdownLink = """
-                                                    <a class="dropdown-item" onclick="return openModalDialog('/page/document/openCreateDocument?parentId={1}&type={2}');">{3}</a>
+                                                    <a class="dropdown-item" onclick="return openModalDialog('/dlgpage/document/openCreateDocument?parentId={1}&type={2}');">{3}</a>
             """;
     static final String newDocumentDropdownEnd = """
                                                 </div>
@@ -227,7 +227,7 @@ public class SPContentAdminTreeTag extends SPTag {
                                                         <div class="icons">
                                                             <a class="icon fa fa-eye" href="{4}" target="_blank" title="{5}"> </a>
                                                             <a class="icon fa fa-download" href="{6}?download=true" title="{7}"> </a>
-                                                            <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/page/document/openEditDocument/{8}');" title="{9}"> </a>
+                                                            <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/dlgpage/document/openEditDocument/{8}');" title="{9}"> </a>
                                                             <a class="icon fa fa-scissors" href="" onclick="return linkTo('/page/document/cutDocument/{10}');" title="{11}"> </a>
                                                             <a class="icon fa fa-copy" href="" onclick="return linkTo('/page/document/copyDocument/{12}');" title="{13}"> </a>
                                                             <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/page/document/deleteDocument/{14}');" title="{15}"> </a>
@@ -314,7 +314,7 @@ public class SPContentAdminTreeTag extends SPTag {
                                                 <a class="icon fa fa-paste" href="/page/image/pasteImage?parentId={1}" title="{2}"> </a>
             """;
     static final String newImageLink = """
-                                                <a class="icon fa fa-plus" onclick="return openModalDialog('/page/image/openCreateImage?parentId={1}&type={2}');" title="{3}"></a>
+                                                <a class="icon fa fa-plus" onclick="return openModalDialog('/dlgpage/image/openCreateImage?parentId={1}&type={2}');" title="{3}"></a>
             """;
     static final String newImageDropdownStart = """
                                                 <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="{1}"></a>
@@ -322,7 +322,7 @@ public class SPContentAdminTreeTag extends SPTag {
             """;
 
     static final String newImageDropdownLink = """
-                                                    <a class="dropdown-item" onclick="return openModalDialog('/page/image/openCreateImage?parentId={1}&type={2}');">{3}</a>
+                                                    <a class="dropdown-item" onclick="return openModalDialog('/dlgpage/image/openCreateImage?parentId={1}&type={2}');">{3}</a>
             """;
     static final String newImageDropdownEnd = """
                                                 </div>
@@ -345,7 +345,7 @@ public class SPContentAdminTreeTag extends SPTag {
                                                         <div class="icons">
                                                             <a class="icon fa fa-eye" href="{6}" target="_blank" title="{7}"> </a>
                                                             <a class="icon fa fa-download" href="{8}?download=true" title="{9}"> </a>
-                                                            <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/page/image/openEditImage/{10}');" title="{11}"> </a>
+                                                            <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/dlgpage/image/openEditImage/{10}');" title="{11}"> </a>
                                                             <a class="icon fa fa-scissors" href="" onclick="return linkTo('/page/image/cutImage/{12}');" title="{13}"> </a>
                                                             <a class="icon fa fa-copy" href="" onclick="return linkTo('/page/image/copyImage/{14}');" title="{15}"> </a>
                                                             <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/page/image/deleteImage/{16}');" title="{17}"> </a>
@@ -434,7 +434,7 @@ public class SPContentAdminTreeTag extends SPTag {
                                                 <a class="icon fa fa-paste" href="/page/media/pasteMedia?parentId={1}" title="{2}"> </a>
             """;
     static final String newMediaLink = """
-                                                <a class="icon fa fa-plus" onclick="return openModalDialog('/page/media/openCreateMedia?parentId={1}&type={2}');" title="{3}"></a>
+                                                <a class="icon fa fa-plus" onclick="return openModalDialog('/dlgpage/media/openCreateMedia?parentId={1}&type={2}');" title="{3}"></a>
             """;
     static final String newMediaDropdownStart = """
                                                 <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="{1}"></a>
@@ -442,7 +442,7 @@ public class SPContentAdminTreeTag extends SPTag {
             """;
 
     static final String newMediaDropdownLink = """
-                                                    <a class="dropdown-item" onclick="return openModalDialog('/page/media/openCreateMedia?parentId={1}&type={2}');">{3}</a>
+                                                    <a class="dropdown-item" onclick="return openModalDialog('/dlgpage/media/openCreateMedia?parentId={1}&type={2}');">{3}</a>
             """;
     static final String newMediaDropdownEnd = """
                                                 </div>
@@ -462,7 +462,7 @@ public class SPContentAdminTreeTag extends SPTag {
                                                         <div class="icons">
                                                             <a class="icon fa fa-eye" href="{4}" target="_blank" title="{5}"> </a>
                                                             <a class="icon fa fa-download" href="{6}?download=true" title="{7}"> </a>
-                                                            <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/page/media/openEditMedia/{8}');" title="{9}"> </a>
+                                                            <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/dlgpage/media/openEditMedia/{8}');" title="{9}"> </a>
                                                             <a class="icon fa fa-scissors" href="" onclick="return linkTo('/page/media/cutMedia/{10}');" title="{11}"> </a>
                                                             <a class="icon fa fa-copy" href="" onclick="return linkTo('/page/media/copyMedia/{12}');" title="{13}"> </a>
                                                             <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/page/media/deleteMedia/{14}');" title="{15}"> </a>

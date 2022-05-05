@@ -19,7 +19,7 @@ public class SPGroupListTag extends SPTag {
             <li class="open">
                 <span>{1}</span>
                 <div class="icons">
-                    <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/page/group/openCreateGroup');" title="{2}"> </a>
+                    <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/dlgpage/group/openCreateGroup');" title="{2}"> </a>
                 </div>
                 <ul>
             """;
@@ -28,7 +28,7 @@ public class SPGroupListTag extends SPTag {
                     <li class="{1}">
                         <span>{2}</span>
                         <div class="icons">
-                            <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/page/group/openEditGroup/{3}');" title="{4}"></a>
+                            <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/dlgpage/group/openEditGroup/{3}');" title="{4}"></a>
                             <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/page/group/deleteGroup/{5}');" title="{6}"></a>
                         </div>
                     </li>

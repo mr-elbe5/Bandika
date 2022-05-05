@@ -13,7 +13,7 @@ public enum RequestType {
     any,
     content,
     page,
-    dialog,
-    api,
+    dialogpage,
+    apicall,
     file
 }

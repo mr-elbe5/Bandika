@@ -34,8 +34,8 @@
     <servlet-mapping>
         <servlet-name>controller</servlet-name>
         <url-pattern>/page/*</url-pattern>
-        <url-pattern>/dlg/*</url-pattern>
-        <url-pattern>/api/*</url-pattern>
+        <url-pattern>/dlgpage/*</url-pattern>
+        <url-pattern>/apicall/*</url-pattern>
     </servlet-mapping>
 
     <listener>

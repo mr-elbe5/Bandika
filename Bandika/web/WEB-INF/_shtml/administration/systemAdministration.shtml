@@ -8,7 +8,7 @@
                 <ul>
                     <spg:if condition="{{hasSystemRights}}" >
                     <li>
-                        <a href="" onclick="if (confirmExecute()) return openModalDialog('/page/admin/restart');">{{_restart}}
+                        <a href="" onclick="if (confirmExecute()) return openModalDialog('/dlgpage/admin/restart');">{{_restart}}
                         </a>
                     <li class="open">
                         <a>{{_caches}}

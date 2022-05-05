@@ -34,13 +34,13 @@ public class ControllerServlet extends WebServlet {
             requestType = RequestType.page;
             uri = uri.substring(6);
         }
-        else if (uri.startsWith("/dlg/")){
-            requestType = RequestType.dialog;
-            uri = uri.substring(6);
+        else if (uri.startsWith("/dlgpage/")){
+            requestType = RequestType.dialogpage;
+            uri = uri.substring(9);
         }
-        else if (uri.startsWith("/api/")){
-            requestType = RequestType.api;
-            uri = uri.substring(5);
+        else if (uri.startsWith("/apicall/")){
+            requestType = RequestType.apicall;
+            uri = uri.substring(9);
         }
         RequestData rdata = new RequestData(method, requestType, request);
         StringTokenizer stk = new StringTokenizer(uri, "/", false);

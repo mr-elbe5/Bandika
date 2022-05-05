@@ -57,7 +57,7 @@
             partType: type,
             template: template
         };
-        $.ajax({url: '/dlg/{{type}}/addPart/' + {{id}},
+        $.ajax({url: '/dlgpage/{{type}}/addPart/' + {{id}},
             type: 'POST',
             data: data,
             dataType: 'html'}).success(function (html, textStatus) {

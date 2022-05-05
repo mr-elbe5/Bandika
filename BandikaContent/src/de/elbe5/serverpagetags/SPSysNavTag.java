@@ -42,7 +42,7 @@ public class SPSysNavTag extends SPTag {
                                             <a class="dropdown-item" href="/page/user/logout">{2}</a>
             """;
     static final String loginLink = """
-                                            <a class="dropdown-item" href="" onclick="return openModalDialog('/page/user/openLogin');">{1}</a>
+                                            <a class="dropdown-item" href="" onclick="return openModalDialog('/dlgpage/user/openLogin');">{1}</a>
             """;
     static final String ulEnd = """
                                         </div>
