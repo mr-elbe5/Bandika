@@ -23,7 +23,7 @@ public class CmsTest {
     }
 
     void prepare(){
-        ServerPage.shtmlBasePath = System.getProperty("user.dir") + "/web/WEB-INF/_shtml/";
+        ServerPage.shtmlBasePath = System.getProperty("user.dir") + "/../Bandika/web/WEB-INF/_shtml/";
         System.out.println(ServerPage.shtmlBasePath);
         SPTagFactory.addTagType(SPIfTag.TYPE, SPIfTag.class);
         SPTagFactory.addTagType(SPIncludeTag.TYPE, SPIncludeTag.class);
@@ -55,7 +55,8 @@ public class CmsTest {
     }
 
     void run(){
-        ServerPage page = SPPageCache.getPage("_layout/master/defaultMaster");
+        ServerPage page = SPPageCache.getPage("user/editUser");
+        System.out.println(page.getPath());
         System.out.println(page.getCode());
     }
 

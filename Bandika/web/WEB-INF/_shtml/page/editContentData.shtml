@@ -25,7 +25,7 @@
                     </option>
                     <option value="INHERIT" {{isInheritsSelected}}>{{_accessTypeInherits}}
                     </option>
-                    <option value="INDIVIDUAL" {{isIndividualSAelected}}>{{_accessTypeIndividual}}
+                    <option value="INDIVIDUAL" {{isIndividualSelected}}>{{_accessTypeIndividual}}
                     </option>
                 </spg:select>
                 <spg:select name="navType" label="_navType">

@@ -1,6 +1,6 @@
 package de.elbe5.serverpage;
 
-import de.elbe5.base.StringMap;
+import de.elbe5.base.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,16 +35,17 @@ public class SPParser {
             }
             int tagEnd = nextOccurrenceOf(chars,endChar, tagStart);
             if (tagEnd == -1){
-                System.out.println("no tag end");
+                error("no tag end in " + page.getPath());
                 return false;
             }
             boolean selfClosing = code.charAt(tagEnd-1) == '/';
             int contentStart = tagStart + tagStartChars.length;
             int contentEnd = selfClosing ? tagEnd-1 : tagEnd;
             indices.add(new TagData(tagStart, tagEnd, code.substring(contentStart, contentEnd).trim(), true, selfClosing));
-            p1 = tagEnd+1;
+            p1 = tagEnd;
         }
         // get end tags
+        p1 = 0;
         while (true) {
             int tagStart = nextOccurrenceOf(chars, tagEndChars, p1);
             if (tagStart == -1){
@@ -52,18 +53,19 @@ public class SPParser {
             }
             int tagEnd = nextOccurrenceOf(chars,endChar, tagStart);
             if (tagEnd == -1){
-                System.out.println("no tag end");
+                error("no tag end in " + page.getPath());
                 return false;
             }
             int contentStart = tagStart + tagEndChars.length;
             indices.add(new TagData(tagStart, tagEnd, code.substring(contentStart, tagEnd).trim(), false, false));
-            p1 = tagEnd+1;
+            p1 = tagEnd;
         }
         // sort by start index
         indices.sort(null);
         int start = 0;
         // create tag and text objects
         for (TagData ip : indices){
+            log("processing "+ (ip.isStartIndex ? "tag start " : "tag end ") + ip.name + " at " + ip.start);
             if (ip.start > start){
                 addChildNode(new SPText(code.substring(start, ip.start)));
             }
@@ -88,6 +90,7 @@ public class SPParser {
 
     // add tag and put on stack top
     private void pushTag(String type, Map<String,String> params){
+        log("push tag " + type);
         SPTag tag;
         tag = SPTagFactory.createTag(type);
         tag.setParameters(params);
@@ -97,12 +100,13 @@ public class SPParser {
 
     // remove from stack top
     private boolean popTag(String type){
+        log("pop tag " + type);
         if (tagStack.size()==0){
-            System.out.println("bad closing tag: " + type);
+            error("bad closing tag: " + type + " in " + page.getPath());
             return false;
         }
         if (!tagStack.get(tagStack.size()-1).getType().equals(type)){
-            System.out.println("bad closing tag: " + type + " does not match " + tagStack.get(tagStack.size()-1).getType());
+            error("bad closing tag: " + type + " does not match " + tagStack.get(tagStack.size()-1).getType() + " in " + page.getPath());
             return false;
         }
         tagStack.remove(tagStack.size()-1);
@@ -166,7 +170,7 @@ public class SPParser {
                 name = content.trim();
                 this.content = "";
             }
-
+            log((isStartIndex ? "adding tag start " : "adding tag end ") + name + " at " + this.start);
         }
 
         public Map<String,String> getParameters(){
@@ -205,6 +209,15 @@ public class SPParser {
         public int compareTo(TagData o) {
             return start - o.start;
         }
+    }
+
+    static void log(String log){
+        //System.out.println(log);
+        //Log.log(log);
+    }
+    static void error(String err){
+        //System.out.println(err);
+        Log.error(err);
     }
 
 }
