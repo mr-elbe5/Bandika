@@ -28,7 +28,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <form:form url="/ctrl/timer/saveTimerTask" name="taskform" ajax="true">
+        <form:form url="/page/timer/saveTimerTask" name="taskform" ajax="true">
             <input type="hidden" name="timerName" value="<%=data.getName()%>"/>
             <div class="modal-body">
                 <form:formerror/>

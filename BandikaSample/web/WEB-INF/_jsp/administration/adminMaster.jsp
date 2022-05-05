@@ -56,24 +56,24 @@
                             <% if (rdata.hasSystemRight(SystemZone.APPLICATION)){%>
                             <li class="nav-item">
                                 <a class="nav-link"
-                                        href="/ctrl/admin/openSystemAdministration"><%=$SH("_systemAdministration")%>
+                                        href="/page/admin/openSystemAdministration"><%=$SH("_systemAdministration")%>
                                 </a>
                             </li>
                             <%}%>
                             <% if (rdata.hasSystemRight(SystemZone.USER)){%>
                             <li class="nav-item">
                                 <a class="nav-link"
-                                        href="/ctrl/admin/openPersonAdministration"><%=$SH("_personAdministration")%>
+                                        href="/page/admin/openPersonAdministration"><%=$SH("_personAdministration")%>
                                 </a>
                             </li>
                             <%}%>
                             <% if (rdata.hasSystemRight(SystemZone.CONTENTEDIT)){%>
                             <li class="nav-item">
-                                <a class="nav-link" href="/ctrl/admin/openContentAdministration"><%=$SH("_contentAdministration")%>
+                                <a class="nav-link" href="/page/admin/openContentAdministration"><%=$SH("_contentAdministration")%>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/ctrl/admin/openContentLog"><%=$SH("_contentLog")%>
+                                <a class="nav-link" href="/page/admin/openContentLog"><%=$SH("_contentLog")%>
                                 </a>
                             </li>
                             <%}%>

@@ -18,19 +18,19 @@ public class SPSysNavTag extends SPTag {
                                 <ul class="nav justify-content-end">
             """;
     static final String adminLink = """
-                                    <li class="nav-item"><a class="nav-link fa fa-cog" href="/ctrl/admin/openAdministration" title="{1}"></a></li>
+                                    <li class="nav-item"><a class="nav-link fa fa-cog" href="/page/admin/openAdministration" title="{1}"></a></li>
             """;
     static final String editContentLink = """
-                                    <li class="nav-item"><a class="nav-link fa fa-edit" href="/ctrl/page/openEditContentFrontend/{1}" title="{2}"></a></li>
+                                    <li class="nav-item"><a class="nav-link fa fa-edit" href="/page/cmspage/openEditContentFrontend/{1}" title="{2}"></a></li>
             """;
     static final String showDraftLink = """
-                                    <li class="nav-item"><a class="nav-link fa fa-eye-slash" href="/ctrl/page/showDraft/{1}" title="{2}" ></a></li>
+                                    <li class="nav-item"><a class="nav-link fa fa-eye-slash" href="/page/cmspage/showDraft/{1}" title="{2}" ></a></li>
             """;
     static final String showPublishedlink = """
-                                    <li class="nav-item"><a class="nav-link fa fa-eye" href="/ctrl/page/showPublished/{1}" title="{2}"></a></li>
+                                    <li class="nav-item"><a class="nav-link fa fa-eye" href="/page/cmspage/showPublished/{1}" title="{2}"></a></li>
             """;
     static final String approveLink = """
-                                    <li class="nav-item"><a class="nav-link fa fa-thumbs-up" href="/ctrl/page/publishPage/{1}" title="{2}"></a></li>
+                                    <li class="nav-item"><a class="nav-link fa fa-thumbs-up" href="/page/cmspage/publishPage/{1}" title="{2}"></a></li>
             """;
     static final String userDropdownStart = """
                                     <li class="nav-item">
@@ -38,11 +38,11 @@ public class SPSysNavTag extends SPTag {
                                         <div class="dropdown-menu">
             """;
     static final String userDropdownLinks = """
-                                            <a class="dropdown-item" href="/ctrl/user/openProfile">{1}</a>
-                                            <a class="dropdown-item" href="/ctrl/user/logout">{2}</a>
+                                            <a class="dropdown-item" href="/page/user/openProfile">{1}</a>
+                                            <a class="dropdown-item" href="/page/user/logout">{2}</a>
             """;
     static final String loginLink = """
-                                            <a class="dropdown-item" href="" onclick="return openModalDialog('/ctrl/user/openLogin');">{1}</a>
+                                            <a class="dropdown-item" href="" onclick="return openModalDialog('/page/user/openLogin');">{1}</a>
             """;
     static final String ulEnd = """
                                         </div>

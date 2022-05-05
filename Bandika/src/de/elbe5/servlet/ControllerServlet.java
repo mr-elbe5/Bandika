@@ -30,8 +30,12 @@ public class ControllerServlet extends WebServlet {
         request.setCharacterEncoding(Configuration.ENCODING);
         String uri = request.getRequestURI();
         RequestType requestType = RequestType.any;
-        if (uri.startsWith("/ctrl/")){
-            requestType = RequestType.control;
+        if (uri.startsWith("/page/")){
+            requestType = RequestType.page;
+            uri = uri.substring(6);
+        }
+        else if (uri.startsWith("/dlg/")){
+            requestType = RequestType.dialog;
             uri = uri.substring(6);
         }
         else if (uri.startsWith("/api/")){

@@ -8,7 +8,7 @@
                 <ul>
                     <spg:if condition="{{hasSystemRights}}" >
                     <li>
-                        <a href="" onclick="if (confirmExecute()) return openModalDialog('/ctrl/admin/restart');">{{_restart}}
+                        <a href="" onclick="if (confirmExecute()) return openModalDialog('/page/admin/restart');">{{_restart}}
                         </a>
                     <li class="open">
                         <a>{{_caches}}
@@ -17,19 +17,19 @@
                             <li>
                                 <span>{{_userCache}}</span>
                                 <div class="icons">
-                                    <a class="icon fa fa-recycle" href="/ctrl/admin/reloadUserCache" title="{{_reload}}"></a>
+                                    <a class="icon fa fa-recycle" href="/page/admin/reloadUserCache" title="{{_reload}}"></a>
                                 </div>
                             </li>
                             <li>
                                 <span>{{_contentCache}}</span>
                                 <div class="icons">
-                                    <a class="icon fa fa-recycle" href="/ctrl/admin/reloadContentCache" title="{{_reload}}"></a>
+                                    <a class="icon fa fa-recycle" href="/page/admin/reloadContentCache" title="{{_reload}}"></a>
                                 </div>
                             </li>
                             <li>
                                 <span>{{_previewCache}}</span>
                                 <div class="icons">
-                                    <a class="icon fa fa-recycle" href="/ctrl/admin/clearPreviewCache" title="{{_clear}}"></a>
+                                    <a class="icon fa fa-recycle" href="/page/admin/clearPreviewCache" title="{{_clear}}"></a>
                                 </div>
                             </li>
                         </ul>

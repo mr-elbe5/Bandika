@@ -12,7 +12,8 @@ package de.elbe5.request;
 public enum RequestType {
     any,
     content,
-    control,
+    page,
+    dialog,
     api,
     file
 }

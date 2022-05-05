@@ -21,7 +21,7 @@
     GroupData group = rdata.getSessionObject("groupData",GroupData.class);
     List<UserData> users = UserBean.getInstance().getAllUsers();
     String name, label;
-    String url = "/ctrl/group/saveGroup/" + group.getId();
+    String url = "/page/group/saveGroup/" + group.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">

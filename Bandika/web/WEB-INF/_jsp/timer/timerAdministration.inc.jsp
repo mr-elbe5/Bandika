@@ -33,7 +33,7 @@
         <li>
             <span><%=$H(task.getDisplayName())%></span>
             <div class="icons">
-                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/timer/openEditTimerTask?timerName=<%=task.getName()%>');" title="<%=$SH("_edit")%>"></a>
+                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/page/timer/openEditTimerTask?timerName=<%=task.getName()%>');" title="<%=$SH("_edit")%>"></a>
             </div>
         </li>
         <%

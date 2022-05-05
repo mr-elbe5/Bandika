@@ -38,7 +38,7 @@
             </form:line>
             <form:line label="_notes"><%=$H(user.getNotes())%>
             </form:line>
-            <form:line label="_portrait"><% if (user.hasPortrait()) {%><img src="/ctrl/user/showPortrait/<%=user.getId()%>" alt="<%=$H(user.getName())%>"/> <%}%>
+            <form:line label="_portrait"><% if (user.hasPortrait()) {%><img src="/page/user/showPortrait/<%=user.getId()%>" alt="<%=$H(user.getName())%>"/> <%}%>
             </form:line>
             <h3><%=$SH("_address")%>
             </h3>
@@ -66,11 +66,11 @@
         <div class="section">
             <div class="paragraph form">
                 <div>
-                    <a class="link" href="#" onclick="return openModalDialog('/ctrl/user/openChangePassword');"><%=$SH("_changePassword")%>
+                    <a class="link" href="#" onclick="return openModalDialog('/page/user/openChangePassword');"><%=$SH("_changePassword")%>
                     </a>
                 </div>
                 <div>
-                    <a class="link" href="#" onclick="return openModalDialog('/ctrl/user/openChangeProfile');"><%=$SH("_changeProfile")%>
+                    <a class="link" href="#" onclick="return openModalDialog('/page/user/openChangeProfile');"><%=$SH("_changeProfile")%>
                     </a>
                 </div>
             </div>

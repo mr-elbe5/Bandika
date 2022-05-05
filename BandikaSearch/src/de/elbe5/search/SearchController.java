@@ -77,14 +77,14 @@ public class SearchController extends Controller {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         SearchQueue.getInstance().addAction(SearchQueue.ACTION_INDEX_PAGES);
         rdata.setMessage(LocalizedStrings.string("_indexingContentQueued"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return new ForwardResponse("/ctrl/admin/openSystemAdministration");
+        return new ForwardResponse("/page/admin/openSystemAdministration");
     }
 
     public IResponse indexAllUsers(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         SearchQueue.getInstance().addAction(SearchQueue.ACTION_INDEX_USERS);
         rdata.setMessage(LocalizedStrings.string("_indexingUsersQueued"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return new ForwardResponse("/ctrl/admin/openSystemAdministration");
+        return new ForwardResponse("/page/admin/openSystemAdministration");
     }
 
     protected IResponse showSearch() {

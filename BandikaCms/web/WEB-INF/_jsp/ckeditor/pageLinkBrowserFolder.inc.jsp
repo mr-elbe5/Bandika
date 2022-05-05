@@ -19,7 +19,7 @@
     ContentData contentData = rdata.getRequestObject("treePage", ContentData.class);
 %>
 <li class="open">
-    <a id="<%=contentData.getId()%>" href="" onclick="return ckLinkCallback('/ctrl/content/show/<%=contentData.getId()%>');"><%=contentData.getName()%>
+    <a id="<%=contentData.getId()%>" href="" onclick="return ckLinkCallback('/page/content/show/<%=contentData.getId()%>');"><%=contentData.getName()%>
     </a>
     <ul>
         <% if (!contentData.getChildren().isEmpty()) {

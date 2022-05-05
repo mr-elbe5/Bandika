@@ -29,11 +29,13 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>file</servlet-name>
-        <url-pattern>/files/*</url-pattern>
+        <url-pattern>/file/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>controller</servlet-name>
-        <url-pattern>/ctrl/*</url-pattern>
+        <url-pattern>/page/*</url-pattern>
+        <url-pattern>/dlg/*</url-pattern>
+        <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 
     <listener>

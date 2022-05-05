@@ -19,7 +19,7 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     LinkData contentData = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, LinkData.class);
-    String url = "/ctrl/content/saveContentData/" + contentData.getId();
+    String url = "/page/content/saveContentData/" + contentData.getId();
     UserData creator = UserCache.getUser(contentData.getCreatorId());
     String creatorName = creator == null ? "" : creator.getName();
     UserData changer = UserCache.getUser(contentData.getChangerId());

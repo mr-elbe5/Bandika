@@ -23,8 +23,16 @@ public class HtmlResponse implements IResponse {
     public HtmlResponse() {
     }
 
+    public HtmlResponse(String html) {
+        this.html = html;
+    }
+
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
+        sendHtml(response);
+    }
+
+    public void sendHtml(HttpServletResponse response){
         try {
             ServletOutputStream out = response.getOutputStream();
             response.setHeader("Access-Control-Allow-Origin", "*");

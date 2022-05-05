@@ -71,8 +71,7 @@ public class CompanyController extends Controller {
         }
         CompanyBean.getInstance().saveCompany(data);
         CompanyCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_companySaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogResponse("/ctrl/admin/openPersonAdministration?companyId=" + data.getId());
+        return new CloseDialogResponse("/page/admin/openPersonAdministration?companyId=" + data.getId(), LocalizedStrings.string("_companySaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse deleteCompany(RequestData rdata) {
@@ -80,12 +79,12 @@ public class CompanyController extends Controller {
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
             rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
-            return new ForwardResponse("/ctrl/admin/openPersonAdministration");
+            return new ForwardResponse("/page/admin/openPersonAdministration");
         }
         CompanyBean.getInstance().deleteCompany(id);
         CompanyCache.setDirty();
         rdata.setMessage(LocalizedStrings.string("_companyDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return new ForwardResponse("/ctrl/admin/openPersonAdministration");
+        return new ForwardResponse("/page/admin/openPersonAdministration");
     }
 
     protected IResponse showEditCompany() {

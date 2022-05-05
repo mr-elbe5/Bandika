@@ -25,18 +25,18 @@
             <%if (contentData.hasUserEditRight(rdata)) {%>
             <div class="icons">
                 <% if (rdata.hasClipboardData(ContentRequestKeys.KEY_IMAGE)) {%>
-                <a class="icon fa fa-paste" href="/ctrl/image/pasteImage?parentId=<%=contentData.getId()%>" title="<%=$SH("_pasteImage")%>"> </a>
+                <a class="icon fa fa-paste" href="/page/image/pasteImage?parentId=<%=contentData.getId()%>" title="<%=$SH("_pasteImage")%>"> </a>
                 <%}
                     if (!imageTypes.isEmpty()) {
                         if (imageTypes.size() == 1){%>
-                <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/image/openCreateImage?parentId=<%=contentData.getId()%>&type=<%=imageTypes.get(0)%>');" title="<%=$SH("_newImage")%>"></a>
+                <a class="icon fa fa-plus" onclick="return openModalDialog('/page/image/openCreateImage?parentId=<%=contentData.getId()%>&type=<%=imageTypes.get(0)%>');" title="<%=$SH("_newImage")%>"></a>
                     <%} else {%>
                 <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="<%=$SH("_newImage")%>"></a>
                 <div class="dropdown-menu">
                     <%for (String imageType : imageTypes) {
                         String name = $SH("class."+imageType);
                     %>
-                    <a class="dropdown-item" onclick="return openModalDialog('/ctrl/image/openCreateImage?parentId=<%=contentData.getId()%>&type=<%=imageType%>');"><%=name%>
+                    <a class="dropdown-item" onclick="return openModalDialog('/page/image/openCreateImage?parentId=<%=contentData.getId()%>&type=<%=imageType%>');"><%=name%>
                     </a>
                     <%}%>
                 </div>
@@ -53,16 +53,16 @@
                         <span class="treeImage" id="<%=image.getId()%>">
                             <%=image.getDisplayName()%>
                             <span class="hoverImage">
-                                <img src="/ctrl/image/showPreview/<%=image.getId()%>" alt="<%=$H(image.getFileName())%>"/>
+                                <img src="/page/image/showPreview/<%=image.getId()%>" alt="<%=$H(image.getFileName())%>"/>
                             </span>
                         </span>
                         <div class="icons">
                             <a class="icon fa fa-eye" href="<%=image.getURL()%>" target="_blank" title="<%=$SH("_view")%>"> </a>
                             <a class="icon fa fa-download" href="<%=image.getURL()%>?download=true" title="<%=$SH("_download")%>"> </a>
-                            <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/image/openEditImage/<%=image.getId()%>');" title="<%=$SH("_edit")%>"> </a>
-                            <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/image/cutImage/<%=image.getId()%>');" title="<%=$SH("_cut")%>"> </a>
-                            <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/image/copyImage/<%=image.getId()%>');" title="<%=$SH("_copy")%>"> </a>
-                            <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/image/deleteImage/<%=image.getId()%>');" title="<%=$SH("_delete")%>"> </a>
+                            <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/page/image/openEditImage/<%=image.getId()%>');" title="<%=$SH("_edit")%>"> </a>
+                            <a class="icon fa fa-scissors" href="" onclick="return linkTo('/page/image/cutImage/<%=image.getId()%>');" title="<%=$SH("_cut")%>"> </a>
+                            <a class="icon fa fa-copy" href="" onclick="return linkTo('/page/image/copyImage/<%=image.getId()%>');" title="<%=$SH("_copy")%>"> </a>
+                            <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/page/image/deleteImage/<%=image.getId()%>');" title="<%=$SH("_delete")%>"> </a>
                         </div>
                     </div>
                 </li>

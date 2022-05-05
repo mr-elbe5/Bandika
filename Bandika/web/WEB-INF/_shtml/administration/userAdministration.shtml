@@ -10,7 +10,7 @@
                     <li class="open">
                         <span>{{_groups}}</span>
                         <div class="icons">
-                            <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/ajax/group/openCreateGroup');" title="{{_new}}"> </a>
+                            <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/dlg/group/openCreateGroup');" title="{{_new}}"> </a>
                         </div>
                         <ul>
                         <spg:grouplist />
@@ -19,7 +19,7 @@
                     <li class="open">
                         <span>{{_users}}</span>
                         <div class="icons">
-                            <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/ajax/user/openCreateUser');" title="{{_new}}"> </a>
+                            <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/dlg/user/openCreateUser');" title="{{_new}}"> </a>
                         </div>
                         <ul>
                         <spg:userlist />

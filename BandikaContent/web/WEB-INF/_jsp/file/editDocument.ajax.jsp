@@ -17,7 +17,7 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     DocumentData documentData = rdata.getSessionObject(ContentRequestKeys.KEY_DOCUMENT,DocumentData.class);
-    String url = "/ctrl/document/saveDocument/" + documentData.getId();
+    String url = "/page/document/saveDocument/" + documentData.getId();
     boolean fileRequired= documentData.isNew();
 %>
 <div class="modal-dialog modal-lg" role="document">

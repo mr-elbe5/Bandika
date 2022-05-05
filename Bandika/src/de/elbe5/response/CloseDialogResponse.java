@@ -8,34 +8,88 @@
  */
 package de.elbe5.response;
 
+import de.elbe5.base.StringFormatter;
+import de.elbe5.base.StringHelper;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
-public class CloseDialogResponse extends ServerPageResponse {
+public class CloseDialogResponse extends HtmlResponse {
 
+    String url;
+    String msg = "";
+    String msgType = "";
     private String targetId = "";
 
-    public CloseDialogResponse(String path) {
-        super(path);
+    static final String dialogHtmlStart = """
+            <div id="pageContent">
+                <form action="{1}" method="POST" id="forwardform" accept-charset="UTF-8">
+                """;
+    static final String dialogMsg = """
+                    <input type="hidden" name="message" value="{msg}"/>
+                    <input type="hidden" name="messageType" value="{msgType}"/>
+                    """;
+    static final String dialogHtmlEnd = """
+                </form>
+            </div>
+            <script type="text/javascript">
+                $('#forwardform').submit();
+            </script>
+            """;
+
+    static final String targetedHtml = """
+            <div id="pageContent"></div>
+            <script type="text/javascript">
+                    let $dlg = $(MODAL_DLG_JQID);
+                    $dlg.html('');
+                    $dlg.modal('hide');
+                    $('.modal-backdrop').remove();
+                    postByAjax('{1}', {2}, '{3}');
+            </script>
+            """;
+
+    public CloseDialogResponse(String url){
+        this.url = url;
     }
 
-    public CloseDialogResponse(String path, String targetId) {
-        super(path);
+    public CloseDialogResponse(String url, String msg, String msgType){
+        this.url = url;
+        this.msg = msg;
+        this.msgType = msgType;
+    }
+    public CloseDialogResponse(String url, String msg, String msgType, String targetId){
+        this.url = url;
+        this.msg = msg;
+        this.msgType = msgType;
         this.targetId = targetId;
     }
 
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
-        rdata.getAttributes().put(RequestKeys.KEY_URL, path);
-        if (!targetId.isEmpty())
-            rdata.getAttributes().put(RequestKeys.KEY_TARGETID, targetId);
-        path = "closeDialog";
-        super.processResponse(context, rdata, response);
+        if (targetId.isEmpty()) {
+            html = StringFormatter.format(dialogHtmlStart,
+                    url);
+            if (!msg.isEmpty()) {
+                html += StringFormatter.format(dialogMsg,
+                        StringHelper.toHtml(msg),
+                        msgType);
+            }
+            html += dialogHtmlEnd;
+        }
+        else{
+            StringBuilder sb = new StringBuilder("{");
+            if (!msg.isEmpty()) {
+                sb.append(RequestKeys.KEY_MESSAGE).append(" : '").append(StringHelper.toJs(msg)).append("',");
+                sb.append(RequestKeys.KEY_MESSAGETYPE).append(" : '").append(StringHelper.toJs(msgType)).append("'");
+            }
+            sb.append("}");
+            html = StringFormatter.format(targetedHtml,
+                    url,
+                    sb.toString(),
+                    StringHelper.toJs(targetId));
+        }
+        super.sendHtml(response);
     }
 }

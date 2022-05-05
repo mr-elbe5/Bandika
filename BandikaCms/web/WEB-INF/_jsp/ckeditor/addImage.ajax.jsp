@@ -25,7 +25,7 @@
 <li>
     <div class="treeline">
         <a id="<%=image.getId()%>" href="" onclick="return ckImgCallback('<%=image.getURL()%>');">
-            <img src="/ctrl/image/showPreview/<%=image.getId()%>" alt="<%=$H(image.getDisplayName())%>"/>
+            <img src="/page/image/showPreview/<%=image.getId()%>" alt="<%=$H(image.getDisplayName())%>"/>
             <%=$H(image.getDisplayName())%>
         </a>
         <a class="fa fa-eye" title="<%=$SH("_view")%>" href="<%=image.getURL()%>" target="_blank"> </a>

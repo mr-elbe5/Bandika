@@ -20,7 +20,7 @@
     String contactName = rdata.getAttributes().getString("contactName");
     String contactEmail = rdata.getAttributes().getString("contactEmail");
     String contactMessage = rdata.getAttributes().getString("contactMessage");
-    String url = "/ctrl/page/sendContact/" + contentData.getId();
+    String url = "/page/cmspage/sendContact/" + contentData.getId();
     boolean editing = contentData.isEditing();
 %>
 <% if (!editing) {%>
@@ -31,7 +31,7 @@
                 <form:textarea name="contactMessage" label="_message" required="true" height="10rem"><%=$H(contactMessage)%>
                 </form:textarea>
                 <form:line label="" padded="true">
-                    <img src="/ctrl/user/showCaptcha?v=<%=Long.toString(new Date().getTime())%>" alt="" />
+                    <img src="/page/user/showCaptcha?v=<%=Long.toString(new Date().getTime())%>" alt="" />
                 </form:line>
                 <form:text name="captcha" required="true" label="_captcha" value=""/>
                 <form:line label="" padded="true">
@@ -50,7 +50,7 @@
             <form:textarea name="contactMessage" label="_message" required="true" height="10rem"><%=$H(contactMessage)%>
             </form:textarea>
             <form:line label="" padded="true">
-                <img src="/ctrl/user/showCaptcha?v=<%=Long.toString(new Date().getTime())%>" alt="" />
+                <img src="/page/user/showCaptcha?v=<%=Long.toString(new Date().getTime())%>" alt="" />
             </form:line>
             <form:text name="captcha" required="true" label="_captcha" value=""/>
             <form:line label="" padded="true">

@@ -15,11 +15,11 @@ function closeModalDialog() {
     return false;
 }
 
-function postByAjax(url, params, identifier) {
+function postByAjax(url, params, target) {
     $.ajax({
         url: url, type: 'POST', data: params, cache: false, dataType: 'html'
     }).success(function (html, textStatus) {
-        $(identifier).html(html);
+        $(target).html(html);
     });
     return false;
 }

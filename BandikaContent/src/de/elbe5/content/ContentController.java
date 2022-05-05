@@ -112,8 +112,7 @@ public class ContentController extends Controller {
         data.setNew(false);
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
         ContentCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_contentSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
+        return new CloseDialogResponse("/page/admin/openContentAdministration?contentId=" + data.getId(), LocalizedStrings.string("_contentSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     //backend
@@ -142,8 +141,7 @@ public class ContentController extends Controller {
         }
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
         ContentCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_rightsSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
+        return new CloseDialogResponse("/page/admin/openContentAdministration?contentId=" + data.getId(), LocalizedStrings.string("_rightsSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     //backend
@@ -248,8 +246,7 @@ public class ContentController extends Controller {
         ContentBean.getInstance().updateChildRankings(data);
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
         ContentCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_newRankingSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + contentId);
+        return new CloseDialogResponse("/page/admin/openContentAdministration?contentId=" + contentId, LocalizedStrings.string("_newRankingSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse openCreateContentFrontend(RequestData rdata) {
@@ -292,7 +289,7 @@ public class ContentController extends Controller {
     }
 
     protected IResponse showContentAdministration(RequestData rdata, int contentId) {
-        return new ForwardResponse("/ctrl/admin/openContentAdministration?contentId=" + contentId);
+        return new ForwardResponse("/page/admin/openContentAdministration?contentId=" + contentId);
     }
 
 }

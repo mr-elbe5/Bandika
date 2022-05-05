@@ -19,7 +19,7 @@
     RequestData rdata = RequestData.getRequestData(request);
     CompanyData company = rdata.getSessionObject("companyData",CompanyData.class);
     List<UserData> users = UserBean.getInstance().getCompanyUsers(company.getId());
-    String url = "/ctrl/company/saveCompany/" + company.getId();
+    String url = "/page/company/saveCompany/" + company.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">

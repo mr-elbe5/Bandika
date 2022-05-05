@@ -23,7 +23,7 @@
     ContentData contentData = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
     List<GroupData> groups = GroupBean.getInstance().getAllGroups();
     String label, name;
-    String url = "/ctrl/content/saveRights/" + contentData.getId();%>
+    String url = "/page/content/saveRights/" + contentData.getId();%>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">

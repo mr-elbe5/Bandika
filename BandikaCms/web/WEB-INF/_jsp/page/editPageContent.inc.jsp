@@ -17,10 +17,10 @@
     RequestData rdata = RequestData.getRequestData(request);
     PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
 %>
-    <form action="/ctrl/page/saveContentFrontend/<%=contentData.getId()%>" method="post" id="pageform" name="pageform" accept-charset="UTF-8">
+    <form action="/page/cmspage/saveContentFrontend/<%=contentData.getId()%>" method="post" id="pageform" name="pageform" accept-charset="UTF-8">
         <div class="btn-group btn-group-sm pageEditButtons">
             <button type="submit" class="btn btn-sm btn-success" onclick="updateEditors();"><%=$SH("_savePage")%></button>
-            <button class="btn btn-sm btn-secondary" onclick="return linkTo('/ctrl/page/cancelEditContentFrontend/<%=contentData.getId()%>');"><%=$SH("_cancel")%></button>
+            <button class="btn btn-sm btn-secondary" onclick="return linkTo('/page/cmspage/cancelEditContentFrontend/<%=contentData.getId()%>');"><%=$SH("_cancel")%></button>
         </div>
         <jsp:include page="<%=contentData.getLayoutUrl()%>" flush="true" />
     </form>
@@ -67,7 +67,7 @@
                 layout: layout
             };
             $.ajax({
-                url: '/ctrl/page/addPart/'+<%=contentData.getId()%>,
+                url: '/page/cmspage/addPart/'+<%=contentData.getId()%>,
                 type: 'POST',
                 data: data,
                 dataType: 'html'

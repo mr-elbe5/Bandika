@@ -28,7 +28,7 @@ public class SPUserListTag extends SPTag {
                         <li class="open">
                             <span>{1}</span>
                             <div class="icons">
-                                <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/ctrl/user/openCreateUser');" title="{2}"> </a>
+                                <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/page/user/openCreateUser');" title="{2}"> </a>
                             </div>
                             <ul>
                             """,
@@ -40,7 +40,7 @@ public class SPUserListTag extends SPTag {
                                 <li class="{1}">
                                 <span>{2}&nbsp;({3})</span>
                                 <div class="icons">
-                                    <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/user/openEditUser/{4}');" title="{5}"> </a>
+                                    <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/page/user/openEditUser/{4}');" title="{5}"> </a>
                                     """,
                         userId == user.getId() ? "selected" : "",
                         toHtml(user.getName()),
@@ -49,7 +49,7 @@ public class SPUserListTag extends SPTag {
                         localizedString("_edit")));
                 if (user.getId() != UserData.ID_ROOT) {
                     sb.append(format("""
-                                    <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/user/deleteUser/{1}');" title="{2}"> </a>
+                                    <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/page/user/deleteUser/{1}');" title="{2}"> </a>
                                     """,
                             Integer.toString(user.getId()),
                             localizedString("_delete")));

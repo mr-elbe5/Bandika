@@ -21,7 +21,7 @@
     RequestData rdata = RequestData.getRequestData(request);
     ContentData contentData = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
     //todo js
-    String url = "/ctrl/content/saveChildPageRanking/" + contentData.getId();%>
+    String url = "/page/content/saveChildPageRanking/" + contentData.getId();%>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">

@@ -72,8 +72,7 @@ public class GroupController extends Controller {
         }
         GroupBean.getInstance().saveGroup(data);
         UserCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_groupSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogResponse("/ctrl/admin/openPersonAdministration?groupId=" + data.getId());
+        return new CloseDialogResponse("/page/admin/openPersonAdministration?groupId=" + data.getId(), LocalizedStrings.string("_groupSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse deleteGroup(RequestData rdata) {
@@ -81,12 +80,12 @@ public class GroupController extends Controller {
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
             rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
-            return new ForwardResponse("/ctrl/admin/openPersonAdministration");
+            return new ForwardResponse("/page/admin/openPersonAdministration");
         }
         GroupBean.getInstance().deleteGroup(id);
         UserCache.setDirty();
         rdata.setMessage(LocalizedStrings.string("_groupDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return new ForwardResponse("/ctrl/admin/openPersonAdministration");
+        return new ForwardResponse("/page/admin/openPersonAdministration");
     }
 
     protected IResponse showEditGroup() {

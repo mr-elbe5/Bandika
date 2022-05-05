@@ -18,7 +18,7 @@ public class SPHtmlFieldTag extends SPTag {
                     <div class="ckeditField" id="{1}" contenteditable="true">{2}</div>
                     <input type="hidden" name="{3}" value="{4}" />
                     <script type="text/javascript">
-                        $('#{5}').ckeditor({toolbar : 'Full',filebrowserBrowseUrl : '/ctrl/ckeditor/openLinkBrowser?contentId={6}',filebrowserImageBrowseUrl : '/ctrl/ckeditor/openImageBrowser?contentId={7}'});
+                        $('#{5}').ckeditor({toolbar : 'Full',filebrowserBrowseUrl : '/page/ckeditor/openLinkBrowser?contentId={6}',filebrowserImageBrowseUrl : '/page/ckeditor/openImageBrowser?contentId={7}'});
                     </script>""";
 
     public SPHtmlFieldTag(){

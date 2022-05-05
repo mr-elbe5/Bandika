@@ -82,7 +82,7 @@ public class BandikaInitServlet extends InitServlet {
         SPTagFactory.addTagType(SPIncludeTag.TYPE, SPIncludeTag.class);
         SPTagFactory.addTagType(SPBreadcrumbTag.TYPE, SPBreadcrumbTag.class);
         SPTagFactory.addTagType(SPContentTag.TYPE, SPContentTag.class);
-        SPTagFactory.addTagType(SPContentTreeTag.TYPE, SPContentTreeTag.class);
+        SPTagFactory.addTagType(SPContentAdminTreeTag.TYPE, SPContentAdminTreeTag.class);
         SPTagFactory.addTagType(SPFooterTag.TYPE, SPFooterTag.class);
         SPTagFactory.addTagType(SPFormTag.TYPE, SPFormTag.class);
         SPTagFactory.addTagType(SPFormCheckTag.TYPE, SPFormCheckTag.class);
@@ -107,7 +107,7 @@ public class BandikaInitServlet extends InitServlet {
 
         SPTagFactory.addTagType(SPBreadcrumbTag.TYPE, SPBreadcrumbTag.class);
         SPTagFactory.addTagType(SPContentTag.TYPE, SPContentTag.class);
-        SPTagFactory.addTagType(SPContentTreeTag.TYPE, SPContentTreeTag.class);
+        SPTagFactory.addTagType(SPContentAdminTreeTag.TYPE, SPContentAdminTreeTag.class);
         SPTagFactory.addTagType(SPFooterTag.TYPE, SPFooterTag.class);
         SPTagFactory.addTagType(SPMainNavTag.TYPE, SPMainNavTag.class);
         SPTagFactory.addTagType(SPSysNavTag.TYPE, SPSysNavTag.class);

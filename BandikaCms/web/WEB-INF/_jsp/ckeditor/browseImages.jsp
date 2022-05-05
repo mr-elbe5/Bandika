@@ -67,7 +67,7 @@
             let formData = new FormData();
             formData.append('file', file);
             $.ajax({
-                url: '/ctrl/ckeditor/addImage/<%=data.getId()%>',
+                url: '/page/ckeditor/addImage/<%=data.getId()%>',
                 type: 'POST',
                 data: formData,
                 cache: false,

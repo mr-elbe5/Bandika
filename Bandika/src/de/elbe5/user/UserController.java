@@ -8,8 +8,6 @@
  */
 package de.elbe5.user;
 
-import de.elbe5.application.Configuration;
-import de.elbe5.application.MailHelper;
 import de.elbe5.base.BaseData;
 import de.elbe5.base.BinaryFile;
 import de.elbe5.base.LocalizedStrings;
@@ -120,8 +118,7 @@ public class UserController extends Controller {
         if (rdata.getUserId() == data.getId()) {
             rdata.setSessionUser(data);
         }
-        rdata.setMessage(LocalizedStrings.string("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogResponse("/ctrl/admin/openPersonAdministration?userId=" + data.getId());
+        return new CloseDialogResponse("/page/admin/openPersonAdministration?userId=" + data.getId(), LocalizedStrings.string("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse deleteUser(RequestData rdata) {
@@ -129,12 +126,12 @@ public class UserController extends Controller {
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
             rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
-            return new ForwardResponse("/ctrl/admin/openPersonAdministration");
+            return new ForwardResponse("/page/admin/openPersonAdministration");
         }
         UserBean.getInstance().deleteUser(id);
         UserCache.setDirty();
         rdata.setMessage(LocalizedStrings.string("_userDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return new ForwardResponse("/ctrl/admin/openPersonAdministration");
+        return new ForwardResponse("/page/admin/openPersonAdministration");
     }
 
     public IResponse showPortrait(RequestData rdata) {
@@ -184,8 +181,7 @@ public class UserController extends Controller {
         }
         data.setPassword(newPassword);
         UserBean.getInstance().saveUserPassword(data);
-        rdata.setMessage(LocalizedStrings.string("_passwordChanged"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogResponse("/ctrl/user/openProfile");
+        return new CloseDialogResponse("/page/user/openProfile", LocalizedStrings.string("_passwordChanged"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse openChangeProfile(RequestData rdata) {
@@ -204,8 +200,7 @@ public class UserController extends Controller {
         UserBean.getInstance().saveUserProfile(data);
         rdata.setSessionUser(data);
         UserCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogResponse("/ctrl/user/openProfile");
+        return new CloseDialogResponse("/page/user/openProfile", LocalizedStrings.string("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
     
     protected IResponse showProfile() {

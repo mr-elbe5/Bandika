@@ -22,7 +22,7 @@
 <section class="contentTop">
     <h1><%=$SH("_search")%>
     </h1>
-    <form action="/ctrl/search/search" method="post" id="searchboxform" name="searchboxform" accept-charset="UTF-8">
+    <form action="/page/search/search" method="post" id="searchboxform" name="searchboxform" accept-charset="UTF-8">
         <div class="input-group">
             <label for="searchPattern"></label><input class="form-control mr-sm-2" id="searchPattern" name="searchPattern" maxlength="60" value="<%=$H(pageResult.getPattern())%>"/>
             <button class="btn btn-outline-primary my-2 my-sm-0" type="submit"><%=$SH("_search")%>

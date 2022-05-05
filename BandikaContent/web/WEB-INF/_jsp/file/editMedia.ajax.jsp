@@ -17,7 +17,7 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     MediaData mediaData = rdata.getSessionObject(ContentRequestKeys.KEY_MEDIA,MediaData.class);
-    String url = "/ctrl/media/saveMedia/" + mediaData.getId();
+    String url = "/page/media/saveMedia/" + mediaData.getId();
     boolean fileRequired= mediaData.isNew();
 %>
 <div class="modal-dialog modal-lg" role="document">

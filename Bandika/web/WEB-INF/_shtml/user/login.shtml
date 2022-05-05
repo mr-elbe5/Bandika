@@ -8,7 +8,7 @@
             </button>
         </div>
 
-        <spg:form url="/ctrl/user/login" name="loginForm" ajax="true" >
+        <spg:form url="/page/user/login" name="loginForm" ajax="true" >
             <div class="modal-body">
                 <spg:formerror/>
                 <div class="form-group">

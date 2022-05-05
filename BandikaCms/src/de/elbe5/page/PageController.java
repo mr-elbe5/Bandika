@@ -33,7 +33,7 @@ import java.time.Duration;
 
 public class PageController extends ContentController {
 
-    public static final String KEY = "page";
+    public static final String KEY = "cmspage";
 
     private static PageController instance = null;
 
@@ -163,7 +163,7 @@ public class PageController extends ContentController {
             String uri = rdata.getRequest().getRequestURI();
             int idx = url.lastIndexOf(uri);
             url = url.substring(0, idx);
-            url +="/ctrl/page/publishPage/"+contentId;
+            url +="/page/cmspage/publishPage/"+contentId;
             try {
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(url))
@@ -180,7 +180,7 @@ public class PageController extends ContentController {
                 Log.error("could not send publishing request", e);
             }
         }
-        return new ForwardResponse("/ctrl/admin/openContentAdministration");
+        return new ForwardResponse("/page/admin/openContentAdministration");
     }
 
     public IResponse addPart(RequestData rdata) {

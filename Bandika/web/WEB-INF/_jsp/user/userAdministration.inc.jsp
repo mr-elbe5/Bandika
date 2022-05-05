@@ -27,7 +27,7 @@
 <li class="open">
     <span><%=$SH("_users")%></span>
     <div class="icons">
-        <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/ctrl/user/openCreateUser');" title="<%=$SH("_new")%>"> </a>
+        <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/page/user/openCreateUser');" title="<%=$SH("_new")%>"> </a>
     </div>
     <ul>
         <%
@@ -37,9 +37,9 @@
         <li class="<%=userId==user.getId() ? "selected" : ""%>">
             <span><%=$H(user.getName())%>&nbsp;(<%=user.getId()%>)</span>
             <div class="icons">
-                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/user/openEditUser/<%=user.getId()%>');" title="<%=$SH("_edit")%>"> </a>
+                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/page/user/openEditUser/<%=user.getId()%>');" title="<%=$SH("_edit")%>"> </a>
                 <% if (user.getId() != UserData.ID_ROOT) {%>
-                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/user/deleteUser/<%=user.getId()%>');" title="<%=$SH("_delete")%>"> </a>
+                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/page/user/deleteUser/<%=user.getId()%>');" title="<%=$SH("_delete")%>"> </a>
             </div>
             <%}%>
         </li>

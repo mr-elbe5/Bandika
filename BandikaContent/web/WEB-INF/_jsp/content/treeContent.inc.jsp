@@ -19,7 +19,7 @@
 %>
 <li class="open">
     <span class="<%=contentData.hasUnpublishedDraft() ? "unpublished" : "published"%>">
-        <a href="/ctrl/content/show/<%=contentData.getId()%>"><%=$H(contentData.getDisplayName())%></a>
+        <a href="/page/content/show/<%=contentData.getId()%>"><%=$H(contentData.getDisplayName())%></a>
     </span>
     <ul>
         <%if (contentData.hasChildren()) {

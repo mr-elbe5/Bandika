@@ -1,11 +1,9 @@
-import de.elbe5.application.ApplicationPath;
 import de.elbe5.application.Configuration;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestType;
 import de.elbe5.serverpage.SPPageCache;
 import de.elbe5.serverpage.SPTagFactory;
 import de.elbe5.serverpage.ServerPage;
-import de.elbe5.serverpage.SPParser;
 import de.elbe5.serverpagetags.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +29,7 @@ public class CmsTest {
         SPTagFactory.addTagType(SPIncludeTag.TYPE, SPIncludeTag.class);
         SPTagFactory.addTagType(SPBreadcrumbTag.TYPE, SPBreadcrumbTag.class);
         SPTagFactory.addTagType(SPContentTag.TYPE, SPContentTag.class);
-        SPTagFactory.addTagType(SPContentTreeTag.TYPE, SPContentTreeTag.class);
+        SPTagFactory.addTagType(SPContentAdminTreeTag.TYPE, SPContentAdminTreeTag.class);
         SPTagFactory.addTagType(SPFooterTag.TYPE, SPFooterTag.class);
         SPTagFactory.addTagType(SPFormTag.TYPE, SPFormTag.class);
         SPTagFactory.addTagType(SPFormCheckTag.TYPE, SPFormCheckTag.class);

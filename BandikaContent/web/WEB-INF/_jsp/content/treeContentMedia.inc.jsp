@@ -25,18 +25,18 @@
             <%if (contentData.hasUserEditRight(rdata)) {%>
             <div class="icons">
                 <% if (rdata.hasClipboardData(ContentRequestKeys.KEY_MEDIA)) {%>
-                <a class="icon fa fa-paste" href="/ctrl/media/pasteMedia?parentId=<%=contentData.getId()%>" title="<%=$SH("_pasteMedia")%>"> </a>
+                <a class="icon fa fa-paste" href="/page/media/pasteMedia?parentId=<%=contentData.getId()%>" title="<%=$SH("_pasteMedia")%>"> </a>
                 <%}
                     if (!mediaTypes.isEmpty()) {
                         if (mediaTypes.size()==1){%>
-                <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/media/openCreateMedia?parentId=<%=contentData.getId()%>&type=<%=mediaTypes.get(0)%>');" title="<%=$SH("_newMedia")%>"></a>
+                <a class="icon fa fa-plus" onclick="return openModalDialog('/page/media/openCreateMedia?parentId=<%=contentData.getId()%>&type=<%=mediaTypes.get(0)%>');" title="<%=$SH("_newMedia")%>"></a>
                     <%}else{%>
                 <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="<%=$SH("_newMedia")%>"></a>
                 <div class="dropdown-menu">
                     <%for (String mediaType : mediaTypes) {
                         String name = $SH("class."+mediaType);
                     %>
-                    <a class="dropdown-item" onclick="return openModalDialog('/ctrl/media/openCreateMedia?parentId=<%=contentData.getId()%>&type=<%=mediaType%>');"><%=name%>
+                    <a class="dropdown-item" onclick="return openModalDialog('/page/media/openCreateMedia?parentId=<%=contentData.getId()%>&type=<%=mediaType%>');"><%=name%>
                     </a>
                     <%}%>
                 </div>
@@ -56,10 +56,10 @@
                         <div class="icons">
                             <a class="icon fa fa-eye" href="<%=media.getURL()%>" target="_blank" title="<%=$SH("_view")%>"> </a>
                             <a class="icon fa fa-download" href="<%=media.getURL()%>?download=true" title="<%=$SH("_download")%>"> </a>
-                            <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/media/openEditMedia/<%=media.getId()%>');" title="<%=$SH("_edit")%>"> </a>
-                            <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/media/cutMedia/<%=media.getId()%>');" title="<%=$SH("_cut")%>"> </a>
-                            <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/media/copyMedia/<%=media.getId()%>');" title="<%=$SH("_copy")%>"> </a>
-                            <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/media/deleteMedia/<%=media.getId()%>');" title="<%=$SH("_delete")%>"> </a>
+                            <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/page/media/openEditMedia/<%=media.getId()%>');" title="<%=$SH("_edit")%>"> </a>
+                            <a class="icon fa fa-scissors" href="" onclick="return linkTo('/page/media/cutMedia/<%=media.getId()%>');" title="<%=$SH("_cut")%>"> </a>
+                            <a class="icon fa fa-copy" href="" onclick="return linkTo('/page/media/copyMedia/<%=media.getId()%>');" title="<%=$SH("_copy")%>"> </a>
+                            <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/page/media/deleteMedia/<%=media.getId()%>');" title="<%=$SH("_delete")%>"> </a>
                         </div>
                     </div>
                 </li>

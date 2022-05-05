@@ -36,7 +36,7 @@
     <div class="container">
         <form:message/>
         <section class="mainSection loginSection text-center">
-            <form class="form" action="/ctrl/user/login" method="post" name="loginForm" accept-charset="UTF-8">
+            <form class="form" action="/page/user/login" method="post" name="loginForm" accept-charset="UTF-8">
                 <img class="mb-4" src="/static-content/img/logo-dark.png" alt="<%=Configuration.getAppTitle()%>">
                 <label for="login" class="sr-only"><%=$SH("_loginName")%>
                 </label>

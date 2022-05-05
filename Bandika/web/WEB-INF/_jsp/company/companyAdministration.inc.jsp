@@ -27,7 +27,7 @@
 <li class="open">
     <span><%=$SH("_companies")%></span>
     <div class="icons">
-        <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/ctrl/company/openCreateCompany');" title="<%=$SH("_new")%>"> </a>
+        <a class="icon fa fa-plus" href="" onclick="return openModalDialog('/page/company/openCreateCompany');" title="<%=$SH("_new")%>"> </a>
     </div>
     <ul>
         <%
@@ -37,8 +37,8 @@
         <li class="<%=companyId==company.getId() ? "open" : ""%>">
             <span><%=$H(company.getName())%></span>
             <div class="icons">
-                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/company/openEditCompany/<%=company.getId()%>');" title="<%=$SH("_edit")%>"></a>
-                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/company/deleteCompany/<%=company.getId()%>');" title="<%=$SH("_delete")%>"></a>
+                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/page/company/openEditCompany/<%=company.getId()%>');" title="<%=$SH("_edit")%>"></a>
+                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/page/company/deleteCompany/<%=company.getId()%>');" title="<%=$SH("_delete")%>"></a>
             </div>
         </li>
         <%

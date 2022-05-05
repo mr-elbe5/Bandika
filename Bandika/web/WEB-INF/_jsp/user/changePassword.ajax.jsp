@@ -15,7 +15,7 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     UserData user = rdata.getLoginUser();
-    String url = "/ctrl/user/changePassword/" + user.getId();
+    String url = "/page/user/changePassword/" + user.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">

@@ -18,7 +18,7 @@
 <li class="open">
     <span><%=$SH("_search")%></span>
     <div class="icons">
-        <a class="icon fa fa-globe" href="/ctrl/search/indexAllContent" title="<%=$SH("_indexAllContent")%>"></a>
-        <a class="icon fa fa-users" href="/ctrl/search/indexAllUsers" title="<%=$SH("_indexAllUsers")%>"></a>
+        <a class="icon fa fa-globe" href="/page/search/indexAllContent" title="<%=$SH("_indexAllContent")%>"></a>
+        <a class="icon fa fa-users" href="/page/search/indexAllUsers" title="<%=$SH("_indexAllUsers")%>"></a>
     </div>
 </li>

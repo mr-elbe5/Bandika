@@ -38,11 +38,11 @@
             <div class="section">
                 <div class="paragraph form">
                     <div>
-                        <a class="link" href="#" onclick="return openModalDialog('/ajax/user/openChangePassword');">{{_changePassword}}
+                        <a class="link" href="#" onclick="return openModalDialog('/dlg/user/openChangePassword');">{{_changePassword}}
                         </a>
                     </div>
                     <div>
-                        <a class="link" href="#" onclick="return openModalDialog('/ajax/user/openChangeProfile');">{{_changeProfile}}
+                        <a class="link" href="#" onclick="return openModalDialog('/dlg/user/openChangeProfile');">{{_changeProfile}}
                         </a>
                     </div>
                 </div>

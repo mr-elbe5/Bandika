@@ -23,7 +23,7 @@
     List<CompanyData> companies = CompanyBean.getInstance().getAllCompanies();
     List<GroupData> groups = GroupBean.getInstance().getAllGroups();
     String label;
-    String url = "/ctrl/user/saveUser/" + user.getId();
+    String url = "/page/user/saveUser/" + user.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -54,7 +54,7 @@
                 </form:select>
                 <form:textarea name="notes" label="_notes" height="5rem"><%=$H(user.getNotes())%>
                 </form:textarea>
-                <form:file name="portrait" label="_portrait"><% if (user.hasPortrait()) {%><img src="/ctrl/user/showPortrait/<%=user.getId()%>" alt="<%=$H(user.getName())%>"/> <%}%>
+                <form:file name="portrait" label="_portrait"><% if (user.hasPortrait()) {%><img src="/page/user/showPortrait/<%=user.getId()%>" alt="<%=$H(user.getName())%>"/> <%}%>
                 </form:file>
                 <form:line label="_approved" padded="true">
                     <form:check name="approved" value="true" checked="<%=user.isApproved()%>"></form:check>
