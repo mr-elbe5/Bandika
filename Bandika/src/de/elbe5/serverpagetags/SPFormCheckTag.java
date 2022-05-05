@@ -13,7 +13,7 @@ public class SPFormCheckTag extends SPTag {
     protected boolean checked = false;
 
     public SPFormCheckTag(){
-        this.type = TYPE;;
+        this.type = TYPE;
     }
 
     @Override
