@@ -170,7 +170,7 @@ public class PageData extends ContentData {
         return new ContentResponse(this);
     }
 
-    public void appendContent(StringBuilder sb, RequestData rdata) {
+    public void appendHtml(StringBuilder sb, RequestData rdata) {
         switch (getViewType()) {
             case VIEW_TYPE_PUBLISH -> {
                 sb.append("""

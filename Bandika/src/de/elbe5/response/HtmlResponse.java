@@ -10,6 +10,8 @@ package de.elbe5.response;
 
 import de.elbe5.application.Configuration;
 import de.elbe5.request.RequestData;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
@@ -33,6 +35,8 @@ public class HtmlResponse implements IResponse {
     }
 
     public void sendHtml(HttpServletResponse response){
+        Document doc = Jsoup.parse(html);
+        html = doc.toString();
         try {
             ServletOutputStream out = response.getOutputStream();
             response.setHeader("Access-Control-Allow-Origin", "*");
@@ -54,4 +58,5 @@ public class HtmlResponse implements IResponse {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
+
 }

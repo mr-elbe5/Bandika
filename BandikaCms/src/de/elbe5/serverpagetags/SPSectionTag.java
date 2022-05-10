@@ -4,10 +4,10 @@ import de.elbe5.page.PageData;
 import de.elbe5.page.SectionData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
-import de.elbe5.serverpage.SPTag;
-import de.elbe5.serverpage.ServerPage;
+import de.elbe5.template.TemplateTag;
+import de.elbe5.template.Template;
 
-public class SPSectionTag extends SPTag {
+public class SPSectionTag extends TemplateTag {
 
     public static final String TYPE = "section";
 
@@ -30,7 +30,7 @@ public class SPSectionTag extends SPTag {
             } else {
                 url = "page/section";
             }
-            ServerPage.includePage(sb, url, rdata);
+            Template.includePage(sb, url, rdata);
             rdata.getAttributes().remove("sectionData");
         }
     }

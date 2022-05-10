@@ -9,47 +9,29 @@
 package de.elbe5.response;
 
 import de.elbe5.request.RequestData;
-import de.elbe5.request.RequestKeys;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import de.elbe5.template.TemplateCache;
+import de.elbe5.template.Template;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
-public class MasterResponse extends TemplateResponse {
+public class TemplateResponse extends HtmlResponse {
 
-    public static String DEFAULT_MASTER = "defaultMaster";
+    protected String path;
 
-    protected IMasterInclude includeObject = null;
-
-    public MasterResponse(String master) {
-        super("_layout/master/" + master);
-    }
-
-    public MasterResponse(IMasterInclude include) {
-        this(DEFAULT_MASTER, include);
-    }
-
-    public MasterResponse(String master, IMasterInclude include) {
-        super("_layout/master/" + master);
-        this.includeObject = include;
-    }
-
-    public void setMaster(String master){
-        path = "_layout/master/" + master;
+    public TemplateResponse(String path) {
+        this.path = path;
     }
 
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
-        if (includeObject != null){
-            rdata.setRequestObject(RequestKeys.KEY_MASTERINCLUDE, includeObject);
+        Template template = TemplateCache.getTemplate(path);
+        if (template != null) {
+            html = template.getHtml(rdata);
+            super.processResponse(context, rdata, response);
         }
-        super.processResponse(context, rdata, response);
-    }
-
-    public String toPrettyString(){
-        String html = toString();
-        Document doc = Jsoup.parse(html);
-        return doc.toString();
+        else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
 }

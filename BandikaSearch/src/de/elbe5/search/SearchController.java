@@ -88,12 +88,12 @@ public class SearchController extends Controller {
     }
 
     protected IResponse showSearch() {
-        ServerPageInclude pageInclude = new ServerPageInclude("search/search");
+        TemplateInclude pageInclude = new TemplateInclude("search/search");
         return new MasterResponse(pageInclude);
     }
 
     protected IResponse showUserSearch() {
-        ServerPageInclude pageInclude = new ServerPageInclude("search/userSearch");
+        TemplateInclude pageInclude = new TemplateInclude("search/userSearch");
         return new MasterResponse(pageInclude);
     }
 

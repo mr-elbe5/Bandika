@@ -130,7 +130,7 @@ public class ImageController extends FileController {
     }
 
     protected IResponse showEditImage() {
-        return new ServerPageResponse("file/editImage");
+        return new TemplateResponse("file/editImage");
     }
 
 }

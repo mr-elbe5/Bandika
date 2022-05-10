@@ -16,13 +16,14 @@ import de.elbe5.company.CompanyCache;
 import de.elbe5.company.CompanyController;
 import de.elbe5.content.*;
 import de.elbe5.database.DbConnector;
+import de.elbe5.html.IncludeTag;
+import de.elbe5.layout.*;
 import de.elbe5.page.LayoutPartBean;
 import de.elbe5.page.LayoutPartData;
 import de.elbe5.file.*;
 import de.elbe5.group.GroupController;
-import de.elbe5.layout.LayoutCache;
 import de.elbe5.page.*;
-import de.elbe5.serverpage.SPTagFactory;
+import de.elbe5.template.TemplateTagFactory;
 import de.elbe5.serverpagetags.*;
 import de.elbe5.servlet.InitServlet;
 import de.elbe5.timer.CleanupTaskData;
@@ -65,53 +66,34 @@ public class BandikaInitServlet extends InitServlet {
         CkEditorController.register(new CkEditorController());
         TimerController.register(new TimerController());
         UserController.register(new UserController());
-        ContentFactory.addClassInfo(ContentData.class, ContentBean.getInstance());
-        ContentFactory.addClassInfo(LinkData.class, LinkBean.getInstance());
+
         FileFactory.addDocumentClassInfo(DocumentData.class, null);
         FileFactory.addImageClassInfo(ImageData.class, ImageBean.getInstance());
         FileFactory.addMediaClassInfo(MediaData.class, null);
+
+        ContentFactory.addClassInfo(ContentData.class, ContentBean.getInstance());
+        ContentFactory.addClassInfo(LinkData.class, LinkBean.getInstance());
         ContentFactory.addClassInfo(PageData.class, PageBean.getInstance());
-        PagePartFactory.addClassInfo(LayoutPartData.class, LayoutPartBean.getInstance(),true);
-        LayoutCache.addType(PageData.LAYOUT_TYPE);
-        LayoutCache.addType(PagePartData.LAYOUT_TYPE);
         ContentFactory.addDefaultType(PageData.class);
+
         FileFactory.addDefaultDocumentType(DocumentData.class);
         FileFactory.addDefaultImageType(ImageData.class);
         FileFactory.addDefaultMediaType(MediaData.class);
-        SPTagFactory.addTagType(SPIfTag.TYPE, SPIfTag.class);
-        SPTagFactory.addTagType(SPIncludeTag.TYPE, SPIncludeTag.class);
-        SPTagFactory.addTagType(SPBreadcrumbTag.TYPE, SPBreadcrumbTag.class);
-        SPTagFactory.addTagType(SPContentTag.TYPE, SPContentTag.class);
-        SPTagFactory.addTagType(SPContentAdminTreeTag.TYPE, SPContentAdminTreeTag.class);
-        SPTagFactory.addTagType(SPFooterTag.TYPE, SPFooterTag.class);
-        SPTagFactory.addTagType(SPFormTag.TYPE, SPFormTag.class);
-        SPTagFactory.addTagType(SPFormCheckTag.TYPE, SPFormCheckTag.class);
-        SPTagFactory.addTagType(SPFormDateTag.TYPE, SPFormDateTag.class);
-        SPTagFactory.addTagType(SPFormErrorTag.TYPE, SPFormErrorTag.class);
-        SPTagFactory.addTagType(SPFormFileTag.TYPE, SPFormFileTag.class);
-        SPTagFactory.addTagType(SPFormLineTag.TYPE, SPFormLineTag.class);
-        SPTagFactory.addTagType(SPFormPasswordTag.TYPE, SPFormPasswordTag.class);
-        SPTagFactory.addTagType(SPFormRadioTag.TYPE, SPFormRadioTag.class);
-        SPTagFactory.addTagType(SPFormSelectTag.TYPE, SPFormSelectTag.class);
-        SPTagFactory.addTagType(SPFormTextAreaTag.TYPE, SPFormTextAreaTag.class);
-        SPTagFactory.addTagType(SPFormTextTag.TYPE, SPFormTextTag.class);
-        SPTagFactory.addTagType(SPGroupListTag.TYPE, SPGroupListTag.class);
-        SPTagFactory.addTagType(SPHtmlFieldTag.TYPE, SPHtmlFieldTag.class);
-        SPTagFactory.addTagType(SPMainNavTag.TYPE, SPMainNavTag.class);
-        SPTagFactory.addTagType(SPMessageTag.TYPE, SPMessageTag.class);
-        SPTagFactory.addTagType(SPSectionTag.TYPE, SPSectionTag.class);
-        SPTagFactory.addTagType(SPSysNavTag.TYPE, SPSysNavTag.class);
-        SPTagFactory.addTagType(SPTextFieldTag.TYPE, SPTextFieldTag.class);
-        SPTagFactory.addTagType(SPTimerListTag.TYPE, SPTimerListTag.class);
-        SPTagFactory.addTagType(SPUserListTag.TYPE, SPUserListTag.class);
 
-        SPTagFactory.addTagType(SPBreadcrumbTag.TYPE, SPBreadcrumbTag.class);
-        SPTagFactory.addTagType(SPContentTag.TYPE, SPContentTag.class);
-        SPTagFactory.addTagType(SPContentAdminTreeTag.TYPE, SPContentAdminTreeTag.class);
-        SPTagFactory.addTagType(SPFooterTag.TYPE, SPFooterTag.class);
-        SPTagFactory.addTagType(SPMainNavTag.TYPE, SPMainNavTag.class);
-        SPTagFactory.addTagType(SPSysNavTag.TYPE, SPSysNavTag.class);
+        PagePartFactory.addClassInfo(LayoutPartData.class, LayoutPartBean.getInstance(),true);
 
+        TemplateTagFactory.addTagType(IncludeTag.TYPE, IncludeTag.class);
+        TemplateTagFactory.addTagType(BreadcrumbTag.TYPE, BreadcrumbTag.class);
+        TemplateTagFactory.addTagType(ContentTag.TYPE, ContentTag.class);
+        TemplateTagFactory.addTagType(FooterTag.TYPE, FooterTag.class);
+        TemplateTagFactory.addTagType(SPHtmlFieldTag.TYPE, SPHtmlFieldTag.class);
+        TemplateTagFactory.addTagType(MainNavTag.TYPE, MainNavTag.class);
+        TemplateTagFactory.addTagType(SPSectionTag.TYPE, SPSectionTag.class);
+        TemplateTagFactory.addTagType(SysNavTag.TYPE, SysNavTag.class);
+        TemplateTagFactory.addTagType(SPTextFieldTag.TYPE, SPTextFieldTag.class);
+
+        LayoutCache.addType(PageData.LAYOUT_TYPE);
+        LayoutCache.addType(PagePartData.LAYOUT_TYPE);
 
         ContentCache.load();
         ContentCentral.setInstance(new AppContentCentral());

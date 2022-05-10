@@ -2,15 +2,16 @@ package de.elbe5.serverpagetags;
 
 import de.elbe5.base.StringHelper;
 import de.elbe5.content.ContentData;
+import de.elbe5.html.Html;
 import de.elbe5.page.LayoutPartData;
 import de.elbe5.page.PageData;
 import de.elbe5.page.PagePartData;
 import de.elbe5.page.PartHtmlField;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
-import de.elbe5.serverpage.SPTag;
+import de.elbe5.template.TemplateTag;
 
-public class SPHtmlFieldTag extends SPTag {
+public class SPHtmlFieldTag extends TemplateTag {
 
     public static final String TYPE = "htmlfield";
 
@@ -34,7 +35,7 @@ public class SPHtmlFieldTag extends SPTag {
         PartHtmlField field = partData.ensureHtmlField(name);
         boolean editMode = contentData.getViewType().equals(ContentData.VIEW_TYPE_EDIT);
         if (editMode) {
-            sb.append(format(script,
+            sb.append(Html.format(script,
                     field.getIdentifier(),
                     field.getContent().isEmpty() ? StringHelper.toHtml(placeholder) : field.getContent(),
                     field.getIdentifier(),

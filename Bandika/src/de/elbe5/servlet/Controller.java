@@ -26,12 +26,12 @@ public abstract class Controller {
     }
 
     protected IResponse openAdminPage(RequestData rdata, String include, String title) {
-        rdata.getPageAttributes().put("title", title);
-        rdata.getPageAttributes().put("language", Configuration.getLocale().getLanguage());
-        rdata.getPageAttributes().put("hasSystemRights", rdata.hasSystemRight(SystemZone.APPLICATION));
-        rdata.getPageAttributes().put("hasUserRights", rdata.hasSystemRight(SystemZone.USER));
-        rdata.getPageAttributes().put("hasContentRights", rdata.hasAnyContentRight());
-        return new MasterResponse("adminMaster", new ServerPageInclude(include));
+        rdata.getTemplateAttributes().put("title", title);
+        rdata.getTemplateAttributes().put("language", Configuration.getLocale().getLanguage());
+        rdata.getTemplateAttributes().put("hasSystemRights", rdata.hasSystemRight(SystemZone.APPLICATION));
+        rdata.getTemplateAttributes().put("hasUserRights", rdata.hasSystemRight(SystemZone.USER));
+        rdata.getTemplateAttributes().put("hasContentRights", rdata.hasAnyContentRight());
+        return new MasterResponse("adminMaster", new TemplateInclude(include));
     }
 
     protected IResponse showSystemAdministration(RequestData rdata) {

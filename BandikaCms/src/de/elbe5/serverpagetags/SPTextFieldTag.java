@@ -1,15 +1,16 @@
 package de.elbe5.serverpagetags;
 
 import de.elbe5.content.ContentData;
+import de.elbe5.html.Html;
 import de.elbe5.page.LayoutPartData;
 import de.elbe5.page.PageData;
 import de.elbe5.page.PagePartData;
 import de.elbe5.page.PartTextField;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
-import de.elbe5.serverpage.SPTag;
+import de.elbe5.template.TemplateTag;
 
-public class SPTextFieldTag extends SPTag {
+public class SPTextFieldTag extends TemplateTag {
 
     public static final String TYPE = "textfield";
 
@@ -26,20 +27,20 @@ public class SPTextFieldTag extends SPTag {
         String content = field.getContent();
         if (editMode) {
             if (rows > 1)
-                sb.append(format("<textarea class=\"editField\" name=\"{1}\" rows=\"{2}\">{3}</textarea>",
+                sb.append(Html.format("<textarea class=\"editField\" name=\"{1}\" rows=\"{2}\">{3}</textarea>",
                         field.getIdentifier(),
                         Integer.toString(rows),
-                        toHtml(content.isEmpty() ? placeholder : content)));
+                        Html.html(content.isEmpty() ? placeholder : content)));
             else
-                sb.append(format("<input type=\"text\" class=\"editField\" name=\"{1}\" placeholder=\"{2}\" value=\"{3}\" />",
+                sb.append(Html.format("<input type=\"text\" class=\"editField\" name=\"{1}\" placeholder=\"{2}\" value=\"{3}\" />",
                         field.getIdentifier(),
                         field.getIdentifier(),
-                        toHtml(content)));
+                        Html.html(content)));
         } else {
             if (content.length() == 0) {
                 sb.append("&nbsp;");
             } else {
-                sb.append(toHtmlMultiline(content));
+                sb.append(Html.htmlMultiline(content));
             }
         }
 

@@ -6,14 +6,30 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.response;
+package de.elbe5.html;
 
+import de.elbe5.application.Configuration;
 import de.elbe5.request.RequestData;
+import de.elbe5.response.IMasterInclude;
 
-public interface IMasterInclude {
+public class HtmlIncludePage implements IMasterInclude {
 
-    void appendHtml(StringBuilder sb, RequestData rdata);
+    public HtmlIncludePage() {}
 
-    void prepareMaster(RequestData rdata);
+    @Override
+    public void appendHtml(StringBuilder sb, RequestData rdata) {
+        sb.append("""
+                <div id="pageContent" class="viewArea">
+        """);
+
+        sb.append("""
+                </div>""");
+    }
+
+    @Override
+    public void prepareMaster(RequestData rdata){
+        rdata.getTemplateAttributes().put("language", Configuration.getLocale().getLanguage());
+        rdata.getTemplateAttributes().put("title", Configuration.getAppTitle());
+    }
 
 }

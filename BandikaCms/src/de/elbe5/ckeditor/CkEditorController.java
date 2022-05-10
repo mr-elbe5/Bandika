@@ -17,7 +17,7 @@ import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.IResponse;
-import de.elbe5.response.ServerPageResponse;
+import de.elbe5.response.TemplateResponse;
 
 public class CkEditorController extends ContentController {
 
@@ -46,13 +46,13 @@ public class CkEditorController extends ContentController {
     public IResponse openLinkBrowser(RequestData rdata) {
         ContentData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         checkRights(data.hasUserEditRight(rdata));
-        return new ServerPageResponse("ckeditor/browseLinks");
+        return new TemplateResponse("ckeditor/browseLinks");
     }
 
     public IResponse openImageBrowser(RequestData rdata) {
         ContentData data=rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         checkRights(data.hasUserEditRight(rdata));
-        return new ServerPageResponse("ckeditor/browseImages");
+        return new TemplateResponse("ckeditor/browseImages");
     }
 
     public IResponse addImage(RequestData rdata) {
@@ -64,7 +64,7 @@ public class CkEditorController extends ContentController {
         ImageBean.getInstance().saveFile(image,true);
         ContentCache.setDirty();
         rdata.getAttributes().put("imageId", Integer.toString(image.getId()));
-        return new ServerPageResponse("ckeditor/addImage");
+        return new TemplateResponse("ckeditor/addImage");
     }
 
 

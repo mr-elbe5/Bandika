@@ -1,13 +1,14 @@
 package de.elbe5.serverpagetags;
 
+import de.elbe5.html.Html;
 import de.elbe5.page.PageData;
 import de.elbe5.page.PagePartData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
-import de.elbe5.serverpage.SPTag;
-import de.elbe5.serverpage.ServerPage;
+import de.elbe5.template.TemplateTag;
+import de.elbe5.template.Template;
 
-public class SPPartTag extends SPTag {
+public class SPPartTag extends TemplateTag {
 
     static final String editStart="<div id=\"{1}\" class=\"partWrapper {2}\" title=\"{3}\">";
     static final String viewStart="<div id=\"{1}\" class=\"partWrapper {2}\">";
@@ -21,17 +22,17 @@ public class SPPartTag extends SPTag {
         if (partData != null) {
             partData.setCssClass(cssClass);
             if (contentData.isEditing()) {
-                sb.append(format(editStart,
+                sb.append(Html.format(editStart,
                         partData.getPartWrapperId(),
-                        toHtml(partData.getCssClass()),
-                        toHtml(partData.getEditTitle())
+                        Html.html(partData.getCssClass()),
+                        Html.html(partData.getEditTitle())
                 ));
-                ServerPage.includePage(sb, "page/editPartHeader", rdata);
+                Template.includePage(sb, "page/editPartHeader", rdata);
             }
             else{
-                sb.append(format(viewStart,
+                sb.append(Html.format(viewStart,
                         partData.getPartWrapperId(),
-                        toHtml(partData.getCssClass())
+                        Html.html(partData.getCssClass())
                 ));
             }
         }

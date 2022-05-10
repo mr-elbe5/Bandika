@@ -17,7 +17,7 @@ import de.elbe5.request.RequestKeys;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.CloseDialogResponse;
 import de.elbe5.response.IResponse;
-import de.elbe5.response.ServerPageResponse;
+import de.elbe5.response.TemplateResponse;
 
 public class DocumentController extends FileController {
 
@@ -132,7 +132,7 @@ public class DocumentController extends FileController {
     }
 
     protected IResponse showEditDocument() {
-        return new ServerPageResponse("file/editDocument");
+        return new TemplateResponse("file/editDocument");
     }
 
 }

@@ -17,7 +17,7 @@ import de.elbe5.request.RequestKeys;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.CloseDialogResponse;
 import de.elbe5.response.IResponse;
-import de.elbe5.response.ServerPageResponse;
+import de.elbe5.response.TemplateResponse;
 
 public class MediaController extends FileController {
 
@@ -132,7 +132,7 @@ public class MediaController extends FileController {
     }
 
     protected IResponse showEditMedia() {
-        return new ServerPageResponse("file/editMedia");
+        return new TemplateResponse("file/editMedia");
     }
 
 }

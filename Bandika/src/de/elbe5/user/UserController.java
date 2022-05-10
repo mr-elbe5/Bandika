@@ -94,7 +94,7 @@ public class UserController extends Controller {
         int userId = rdata.getId();
         UserData data = UserBean.getInstance().getUser(userId);
         rdata.setSessionObject("userData", data);
-        return showEditUser();
+        return showEditUser(rdata);
     }
 
     public IResponse openCreateUser(RequestData rdata) {
@@ -103,7 +103,7 @@ public class UserController extends Controller {
         data.setNew(true);
         data.setId(UserBean.getInstance().getNextId());
         rdata.setSessionObject("userData", data);
-        return showEditUser();
+        return showEditUser(rdata);
     }
 
     public IResponse saveUser(RequestData rdata) {
@@ -111,7 +111,7 @@ public class UserController extends Controller {
         UserData data = (UserData) rdata.getSessionObject("userData");
         data.readSettingsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
-            return showEditUser();
+            return showEditUser(rdata);
         }
         UserBean.getInstance().saveUser(data);
         UserCache.setDirty();
@@ -204,43 +204,39 @@ public class UserController extends Controller {
     }
     
     protected IResponse showProfile() {
-        ServerPageInclude jsp = new ServerPageInclude("user/profile");
+        TemplateInclude jsp = new TemplateInclude("user/profile");
         return new MasterResponse(MasterResponse.DEFAULT_MASTER, jsp);
     }
 
     protected IResponse showChangePassword() {
-        return new ServerPageResponse("user/changePassword");
+        return new TemplateResponse("user/changePassword");
     }
 
     protected IResponse showChangeProfile() {
-        return new ServerPageResponse("user/changeProfile");
+        return new TemplateResponse("user/changeProfile");
     }
 
     protected IResponse showRegistration() {
-        ServerPageInclude include = new ServerPageInclude("user/registration");
+        TemplateInclude include = new TemplateInclude("user/registration");
         return new MasterResponse(include);
     }
 
     protected IResponse showRegistrationDone() {
-        ServerPageInclude include = new ServerPageInclude("user/registrationDone");
+        TemplateInclude include = new TemplateInclude("user/registrationDone");
         return new MasterResponse(include);
     }
 
     protected IResponse showEmailVerification() {
-        ServerPageInclude include = new ServerPageInclude("user/verifyRegistrationEmail");
+        TemplateInclude include = new TemplateInclude("user/verifyRegistrationEmail");
         return new MasterResponse(include);
     }
 
     protected IResponse showLogin(RequestData rdata) {
-        return new ServerPageResponse("user/login");
+        return new TemplateResponse("user/login");
     }
 
-    protected IResponse showEditGroup() {
-        return new ServerPageResponse("user/editGroup");
-    }
-
-    protected IResponse showEditUser() {
-        return new ServerPageResponse("user/editUser");
+    protected IResponse showEditUser(RequestData rdata) {
+        return new EditUserPage().createHtml(rdata);
     }
 
 }

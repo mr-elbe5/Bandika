@@ -23,8 +23,8 @@ import de.elbe5.request.RequestData;
 import de.elbe5.response.IMasterInclude;
 import de.elbe5.rights.Right;
 import de.elbe5.rights.SystemZone;
-import de.elbe5.serverpage.SPPageCache;
-import de.elbe5.serverpage.ServerPage;
+import de.elbe5.template.TemplateCache;
+import de.elbe5.template.Template;
 import de.elbe5.user.UserCache;
 import de.elbe5.user.UserData;
 import de.elbe5.response.IResponse;
@@ -428,7 +428,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     }
 
     protected void includePage(StringBuilder sb, String path, RequestData rdata){
-        ServerPage include = SPPageCache.getPage(path);
+        Template include = TemplateCache.getTemplate(path);
         if (include != null) {
             sb.append(include.getHtml(rdata));
         }
@@ -462,16 +462,16 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         }
     }
     @Override
-    public void appendContent(StringBuilder sb, RequestData rdata) {
+    public void appendHtml(StringBuilder sb, RequestData rdata) {
 
     }
 
     @Override
     public void prepareMaster(RequestData rdata){
-        rdata.getPageAttributes().put("language", Configuration.getLocale().getLanguage());
-        rdata.getPageAttributes().put("title", StringHelper.toHtml(Configuration.getAppTitle() + " | " + getDisplayName()));
-        rdata.getPageAttributes().put("description", StringHelper.toHtml(getDescription()));
-        rdata.getPageAttributes().put("keywords", StringHelper.toHtml(getKeywords()));
+        rdata.getTemplateAttributes().put("language", Configuration.getLocale().getLanguage());
+        rdata.getTemplateAttributes().put("title", StringHelper.toHtml(Configuration.getAppTitle() + " | " + getDisplayName()));
+        rdata.getTemplateAttributes().put("description", StringHelper.toHtml(getDescription()));
+        rdata.getTemplateAttributes().put("keywords", StringHelper.toHtml(getKeywords()));
     }
 
     // multiple data

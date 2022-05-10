@@ -27,7 +27,7 @@ public class RequestData {
 
     private final KeyValueMap attributes = new KeyValueMap();
 
-    private final StringMap pageAttributes = new StringMap();
+    private final StringMap templateAttributes = new StringMap();
 
     private final Map<String, Cookie> cookies = new HashMap<>();
 
@@ -57,8 +57,8 @@ public class RequestData {
         return attributes;
     }
 
-    public StringMap getPageAttributes() {
-        return pageAttributes;
+    public StringMap getTemplateAttributes() {
+        return templateAttributes;
     }
 
     public HttpServletRequest getRequest() {

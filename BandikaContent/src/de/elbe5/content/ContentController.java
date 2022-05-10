@@ -19,7 +19,7 @@ import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.CloseDialogResponse;
 import de.elbe5.response.IResponse;
-import de.elbe5.response.ServerPageResponse;
+import de.elbe5.response.TemplateResponse;
 import de.elbe5.servlet.ResponseException;
 
 import javax.servlet.http.HttpServletResponse;
@@ -277,15 +277,15 @@ public class ContentController extends Controller {
     }
 
     protected IResponse showEditContentData(ContentData contentData) {
-        return new ServerPageResponse(contentData.getContentDataPage());
+        return new TemplateResponse(contentData.getContentDataPage());
     }
 
     protected IResponse showEditRights(ContentData contentData) {
-        return new ServerPageResponse("content/editGroupRights");
+        return new TemplateResponse("content/editGroupRights");
     }
 
     protected IResponse showSortChildContents() {
-        return new ServerPageResponse("content/sortChildContents");
+        return new TemplateResponse("content/sortChildContents");
     }
 
     protected IResponse showContentAdministration(RequestData rdata, int contentId) {

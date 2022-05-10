@@ -88,6 +88,6 @@ public class CompanyController extends Controller {
     }
 
     protected IResponse showEditCompany() {
-        return new ServerPageResponse("company/editCompany");
+        return new TemplateResponse("company/editCompany");
     }
 }

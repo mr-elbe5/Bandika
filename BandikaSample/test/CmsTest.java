@@ -1,9 +1,12 @@
+import de.elbe5.html.IncludeTag;
+import de.elbe5.html.MessageTag;
+import de.elbe5.layout.*;
 import de.elbe5.application.Configuration;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestType;
-import de.elbe5.serverpage.SPPageCache;
-import de.elbe5.serverpage.SPTagFactory;
-import de.elbe5.serverpage.ServerPage;
+import de.elbe5.template.TemplateCache;
+import de.elbe5.template.TemplateTagFactory;
+import de.elbe5.template.Template;
 import de.elbe5.serverpagetags.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,39 +26,23 @@ public class CmsTest {
     }
 
     void prepare(){
-        ServerPage.shtmlBasePath = System.getProperty("user.dir") + "/../Bandika/web/WEB-INF/_shtml/";
-        System.out.println(ServerPage.shtmlBasePath);
-        SPTagFactory.addTagType(SPIfTag.TYPE, SPIfTag.class);
-        SPTagFactory.addTagType(SPIncludeTag.TYPE, SPIncludeTag.class);
-        SPTagFactory.addTagType(SPBreadcrumbTag.TYPE, SPBreadcrumbTag.class);
-        SPTagFactory.addTagType(SPContentTag.TYPE, SPContentTag.class);
-        SPTagFactory.addTagType(SPContentAdminTreeTag.TYPE, SPContentAdminTreeTag.class);
-        SPTagFactory.addTagType(SPFooterTag.TYPE, SPFooterTag.class);
-        SPTagFactory.addTagType(SPFormTag.TYPE, SPFormTag.class);
-        SPTagFactory.addTagType(SPFormCheckTag.TYPE, SPFormCheckTag.class);
-        SPTagFactory.addTagType(SPFormDateTag.TYPE, SPFormDateTag.class);
-        SPTagFactory.addTagType(SPFormErrorTag.TYPE, SPFormErrorTag.class);
-        SPTagFactory.addTagType(SPFormFileTag.TYPE, SPFormFileTag.class);
-        SPTagFactory.addTagType(SPFormLineTag.TYPE, SPFormLineTag.class);
-        SPTagFactory.addTagType(SPFormPasswordTag.TYPE, SPFormPasswordTag.class);
-        SPTagFactory.addTagType(SPFormRadioTag.TYPE, SPFormRadioTag.class);
-        SPTagFactory.addTagType(SPFormSelectTag.TYPE, SPFormSelectTag.class);
-        SPTagFactory.addTagType(SPFormTextAreaTag.TYPE, SPFormTextAreaTag.class);
-        SPTagFactory.addTagType(SPFormTextTag.TYPE, SPFormTextTag.class);
-        SPTagFactory.addTagType(SPGroupListTag.TYPE, SPGroupListTag.class);
-        SPTagFactory.addTagType(SPHtmlFieldTag.TYPE, SPHtmlFieldTag.class);
-        SPTagFactory.addTagType(SPMainNavTag.TYPE, SPMainNavTag.class);
-        SPTagFactory.addTagType(SPMessageTag.TYPE, SPMessageTag.class);
-        SPTagFactory.addTagType(SPSectionTag.TYPE, SPSectionTag.class);
-        SPTagFactory.addTagType(SPSysNavTag.TYPE, SPSysNavTag.class);
-        SPTagFactory.addTagType(SPTextFieldTag.TYPE, SPTextFieldTag.class);
-        SPTagFactory.addTagType(SPUserListTag.TYPE, SPUserListTag.class);
-        rdata.getPageAttributes().put("language", Configuration.getLocale().getLanguage());
-        rdata.getPageAttributes().put("include", "_layout/page/defaultPage");
+        Template.templateBasePath = System.getProperty("user.dir") + "/../Bandika/web/WEB-INF/_shtml/";
+        System.out.println(Template.templateBasePath);
+        TemplateTagFactory.addTagType(IncludeTag.TYPE, IncludeTag.class);
+        TemplateTagFactory.addTagType(BreadcrumbTag.TYPE, BreadcrumbTag.class);
+        TemplateTagFactory.addTagType(ContentTag.TYPE, ContentTag.class);
+        TemplateTagFactory.addTagType(FooterTag.TYPE, FooterTag.class);
+        TemplateTagFactory.addTagType(SPHtmlFieldTag.TYPE, SPHtmlFieldTag.class);
+        TemplateTagFactory.addTagType(MainNavTag.TYPE, MainNavTag.class);
+        TemplateTagFactory.addTagType(SPSectionTag.TYPE, SPSectionTag.class);
+        TemplateTagFactory.addTagType(SysNavTag.TYPE, SysNavTag.class);
+        TemplateTagFactory.addTagType(SPTextFieldTag.TYPE, SPTextFieldTag.class);
+        rdata.getTemplateAttributes().put("language", Configuration.getLocale().getLanguage());
+        rdata.getTemplateAttributes().put("include", "_layout/page/defaultPage");
     }
 
     void run(){
-        ServerPage page = SPPageCache.getPage("user/editUser");
+        Template page = TemplateCache.getTemplate("user/editUser");
         System.out.println(page.getPath());
         System.out.println(page.getCode());
     }

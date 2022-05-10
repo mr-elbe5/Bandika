@@ -19,7 +19,7 @@ import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.response.IResponse;
-import de.elbe5.response.ServerPageResponse;
+import de.elbe5.response.TemplateResponse;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -89,7 +89,7 @@ public class AdminController extends Controller {
     }
 
     private IResponse showEditConfiguration() {
-        return new ServerPageResponse("administration/editConfiguration");
+        return new TemplateResponse("administration/editConfiguration");
     }
 
 }

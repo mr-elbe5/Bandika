@@ -48,7 +48,7 @@ public class GroupController extends Controller {
         int groupId = rdata.getId();
         GroupData data = GroupBean.getInstance().getGroup(groupId);
         rdata.setSessionObject("groupData", data);
-        return showEditGroup();
+        return showEditGroup(rdata);
     }
 
     public IResponse openCreateGroup(RequestData rdata) {
@@ -57,7 +57,7 @@ public class GroupController extends Controller {
         data.setNew(true);
         data.setId(GroupBean.getInstance().getNextId());
         rdata.setSessionObject("groupData", data);
-        return showEditGroup();
+        return showEditGroup(rdata);
     }
 
     public IResponse saveGroup(RequestData rdata) {
@@ -68,7 +68,7 @@ public class GroupController extends Controller {
         }
         data.readSettingsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
-            return showEditGroup();
+            return showEditGroup(rdata);
         }
         GroupBean.getInstance().saveGroup(data);
         UserCache.setDirty();
@@ -88,7 +88,7 @@ public class GroupController extends Controller {
         return new ForwardResponse("/page/admin/openPersonAdministration");
     }
 
-    protected IResponse showEditGroup() {
-        return new ServerPageResponse("group/editGroup");
+    protected IResponse showEditGroup(RequestData rdata) {
+        return new EditGroupPage().createHtml(rdata);
     }
 }
