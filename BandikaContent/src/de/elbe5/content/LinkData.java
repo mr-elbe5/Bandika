@@ -8,7 +8,8 @@
  */
 package de.elbe5.content;
 
-import de.elbe5.base.StringHelper;
+import de.elbe5.base.Strings;
+import de.elbe5.html.ModalPage;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IResponse;
 import de.elbe5.response.RedirectResponse;
@@ -46,9 +47,9 @@ public class LinkData extends ContentData {
     @Override
     public String getNavDisplay(){
         if (!linkIcon.isEmpty()){
-            return "<img src=\"/static-content/img/" + linkIcon +"\" class=\"navIcon\" title=\"" + StringHelper.toHtml(getDisplayName()) + "\" alt=\"" + StringHelper.toHtml(getDisplayName()) + "\" />";
+            return "<img src=\"/static-content/img/" + linkIcon +"\" class=\"navIcon\" title=\"" + Strings.toHtml(getDisplayName()) + "\" alt=\"" + Strings.toHtml(getDisplayName()) + "\" />";
         }
-        return StringHelper.toHtml(getDisplayName());
+        return Strings.toHtml(getDisplayName());
     }
 
     @Override
@@ -57,8 +58,8 @@ public class LinkData extends ContentData {
     }
 
     @Override
-    public String getContentDataPage() {
-        return "/WEB-INF/_shtml/content/editLinkData.ajax.shtml";
+    public ModalPage getContentDataPage() {
+        return new EditLinkDataPage();
     }
 
     @Override

@@ -13,8 +13,7 @@ import de.elbe5.base.BinaryFile;
 import de.elbe5.base.IJsonData;
 import de.elbe5.base.Log;
 import de.elbe5.base.ImageHelper;
-import de.elbe5.base.StringHelper;
-import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Strings;
 import de.elbe5.application.Configuration;
 import de.elbe5.group.GroupData;
 import de.elbe5.request.RequestData;
@@ -345,7 +344,7 @@ public class UserData extends BaseData implements IJsonData {
         setMobile(rdata.getAttributes().getString("mobile"));
         setNotes(rdata.getAttributes().getString("notes"));
         BinaryFile file = rdata.getAttributes().getFile("portrait");
-        if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringHelper.isNullOrEmpty(file.getContentType())) {
+        if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !Strings.isNullOrEmpty(file.getContentType())) {
             try {
                 BufferedImage source = ImageHelper.createImage(file.getBytes(), file.getContentType());
                 if (source != null) {
@@ -397,14 +396,14 @@ public class UserData extends BaseData implements IJsonData {
             rdata.addIncompleteField("login");
         if (login.length() < UserData.MIN_LOGIN_LENGTH) {
             rdata.addFormField("login");
-            rdata.addFormError(LocalizedStrings.string("_loginLengthError"));
+            rdata.addFormError(Strings.getString("_loginLengthError"));
         }
         if (password1.length() < UserData.MIN_PASSWORD_LENGTH) {
             rdata.addFormField("password1");
-            rdata.addFormError(LocalizedStrings.string("_passwordLengthError"));
+            rdata.addFormError(Strings.getString("_passwordLengthError"));
         } else if (!password1.equals(password2)) {
             rdata.addFormField("password2");
-            rdata.addFormError(LocalizedStrings.string("_passwordsDontMatch"));
+            rdata.addFormError(Strings.getString("_passwordsDontMatch"));
         } else
             setPassword(password1);
     }

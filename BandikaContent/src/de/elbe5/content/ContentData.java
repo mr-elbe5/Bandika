@@ -9,22 +9,19 @@
 package de.elbe5.content;
 
 import de.elbe5.application.Configuration;
-import de.elbe5.base.BaseData;
-import de.elbe5.base.IJsonData;
-import de.elbe5.base.Log;
-import de.elbe5.base.DateHelper;
-import de.elbe5.base.StringHelper;
+import de.elbe5.base.*;
 import de.elbe5.file.FileData;
 import de.elbe5.file.FileFactory;
 import de.elbe5.group.GroupBean;
 import de.elbe5.group.GroupData;
+import de.elbe5.html.ModalPage;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IMasterInclude;
 import de.elbe5.rights.Right;
 import de.elbe5.rights.SystemZone;
-import de.elbe5.template.TemplateCache;
-import de.elbe5.template.Template;
+import de.elbe5.layout.TemplateCache;
+import de.elbe5.layout.Template;
 import de.elbe5.user.UserCache;
 import de.elbe5.user.UserData;
 import de.elbe5.response.IResponse;
@@ -113,7 +110,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     public void generatePath() {
         if (getParent() == null)
             return;
-        setPath(getParent().getPath() + "/" + StringHelper.toUrl(getName().toLowerCase()));
+        setPath(getParent().getPath() + "/" + Strings.toUrl(getName().toLowerCase()));
     }
 
     public String getUrl() {
@@ -131,7 +128,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     }
 
     public String getNavDisplay(){
-        return StringHelper.toHtml(getDisplayName());
+        return Strings.toHtml(getDisplayName());
     }
 
     public String getDescription() {
@@ -427,15 +424,15 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         return new ContentResponse(this);
     }
 
-    protected void includePage(StringBuilder sb, String path, RequestData rdata){
-        Template include = TemplateCache.getTemplate(path);
+    protected void includePage(StringBuilder sb, String name, RequestData rdata){
+        Template include = TemplateCache.getTemplate("page", name);
         if (include != null) {
             sb.append(include.getHtml(rdata));
         }
     }
 
-    public String getContentDataPage() {
-        return "content/editContentData";
+    public ModalPage getContentDataPage() {
+        return new EditContentDataPage();
     }
 
     //used in jsp
@@ -469,9 +466,9 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     @Override
     public void prepareMaster(RequestData rdata){
         rdata.getTemplateAttributes().put("language", Configuration.getLocale().getLanguage());
-        rdata.getTemplateAttributes().put("title", StringHelper.toHtml(Configuration.getAppTitle() + " | " + getDisplayName()));
-        rdata.getTemplateAttributes().put("description", StringHelper.toHtml(getDescription()));
-        rdata.getTemplateAttributes().put("keywords", StringHelper.toHtml(getKeywords()));
+        rdata.getTemplateAttributes().put("title", Strings.toHtml(Configuration.getAppTitle() + " | " + getDisplayName()));
+        rdata.getTemplateAttributes().put("description", Strings.toHtml(getDescription()));
+        rdata.getTemplateAttributes().put("keywords", Strings.toHtml(getKeywords()));
     }
 
     // multiple data
@@ -529,7 +526,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
 
     public void readRequestData(RequestData rdata) {
         setDisplayName(rdata.getAttributes().getString("displayName").trim());
-        setName(StringHelper.toSafeWebName(getDisplayName()));
+        setName(Strings.toSafeWebName(getDisplayName()));
         setDescription(rdata.getAttributes().getString("description"));
         setAccessType(rdata.getAttributes().getString("accessType"));
         setNavType(rdata.getAttributes().getString("navType"));

@@ -8,7 +8,7 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Strings;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.ContentRequestKeys;
@@ -51,7 +51,7 @@ public class DocumentController extends FileController {
         DocumentData data = FileFactory.getNewData(type,DocumentData.class);
         data.setCreateValues(parentData, rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_DOCUMENT, data);
-        return showEditDocument();
+        return showEditDocument(rdata);
     }
 
     public IResponse openEditDocument(RequestData rdata) {
@@ -59,7 +59,7 @@ public class DocumentController extends FileController {
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         rdata.setSessionObject(ContentRequestKeys.KEY_DOCUMENT,data);
-        return showEditDocument();
+        return showEditDocument(rdata);
     }
 
     public IResponse saveDocument(RequestData rdata) {
@@ -69,17 +69,17 @@ public class DocumentController extends FileController {
         checkRights(parent.hasUserEditRight(rdata));
         data.readSettingsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
-            return showEditDocument();
+            return showEditDocument(rdata);
         }
         data.setChangerId(rdata.getUserId());
         //bytes=null, if no new file selected
         if (!FileBean.getInstance().saveFile(data,data.isNew() || data.getBytes()!=null)) {
             setSaveError(rdata);
-            return showEditDocument();
+            return showEditDocument(rdata);
         }
         data.setNew(false);
         ContentCache.setDirty();
-        return new CloseDialogResponse("/page/admin/openContentAdministration?contentId=" + data.getId(), LocalizedStrings.string("_fileSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/page/admin/openContentAdministration?contentId=" + data.getId(), Strings.getString("_fileSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse cutDocument(RequestData rdata) {
@@ -108,13 +108,13 @@ public class DocumentController extends FileController {
         int parentId = rdata.getAttributes().getInt("parentId");
         ContentData parent=ContentCache.getContent(parentId);
         if (parent == null){
-            rdata.setMessage(LocalizedStrings.string("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata);
         }
         checkRights(parent.hasUserEditRight(rdata));
         DocumentData data=rdata.getClipboardData(ContentRequestKeys.KEY_DOCUMENT,DocumentData.class);
         if (data==null){
-            rdata.setMessage(LocalizedStrings.string("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata);
         }
         data.setParentId(parentId);
@@ -123,7 +123,7 @@ public class DocumentController extends FileController {
         FileBean.getInstance().saveFile(data,true);
         rdata.clearClipboardData(ContentRequestKeys.KEY_DOCUMENT);
         ContentCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_documentPasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.getString("_documentPasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,data.getId());
     }
 
@@ -131,8 +131,8 @@ public class DocumentController extends FileController {
         return deleteFile(rdata);
     }
 
-    protected IResponse showEditDocument() {
-        return new TemplateResponse("file/editDocument");
+    protected IResponse showEditDocument(RequestData rdata) {
+        return new EditDocumentPage().createHtml(rdata);
     }
 
 }

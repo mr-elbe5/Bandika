@@ -10,6 +10,7 @@ package de.elbe5.page;
 
 import de.elbe5.base.BaseData;
 import de.elbe5.content.ContentBean;
+import de.elbe5.layout.PartHtml;
 import de.elbe5.request.RequestData;
 
 public abstract class PagePartData extends BaseData implements Comparable<PagePartData> {
@@ -22,7 +23,7 @@ public abstract class PagePartData extends BaseData implements Comparable<PagePa
     protected int position = 0;
     protected boolean editable = true;
 
-    public static String jspBasePath = "/WEB-INF/_shtml/_layout";
+    public static String jspBasePath = "/WEB-INF/_layout";
 
     public PagePartData() {
     }
@@ -69,14 +70,6 @@ public abstract class PagePartData extends BaseData implements Comparable<PagePa
         this.position = position;
     }
 
-    public String getPartInclude() {
-        return getJspPath() + "/show.shtml";
-    }
-
-    public String getEditPartInclude() {
-        return getJspPath() + "/edit.shtml";
-    }
-
     public String getPartWrapperId() {
         return "part_" + getId();
     }
@@ -112,6 +105,22 @@ public abstract class PagePartData extends BaseData implements Comparable<PagePa
     public void readFrontendRequestData(RequestData rdata) {
         // -1 if deleted
         setPosition(rdata.getAttributes().getInt(getPartPositionName(),-1));
+    }
+
+    public void appendHtml(StringBuilder sb, RequestData rdata){
+        PartHtml.appendPartStart(sb, this);
+        appendContent(sb, rdata);
+        PartHtml.appendPartEnd(sb);
+    }
+
+    public void appendEditHtml(StringBuilder sb, RequestData rdata){
+        PartHtml.appendPartEditStart(sb, this);
+        appendContent(sb, rdata);
+        PartHtml.appendPartEnd(sb);
+    }
+
+    public void appendContent(StringBuilder sb, RequestData rdata){
+
     }
 
 }

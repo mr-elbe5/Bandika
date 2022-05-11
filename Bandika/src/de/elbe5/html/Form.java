@@ -1,17 +1,27 @@
 package de.elbe5.html;
 
 import de.elbe5.application.Configuration;
-import de.elbe5.base.LocalizedStrings;
-import de.elbe5.base.StringFormatter;
-import de.elbe5.base.StringHelper;
+import de.elbe5.base.Strings;
 import de.elbe5.request.RequestData;
 
 public class Form {
 
     // form
 
+    static public void appendFormError(StringBuilder sb, RequestData rdata){
+        if (rdata.hasFormError()) {
+            sb.append(Strings.format("""
+                                      <div class="formError">
+                                          {1}
+                                      </div>
+                            """,
+                    Strings.toHtmlMultiline(rdata.getFormError(false).getFormErrorString())
+            ));
+        }
+    }
+
     static public void appendFormStart(StringBuilder sb, String url, String name, boolean multi) {
-        sb.append(Html.format("""
+        sb.append(Strings.format("""
                         <form action="{1}" method="post" id="{2}" name="{3}" accept-charset="UTF-8"{4}>
                         """,
                 url,
@@ -30,7 +40,7 @@ public class Form {
                     </form>
                 """);
         if (ajax) {
-            sb.append(StringFormatter.format("""
+            sb.append(Strings.format("""
                                 <script type="text/javascript">
                                     $('#{1}').submit(function (event) {
                                     var $this = $(this);
@@ -57,21 +67,33 @@ public class Form {
     // form line
 
     static public void appendLineStart(StringBuilder sb, boolean hasError, String name, String label, boolean required, boolean padded) {
-        sb.append(Html.format("""
+        sb.append(Strings.format("""
                         <div class="form-group row {1}">
                                 <label class="col-md-3 col-form-label" for="{2}" >{3}{4}</label>
                                 <div class="col-md-9" {5}>
                         """,
                 hasError ? " error" : "",
-                Html.html(name),
-                label.startsWith("_") ? LocalizedStrings.html(label) : label,
+                name,
+                label,
                 required ? " <sup>*</sup>" : "",
                 padded ? " padded" : ""
         ));
     }
 
+    static public void appendLineStart(StringBuilder sb, boolean hasError, String name, String label, boolean required) {
+        appendLineStart(sb, hasError, name, label, required, false);
+    }
+
+    static public void appendLineStart(StringBuilder sb, String name, String label) {
+        appendLineStart(sb, false, name, label, false, false);
+    }
+
+    static public void appendLineStart(StringBuilder sb, String name, String label, boolean padded) {
+        appendLineStart(sb, false, name, label, false, padded);
+    }
+
     static public void appendLineStart(StringBuilder sb, boolean hasError, String name, boolean required, boolean padded) {
-        sb.append(Html.format("""
+        sb.append(Strings.format("""
                         <div class="form-group row {1}">
                             <div class="col-md-3"></div>
                             <div class="col-md-9" {2}>
@@ -89,7 +111,7 @@ public class Form {
 
     public static void appendTextLine(StringBuilder sb, boolean hasError, String name, String label, boolean required, String value, int maxLength) {
         appendLineStart(sb, hasError, name, label, required, false);
-        sb.append(Html.format("""
+        sb.append(Strings.format("""
                         <input type="text" id="{1}" name="{2}" class="form-control" value="{3}" {4}/>
                         """,
                 name,
@@ -99,9 +121,21 @@ public class Form {
         appendLineEnd(sb);
     }
 
+    public static void appendTextLine(StringBuilder sb, boolean hasError, String name, String label, boolean required, String value) {
+        appendTextLine(sb, hasError, name, label, required, value, 0);
+    }
+
+    public static void appendTextLine(StringBuilder sb, String name, String label, String value, int maxLength) {
+        appendTextLine(sb, false, name, label, false, value, maxLength);
+    }
+
+    public static void appendTextLine(StringBuilder sb, String name, String label, String value) {
+        appendTextLine(sb, name, label, value, 0);
+    }
+
     public static void appendPasswordLine(StringBuilder sb, boolean hasError, String name, String label, boolean required, int maxLength) {
         appendLineStart(sb, hasError, name, label, required, false);
-        sb.append(Html.format("""
+        sb.append(Strings.format("""
                         <input type="password" id="{1}" name="{2}" class="form-control" {4}/>
                         """,
                 name,
@@ -110,9 +144,17 @@ public class Form {
         appendLineEnd(sb);
     }
 
+    public static void appendPasswordLine(StringBuilder sb, String name, String label, int maxLength) {
+        appendPasswordLine(sb, false, name, label, false, maxLength);
+    }
+
+    public static void appendPasswordLine(StringBuilder sb, String name, String label) {
+        appendPasswordLine(sb, name, label, 0);
+    }
+
     public static void appendTextareaLine(StringBuilder sb, boolean hasError, String name, String label, boolean required, String value, String height) {
         appendLineStart(sb, hasError, name, label, required, false);
-        sb.append(StringFormatter.format("""
+        sb.append(Strings.format("""
             <textarea id="{1}" name="{2}" class="form-control" {3}>{4}</textarea>
             """,
                 name,
@@ -121,11 +163,15 @@ public class Form {
                 value));
     }
 
+    public static void appendTextareaLine(StringBuilder sb, String name, String label, String value, String height) {
+        appendTextareaLine(sb, false, name, label, false, value, height);
+    }
+
     // date
 
     public static void appendDateLine(StringBuilder sb, boolean hasError, String name, String label, String value, boolean required) {
         appendLineStart(sb, hasError, name, label, required, false);
-        sb.append(Html.format("""
+        sb.append(Strings.format("""
                         <div class="input-group date">
                           <input type="text" id="{1}" name="{2}" class="form-control datepicker" value="{3}" />
                         </div>
@@ -139,14 +185,24 @@ public class Form {
         appendLineEnd(sb);
     }
 
+    public static void appendDateLine(StringBuilder sb, String name, String label, String value) {
+        appendDateLine(sb, false, name, label, value, false);
+    }
+
     // file
 
     public static void appendFileLine(StringBuilder sb, boolean hasError, String name, String label, boolean required, boolean multiple) {
         appendLineStart(sb, hasError, name, label, required, false);
-        sb.append(Html.format("<input type=\"file\" class=\"form-control-file\" id=\"{1}\" name=\"{2}\" {3}>",
+        sb.append(Strings.format("""
+                <input type="file" class="form-control-file" id="{1}" name="{2}" {3}>
+                """,
                 name,
                 name,
                 multiple ? "multiple" : ""));
+    }
+
+    public static void appendFileLine(StringBuilder sb, String name, String label, boolean multiple) {
+        appendFileLine(sb, false, name, label, false, multiple);
     }
 
     // select
@@ -154,13 +210,21 @@ public class Form {
 
     static public void appendSelectStart(StringBuilder sb, boolean hasError, String name, String label, boolean required, String onchange) {
         appendLineStart(sb, hasError, name, label, required, true);
-        sb.append(Html.format("""
+        sb.append(Strings.format("""
                     <select id="{1}" name="{2}" class="form-control" {3}>
                 """,
                 name,
                 name,
                 onchange.isEmpty() ? "" : "onchange=\"" + onchange + "\""
         ));
+    }
+
+    static public void appendSelectStart(StringBuilder sb, String name, String label, String onchange) {
+        appendSelectStart(sb, false, name, label, false, onchange);
+    }
+
+    static public void appendSelectStart(StringBuilder sb, String name, String label) {
+        appendSelectStart(sb, false, name, label, false, "");
     }
 
     static public void appendSelectEnd(StringBuilder sb) {
@@ -171,7 +235,7 @@ public class Form {
     // check
 
     public static void appendCheckbox(StringBuilder sb, String name, String label, String value, boolean checked){
-        sb.append(Html.format("""
+        sb.append(Strings.format("""
                        <span>
                             <input type="checkbox" name="{1}" value="{2}" {3}/>
                                 <label class="form-check-label">{4}</label>
@@ -184,7 +248,7 @@ public class Form {
     }
 
     public static void appendRadio(StringBuilder sb, String name, String label, String value, boolean checked){
-        sb.append(Html.format("""
+        sb.append(Strings.format("""
                        <span>
                             <input type="radio" name="{1}" value="{2}" {3}/>
                             <label class="form-check-label">{4}</label>

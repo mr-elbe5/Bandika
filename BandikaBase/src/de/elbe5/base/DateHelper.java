@@ -55,15 +55,15 @@ public class DateHelper {
     }
 
     public static String getDatePattern(){
-        return LocalizedStrings.string("system.datePattern");
+        return Strings.getString("system.datePattern");
     }
 
     public static String getDateTimePattern(){
-        return LocalizedStrings.string("system.dateTimePattern");
+        return Strings.getString("system.dateTimePattern");
     }
 
     public static String getTimePattern(){
-        return LocalizedStrings.string("system.timePattern");
+        return Strings.getString("system.timePattern");
     }
 
     public static String toHtmlDate(LocalDate date) {

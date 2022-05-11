@@ -22,21 +22,17 @@ public class MasterResponse extends TemplateResponse {
 
     protected IMasterInclude includeObject = null;
 
-    public MasterResponse(String master) {
-        super("_layout/master/" + master);
+    public MasterResponse(String name) {
+        super("master", name);
     }
 
     public MasterResponse(IMasterInclude include) {
         this(DEFAULT_MASTER, include);
     }
 
-    public MasterResponse(String master, IMasterInclude include) {
-        super("_layout/master/" + master);
+    public MasterResponse(String name, IMasterInclude include) {
+        super("master", name);
         this.includeObject = include;
-    }
-
-    public void setMaster(String master){
-        path = "_layout/master/" + master;
     }
 
     @Override

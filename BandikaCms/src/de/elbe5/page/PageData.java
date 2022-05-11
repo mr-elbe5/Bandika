@@ -11,6 +11,7 @@ package de.elbe5.page;
 import de.elbe5.base.Log;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
+import de.elbe5.html.ModalPage;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IResponse;
 import de.elbe5.content.ContentResponse;
@@ -147,8 +148,8 @@ public class PageData extends ContentData {
 
     //used in controller
     @Override
-    public String getContentDataPage() {
-        return "page/editContentData";
+    public ModalPage getContentDataPage() {
+        return new EditPageDataPage();
     }
 
     //used in jsp

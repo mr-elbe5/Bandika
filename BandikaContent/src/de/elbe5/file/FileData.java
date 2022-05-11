@@ -8,10 +8,7 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.base.BaseData;
-import de.elbe5.base.BinaryFile;
-import de.elbe5.base.FileHelper;
-import de.elbe5.base.StringHelper;
+import de.elbe5.base.*;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.RequestData;
 
@@ -44,7 +41,7 @@ public abstract class FileData extends BaseData {
         int pos= getFileName().lastIndexOf('.');
         if (pos==-1)
             return;
-        setFileName(StringHelper.toSafeWebName(getDisplayName())+ getFileName().substring(pos));
+        setFileName(Strings.toSafeWebName(getDisplayName())+ getFileName().substring(pos));
     }
 
     public String getFileName() {
@@ -159,7 +156,7 @@ public abstract class FileData extends BaseData {
     // helper
 
     public void createFromBinaryFile(BinaryFile file) {
-        if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringHelper.isNullOrEmpty(file.getContentType())) {
+        if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !Strings.isNullOrEmpty(file.getContentType())) {
             setFileName(file.getFileName());
             setBytes(file.getBytes());
             setFileSize(file.getBytes().length);

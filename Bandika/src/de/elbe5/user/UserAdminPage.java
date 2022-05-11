@@ -1,8 +1,8 @@
 package de.elbe5.user;
 
+import de.elbe5.base.Strings;
 import de.elbe5.group.GroupBean;
 import de.elbe5.group.GroupData;
-import de.elbe5.html.Html;
 import de.elbe5.request.RequestData;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public class UserAdminPage {
         } catch (Exception ignore) {
         }
         int groupId = rdata.getAttributes().getInt("groupId");
-        sb.append(Html.format("""
+        sb.append(Strings.format("""
             <li class="open">
                 <span>{1}</span>
                 <div class="icons">
@@ -24,11 +24,11 @@ public class UserAdminPage {
                 </div>
                 <ul>
             """,
-                Html.localized("_groups"),
-                Html.localized("_new")));
+                Strings.getHtml("_groups"),
+                Strings.getHtml("_new")));
         if (groups != null) {
             for (GroupData group : groups) {
-                sb.append(Html.format("""
+                sb.append(Strings.format("""
                     <li class="{1}">
                         <span>{2}</span>
                         <div class="icons">
@@ -38,11 +38,11 @@ public class UserAdminPage {
                     </li>
             """,
                         groupId == group.getId() ? "open" : "",
-                        Html.html(group.getName()),
+                        Strings.toHtml(group.getName()),
                         Integer.toString(group.getId()),
-                        Html.localized("_edit"),
+                        Strings.getHtml("_edit"),
                         Integer.toString(group.getId()),
-                        Html.localized("_delete")));
+                        Strings.getHtml("_delete")));
             }
         }
         sb.append("""
@@ -59,7 +59,7 @@ public class UserAdminPage {
         } catch (Exception ignore) {
         }
         int userId = rdata.getAttributes().getInt("userId");
-        sb.append(Html.format("""
+        sb.append(Strings.format("""
                         <li class="open">
                             <span>{1}</span>
                             <div class="icons">
@@ -67,27 +67,27 @@ public class UserAdminPage {
                             </div>
                             <ul>
                             """,
-                Html.localized("_users"),
-                Html.localized("_new")));
+                Strings.getHtml("_users"),
+                Strings.getHtml("_new")));
         if (users != null) {
             for (UserData user : users) {
-                sb.append(Html.format("""
+                sb.append(Strings.format("""
                                 <li class="{1}">
                                 <span>{2}&nbsp;({3})</span>
                                 <div class="icons">
                                     <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/dlgpage/user/openEditUser/{4}');" title="{5}"> </a>
                                     """,
                         userId == user.getId() ? "selected" : "",
-                        Html.html(user.getName()),
+                        Strings.toHtml(user.getName()),
                         Integer.toString(user.getId()),
                         Integer.toString(user.getId()),
-                        Html.localized("_edit")));
+                        Strings.getHtml("_edit")));
                 if (user.getId() != UserData.ID_ROOT) {
-                    sb.append(Html.format("""
+                    sb.append(Strings.format("""
                                     <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/page/user/deleteUser/{1}');" title="{2}"> </a>
                                     """,
                             Integer.toString(user.getId()),
-                            Html.localized("_delete")));
+                            Strings.getHtml("_delete")));
                 }
                 sb.append("""
                         </div>

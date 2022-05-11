@@ -8,12 +8,7 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.base.BinaryFile;
-import de.elbe5.base.IJsonData;
-import de.elbe5.base.Log;
-import de.elbe5.base.FileHelper;
-import de.elbe5.base.ImageHelper;
-import de.elbe5.base.StringHelper;
+import de.elbe5.base.*;
 import de.elbe5.request.RequestData;
 import org.json.simple.JSONObject;
 
@@ -135,7 +130,7 @@ public class ImageData extends FileData implements IJsonData {
 
     public boolean createFromBinaryFile(BinaryFile file, int maxTumbnailWidth, int maxThumbnailHeight) {
         boolean success=false;
-        if (file != null && file.isImage() && file.getBytes() != null && file.getFileName().length() > 0 && !StringHelper.isNullOrEmpty(file.getContentType())) {
+        if (file != null && file.isImage() && file.getBytes() != null && file.getFileName().length() > 0 && !Strings.isNullOrEmpty(file.getContentType())) {
             setFileName(file.getFileName());
             setBytes(file.getBytes());
             setFileSize(file.getBytes().length);
@@ -152,7 +147,7 @@ public class ImageData extends FileData implements IJsonData {
 
     public boolean createFromBinaryFile(BinaryFile file, int maxWidth, int maxHeight, int maxTumbnailWidth, int maxThumbnailHeight, boolean expand) {
         boolean success=false;
-        if (file != null && file.isImage() && file.getBytes() != null && file.getFileName().length() > 0 && !StringHelper.isNullOrEmpty(file.getContentType())) {
+        if (file != null && file.isImage() && file.getBytes() != null && file.getFileName().length() > 0 && !Strings.isNullOrEmpty(file.getContentType())) {
             setFileName(file.getFileName());
             setBytes(file.getBytes());
             setFileSize(file.getBytes().length);
@@ -170,7 +165,7 @@ public class ImageData extends FileData implements IJsonData {
 
     public boolean createJpegFromBinaryFile(BinaryFile file, int maxWidth, int maxHeight, int maxTumbnailWidth, int maxThumbnailHeight, boolean expand) {
         boolean success=false;
-        if (file != null && file.isImage() && file.getBytes() != null && file.getFileName().length() > 0 && !StringHelper.isNullOrEmpty(file.getContentType())) {
+        if (file != null && file.isImage() && file.getBytes() != null && file.getFileName().length() > 0 && !Strings.isNullOrEmpty(file.getContentType())) {
             setFileName(file.getFileName());
             setBytes(file.getBytes());
             setFileSize(file.getBytes().length);

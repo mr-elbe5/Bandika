@@ -1,11 +1,10 @@
 package de.elbe5.layout;
 
+import de.elbe5.base.Strings;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
-import de.elbe5.html.Html;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
-import de.elbe5.template.TemplateTag;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -38,7 +37,7 @@ public class MainNavTag extends TemplateTag {
                             children.add(child);
                     }
                     if (!children.isEmpty()) {
-                        sb.append(Html.format("""
+                        sb.append(Strings.format("""
                                         <li class="nav-item dropdown">
                                             <a class="nav-link {1} dropdown-toggle" data-toggle="dropdown" href="{2}" role="button" aria-haspopup="true" aria-expanded="false">{3}</a>
                                             <div class="dropdown-menu">
@@ -52,7 +51,7 @@ public class MainNavTag extends TemplateTag {
                                 contentData.getNavDisplay()
                         ));
                         for (ContentData child : children) {
-                            sb.append(Html.format("""
+                            sb.append(Strings.format("""
                                                 <a class="dropdown-item {1}" href="{2}">{3}</a>
             """,
                                     activeIds.contains(child.getId()) ? "active" : "",
@@ -65,7 +64,7 @@ public class MainNavTag extends TemplateTag {
                                         </li>
             """);
                     } else {
-                        sb.append(Html.format("""
+                        sb.append(Strings.format("""
                                         <li class="nav-item {1}">
                                             <a class="nav-link {2}" href="{3}">{4}</a>
                                         </li>

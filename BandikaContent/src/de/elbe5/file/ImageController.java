@@ -8,7 +8,7 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Strings;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.ContentRequestKeys;
@@ -49,7 +49,7 @@ public class ImageController extends FileController {
         ImageData data = FileFactory.getNewData(type,ImageData.class);
         data.setCreateValues(parentData, rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_IMAGE, data);
-        return showEditImage();
+        return showEditImage(rdata);
     }
 
     public IResponse openEditImage(RequestData rdata) {
@@ -57,7 +57,7 @@ public class ImageController extends FileController {
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         rdata.setSessionObject(ContentRequestKeys.KEY_IMAGE,data);
-        return showEditImage();
+        return showEditImage(rdata);
     }
 
     public IResponse saveImage(RequestData rdata) {
@@ -67,16 +67,16 @@ public class ImageController extends FileController {
         checkRights(parent.hasUserEditRight(rdata));
         data.readSettingsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
-            return showEditImage();
+            return showEditImage(rdata);
         }
         data.setChangerId(rdata.getUserId());
         if (!FileBean.getInstance().saveFile(data, data.isNew() || data.getBytes()!=null)) {
             setSaveError(rdata);
-            return showEditImage();
+            return showEditImage(rdata);
         }
         data.setNew(false);
         ContentCache.setDirty();
-        return new CloseDialogResponse("/page/admin/openContentAdministration?contentId=" + data.getId(), LocalizedStrings.string("_fileSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/page/admin/openContentAdministration?contentId=" + data.getId(), Strings.getString("_fileSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse cutImage(RequestData rdata) {
@@ -106,7 +106,7 @@ public class ImageController extends FileController {
         ImageData data=rdata.getClipboardData(ContentRequestKeys.KEY_IMAGE,ImageData.class);
         ContentData parent=ContentCache.getContent(parentId);
         if (parent == null){
-            rdata.setMessage(LocalizedStrings.string("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata);
         }
         checkRights(parent.hasUserEditRight(rdata));
@@ -116,7 +116,7 @@ public class ImageController extends FileController {
         FileBean.getInstance().saveFile(data, true);
         rdata.clearClipboardData(ContentRequestKeys.KEY_IMAGE);
         ContentCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_imagePasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.getString("_imagePasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,data.getId());
     }
 
@@ -129,8 +129,8 @@ public class ImageController extends FileController {
         return deleteFile(rdata);
     }
 
-    protected IResponse showEditImage() {
-        return new TemplateResponse("file/editImage");
+    protected IResponse showEditImage(RequestData rdata) {
+        return new EditImagePage().createHtml(rdata);
     }
 
 }

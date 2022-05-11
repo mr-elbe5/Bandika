@@ -8,7 +8,7 @@
  */
 package de.elbe5.timer;
 
-import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Strings;
 import de.elbe5.request.RequestKeys;
 import de.elbe5.response.StatusResponse;
 import de.elbe5.servlet.ControllerCache;
@@ -50,7 +50,7 @@ public class TimerController extends Controller {
         String name = rdata.getAttributes().getString("timerName");
         TimerTaskData task = Timer.getInstance().getTaskCopy(name);
         rdata.setSessionObject("timerTaskData", task);
-        return showEditTimerTask();
+        return showEditTimerTask(rdata);
     }
 
     public IResponse saveTimerTask(RequestData rdata) {
@@ -61,16 +61,16 @@ public class TimerController extends Controller {
         }
         data.readSettingsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
-            return showEditTimerTask();
+            return showEditTimerTask(rdata);
         }
         TimerBean ts = TimerBean.getInstance();
         ts.updateTaskData(data);
         Timer.getInstance().loadTask(data.getName());
-        return new CloseDialogResponse("/page/admin/openSystemAdministration", LocalizedStrings.string("_taskSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/page/admin/openSystemAdministration", Strings.getString("_taskSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
-    private IResponse showEditTimerTask() {
-        return new TemplateResponse("timer/editTimerTask");
+    private IResponse showEditTimerTask(RequestData rdata) {
+        return new EditTimerPage().createHtml(rdata);
     }
 
 }

@@ -167,7 +167,7 @@ public class RequestData {
         if (formError == null)
             return true;
         if (formError.isFormIncomplete())
-            formError.addFormError(LocalizedStrings.string("_notComplete"));
+            formError.addFormError(Strings.getString("_notComplete"));
         return formError.isEmpty();
     }
 

@@ -1,13 +1,11 @@
 package de.elbe5.content;
 
-import de.elbe5.content.ContentCache;
-import de.elbe5.content.ContentData;
+import de.elbe5.base.Strings;
 import de.elbe5.file.DocumentData;
 import de.elbe5.file.ImageData;
 import de.elbe5.file.MediaData;
-import de.elbe5.html.Html;
-import de.elbe5.html.HtmlIncludePage;
-import de.elbe5.html.MessageTag;
+import de.elbe5.layout.HtmlIncludePage;
+import de.elbe5.layout.MessageTag;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 
@@ -23,18 +21,18 @@ public class ContentAdminPage extends HtmlIncludePage {
         sb.append("""
                     <div id="pageContent">
                 """);
-        MessageTag.appendHtml(sb, rdata);
+        MessageTag.appendMessageHtml(sb, rdata);
         sb.append("""
                         <section class="treeSection">
                 """);
         if (rdata.hasAnyContentRight()) {
-            sb.append(Html.format("""
+            sb.append(Strings.format("""
                                 <div class = "">
                                         <a class = "btn btn-sm btn-outline-light" href="/page/content/clearClipboard">{1}</a>
                                     </div>
                                     <ul class="tree pagetree">
                             """,
-                    Html.localized("_clearClipboard")));
+                    Strings.getHtml("_clearClipboard")));
             appendChildHtml(sb, rootContent, rdata);
             sb.append("""
                                     </ul>
@@ -57,83 +55,83 @@ public class ContentAdminPage extends HtmlIncludePage {
     protected void appendChildHtml(StringBuilder sb, ContentData contentData, RequestData rdata) {
         if (contentData.hasUserReadRight(rdata)) {
             List<String> childTypes = contentData.getChildClasses();
-            sb.append(Html.format("""
+            sb.append(Strings.format("""
                                 <li class="open">
                                     <span class="{1}">
                                         {2}
                                     </span>
                             """,
                     contentData.hasUnpublishedDraft() ? "unpublished" : "published",
-                    Html.html(contentData.getDisplayName())));
+                    Strings.toHtml(contentData.getDisplayName())));
             if ((contentData.hasUserEditRight(rdata))) {
-                sb.append(Html.format("""
+                sb.append(Strings.format("""
                                     <div class="icons">
                                         <a class="icon fa fa-eye" href="" onclick="return linkTo('/page/content/show/{1}');" title="{2}"> </a>
                                         <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/dlgpage/content/openEditContentData/{3}');" title="{4}"> </a>
                                         <a class="icon fa fa-key" href="" onclick="return openModalDialog('/dlgpage/content/openEditRights/{5}');" title="{6}"> </a>
                                 """,
                         Integer.toString(contentData.getId()),
-                        Html.localized("_view"),
+                        Strings.getHtml("_view"),
                         Integer.toString(contentData.getId()),
-                        Html.localized("_edit"),
+                        Strings.getHtml("_edit"),
                         Integer.toString(contentData.getId()),
-                        Html.localized("_rights")));
+                        Strings.getHtml("_rights")));
                 if (contentData.getId() != ContentData.ID_ROOT) {
-                    sb.append(Html.format("""
+                    sb.append(Strings.format("""
                                         <a class="icon fa fa-scissors" href="" onclick="return linkTo('/page/content/cutContent/{1}');" title="{2}"> </a>
                                     """,
                             Integer.toString(contentData.getId()),
-                            Html.localized("_cut")
+                            Strings.getHtml("_cut")
                     ));
                 }
-                sb.append(Html.format("""
+                sb.append(Strings.format("""
                                     <a class="icon fa fa-copy" href="" onclick="return linkTo('/page/content/copyContent/{1}');" title="{2}"> </a>
                                 """,
                         Integer.toString(contentData.getId()),
-                        Html.localized("_copy")
+                        Strings.getHtml("_copy")
                 ));
                 if (contentData.hasChildren()) {
-                    sb.append(Html.format("""
+                    sb.append(Strings.format("""
                                         <a class="icon fa fa-sort" href="" onclick="return openModalDialog('/dlgpage/content/openSortChildPages/{1}');" title="{2}"> </a>
                                     """,
                             Integer.toString(contentData.getId()),
-                            Html.localized("_sortChildPages")
+                            Strings.getHtml("_sortChildPages")
                     ));
                 }
                 if (contentData.getId() != ContentData.ID_ROOT) {
-                    sb.append(Html.format("""
+                    sb.append(Strings.format("""
                                         <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/page/content/deleteContent/{1}');" title="{2}>"> </a>
                                     """,
                             Integer.toString(contentData.getId()),
-                            Html.localized("_delete")
+                            Strings.getHtml("_delete")
                     ));
                 }
                 if (rdata.hasClipboardData(ContentRequestKeys.KEY_CONTENT)) {
-                    sb.append(Html.format("""
+                    sb.append(Strings.format("""
                                             <a class="icon fa fa-paste" href="/page/content/pasteContent?parentId={1}" title="{2}"> </a>
                                     """,
                             Integer.toString(contentData.getId()),
-                            Html.localized("_pasteContent")
+                            Strings.getHtml("_pasteContent")
                     ));
                 }
                 if (!childTypes.isEmpty()) {
                     if (childTypes.size() == 1) {
-                        sb.append(Html.format("""
+                        sb.append(Strings.format("""
                                             <a class="icon fa fa-plus" onclick="return openModalDialog('/dlgpage/content/openCreateContentData?parentId=&type={1}');" title="{2}"></a>
                                         """,
                                 Integer.toString(contentData.getId()),
-                                Html.localized("_newContent")
+                                Strings.getHtml("_newContent")
                         ));
                     } else {
-                        sb.append(Html.format("""
+                        sb.append(Strings.format("""
                                             <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="{1}"></a>
                                             <div class="dropdown-menu">
                                         """,
-                                Html.localized("_newContent")
+                                Strings.getHtml("_newContent")
                         ));
                         for (String pageType : childTypes) {
-                            String name = Html.localized("class." + pageType);
-                            sb.append(Html.format("""
+                            String name = Strings.getHtml("class." + pageType);
+                            sb.append(Strings.format("""
                                                 <a class="dropdown-item" onclick="return openModalDialog('/dlgpage/content/openCreateContentData?parentId={1}&type={2}');">{3}</a>
                                             """,
                                     Integer.toString(contentData.getId()),
@@ -171,42 +169,42 @@ public class ContentAdminPage extends HtmlIncludePage {
     protected void appendContentDocumentsHtml(StringBuilder sb, ContentData contentData, RequestData rdata) {
         List<String> documentTypes = contentData.getDocumentClasses();
         int fileId = rdata.getAttributes().getInt("fileId");
-        sb.append(Html.format("""
+        sb.append(Strings.format("""
                                                     <li class="documents open">
                                                         <span>[{1}]</span>
                         """,
-                Html.localized("_documents")
+                Strings.getHtml("_documents")
         ));
         if (contentData.hasUserEditRight(rdata)) {
             sb.append("""
                                                     <div class="icons">
                     """);
             if (rdata.hasClipboardData(ContentRequestKeys.KEY_DOCUMENT)) {
-                sb.append(Html.format("""
+                sb.append(Strings.format("""
                                                                     <a class="icon fa fa-paste" href="/page/document/pasteDocument?parentId={1}" title="{2}"> </a>
                                 """,
                         Integer.toString(contentData.getId()),
-                        Html.localized("_pasteDocument")
+                        Strings.getHtml("_pasteDocument")
                 ));
                 if (!documentTypes.isEmpty()) {
                     if (documentTypes.size() == 1) {
-                        sb.append(Html.format("""
+                        sb.append(Strings.format("""
                                                                             <a class="icon fa fa-plus" onclick="return openModalDialog('/dlgpage/document/openCreateDocument?parentId={1}&type={2}');" title="{3}"></a>
                                         """,
                                 Integer.toString(contentData.getId()),
                                 documentTypes.get(0),
-                                Html.localized("_newDocument")
+                                Strings.getHtml("_newDocument")
                         ));
                     } else {
-                        sb.append(Html.format("""
+                        sb.append(Strings.format("""
                                                                             <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="{1}"></a>
                                                                             <div class="dropdown-menu">
                                         """,
-                                Html.localized("_newDocument")
+                                Strings.getHtml("_newDocument")
                         ));
                         for (String documentType : documentTypes) {
-                            String name = Html.localized("class." + documentType);
-                            sb.append(Html.format("""
+                            String name = Strings.getHtml("class." + documentType);
+                            sb.append(Strings.format("""
                                                                                     <a class="dropdown-item" onclick="return openModalDialog('/dlgpage/document/openCreateDocument?parentId={1}&type={2}');">{3}</a>
                                             """,
                                     Integer.toString(contentData.getId()),
@@ -228,7 +226,7 @@ public class ContentAdminPage extends HtmlIncludePage {
                     """);
             List<DocumentData> documents = contentData.getFiles(DocumentData.class);
             for (DocumentData document : documents) {
-                sb.append(Html.format("""
+                sb.append(Strings.format("""
                                                                     <li class="">{1}
                                                                         <div class="treeline">
                                                                             <span id="{2}">
@@ -247,19 +245,19 @@ public class ContentAdminPage extends HtmlIncludePage {
                                 """,
                         fileId == document.getId() ? "current" : "",
                         Integer.toString(document.getId()),
-                        Html.html(document.getDisplayName()),
+                        Strings.toHtml(document.getDisplayName()),
                         document.getURL(),
-                        Html.localized("_view"),
+                        Strings.getHtml("_view"),
                         document.getURL(),
-                        Html.localized("_download"),
+                        Strings.getHtml("_download"),
                         Integer.toString(document.getId()),
-                        Html.localized("_edit"),
+                        Strings.getHtml("_edit"),
                         Integer.toString(document.getId()),
-                        Html.localized("_cut"),
+                        Strings.getHtml("_cut"),
                         Integer.toString(document.getId()),
-                        Html.localized("_copy"),
+                        Strings.getHtml("_copy"),
                         Integer.toString(document.getId()),
-                        Html.localized("_delete")
+                        Strings.getHtml("_delete")
                 ));
             }
             sb.append("""
@@ -272,43 +270,43 @@ public class ContentAdminPage extends HtmlIncludePage {
     protected void appendContentImagesHtml(StringBuilder sb, ContentData contentData, RequestData rdata) {
         List<String> imageTypes = contentData.getImageClasses();
         int fileId = rdata.getAttributes().getInt("fileId");
-        sb.append(Html.format("""
+        sb.append(Strings.format("""
                             <li class="images open">
                                 <span>[{1}]</span>
             """,
-                Html.localized("_images")
+                Strings.getHtml("_images")
         ));
         if (contentData.hasUserEditRight(rdata)) {
             sb.append("""
                                 <div class="icons">
             """);
             if (rdata.hasClipboardData(ContentRequestKeys.KEY_IMAGE)) {
-                sb.append(Html.format("""
+                sb.append(Strings.format("""
                                     <a class="icon fa fa-paste" href="/page/image/pasteImage?parentId={1}" title="{2}"> </a>
             """,
                         Integer.toString(contentData.getId()),
-                        Html.localized("_pasteImage")
+                        Strings.getHtml("_pasteImage")
                 ));
             }
             if (!imageTypes.isEmpty()) {
                 if (imageTypes.size() == 1) {
-                    sb.append(Html.format("""
+                    sb.append(Strings.format("""
                                     <a class="icon fa fa-plus" onclick="return openModalDialog('/dlgpage/image/openCreateImage?parentId={1}&type={2}');" title="{3}"></a>
             """,
                             Integer.toString(contentData.getId()),
                             imageTypes.get(0),
-                            Html.localized("_newImage")
+                            Strings.getHtml("_newImage")
                     ));
                 } else {
-                    sb.append(Html.format("""
+                    sb.append(Strings.format("""
                                     <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="{1}"></a>
                                     <div class="dropdown-menu">
             """,
-                            Html.localized("_newImage")
+                            Strings.getHtml("_newImage")
                     ));
                     for (String imageType : imageTypes) {
-                        String name = Html.localized("class." + imageType);
-                        sb.append(Html.format("""
+                        String name = Strings.getHtml("class." + imageType);
+                        sb.append(Strings.format("""
                                         <a class="dropdown-item" onclick="return openModalDialog('/dlgpage/image/openCreateImage?parentId={1}&type={2}');">{3}</a>
             """,
                                 Integer.toString(contentData.getId()),
@@ -329,7 +327,7 @@ public class ContentAdminPage extends HtmlIncludePage {
             """);
             List<ImageData> images = contentData.getFiles(ImageData.class);
             for (ImageData image : images) {
-                sb.append(Html.format("""
+                sb.append(Strings.format("""
                                     <li class="{1}">
                                         <div class="treeline">
                                             <span class="treeImage" id="{2}">
@@ -351,21 +349,21 @@ public class ContentAdminPage extends HtmlIncludePage {
             """,
                         fileId == image.getId() ? "current" : "",
                         Integer.toString(image.getId()),
-                        Html.html(image.getDisplayName()),
+                        Strings.toHtml(image.getDisplayName()),
                         Integer.toString(image.getId()),
-                        Html.html(image.getFileName()),
+                        Strings.toHtml(image.getFileName()),
                         image.getURL(),
-                        Html.localized("_view"),
+                        Strings.getHtml("_view"),
                         image.getURL(),
-                        Html.localized("_download"),
+                        Strings.getHtml("_download"),
                         Integer.toString(image.getId()),
-                        Html.localized("_edit"),
+                        Strings.getHtml("_edit"),
                         Integer.toString(image.getId()),
-                        Html.localized("_cut"),
+                        Strings.getHtml("_cut"),
                         Integer.toString(image.getId()),
-                        Html.localized("_copy"),
+                        Strings.getHtml("_copy"),
                         Integer.toString(image.getId()),
-                        Html.localized("_delete")
+                        Strings.getHtml("_delete")
                 ));
             }
             sb.append("""
@@ -378,44 +376,44 @@ public class ContentAdminPage extends HtmlIncludePage {
     protected void appendContentMediaHtml(StringBuilder sb, ContentData contentData, RequestData rdata) {
         List<String> mediaTypes = contentData.getMediaClasses();
         int fileId = rdata.getAttributes().getInt("fileId");
-        sb.append(Html.format("""
+        sb.append(Strings.format("""
                                         
                             <li class="media open">
                                 <span>[{1}}]</span>
             """,
-                Html.localized("_media")
+                Strings.getHtml("_media")
         ));
         if (contentData.hasUserEditRight(rdata)) {
             sb.append("""
                                 <div class="icons">
             """);
             if (rdata.hasClipboardData(ContentRequestKeys.KEY_MEDIA)) {
-                sb.append(Html.format("""
+                sb.append(Strings.format("""
                                     <a class="icon fa fa-paste" href="/page/media/pasteMedia?parentId={1}" title="{2}"> </a>
             """,
                         Integer.toString(contentData.getId()),
-                        Html.localized("_pasteMedia")
+                        Strings.getHtml("_pasteMedia")
                 ));
             }
             if (!mediaTypes.isEmpty()) {
                 if (mediaTypes.size() == 1) {
-                    sb.append(Html.format("""
+                    sb.append(Strings.format("""
                                     <a class="icon fa fa-plus" onclick="return openModalDialog('/dlgpage/media/openCreateMedia?parentId={1}&type={2}');" title="{3}"></a>
             """,
                             Integer.toString(contentData.getId()),
                             mediaTypes.get(0),
-                            Html.localized("_newMedia")
+                            Strings.getHtml("_newMedia")
                     ));
                 } else {
-                    sb.append(Html.format("""
+                    sb.append(Strings.format("""
                                     <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="{1}"></a>
                                     <div class="dropdown-menu">
             """,
-                            Html.localized("_newMedia")
+                            Strings.getHtml("_newMedia")
                     ));
                     for (String mediaType : mediaTypes) {
-                        String name = Html.localized("class." + mediaType);
-                        sb.append(Html.format("""
+                        String name = Strings.getHtml("class." + mediaType);
+                        sb.append(Strings.format("""
                                         <a class="dropdown-item" onclick="return openModalDialog('/dlgpage/media/openCreateMedia?parentId={1}&type={2}');">{3}</a>
             """,
                                 Integer.toString(contentData.getId()),
@@ -437,7 +435,7 @@ public class ContentAdminPage extends HtmlIncludePage {
             """);
         List<MediaData> mediaFiles = contentData.getFiles(MediaData.class);
         for (MediaData media : mediaFiles) {
-            sb.append(Html.format("""
+            sb.append(Strings.format("""
                                     <li class="{1}">
                                         <div class="treeline">
                                             <span id="{2}">
@@ -456,19 +454,19 @@ public class ContentAdminPage extends HtmlIncludePage {
             """,
                     fileId == media.getId() ? "current" : "",
                     Integer.toString(media.getId()),
-                    Html.html(media.getDisplayName()),
+                    Strings.toHtml(media.getDisplayName()),
                     media.getURL(),
-                    Html.localized("_view"),
+                    Strings.getHtml("_view"),
                     media.getURL(),
-                    Html.localized("_download"),
+                    Strings.getHtml("_download"),
                     Integer.toString(media.getId()),
-                    Html.localized("_edit"),
+                    Strings.getHtml("_edit"),
                     Integer.toString(media.getId()),
-                    Html.localized("_cut"),
+                    Strings.getHtml("_cut"),
                     Integer.toString(media.getId()),
-                    Html.localized("_copy"),
+                    Strings.getHtml("_copy"),
                     Integer.toString(media.getId()),
-                    Html.localized("_delete")
+                    Strings.getHtml("_delete")
             ));
         }
         sb.append("""

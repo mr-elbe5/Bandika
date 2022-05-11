@@ -8,7 +8,7 @@
  */
 package de.elbe5.application;
 
-import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Strings;
 import de.elbe5.base.JsonWebToken;
 import de.elbe5.base.Log;
 import de.elbe5.ckeditor.CkEditorController;
@@ -16,15 +16,12 @@ import de.elbe5.company.CompanyCache;
 import de.elbe5.company.CompanyController;
 import de.elbe5.content.*;
 import de.elbe5.database.DbConnector;
-import de.elbe5.html.IncludeTag;
 import de.elbe5.layout.*;
-import de.elbe5.page.LayoutPartBean;
-import de.elbe5.page.LayoutPartData;
+import de.elbe5.page.TemplatePartBean;
 import de.elbe5.file.*;
 import de.elbe5.group.GroupController;
 import de.elbe5.page.*;
-import de.elbe5.template.TemplateTagFactory;
-import de.elbe5.serverpagetags.*;
+import de.elbe5.layout.TemplateTagFactory;
 import de.elbe5.servlet.InitServlet;
 import de.elbe5.timer.CleanupTaskData;
 import de.elbe5.timer.HeartbeatTaskData;
@@ -46,10 +43,10 @@ public class BandikaInitServlet extends InitServlet {
         ServletContext context=servletConfig.getServletContext();
         ApplicationPath.initializePath(ApplicationPath.getCatalinaAppDir(context), ApplicationPath.getCatalinaAppROOTDir(context));
         Configuration.setConfigs(context);
-        LocalizedStrings.addBundle("bandika", Configuration.getLocale());
-        LocalizedStrings.addBundle("content", Configuration.getLocale());
-        LocalizedStrings.addBundle("cms", Configuration.getLocale());
-        LocalizedStrings.addBundle("application", Configuration.getLocale());
+        Strings.addBundle("bandika", Configuration.getLocale());
+        Strings.addBundle("content", Configuration.getLocale());
+        Strings.addBundle("cms", Configuration.getLocale());
+        Strings.addBundle("application", Configuration.getLocale());
         Log.initLog(ApplicationPath.getAppName());
         if (!DbConnector.getInstance().initialize("jdbc/bandika"))
             return;
@@ -80,26 +77,27 @@ public class BandikaInitServlet extends InitServlet {
         FileFactory.addDefaultImageType(ImageData.class);
         FileFactory.addDefaultMediaType(MediaData.class);
 
-        PagePartFactory.addClassInfo(LayoutPartData.class, LayoutPartBean.getInstance(),true);
+        PagePartFactory.addClassInfo(TemplatePartData.class, TemplatePartBean.getInstance(),true);
 
-        TemplateTagFactory.addTagType(IncludeTag.TYPE, IncludeTag.class);
+        TemplateTagFactory.addTagType(MessageTag.TYPE, MessageTag.class);
         TemplateTagFactory.addTagType(BreadcrumbTag.TYPE, BreadcrumbTag.class);
         TemplateTagFactory.addTagType(ContentTag.TYPE, ContentTag.class);
         TemplateTagFactory.addTagType(FooterTag.TYPE, FooterTag.class);
-        TemplateTagFactory.addTagType(SPHtmlFieldTag.TYPE, SPHtmlFieldTag.class);
+        TemplateTagFactory.addTagType(HtmlFieldTag.TYPE, HtmlFieldTag.class);
         TemplateTagFactory.addTagType(MainNavTag.TYPE, MainNavTag.class);
-        TemplateTagFactory.addTagType(SPSectionTag.TYPE, SPSectionTag.class);
+        TemplateTagFactory.addTagType(SectionTag.TYPE, SectionTag.class);
         TemplateTagFactory.addTagType(SysNavTag.TYPE, SysNavTag.class);
-        TemplateTagFactory.addTagType(SPTextFieldTag.TYPE, SPTextFieldTag.class);
+        TemplateTagFactory.addTagType(TextFieldTag.TYPE, TextFieldTag.class);
 
-        LayoutCache.addType(PageData.LAYOUT_TYPE);
-        LayoutCache.addType(PagePartData.LAYOUT_TYPE);
+        TemplateCache.addType("master");
+        TemplateCache.addType("page");
+        TemplateCache.addType("part");
 
         ContentCache.load();
         ContentCentral.setInstance(new AppContentCentral());
         CompanyCache.load();
         UserCache.load();
-        LayoutCache.load();
+        TemplateCache.load();
         if (!FileBean.getInstance().assertFileDirectory()){
             Log.error("could not create file directory");
         }

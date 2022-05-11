@@ -8,7 +8,7 @@
  */
 package de.elbe5.application;
 
-import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Strings;
 import de.elbe5.base.Log;
 import de.elbe5.base.FileHelper;
 import de.elbe5.request.RequestKeys;
@@ -76,7 +76,7 @@ public class AdminController extends Controller {
         } catch (IOException e) {
             Log.error("could not touch file " + path, e);
         }
-        rdata.setMessage(LocalizedStrings.string("_restartHint"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.getString("_restartHint"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
@@ -84,12 +84,8 @@ public class AdminController extends Controller {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         UserCache.setDirty();
         UserCache.checkDirty();
-        rdata.setMessage(LocalizedStrings.string("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.getString("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
-    }
-
-    private IResponse showEditConfiguration() {
-        return new TemplateResponse("administration/editConfiguration");
     }
 
 }

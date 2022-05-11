@@ -8,8 +8,7 @@
  */
 package de.elbe5.servlet;
 
-import de.elbe5.base.LocalizedStrings;
-import de.elbe5.base.StringFormatter;
+import de.elbe5.base.Strings;
 import de.elbe5.response.HtmlResponse;
 
 import javax.servlet.http.HttpServlet;
@@ -88,10 +87,10 @@ public abstract class WebServlet extends HttpServlet {
             """;
     protected void handleException(HttpServletRequest request, HttpServletResponse response, int code){
         String errorKey = (String) request.getAttribute("errorKey");
-         String html = StringFormatter.format(exceptionHtml,
-                LocalizedStrings.html("_error"+code),
-                errorKey != null ? LocalizedStrings.html(errorKey) : "",
-                LocalizedStrings.html("_home"));
+         String html = Strings.format(exceptionHtml,
+                Strings.getHtml("_error"+code),
+                errorKey != null ? Strings.getHtml(errorKey) : "",
+                Strings.getHtml("_home"));
         HtmlResponse resp = new HtmlResponse(html);
         resp.sendHtml(response);
     }

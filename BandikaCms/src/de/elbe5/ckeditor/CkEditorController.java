@@ -46,13 +46,13 @@ public class CkEditorController extends ContentController {
     public IResponse openLinkBrowser(RequestData rdata) {
         ContentData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         checkRights(data.hasUserEditRight(rdata));
-        return new TemplateResponse("ckeditor/browseLinks");
+        return new BrowseLinksPage().createHtml(rdata);
     }
 
     public IResponse openImageBrowser(RequestData rdata) {
         ContentData data=rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         checkRights(data.hasUserEditRight(rdata));
-        return new TemplateResponse("ckeditor/browseImages");
+        return new BrowseImagesPage().createHtml(rdata);
     }
 
     public IResponse addImage(RequestData rdata) {
@@ -64,7 +64,7 @@ public class CkEditorController extends ContentController {
         ImageBean.getInstance().saveFile(image,true);
         ContentCache.setDirty();
         rdata.getAttributes().put("imageId", Integer.toString(image.getId()));
-        return new TemplateResponse("ckeditor/addImage");
+        return new AddImagePage().createHtml(rdata);
     }
 
 

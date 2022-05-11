@@ -10,7 +10,7 @@ package de.elbe5.user;
 
 import de.elbe5.base.BaseData;
 import de.elbe5.base.BinaryFile;
-import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Strings;
 import de.elbe5.base.Log;
 import de.elbe5.request.*;
 import de.elbe5.rights.SystemZone;
@@ -53,13 +53,13 @@ public class UserController extends Controller {
         String login = rdata.getAttributes().getString("login");
         String pwd = rdata.getAttributes().getString("password");
         if (login.length() == 0 || pwd.length() == 0) {
-            rdata.setMessage(LocalizedStrings.string("_notComplete"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.getString("_notComplete"), RequestKeys.MESSAGE_TYPE_ERROR);
             return openLogin(rdata);
         }
         UserData data = UserBean.getInstance().loginUser(login, pwd);
         if (data == null) {
             Log.info("bad login of "+login);
-            rdata.setMessage(LocalizedStrings.string("_badLogin"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.getString("_badLogin"), RequestKeys.MESSAGE_TYPE_ERROR);
             return openLogin(rdata);
         }
         rdata.setSessionUser(data);
@@ -82,7 +82,7 @@ public class UserController extends Controller {
     public IResponse logout(RequestData rdata) {
         rdata.setSessionUser(null);
         rdata.resetSession();
-        rdata.setMessage(LocalizedStrings.string("_loggedOut"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.getString("_loggedOut"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         String next = rdata.getAttributes().getString("next");
         if (!next.isEmpty())
             return new ForwardResponse(next);
@@ -118,19 +118,19 @@ public class UserController extends Controller {
         if (rdata.getUserId() == data.getId()) {
             rdata.setSessionUser(data);
         }
-        return new CloseDialogResponse("/page/admin/openPersonAdministration?userId=" + data.getId(), LocalizedStrings.string("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/page/admin/openPersonAdministration?userId=" + data.getId(), Strings.getString("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse deleteUser(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
-            rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.getString("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
             return new ForwardResponse("/page/admin/openPersonAdministration");
         }
         UserBean.getInstance().deleteUser(id);
         UserCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_userDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.getString("_userDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/page/admin/openPersonAdministration");
     }
 
@@ -150,7 +150,7 @@ public class UserController extends Controller {
 
     public IResponse openChangePassword(RequestData rdata) {
         checkRights(rdata.isLoggedIn());
-        return showChangePassword();
+        return showChangePassword(rdata);
     }
 
     public IResponse changePassword(RequestData rdata) {
@@ -164,29 +164,29 @@ public class UserController extends Controller {
         String newPassword2 = rdata.getAttributes().getString("newPassword2");
         if (newPassword.length() < UserData.MIN_PASSWORD_LENGTH) {
             rdata.addFormField("newPassword1");
-            rdata.addFormError(LocalizedStrings.string("_passwordLengthError"));
-            return showChangePassword();
+            rdata.addFormError(Strings.getString("_passwordLengthError"));
+            return showChangePassword(rdata);
         }
         if (!newPassword.equals(newPassword2)) {
             rdata.addFormField("newPassword1");
             rdata.addFormField("newPassword2");
-            rdata.addFormError(LocalizedStrings.string("_passwordsDontMatch"));
-            return showChangePassword();
+            rdata.addFormError(Strings.getString("_passwordsDontMatch"));
+            return showChangePassword(rdata);
         }
         UserData data = UserBean.getInstance().loginUser(user.getLogin(), oldPassword);
         if (data == null) {
             rdata.addFormField("newPassword1");
-            rdata.addFormError(LocalizedStrings.string("_badLogin"));
-            return showChangePassword();
+            rdata.addFormError(Strings.getString("_badLogin"));
+            return showChangePassword(rdata);
         }
         data.setPassword(newPassword);
         UserBean.getInstance().saveUserPassword(data);
-        return new CloseDialogResponse("/page/user/openProfile", LocalizedStrings.string("_passwordChanged"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/page/user/openProfile", Strings.getString("_passwordChanged"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse openChangeProfile(RequestData rdata) {
         checkRights(rdata.isLoggedIn());
-        return showChangeProfile();
+        return showChangeProfile(rdata);
     }
 
     public IResponse changeProfile(RequestData rdata) {
@@ -195,44 +195,28 @@ public class UserController extends Controller {
         UserData data = UserBean.getInstance().getUser(userId);
         data.readProfileRequestData(rdata);
         if (!rdata.checkFormErrors()) {
-            return showChangeProfile();
+            return showChangeProfile(rdata);
         }
         UserBean.getInstance().saveUserProfile(data);
         rdata.setSessionUser(data);
         UserCache.setDirty();
-        return new CloseDialogResponse("/page/user/openProfile", LocalizedStrings.string("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/page/user/openProfile", Strings.getString("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
     
     protected IResponse showProfile() {
-        TemplateInclude jsp = new TemplateInclude("user/profile");
-        return new MasterResponse(MasterResponse.DEFAULT_MASTER, jsp);
+        return new MasterResponse(new ProfilePage());
     }
 
-    protected IResponse showChangePassword() {
-        return new TemplateResponse("user/changePassword");
+    protected IResponse showChangePassword(RequestData rdata) {
+        return new ChangePasswordPage().createHtml(rdata);
     }
 
-    protected IResponse showChangeProfile() {
-        return new TemplateResponse("user/changeProfile");
-    }
-
-    protected IResponse showRegistration() {
-        TemplateInclude include = new TemplateInclude("user/registration");
-        return new MasterResponse(include);
-    }
-
-    protected IResponse showRegistrationDone() {
-        TemplateInclude include = new TemplateInclude("user/registrationDone");
-        return new MasterResponse(include);
-    }
-
-    protected IResponse showEmailVerification() {
-        TemplateInclude include = new TemplateInclude("user/verifyRegistrationEmail");
-        return new MasterResponse(include);
+    protected IResponse showChangeProfile(RequestData rdata) {
+        return new EditProfilePage().createHtml(rdata);
     }
 
     protected IResponse showLogin(RequestData rdata) {
-        return new TemplateResponse("user/login");
+        return new MasterResponse(new LoginPage());
     }
 
     protected IResponse showEditUser(RequestData rdata) {

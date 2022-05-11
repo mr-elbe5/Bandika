@@ -9,7 +9,7 @@
 package de.elbe5.timer;
 
 import de.elbe5.base.BaseData;
-import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Strings;
 import de.elbe5.request.RequestData;
 
 import java.time.LocalDateTime;
@@ -170,7 +170,7 @@ public abstract class TimerTaskData extends BaseData implements Cloneable {
         setMinute(rdata.getAttributes().getInt("minute"));
         setActive(rdata.getAttributes().getBoolean("active"));
         if (interval != TimerInterval.CONTINOUS && (day == 0 || (hour < 0 || hour >= 24) || (minute < 0 || minute >= 60))) {
-            rdata.addFormError(LocalizedStrings.string("_timerSettingsError"));
+            rdata.addFormError(Strings.getString("_timerSettingsError"));
             rdata.addFormField("interval");
             rdata.addFormField("day");
             rdata.addFormField("hour");

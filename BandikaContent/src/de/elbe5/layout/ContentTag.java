@@ -3,7 +3,6 @@ package de.elbe5.layout;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
 import de.elbe5.response.IMasterInclude;
-import de.elbe5.template.TemplateTag;
 
 public class ContentTag extends TemplateTag {
 

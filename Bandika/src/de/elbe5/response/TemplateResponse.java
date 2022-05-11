@@ -9,23 +9,25 @@
 package de.elbe5.response;
 
 import de.elbe5.request.RequestData;
-import de.elbe5.template.TemplateCache;
-import de.elbe5.template.Template;
+import de.elbe5.layout.TemplateCache;
+import de.elbe5.layout.Template;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
 public class TemplateResponse extends HtmlResponse {
 
-    protected String path;
+    protected String type;
+    protected String name;
 
-    public TemplateResponse(String path) {
-        this.path = path;
+    public TemplateResponse(String type, String name) {
+        this.type = type;
+        this.name = name;
     }
 
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
-        Template template = TemplateCache.getTemplate(path);
+        Template template = TemplateCache.getTemplate(type, name);
         if (template != null) {
             html = template.getHtml(rdata);
             super.processResponse(context, rdata, response);

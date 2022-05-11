@@ -8,7 +8,7 @@
  */
 package de.elbe5.content;
 
-import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Strings;
 import de.elbe5.base.BaseData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
@@ -79,7 +79,7 @@ public class ContentController extends Controller {
         data.setCreateValues(parentData, rdata);
         data.setRanking(parentData.getChildren().size());
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
-        return showEditContentData(data);
+        return showEditContentData(rdata, data);
     }
 
     //backend
@@ -89,7 +89,7 @@ public class ContentController extends Controller {
         checkRights(data.hasUserEditRight(rdata));
         data.setEditValues(ContentCache.getContent(data.getId()), rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
-        return showEditContentData(data);
+        return showEditContentData(rdata, data);
     }
 
     //backend
@@ -102,17 +102,17 @@ public class ContentController extends Controller {
         else
             data.readUpdateRequestData(rdata);
         if (!rdata.checkFormErrors()) {
-            return showEditContentData(data);
+            return showEditContentData(rdata, data);
         }
         data.setChangerId(rdata.getUserId());
         if (!ContentBean.getInstance().saveContent(data)) {
             setSaveError(rdata);
-            return showEditContentData(data);
+            return showEditContentData(rdata, data);
         }
         data.setNew(false);
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
         ContentCache.setDirty();
-        return new CloseDialogResponse("/page/admin/openContentAdministration?contentId=" + data.getId(), LocalizedStrings.string("_contentSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/page/admin/openContentAdministration?contentId=" + data.getId(), Strings.getString("_contentSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     //backend
@@ -122,7 +122,7 @@ public class ContentController extends Controller {
         checkRights(data.hasUserEditRight(rdata));
         data.setEditValues(ContentCache.getContent(data.getId()), rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
-        return showEditRights(data);
+        return showEditRights(rdata, data);
     }
 
     //backend
@@ -132,16 +132,16 @@ public class ContentController extends Controller {
         checkRights(data.hasUserEditRight(rdata));
         data.readRightsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
-            return showEditRights(data);
+            return showEditRights(rdata, data);
         }
         data.setChangerId(rdata.getUserId());
         if (!ContentBean.getInstance().saveRights(data)) {
             setSaveError(rdata);
-            return showEditRights(data);
+            return showEditRights(rdata, data);
         }
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
         ContentCache.setDirty();
-        return new CloseDialogResponse("/page/admin/openContentAdministration?contentId=" + data.getId(), LocalizedStrings.string("_rightsSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/page/admin/openContentAdministration?contentId=" + data.getId(), Strings.getString("_rightsSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     //backend
@@ -170,19 +170,19 @@ public class ContentController extends Controller {
         int parentId = rdata.getAttributes().getInt("parentId");
         ContentData data=rdata.getClipboardData(ContentRequestKeys.KEY_CONTENT,ContentData.class);
         if (data==null){
-            rdata.setMessage(LocalizedStrings.string("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata);
         }
         ContentData parent = ContentCache.getContent(parentId);
         if (parent == null){
-            rdata.setMessage(LocalizedStrings.string("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata);
         }
         checkRights(parent.hasUserEditRight(rdata));
         Set<Integer> parentIds=new HashSet<>();
         parent.collectParentIds(parentIds);
         if (parentIds.contains(data.getId())){
-            rdata.setMessage(LocalizedStrings.string("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata);
         }
         data.setParentId(parentId);
@@ -192,7 +192,7 @@ public class ContentController extends Controller {
         ContentBean.getInstance().saveContent(data);
         rdata.clearClipboardData(ContentRequestKeys.KEY_CONTENT);
         ContentCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_contentPasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.getString("_contentPasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,data.getId());
     }
 
@@ -209,7 +209,7 @@ public class ContentController extends Controller {
         ContentData data=ContentCache.getContent(contentId);
         checkRights(data.hasUserEditRight(rdata)) ;
         if (contentId < BaseData.ID_MIN) {
-            rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.getString("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata);
         }
         int parentId = ContentCache.getParentContentId(contentId);
@@ -217,7 +217,7 @@ public class ContentController extends Controller {
         ContentCache.setDirty();
         rdata.getAttributes().put("contentId", Integer.toString(parentId));
         ContentCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_contentDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.getString("_contentDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,parentId);
     }
 
@@ -227,7 +227,7 @@ public class ContentController extends Controller {
         ContentData data = ContentCache.getContent(contentId);
         checkRights(data.hasUserEditRight(rdata));
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
-        return showSortChildContents();
+        return showSortChildContents(rdata);
     }
 
     //backend
@@ -246,7 +246,7 @@ public class ContentController extends Controller {
         ContentBean.getInstance().updateChildRankings(data);
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
         ContentCache.setDirty();
-        return new CloseDialogResponse("/page/admin/openContentAdministration?contentId=" + contentId, LocalizedStrings.string("_newRankingSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/page/admin/openContentAdministration?contentId=" + contentId, Strings.getString("_newRankingSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse openCreateContentFrontend(RequestData rdata) {
@@ -276,16 +276,16 @@ public class ContentController extends Controller {
         return show(rdata);
     }
 
-    protected IResponse showEditContentData(ContentData contentData) {
-        return new TemplateResponse(contentData.getContentDataPage());
+    protected IResponse showEditContentData(RequestData rdata, ContentData contentData) {
+        return new EditContentDataPage().createHtml(rdata);
     }
 
-    protected IResponse showEditRights(ContentData contentData) {
-        return new TemplateResponse("content/editGroupRights");
+    protected IResponse showEditRights(RequestData rdata, ContentData contentData) {
+        return new EditContentRightsPage().createHtml(rdata);
     }
 
-    protected IResponse showSortChildContents() {
-        return new TemplateResponse("content/sortChildContents");
+    protected IResponse showSortChildContents(RequestData rdata) {
+        return new SortChildContentPage().createHtml(rdata);
     }
 
     protected IResponse showContentAdministration(RequestData rdata, int contentId) {

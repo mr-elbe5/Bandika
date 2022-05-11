@@ -1,11 +1,10 @@
 package de.elbe5.layout;
 
+import de.elbe5.base.Strings;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
-import de.elbe5.html.Html;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
-import de.elbe5.template.TemplateTag;
 
 import java.util.List;
 
@@ -29,13 +28,13 @@ public class BreadcrumbTag extends TemplateTag {
         for (int i = parentIds.size() - 1; i >= 0; i--) {
             ContentData content = ContentCache.getContent(parentIds.get(i));
             if (content != null) {
-                sb.append(Html.format("""
+                sb.append(Strings.format("""
                                         <li class="breadcrumb-item">
                                             <a href="{1}">{2}</a>
                                         </li>
             """,
                         content.getUrl(),
-                        Html.html(content.getDisplayName())));
+                        Strings.toHtml(content.getDisplayName())));
             }
         }
         sb.append("""

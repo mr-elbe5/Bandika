@@ -10,21 +10,23 @@ package de.elbe5.response;
 
 import de.elbe5.application.Configuration;
 import de.elbe5.request.RequestData;
-import de.elbe5.template.TemplateCache;
-import de.elbe5.template.Template;
+import de.elbe5.layout.TemplateCache;
+import de.elbe5.layout.Template;
 
 public class TemplateInclude implements IMasterInclude {
 
-    private final String templatePath;
+    private final String type;
+    private final String name;
 
-    public TemplateInclude(String templatePath) {
-        this.templatePath = templatePath;
+    public TemplateInclude(String type, String name) {
+        this.type = type;
+        this.name = name;
     }
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
         sb.append("<div id=\"pageContent\" class=\"viewArea\">");
-        Template template = TemplateCache.getTemplate(templatePath);
+        Template template = TemplateCache.getTemplate(type, name);
         if (template!=null) {
             sb.append(template.getHtml(rdata));
         }

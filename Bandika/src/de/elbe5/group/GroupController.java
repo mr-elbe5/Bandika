@@ -8,7 +8,7 @@
  */
 package de.elbe5.group;
 
-import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Strings;
 import de.elbe5.base.BaseData;
 import de.elbe5.request.*;
 import de.elbe5.response.*;
@@ -72,19 +72,19 @@ public class GroupController extends Controller {
         }
         GroupBean.getInstance().saveGroup(data);
         UserCache.setDirty();
-        return new CloseDialogResponse("/page/admin/openPersonAdministration?groupId=" + data.getId(), LocalizedStrings.string("_groupSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/page/admin/openPersonAdministration?groupId=" + data.getId(), Strings.getString("_groupSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse deleteGroup(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
-            rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.getString("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
             return new ForwardResponse("/page/admin/openPersonAdministration");
         }
         GroupBean.getInstance().deleteGroup(id);
         UserCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_groupDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.getString("_groupDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/page/admin/openPersonAdministration");
     }
 

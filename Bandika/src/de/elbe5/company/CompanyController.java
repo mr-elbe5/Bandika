@@ -8,7 +8,7 @@
  */
 package de.elbe5.company;
 
-import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Strings;
 import de.elbe5.base.BaseData;
 import de.elbe5.request.*;
 import de.elbe5.response.*;
@@ -47,7 +47,7 @@ public class CompanyController extends Controller {
         int companyId = rdata.getId();
         CompanyData data = CompanyBean.getInstance().getCompany(companyId);
         rdata.setSessionObject("companyData", data);
-        return showEditCompany();
+        return showEditCompany(rdata);
     }
 
     public IResponse openCreateCompany(RequestData rdata) {
@@ -56,7 +56,7 @@ public class CompanyController extends Controller {
         data.setNew(true);
         data.setId(CompanyBean.getInstance().getNextId());
         rdata.setSessionObject("companyData", data);
-        return showEditCompany();
+        return showEditCompany(rdata);
     }
 
     public IResponse saveCompany(RequestData rdata) {
@@ -67,27 +67,27 @@ public class CompanyController extends Controller {
         }
         data.readSettingsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
-            return showEditCompany();
+            return showEditCompany(rdata);
         }
         CompanyBean.getInstance().saveCompany(data);
         CompanyCache.setDirty();
-        return new CloseDialogResponse("/page/admin/openPersonAdministration?companyId=" + data.getId(), LocalizedStrings.string("_companySaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/page/admin/openPersonAdministration?companyId=" + data.getId(), Strings.getString("_companySaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse deleteCompany(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
-            rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(Strings.getString("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
             return new ForwardResponse("/page/admin/openPersonAdministration");
         }
         CompanyBean.getInstance().deleteCompany(id);
         CompanyCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_companyDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.getString("_companyDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/page/admin/openPersonAdministration");
     }
 
-    protected IResponse showEditCompany() {
-        return new TemplateResponse("company/editCompany");
+    protected IResponse showEditCompany(RequestData rdata) {
+        return new EditCompanyPage().createHtml(rdata);
     }
 }

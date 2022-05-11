@@ -11,7 +11,7 @@ package de.elbe5.file;
 import de.elbe5.application.ApplicationPath;
 import de.elbe5.base.BinaryFile;
 import de.elbe5.base.Log;
-import de.elbe5.base.StringHelper;
+import de.elbe5.base.Strings;
 import de.elbe5.database.DbBean;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
@@ -35,7 +35,7 @@ public class FopBean extends DbBean {
     }
 
     protected String xml(String src){
-        return StringHelper.toXml(src);
+        return Strings.toXml(src);
     }
 
     public byte[] generatePdf(String basePath, String xml, Templates xslTemplates) {

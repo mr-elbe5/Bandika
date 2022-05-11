@@ -10,7 +10,7 @@ package de.elbe5.page;
 
 import de.elbe5.application.Configuration;
 import de.elbe5.application.MailHelper;
-import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Strings;
 import de.elbe5.base.Log;
 import de.elbe5.content.ContentBean;
 import de.elbe5.content.ContentCache;
@@ -130,30 +130,6 @@ public class PageController extends ContentController {
         return data.getDefaultView();
     }
 
-    public IResponse openLinkBrowser(RequestData rdata) {
-        ContentData data=rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-        checkRights(data.hasUserEditRight(rdata));
-        return new TemplateResponse("ckeditor/browseLinks");
-    }
-
-    public IResponse openImageBrowser(RequestData rdata) {
-        ContentData data=rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-        checkRights(data.hasUserEditRight(rdata));
-        return new TemplateResponse("ckeditor/browseImages");
-    }
-
-    public IResponse addImage(RequestData rdata) {
-        ContentData data=rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-        checkRights(data.hasUserEditRight(rdata));
-        ImageData image=new ImageData();
-        image.setCreateValues(data,rdata);
-        image.readSettingsRequestData(rdata);
-        ImageBean.getInstance().saveFile(image,true);
-        ContentCache.setDirty();
-        rdata.getAttributes().put("imageId", Integer.toString(image.getId()));
-        return new TemplateResponse("ckeditor/addImage");
-    }
-
     public IResponse republishPage(RequestData rdata) {
         int contentId = rdata.getId();
 
@@ -193,7 +169,7 @@ public class PageController extends ContentController {
         pdata.setCreateValues(rdata);
         data.addPart(pdata, fromPartId, true);
         rdata.getAttributes().put(PagePartData.KEY_PART, pdata);
-        return new TemplateResponse("page/newPart");
+        return new AddPartPage().createHtml(rdata);
     }
 
     public IResponse sendContact(RequestData rdata) {
@@ -201,7 +177,7 @@ public class PageController extends ContentController {
         String sessionCaptcha = rdata.getSessionObject(RequestKeys.KEY_CAPTCHA, String.class);
         if (!captcha.equals(sessionCaptcha)){
             rdata.addFormField("captcha");
-            rdata.addFormError(LocalizedStrings.string("_captchaError"));
+            rdata.addFormError(Strings.getString("_captchaError"));
             return show(rdata);
         }
         String name = rdata.getAttributes().getString("contactName");
@@ -219,12 +195,12 @@ public class PageController extends ContentController {
         if (!rdata.checkFormErrors()){
             return show(rdata);
         }
-        message = String.format(LocalizedStrings.html("_contactRequestText"),name,email) + message;
-        if (!MailHelper.sendPlainMail(Configuration.getMailReceiver(), LocalizedStrings.string("_contactRequest"), message)) {
-            rdata.setMessage(LocalizedStrings.string("_contactRequestError"), RequestKeys.MESSAGE_TYPE_ERROR);
+        message = String.format(Strings.getHtml("_contactRequestText"),name,email) + message;
+        if (!MailHelper.sendPlainMail(Configuration.getMailReceiver(), Strings.getString("_contactRequest"), message)) {
+            rdata.setMessage(Strings.getString("_contactRequestError"), RequestKeys.MESSAGE_TYPE_ERROR);
             return show(rdata);
         }
-        rdata.setMessage(LocalizedStrings.string("_contactRequestSent"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.getString("_contactRequestSent"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         rdata.removeSessionObject(RequestKeys.KEY_CAPTCHA);
         return show(rdata);
     }

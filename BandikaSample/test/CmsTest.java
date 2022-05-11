@@ -1,13 +1,11 @@
-import de.elbe5.html.IncludeTag;
-import de.elbe5.html.MessageTag;
+import de.elbe5.layout.MessageTag;
 import de.elbe5.layout.*;
 import de.elbe5.application.Configuration;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestType;
-import de.elbe5.template.TemplateCache;
-import de.elbe5.template.TemplateTagFactory;
-import de.elbe5.template.Template;
-import de.elbe5.serverpagetags.*;
+import de.elbe5.layout.TemplateCache;
+import de.elbe5.layout.TemplateTagFactory;
+import de.elbe5.layout.Template;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,24 +24,29 @@ public class CmsTest {
     }
 
     void prepare(){
-        Template.templateBasePath = System.getProperty("user.dir") + "/../Bandika/web/WEB-INF/_shtml/";
-        System.out.println(Template.templateBasePath);
-        TemplateTagFactory.addTagType(IncludeTag.TYPE, IncludeTag.class);
+        TemplateCache.templateBasePath = System.getProperty("user.dir") + "/../Bandika/web/WEB-INF/_template/";
+        System.out.println(TemplateCache.templateBasePath);
+        TemplateTagFactory.addTagType(MessageTag.TYPE, MessageTag.class);
         TemplateTagFactory.addTagType(BreadcrumbTag.TYPE, BreadcrumbTag.class);
         TemplateTagFactory.addTagType(ContentTag.TYPE, ContentTag.class);
         TemplateTagFactory.addTagType(FooterTag.TYPE, FooterTag.class);
-        TemplateTagFactory.addTagType(SPHtmlFieldTag.TYPE, SPHtmlFieldTag.class);
+        TemplateTagFactory.addTagType(HtmlFieldTag.TYPE, HtmlFieldTag.class);
         TemplateTagFactory.addTagType(MainNavTag.TYPE, MainNavTag.class);
-        TemplateTagFactory.addTagType(SPSectionTag.TYPE, SPSectionTag.class);
+        TemplateTagFactory.addTagType(SectionTag.TYPE, SectionTag.class);
         TemplateTagFactory.addTagType(SysNavTag.TYPE, SysNavTag.class);
-        TemplateTagFactory.addTagType(SPTextFieldTag.TYPE, SPTextFieldTag.class);
+        TemplateTagFactory.addTagType(TextFieldTag.TYPE, TextFieldTag.class);
         rdata.getTemplateAttributes().put("language", Configuration.getLocale().getLanguage());
-        rdata.getTemplateAttributes().put("include", "_layout/page/defaultPage");
+        rdata.getTemplateAttributes().put("include", "_template/page/defaultPage");
+
+        TemplateCache.addType("master");
+        TemplateCache.addType("page");
+        TemplateCache.addType("part");
+
+        TemplateCache.load();
     }
 
     void run(){
-        Template page = TemplateCache.getTemplate("user/editUser");
-        System.out.println(page.getPath());
+        Template page = TemplateCache.getTemplate("master", "defaultMaster");
         System.out.println(page.getCode());
     }
 

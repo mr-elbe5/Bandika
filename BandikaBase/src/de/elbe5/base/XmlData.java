@@ -112,11 +112,11 @@ public class XmlData {
 
     public void addText(Element parentNode, String name, String text) {
         Element childNode = addNode(parentNode, name);
-        childNode.appendChild(doc.createTextNode(StringHelper.toXml(text)));
+        childNode.appendChild(doc.createTextNode(Strings.toXml(text)));
     }
 
     public Text replaceWithText(Element oldNode, String text) {
-        Text newNode = doc.createTextNode(StringHelper.toXml(text));
+        Text newNode = doc.createTextNode(Strings.toXml(text));
         oldNode.getParentNode().replaceChild(newNode, oldNode);
         return newNode;
     }

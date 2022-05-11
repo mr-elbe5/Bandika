@@ -8,7 +8,7 @@
  */
 package de.elbe5.search;
 
-import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Strings;
 import de.elbe5.request.RequestKeys;
 import de.elbe5.response.*;
 import de.elbe5.rights.SystemZone;
@@ -76,25 +76,23 @@ public class SearchController extends Controller {
     public IResponse indexAllContent(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         SearchQueue.getInstance().addAction(SearchQueue.ACTION_INDEX_PAGES);
-        rdata.setMessage(LocalizedStrings.string("_indexingContentQueued"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.getString("_indexingContentQueued"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/page/admin/openSystemAdministration");
     }
 
     public IResponse indexAllUsers(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         SearchQueue.getInstance().addAction(SearchQueue.ACTION_INDEX_USERS);
-        rdata.setMessage(LocalizedStrings.string("_indexingUsersQueued"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(Strings.getString("_indexingUsersQueued"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/page/admin/openSystemAdministration");
     }
 
     protected IResponse showSearch() {
-        TemplateInclude pageInclude = new TemplateInclude("search/search");
-        return new MasterResponse(pageInclude);
+        return new MasterResponse(new SearchPage());
     }
 
     protected IResponse showUserSearch() {
-        TemplateInclude pageInclude = new TemplateInclude("search/userSearch");
-        return new MasterResponse(pageInclude);
+        return new MasterResponse(new UserSearchPage());
     }
 
 }

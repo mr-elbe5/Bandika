@@ -9,7 +9,7 @@
 package de.elbe5.content;
 
 import de.elbe5.page.PageBean;
-import de.elbe5.page.LayoutPartBean;
+import de.elbe5.page.TemplatePartBean;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -19,7 +19,7 @@ public class AppContentCentral extends ContentCentral{
     @Override
     public void replaceStringInContent(Connection con, String oldFileName,String fileName) throws SQLException {
         PageBean.getInstance().replaceStringInContent(con,oldFileName,fileName);
-        LayoutPartBean.getInstance().replaceStringInContent(con,oldFileName,fileName);
+        TemplatePartBean.getInstance().replaceStringInContent(con,oldFileName,fileName);
     }
 
 }

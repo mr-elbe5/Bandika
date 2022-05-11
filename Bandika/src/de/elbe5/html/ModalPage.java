@@ -1,5 +1,6 @@
 package de.elbe5.html;
 
+import de.elbe5.base.Strings;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.HtmlResponse;
 
@@ -17,7 +18,7 @@ public class ModalPage extends HtmlResponse {
     }
 
     public void appendModalStart(StringBuilder sb, String title) {
-        sb.append(Html.format("""
+        sb.append(Strings.format("""
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -32,19 +33,8 @@ public class ModalPage extends HtmlResponse {
     }
 
     public void appendModalBodyStart(StringBuilder sb, RequestData rdata, String title){
-        sb.append("""
+        sb.append(Strings.format("""
                         <div class="modal-body">
-                        """);
-        if (rdata.hasFormError()) {
-            sb.append(Html.format("""
-                                      <div class="formError">
-                                          {1}
-                                      </div>
-                            """,
-                    Html.htmlMultiline(rdata.getFormError(false).getFormErrorString())
-            ));
-        }
-        sb.append(Html.format("""
                                 <h3>{1}
                                 </h3>
                 """,
@@ -53,7 +43,7 @@ public class ModalPage extends HtmlResponse {
     }
 
     public void appendModalEnd(StringBuilder sb, String secondary, String primary) {
-        sb.append(Html.format("""                
+        sb.append(Strings.format("""                
                                 </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{1}
@@ -64,12 +54,8 @@ public class ModalPage extends HtmlResponse {
                                 </div>
                             </div>
                         """,
-                Html.localized(secondary),
-                Html.localized(primary)));
-    }
-
-    void appendFormError(StringBuilder sb, RequestData rdata) {
-
+                secondary,
+                primary));
     }
 
 }

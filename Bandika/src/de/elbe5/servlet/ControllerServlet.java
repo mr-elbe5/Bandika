@@ -9,8 +9,8 @@
 package de.elbe5.servlet;
 
 import de.elbe5.base.Log;
-import de.elbe5.base.StringHelper;
 import de.elbe5.application.Configuration;
+import de.elbe5.base.Strings;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestType;
 import de.elbe5.response.IResponse;
@@ -51,7 +51,7 @@ public class ControllerServlet extends WebServlet {
             if (stk.hasMoreTokens()) {
                 methodName = stk.nextToken();
                 if (stk.hasMoreTokens()) {
-                    rdata.setId(StringHelper.toInt(stk.nextToken()));
+                    rdata.setId(Strings.toInt(stk.nextToken()));
                 }
             }
             controller = ControllerCache.getController(controllerName);
