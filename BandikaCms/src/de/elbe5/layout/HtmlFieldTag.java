@@ -30,7 +30,7 @@ public class HtmlFieldTag extends TemplateTag {
                     <div class="ckeditField" id="{1}" contenteditable="true">{2}</div>
                     <input type="hidden" name="{3}" value="{4}" />
                     <script type="text/javascript">
-                        $('#{5}').ckeditor({toolbar : 'Full',filebrowserBrowseUrl : '/page/ckeditor/openLinkBrowser?contentId={6}',filebrowserImageBrowseUrl : '/page/ckeditor/openImageBrowser?contentId={7}'});
+                        $('#{5}').ckeditor({toolbar : 'Full',filebrowserBrowseUrl : '/ctrl/ckeditor/openLinkBrowser?contentId={6}',filebrowserImageBrowseUrl : '/ctrl/ckeditor/openImageBrowser?contentId={7}'});
                     </script>""",
                     field.getIdentifier(),
                     field.getContent().isEmpty() ? Strings.toHtml(placeholder) : field.getContent(),

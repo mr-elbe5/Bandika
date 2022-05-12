@@ -24,7 +24,7 @@ public class TemplatePartBean extends PagePartBean {
         return instance;
     }
 
-    private static final String READ_PART_EXTRAS_SQL = "SELECT layout FROM t_layout_part WHERE id=? ";
+    private static final String READ_PART_EXTRAS_SQL = "SELECT template FROM t_template_part WHERE id=? ";
 
     public void readPartExtras(Connection con, PagePartData partData) throws SQLException {
         if (!(partData instanceof TemplatePartData))
@@ -37,7 +37,7 @@ public class TemplatePartBean extends PagePartBean {
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
-                    data.setLayout(rs.getString(i));
+                    data.setTemplate(rs.getString(i));
                     readAllPartFields(con, data);
                 }
             }
@@ -71,8 +71,8 @@ public class TemplatePartBean extends PagePartBean {
         }
     }
 
-    private static final String INSERT_PART_EXTRAS_SQL = "INSERT INTO t_layout_part (layout,id) VALUES(?,?)";
-    private static final String UPDATE_PART_EXTRAS_SQL = "UPDATE t_layout_part SET layout=? WHERE id=?";
+    private static final String INSERT_PART_EXTRAS_SQL = "INSERT INTO t_template_part (template,id) VALUES(?,?)";
+    private static final String UPDATE_PART_EXTRAS_SQL = "UPDATE t_template_part SET template=? WHERE id=?";
 
     public void writePartExtras(Connection con, PagePartData partData) throws SQLException {
         if (!(partData instanceof TemplatePartData))
@@ -82,7 +82,7 @@ public class TemplatePartBean extends PagePartBean {
         try {
             pst = con.prepareStatement(data.isNew() ? INSERT_PART_EXTRAS_SQL : UPDATE_PART_EXTRAS_SQL);
             int i = 1;
-            pst.setString(i++, data.getLayout());
+            pst.setString(i++, data.getTemplate());
             pst.setInt(i, data.getId());
             pst.executeUpdate();
             writeAllPartFields(con, data);

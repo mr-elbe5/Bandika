@@ -19,7 +19,6 @@ import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.CloseDialogResponse;
 import de.elbe5.response.IResponse;
-import de.elbe5.response.TemplateResponse;
 import de.elbe5.servlet.ResponseException;
 
 import javax.servlet.http.HttpServletResponse;
@@ -56,7 +55,7 @@ public class ContentController extends Controller {
         ContentData data = ContentCache.getContent(contentId);
         checkRights(data.hasUserReadRight(rdata));
         ContentBean.getInstance().increaseViewCount(data.getId());
-        return data.getDefaultView();
+        return showContent(data);
     }
 
     //frontend
@@ -66,7 +65,7 @@ public class ContentController extends Controller {
         checkRights(data.hasUserReadRight(rdata));
         //Log.log("show: "+data.getClass().getSimpleName());
         ContentBean.getInstance().increaseViewCount(data.getId());
-        return data.getDefaultView();
+        return showContent(data);
     }
 
     //backend
@@ -94,7 +93,6 @@ public class ContentController extends Controller {
 
     //backend
     public IResponse saveContentData(RequestData rdata) {
-        int contentId = rdata.getId();
         ContentData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         checkRights(data.hasUserEditRight(rdata));
         if (data.isNew())
@@ -112,7 +110,7 @@ public class ContentController extends Controller {
         data.setNew(false);
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
         ContentCache.setDirty();
-        return new CloseDialogResponse("/page/admin/openContentAdministration?contentId=" + data.getId(), Strings.getString("_contentSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId(), Strings.getString("_contentSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     //backend
@@ -141,7 +139,7 @@ public class ContentController extends Controller {
         }
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
         ContentCache.setDirty();
-        return new CloseDialogResponse("/page/admin/openContentAdministration?contentId=" + data.getId(), Strings.getString("_rightsSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId(), Strings.getString("_rightsSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     //backend
@@ -246,7 +244,7 @@ public class ContentController extends Controller {
         ContentBean.getInstance().updateChildRankings(data);
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
         ContentCache.setDirty();
-        return new CloseDialogResponse("/page/admin/openContentAdministration?contentId=" + contentId, Strings.getString("_newRankingSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + contentId, Strings.getString("_newRankingSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse openCreateContentFrontend(RequestData rdata) {
@@ -276,8 +274,12 @@ public class ContentController extends Controller {
         return show(rdata);
     }
 
+    protected IResponse showContent(ContentData contentData) {
+        return contentData.getResponse();
+    }
+
     protected IResponse showEditContentData(RequestData rdata, ContentData contentData) {
-        return new EditContentDataPage().createHtml(rdata);
+        return contentData.getContentDataPage().createHtml(rdata);
     }
 
     protected IResponse showEditRights(RequestData rdata, ContentData contentData) {
@@ -289,7 +291,7 @@ public class ContentController extends Controller {
     }
 
     protected IResponse showContentAdministration(RequestData rdata, int contentId) {
-        return new ForwardResponse("/page/admin/openContentAdministration?contentId=" + contentId);
+        return new ForwardResponse("/ctrl/admin/openContentAdministration?contentId=" + contentId);
     }
 
 }

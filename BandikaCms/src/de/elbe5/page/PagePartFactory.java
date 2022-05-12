@@ -30,7 +30,7 @@ public class PagePartFactory {
     public static PagePartData getNewData(String type) {
         if (!infos.containsKey(type)) {
             Log.error("no part info for type "+type);
-            return null;
+            return new PagePartData();
         }
         return infos.get(type).getNewData();
     }
@@ -38,7 +38,7 @@ public class PagePartFactory {
     public static PagePartBean getBean(String type){
         if (!infos.containsKey(type)) {
             Log.error("no part info for type "+type);
-            return null;
+            return PagePartBean.getInstance();
         }
         return infos.get(type).getBean();
     }

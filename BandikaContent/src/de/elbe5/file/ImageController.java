@@ -76,7 +76,7 @@ public class ImageController extends FileController {
         }
         data.setNew(false);
         ContentCache.setDirty();
-        return new CloseDialogResponse("/page/admin/openContentAdministration?contentId=" + data.getId(), Strings.getString("_fileSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId(), Strings.getString("_fileSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse cutImage(RequestData rdata) {

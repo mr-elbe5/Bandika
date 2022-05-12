@@ -16,6 +16,7 @@ import de.elbe5.company.CompanyCache;
 import de.elbe5.company.CompanyController;
 import de.elbe5.content.*;
 import de.elbe5.database.DbConnector;
+import de.elbe5.html.IfTag;
 import de.elbe5.layout.*;
 import de.elbe5.page.TemplatePartBean;
 import de.elbe5.file.*;
@@ -79,6 +80,7 @@ public class BandikaInitServlet extends InitServlet {
 
         PagePartFactory.addClassInfo(TemplatePartData.class, TemplatePartBean.getInstance(),true);
 
+        TemplateTagFactory.addTagType(IfTag.TYPE, IfTag.class);
         TemplateTagFactory.addTagType(MessageTag.TYPE, MessageTag.class);
         TemplateTagFactory.addTagType(BreadcrumbTag.TYPE, BreadcrumbTag.class);
         TemplateTagFactory.addTagType(ContentTag.TYPE, ContentTag.class);

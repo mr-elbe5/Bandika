@@ -20,11 +20,7 @@ public class MasterResponse extends TemplateResponse {
 
     public static String DEFAULT_MASTER = "defaultMaster";
 
-    protected IMasterInclude includeObject = null;
-
-    public MasterResponse(String name) {
-        super("master", name);
-    }
+    protected IMasterInclude includeObject;
 
     public MasterResponse(IMasterInclude include) {
         this(DEFAULT_MASTER, include);
@@ -43,9 +39,4 @@ public class MasterResponse extends TemplateResponse {
         super.processResponse(context, rdata, response);
     }
 
-    public String toPrettyString(){
-        String html = toString();
-        Document doc = Jsoup.parse(html);
-        return doc.toString();
-    }
 }

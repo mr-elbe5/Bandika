@@ -15,20 +15,28 @@ public class SysNavTag extends TemplateTag {
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
-        ContentData currentContent = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-        String userClass = rdata.isLoggedIn() ? "fa-user" : "fa-user-o";
+        appendAdminHtml(sb, rdata);
+        appendContentHtml(sb, rdata);
+        appendUserHtml(sb, rdata);
+    }
+
+    public void appendAdminHtml(StringBuilder sb, RequestData rdata) {
         sb.append("""
                                 <ul class="nav justify-content-end">
             """);
         if (rdata.hasAnyElevatedSystemRight()) {
             sb.append(Strings.format("""
-                                    <li class="nav-item"><a class="nav-link fa fa-cog" href="/page/admin/openAdministration" title="{1}"></a></li>
+                                    <li class="nav-item"><a class="nav-link fa fa-cog" href="/ctrl/admin/openAdministration" title="{1}"></a></li>
             """,
                     Strings.toHtml("_administration")));
         }
+    }
+
+    public void appendContentHtml(StringBuilder sb, RequestData rdata) {
+        ContentData currentContent = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         if (currentContent!=null && !currentContent.isEditing() && currentContent.hasUserEditRight(rdata)) {
             sb.append(Strings.format("""
-                                    <li class="nav-item"><a class="nav-link fa fa-edit" href="/page/cmspage/openEditContentFrontend/{1}" title="{2}"></a></li>
+                                    <li class="nav-item"><a class="nav-link fa fa-edit" href="/ctrl/cmspage/openEditContentFrontend/{1}" title="{2}"></a></li>
             """,
                     Integer.toString(currentContent.getId()),
                     Strings.getHtml("_editPage")
@@ -37,13 +45,13 @@ public class SysNavTag extends TemplateTag {
                 if (currentContent.isPublished()) {
                     if (currentContent.isPublishedView()) {
                         sb.append(Strings.format("""
-                                    <li class="nav-item"><a class="nav-link fa fa-eye-slash" href="/page/cmspage/showDraft/{1}" title="{2}" ></a></li>
+                                    <li class="nav-item"><a class="nav-link fa fa-eye-slash" href="/ctrl/cmspage/showDraft/{1}" title="{2}" ></a></li>
             """,
                                 Integer.toString(currentContent.getId()),
                                 Strings.getHtml("_showDraft")));
                     } else {
                         sb.append(Strings.format("""
-                                    <li class="nav-item"><a class="nav-link fa fa-eye" href="/page/cmspage/showPublished/{1}" title="{2}"></a></li>
+                                    <li class="nav-item"><a class="nav-link fa fa-eye" href="/ctrl/cmspage/showPublished/{1}" title="{2}"></a></li>
             """,
                                 Integer.toString(currentContent.getId()),
                                 Strings.getHtml("_showPublished")));
@@ -51,13 +59,17 @@ public class SysNavTag extends TemplateTag {
                 }
                 if (currentContent.hasUserApproveRight(rdata)) {
                     sb.append(Strings.format("""
-                                    <li class="nav-item"><a class="nav-link fa fa-thumbs-up" href="/page/cmspage/publishPage/{1}" title="{2}"></a></li>
+                                    <li class="nav-item"><a class="nav-link fa fa-thumbs-up" href="/ctrl/cmspage/publishPage/{1}" title="{2}"></a></li>
             """,
                             Integer.toString(currentContent.getId()),
                             Strings.getHtml("_publish")));
                 }
             }
         }
+    }
+
+    public void appendUserHtml(StringBuilder sb, RequestData rdata) {
+        String userClass = rdata.isLoggedIn() ? "fa-user" : "fa-user-o";
         sb.append(Strings.format("""
                                     <li class="nav-item">
                                         <a class="nav-link fa {1}" data-toggle="dropdown" title="{2}"></a>
@@ -67,14 +79,14 @@ public class SysNavTag extends TemplateTag {
                 Strings.getHtml("_user")));
         if (rdata.isLoggedIn()) {
             sb.append(Strings.format("""
-                                            <a class="dropdown-item" href="/page/user/openProfile">{1}</a>
-                                            <a class="dropdown-item" href="/page/user/logout">{2}</a>
+                                            <a class="dropdown-item" href="/ctrl/user/openProfile">{1}</a>
+                                            <a class="dropdown-item" href="/ctrl/user/logout">{2}</a>
             """,
                     Strings.getHtml("_profile"),
                     Strings.getHtml("_logout")));
         } else {
             sb.append(Strings.format("""
-                                            <a class="dropdown-item" href="" onclick="return openModalDialog('/dlgpage/user/openLogin');">{1}</a>
+                                            <a class="dropdown-item" href="/ctrl/user/openLogin">{1}</a>
             """,
                     Strings.getHtml("_login")));
         }

@@ -12,12 +12,11 @@ import de.elbe5.request.RequestData;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class TemplatePartData extends PagePartData {
 
-    protected String layout="";
+    protected String template = "";
     protected LocalDateTime publishDate = null;
     protected String publishedContent = "";
 
@@ -35,7 +34,7 @@ public class TemplatePartData extends PagePartData {
         if (!(data instanceof TemplatePartData))
             return;
         TemplatePartData tpdata=(TemplatePartData)data;
-        setLayout(tpdata.getLayout());
+        setTemplate(tpdata.getTemplate());
         getFields().clear();
         for (PartField f : tpdata.getFields().values()) {
             try {
@@ -45,28 +44,16 @@ public class TemplatePartData extends PagePartData {
         }
     }
 
-    public String getLayout() {
-        return layout;
+    public String getTemplate() {
+        return template;
     }
 
-    public void setLayout(String layout) {
-        this.layout = layout;
-    }
-
-    public String getTemplateUrl() {
-        return "/WEB-INF/_shtml/_layout/"+ layout +".shtml";
-    }
-
-    public String getPartInclude() {
-        return getTemplateUrl();
-    }
-
-    public String getEditPartInclude() {
-        return getTemplateUrl();
+    public void setTemplate(String template) {
+        this.template = template;
     }
 
     public String getEditTitle() {
-        return getLayout() + ", ID=" + getId();
+        return getTemplate() + ", ID=" + getId();
     }
 
     public LocalDateTime getPublishDate() {
@@ -126,7 +113,7 @@ public class TemplatePartData extends PagePartData {
     @Override
     public void setCreateValues(RequestData rdata) {
         super.setCreateValues(rdata);
-        setLayout(rdata.getAttributes().getString("layout"));
+        setTemplate(rdata.getAttributes().getString("layout"));
     }
 
     @Override

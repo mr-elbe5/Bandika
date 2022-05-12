@@ -26,7 +26,7 @@ class ContentClassInfo {
         } catch (Exception e) {
             Log.error("could not create content data for type "+type);
         }
-        return null;
+        return new ContentData();
     }
 
     public ContentBean getBean(){

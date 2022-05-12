@@ -43,7 +43,7 @@ public class ImageData extends FileData implements IJsonData {
     // base data
 
     public String getPreviewURL(){
-        return "/page/image/showPreview/"+getId();
+        return "/ctrl/image/showPreview/"+getId();
     }
 
     public int getWidth() {

@@ -13,7 +13,7 @@ import de.elbe5.content.ContentBean;
 import de.elbe5.layout.PartHtml;
 import de.elbe5.request.RequestData;
 
-public abstract class PagePartData extends BaseData implements Comparable<PagePartData> {
+public class PagePartData extends BaseData implements Comparable<PagePartData> {
 
     public static final String KEY_PART = "partData";
     public static String LAYOUT_TYPE = "Part";

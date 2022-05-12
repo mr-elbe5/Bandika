@@ -12,8 +12,7 @@ package de.elbe5.request;
 public enum RequestType {
     any,
     content,
-    page,
-    dialogpage,
-    apicall,
+    ctrl,
+    api,
     file
 }

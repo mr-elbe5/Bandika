@@ -28,7 +28,7 @@ public class ContentAdminPage extends HtmlIncludePage {
         if (rdata.hasAnyContentRight()) {
             sb.append(Strings.format("""
                                 <div class = "">
-                                        <a class = "btn btn-sm btn-outline-light" href="/page/content/clearClipboard">{1}</a>
+                                        <a class = "btn btn-sm btn-outline-light" href="/ctrl/content/clearClipboard">{1}</a>
                                     </div>
                                     <ul class="tree pagetree">
                             """,
@@ -66,9 +66,9 @@ public class ContentAdminPage extends HtmlIncludePage {
             if ((contentData.hasUserEditRight(rdata))) {
                 sb.append(Strings.format("""
                                     <div class="icons">
-                                        <a class="icon fa fa-eye" href="" onclick="return linkTo('/page/content/show/{1}');" title="{2}"> </a>
-                                        <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/dlgpage/content/openEditContentData/{3}');" title="{4}"> </a>
-                                        <a class="icon fa fa-key" href="" onclick="return openModalDialog('/dlgpage/content/openEditRights/{5}');" title="{6}"> </a>
+                                        <a class="icon fa fa-eye" href="" onclick="return linkTo('/ctrl/content/show/{1}');" title="{2}"> </a>
+                                        <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/content/openEditContentData/{3}');" title="{4}"> </a>
+                                        <a class="icon fa fa-key" href="" onclick="return openModalDialog('/ctrl/content/openEditRights/{5}');" title="{6}"> </a>
                                 """,
                         Integer.toString(contentData.getId()),
                         Strings.getHtml("_view"),
@@ -78,21 +78,21 @@ public class ContentAdminPage extends HtmlIncludePage {
                         Strings.getHtml("_rights")));
                 if (contentData.getId() != ContentData.ID_ROOT) {
                     sb.append(Strings.format("""
-                                        <a class="icon fa fa-scissors" href="" onclick="return linkTo('/page/content/cutContent/{1}');" title="{2}"> </a>
+                                        <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/content/cutContent/{1}');" title="{2}"> </a>
                                     """,
                             Integer.toString(contentData.getId()),
                             Strings.getHtml("_cut")
                     ));
                 }
                 sb.append(Strings.format("""
-                                    <a class="icon fa fa-copy" href="" onclick="return linkTo('/page/content/copyContent/{1}');" title="{2}"> </a>
+                                    <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/content/copyContent/{1}');" title="{2}"> </a>
                                 """,
                         Integer.toString(contentData.getId()),
                         Strings.getHtml("_copy")
                 ));
                 if (contentData.hasChildren()) {
                     sb.append(Strings.format("""
-                                        <a class="icon fa fa-sort" href="" onclick="return openModalDialog('/dlgpage/content/openSortChildPages/{1}');" title="{2}"> </a>
+                                        <a class="icon fa fa-sort" href="" onclick="return openModalDialog('/ctrl/content/openSortChildPages/{1}');" title="{2}"> </a>
                                     """,
                             Integer.toString(contentData.getId()),
                             Strings.getHtml("_sortChildPages")
@@ -100,7 +100,7 @@ public class ContentAdminPage extends HtmlIncludePage {
                 }
                 if (contentData.getId() != ContentData.ID_ROOT) {
                     sb.append(Strings.format("""
-                                        <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/page/content/deleteContent/{1}');" title="{2}>"> </a>
+                                        <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/content/deleteContent/{1}');" title="{2}>"> </a>
                                     """,
                             Integer.toString(contentData.getId()),
                             Strings.getHtml("_delete")
@@ -108,7 +108,7 @@ public class ContentAdminPage extends HtmlIncludePage {
                 }
                 if (rdata.hasClipboardData(ContentRequestKeys.KEY_CONTENT)) {
                     sb.append(Strings.format("""
-                                            <a class="icon fa fa-paste" href="/page/content/pasteContent?parentId={1}" title="{2}"> </a>
+                                            <a class="icon fa fa-paste" href="/ctrl/content/pasteContent?parentId={1}" title="{2}"> </a>
                                     """,
                             Integer.toString(contentData.getId()),
                             Strings.getHtml("_pasteContent")
@@ -117,7 +117,7 @@ public class ContentAdminPage extends HtmlIncludePage {
                 if (!childTypes.isEmpty()) {
                     if (childTypes.size() == 1) {
                         sb.append(Strings.format("""
-                                            <a class="icon fa fa-plus" onclick="return openModalDialog('/dlgpage/content/openCreateContentData?parentId=&type={1}');" title="{2}"></a>
+                                            <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/content/openCreateContentData?parentId=&type={1}');" title="{2}"></a>
                                         """,
                                 Integer.toString(contentData.getId()),
                                 Strings.getHtml("_newContent")
@@ -132,7 +132,7 @@ public class ContentAdminPage extends HtmlIncludePage {
                         for (String pageType : childTypes) {
                             String name = Strings.getHtml("class." + pageType);
                             sb.append(Strings.format("""
-                                                <a class="dropdown-item" onclick="return openModalDialog('/dlgpage/content/openCreateContentData?parentId={1}&type={2}');">{3}</a>
+                                                <a class="dropdown-item" onclick="return openModalDialog('/ctrl/content/openCreateContentData?parentId={1}&type={2}');">{3}</a>
                                             """,
                                     Integer.toString(contentData.getId()),
                                     pageType,
@@ -181,7 +181,7 @@ public class ContentAdminPage extends HtmlIncludePage {
                     """);
             if (rdata.hasClipboardData(ContentRequestKeys.KEY_DOCUMENT)) {
                 sb.append(Strings.format("""
-                                                                    <a class="icon fa fa-paste" href="/page/document/pasteDocument?parentId={1}" title="{2}"> </a>
+                                                                    <a class="icon fa fa-paste" href="/ctrl/document/pasteDocument?parentId={1}" title="{2}"> </a>
                                 """,
                         Integer.toString(contentData.getId()),
                         Strings.getHtml("_pasteDocument")
@@ -189,7 +189,7 @@ public class ContentAdminPage extends HtmlIncludePage {
                 if (!documentTypes.isEmpty()) {
                     if (documentTypes.size() == 1) {
                         sb.append(Strings.format("""
-                                                                            <a class="icon fa fa-plus" onclick="return openModalDialog('/dlgpage/document/openCreateDocument?parentId={1}&type={2}');" title="{3}"></a>
+                                                                            <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/document/openCreateDocument?parentId={1}&type={2}');" title="{3}"></a>
                                         """,
                                 Integer.toString(contentData.getId()),
                                 documentTypes.get(0),
@@ -205,7 +205,7 @@ public class ContentAdminPage extends HtmlIncludePage {
                         for (String documentType : documentTypes) {
                             String name = Strings.getHtml("class." + documentType);
                             sb.append(Strings.format("""
-                                                                                    <a class="dropdown-item" onclick="return openModalDialog('/dlgpage/document/openCreateDocument?parentId={1}&type={2}');">{3}</a>
+                                                                                    <a class="dropdown-item" onclick="return openModalDialog('/ctrl/document/openCreateDocument?parentId={1}&type={2}');">{3}</a>
                                             """,
                                     Integer.toString(contentData.getId()),
                                     documentType,
@@ -235,10 +235,10 @@ public class ContentAdminPage extends HtmlIncludePage {
                                                                             <div class="icons">
                                                                                 <a class="icon fa fa-eye" href="{4}" target="_blank" title="{5}"> </a>
                                                                                 <a class="icon fa fa-download" href="{6}?download=true" title="{7}"> </a>
-                                                                                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/dlgpage/document/openEditDocument/{8}');" title="{9}"> </a>
-                                                                                <a class="icon fa fa-scissors" href="" onclick="return linkTo('/page/document/cutDocument/{10}');" title="{11}"> </a>
-                                                                                <a class="icon fa fa-copy" href="" onclick="return linkTo('/page/document/copyDocument/{12}');" title="{13}"> </a>
-                                                                                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/page/document/deleteDocument/{14}');" title="{15}"> </a>
+                                                                                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/document/openEditDocument/{8}');" title="{9}"> </a>
+                                                                                <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/document/cutDocument/{10}');" title="{11}"> </a>
+                                                                                <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/document/copyDocument/{12}');" title="{13}"> </a>
+                                                                                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/document/deleteDocument/{14}');" title="{15}"> </a>
                                                                             </div>
                                                                         </div>
                                                                     </li>
@@ -282,7 +282,7 @@ public class ContentAdminPage extends HtmlIncludePage {
             """);
             if (rdata.hasClipboardData(ContentRequestKeys.KEY_IMAGE)) {
                 sb.append(Strings.format("""
-                                    <a class="icon fa fa-paste" href="/page/image/pasteImage?parentId={1}" title="{2}"> </a>
+                                    <a class="icon fa fa-paste" href="/ctrl/image/pasteImage?parentId={1}" title="{2}"> </a>
             """,
                         Integer.toString(contentData.getId()),
                         Strings.getHtml("_pasteImage")
@@ -291,7 +291,7 @@ public class ContentAdminPage extends HtmlIncludePage {
             if (!imageTypes.isEmpty()) {
                 if (imageTypes.size() == 1) {
                     sb.append(Strings.format("""
-                                    <a class="icon fa fa-plus" onclick="return openModalDialog('/dlgpage/image/openCreateImage?parentId={1}&type={2}');" title="{3}"></a>
+                                    <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/image/openCreateImage?parentId={1}&type={2}');" title="{3}"></a>
             """,
                             Integer.toString(contentData.getId()),
                             imageTypes.get(0),
@@ -307,7 +307,7 @@ public class ContentAdminPage extends HtmlIncludePage {
                     for (String imageType : imageTypes) {
                         String name = Strings.getHtml("class." + imageType);
                         sb.append(Strings.format("""
-                                        <a class="dropdown-item" onclick="return openModalDialog('/dlgpage/image/openCreateImage?parentId={1}&type={2}');">{3}</a>
+                                        <a class="dropdown-item" onclick="return openModalDialog('/ctrl/image/openCreateImage?parentId={1}&type={2}');">{3}</a>
             """,
                                 Integer.toString(contentData.getId()),
                                 imageType,
@@ -333,16 +333,16 @@ public class ContentAdminPage extends HtmlIncludePage {
                                             <span class="treeImage" id="{2}">
                                                 {3}
                                                 <span class="hoverImage">
-                                                    <img src="/page/image/showPreview/{4}" alt="{5}"/>
+                                                    <img src="/ctrl/image/showPreview/{4}" alt="{5}"/>
                                                 </span>
                                             </span>
                                             <div class="icons">
                                                 <a class="icon fa fa-eye" href="{6}" target="_blank" title="{7}"> </a>
                                                 <a class="icon fa fa-download" href="{8}?download=true" title="{9}"> </a>
-                                                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/dlgpage/image/openEditImage/{10}');" title="{11}"> </a>
-                                                <a class="icon fa fa-scissors" href="" onclick="return linkTo('/page/image/cutImage/{12}');" title="{13}"> </a>
-                                                <a class="icon fa fa-copy" href="" onclick="return linkTo('/page/image/copyImage/{14}');" title="{15}"> </a>
-                                                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/page/image/deleteImage/{16}');" title="{17}"> </a>
+                                                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/image/openEditImage/{10}');" title="{11}"> </a>
+                                                <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/image/cutImage/{12}');" title="{13}"> </a>
+                                                <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/image/copyImage/{14}');" title="{15}"> </a>
+                                                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/image/deleteImage/{16}');" title="{17}"> </a>
                                             </div>
                                         </div>
                                     </li>
@@ -389,7 +389,7 @@ public class ContentAdminPage extends HtmlIncludePage {
             """);
             if (rdata.hasClipboardData(ContentRequestKeys.KEY_MEDIA)) {
                 sb.append(Strings.format("""
-                                    <a class="icon fa fa-paste" href="/page/media/pasteMedia?parentId={1}" title="{2}"> </a>
+                                    <a class="icon fa fa-paste" href="/ctrl/media/pasteMedia?parentId={1}" title="{2}"> </a>
             """,
                         Integer.toString(contentData.getId()),
                         Strings.getHtml("_pasteMedia")
@@ -398,7 +398,7 @@ public class ContentAdminPage extends HtmlIncludePage {
             if (!mediaTypes.isEmpty()) {
                 if (mediaTypes.size() == 1) {
                     sb.append(Strings.format("""
-                                    <a class="icon fa fa-plus" onclick="return openModalDialog('/dlgpage/media/openCreateMedia?parentId={1}&type={2}');" title="{3}"></a>
+                                    <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/media/openCreateMedia?parentId={1}&type={2}');" title="{3}"></a>
             """,
                             Integer.toString(contentData.getId()),
                             mediaTypes.get(0),
@@ -414,7 +414,7 @@ public class ContentAdminPage extends HtmlIncludePage {
                     for (String mediaType : mediaTypes) {
                         String name = Strings.getHtml("class." + mediaType);
                         sb.append(Strings.format("""
-                                        <a class="dropdown-item" onclick="return openModalDialog('/dlgpage/media/openCreateMedia?parentId={1}&type={2}');">{3}</a>
+                                        <a class="dropdown-item" onclick="return openModalDialog('/ctrl/media/openCreateMedia?parentId={1}&type={2}');">{3}</a>
             """,
                                 Integer.toString(contentData.getId()),
                                 mediaType,
@@ -444,10 +444,10 @@ public class ContentAdminPage extends HtmlIncludePage {
                                             <div class="icons">
                                                 <a class="icon fa fa-eye" href="{4}" target="_blank" title="{5}"> </a>
                                                 <a class="icon fa fa-download" href="{6}?download=true" title="{7}"> </a>
-                                                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/dlgpage/media/openEditMedia/{8}');" title="{9}"> </a>
-                                                <a class="icon fa fa-scissors" href="" onclick="return linkTo('/page/media/cutMedia/{10}');" title="{11}"> </a>
-                                                <a class="icon fa fa-copy" href="" onclick="return linkTo('/page/media/copyMedia/{12}');" title="{13}"> </a>
-                                                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/page/media/deleteMedia/{14}');" title="{15}"> </a>
+                                                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/media/openEditMedia/{8}');" title="{9}"> </a>
+                                                <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/media/cutMedia/{10}');" title="{11}"> </a>
+                                                <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/media/copyMedia/{12}');" title="{13}"> </a>
+                                                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/media/deleteMedia/{14}');" title="{15}"> </a>
                                             </div>
                                         </div>
                                     </li>

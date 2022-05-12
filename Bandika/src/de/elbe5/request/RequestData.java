@@ -480,7 +480,7 @@ public class RequestData {
 
     public void addLoginCookie(String name, String value, int expirationDays){
         Cookie cookie=new Cookie("elbe5cms_"+name,value);
-        cookie.setPath("/page/user/login");
+        cookie.setPath("/ctrl/user/login");
         cookie.setMaxAge(expirationDays*24*60*60);
         cookies.put(cookie.getName(),cookie);
     }

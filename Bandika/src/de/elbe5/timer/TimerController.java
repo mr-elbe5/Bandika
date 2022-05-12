@@ -66,7 +66,7 @@ public class TimerController extends Controller {
         TimerBean ts = TimerBean.getInstance();
         ts.updateTaskData(data);
         Timer.getInstance().loadTask(data.getName());
-        return new CloseDialogResponse("/page/admin/openSystemAdministration", Strings.getString("_taskSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/admin/openSystemAdministration", Strings.getString("_taskSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     private IResponse showEditTimerTask(RequestData rdata) {

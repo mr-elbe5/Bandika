@@ -118,7 +118,7 @@ public class UserController extends Controller {
         if (rdata.getUserId() == data.getId()) {
             rdata.setSessionUser(data);
         }
-        return new CloseDialogResponse("/page/admin/openPersonAdministration?userId=" + data.getId(), Strings.getString("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/admin/openPersonAdministration?userId=" + data.getId(), Strings.getString("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse deleteUser(RequestData rdata) {
@@ -126,12 +126,12 @@ public class UserController extends Controller {
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
             rdata.setMessage(Strings.getString("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
-            return new ForwardResponse("/page/admin/openPersonAdministration");
+            return new ForwardResponse("/ctrl/admin/openPersonAdministration");
         }
         UserBean.getInstance().deleteUser(id);
         UserCache.setDirty();
         rdata.setMessage(Strings.getString("_userDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return new ForwardResponse("/page/admin/openPersonAdministration");
+        return new ForwardResponse("/ctrl/admin/openPersonAdministration");
     }
 
     public IResponse showPortrait(RequestData rdata) {
@@ -181,7 +181,7 @@ public class UserController extends Controller {
         }
         data.setPassword(newPassword);
         UserBean.getInstance().saveUserPassword(data);
-        return new CloseDialogResponse("/page/user/openProfile", Strings.getString("_passwordChanged"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/user/openProfile", Strings.getString("_passwordChanged"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse openChangeProfile(RequestData rdata) {
@@ -200,7 +200,7 @@ public class UserController extends Controller {
         UserBean.getInstance().saveUserProfile(data);
         rdata.setSessionUser(data);
         UserCache.setDirty();
-        return new CloseDialogResponse("/page/user/openProfile", Strings.getString("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/user/openProfile", Strings.getString("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
     
     protected IResponse showProfile() {
@@ -216,7 +216,7 @@ public class UserController extends Controller {
     }
 
     protected IResponse showLogin(RequestData rdata) {
-        return new MasterResponse(new LoginPage());
+        return new HtmlResponse(LoginPage.getHtml());
     }
 
     protected IResponse showEditUser(RequestData rdata) {

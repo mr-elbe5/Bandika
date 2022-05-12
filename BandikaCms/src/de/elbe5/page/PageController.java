@@ -16,13 +16,10 @@ import de.elbe5.content.ContentBean;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentController;
 import de.elbe5.content.ContentData;
-import de.elbe5.file.ImageBean;
-import de.elbe5.file.ImageData;
 import de.elbe5.request.*;
 import de.elbe5.response.ForwardResponse;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.IResponse;
-import de.elbe5.response.TemplateResponse;
 
 import java.io.IOException;
 import java.net.URI;
@@ -64,7 +61,7 @@ public class PageController extends ContentController {
         data.setEditValues(ContentBean.getInstance().getContent(data.getId()), rdata);
         data.startEditing();
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
-        return data.getDefaultView();
+        return data.getResponse();
     }
 
     //frontend
@@ -72,7 +69,7 @@ public class PageController extends ContentController {
     public IResponse showEditContentFrontend(RequestData rdata) {
         PageData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, PageData.class);
         checkRights(data.hasUserEditRight(rdata));
-        return data.getDefaultView();
+        return data.getResponse();
     }
 
     //frontend
@@ -85,7 +82,7 @@ public class PageController extends ContentController {
         data.setChangerId(rdata.getUserId());
         if (!ContentBean.getInstance().saveContent(data)) {
             setSaveError(rdata);
-            return data.getDefaultView();
+            return data.getResponse();
         }
         data.setViewType(ContentData.VIEW_TYPE_SHOW);
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
@@ -100,7 +97,7 @@ public class PageController extends ContentController {
         PageData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, PageData.class);
         checkRights(data.hasUserEditRight(rdata));
         data.stopEditing();
-        return data.getDefaultView();
+        return data.getResponse();
     }
 
     public IResponse showDraft(RequestData rdata){
@@ -108,7 +105,7 @@ public class PageController extends ContentController {
         ContentData data = ContentCache.getContent(contentId);
         checkRights(data.hasUserReadRight(rdata));
         data.setViewType(ContentData.VIEW_TYPE_SHOW);
-        return data.getDefaultView();
+        return data.getResponse();
     }
 
     public IResponse showPublished(RequestData rdata){
@@ -116,18 +113,15 @@ public class PageController extends ContentController {
         ContentData data = ContentCache.getContent(contentId);
         checkRights(data.hasUserReadRight(rdata));
         data.setViewType(ContentData.VIEW_TYPE_SHOWPUBLISHED);
-        return data.getDefaultView();
+        return data.getResponse();
     }
 
     //frontend
     public IResponse publishPage(RequestData rdata){
         int contentId = rdata.getId();
         Log.log("Publishing page" + contentId);
-        PageData data=ContentBean.getInstance().getContent(contentId,PageData.class);
-        checkRights(data.hasUserApproveRight(rdata));
-        data.setViewType(ContentData.VIEW_TYPE_PUBLISH);
-        data.setPublishDate(PageBean.getInstance().getServerTime());
-        return data.getDefaultView();
+        //todo
+        return show(rdata);
     }
 
     public IResponse republishPage(RequestData rdata) {
@@ -139,7 +133,7 @@ public class PageController extends ContentController {
             String uri = rdata.getRequest().getRequestURI();
             int idx = url.lastIndexOf(uri);
             url = url.substring(0, idx);
-            url +="/page/cmspage/publishPage/"+contentId;
+            url +="/ctrl/cmspage/publishPage/"+contentId;
             try {
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(url))
@@ -156,7 +150,7 @@ public class PageController extends ContentController {
                 Log.error("could not send publishing request", e);
             }
         }
-        return new ForwardResponse("/page/admin/openContentAdministration");
+        return new ForwardResponse("/ctrl/admin/openContentAdministration");
     }
 
     public IResponse addPart(RequestData rdata) {

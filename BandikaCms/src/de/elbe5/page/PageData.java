@@ -8,13 +8,9 @@
  */
 package de.elbe5.page;
 
-import de.elbe5.base.Log;
-import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.html.ModalPage;
 import de.elbe5.request.RequestData;
-import de.elbe5.response.IResponse;
-import de.elbe5.content.ContentResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -23,8 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PageData extends ContentData {
-
-    public static String LAYOUT_TYPE = "Page";
 
     private String keywords = "";
     protected String layout = "";
@@ -154,80 +148,17 @@ public class PageData extends ContentData {
 
     //used in jsp
     protected void appendEditContent(StringBuilder sb, RequestData rdata) {
-        includePage(sb,"page/editPageContent", rdata);
+
     }
 
     //used in jsp
     protected void appendDraftContent(StringBuilder sb, RequestData rdata) {
-        includePage(sb, getLayoutUrl(), rdata);
+
     }
 
     //used in jsp
     protected void appendPublishedContent(StringBuilder sb, RequestData rdata) {
         sb.append(publishedContent);
-    }
-
-    public IResponse getDefaultView(){
-        return new ContentResponse(this);
-    }
-
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
-        switch (getViewType()) {
-            case VIEW_TYPE_PUBLISH -> {
-                sb.append("""
-                                
-                                    <div id="pageContent" class="viewArea">
-                """);
-                StringBuilder sbp = new StringBuilder();
-                appendDraftContent(sbp, rdata);
-                setPublishedContent(sbp.toString());
-                reformatPublishedContent();
-                //Log.log("publishing page " + getDisplayName());
-                if (!PageBean.getInstance().publishPage(this)) {
-                    Log.error("error writing published content");
-                }
-                sb.append(getPublishedContent());
-                setViewType(ContentData.VIEW_TYPE_SHOW);
-                ContentCache.setDirty();
-                sb.append("""
-                                    </div>
-            """);
-            }
-            case VIEW_TYPE_EDIT -> {
-                sb.append("""
-                                
-                                    <div id="pageContent" class="editArea">
-                """);
-                appendEditContent(sb, rdata);
-                sb.append("""
-                                    </div>
-            """);
-            }
-            case VIEW_TYPE_SHOWPUBLISHED -> {
-                sb.append("""
-                                
-                                    <div id="pageContent" class="viewArea">
-                """);
-                if (isPublished())
-                    appendPublishedContent(sb, rdata);
-                sb.append("""
-                                    </div>
-            """);
-            }
-            default -> {
-                sb.append("""
-                                
-                                    <div id="pageContent" class="viewArea">
-                """);
-                if (isPublished() && !hasUserEditRight(rdata))
-                    appendPublishedContent(sb, rdata);
-                else
-                    appendDraftContent(sb, rdata);
-                sb.append("""
-                                    </div>
-            """);
-            }
-        }
     }
 
     // multiple data

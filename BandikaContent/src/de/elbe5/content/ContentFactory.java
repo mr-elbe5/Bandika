@@ -31,7 +31,7 @@ public class ContentFactory {
     public static ContentData getNewData(String type) {
         if (!infos.containsKey(type)) {
             Log.error("no content info for type "+type);
-            return null;
+            return new ContentData();
         }
         return infos.get(type).getNewData();
     }
@@ -39,7 +39,7 @@ public class ContentFactory {
     public static ContentBean getBean(String type){
         if (!infos.containsKey(type)) {
             Log.error("no content info for type "+type);
-            return null;
+            return ContentBean.getInstance();
         }
         return infos.get(type).getBean();
     }

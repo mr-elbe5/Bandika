@@ -12,9 +12,9 @@
     if (contentData!=null)
         url += contentData.getUrl();
     else if (rdata!= null && rdata.isLoggedIn())
-        url +="/page/admin/openSystemAdministration";
+        url +="/ctrl/admin/openSystemAdministration";
     else
-        url +="/page/user/openLogin";
+        url +="/ctrl/user/openLogin";
 %>
 <html>
 <head>

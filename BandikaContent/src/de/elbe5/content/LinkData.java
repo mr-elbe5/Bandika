@@ -45,15 +45,20 @@ public class LinkData extends ContentData {
     }
 
     @Override
-    public String getNavDisplay(){
-        if (!linkIcon.isEmpty()){
-            return "<img src=\"/static-content/img/" + linkIcon +"\" class=\"navIcon\" title=\"" + Strings.toHtml(getDisplayName()) + "\" alt=\"" + Strings.toHtml(getDisplayName()) + "\" />";
+    public String getNavDisplay() {
+        if (!linkIcon.isEmpty()) {
+            return Strings.format("""
+                                <img src="/static-content/img/{1}" class="navIcon" title="{2}" alt="{3}" />
+                            """,
+                    linkIcon,
+                    Strings.toHtml(getDisplayName()),
+                    Strings.toHtml(getDisplayName()));
         }
         return Strings.toHtml(getDisplayName());
     }
 
     @Override
-    public IResponse getDefaultView(){
+    public IResponse getResponse() {
         return new RedirectResponse(linkUrl);
     }
 

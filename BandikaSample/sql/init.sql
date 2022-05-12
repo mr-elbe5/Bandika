@@ -225,12 +225,12 @@ CREATE TABLE IF NOT EXISTS t_page_part
     CONSTRAINT t_page_part_fk1 FOREIGN KEY (page_id) REFERENCES t_page (id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS t_layout_part
+CREATE TABLE IF NOT EXISTS t_template_part
 (
     id            INTEGER      NOT NULL,
-    layout        VARCHAR(255) NOT NULL,
-    CONSTRAINT t_layout_part_pk PRIMARY KEY (id),
-    CONSTRAINT t_layout_part_fk1 FOREIGN KEY (id) REFERENCES t_page_part (id) ON DELETE CASCADE
+    template      VARCHAR(255) NOT NULL,
+    CONSTRAINT t_template_part_pk PRIMARY KEY (id),
+    CONSTRAINT t_template_part_fk1 FOREIGN KEY (id) REFERENCES t_page_part (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS t_part_field

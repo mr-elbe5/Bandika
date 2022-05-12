@@ -25,7 +25,7 @@ public class ContactTag extends TemplateTag {
                 <div class="{1}">
                 """,
                 Strings.toHtml(cssClass)));
-        Form.appendFormStart(sb, "/ctrl/page/sendContact/" + contentId, "contactform");
+        Form.appendFormStart(sb, "/ctrl/ctrl/sendContact/" + contentId, "contactform");
         Form.appendFormError(sb, rdata);
         Form.appendTextLine(sb, rdata.hasFormErrorField("contactName"), Strings.toHtml("contactName"), Strings.getHtml("_name"), true, Strings.toHtml(contactName),0);
         Form.appendTextLine(sb, rdata.hasFormErrorField("contactEmail"), Strings.toHtml("contactEmail"), Strings.getHtml("_email"), true, Strings.toHtml(contactEmail));

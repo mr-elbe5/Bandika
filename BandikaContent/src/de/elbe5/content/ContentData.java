@@ -15,13 +15,10 @@ import de.elbe5.file.FileFactory;
 import de.elbe5.group.GroupBean;
 import de.elbe5.group.GroupData;
 import de.elbe5.html.ModalPage;
-import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IMasterInclude;
 import de.elbe5.rights.Right;
 import de.elbe5.rights.SystemZone;
-import de.elbe5.layout.TemplateCache;
-import de.elbe5.layout.Template;
 import de.elbe5.user.UserCache;
 import de.elbe5.user.UserData;
 import de.elbe5.response.IResponse;
@@ -42,7 +39,6 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     public static final String VIEW_TYPE_SHOW = "SHOW";
     public static final String VIEW_TYPE_SHOWPUBLISHED = "PUBLISHED";
     public static final String VIEW_TYPE_EDIT = "EDIT";
-    public static final String VIEW_TYPE_PUBLISH = "PUBLISH";
 
     public static final int ID_ROOT = 1;
 
@@ -420,46 +416,54 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         return viewType.equals(VIEW_TYPE_SHOW);
     }
 
-    public IResponse getDefaultView(){
+    public IResponse getResponse(){
         return new ContentResponse(this);
-    }
-
-    protected void includePage(StringBuilder sb, String name, RequestData rdata){
-        Template include = TemplateCache.getTemplate("page", name);
-        if (include != null) {
-            sb.append(include.getHtml(rdata));
-        }
     }
 
     public ModalPage getContentDataPage() {
         return new EditContentDataPage();
     }
 
-    //used in jsp
-    public void appendTreeContent(StringBuilder sb, RequestData rdata) {
-        if (hasUserReadRight(rdata)) {
-            //backup
-            ContentData currentContent = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, this);
-            includePage(sb, "content/treeContent", rdata);
-            //restore
-            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, currentContent);
+    @Override
+    public void appendHtml(StringBuilder sb, RequestData rdata) {
+        switch (getViewType()) {
+            case VIEW_TYPE_EDIT -> {
+                sb.append("""
+                    <div id="pageContent" class="editArea">
+                """);
+                appendEditContent(sb, rdata);
+                sb.append("</div>");
+            }
+            case VIEW_TYPE_SHOWPUBLISHED -> {
+                sb.append("""
+                    <div id="pageContent" class="viewArea">
+                """);
+                if (isPublished())
+                    appendPublishedContent(sb, rdata);
+                sb.append("</div>");
+            }
+            default -> {
+                sb.append("""
+                    <div id="pageContent" class="viewArea">
+                """);
+                if (isPublished() && !hasUserEditRight(rdata))
+                    appendPublishedContent(sb, rdata);
+                else
+                    appendDraftContent(sb, rdata);
+                sb.append("</div>");
+            }
         }
     }
 
-    //used in admin jsp
-    public void appendAdminTreeContent(StringBuilder sb, RequestData rdata) {
-        if (hasUserReadRight(rdata)) {
-            //backup
-            ContentData currentContent = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, this);
-            includePage(sb,"content/adminTreeContent", rdata);
-            //restore
-            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, currentContent);
-        }
+    protected void appendEditContent (StringBuilder sb, RequestData rdata){
+
     }
-    @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
+
+    protected void appendDraftContent (StringBuilder sb, RequestData rdata){
+
+    }
+
+    protected void appendPublishedContent (StringBuilder sb, RequestData rdata){
 
     }
 

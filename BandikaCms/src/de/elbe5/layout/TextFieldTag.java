@@ -13,6 +13,10 @@ public class TextFieldTag extends TemplateTag {
 
     public static final String TYPE = "textfield";
 
+    public TextFieldTag(){
+        this.type = TYPE;
+    }
+
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata){
         String name = getStringParam("name", rdata, "");

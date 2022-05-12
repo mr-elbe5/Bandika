@@ -28,7 +28,7 @@
                     <li class="nav-item">
                         <a class="nav-link fa fa-home" href="/" title="{{_home}}>"></a></li>
                     <li class="nav-item">
-                        <a class="nav-link fa fa-sign-out" href="/page/user/logout" title="{{_logout}}"></a>
+                        <a class="nav-link fa fa-sign-out" href="/ctrl/user/logout" title="{{_logout}}"></a>
                     </li>
                 </ul>
             </section>
@@ -45,20 +45,20 @@
                                 <spg:if condition="{{hasSystemRights}}">
                                     <li class="nav-item">
                                         <a class="nav-link"
-                                           href="/page/admin/openSystemAdministration">{{_systemAdministration}}
+                                           href="/ctrl/admin/openSystemAdministration">{{_systemAdministration}}
                                         </a>
                                     </li>
                                 </spg:if>
                                 <spg:if condition="{{hasUserRights}}">
                                 <li class="nav-item">
                                     <a class="nav-link"
-                                       href="/page/admin/openUserAdministration">{{_userAdministration}}
+                                       href="/ctrl/admin/openUserAdministration">{{_userAdministration}}
                                     </a>
                                 </li>
                                 </spg:if>
                                 <spg:if condition="{{hasContentRights}}">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/page/admin/openContentAdministration">{{_contentAdministration}}
+                                    <a class="nav-link" href="/ctrl/admin/openContentAdministration">{{_contentAdministration}}
                                     </a>
                                 </li>
                                 </spg:if>

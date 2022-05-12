@@ -79,7 +79,7 @@ public abstract class FileController extends Controller {
     }
 
     protected IResponse showContentAdministration(RequestData rdata, int contentId) {
-        return new ForwardResponse("/page/admin/openContentAdministration?contentId=" + contentId);
+        return new ForwardResponse("/ctrl/admin/openContentAdministration?contentId=" + contentId);
     }
 
 }

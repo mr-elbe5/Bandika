@@ -36,7 +36,7 @@ public class CmsTest {
         TemplateTagFactory.addTagType(SysNavTag.TYPE, SysNavTag.class);
         TemplateTagFactory.addTagType(TextFieldTag.TYPE, TextFieldTag.class);
         rdata.getTemplateAttributes().put("language", Configuration.getLocale().getLanguage());
-        rdata.getTemplateAttributes().put("include", "_template/page/defaultPage");
+        rdata.getTemplateAttributes().put("include", "_template/ctrl/defaultPage");
 
         TemplateCache.addType("master");
         TemplateCache.addType("page");

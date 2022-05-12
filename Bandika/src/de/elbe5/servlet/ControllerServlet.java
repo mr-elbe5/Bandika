@@ -30,17 +30,13 @@ public class ControllerServlet extends WebServlet {
         request.setCharacterEncoding(Configuration.ENCODING);
         String uri = request.getRequestURI();
         RequestType requestType = RequestType.any;
-        if (uri.startsWith("/page/")){
-            requestType = RequestType.page;
+        if (uri.startsWith("/ctrl/")){
+            requestType = RequestType.ctrl;
             uri = uri.substring(6);
         }
-        else if (uri.startsWith("/dlgpage/")){
-            requestType = RequestType.dialogpage;
-            uri = uri.substring(9);
-        }
-        else if (uri.startsWith("/apicall/")){
-            requestType = RequestType.apicall;
-            uri = uri.substring(9);
+        else if (uri.startsWith("/api/")){
+            requestType = RequestType.api;
+            uri = uri.substring(5);
         }
         RequestData rdata = new RequestData(method, requestType, request);
         StringTokenizer stk = new StringTokenizer(uri, "/", false);
