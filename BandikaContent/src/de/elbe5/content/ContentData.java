@@ -431,7 +431,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
                 sb.append("""
                     <div id="pageContent" class="editArea">
                 """);
-                appendEditContent(sb, rdata);
+                appendEditDraftContent(sb, rdata);
                 sb.append("</div>");
             }
             case VIEW_TYPE_SHOWPUBLISHED -> {
@@ -455,7 +455,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         }
     }
 
-    protected void appendEditContent (StringBuilder sb, RequestData rdata){
+    protected void appendEditDraftContent(StringBuilder sb, RequestData rdata){
 
     }
 

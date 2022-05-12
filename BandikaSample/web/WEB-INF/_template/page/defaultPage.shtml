@@ -1,7 +1,4 @@
-<template type="page" name="defaultPage" displayName="Default Page">
-                        <spg:message/>
-                        <spg:section name="content" css="contentSection" >
-                            <spg:section name="main" css="row"/>
-                        </spg:section>
-</template>
-    
+<tpl:message/>
+<section class="contentSection" id="content">
+    <tpl:section name="main" cssClass="row"></tpl:section>
+</section>

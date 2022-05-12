@@ -1,6 +1,4 @@
-<template type="part" name="titlePart" displayName="Title" css="col-lg-12">
-                        <h1 class="title">
-                            <spg:textfield name="header">Lorem ipsum</spg:textfield>
-                        </h1>
-</template>
-    
+
+<h1 class="title">
+    <tpl:textfield name="header">Lorem ipsum</tpl:textfield>
+</h1>

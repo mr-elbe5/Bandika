@@ -25,7 +25,7 @@ public class LoginPage {
                 <body class="login">
                 <main id="main" role="main">
                     <div class="container">
-                        <form:message/>
+                        <tpl:message/>
                         <section class="mainSection loginSection text-center">
                             <form class="form" action="/ctrl/user/login" method="post" name="loginForm" accept-charset="UTF-8">
                                 <img class="mb-4" src="/static-content/img/logo.png" alt="{2}">

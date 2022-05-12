@@ -1,7 +1,4 @@
-<template type="part" name="fullParagraphPart" displayName="Paragraph 100%" css="col-lg-12">
-                        <div class="paragraph">
-                            <spg:htmlfield name="html">Lorem ipsum</spg:htmlfield>
-                        </div>
-</template>
-    
 
+<div class="paragraph">
+    <tpl:htmlfield name="html">Lorem ipsum</tpl:htmlfield>
+</div>

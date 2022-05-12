@@ -42,26 +42,26 @@
                         </button>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav mr-auto">
-                                <spg:if condition="{{hasSystemRights}}">
+                                <tpl:if condition="{{hasSystemRights}}">
                                     <li class="nav-item">
                                         <a class="nav-link"
                                            href="/ctrl/admin/openSystemAdministration">{{_systemAdministration}}
                                         </a>
                                     </li>
-                                </spg:if>
-                                <spg:if condition="{{hasUserRights}}">
+                                </tpl:if>
+                                <tpl:if condition="{{hasUserRights}}">
                                 <li class="nav-item">
                                     <a class="nav-link"
                                        href="/ctrl/admin/openUserAdministration">{{_userAdministration}}
                                     </a>
                                 </li>
-                                </spg:if>
-                                <spg:if condition="{{hasContentRights}}">
+                                </tpl:if>
+                                <tpl:if condition="{{hasContentRights}}">
                                 <li class="nav-item">
                                     <a class="nav-link" href="/ctrl/admin/openContentAdministration">{{_contentAdministration}}
                                     </a>
                                 </li>
-                                </spg:if>
+                                </tpl:if>
                             </ul>
                         </div>
                     </nav>
@@ -70,7 +70,7 @@
         </header>
         <main id="main" role="main">
             <div id="pageContainer">
-                <spg:content/>
+                <tpl:content/>
             </div>
         </main>
     </div>

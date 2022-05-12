@@ -23,8 +23,6 @@ public class PagePartData extends BaseData implements Comparable<PagePartData> {
     protected int position = 0;
     protected boolean editable = true;
 
-    public static String jspBasePath = "/WEB-INF/_layout";
-
     public PagePartData() {
     }
 
@@ -36,10 +34,6 @@ public class PagePartData extends BaseData implements Comparable<PagePartData> {
     @Override
     public int compareTo(PagePartData data) {
         return position - data.position;
-    }
-
-    public String getJspPath() {
-        return jspBasePath;
     }
 
     public String getType() {

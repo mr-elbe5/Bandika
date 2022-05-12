@@ -2,6 +2,7 @@ package de.elbe5.layout;
 
 import de.elbe5.application.ApplicationPath;
 import de.elbe5.base.FileHelper;
+import de.elbe5.base.Log;
 
 import java.io.File;
 import java.util.*;
@@ -38,11 +39,14 @@ public class TemplateCache {
             File dir = new File(templateBasePath + type);
             if (dir.exists() && dir.isDirectory()){
                 File[] files = dir.listFiles();
-                for (File f : files){
-                    String code = FileHelper.readTextFile(f);
-                    Template tpl = new Template(type, FileHelper.getFileNameWithoutExtension(f.getName()));
-                    if (!code.isEmpty() && new TemplateParser(code, tpl).parse()){
-                        templates.get(type).put(tpl.getName(), tpl);
+                if (files != null) {
+                    for (File f : files) {
+                        String code = FileHelper.readTextFile(f);
+                        Template tpl = new Template(type, FileHelper.getFileNameWithoutExtension(f.getName()));
+                        if (!code.isEmpty() && new TemplateParser(code, tpl).parse()) {
+                            Log.info("adding template '" + tpl.getName() + "' of type " + type);
+                            templates.get(type).put(tpl.getName(), tpl);
+                        }
                     }
                 }
             }

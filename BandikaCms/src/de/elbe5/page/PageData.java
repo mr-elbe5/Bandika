@@ -8,8 +8,11 @@
  */
 package de.elbe5.page;
 
+import de.elbe5.base.Strings;
 import de.elbe5.content.ContentData;
 import de.elbe5.html.ModalPage;
+import de.elbe5.layout.Template;
+import de.elbe5.layout.TemplateCache;
 import de.elbe5.request.RequestData;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -140,20 +143,26 @@ public class PageData extends ContentData {
         }
     }
 
-    //used in controller
     @Override
     public ModalPage getContentDataPage() {
         return new EditPageDataPage();
     }
 
-    //used in jsp
-    protected void appendEditContent(StringBuilder sb, RequestData rdata) {
-
+    protected void appendEditDraftContent(StringBuilder sb, RequestData rdata) {
+        DraftPageWrapper.appendStartHtml(sb, this);
+        Template tpl = TemplateCache.getTemplate("page", layout);
+        if (tpl==null)
+            return;
+        tpl.appendHtml(sb, rdata);
+        DraftPageWrapper.appendEndHtml(sb);
+        DraftPageWrapper.appendScript(sb, this);
     }
 
-    //used in jsp
     protected void appendDraftContent(StringBuilder sb, RequestData rdata) {
-
+        Template tpl = TemplateCache.getTemplate("page", layout);
+        if (tpl==null)
+            return;
+        tpl.appendHtml(sb, rdata);
     }
 
     //used in jsp

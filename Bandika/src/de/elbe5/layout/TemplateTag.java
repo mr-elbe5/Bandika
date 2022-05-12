@@ -6,7 +6,7 @@ import java.util.*;
 
 public abstract class TemplateTag implements ITemplateNode {
 
-    public static final String TAG_PREFIX = "spg";
+    public static final String TAG_PREFIX = "tpl";
 
     protected String type = "";
     protected Map<String,String> parameters = new HashMap<>();

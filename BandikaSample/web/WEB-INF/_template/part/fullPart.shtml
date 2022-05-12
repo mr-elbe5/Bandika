@@ -1,0 +1,4 @@
+
+<div>
+    <tpl:htmlfield name="html" placeholder="Lorem ipsum" />
+</div>

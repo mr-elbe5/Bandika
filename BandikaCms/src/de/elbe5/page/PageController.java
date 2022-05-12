@@ -30,7 +30,7 @@ import java.time.Duration;
 
 public class PageController extends ContentController {
 
-    public static final String KEY = "cmspage";
+    public static final String KEY = "page";
 
     private static PageController instance = null;
 
@@ -133,7 +133,7 @@ public class PageController extends ContentController {
             String uri = rdata.getRequest().getRequestURI();
             int idx = url.lastIndexOf(uri);
             url = url.substring(0, idx);
-            url +="/ctrl/cmspage/publishPage/"+contentId;
+            url +="/ctrl/page/publishPage/"+contentId;
             try {
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(url))

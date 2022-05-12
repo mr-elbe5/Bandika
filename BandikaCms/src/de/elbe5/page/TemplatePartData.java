@@ -8,6 +8,8 @@
  */
 package de.elbe5.page;
 
+import de.elbe5.layout.Template;
+import de.elbe5.layout.TemplateCache;
 import de.elbe5.request.RequestData;
 
 import java.time.LocalDateTime;
@@ -23,10 +25,6 @@ public class TemplatePartData extends PagePartData {
     protected Map<String, PartField> fields = new HashMap<>();
 
     public TemplatePartData() {
-    }
-
-    public String getJspPath() {
-        return jspBasePath + "/page";
     }
 
     public void copyData(PagePartData data) {
@@ -78,6 +76,15 @@ public class TemplatePartData extends PagePartData {
 
     public void setPublishedContent(String publishedContent) {
         this.publishedContent = publishedContent;
+    }
+
+    public void appendContent(StringBuilder sb, RequestData rdata){
+        rdata.getAttributes().put(PagePartData.KEY_PART, this);
+        Template tpl = TemplateCache.getTemplate("part", template);
+        if (tpl==null)
+            return;
+        tpl.appendHtml(sb, rdata);
+        rdata.getAttributes().remove(PagePartData.KEY_PART);
     }
 
     public Map<String, PartField> getFields() {
