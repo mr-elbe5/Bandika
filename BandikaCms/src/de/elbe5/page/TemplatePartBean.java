@@ -37,7 +37,7 @@ public class TemplatePartBean extends PagePartBean {
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
-                    data.setTemplate(rs.getString(i));
+                    data.setTemplateName(rs.getString(i));
                     readAllPartFields(con, data);
                 }
             }
@@ -82,7 +82,7 @@ public class TemplatePartBean extends PagePartBean {
         try {
             pst = con.prepareStatement(data.isNew() ? INSERT_PART_EXTRAS_SQL : UPDATE_PART_EXTRAS_SQL);
             int i = 1;
-            pst.setString(i++, data.getTemplate());
+            pst.setString(i++, data.getTemplateName());
             pst.setInt(i, data.getId());
             pst.executeUpdate();
             writeAllPartFields(con, data);

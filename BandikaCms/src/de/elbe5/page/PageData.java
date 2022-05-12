@@ -8,7 +8,6 @@
  */
 package de.elbe5.page;
 
-import de.elbe5.base.Strings;
 import de.elbe5.content.ContentData;
 import de.elbe5.html.ModalPage;
 import de.elbe5.layout.Template;
@@ -24,7 +23,7 @@ import java.util.Map;
 public class PageData extends ContentData {
 
     private String keywords = "";
-    protected String layout = "";
+    protected String templateName = "";
     protected LocalDateTime publishDate = null;
     protected String publishedContent="";
 
@@ -40,16 +39,12 @@ public class PageData extends ContentData {
         this.keywords = keywords;
     }
 
-    public String getLayout() {
-        return layout;
+    public String getTemplateName() {
+        return templateName;
     }
 
-    public String getLayoutUrl() {
-        return "/WEB-INF/_shtml/_layout/"+ layout +".shtml";
-    }
-
-    public void setLayout(String layout) {
-        this.layout = layout;
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
     }
 
     public LocalDateTime getPublishDate() {
@@ -150,7 +145,7 @@ public class PageData extends ContentData {
 
     protected void appendEditDraftContent(StringBuilder sb, RequestData rdata) {
         DraftPageWrapper.appendStartHtml(sb, this);
-        Template tpl = TemplateCache.getTemplate("page", layout);
+        Template tpl = TemplateCache.getTemplate("page", templateName);
         if (tpl==null)
             return;
         tpl.appendHtml(sb, rdata);
@@ -159,7 +154,7 @@ public class PageData extends ContentData {
     }
 
     protected void appendDraftContent(StringBuilder sb, RequestData rdata) {
-        Template tpl = TemplateCache.getTemplate("page", layout);
+        Template tpl = TemplateCache.getTemplate("page", templateName);
         if (tpl==null)
             return;
         tpl.appendHtml(sb, rdata);
@@ -178,7 +173,7 @@ public class PageData extends ContentData {
         PageData hcdata=(PageData)data;
         super.copyData(hcdata,rdata);
         setKeywords(hcdata.getKeywords());
-        setLayout(hcdata.getLayout());
+        setTemplateName(hcdata.getTemplateName());
         for (String sectionName : hcdata.sections.keySet()) {
             SectionData section = new SectionData();
             section.setPageId(getId());
@@ -191,8 +186,8 @@ public class PageData extends ContentData {
     public void readRequestData(RequestData rdata) {
         super.readRequestData(rdata);
         setKeywords(rdata.getAttributes().getString("keywords"));
-        setLayout(rdata.getAttributes().getString("layout"));
-        if (layout.isEmpty()) {
+        setTemplateName(rdata.getAttributes().getString("layout"));
+        if (templateName.isEmpty()) {
             rdata.addIncompleteField("layout");
         }
     }

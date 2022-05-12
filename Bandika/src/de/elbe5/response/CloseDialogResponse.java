@@ -74,10 +74,7 @@ public class CloseDialogResponse extends HtmlResponse {
             html = Strings.format("""
                 <div id="pageContent"></div>
                 <script type="text/javascript">
-                        let $dlg = $(MODAL_DLG_JQID);
-                        $dlg.html('');
-                        $dlg.modal('hide');
-                        $('.modal-backdrop').remove();
+                        closeModalDialog();
                         postByAjax('{1}', {2}, '{3}');
                 </script>
             """,

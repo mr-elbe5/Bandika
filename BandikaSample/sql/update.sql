@@ -17,3 +17,5 @@ insert into t_template_part (id, template) select id,layout from t_layout_part;
 drop table t_layout_part;
 
 update t_page_part set type = 'TemplatePartData' where type = 'LayoutPartData';
+
+alter table t_page rename column layout to template;

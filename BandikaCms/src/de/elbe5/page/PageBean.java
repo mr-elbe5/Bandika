@@ -27,7 +27,7 @@ public class PageBean extends ContentBean {
         return instance;
     }
 
-    private static final String GET_CONTENT_EXTRAS_SQL = "SELECT keywords, layout, publish_date, published_content FROM t_page WHERE id=?";
+    private static final String GET_CONTENT_EXTRAS_SQL = "SELECT keywords, template, publish_date, published_content FROM t_page WHERE id=?";
 
     @Override
     public void readContentExtras(Connection con, ContentData contentData) throws SQLException {
@@ -42,7 +42,7 @@ public class PageBean extends ContentBean {
                 if (rs.next()) {
                     int i = 1;
                     data.setKeywords(rs.getString(i++));
-                    data.setLayout(rs.getString(i++));
+                    data.setTemplateName(rs.getString(i++));
                     Timestamp ts = rs.getTimestamp(i++);
                     data.setPublishDate(ts == null ? null : ts.toLocalDateTime());
                     data.setPublishedContent(rs.getString(i));
@@ -55,7 +55,7 @@ public class PageBean extends ContentBean {
         }
     }
 
-    private static final String INSERT_CONTENT_EXTRAS_SQL = "insert into t_page (keywords,layout,publish_date,published_content,id) values(?,?,?,?,?)";
+    private static final String INSERT_CONTENT_EXTRAS_SQL = "insert into t_page (keywords,template,publish_date,published_content,id) values(?,?,?,?,?)";
 
     @Override
     public void createContentExtras(Connection con, ContentData contentData) throws SQLException {
@@ -96,7 +96,7 @@ public class PageBean extends ContentBean {
     private void setExtraValues(PreparedStatement pst, PageData data) throws SQLException{
         int i = 1;
         pst.setString(i++, data.getKeywords());
-        pst.setString(i++, data.getLayout());
+        pst.setString(i++, data.getTemplateName());
         if (data.getPublishDate()==null)
             pst.setNull(i++,Types.TIMESTAMP);
         else

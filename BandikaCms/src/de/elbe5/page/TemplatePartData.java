@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class TemplatePartData extends PagePartData {
 
-    protected String template = "";
+    protected String templateName = "";
     protected LocalDateTime publishDate = null;
     protected String publishedContent = "";
 
@@ -32,7 +32,7 @@ public class TemplatePartData extends PagePartData {
         if (!(data instanceof TemplatePartData))
             return;
         TemplatePartData tpdata=(TemplatePartData)data;
-        setTemplate(tpdata.getTemplate());
+        setTemplateName(tpdata.getTemplateName());
         getFields().clear();
         for (PartField f : tpdata.getFields().values()) {
             try {
@@ -42,16 +42,16 @@ public class TemplatePartData extends PagePartData {
         }
     }
 
-    public String getTemplate() {
-        return template;
+    public String getTemplateName() {
+        return templateName;
     }
 
-    public void setTemplate(String template) {
-        this.template = template;
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
     }
 
     public String getEditTitle() {
-        return getTemplate() + ", ID=" + getId();
+        return getTemplateName() + ", ID=" + getId();
     }
 
     public LocalDateTime getPublishDate() {
@@ -80,7 +80,7 @@ public class TemplatePartData extends PagePartData {
 
     public void appendContent(StringBuilder sb, RequestData rdata){
         rdata.getAttributes().put(PagePartData.KEY_PART, this);
-        Template tpl = TemplateCache.getTemplate("part", template);
+        Template tpl = TemplateCache.getTemplate("part", templateName);
         if (tpl==null)
             return;
         tpl.appendHtml(sb, rdata);
@@ -120,7 +120,7 @@ public class TemplatePartData extends PagePartData {
     @Override
     public void setCreateValues(RequestData rdata) {
         super.setCreateValues(rdata);
-        setTemplate(rdata.getAttributes().getString("layout"));
+        setTemplateName(rdata.getAttributes().getString("layout"));
     }
 
     @Override

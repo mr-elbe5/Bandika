@@ -16,7 +16,6 @@ import de.elbe5.request.RequestData;
 public class PagePartData extends BaseData implements Comparable<PagePartData> {
 
     public static final String KEY_PART = "partData";
-    public static String LAYOUT_TYPE = "Part";
 
     protected String cssClass = "";
     protected String sectionName = "";
