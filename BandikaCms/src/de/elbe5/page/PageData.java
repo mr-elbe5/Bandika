@@ -12,9 +12,9 @@ import de.elbe5.content.ContentData;
 import de.elbe5.html.ModalPage;
 import de.elbe5.layout.Template;
 import de.elbe5.layout.TemplateCache;
+import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import de.elbe5.request.RequestKeys;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -31,6 +31,7 @@ public class PageData extends ContentData {
 
     // base data
 
+    @Override
     public String getKeywords() {
         return keywords;
     }
@@ -63,15 +64,12 @@ public class PageData extends ContentData {
         this.publishedContent = publishedContent;
     }
 
-    public void reformatPublishedContent() {
-        Document doc= Jsoup.parseBodyFragment(getPublishedContent());
-        setPublishedContent(doc.body().html());
-    }
-
+    @Override
     public boolean hasUnpublishedDraft() {
         return publishDate == null || publishDate.isBefore(getChangeDate());
     }
 
+    @Override
     public boolean isPublished() {
         return getPublishDate() != null;
     }
@@ -138,35 +136,9 @@ public class PageData extends ContentData {
         }
     }
 
-    @Override
-    public ModalPage getContentDataPage() {
-        return new EditPageDataPage();
-    }
-
-    protected void appendEditDraftContent(StringBuilder sb, RequestData rdata) {
-        DraftPageWrapper.appendStartHtml(sb, this);
-        Template tpl = TemplateCache.getTemplate("page", templateName);
-        if (tpl==null)
-            return;
-        tpl.appendHtml(sb, rdata);
-        DraftPageWrapper.appendEndHtml(sb);
-        DraftPageWrapper.appendScript(sb, this);
-    }
-
-    protected void appendDraftContent(StringBuilder sb, RequestData rdata) {
-        Template tpl = TemplateCache.getTemplate("page", templateName);
-        if (tpl==null)
-            return;
-        tpl.appendHtml(sb, rdata);
-    }
-
-    //used in jsp
-    protected void appendPublishedContent(StringBuilder sb, RequestData rdata) {
-        sb.append(publishedContent);
-    }
-
     // multiple data
 
+    @Override
     public void copyData(ContentData data, RequestData rdata) {
         if (!(data instanceof PageData))
             return;
@@ -192,10 +164,53 @@ public class PageData extends ContentData {
         }
     }
 
+    @Override
     public void readFrontendRequestData(RequestData rdata) {
         for (SectionData section : getSections().values()) {
             section.readFrontendRequestData(rdata);
         }
     }
+
+    // html
+
+    @Override
+    public ModalPage getContentDataPage() {
+        return new EditPageDataPage();
+    }
+
+    @Override
+    protected void appendEditDraftContent(StringBuilder sb, RequestData rdata) {
+        DraftPageWrapper.appendStartHtml(sb, this);
+        Template tpl = TemplateCache.getTemplate("page", templateName);
+        if (tpl==null)
+            return;
+        tpl.appendHtml(sb, rdata);
+        DraftPageWrapper.appendEndHtml(sb);
+        DraftPageWrapper.appendScript(sb, this);
+    }
+
+    @Override
+    protected void appendDraftContent(StringBuilder sb, RequestData rdata) {
+        Template tpl = TemplateCache.getTemplate("page", templateName);
+        if (tpl==null)
+            return;
+        tpl.appendHtml(sb, rdata);
+    }
+
+    @Override
+    protected void appendPublishedContent(StringBuilder sb, RequestData rdata) {
+        sb.append(publishedContent);
+    }
+
+    @Override
+    public void publish(RequestData rdata){
+        StringBuilder sb = new StringBuilder();
+        setViewType(VIEW_TYPE_SHOW);
+        rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, this);
+        appendDraftContent(sb, rdata);
+        setPublishedContent(sb.toString());
+        setPublishDate(PageBean.getInstance().getServerTime());
+    }
+
 
 }

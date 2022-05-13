@@ -45,6 +45,15 @@ public class LinkData extends ContentData {
     }
 
     @Override
+    public void readRequestData(RequestData rdata) {
+        super.readRequestData(rdata);
+        setLinkUrl(rdata.getAttributes().getString("linkUrl"));
+        setLinkIcon(rdata.getAttributes().getString("linkIcon"));
+    }
+
+    // html
+
+    @Override
     public String getNavDisplay() {
         if (!linkIcon.isEmpty()) {
             return Strings.format("""
@@ -65,13 +74,6 @@ public class LinkData extends ContentData {
     @Override
     public ModalPage getContentDataPage() {
         return new EditLinkDataPage();
-    }
-
-    @Override
-    public void readRequestData(RequestData rdata) {
-        super.readRequestData(rdata);
-        setLinkUrl(rdata.getAttributes().getString("linkUrl"));
-        setLinkIcon(rdata.getAttributes().getString("linkIcon"));
     }
 
 }

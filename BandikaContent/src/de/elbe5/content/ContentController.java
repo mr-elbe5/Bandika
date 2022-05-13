@@ -8,6 +8,7 @@
  */
 package de.elbe5.content;
 
+import de.elbe5.base.Log;
 import de.elbe5.base.Strings;
 import de.elbe5.base.BaseData;
 import de.elbe5.request.ContentRequestKeys;
@@ -253,17 +254,36 @@ public class ContentController extends Controller {
 
     //frontend
     public IResponse openEditContentFrontend(RequestData rdata) {
-        throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
+        int contentId = rdata.getId();
+        ContentData data = ContentBean.getInstance().getContent(contentId,ContentData.class);
+        checkRights(data.hasUserEditRight(rdata));
+        data.setEditValues(ContentBean.getInstance().getContent(data.getId()), rdata);
+        data.startEditing();
+        rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
+        return data.getResponse();
     }
 
-    //frontend
     public IResponse showEditContentFrontend(RequestData rdata) {
-        throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
+        ContentData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
+        checkRights(data.hasUserEditRight(rdata));
+        return data.getResponse();
     }
 
-    //frontend
     public IResponse saveContentFrontend(RequestData rdata) {
-        throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
+        int contentId = rdata.getId();
+        ContentData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
+        checkRights(data.hasUserEditRight(rdata));
+        data.readFrontendRequestData(rdata);
+        data.setChangerId(rdata.getUserId());
+        if (!ContentBean.getInstance().saveContent(data)) {
+            setSaveError(rdata);
+            return data.getResponse();
+        }
+        data.setViewType(ContentData.VIEW_TYPE_SHOW);
+        rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
+        data.stopEditing();
+        ContentCache.setDirty();
+        return show(rdata);
     }
 
     public IResponse cancelEditContentFrontend(RequestData rdata) {
@@ -271,7 +291,33 @@ public class ContentController extends Controller {
         ContentData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         checkRights(data.hasUserEditRight(rdata));
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
+        data.stopEditing();
         return show(rdata);
+    }
+
+    public IResponse showDraft(RequestData rdata){
+        int contentId = rdata.getId();
+        ContentData data = ContentCache.getContent(contentId);
+        checkRights(data.hasUserReadRight(rdata));
+        data.setViewType(ContentData.VIEW_TYPE_SHOW);
+        return data.getResponse();
+    }
+
+    public IResponse showPublished(RequestData rdata){
+        int contentId = rdata.getId();
+        ContentData data = ContentCache.getContent(contentId);
+        checkRights(data.hasUserReadRight(rdata));
+        data.setViewType(ContentData.VIEW_TYPE_SHOWPUBLISHED);
+        return data.getResponse();
+    }
+
+    public IResponse publishContent(RequestData rdata){
+        int contentId = rdata.getId();
+        Log.log("Publishing content id " + contentId);
+        ContentData data = ContentCache.getContent(contentId);
+        checkRights(data.hasUserApproveRight(rdata));
+        data.publish(rdata);
+        return data.getResponse();
     }
 
     protected IResponse showContent(ContentData contentData) {

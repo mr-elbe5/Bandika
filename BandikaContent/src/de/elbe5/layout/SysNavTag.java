@@ -36,22 +36,22 @@ public class SysNavTag extends TemplateTag {
         ContentData currentContent = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         if (currentContent!=null && !currentContent.isEditing() && currentContent.hasUserEditRight(rdata)) {
             sb.append(Strings.format("""
-                                    <li class="nav-item"><a class="nav-link fa fa-edit" href="/ctrl/page/openEditContentFrontend/{1}" title="{2}"></a></li>
+                                    <li class="nav-item"><a class="nav-link fa fa-edit" href="/ctrl/content/openEditContentFrontend/{1}" title="{2}"></a></li>
             """,
                     Integer.toString(currentContent.getId()),
                     Strings.getHtml("_editPage")
             ));
             if (currentContent.hasUnpublishedDraft()) {
                 if (currentContent.isPublished()) {
-                    if (currentContent.isPublishedView()) {
+                    if (currentContent.getViewType().equals(ContentData.VIEW_TYPE_SHOWPUBLISHED)) {
                         sb.append(Strings.format("""
-                                    <li class="nav-item"><a class="nav-link fa fa-eye-slash" href="/ctrl/page/showDraft/{1}" title="{2}" ></a></li>
+                                    <li class="nav-item"><a class="nav-link fa fa-eye-slash" href="/ctrl/content/showDraft/{1}" title="{2}" ></a></li>
             """,
                                 Integer.toString(currentContent.getId()),
                                 Strings.getHtml("_showDraft")));
                     } else {
                         sb.append(Strings.format("""
-                                    <li class="nav-item"><a class="nav-link fa fa-eye" href="/ctrl/page/showPublished/{1}" title="{2}"></a></li>
+                                    <li class="nav-item"><a class="nav-link fa fa-eye" href="/ctrl/content/showPublished/{1}" title="{2}"></a></li>
             """,
                                 Integer.toString(currentContent.getId()),
                                 Strings.getHtml("_showPublished")));
@@ -59,7 +59,7 @@ public class SysNavTag extends TemplateTag {
                 }
                 if (currentContent.hasUserApproveRight(rdata)) {
                     sb.append(Strings.format("""
-                                    <li class="nav-item"><a class="nav-link fa fa-thumbs-up" href="/ctrl/page/publishPage/{1}" title="{2}"></a></li>
+                                    <li class="nav-item"><a class="nav-link fa fa-thumbs-up" href="/ctrl/content/publishContent/{1}" title="{2}"></a></li>
             """,
                             Integer.toString(currentContent.getId()),
                             Strings.getHtml("_publish")));

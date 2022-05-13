@@ -12,15 +12,12 @@ import de.elbe5.layout.Template;
 import de.elbe5.layout.TemplateCache;
 import de.elbe5.request.RequestData;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TemplatePartData extends PagePartData {
 
     protected String templateName = "";
-    protected LocalDateTime publishDate = null;
-    protected String publishedContent = "";
 
     protected Map<String, PartField> fields = new HashMap<>();
 
@@ -52,30 +49,6 @@ public class TemplatePartData extends PagePartData {
 
     public String getEditTitle() {
         return getTemplateName() + ", ID=" + getId();
-    }
-
-    public LocalDateTime getPublishDate() {
-        return publishDate;
-    }
-
-    public boolean hasUnpublishedDraft() {
-        return publishDate == null || publishDate.isBefore(getChangeDate());
-    }
-
-    public boolean isPublished() {
-        return publishDate != null;
-    }
-
-    public void setPublishDate(LocalDateTime publishDate) {
-        this.publishDate = publishDate;
-    }
-
-    public String getPublishedContent() {
-        return publishedContent;
-    }
-
-    public void setPublishedContent(String publishedContent) {
-        this.publishedContent = publishedContent;
     }
 
     public void appendHtml(StringBuilder sb, RequestData rdata){

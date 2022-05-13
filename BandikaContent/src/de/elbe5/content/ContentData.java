@@ -385,9 +385,6 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         return false;
     }
 
-    // view
-
-
     public String getViewType() {
         return viewType;
     }
@@ -406,73 +403,6 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
 
     public void startEditing(){
         this.viewType=VIEW_TYPE_EDIT;
-    }
-
-    public boolean isPublishedView(){
-        return viewType.equals(VIEW_TYPE_SHOWPUBLISHED);
-    }
-
-    public boolean isStandardView(){
-        return viewType.equals(VIEW_TYPE_SHOW);
-    }
-
-    public IResponse getResponse(){
-        return new ContentResponse(this);
-    }
-
-    public ModalPage getContentDataPage() {
-        return new EditContentDataPage();
-    }
-
-    @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
-        switch (getViewType()) {
-            case VIEW_TYPE_EDIT -> {
-                sb.append("""
-                    <div id="pageContent" class="editArea">
-                """);
-                appendEditDraftContent(sb, rdata);
-                sb.append("</div>");
-            }
-            case VIEW_TYPE_SHOWPUBLISHED -> {
-                sb.append("""
-                    <div id="pageContent" class="viewArea">
-                """);
-                if (isPublished())
-                    appendPublishedContent(sb, rdata);
-                sb.append("</div>");
-            }
-            default -> {
-                sb.append("""
-                    <div id="pageContent" class="viewArea">
-                """);
-                if (isPublished() && !hasUserEditRight(rdata))
-                    appendPublishedContent(sb, rdata);
-                else
-                    appendDraftContent(sb, rdata);
-                sb.append("</div>");
-            }
-        }
-    }
-
-    protected void appendEditDraftContent(StringBuilder sb, RequestData rdata){
-
-    }
-
-    protected void appendDraftContent (StringBuilder sb, RequestData rdata){
-
-    }
-
-    protected void appendPublishedContent (StringBuilder sb, RequestData rdata){
-
-    }
-
-    @Override
-    public void prepareMaster(RequestData rdata){
-        rdata.getTemplateAttributes().put("language", Configuration.getLocale().getLanguage());
-        rdata.getTemplateAttributes().put("title", Strings.toHtml(Configuration.getAppTitle() + " | " + getDisplayName()));
-        rdata.getTemplateAttributes().put("description", Strings.toHtml(getDescription()));
-        rdata.getTemplateAttributes().put("keywords", Strings.toHtml(getKeywords()));
     }
 
     // multiple data
@@ -585,4 +515,69 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         json.put("description",getDescription());
         return json;
     }
+
+    // html
+
+    public IResponse getResponse(){
+        return new ContentResponse(this);
+    }
+
+    public ModalPage getContentDataPage() {
+        return new EditContentDataPage();
+    }
+
+    @Override
+    public void appendHtml(StringBuilder sb, RequestData rdata) {
+        switch (getViewType()) {
+            case VIEW_TYPE_EDIT -> {
+                sb.append("""
+                    <div id="pageContent" class="editArea">
+                """);
+                appendEditDraftContent(sb, rdata);
+                sb.append("</div>");
+            }
+            case VIEW_TYPE_SHOWPUBLISHED -> {
+                sb.append("""
+                    <div id="pageContent" class="viewArea">
+                """);
+                if (isPublished())
+                    appendPublishedContent(sb, rdata);
+                sb.append("</div>");
+            }
+            default -> {
+                sb.append("""
+                    <div id="pageContent" class="viewArea">
+                """);
+                if (isPublished() && !hasUserEditRight(rdata))
+                    appendPublishedContent(sb, rdata);
+                else
+                    appendDraftContent(sb, rdata);
+                sb.append("</div>");
+            }
+        }
+    }
+
+    protected void appendEditDraftContent(StringBuilder sb, RequestData rdata){
+
+    }
+
+    protected void appendDraftContent (StringBuilder sb, RequestData rdata){
+
+    }
+
+    protected void appendPublishedContent (StringBuilder sb, RequestData rdata){
+
+    }
+
+    @Override
+    public void prepareMaster(RequestData rdata){
+        rdata.getTemplateAttributes().put("language", Configuration.getLocale().getLanguage());
+        rdata.getTemplateAttributes().put("title", Strings.toHtml(Configuration.getAppTitle() + " | " + getDisplayName()));
+        rdata.getTemplateAttributes().put("description", Strings.toHtml(getDescription()));
+        rdata.getTemplateAttributes().put("keywords", Strings.toHtml(getKeywords()));
+    }
+
+    public void publish(RequestData rdata){
+    }
+
 }
