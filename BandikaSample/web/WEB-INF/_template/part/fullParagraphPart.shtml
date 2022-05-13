@@ -1,4 +1,5 @@
-
+<tpl:part cssClass="col-lg-12">
 <div class="paragraph">
     <tpl:htmlfield name="html">Lorem ipsum</tpl:htmlfield>
 </div>
+</tpl:part>

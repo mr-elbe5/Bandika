@@ -1,19 +1,41 @@
 package de.elbe5.layout;
 
 import de.elbe5.base.Strings;
-import de.elbe5.page.PagePartData;
-import de.elbe5.page.PagePartFactory;
+import de.elbe5.page.*;
+import de.elbe5.request.ContentRequestKeys;
+import de.elbe5.request.RequestData;
 
 import java.util.List;
 
-public class PartHtml {
+public class PartTag extends TemplateTag {
 
-    static public void appendPartEditStart(StringBuilder sb, PagePartData partData) {
+    public static final String TYPE = "part";
+
+    public PartTag(){
+        this.type = TYPE;
+    }
+
+    @Override
+    public void appendTagStart(StringBuilder sb, RequestData rdata){
+        PageData pageData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
+        TemplatePartData part = rdata.getAttributes().get(PagePartData.KEY_PART, TemplatePartData.class);
+        if (pageData == null || part == null)
+            return;
+        String cssClass = getStringParam("cssClass", rdata, "");
+        if (pageData.isEditing()){
+            appendPartEditStart(sb, part, cssClass);
+        }
+        else{
+            appendPartStart(sb, part, cssClass);
+        }
+    }
+
+    void appendPartEditStart(StringBuilder sb, PagePartData partData, String cssClass) {
         sb.append(Strings.format("""
                         <div id="{1}" class="partWrapper {2}" title="{3}">
                         """,
                 partData.getPartWrapperId(),
-                Strings.toHtml(partData.getCssClass()),
+                Strings.toHtml(cssClass),
                 Strings.toHtml(partData.getEditTitle())
         ));
         List<Template> templates = TemplateCache.getTemplates("part");
@@ -82,17 +104,19 @@ public class PartHtml {
         ));
     }
 
-    static public void appendPartStart(StringBuilder sb, PagePartData partData) {
+    void appendPartStart(StringBuilder sb, PagePartData partData, String cssClass) {
         sb.append(Strings.format("""
                         <div id="{1}" class="partWrapper {2}">
                         """,
                 partData.getPartWrapperId(),
-                Strings.toHtml(partData.getCssClass())
+                Strings.toHtml(cssClass)
         ));
     }
 
-    static public void appendPartEnd(StringBuilder sb) {
+    @Override
+    public void appendTagEnd(StringBuilder sb, RequestData rdata) {
         sb.append("</div>");
     }
+
 
 }

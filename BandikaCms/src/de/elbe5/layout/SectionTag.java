@@ -80,8 +80,7 @@ public class SectionTag extends TemplateTag {
                 </div>
                 """);
         for (PagePartData partData : sectionData.getParts()) {
-            partData.appendEditHtml(sb, rdata);
-            rdata.getAttributes().remove(PagePartData.KEY_PART);
+            partData.appendHtml(sb, rdata);
         }
         sb.append("""  
                 </div>

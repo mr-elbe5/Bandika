@@ -10,14 +10,12 @@ package de.elbe5.page;
 
 import de.elbe5.base.BaseData;
 import de.elbe5.content.ContentBean;
-import de.elbe5.layout.PartHtml;
 import de.elbe5.request.RequestData;
 
 public class PagePartData extends BaseData implements Comparable<PagePartData> {
 
     public static final String KEY_PART = "partData";
 
-    protected String cssClass = "";
     protected String sectionName = "";
     protected int position = 0;
     protected boolean editable = true;
@@ -37,14 +35,6 @@ public class PagePartData extends BaseData implements Comparable<PagePartData> {
 
     public String getType() {
         return getClass().getSimpleName();
-    }
-
-    public String getCssClass() {
-        return cssClass;
-    }
-
-    public void setCssClass(String cssClass) {
-        this.cssClass = cssClass;
     }
 
     public String getSectionName() {
@@ -80,7 +70,7 @@ public class PagePartData extends BaseData implements Comparable<PagePartData> {
     }
 
     public String getEditTitle() {
-        return "Section Part, ID=" + getId();
+        return "Part, ID=" + getId();
     }
 
     public void prepareCopy() {
@@ -101,18 +91,6 @@ public class PagePartData extends BaseData implements Comparable<PagePartData> {
     }
 
     public void appendHtml(StringBuilder sb, RequestData rdata){
-        PartHtml.appendPartStart(sb, this);
-        appendContent(sb, rdata);
-        PartHtml.appendPartEnd(sb);
-    }
-
-    public void appendEditHtml(StringBuilder sb, RequestData rdata){
-        PartHtml.appendPartEditStart(sb, this);
-        appendContent(sb, rdata);
-        PartHtml.appendPartEnd(sb);
-    }
-
-    public void appendContent(StringBuilder sb, RequestData rdata){
 
     }
 

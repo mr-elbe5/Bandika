@@ -82,14 +82,15 @@ public class BandikaInitServlet extends InitServlet {
 
         TemplateTagFactory.addTagType(IfTag.TYPE, IfTag.class);
         TemplateTagFactory.addTagType(MessageTag.TYPE, MessageTag.class);
+        TemplateTagFactory.addTagType(SysNavTag.TYPE, SysNavTag.class);
+        TemplateTagFactory.addTagType(MainNavTag.TYPE, MainNavTag.class);
         TemplateTagFactory.addTagType(BreadcrumbTag.TYPE, BreadcrumbTag.class);
         TemplateTagFactory.addTagType(ContentTag.TYPE, ContentTag.class);
         TemplateTagFactory.addTagType(FooterTag.TYPE, FooterTag.class);
-        TemplateTagFactory.addTagType(HtmlFieldTag.TYPE, HtmlFieldTag.class);
-        TemplateTagFactory.addTagType(MainNavTag.TYPE, MainNavTag.class);
         TemplateTagFactory.addTagType(SectionTag.TYPE, SectionTag.class);
-        TemplateTagFactory.addTagType(SysNavTag.TYPE, SysNavTag.class);
+        TemplateTagFactory.addTagType(PartTag.TYPE, PartTag.class);
         TemplateTagFactory.addTagType(TextFieldTag.TYPE, TextFieldTag.class);
+        TemplateTagFactory.addTagType(HtmlFieldTag.TYPE, HtmlFieldTag.class);
 
         TemplateCache.addType("master");
         TemplateCache.addType("page");

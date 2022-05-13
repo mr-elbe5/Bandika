@@ -1,4 +1,5 @@
-
+<tpl:part cssClass="col-lg-12">
 <h1 class="title">
     <tpl:textfield name="header">Lorem ipsum</tpl:textfield>
 </h1>
+</tpl:part>
