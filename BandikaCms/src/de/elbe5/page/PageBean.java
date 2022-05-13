@@ -74,7 +74,7 @@ public class PageBean extends ContentBean {
         writeAllParts(con, data);
     }
 
-    private static final String UPDATE_CONTENT_EXTRAS_SQL = "update t_page set keywords=?,layout=?,publish_date=?,published_content=? where id=?";
+    private static final String UPDATE_CONTENT_EXTRAS_SQL = "update t_page set keywords=?,template=?,publish_date=?,published_content=? where id=?";
 
     @Override
     public void updateContentExtras(Connection con, ContentData contentData) throws SQLException {

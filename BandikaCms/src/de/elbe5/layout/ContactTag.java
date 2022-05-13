@@ -10,6 +10,12 @@ import java.util.Date;
 
 public class ContactTag extends TemplateTag {
 
+    public static final String TYPE = "contact";
+
+    public ContactTag(){
+        this.type = TYPE;
+    }
+
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata){
         PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);

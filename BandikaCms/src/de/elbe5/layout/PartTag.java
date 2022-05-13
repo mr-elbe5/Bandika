@@ -38,7 +38,6 @@ public class PartTag extends TemplateTag {
                 Strings.toHtml(cssClass),
                 Strings.toHtml(partData.getEditTitle())
         ));
-        List<Template> templates = TemplateCache.getTemplates("part");
         sb.append(Strings.format("""
                         <input type="hidden" name="{1}" value="{2}" class="partPos"/>
                                     <div class="partEditButtons">
@@ -53,6 +52,7 @@ public class PartTag extends TemplateTag {
         ));
         for (String partType : PagePartFactory.getTypes()) {
             if (PagePartFactory.useLayouts(partType)) {
+                List<Template> templates = TemplateCache.getTemplates("part");
                 for (Template template : templates) {
                     sb.append(Strings.format("""
                                                     <a class="dropdown-item" href="" onclick="return addPart({1},'{2}','{3}','{4}');">{5}

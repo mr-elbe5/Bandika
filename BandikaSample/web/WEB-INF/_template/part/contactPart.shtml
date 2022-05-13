@@ -1,0 +1,5 @@
+<tpl:part cssClass="col-lg-12">
+    <div class="paragraph">
+        <tpl:contact />
+    </div>
+</tpl:part>

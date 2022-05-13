@@ -30,6 +30,7 @@ public class TemplateCache {
         if (templates.containsKey(type)){
             List<Template> list = new ArrayList<>(templates.get(type).values());
             list.sort(Comparator.comparing(o -> o.name));
+            return list;
         }
         return new ArrayList<>();
     }

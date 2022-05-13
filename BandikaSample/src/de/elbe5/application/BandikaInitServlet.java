@@ -48,6 +48,7 @@ public class BandikaInitServlet extends InitServlet {
         Strings.addBundle("content", Configuration.getLocale());
         Strings.addBundle("cms", Configuration.getLocale());
         Strings.addBundle("application", Configuration.getLocale());
+        Strings.addBundle("layout", Configuration.getLocale());
         Log.initLog(ApplicationPath.getAppName());
         if (!DbConnector.getInstance().initialize("jdbc/bandika"))
             return;
@@ -91,6 +92,7 @@ public class BandikaInitServlet extends InitServlet {
         TemplateTagFactory.addTagType(PartTag.TYPE, PartTag.class);
         TemplateTagFactory.addTagType(TextFieldTag.TYPE, TextFieldTag.class);
         TemplateTagFactory.addTagType(HtmlFieldTag.TYPE, HtmlFieldTag.class);
+        TemplateTagFactory.addTagType(ContactTag.TYPE, ContactTag.class);
 
         TemplateCache.addType("master");
         TemplateCache.addType("page");
