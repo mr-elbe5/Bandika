@@ -32,10 +32,4 @@ public class PartTextField extends PartField {
         setContent(rdata.getAttributes().getString(getIdentifier()));
     }
 
-    /******************* search part *********************************/
-
-    public void appendSearchText(StringBuilder sb) {
-        sb.append(" ").append(getContent());
-    }
-
 }

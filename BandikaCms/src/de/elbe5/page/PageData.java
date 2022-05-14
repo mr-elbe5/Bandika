@@ -14,7 +14,6 @@ import de.elbe5.layout.Template;
 import de.elbe5.layout.TemplateCache;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
-import de.elbe5.request.RequestKeys;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;

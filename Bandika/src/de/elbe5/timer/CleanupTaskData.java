@@ -27,7 +27,7 @@ public class CleanupTaskData extends TimerTaskData {
     @Override
     public boolean execute(LocalDateTime executionTime, LocalDateTime checkTime) {
         Log.log("Cleanup at " + DateHelper.toHtmlDateTime(TimerBean.getInstance().getServerTime()));
-        //todo
+
         return true;
     }
 }

@@ -23,6 +23,8 @@ import de.elbe5.user.UserCache;
 import de.elbe5.user.UserData;
 import de.elbe5.response.IResponse;
 import org.json.simple.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.util.*;
 
@@ -383,6 +385,22 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
 
     public boolean hasUnpublishedDraft() {
         return false;
+    }
+
+    public String getPublishedContent() {
+        return "";
+    }
+
+    public void setPublishedContent(String publishedContent) {
+    }
+
+    public String getPublishedText(){
+        String str = getPublishedContent();
+        if (str.isEmpty()){
+            return "";
+        }
+        Document doc = Jsoup.parse(str);
+        return doc.text();
     }
 
     public String getViewType() {

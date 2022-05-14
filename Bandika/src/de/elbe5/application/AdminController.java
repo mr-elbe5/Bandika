@@ -14,6 +14,7 @@ import de.elbe5.base.FileHelper;
 import de.elbe5.request.RequestKeys;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.servlet.ResponseException;
+import de.elbe5.user.UserAdminPage;
 import de.elbe5.user.UserCache;
 import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
@@ -59,12 +60,12 @@ public class AdminController extends Controller {
 
     public IResponse openSystemAdministration(RequestData rdata) {
         checkRights(rdata.hasAnySystemRight());
-        return showSystemAdministration(rdata);
+        return new AdminPage(new SystemAdminPage(), Strings.getString("_systemAdministration"));
     }
 
     public IResponse openUserAdministration(RequestData rdata) {
         checkRights(rdata.hasAnySystemRight());
-        return showUserAdministration(rdata);
+        return new AdminPage(new UserAdminPage(), Strings.getString("_userAdministration"));
     }
 
     public IResponse restart(RequestData rdata) {

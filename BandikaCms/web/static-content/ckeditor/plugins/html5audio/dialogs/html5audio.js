@@ -30,7 +30,6 @@ CKEDITOR.dialog.add( 'html5audio', function( editor ) {
                         type: 'button',
                         id: 'browse',
                         // v-align with the 'txtUrl' field.
-                        // TODO: We need something better than a fixed size here.
                         style: 'display:inline-block;margin-top:14px;',
                         align: 'center',
                         label: editor.lang.common.browseServer,

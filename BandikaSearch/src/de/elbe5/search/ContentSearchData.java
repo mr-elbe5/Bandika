@@ -8,6 +8,10 @@
  */
 package de.elbe5.search;
 
+import de.elbe5.content.ContentCache;
+import de.elbe5.content.ContentData;
+import de.elbe5.request.RequestData;
+import de.elbe5.user.UserData;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -16,7 +20,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.highlight.Highlighter;
 import org.apache.lucene.search.highlight.QueryScorer;
 
-public class PageSearchData extends SearchData {
+public class ContentSearchData extends SearchData {
 
     protected static final int CONTEXT_LENGTH_DESCRIPTION = 200;
     protected static final int CONTEXT_LENGTH_KEYWORDS = 80;
@@ -116,6 +120,13 @@ public class PageSearchData extends SearchData {
 
     public void setAnonymous(boolean anonymous) {
         this.anonymous = anonymous;
+    }
+
+    public boolean hasReadRight(RequestData rdata){
+        ContentData data = ContentCache.getContent(getId());
+        if (data == null)
+            return false;
+        return data.hasUserReadRight(rdata);
     }
 
     public void setContexts(Query query, Analyzer analyzer) {

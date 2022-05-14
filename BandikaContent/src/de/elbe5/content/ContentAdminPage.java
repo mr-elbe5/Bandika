@@ -1,19 +1,17 @@
 package de.elbe5.content;
 
+import de.elbe5.application.IAdminIncludePage;
 import de.elbe5.base.Strings;
 import de.elbe5.file.DocumentData;
 import de.elbe5.file.ImageData;
 import de.elbe5.file.MediaData;
-import de.elbe5.layout.HtmlIncludePage;
 import de.elbe5.layout.MessageTag;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 
 import java.util.List;
 
-public class ContentAdminPage extends HtmlIncludePage {
-
-    public static final String TYPE = "contentadmintree";
+public class ContentAdminPage implements IAdminIncludePage {
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {

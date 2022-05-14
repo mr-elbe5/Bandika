@@ -11,12 +11,12 @@ package de.elbe5.search;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PageSearchResultData extends SearchResultData {
+public class ContentSearchResultData extends SearchResultData {
 
     protected String[] fieldNames = {"name", "authorName", "description", "keywords", "content"};
-    protected List<PageSearchData> results = new ArrayList<>();
+    protected List<ContentSearchData> results = new ArrayList<>();
 
-    public PageSearchResultData() {
+    public ContentSearchResultData() {
     }
 
     public String[] getFieldNames() {
@@ -27,7 +27,7 @@ public class PageSearchResultData extends SearchResultData {
         this.fieldNames = fieldNames;
     }
 
-    public List<PageSearchData> getResults() {
+    public List<ContentSearchData> getResults() {
         return results;
     }
 }

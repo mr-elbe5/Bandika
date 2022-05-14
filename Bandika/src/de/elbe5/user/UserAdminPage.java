@@ -1,5 +1,6 @@
 package de.elbe5.user;
 
+import de.elbe5.application.IAdminIncludePage;
 import de.elbe5.base.Strings;
 import de.elbe5.group.GroupBean;
 import de.elbe5.group.GroupData;
@@ -7,7 +8,13 @@ import de.elbe5.request.RequestData;
 
 import java.util.List;
 
-public class UserAdminPage {
+public class UserAdminPage implements IAdminIncludePage {
+
+    @Override
+    public void appendHtml(StringBuilder sb, RequestData rdata) {
+        appendGroupList(sb,rdata);
+        appendUserList(sb,rdata);
+    }
 
     public void appendGroupList(StringBuilder sb, RequestData rdata) {
         List<GroupData> groups = null;

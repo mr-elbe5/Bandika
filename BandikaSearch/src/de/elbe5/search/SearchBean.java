@@ -10,7 +10,10 @@ package de.elbe5.search;
 
 import de.elbe5.base.Log;
 import de.elbe5.application.ApplicationPath;
+import de.elbe5.content.ContentCache;
+import de.elbe5.content.ContentData;
 import de.elbe5.database.DbBean;
+import de.elbe5.user.UserCache;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -91,17 +94,15 @@ public class SearchBean extends DbBean {
 
     protected void indexContent(IndexWriter writer) throws Exception {
         int count = 0;
-        //todo
-        /*
-        for (PageData page : ContentCache.getContentSet()) {
-            PageSearchData data = new PageSearchData();
-            data.setId(page.getId());
-            data.setUrl(page.getUrl());
-            data.setName(page.getDisplayName());
-            data.setDescription(page.getDescription());
-            data.setAuthorName(UserCache.getUser(page.getChangerId()).getName());
-            data.setContent(page.getSearchContent());
-            data.setAnonymous(page.hasOpenAccess());
+        for (ContentData content : ContentCache.getContents(ContentData.class)) {
+            ContentSearchData data = new ContentSearchData();
+            data.setId(content.getId());
+            data.setUrl(content.getUrl());
+            data.setName(content.getDisplayName());
+            data.setDescription(content.getDescription());
+            data.setAuthorName(UserCache.getUser(content.getChangerId()).getName());
+            data.setContent(content.getPublishedText());
+            data.setAnonymous(content.isOpenAccess());
             data.setDoc();
             writer.addDocument(data.getDoc());
             count++;
@@ -109,7 +110,6 @@ public class SearchBean extends DbBean {
                 writer.commit();
             }
         }
-        */
         writer.commit();
         Log.log("finished indexing " + count + " pages");
     }
@@ -148,7 +148,7 @@ public class SearchBean extends DbBean {
         }
     }
 
-    public void searchPages(PageSearchResultData result) {
+    public void searchPages(ContentSearchResultData result) {
         result.getResults().clear();
         String[] fieldNames = result.getFieldNames();
         ScoreDoc[] hits = null;
@@ -171,7 +171,7 @@ public class SearchBean extends DbBean {
             if (hits != null) {
                 for (ScoreDoc hit : hits) {
                     Document doc = searcher.doc(hit.doc);
-                    PageSearchData data = new PageSearchData();
+                    ContentSearchData data = new ContentSearchData();
                     data.setDoc(doc);
                     data.evaluateDoc();
                     data.setContexts(query, analyzer);

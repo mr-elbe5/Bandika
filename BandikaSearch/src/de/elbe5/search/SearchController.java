@@ -41,7 +41,7 @@ public class SearchController extends Controller {
     }
 
     public IResponse openSearch(RequestData rdata) {
-        PageSearchResultData contentResult = new PageSearchResultData();
+        ContentSearchResultData contentResult = new ContentSearchResultData();
         rdata.getAttributes().put("searchResultData", contentResult);
         return showSearch();
     }
@@ -51,15 +51,14 @@ public class SearchController extends Controller {
     }
 
     public IResponse search(RequestData rdata) {
-        PageSearchResultData contentResult = new PageSearchResultData();
+        ContentSearchResultData contentResult = new ContentSearchResultData();
         String pattern = rdata.getAttributes().getString("searchPattern");
         contentResult.setPattern(pattern);
         SearchBean.getInstance().searchPages(contentResult);
         for (int i = contentResult.results.size() - 1; i >= 0; i--) {
-            PageSearchData result = contentResult.results.get(i);
-            //todo
-            //if (!result.hasOpenAccess() && !rdata.hasContentReadRight(result.getId()))
-            //    contentResult.results.remove(i);
+            ContentSearchData result = contentResult.results.get(i);
+            if (!result.hasOpenAccess() && !result.hasReadRight(rdata))
+                contentResult.results.remove(i);
         }
         rdata.getAttributes().put("searchResultData", contentResult);
         return showSearch();

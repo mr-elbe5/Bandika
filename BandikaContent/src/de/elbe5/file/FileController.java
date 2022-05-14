@@ -8,9 +8,12 @@
  */
 package de.elbe5.file;
 
+import de.elbe5.application.AdminPage;
 import de.elbe5.application.ApplicationPath;
+import de.elbe5.application.ContentAdminController;
 import de.elbe5.base.Strings;
 import de.elbe5.base.Log;
+import de.elbe5.content.ContentAdminPage;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.RequestData;
@@ -49,9 +52,7 @@ public abstract class FileController extends Controller {
     private IResponse show(FileData data, RequestData rdata){
         ContentData parent=ContentCache.getContent(data.getParentId());
         if (!parent.hasUserReadRight(rdata)) {
-            //todo
-            //String token = rdata.getAttributes().getString("token");
-            //checkRights(Token.matchToken(data.getId(), token));
+            return new StatusResponse(HttpServletResponse.SC_UNAUTHORIZED);
         }
         File file = new File(ApplicationPath.getAppFilePath(), data.getFileName());
         // if not exists, create from database
@@ -75,11 +76,16 @@ public abstract class FileController extends Controller {
         ContentCache.setDirty();
         rdata.getAttributes().put("contentId", Integer.toString(parentId));
         rdata.setMessage(Strings.getString("_fileDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return showContentAdministration(rdata,parentId);
+        return showContentAdministration(rdata);
     }
 
-    protected IResponse showContentAdministration(RequestData rdata, int contentId) {
-        return new ForwardResponse("/ctrl/admin/openContentAdministration?contentId=" + contentId);
+    protected IResponse showContentAdministration(RequestData rdata){
+        return new AdminPage(new ContentAdminPage(), Strings.getString("_contentAdministration"));
+    }
+
+    protected IResponse showContentAdministration(RequestData rdata, int contentId){
+        rdata.getAttributes().put("contentId", contentId);
+        return ContentAdminController.getInstance().openContentAdministration(rdata);
     }
 
 }

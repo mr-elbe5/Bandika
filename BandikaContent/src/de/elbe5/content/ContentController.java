@@ -8,6 +8,7 @@
  */
 package de.elbe5.content;
 
+import de.elbe5.application.AdminPage;
 import de.elbe5.base.Log;
 import de.elbe5.base.Strings;
 import de.elbe5.base.BaseData;
@@ -336,8 +337,13 @@ public class ContentController extends Controller {
         return new SortChildContentPage().createHtml(rdata);
     }
 
+    protected IResponse showContentAdministration(RequestData rdata) {
+        return new AdminPage(new ContentAdminPage(), Strings.getString("_contentAdministration"));
+    }
+
     protected IResponse showContentAdministration(RequestData rdata, int contentId) {
-        return new ForwardResponse("/ctrl/admin/openContentAdministration?contentId=" + contentId);
+        rdata.getAttributes().put("contentId", contentId);
+        return showContentAdministration(rdata);
     }
 
 }

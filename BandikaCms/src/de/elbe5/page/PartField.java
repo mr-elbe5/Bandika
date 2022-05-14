@@ -51,9 +51,4 @@ public abstract class PartField implements Cloneable {
 
     public abstract void readFrontendRequestData(RequestData rdata);
 
-    /******************* search part *********************************/
-
-    public void appendSearchText(StringBuilder sb) {
-    }
-
 }

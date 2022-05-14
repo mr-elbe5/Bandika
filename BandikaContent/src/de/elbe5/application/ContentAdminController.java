@@ -9,8 +9,10 @@
 package de.elbe5.application;
 
 import de.elbe5.base.Strings;
+import de.elbe5.content.ContentAdminPage;
 import de.elbe5.content.ContentBean;
 import de.elbe5.content.ContentCache;
+import de.elbe5.content.ContentLogAdminPage;
 import de.elbe5.file.PreviewCache;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
@@ -51,12 +53,12 @@ public class ContentAdminController extends AdminController {
 
     public IResponse openContentAdministration(RequestData rdata) {
         checkRights(rdata.hasAnyContentRight());
-        return showContentAdministration(rdata);
+        return new AdminPage(new ContentAdminPage(), Strings.getString("_contentAdministration"));
     }
 
     public IResponse openContentLog(RequestData rdata) {
         checkRights(rdata.hasAnyContentRight());
-        return showContentLog(rdata);
+        return new AdminPage(new ContentLogAdminPage(), Strings.getString("_contentLog"));
     }
 
     public IResponse clearPreviewCache(RequestData rdata) {
@@ -77,7 +79,7 @@ public class ContentAdminController extends AdminController {
     public IResponse resetContentLog(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.CONTENTEDIT));
         ContentBean.getInstance().resetContentLog();
-        return showContentLog(rdata);
+        return new AdminPage(new ContentLogAdminPage(), Strings.getString("_contentLog"));
     }
 
 }

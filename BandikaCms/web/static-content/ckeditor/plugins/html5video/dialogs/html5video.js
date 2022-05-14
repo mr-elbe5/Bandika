@@ -32,7 +32,6 @@ CKEDITOR.dialog.add( 'html5video', function( editor ) {
                         type: 'button',
                         id: 'browse',
                         // v-align with the 'txtUrl' field.
-                        // TODO: We need something better than a fixed size here.
                         style: 'display:inline-block;margin-top:14px;',
                         align: 'center',
                         label: editor.lang.common.browseServer,
@@ -75,7 +74,6 @@ CKEDITOR.dialog.add( 'html5video', function( editor ) {
                         type: 'button',
                         id: 'browseposter',
                         // v-align with the 'txtUrl' field.
-                        // TODO: We need something better than a fixed size here.
                         style: 'display:inline-block;margin-top:14px;',
                         align: 'center',
                         label: editor.lang.common.browseServer,

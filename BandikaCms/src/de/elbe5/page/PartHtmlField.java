@@ -32,11 +32,4 @@ public class PartHtmlField extends PartField {
     }
 
 
-    /******************* search part *********************************/
-
-    public void appendSearchText(StringBuilder sb) {
-        //todo
-        //sb.append(" ").append(SearchHelper.getSearchContentFromHtml(getContent()));
-    }
-
 }
