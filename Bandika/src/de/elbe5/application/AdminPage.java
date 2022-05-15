@@ -121,13 +121,12 @@ public class AdminPage extends HtmlResponse {
                             </div>
                         </header>
                         <main id="main" role="main">
-                            <div id="pageContainer">
+                            <div id="pageContainer" class="container admin">
                             """);
     }
 
     public void appendHtmlEnd(StringBuilder sb) {
         sb.append(Strings.format("""
-                                <tpl:content/>
                             </div>
                         </main>
                     </div>
