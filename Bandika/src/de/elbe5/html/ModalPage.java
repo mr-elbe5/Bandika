@@ -32,30 +32,37 @@ public class ModalPage extends HtmlResponse {
                 title));
     }
 
-    public void appendModalBodyStart(StringBuilder sb, RequestData rdata, String title){
+    public void appendModalBodyStart(StringBuilder sb, RequestData rdata, String title) {
         sb.append(Strings.format("""
-                        <div class="modal-body">
-                                <h3>{1}
-                                </h3>
-                """,
+                                <div class="modal-body">
+                                        <h3>{1}
+                                        </h3>
+                        """,
                 title
-                ));
+        ));
     }
 
-    public void appendModalEnd(StringBuilder sb, String secondary, String primary) {
+    public void appendModalFooter(StringBuilder sb, String secondary, String primary) {
         sb.append(Strings.format("""                
                                 </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{1}
-                                        </button>
-                                        <button type="submit" class="btn btn-primary">{2}
-                                        </button>
-                                    </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{1}
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">{2}
+                                    </button>
                                 </div>
                             </div>
+                        </div>
                         """,
                 secondary,
                 primary));
+    }
+
+    public void appendModalEnd(StringBuilder sb) {
+        sb.append("""                
+                    </div>
+                </div>
+                """);
     }
 
 }

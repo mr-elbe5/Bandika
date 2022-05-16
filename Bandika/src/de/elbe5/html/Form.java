@@ -3,6 +3,7 @@ package de.elbe5.html;
 import de.elbe5.application.Configuration;
 import de.elbe5.base.Strings;
 import de.elbe5.request.RequestData;
+import de.elbe5.response.IResponse;
 
 public class Form {
 
@@ -54,7 +55,7 @@ public class Form {
                     multi ? "serializeFiles" : "serialize",
                     multi ? "postMultiByAjax" : "postByAjax",
                     url,
-                    target));
+                    target.isEmpty() ? IResponse.MODAL_DIALOG_JQID : target));
         }
     }
 
@@ -109,7 +110,13 @@ public class Form {
 
     // text
 
-    public static void appendTextLine(StringBuilder sb, boolean hasError, String name, String label, boolean required, String value, int maxLength) {
+    public static void appendTextLine(StringBuilder sb, String label, String value) {
+        appendLineStart(sb, "", label);
+        sb.append(value);
+        appendLineEnd(sb);
+    }
+
+    public static void appendTextInputLine(StringBuilder sb, boolean hasError, String name, String label, boolean required, String value, int maxLength) {
         appendLineStart(sb, hasError, name, label, required, false);
         sb.append(Strings.format("""
                         <input type="text" id="{1}" name="{2}" class="form-control" value="{3}" {4}/>
@@ -121,16 +128,16 @@ public class Form {
         appendLineEnd(sb);
     }
 
-    public static void appendTextLine(StringBuilder sb, boolean hasError, String name, String label, boolean required, String value) {
-        appendTextLine(sb, hasError, name, label, required, value, 0);
+    public static void appendTextInputLine(StringBuilder sb, boolean hasError, String name, String label, boolean required, String value) {
+        appendTextInputLine(sb, hasError, name, label, required, value, 0);
     }
 
-    public static void appendTextLine(StringBuilder sb, String name, String label, String value, int maxLength) {
-        appendTextLine(sb, false, name, label, false, value, maxLength);
+    public static void appendTextInputLine(StringBuilder sb, String name, String label, String value, int maxLength) {
+        appendTextInputLine(sb, false, name, label, false, value, maxLength);
     }
 
-    public static void appendTextLine(StringBuilder sb, String name, String label, String value) {
-        appendTextLine(sb, name, label, value, 0);
+    public static void appendTextInputLine(StringBuilder sb, String name, String label, String value) {
+        appendTextInputLine(sb, name, label, value, 0);
     }
 
     public static void appendPasswordLine(StringBuilder sb, boolean hasError, String name, String label, boolean required, int maxLength) {
@@ -161,6 +168,7 @@ public class Form {
                 name,
                 height.isEmpty() ? "" : "style=\"height:" + height + "\"",
                 value));
+        appendLineEnd(sb);
     }
 
     public static void appendTextareaLine(StringBuilder sb, String name, String label, String value, String height) {
@@ -191,8 +199,8 @@ public class Form {
 
     // file
 
-    public static void appendFileLine(StringBuilder sb, boolean hasError, String name, String label, boolean required, boolean multiple) {
-        appendLineStart(sb, hasError, name, label, required, false);
+    public static void appendFileLineStart(StringBuilder sb, boolean hasError, String name, String label, boolean required, boolean multiple) {
+        appendLineStart(sb, hasError, name, label, required, true);
         sb.append(Strings.format("""
                 <input type="file" class="form-control-file" id="{1}" name="{2}" {3}>
                 """,
@@ -201,8 +209,8 @@ public class Form {
                 multiple ? "multiple" : ""));
     }
 
-    public static void appendFileLine(StringBuilder sb, String name, String label, boolean multiple) {
-        appendFileLine(sb, false, name, label, false, multiple);
+    public static void appendFileLineStart(StringBuilder sb, String name, String label, boolean multiple) {
+        appendFileLineStart(sb, false, name, label, false, multiple);
     }
 
     // select

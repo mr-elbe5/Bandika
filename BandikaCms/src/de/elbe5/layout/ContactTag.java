@@ -33,8 +33,8 @@ public class ContactTag extends TemplateTag {
                 Strings.toHtml(cssClass)));
         Form.appendFormStart(sb, "/ctrl/ctrl/sendContact/" + contentId, "contactform");
         Form.appendFormError(sb, rdata);
-        Form.appendTextLine(sb, rdata.hasFormErrorField("contactName"), Strings.toHtml("contactName"), Strings.getHtml("_name"), true, Strings.toHtml(contactName),0);
-        Form.appendTextLine(sb, rdata.hasFormErrorField("contactEmail"), Strings.toHtml("contactEmail"), Strings.getHtml("_email"), true, Strings.toHtml(contactEmail));
+        Form.appendTextInputLine(sb, rdata.hasFormErrorField("contactName"), Strings.toHtml("contactName"), Strings.getHtml("_name"), true, Strings.toHtml(contactName),0);
+        Form.appendTextInputLine(sb, rdata.hasFormErrorField("contactEmail"), Strings.toHtml("contactEmail"), Strings.getHtml("_email"), true, Strings.toHtml(contactEmail));
         Form.appendTextareaLine(sb, rdata.hasFormErrorField("contactMessage"), Strings.toHtml("contactMessage"), Strings.getHtml("_message"), true, Strings.toHtml(contactMessage),"10rem");
         Form.appendLineStart(sb, "", "");
         sb.append(Strings.format("""
@@ -42,7 +42,7 @@ public class ContactTag extends TemplateTag {
         """,
                 Long.toString(new Date().getTime())));
         Form.appendLineEnd(sb);
-        Form.appendTextLine(sb, rdata.hasFormErrorField("captcha"), Strings.toHtml("captcha"), Strings.getHtml("_captcha"), true, "");
+        Form.appendTextInputLine(sb, rdata.hasFormErrorField("captcha"), Strings.toHtml("captcha"), Strings.getHtml("_captcha"), true, "");
         Form.appendLineStart(sb, "", "");
         sb.append(Strings.format("""
                 <div>{1}</div>

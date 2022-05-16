@@ -14,14 +14,15 @@ public class EditGroupPage extends ModalPage {
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
         GroupData group = rdata.getSessionObject("groupData", GroupData.class);
+        String url = "/ctrl/group/saveGroup/" + group.getId();
         List<UserData> users = UserBean.getInstance().getAllUsers();
         appendModalStart(sb, Strings.getHtml("_editGroup"));
-        Form.appendFormStart(sb, "/ctrl/group/saveGroup/" + group.getId(), "groupform");
+        Form.appendFormStart(sb, url , "groupform");
         appendModalBodyStart(sb, rdata, Strings.getHtml("_settings"));
         Form.appendLineStart(sb, "", Strings.getHtml("_id"), true);
         sb.append(group.getId());
         Form.appendLineEnd(sb);
-        Form.appendTextLine(sb, rdata.hasFormErrorField("name"),"name","_name", true, group.getName());
+        Form.appendTextInputLine(sb, rdata.hasFormErrorField("name"),"name","_name", true, group.getName());
         Form.appendTextareaLine(sb, "notes", Strings.getHtml("_notes"), Strings.toHtml(group.getNotes()), "5rem");
         Form.appendLineStart(sb, "", Strings.getHtml("_globalRights"), true);
         for (SystemZone zone : SystemZone.values()) {
@@ -37,7 +38,8 @@ public class EditGroupPage extends ModalPage {
             Form.appendCheckbox(sb, "userIds", "", Integer.toString(udata.getId()), group.getUserIds().contains(udata.getId()));
             Form.appendLineEnd(sb);
         }
-        Form.appendFormEnd(sb);
-        appendModalEnd(sb,Strings.getHtml("_close"),Strings.getHtml("_save"));
+        appendModalFooter(sb,Strings.getHtml("_close"),Strings.getHtml("_save"));
+        Form.appendFormEnd(sb, url, "groupform", false, true, "");
+        appendModalEnd(sb);
     }
 }
