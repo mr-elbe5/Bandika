@@ -45,9 +45,6 @@ public class UserData extends BaseData implements IJsonData {
     protected String passwordHash = "";
     protected String token = "";
     protected LocalDateTime tokenExpiration = null;
-    protected String approvalCode = "";
-    protected boolean approved = false;
-    protected boolean emailVerified = false;
     protected boolean locked = false;
     protected boolean deleted = false;
     protected String street = "";
@@ -149,30 +146,6 @@ public class UserData extends BaseData implements IJsonData {
 
     public void setTokenExpiration(LocalDateTime tokenExpiration) {
         this.tokenExpiration = tokenExpiration;
-    }
-
-    public String getApprovalCode() {
-        return approvalCode;
-    }
-
-    public void setApprovalCode(String approvalCode) {
-        this.approvalCode = approvalCode;
-    }
-
-    public boolean isApproved() {
-        return approved;
-    }
-
-    public void setApproved(boolean approved) {
-        this.approved = approved;
-    }
-
-    public boolean isEmailVerified() {
-        return emailVerified;
-    }
-
-    public void setEmailVerified(boolean emailVerified) {
-        this.emailVerified = emailVerified;
     }
 
     public boolean isLocked() {
@@ -371,9 +344,8 @@ public class UserData extends BaseData implements IJsonData {
         readBasicData(rdata);
         setLogin(rdata.getAttributes().getString("login"));
         setPassword(rdata.getAttributes().getString("password"));
-        setApproved(rdata.getAttributes().getBoolean("approved"));
-        setEmailVerified(rdata.getAttributes().getBoolean("emailVerified"));
         setGroupIds(rdata.getAttributes().getIntegerSet("groupIds"));
+        setLocked(rdata.getAttributes().getBoolean("locked"));
         if (login.isEmpty())
             rdata.addIncompleteField("login");
         if (isNew() && !hasPassword())

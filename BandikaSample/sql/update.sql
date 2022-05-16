@@ -19,3 +19,8 @@ drop table t_layout_part;
 update t_page_part set type = 'TemplatePartData' where type = 'LayoutPartData';
 
 alter table t_page rename column layout to template;
+
+alter table t_user drop column approved;
+alter table t_user drop column approval_code;
+alter table t_user drop column email_verified;
+alter table t_user drop column failed_login_count;

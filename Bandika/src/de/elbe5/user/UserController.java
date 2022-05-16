@@ -118,7 +118,7 @@ public class UserController extends Controller {
         if (rdata.getUserId() == data.getId()) {
             rdata.setSessionUser(data);
         }
-        return new CloseDialogResponse("/ctrl/admin/openPersonAdministration?userId=" + data.getId(), Strings.getString("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/admin/openUserAdministration?userId=" + data.getId(), Strings.getString("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse deleteUser(RequestData rdata) {
@@ -126,12 +126,12 @@ public class UserController extends Controller {
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
             rdata.setMessage(Strings.getString("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
-            return new ForwardResponse("/ctrl/admin/openPersonAdministration");
+            return new ForwardResponse("/ctrl/admin/openUserAdministration");
         }
         UserBean.getInstance().deleteUser(id);
         UserCache.setDirty();
         rdata.setMessage(Strings.getString("_userDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return new ForwardResponse("/ctrl/admin/openPersonAdministration");
+        return new ForwardResponse("/ctrl/admin/openUserAdministration");
     }
 
     public IResponse showPortrait(RequestData rdata) {
