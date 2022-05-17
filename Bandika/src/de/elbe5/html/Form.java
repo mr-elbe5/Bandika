@@ -235,9 +235,20 @@ public class Form {
         appendSelectStart(sb, false, name, label, false, "");
     }
 
+    static public void appendOption(StringBuilder sb, String value, String label, boolean selected) {
+        sb.append(Strings.format("""
+                        <option value="{1}" {2}>{3}</option>
+                        """,
+                value,
+                selected ? "selected" : "",
+                label
+        ));
+    }
+
     static public void appendSelectEnd(StringBuilder sb) {
         sb.append("""
             </select>""");
+        appendLineEnd(sb);
     }
 
     // check

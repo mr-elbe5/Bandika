@@ -15,7 +15,7 @@ public class EditUserPage extends ModalPage {
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
-        UserData user = (UserData) rdata.getSessionObject("userData");
+        UserData user = rdata.getSessionObject("userData", UserData.class);
         List<CompanyData> companies = CompanyBean.getInstance().getAllCompanies();
         List<GroupData> groups = GroupBean.getInstance().getAllGroups();
         String url = "/ctrl/user/saveUser/" + user.getId();
