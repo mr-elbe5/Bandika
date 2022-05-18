@@ -22,9 +22,9 @@ public class PagePartFactory {
         return list;
     }
 
-    public static void addClassInfo(Class<? extends PagePartData> contentClass, PagePartBean bean, boolean useLayouts) {
-        PagePartClassInfo contentClassInfo = new PagePartClassInfo(contentClass,bean,useLayouts);
-        infos.put(contentClass.getSimpleName(),contentClassInfo);
+    public static void addClassInfo(Class<? extends PagePartData> partClass, PagePartBean bean, boolean useLayouts) {
+        PagePartClassInfo contentClassInfo = new PagePartClassInfo(partClass,bean,useLayouts);
+        infos.put(partClass.getSimpleName(),contentClassInfo);
     }
 
     public static PagePartData getNewData(String type) {

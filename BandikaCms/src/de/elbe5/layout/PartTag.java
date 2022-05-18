@@ -35,8 +35,8 @@ public class PartTag extends TemplateTag {
                         <div id="{1}" class="partWrapper {2}" title="{3}">
                         """,
                 partData.getPartWrapperId(),
-                Strings.getHtml(cssClass),
-                Strings.getHtml(partData.getEditTitle())
+                Strings.toHtml(cssClass),
+                Strings.toHtml(partData.getEditTitle())
         ));
         sb.append(Strings.format("""
                         <input type="hidden" name="{1}" value="{2}" class="partPos"/>
@@ -59,9 +59,9 @@ public class PartTag extends TemplateTag {
                                                     </a>
                                     """,
                             Integer.toString(partData.getId()),
-                            Strings.getHtml(partData.getSectionName()),
-                            Strings.getHtml(partType),
-                            Strings.getHtml(template.getName()),
+                            Strings.toHtml(partData.getSectionName()),
+                            Strings.toHtml(partType),
+                            Strings.toHtml(template.getName()),
                             Strings.getHtml(template.getKey())
                     ));
                 }
@@ -71,7 +71,7 @@ public class PartTag extends TemplateTag {
                                                     </a>
                                 """,
                         Integer.toString(partData.getId()),
-                        Strings.getHtml(partData.getSectionName()),
+                        Strings.toHtml(partData.getSectionName()),
                         Strings.toHtml(partType),
                         Strings.getHtml("class." + partType)
                 ));

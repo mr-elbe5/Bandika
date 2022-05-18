@@ -50,7 +50,7 @@ public class PageController extends ContentController {
         pdata.setCreateValues(rdata);
         data.addPart(pdata, fromPartId, true);
         rdata.getAttributes().put(PagePartData.KEY_PART, pdata);
-        return new AddPartPage().createHtml(rdata);
+        return new AddPagePart();
     }
 
     public IResponse sendContact(RequestData rdata) {

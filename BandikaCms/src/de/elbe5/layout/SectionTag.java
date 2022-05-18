@@ -56,8 +56,8 @@ public class SectionTag extends TemplateTag {
                             <a class="dropdown-item" href="" onclick="return addPart(-1,'{1}','{2}','{3}');">{4}
                             </a>
                             """,
-                            sectionData.getName(),
-                            partType,
+                            Strings.toHtml(sectionData.getName()),
+                            Strings.toHtml(partType),
                             Strings.toHtml(template.getName()),
                             Strings.getHtml(template.getKey())
                             ));
@@ -67,8 +67,8 @@ public class SectionTag extends TemplateTag {
                         <a class="dropdown-item" href="" onclick="return addPart(-1,'{1}','{2}');">{3}
                         </a>
                         """,
-                        sectionData.getName(),
-                        partType,
+                        Strings.toHtml(sectionData.getName()),
+                        Strings.toHtml(partType),
                         Strings.getHtml("class."+partType)
                         ));
             }

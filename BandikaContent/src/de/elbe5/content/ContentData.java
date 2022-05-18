@@ -436,7 +436,6 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     }
 
     public void setEditValues(ContentData cachedData, RequestData rdata) {
-        //todo
         if (cachedData == null)
             return;
         if (!isNew()) {
