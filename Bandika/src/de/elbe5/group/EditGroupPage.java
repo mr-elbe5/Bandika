@@ -18,7 +18,7 @@ public class EditGroupPage extends ModalPage {
         List<UserData> users = UserBean.getInstance().getAllUsers();
         appendModalStart(sb, Strings.getHtml("_editGroup"));
         Form.appendFormStart(sb, url , "groupform");
-        appendModalBodyStart(sb, rdata, Strings.getHtml("_settings"));
+        appendModalBodyStart(sb, Strings.getHtml("_settings"));
         Form.appendLineStart(sb, "", Strings.getHtml("_id"), true);
         sb.append(group.getId());
         Form.appendLineEnd(sb);

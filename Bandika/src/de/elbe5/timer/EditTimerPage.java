@@ -13,7 +13,7 @@ public class EditTimerPage extends ModalPage {
         String url = "/ctrl/timer/saveTimerTask";
         appendModalStart(sb, Strings.getHtml("_taskSettings"));
         Form.appendFormStart(sb, url, "taskform");
-        appendModalBodyStart(sb, rdata, Strings.getHtml("_settings"));
+        appendModalBodyStart(sb);
         sb.append(Strings.format("""
                         <input type="hidden" name="timerName" value="{1}>"/>
                         """,

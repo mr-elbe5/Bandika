@@ -21,7 +21,7 @@ public class EditContentRightsPage extends ModalPage {
         String url = "/ctrl/content/saveRights/" + contentData.getId();
         appendModalStart(sb, Strings.getHtml("_editGroupRights"));
         Form.appendFormStart(sb, url, "rightsform", true);
-        appendModalBodyStart(sb, rdata, Strings.getHtml("_rights"));
+        appendModalBodyStart(sb);
         for (GroupData group : groups) {
             if (group.getId() <= GroupData.ID_MAX_FINAL)
                 continue;

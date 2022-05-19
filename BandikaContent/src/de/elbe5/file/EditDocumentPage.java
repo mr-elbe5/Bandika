@@ -22,7 +22,7 @@ public class EditDocumentPage extends ModalPage {
         boolean fileRequired= documentData.isNew();
         appendModalStart(sb, Strings.getHtml("_editDocumentSettings"));
         Form.appendFormStart(sb, url , "documentform");
-        appendModalBodyStart(sb, rdata, Strings.getHtml("_settings"));
+        appendModalBodyStart(sb);
         Form.appendTextLine(sb, Strings.getHtml("_idAndUrl"), documentData.getId() + " - " + Strings.toHtml(documentData.getFileName()));
         Form.appendTextLine(sb, Strings.getHtml("_creation"), DateHelper.toHtmlDateTime(documentData.getCreationDate()) + " - " + Strings.toHtml(creatorName));
         Form.appendTextLine(sb, Strings.getHtml("_lastChange"), DateHelper.toHtmlDateTime(documentData.getChangeDate()) + " - " + Strings.toHtml(changerName));

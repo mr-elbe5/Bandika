@@ -22,7 +22,7 @@ public class EditImagePage extends ModalPage {
         boolean fileRequired= imageData.isNew();
         appendModalStart(sb, Strings.getHtml("_editImageSettings"));
         Form.appendFormStart(sb, url , "imageform");
-        appendModalBodyStart(sb, rdata, Strings.getHtml("_settings"));
+        appendModalBodyStart(sb);
         Form.appendTextLine(sb, Strings.getHtml("_idAndUrl"), imageData.getId() + " - " + Strings.toHtml(imageData.getFileName()));
         Form.appendTextLine(sb, Strings.getHtml("_creation"), DateHelper.toHtmlDateTime(imageData.getCreationDate()) + " - " + Strings.toHtml(creatorName));
         Form.appendTextLine(sb, Strings.getHtml("_lastChange"), DateHelper.toHtmlDateTime(imageData.getChangeDate()) + " - " + Strings.toHtml(changerName));

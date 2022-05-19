@@ -26,7 +26,7 @@ public class EditContentDataPage extends ModalPage {
         String changerName = changer == null ? "" : changer.getName();
         appendModalStart(sb, Strings.getHtml("_editContentData"));
         Form.appendFormStart(sb, url, "contentform", true);
-        appendModalBodyStart(sb, rdata, Strings.getHtml("_settings"));
+        appendModalBodyStart(sb, Strings.getHtml("_settings"));
         Form.appendTextLine(sb, Strings.getHtml("_idAndUrl"), Integer.toString(contentData.getId()) + " - " + Strings.toHtml(contentData.getUrl()));
         Form.appendTextLine(sb, Strings.getHtml("_creation"), DateHelper.toHtmlDateTime(contentData.getCreationDate()) + " - " + Strings.toHtml(creatorName));
         Form.appendTextLine(sb, Strings.getHtml("_lastChange"), DateHelper.toHtmlDateTime(contentData.getChangeDate()) + " - " + Strings.toHtml(changerName));

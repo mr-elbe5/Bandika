@@ -13,7 +13,7 @@ public class ChangePasswordPage extends ModalPage {
         String url = "/ctrl/user/changePassword/" + user.getId();
         appendModalStart(sb, Strings.getHtml("_changePassword"));
         Form.appendFormStart(sb, url, "changepasswordform", false);
-        appendModalBodyStart(sb, rdata, Strings.getHtml("_changePassword"));
+        appendModalBodyStart(sb);
         sb.append(Strings.format("""
                         <input type="hidden" name="userId" value="<%=rdata.getUserId()%>"/>
                         """,

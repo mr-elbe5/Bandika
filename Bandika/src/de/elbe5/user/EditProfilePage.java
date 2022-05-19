@@ -13,7 +13,7 @@ public class EditProfilePage extends ModalPage {
         String url = "/ctrl/user/changeProfile/" + user.getId();
         appendModalStart(sb, Strings.getHtml("_changeProfile"));
         Form.appendFormStart(sb, url, "profileform", true);
-        appendModalBodyStart(sb, rdata, Strings.getHtml("_profile"));
+        appendModalBodyStart(sb, Strings.getHtml("_profile"));
         sb.append(Strings.format("""
                         <input type="hidden" name="userId" value="{1}"/>
                         """,

@@ -21,7 +21,7 @@ public class EditUserPage extends ModalPage {
         String url = "/ctrl/user/saveUser/" + user.getId();
         appendModalStart(sb, Strings.getHtml("_editUser"));
         Form.appendFormStart(sb, url, "userform", true);
-        appendModalBodyStart(sb, rdata, Strings.getHtml("_settings"));
+        appendModalBodyStart(sb, Strings.getHtml("_settings"));
         sb.append(Strings.format("""
                         <input type="hidden" name="userId" value="{1}"/>
                         """,

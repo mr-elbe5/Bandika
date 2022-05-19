@@ -18,7 +18,7 @@ public class EditCompanyPage extends ModalPage {
         String url = "/ctrl/company/saveCompany/" + company.getId();
         appendModalStart(sb, Strings.getHtml("_editUser"));
         Form.appendFormStart(sb, url, "companyform", true);
-        appendModalBodyStart(sb, rdata, Strings.getHtml("_settings"));
+        appendModalBodyStart(sb, Strings.getHtml("_settings"));
         sb.append(Strings.format("""
                         <input type="hidden" name="companyId" value="{1}"/>
                         """,
