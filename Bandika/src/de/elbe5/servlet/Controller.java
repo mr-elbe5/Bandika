@@ -1,14 +1,8 @@
 package de.elbe5.servlet;
 
-import de.elbe5.application.AdminPage;
-import de.elbe5.application.Configuration;
-import de.elbe5.application.IAdminIncludePage;
-import de.elbe5.application.SystemAdminPage;
 import de.elbe5.base.Strings;
 import de.elbe5.request.*;
 import de.elbe5.response.*;
-import de.elbe5.rights.SystemZone;
-import de.elbe5.user.UserAdminPage;
 
 import javax.servlet.http.HttpServletResponse;
 

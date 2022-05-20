@@ -8,6 +8,8 @@
  */
 package de.elbe5.application;
 
+import de.elbe5.administration.AdminController;
+import de.elbe5.administration.ContentAdminController;
 import de.elbe5.base.Strings;
 import de.elbe5.base.JsonWebToken;
 import de.elbe5.base.Log;
@@ -16,13 +18,11 @@ import de.elbe5.company.CompanyCache;
 import de.elbe5.company.CompanyController;
 import de.elbe5.content.*;
 import de.elbe5.database.DbConnector;
-import de.elbe5.html.IfTag;
-import de.elbe5.layout.*;
+import de.elbe5.template.*;
 import de.elbe5.page.TemplatePartBean;
 import de.elbe5.file.*;
 import de.elbe5.group.GroupController;
 import de.elbe5.page.*;
-import de.elbe5.layout.TemplateTagFactory;
 import de.elbe5.servlet.InitServlet;
 import de.elbe5.timer.CleanupTaskData;
 import de.elbe5.timer.HeartbeatTaskData;

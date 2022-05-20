@@ -9,8 +9,8 @@
 package de.elbe5.response;
 
 import de.elbe5.request.RequestData;
-import de.elbe5.layout.TemplateCache;
-import de.elbe5.layout.Template;
+import de.elbe5.template.TemplateCache;
+import de.elbe5.template.Template;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;

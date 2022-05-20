@@ -12,6 +12,8 @@ import de.elbe5.base.Strings;
 import de.elbe5.request.RequestKeys;
 import de.elbe5.response.*;
 import de.elbe5.rights.SystemZone;
+import de.elbe5.search.html.SearchPage;
+import de.elbe5.search.html.UserSearchPage;
 import de.elbe5.servlet.Controller;
 import de.elbe5.request.RequestData;
 import de.elbe5.servlet.ControllerCache;

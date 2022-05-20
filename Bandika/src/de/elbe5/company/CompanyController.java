@@ -10,6 +10,7 @@ package de.elbe5.company;
 
 import de.elbe5.base.Strings;
 import de.elbe5.base.BaseData;
+import de.elbe5.company.response.EditCompanyPage;
 import de.elbe5.request.*;
 import de.elbe5.response.*;
 import de.elbe5.rights.SystemZone;

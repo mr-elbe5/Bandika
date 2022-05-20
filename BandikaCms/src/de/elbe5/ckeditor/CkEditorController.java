@@ -8,6 +8,9 @@
  */
 package de.elbe5.ckeditor;
 
+import de.elbe5.ckeditor.response.AddImagePage;
+import de.elbe5.ckeditor.response.BrowseImagesPage;
+import de.elbe5.ckeditor.response.BrowseLinksPage;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentController;
 import de.elbe5.content.ContentData;
@@ -17,7 +20,6 @@ import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.IResponse;
-import de.elbe5.response.TemplateResponse;
 
 public class CkEditorController extends ContentController {
 

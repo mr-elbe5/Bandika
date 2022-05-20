@@ -14,6 +14,7 @@ import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
 import de.elbe5.request.RequestType;
 import de.elbe5.response.IResponse;
+import de.elbe5.response.ResponseException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

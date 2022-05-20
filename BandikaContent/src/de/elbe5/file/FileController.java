@@ -8,17 +8,17 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.application.AdminPage;
+import de.elbe5.administration.AdminController;
 import de.elbe5.application.ApplicationPath;
-import de.elbe5.application.ContentAdminController;
+import de.elbe5.administration.ContentAdminController;
 import de.elbe5.base.Strings;
 import de.elbe5.base.Log;
-import de.elbe5.content.ContentAdminPage;
+import de.elbe5.administration.response.ContentAdminPage;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
+import de.elbe5.file.response.FileResponse;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
-import de.elbe5.response.ForwardResponse;
 import de.elbe5.response.StatusResponse;
 import de.elbe5.servlet.Controller;
 import de.elbe5.response.IResponse;
@@ -80,7 +80,7 @@ public abstract class FileController extends Controller {
     }
 
     protected IResponse showContentAdministration(RequestData rdata){
-        return new AdminPage(new ContentAdminPage(), Strings.getString("_contentAdministration"));
+        return AdminController.getInstance().openAdminPage(new ContentAdminPage(), Strings.getString("_contentAdministration"));
     }
 
     protected IResponse showContentAdministration(RequestData rdata, int contentId){

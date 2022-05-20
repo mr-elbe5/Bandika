@@ -10,11 +10,12 @@ package de.elbe5.content;
 
 import de.elbe5.application.Configuration;
 import de.elbe5.base.*;
+import de.elbe5.content.response.EditContentDataPage;
 import de.elbe5.file.FileData;
 import de.elbe5.file.FileFactory;
 import de.elbe5.group.GroupBean;
 import de.elbe5.group.GroupData;
-import de.elbe5.html.ModalPage;
+import de.elbe5.response.ModalPage;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IMasterInclude;
 import de.elbe5.rights.Right;

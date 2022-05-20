@@ -1,11 +1,7 @@
-import de.elbe5.layout.MessageTag;
-import de.elbe5.layout.*;
+import de.elbe5.template.*;
 import de.elbe5.application.Configuration;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestType;
-import de.elbe5.layout.TemplateCache;
-import de.elbe5.layout.TemplateTagFactory;
-import de.elbe5.layout.Template;
 
 import javax.servlet.http.HttpServletRequest;
 

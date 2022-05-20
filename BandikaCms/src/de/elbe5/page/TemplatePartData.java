@@ -8,8 +8,8 @@
  */
 package de.elbe5.page;
 
-import de.elbe5.layout.Template;
-import de.elbe5.layout.TemplateCache;
+import de.elbe5.template.Template;
+import de.elbe5.template.TemplateCache;
 import de.elbe5.request.RequestData;
 
 import java.util.HashMap;

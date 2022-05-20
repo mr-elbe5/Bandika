@@ -10,8 +10,8 @@ package de.elbe5.response;
 
 import de.elbe5.application.Configuration;
 import de.elbe5.request.RequestData;
-import de.elbe5.layout.TemplateCache;
-import de.elbe5.layout.Template;
+import de.elbe5.template.TemplateCache;
+import de.elbe5.template.Template;
 
 public class TemplateInclude implements IMasterInclude {
 

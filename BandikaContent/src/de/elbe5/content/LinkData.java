@@ -9,7 +9,8 @@
 package de.elbe5.content;
 
 import de.elbe5.base.Strings;
-import de.elbe5.html.ModalPage;
+import de.elbe5.content.response.EditLinkDataPage;
+import de.elbe5.response.ModalPage;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IResponse;
 import de.elbe5.response.RedirectResponse;

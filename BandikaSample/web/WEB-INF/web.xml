@@ -16,7 +16,7 @@
     </servlet>
     <servlet>
         <servlet-name>files</servlet-name>
-        <servlet-class>de.elbe5.file.FileServlet</servlet-class>
+        <servlet-class>de.elbe5.servlet.FileServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>controller</servlet-name>
