@@ -64,6 +64,11 @@ public class ContentController extends Controller {
 
     //frontend
     public IResponse show(String url, RequestData rdata) {
+        //Log.log("show: "+url);
+        if (url.equals("/")){
+            url=ContentCache.getContentRoot().getUrl();
+            //Log.log("redirect to " + url);
+        }
         ContentData data;
         data = ContentCache.getContent(url);
         checkRights(data.hasUserReadRight(rdata));
