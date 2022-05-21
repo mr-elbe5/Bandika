@@ -18,7 +18,9 @@ public class ApplicationPath {
     private static String appROOTPath = "";
     private static String appWEBINFPath = "";
     private static String appFilePath = "";
-    private static String appPreviewPath = "";
+    private static File appFileDir = null;
+    private static String appTemplatePath = "";
+    private static File appTemplateDir = null;
 
     public static String getAppName() {
         return appName;
@@ -40,32 +42,48 @@ public class ApplicationPath {
         return appFilePath;
     }
 
-    public static void initializePath(File appDir, File appROOTDir) {
-        if (appDir == null || appROOTDir == null) {
-            return;
-        }
+    public static File getAppFileDir() {
+        return appFileDir;
+    }
+
+    public static String getAppTemplatePath() {
+        return appTemplatePath;
+    }
+
+    public static File getAppTemplateDir() {
+        return appTemplateDir;
+    }
+
+    public static boolean initializePath(ServletContext context) {
+        File appROOTDir = new File(context.getRealPath("/"));
+        File appDir = appROOTDir.getParentFile();
         appPath = appDir.getAbsolutePath().replace('\\', '/');
         appName = appPath.substring(appPath.lastIndexOf('/') + 1);
         System.out.println("application name is: " + getAppName());
         System.out.println("application path is: " + getAppPath());
         appROOTPath = appROOTDir.getAbsolutePath().replace('\\', '/');
         appWEBINFPath = appROOTPath + "/WEB-INF";
-        appFilePath = appROOTPath + "/files";
+        String externalFilePath = appPath + "_ext";
+        if (!assertDirectory(externalFilePath))
+            return false;
+        appFilePath = externalFilePath + "/files";
+        appFileDir = new File(appFilePath);
+        if (!assertDirectory(appFileDir))
+            return false;
+        appTemplatePath = externalFilePath + "/templates";
+        appTemplateDir = new File(appTemplatePath);
+        return assertDirectory(appTemplateDir);
     }
 
-    public static File getCatalinaBaseDir() {
-        return new File(System.getProperty("catalina.base")).getAbsoluteFile();
+    public static boolean assertDirectory(String path){
+        File f = new File(path);
+        return assertDirectory(f);
     }
 
-    public static File getCatalinaConfDir() {
-        return new File(getCatalinaBaseDir(), "conf");
-    }
-
-    public static File getCatalinaAppDir(ServletContext context) {
-        return getCatalinaAppROOTDir(context).getParentFile();
-    }
-
-    public static File getCatalinaAppROOTDir(ServletContext context) {
-        return new File(context.getRealPath("/"));
+    public static boolean assertDirectory(File dir){
+        if (dir.exists()){
+            return true;
+        }
+        return dir.mkdir();
     }
 }

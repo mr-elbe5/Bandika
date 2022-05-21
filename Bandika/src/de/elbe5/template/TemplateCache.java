@@ -9,7 +9,7 @@ import java.util.*;
 
 public class TemplateCache {
 
-    public static String templateBasePath = ApplicationPath.getAppWEBINFPath()+"/_template/";
+    public static String templateBasePath = ApplicationPath.getAppTemplatePath()+"/";
 
     static final Map<String, Map<String, Template>> templates = new HashMap<>();
 

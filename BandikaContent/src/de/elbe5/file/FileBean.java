@@ -253,14 +253,6 @@ public class FileBean extends DbBean {
         return data;
     }
 
-    public boolean assertFileDirectory(){
-        File f = new File(ApplicationPath.getAppFilePath());
-        if (f.exists()){
-            return true;
-        }
-        return f.mkdir();
-    }
-
     public boolean assertTempFile(FileData data){
         File f = new File(ApplicationPath.getAppFilePath()+"/"+data.getTempFileName());
         if (f.exists()){

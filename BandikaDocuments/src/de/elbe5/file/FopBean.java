@@ -76,7 +76,7 @@ public class FopBean extends DbBean {
     }
 
     private Templates getXslTemplates(String xslName) {
-        File f=new File(ApplicationPath.getAppWEBINFPath()+"/_templates/"+xslName);
+        File f=new File(ApplicationPath.getAppWEBINFPath()+"/"+xslName);
         if (!f.exists()){
             Log.error("Could not load xsl file");
             return null;

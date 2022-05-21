@@ -32,8 +32,6 @@ import java.nio.charset.StandardCharsets;
 
 public class FileServlet extends WebServlet {
 
-    private final File fileDir = new File(ApplicationPath.getAppFilePath());
-
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
     }
@@ -58,7 +56,7 @@ public class FileServlet extends WebServlet {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
                 return;
             }
-            File file = new File(fileDir, fileName);
+            File file = new File(ApplicationPath.getAppFileDir(), fileName);
             // if not exists, create from database
             if (!file.exists() && !FileBean.getInstance().createTempFile(file)) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);

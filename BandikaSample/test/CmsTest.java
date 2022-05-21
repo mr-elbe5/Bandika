@@ -20,7 +20,7 @@ public class CmsTest {
     }
 
     void prepare(){
-        TemplateCache.templateBasePath = System.getProperty("user.dir") + "/../Bandika/web/WEB-INF/_template/";
+        TemplateCache.templateBasePath = System.getProperty("user.dir") + "/../Bandika/templates/";
         System.out.println(TemplateCache.templateBasePath);
         TemplateTagFactory.addTagType(MessageTag.TYPE, MessageTag.class);
         TemplateTagFactory.addTagType(BreadcrumbTag.TYPE, BreadcrumbTag.class);

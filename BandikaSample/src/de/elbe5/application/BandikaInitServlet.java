@@ -42,7 +42,10 @@ public class BandikaInitServlet extends InitServlet {
         super.init(servletConfig);
         System.out.println("initializing Bandika Application...");
         ServletContext context=servletConfig.getServletContext();
-        ApplicationPath.initializePath(ApplicationPath.getCatalinaAppDir(context), ApplicationPath.getCatalinaAppROOTDir(context));
+        if (!ApplicationPath.initializePath(context)) {
+            System.out.println("could not create directories, please check access rights");
+            return;
+        }
         Configuration.setConfigs(context);
         Strings.addBundle("bandika", Configuration.getLocale());
         Strings.addBundle("content", Configuration.getLocale());
@@ -103,9 +106,6 @@ public class BandikaInitServlet extends InitServlet {
         CompanyCache.load();
         UserCache.load();
         TemplateCache.load();
-        if (!FileBean.getInstance().assertFileDirectory()){
-            Log.error("could not create file directory");
-        }
         Timer.getInstance().registerTimerTask(new HeartbeatTaskData());
         Timer.getInstance().registerTimerTask(new CleanupTaskData());
         Log.log("load tasks");
