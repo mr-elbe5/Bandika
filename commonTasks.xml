@@ -75,6 +75,12 @@
             <file name="${buildScss.dir}/bandika.scss" />
             <mapper type="glob" from="*.scss" to="*.css"/>
         </apply>
+        <apply executable="sass" dest="Bandika/web/static-content/css" verbose="true" force="true" failonerror="true">
+            <srcfile />
+            <targetfile />
+            <file name="${buildScss.dir}/admin.scss" />
+            <mapper type="glob" from="*.scss" to="*.css"/>
+        </apply>
         <apply executable="sass" dest="${project}/web/static-content/css" verbose="true" force="true" failonerror="true">
             <srcfile />
             <targetfile />

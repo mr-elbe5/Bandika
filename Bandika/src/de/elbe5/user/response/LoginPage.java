@@ -28,7 +28,7 @@ public class LoginPage {
                         <tpl:message/>
                         <section class="mainSection loginSection text-center">
                             <form class="form" action="/ctrl/user/login" method="post" name="loginForm" accept-charset="UTF-8">
-                                <img class="mb-4" src="/static-content/img/logo.png" alt="{3}">
+                                <img class="mb-4" src="/static-content/img/login-logo.png" alt="{3}">
                                 <label for="login" class="sr-only">{4}
                                 </label>
                                 <input type="text" id="login" name="login" class="form-control"

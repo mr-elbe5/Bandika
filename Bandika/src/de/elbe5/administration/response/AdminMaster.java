@@ -87,7 +87,7 @@ public class AdminMaster extends HtmlResponse {
                         <div class="menu row">
                             <section class="col-12 menu">
                                 <nav class="navbar navbar-expand-lg">
-                                    <span class="navbar-brand" >{1}</span>
+                                    <span class="navbar-brand" admin-logo"><img class="admin-logo" src="/static-content/img/admin-logo.png" > - {1}</span>
                                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                                         <span class="navbar-toggler-icon"></span>
                                     </button>

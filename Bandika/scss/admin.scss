@@ -1,11 +1,10 @@
 @import "extras";
 
 $font-size-sm:               ($font-size-base * .9);
-$mid-blue: #27446a;
 $light:         #f8f9fa; //gray-100
 $dark:          #343a40; //gray-800
 $main-background: transparent;
-$background-body: $mid-blue url(img-path('pattern.svg'));
+$background-body: $dark url(img-path('carbon.png'));
 
 body.admin {
   background: $background-body;
@@ -33,6 +32,11 @@ body.admin {
         color: $light;
       }
 
+    }
+
+    img.admin-logo{
+      height: 30px;
+      margin-bottom: 10px;
     }
 
     div.menu{
