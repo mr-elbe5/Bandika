@@ -17,7 +17,7 @@ public class LoginPage {
                     <link rel="shortcut icon" href="/favicon.ico"/>
                     <link rel="stylesheet" href="/static-content/css/bootstrap.css"/>
                     <link rel="stylesheet" href="/static-content/css/bandika.css"/>
-                    <link rel="stylesheet" href="/static-content/css/layout.css"/>
+                    <link rel="stylesheet" href="/static-content/css/{2}.css"/>
                     <script type="text/javascript" src="/static-content/js/jquery-1.12.4.min.js"></script>
                     <script type="text/javascript" src="/static-content/js/bootstrap.bundle.min.js"></script>
                                 
@@ -28,19 +28,19 @@ public class LoginPage {
                         <tpl:message/>
                         <section class="mainSection loginSection text-center">
                             <form class="form" action="/ctrl/user/login" method="post" name="loginForm" accept-charset="UTF-8">
-                                <img class="mb-4" src="/static-content/img/logo.png" alt="{2}">
-                                <label for="login" class="sr-only">{3}
+                                <img class="mb-4" src="/static-content/img/logo.png" alt="{3}">
+                                <label for="login" class="sr-only">{4}
                                 </label>
                                 <input type="text" id="login" name="login" class="form-control"
-                                       placeholder="{4}" required autofocus>
-                                <label for="password" class="sr-only">{5}
+                                       placeholder="{5}" required autofocus>
+                                <label for="password" class="sr-only">{6}
                                 </label>
                                 <input type="password" id="password" name="password" class="form-control"
-                                       placeholder="{6}" required>
-                                <button class="btn btn-outline-primary" type="submit">{7}
+                                       placeholder="{7}" required>
+                                <button class="btn btn-outline-primary" type="submit">{8}
                                 </button>
                                 <button class="btn btn-outline-secondary"
-                                        onclick="$(location).attr('href','/');">{8}
+                                        onclick="$(location).attr('href','/');">{9}
                                 </button>
                             </form>
                         </section>
@@ -52,6 +52,7 @@ public class LoginPage {
                 </html>
                 """,
                 Configuration.getAppTitle(),
+                Configuration.getAppName(),
                 Configuration.getAppTitle(),
                 Strings.getHtml("_loginName"),
                 Strings.getHtml("_loginName"),

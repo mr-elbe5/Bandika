@@ -38,47 +38,55 @@ public class MainNavTag extends TemplateTag {
                             children.add(child);
                     }
                     if (!children.isEmpty()) {
-                        sb.append(Strings.format("""
-                                        <li class="nav-item dropdown">
-                                            <a class="nav-link {1} dropdown-toggle" data-toggle="dropdown" href="{2}" role="button" aria-haspopup="true" aria-expanded="false">{3}</a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item {4}" href="{5}">{6}</a>
-            """,
-                                activeIds.contains(contentData.getId()) ? "active" : "",
-                                contentData.getUrl(),
-                                contentData.getNavDisplay(),
-                                activeIds.contains(contentData.getId()) ? "active" : "",
-                                contentData.getUrl(),
-                                contentData.getNavDisplay()
-                        ));
-                        for (ContentData child : children) {
-                            sb.append(Strings.format("""
-                                                <a class="dropdown-item {1}" href="{2}">{3}</a>
-            """,
-                                    activeIds.contains(child.getId()) ? "active" : "",
-                                    child.getUrl(),
-                                    child.getNavDisplay()
-                            ));
-                        }
-                        sb.append("""
-                                            </div>
-                                        </li>
-            """);
+                        appendDropdownMenuHtml(sb, contentData, children, activeIds);
                     } else {
-                        sb.append(Strings.format("""
-                                        <li class="nav-item {1}">
-                                            <a class="nav-link {2}" href="{3}">{4}</a>
-                                        </li>
-            """,
-                                activeIds.contains(contentData.getId()) ? "active" : "",
-                                activeIds.contains(contentData.getId()) ? "active" : "",
-                                contentData.getUrl(),
-                                contentData.getNavDisplay()
-                        ));
+                        appendSingleMenuHtml(sb, contentData, activeIds);
                     }
                 }
             }
         }
+    }
+
+    public void appendSingleMenuHtml(StringBuilder sb, ContentData contentData, Set<Integer> activeIds) {
+        sb.append(Strings.format("""
+                                        <li class="nav-item main-nav {1}">
+                                            <a class="nav-link {2}" href="{3}">{4}</a>
+                                        </li>
+            """,
+                activeIds.contains(contentData.getId()) ? "active" : "",
+                activeIds.contains(contentData.getId()) ? "active" : "",
+                contentData.getUrl(),
+                contentData.getNavDisplay()
+        ));
+    }
+
+    public void appendDropdownMenuHtml(StringBuilder sb, ContentData contentData, List<ContentData> children, Set<Integer> activeIds) {
+        sb.append(Strings.format("""
+                                        <li class="nav-item main-nav dropdown">
+                                            <a class="nav-link {1} dropdown-toggle" data-toggle="dropdown" href="{2}" role="button" aria-haspopup="true" aria-expanded="false">{3}</a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item {4}" href="{5}">{6}</a>
+            """,
+                activeIds.contains(contentData.getId()) ? "active" : "",
+                contentData.getUrl(),
+                contentData.getNavDisplay(),
+                activeIds.contains(contentData.getId()) ? "active" : "",
+                contentData.getUrl(),
+                contentData.getNavDisplay()
+        ));
+        for (ContentData child : children) {
+            sb.append(Strings.format("""
+                                                <a class="dropdown-item {1}" href="{2}">{3}</a>
+            """,
+                    activeIds.contains(child.getId()) ? "active" : "",
+                    child.getUrl(),
+                    child.getNavDisplay()
+            ));
+        }
+        sb.append("""
+                                            </div>
+                                        </li>
+            """);
     }
 
 }

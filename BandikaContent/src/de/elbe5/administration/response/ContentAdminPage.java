@@ -180,67 +180,65 @@ public class ContentAdminPage implements IAdminPage {
                     """);
             if (rdata.hasClipboardData(ContentRequestKeys.KEY_DOCUMENT)) {
                 sb.append(Strings.format("""
-                                                                    <a class="icon fa fa-paste" href="/ctrl/document/pasteDocument?parentId={1}" title="{2}"> </a>
+                                                        <a class="icon fa fa-paste" href="/ctrl/document/pasteDocument?parentId={1}" title="{2}"> </a>
                                 """,
                         Integer.toString(contentData.getId()),
                         Strings.getHtml("_pasteDocument")
                 ));
-                if (!documentTypes.isEmpty()) {
-                    if (documentTypes.size() == 1) {
+            }
+            if (!documentTypes.isEmpty()) {
+                if (documentTypes.size() == 1) {
+                    sb.append(Strings.format("""
+                                                        <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/document/openCreateDocument?parentId={1}&type={2}');" title="{3}"></a>
+                                    """,
+                            Integer.toString(contentData.getId()),
+                            documentTypes.get(0),
+                            Strings.getHtml("_newDocument")
+                    ));
+                } else {
+                    sb.append(Strings.format("""
+                                                        <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="{1}"></a>
+                                                        <div class="dropdown-menu">
+                                    """,
+                            Strings.getHtml("_newDocument")
+                    ));
+                    for (String documentType : documentTypes) {
+                        String name = Strings.getHtml("class." + documentType);
                         sb.append(Strings.format("""
-                                                                            <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/document/openCreateDocument?parentId={1}&type={2}');" title="{3}"></a>
+                                                        <a class="dropdown-item" onclick="return openModalDialog('/ctrl/document/openCreateDocument?parentId={1}&type={2}');">{3}</a>
                                         """,
                                 Integer.toString(contentData.getId()),
-                                documentTypes.get(0),
-                                Strings.getHtml("_newDocument")
+                                documentType,
+                                name
                         ));
-                    } else {
-                        sb.append(Strings.format("""
-                                                                            <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="{1}"></a>
-                                                                            <div class="dropdown-menu">
-                                        """,
-                                Strings.getHtml("_newDocument")
-                        ));
-                        for (String documentType : documentTypes) {
-                            String name = Strings.getHtml("class." + documentType);
-                            sb.append(Strings.format("""
-                                                                                    <a class="dropdown-item" onclick="return openModalDialog('/ctrl/document/openCreateDocument?parentId={1}&type={2}');">{3}</a>
-                                            """,
-                                    Integer.toString(contentData.getId()),
-                                    documentType,
-                                    name
-                            ));
-                        }
-                        sb.append("""
-                                                                    </div>
-                                """);
                     }
+                    sb.append("""
+                                                    </div>
+                            """);
                 }
-                sb.append("""
-                                                        </div>
-                        """);
             }
             sb.append("""
-                                                    <ul>
+                                                </div>
+                                                <ul>
                     """);
             List<DocumentData> documents = contentData.getFiles(DocumentData.class);
             for (DocumentData document : documents) {
                 sb.append(Strings.format("""
-                                                                    <li class="">{1}
-                                                                        <div class="treeline">
-                                                                            <span id="{2}">
-                                                                                {3}
-                                                                            </span>
-                                                                            <div class="icons">
-                                                                                <a class="icon fa fa-eye" href="{4}" target="_blank" title="{5}"> </a>
-                                                                                <a class="icon fa fa-download" href="{6}?download=true" title="{7}"> </a>
-                                                                                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/document/openEditDocument/{8}');" title="{9}"> </a>
-                                                                                <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/document/cutDocument/{10}');" title="{11}"> </a>
-                                                                                <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/document/copyDocument/{12}');" title="{13}"> </a>
-                                                                                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/document/deleteDocument/{14}');" title="{15}"> </a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </li>
+                                                    <li class="">{1}
+                                                        <div class="treeline">
+                                                            <span id="{2}">
+                                                                {3}
+                                                            </span>
+                                                            <div class="icons">
+                                                                <a class="icon fa fa-eye" href="{4}" target="_blank" title="{5}"> </a>
+                                                                <a class="icon fa fa-download" href="{6}?download=true" title="{7}"> </a>
+                                                                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/document/openEditDocument/{8}');" title="{9}"> </a>
+                                                                <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/document/cutDocument/{10}');" title="{11}"> </a>
+                                                                <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/document/copyDocument/{12}');" title="{13}"> </a>
+                                                                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/document/deleteDocument/{14}');" title="{15}"> </a>
+                                                            </div>
+                                                        </div>
+                                                    </li>
                                 """,
                         fileId == document.getId() ? "current" : "",
                         Integer.toString(document.getId()),
@@ -260,8 +258,8 @@ public class ContentAdminPage implements IAdminPage {
                 ));
             }
             sb.append("""
-                                                    </ul>
-                                                </li>
+                                                </ul>
+                                            </li>
                     """);
         }
     }
@@ -320,8 +318,6 @@ public class ContentAdminPage implements IAdminPage {
             }
             sb.append("""
                                 </div>
-            """);
-            sb.append("""
                                 <ul>
             """);
             List<ImageData> images = contentData.getFiles(ImageData.class);

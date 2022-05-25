@@ -2,6 +2,7 @@
 <project name="common" basedir=".">
 
     <property name="project" value="common" />
+    <property name="projectlower" value="common" />
     <property name="build.dir" location="build/${project}" />
     <property name="buildSrc.dir" location="${build.dir}/src" />
     <property name="buildClasses.dir" location="${build.dir}/classes" />
@@ -77,7 +78,7 @@
         <apply executable="sass" dest="${project}/web/static-content/css" verbose="true" force="true" failonerror="true">
             <srcfile />
             <targetfile />
-            <file name="${buildScss.dir}/layout.scss" />
+            <file name="${buildScss.dir}/${projectlower}.scss" />
             <mapper type="glob" from="*.scss" to="*.css"/>
         </apply>
     </target>

@@ -47,7 +47,7 @@ public class AdminMaster extends HtmlResponse {
                     <link rel="shortcut icon" href="/favicon.ico"/>
                     <link rel="stylesheet" href="/static-content/css/bootstrap.css"/>
                     <link rel="stylesheet" href="/static-content/css/bandika.css"/>
-                    <link rel="stylesheet" href="/static-content/css/layout.css"/>
+                    <link rel="stylesheet" href="/static-content/css/admin.css"/>
                     <script type="text/javascript" src="/static-content/js/jquery-1.12.4.min.js"></script>
                     <script type="text/javascript" src="/static-content/js/bootstrap.bundle.min.js"></script>
                     <script type="text/javascript" src="/static-content/js/bootstrap.tree.js"></script>
@@ -149,30 +149,20 @@ public class AdminMaster extends HtmlResponse {
                             </div>
                         </main>
                     </div>
-                    <div class="container fixed-bottom">
-                        <footer>
-                            <div class="container">
-                                <ul class="nav">
-                                    &copy; {1}
-                                </ul>
-                            </div>
-                        </footer>
-                    </div>
                     <div class="modal" id="modalDialog" tabindex="-1" role="dialog"></div>
                 <script type="text/javascript">
                     function confirmDelete() {
-                        return confirm('{2}');
+                        return confirm('{1}');
                     }
                                 
                     function confirmExecute() {
-                        return confirm('{3}');
+                        return confirm('{2}');
                     }
                 </script>
                                 
                 </body>
                 </html>
                 """,
-                Strings.getHtml("_copyright"),
                 Strings.getHtml("_confirmDelete"),
                 Strings.getHtml("_confirmExecute")
         ));

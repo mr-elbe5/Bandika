@@ -73,7 +73,7 @@ public abstract class FileData extends BaseData {
     }
 
     public String getURL(){
-        return "/file/"+getId() + extension;
+        return "/files/"+getId() + extension;
     }
 
     public String getDisplayName() {

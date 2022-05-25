@@ -4,6 +4,7 @@
     <property file="build.properties" />
 
     <property name="project" value="BandikaSample" />
+    <property name="projectlower" value="bandikasample" />
     <property name="deploy.dir" location="${deploy.root}/bandika" />
 
     <import file="commonTasks.xml"/>

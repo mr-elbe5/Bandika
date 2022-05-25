@@ -22,7 +22,7 @@ public class EditImagePage extends ModalPage {
         String changerName = changer == null ? "" : changer.getName();
         boolean fileRequired= imageData.isNew();
         appendModalStart(sb, Strings.getHtml("_editImageSettings"));
-        FormHtml.appendFormStart(sb, url , "imageform");
+        FormHtml.appendFormStart(sb, url , "imageform", true);
         appendModalBodyStart(sb);
         FormHtml.appendTextLine(sb, Strings.getHtml("_idAndUrl"), imageData.getId() + " - " + Strings.toHtml(imageData.getFileName()));
         FormHtml.appendTextLine(sb, Strings.getHtml("_creation"), DateHelper.toHtmlDateTime(imageData.getCreationDate()) + " - " + Strings.toHtml(creatorName));
@@ -32,7 +32,7 @@ public class EditImagePage extends ModalPage {
         FormHtml.appendTextInputLine(sb, rdata.hasFormErrorField("displayName"),"displayName","_displayName", true, Strings.toHtml(imageData.getDisplayName()));
         FormHtml.appendTextareaLine(sb, "description", Strings.getHtml("_description"), Strings.toHtml(imageData.getDescription()), "3rem");
         appendModalFooter(sb,Strings.getHtml("_close"),Strings.getHtml("_save"));
-        FormHtml.appendFormEnd(sb, url, "imageform", false, true, "");
+        FormHtml.appendFormEnd(sb, url, "imageform", true, true, "");
         appendModalEnd(sb);
     }
 }

@@ -22,7 +22,7 @@ public class EditMediaPage extends ModalPage {
         String changerName = changer == null ? "" : changer.getName();
         boolean fileRequired= mediaData.isNew();
         appendModalStart(sb, Strings.getHtml("_editMediaSettings"));
-        FormHtml.appendFormStart(sb, url , "mediaform");
+        FormHtml.appendFormStart(sb, url , "mediaform", true);
         appendModalBodyStart(sb);
         FormHtml.appendTextLine(sb, Strings.getHtml("_idAndUrl"), mediaData.getId() + " - " + Strings.toHtml(mediaData.getFileName()));
         FormHtml.appendTextLine(sb, Strings.getHtml("_creation"), DateHelper.toHtmlDateTime(mediaData.getCreationDate()) + " - " + Strings.toHtml(creatorName));
@@ -32,7 +32,7 @@ public class EditMediaPage extends ModalPage {
         FormHtml.appendTextInputLine(sb, rdata.hasFormErrorField("displayName"),"displayName","_displayName", true, Strings.toHtml(mediaData.getDisplayName()));
         FormHtml.appendTextareaLine(sb, "description", Strings.getHtml("_description"), Strings.toHtml(mediaData.getDescription()), "3rem");
         appendModalFooter(sb,Strings.getHtml("_close"),Strings.getHtml("_save"));
-        FormHtml.appendFormEnd(sb, url, "mediaform", false, true, "");
+        FormHtml.appendFormEnd(sb, url, "mediaform", true, true, "");
         appendModalEnd(sb);
     }
 }

@@ -56,6 +56,7 @@ public class BandikaInitServlet extends InitServlet {
         if (!DbConnector.getInstance().initialize("jdbc/bandika"))
             return;
         Configuration.setAppTitle("Bandika");
+        Configuration.setAppName("bandikasample");
         JsonWebToken.createSecretKey(Configuration.getSalt());
         AdminController.register(new ContentAdminController());
         ContentController.register(new ContentController());

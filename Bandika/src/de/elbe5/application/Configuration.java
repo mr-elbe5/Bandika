@@ -18,6 +18,8 @@ public class Configuration {
     public static String ENCODING = "UTF-8";
 
     private static String appTitle = "";
+
+    private static String appName = "";
     private static String salt = "";
     private static String smtpHost = null;
     private static int smtpPort = 25;
@@ -39,6 +41,14 @@ public class Configuration {
 
     public static String getAppTitle() {
         return appTitle;
+    }
+
+    public static void setAppName(String appName) {
+        Configuration.appName = appName;
+    }
+
+    public static String getAppName() {
+        return appName;
     }
 
     public static void setAppTitle(String appTitle) {

@@ -22,7 +22,7 @@ public class EditDocumentPage extends ModalPage {
         String changerName = changer == null ? "" : changer.getName();
         boolean fileRequired= documentData.isNew();
         appendModalStart(sb, Strings.getHtml("_editDocumentSettings"));
-        FormHtml.appendFormStart(sb, url , "documentform");
+        FormHtml.appendFormStart(sb, url , "documentform", true);
         appendModalBodyStart(sb);
         FormHtml.appendTextLine(sb, Strings.getHtml("_idAndUrl"), documentData.getId() + " - " + Strings.toHtml(documentData.getFileName()));
         FormHtml.appendTextLine(sb, Strings.getHtml("_creation"), DateHelper.toHtmlDateTime(documentData.getCreationDate()) + " - " + Strings.toHtml(creatorName));
@@ -32,7 +32,7 @@ public class EditDocumentPage extends ModalPage {
         FormHtml.appendTextInputLine(sb, rdata.hasFormErrorField("displayName"),"displayName","_displayName", true, Strings.toHtml(documentData.getDisplayName()));
         FormHtml.appendTextareaLine(sb, "description", Strings.getHtml("_description"), Strings.toHtml(documentData.getDescription()), "3rem");
         appendModalFooter(sb,Strings.getHtml("_close"),Strings.getHtml("_save"));
-        FormHtml.appendFormEnd(sb, url, "documentform", false, true, "");
+        FormHtml.appendFormEnd(sb, url, "documentform", true, true, "");
         appendModalEnd(sb);
     }
 }
