@@ -13,7 +13,7 @@ import de.elbe5.user.UserData;
 public class EditImagePage extends ModalPage {
 
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
+    public void appendHtml(RequestData rdata) {
         ImageData imageData = rdata.getSessionObject(ContentRequestKeys.KEY_IMAGE,ImageData.class);
         String url = "/ctrl/image/saveImage/" + imageData.getId();
         UserData creator = UserCache.getUser(imageData.getCreatorId());
@@ -21,9 +21,9 @@ public class EditImagePage extends ModalPage {
         UserData changer = UserCache.getUser(imageData.getChangerId());
         String changerName = changer == null ? "" : changer.getName();
         boolean fileRequired= imageData.isNew();
-        appendModalStart(sb, Strings.getHtml("_editImageSettings"));
+        appendModalStart(Strings.getHtml("_editImageSettings"));
         FormHtml.appendFormStart(sb, url , "imageform", true);
-        appendModalBodyStart(sb);
+        appendModalBodyStart();
         FormHtml.appendTextLine(sb, Strings.getHtml("_idAndUrl"), imageData.getId() + " - " + Strings.toHtml(imageData.getFileName()));
         FormHtml.appendTextLine(sb, Strings.getHtml("_creation"), DateHelper.toHtmlDateTime(imageData.getCreationDate()) + " - " + Strings.toHtml(creatorName));
         FormHtml.appendTextLine(sb, Strings.getHtml("_lastChange"), DateHelper.toHtmlDateTime(imageData.getChangeDate()) + " - " + Strings.toHtml(changerName));
@@ -31,8 +31,8 @@ public class EditImagePage extends ModalPage {
         FormHtml.appendLineEnd(sb);
         FormHtml.appendTextInputLine(sb, rdata.hasFormErrorField("displayName"),"displayName","_displayName", true, Strings.toHtml(imageData.getDisplayName()));
         FormHtml.appendTextareaLine(sb, "description", Strings.getHtml("_description"), Strings.toHtml(imageData.getDescription()), "3rem");
-        appendModalFooter(sb,Strings.getHtml("_close"),Strings.getHtml("_save"));
+        appendModalFooter(Strings.getHtml("_close"),Strings.getHtml("_save"));
         FormHtml.appendFormEnd(sb, url, "imageform", true, true, "");
-        appendModalEnd(sb);
+        appendModalEnd();
     }
 }

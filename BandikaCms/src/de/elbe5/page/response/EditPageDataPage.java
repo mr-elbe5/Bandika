@@ -14,11 +14,11 @@ import java.util.List;
 public class EditPageDataPage extends EditContentDataPage {
 
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
+    public void appendHtml(RequestData rdata) {
         PageData contentData = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, PageData.class);
         String url = "/ctrl/page/saveContentData/" + contentData.getId();
         List<Template> pageTemplates = TemplateCache.getTemplates("page");
-        appendStartHtml(sb, rdata, contentData, url);
+        appendStartHtml(rdata, contentData, url);
         FormHtml.appendSelectStart(sb, rdata.hasFormErrorField("template"), "template", Strings.getHtml("_pageTemplate"), true, "");
         FormHtml.appendOption(sb, "", Strings.getHtml("_pleaseSelect"), contentData.getTemplateName().isEmpty());
         for (Template template : pageTemplates) {
@@ -26,7 +26,7 @@ public class EditPageDataPage extends EditContentDataPage {
             FormHtml.appendOption(sb, Strings.toHtml(templateName), Strings.getHtml(template.getKey()), templateName.equals(contentData.getTemplateName()));
         }
         FormHtml.appendSelectEnd(sb);
-        appendEndHtml(sb, url);
+        appendEndHtml(url);
     }
 
 }

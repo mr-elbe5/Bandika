@@ -29,7 +29,7 @@ public class TemplateResponse extends HtmlResponse {
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
         Template template = TemplateCache.getTemplate(type, name);
         if (template != null) {
-            html = template.getHtml(rdata);
+            sb.append(template.getHtml(rdata));
             super.processResponse(context, rdata, response);
         }
         else {

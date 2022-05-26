@@ -12,17 +12,15 @@ public class AddPagePart extends HtmlResponse {
 
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
-        StringBuilder sb = new StringBuilder();
         PagePartData partData = rdata.getAttributes().get(PagePartData.KEY_PART, PagePartData.class);
         partData.appendHtml(sb, rdata);
-        sb.append(Strings.format("""
+        append(Strings.format("""
                 <script type="text/javascript">
                     updatePartEditors($('#{1}'));
                 </script>
                 """,
                 partData.getPartWrapperId()
         ));
-        html = sb.toString();
         sendHtml(response);
     }
 

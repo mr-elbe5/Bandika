@@ -1,23 +1,20 @@
 package de.elbe5.response;
 
-import de.elbe5.base.Strings;
 import de.elbe5.request.RequestData;
 
 public class ModalPage extends HtmlResponse {
 
     public ModalPage createHtml(RequestData rdata) {
-        StringBuilder sb = new StringBuilder();
-        appendHtml(sb, rdata);
-        html = sb.toString();
+        appendHtml(rdata);
         return this;
     }
 
-    protected void appendHtml(StringBuilder sb, RequestData rdata) {
+    protected void appendHtml(RequestData rdata) {
 
     }
 
-    public void appendModalStart(StringBuilder sb, String title) {
-        sb.append(Strings.format("""
+    public void appendModalStart(String title) {
+        append("""
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -28,28 +25,28 @@ public class ModalPage extends HtmlResponse {
                                   </button>
                                 </div>
                         """,
-                title));
+                title);
     }
 
-    public void appendModalBodyStart(StringBuilder sb, String title) {
-        sb.append(Strings.format("""
+    public void appendModalBodyStart(String title) {
+        append("""
                                 <div class="modal-body">
                                         <h3>{1}
                                         </h3>
                         """,
                 title
-        ));
+        );
     }
 
-    public void appendModalBodyStart(StringBuilder sb) {
-        sb.append("""
+    public void appendModalBodyStart() {
+        append("""
                                 <div class="modal-body">
                         """
                 );
     }
 
-    public void appendModalFooter(StringBuilder sb, String secondary, String primary) {
-        sb.append(Strings.format("""                
+    public void appendModalFooter(String secondary, String primary) {
+        append("""                
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{1}
@@ -61,11 +58,11 @@ public class ModalPage extends HtmlResponse {
                         </div>
                         """,
                 secondary,
-                primary));
+                primary);
     }
 
-    public void appendModalFooter(StringBuilder sb, String secondary) {
-        sb.append(Strings.format("""                
+    public void appendModalFooter(String secondary) {
+        append("""                
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{1}
@@ -74,11 +71,11 @@ public class ModalPage extends HtmlResponse {
                             </div>
                         </div>
                         """,
-                secondary));
+                secondary);
     }
 
-    public void appendModalEnd(StringBuilder sb) {
-        sb.append("""                
+    public void appendModalEnd() {
+        append("""                
                     </div>
                 </div>
                 """);

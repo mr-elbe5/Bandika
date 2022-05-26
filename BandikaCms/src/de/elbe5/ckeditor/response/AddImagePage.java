@@ -11,12 +11,12 @@ import de.elbe5.request.RequestData;
 public class AddImagePage extends ModalPage {
 
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
+    public void appendHtml(RequestData rdata) {
         ContentData contentData = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         int imageId = rdata.getAttributes().getInt("imageId");
         ImageData image = ContentCache.getFile(imageId, ImageData.class);
         if (image != null && contentData.hasUserReadRight(rdata)) {
-            sb.append(Strings.format("""
+            append("""
                             <li>
                                 <div class="treeline">
                                     <a id="{1}" href="" onclick="return ckImgCallback('{2}');">
@@ -34,7 +34,7 @@ public class AddImagePage extends ModalPage {
                     Strings.toHtml(image.getDisplayName()),
                     Strings.getHtml("_view"),
                     image.getURL()
-            ));
+            );
         }
     }
 }

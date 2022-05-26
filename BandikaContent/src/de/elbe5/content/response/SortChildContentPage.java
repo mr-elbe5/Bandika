@@ -6,7 +6,7 @@ import de.elbe5.request.RequestData;
 public class SortChildContentPage extends ModalPage {
 
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
+    public void appendHtml(RequestData rdata) {
 //todo
     }
 }

@@ -14,13 +14,13 @@ import java.util.List;
 public class EditGroupPage extends ModalPage {
 
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
+    public void appendHtml(RequestData rdata) {
         GroupData group = rdata.getSessionObject("groupData", GroupData.class);
         String url = "/ctrl/group/saveGroup/" + group.getId();
         List<UserData> users = UserBean.getInstance().getAllUsers();
-        appendModalStart(sb, Strings.getHtml("_editGroup"));
+        appendModalStart(Strings.getHtml("_editGroup"));
         FormHtml.appendFormStart(sb, url , "groupform");
-        appendModalBodyStart(sb, Strings.getHtml("_settings"));
+        appendModalBodyStart(Strings.getHtml("_settings"));
         FormHtml.appendLineStart(sb, "", Strings.getHtml("_id"), true);
         sb.append(group.getId());
         FormHtml.appendLineEnd(sb);
@@ -40,8 +40,8 @@ public class EditGroupPage extends ModalPage {
             FormHtml.appendCheckbox(sb, "userIds", "", Integer.toString(udata.getId()), group.getUserIds().contains(udata.getId()));
             FormHtml.appendLineEnd(sb);
         }
-        appendModalFooter(sb,Strings.getHtml("_close"),Strings.getHtml("_save"));
+        appendModalFooter(Strings.getHtml("_close"),Strings.getHtml("_save"));
         FormHtml.appendFormEnd(sb, url, "groupform", false, true, "");
-        appendModalEnd(sb);
+        appendModalEnd();
     }
 }

@@ -13,20 +13,20 @@ import java.util.List;
 public class BrowseImagesPage extends ModalPage {
 
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
+    public void appendHtml(RequestData rdata) {
         ContentData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         List<Integer> parentIds = ContentCache.getParentContentIds(data.getId());
         parentIds.add(data.getId());
         rdata.setRequestObject("parentIds", parentIds);
         int callbackNum = rdata.getAttributes().getInt("CKEditorFuncNum", -1);
-        appendModalStart(sb, Strings.getHtml("_editUser"));
-        appendModalBodyStart(sb);
-        sb.append("""
+        appendModalStart(Strings.getHtml("_editUser"));
+        appendModalBodyStart();
+        append("""
                 <section class="treeSection">
                                 <ul class="tree filetree">
                 """);
         appendFolder(sb, rdata, ContentCache.getContentRoot(), parentIds);
-        sb.append(Strings.format("""
+        append("""
                                         </ul>
                           </section>
                           <section class="addImage">
@@ -34,10 +34,10 @@ public class BrowseImagesPage extends ModalPage {
                           </section>
                         """,
                 Strings.getHtml("_add")
-        ));
-        appendModalFooter(sb, Strings.getHtml("_cancel"));
-        appendModalEnd(sb);
-        sb.append(Strings.format("""
+        );
+        appendModalFooter(Strings.getHtml("_cancel"));
+        appendModalEnd();
+        append("""
                                     <script type="text/javascript">
                                             $('.tree').treed('fa fa-minus-square-o', 'fa fa-plus-square-o');
                                         
@@ -73,12 +73,12 @@ public class BrowseImagesPage extends ModalPage {
                 Integer.toString(callbackNum),
                 Integer.toString(data.getId()),
                 Integer.toString(data.getId())
-        ));
+        );
     }
 
     public void appendFolder(StringBuilder sb, RequestData rdata, ContentData contentData, List<Integer> parentIds) {
         boolean isParent = parentIds.contains(contentData.getId());
-        sb.append(Strings.format("""
+        append("""
                         <li class="{1}">
                             <a id="page_{2}">{3}
                             </a>
@@ -88,11 +88,11 @@ public class BrowseImagesPage extends ModalPage {
                 Integer.toString(contentData.getId()),
                 Strings.toHtml(contentData.getName()),
                 Integer.toString(contentData.getId())
-        ));
+        );
         if (contentData.hasUserReadRight(rdata)) {
             List<ImageData> images = contentData.getFiles(ImageData.class);
             for (ImageData image : images) {
-                sb.append(Strings.format("""
+                append("""
                                 <li>
                                     <div class="treeline">
                                         <a id="{1}" href="" onclick="return ckImgCallback('{2}');">
@@ -110,7 +110,7 @@ public class BrowseImagesPage extends ModalPage {
                         Strings.toHtml(image.getDisplayName()),
                         Strings.getHtml("_view"),
                         image.getURL()
-                ));
+                );
             }
         }
         for (ContentData subPage : contentData.getChildren()) {

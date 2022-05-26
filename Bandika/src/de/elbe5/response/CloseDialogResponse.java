@@ -41,37 +41,35 @@ public class CloseDialogResponse extends HtmlResponse {
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
         if (targetId.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(Strings.format("""
+            append(Strings.format("""
             <div id="pageContent">
                 <form action="{1}" method="POST" id="forwardform" accept-charset="UTF-8">
                 """,
                     url));
             if (!msg.isEmpty()) {
-                sb.append(Strings.format("""
+                append(Strings.format("""
                     <input type="hidden" name="message" value="{msg}"/>
                     <input type="hidden" name="messageType" value="{msgType}"/>
                     """,
                         Strings.toHtml(msg),
                         msgType));
             }
-            sb.append("""
+            append("""
                 </form>
             </div>
             <script type="text/javascript">
                 $('#forwardform').submit();
             </script>
             """);
-            html = sb.toString();
         }
         else{
-            StringBuilder sb = new StringBuilder("{");
+            StringBuilder ssb = new StringBuilder("{");
             if (!msg.isEmpty()) {
-                sb.append(RequestKeys.KEY_MESSAGE).append(" : '").append(Strings.toJs(msg)).append("',");
-                sb.append(RequestKeys.KEY_MESSAGETYPE).append(" : '").append(Strings.toJs(msgType)).append("'");
+                ssb.append(RequestKeys.KEY_MESSAGE).append(" : '").append(Strings.toJs(msg)).append("',");
+                ssb.append(RequestKeys.KEY_MESSAGETYPE).append(" : '").append(Strings.toJs(msgType)).append("'");
             }
-            sb.append("}");
-            html = Strings.format("""
+            ssb.append("}");
+            append("""
                 <div id="pageContent"></div>
                 <script type="text/javascript">
                         closeModalDialog();
@@ -79,7 +77,7 @@ public class CloseDialogResponse extends HtmlResponse {
                 </script>
             """,
                     url,
-                    sb.toString(),
+                    ssb.toString(),
                     Strings.toJs(targetId));
         }
         super.sendHtml(response);

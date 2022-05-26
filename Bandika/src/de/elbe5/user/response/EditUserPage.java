@@ -15,19 +15,19 @@ import java.util.List;
 public class EditUserPage extends ModalPage {
 
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
+    public void appendHtml(RequestData rdata) {
         UserData user = rdata.getSessionObject("userData", UserData.class);
         List<CompanyData> companies = CompanyBean.getInstance().getAllCompanies();
         List<GroupData> groups = GroupBean.getInstance().getAllGroups();
         String url = "/ctrl/user/saveUser/" + user.getId();
-        appendModalStart(sb, Strings.getHtml("_editUser"));
+        appendModalStart(Strings.getHtml("_editUser"));
         FormHtml.appendFormStart(sb, url, "userform", true);
-        appendModalBodyStart(sb, Strings.getHtml("_settings"));
-        sb.append(Strings.format("""
+        appendModalBodyStart(Strings.getHtml("_settings"));
+        append("""
                         <input type="hidden" name="userId" value="{1}"/>
                         """,
                 Integer.toString(user.getId())
-        ));
+        );
         FormHtml.appendTextLine(sb, Strings.getHtml("_id"), Integer.toString(user.getId()));
         FormHtml.appendTextInputLine(sb, rdata.hasFormErrorField("login"), "login", Strings.getHtml("_login"), true, Strings.toHtml(user.getLogin()));
         FormHtml.appendPasswordLine(sb, rdata.hasFormErrorField("password"), "password", Strings.getHtml("_password"), false, 30);
@@ -37,40 +37,43 @@ public class EditUserPage extends ModalPage {
         FormHtml.appendTextareaLine(sb, "_notes", Strings.getHtml("_notes"), Strings.toHtml(user.getNotes()), "5rem");
         FormHtml.appendFileLineStart(sb, "portrait", Strings.getHtml("_portrait"), false);
         if (user.hasPortrait()) {
-            sb.append(Strings.format("""
+            append("""
                             <img src="/ctrl/user/showPortrait/{1}" alt="{2}"/>
                             """,
                     Integer.toString(user.getId()),
                     Strings.toHtml(user.getName())
-            ));
+            );
         }
         FormHtml.appendLineEnd(sb);
         FormHtml.appendLineStart(sb, "", Strings.getHtml("_locked"), true);
         FormHtml.appendCheckbox(sb, "locked", "", "true", user.isLocked());
         FormHtml.appendLineEnd(sb);
-        sb.append(Strings.format("""
+        append("""
                 <h3>{1}
                 </h3>
                 """,
-                Strings.getHtml("_address")));
+                Strings.getHtml("_address")
+        );
         FormHtml.appendTextInputLine(sb, "street", Strings.getHtml("_street"), Strings.toHtml(user.getStreet()));
         FormHtml.appendTextInputLine(sb, "zipCode", Strings.getHtml("_zipCode"), Strings.toHtml(user.getZipCode()));
         FormHtml.appendTextInputLine(sb, "city", Strings.getHtml("_city"), Strings.toHtml(user.getCity()));
         FormHtml.appendTextInputLine(sb, "country", Strings.getHtml("_country"), Strings.toHtml(user.getCountry()));
-        sb.append(Strings.format("""
+        append("""
                 <h3>{1}
                 </h3>
                 """,
-                Strings.getHtml("_contact")));
+                Strings.getHtml("_contact")
+        );
         FormHtml.appendTextInputLine(sb, "email", Strings.getHtml("_email"), Strings.toHtml(user.getEmail()));
         FormHtml.appendTextInputLine(sb, "phone", Strings.getHtml("_phone"), Strings.toHtml(user.getPhone()));
         FormHtml.appendTextInputLine(sb, "fax", Strings.getHtml("_fax"), Strings.toHtml(user.getFax()));
         FormHtml.appendTextInputLine(sb, "mobile", Strings.getHtml("_mobile"), Strings.toHtml(user.getMobile()));
-        sb.append(Strings.format("""
+        append("""
                 <h3>{1}
                 </h3>
                 """,
-                Strings.getHtml("_groups")));
+                Strings.getHtml("_groups")
+        );
         FormHtml.appendTextLine(sb, Strings.getHtml("_group"), Strings.getHtml("_inGroup"));
         for (GroupData groupData : groups) {
             String label = Strings.toHtml(groupData.getName());
@@ -78,9 +81,9 @@ public class EditUserPage extends ModalPage {
             FormHtml.appendCheckbox(sb, "groupIds", "", Integer.toString(groupData.getId()), user.getGroupIds().contains(groupData.getId()));
             FormHtml.appendLineEnd(sb);
         }
-        appendModalFooter(sb, Strings.getHtml("_cancel"), Strings.getHtml("_save"));
+        appendModalFooter(Strings.getHtml("_cancel"), Strings.getHtml("_save"));
         FormHtml.appendFormEnd(sb, url, "userform", true, true, "");
-        appendModalEnd(sb);
+        appendModalEnd();
     }
 
 }

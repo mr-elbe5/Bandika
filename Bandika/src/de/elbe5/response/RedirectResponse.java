@@ -8,7 +8,6 @@
  */
 package de.elbe5.response;
 
-import de.elbe5.base.Strings;
 import de.elbe5.request.RequestData;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +22,7 @@ public class RedirectResponse extends HtmlResponse {
 
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response) {
-        html = Strings.format("""
+        append("""
             <html>
             <head><title></title></head>
             <body>

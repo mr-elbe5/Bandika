@@ -10,17 +10,17 @@ import de.elbe5.timer.TimerTaskData;
 public class EditTimerPage extends ModalPage {
 
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
+    public void appendHtml(RequestData rdata) {
         TimerTaskData data = (TimerTaskData) rdata.getSessionObject("timerTaskData");
         String url = "/ctrl/timer/saveTimerTask";
-        appendModalStart(sb, Strings.getHtml("_taskSettings"));
+        appendModalStart(Strings.getHtml("_taskSettings"));
         FormHtml.appendFormStart(sb, url, "taskform");
-        appendModalBodyStart(sb);
-        sb.append(Strings.format("""
+        appendModalBodyStart();
+        append("""
                         <input type="hidden" name="timerName" value="{1}>"/>
                         """,
                 data.getName()
-        ));
+        );
         FormHtml.appendTextLine(sb, Strings.getHtml("_name"), Strings.toHtml(data.getName()));
         FormHtml.appendTextInputLine(sb, "displayName", Strings.getHtml("_displayName"), Strings.toHtml(data.getDisplayName()));
         FormHtml.appendLineStart(sb, "", Strings.getHtml("_intervalType"), true);
@@ -36,8 +36,8 @@ public class EditTimerPage extends ModalPage {
         FormHtml.appendLineStart(sb, "", Strings.getHtml("_active"), true);
         FormHtml.appendCheckbox(sb, "active", "", "true", data.isActive());
         FormHtml.appendLineEnd(sb);
-        appendModalFooter(sb, Strings.getHtml("_close"), Strings.getHtml("_save"));
+        appendModalFooter(Strings.getHtml("_close"), Strings.getHtml("_save"));
         FormHtml.appendFormEnd(sb, url, "taskform", false, true, "");
-        appendModalEnd(sb);
+        appendModalEnd();
     }
 }

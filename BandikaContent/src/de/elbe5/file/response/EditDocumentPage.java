@@ -13,7 +13,7 @@ import de.elbe5.user.UserData;
 public class EditDocumentPage extends ModalPage {
 
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
+    public void appendHtml(RequestData rdata) {
         DocumentData documentData = rdata.getSessionObject(ContentRequestKeys.KEY_DOCUMENT,DocumentData.class);
         String url = "/ctrl/document/saveDocument/" + documentData.getId();
         UserData creator = UserCache.getUser(documentData.getCreatorId());
@@ -21,9 +21,9 @@ public class EditDocumentPage extends ModalPage {
         UserData changer = UserCache.getUser(documentData.getChangerId());
         String changerName = changer == null ? "" : changer.getName();
         boolean fileRequired= documentData.isNew();
-        appendModalStart(sb, Strings.getHtml("_editDocumentSettings"));
+        appendModalStart(Strings.getHtml("_editDocumentSettings"));
         FormHtml.appendFormStart(sb, url , "documentform", true);
-        appendModalBodyStart(sb);
+        appendModalBodyStart();
         FormHtml.appendTextLine(sb, Strings.getHtml("_idAndUrl"), documentData.getId() + " - " + Strings.toHtml(documentData.getFileName()));
         FormHtml.appendTextLine(sb, Strings.getHtml("_creation"), DateHelper.toHtmlDateTime(documentData.getCreationDate()) + " - " + Strings.toHtml(creatorName));
         FormHtml.appendTextLine(sb, Strings.getHtml("_lastChange"), DateHelper.toHtmlDateTime(documentData.getChangeDate()) + " - " + Strings.toHtml(changerName));
@@ -31,8 +31,8 @@ public class EditDocumentPage extends ModalPage {
         FormHtml.appendLineEnd(sb);
         FormHtml.appendTextInputLine(sb, rdata.hasFormErrorField("displayName"),"displayName","_displayName", true, Strings.toHtml(documentData.getDisplayName()));
         FormHtml.appendTextareaLine(sb, "description", Strings.getHtml("_description"), Strings.toHtml(documentData.getDescription()), "3rem");
-        appendModalFooter(sb,Strings.getHtml("_close"),Strings.getHtml("_save"));
+        appendModalFooter(Strings.getHtml("_close"),Strings.getHtml("_save"));
         FormHtml.appendFormEnd(sb, url, "documentform", true, true, "");
-        appendModalEnd(sb);
+        appendModalEnd();
     }
 }

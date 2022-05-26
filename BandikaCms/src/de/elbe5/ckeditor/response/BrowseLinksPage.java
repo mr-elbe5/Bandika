@@ -14,11 +14,11 @@ import java.util.List;
 public class BrowseLinksPage extends ModalPage {
 
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
+    public void appendHtml(RequestData rdata) {
         int callbackNum = rdata.getAttributes().getInt("CKEditorFuncNum", -1);
-        appendModalStart(sb, Strings.getHtml("_selectLink"));
-        appendModalBodyStart(sb);
-        sb.append(Strings.format("""
+        appendModalStart(Strings.getHtml("_selectLink"));
+        appendModalBodyStart();
+        append("""
                         <ul class="nav nav-tabs" id="selectTab" role="tablist">
                                         <li class="nav-item">
                                             <a class="nav-link active" id="pages-tab" data-toggle="tab" href="#pages" role="tab" aria-controls="pages" aria-selected="true">{1}
@@ -47,9 +47,9 @@ public class BrowseLinksPage extends ModalPage {
                 Strings.getHtml("_documents"),
                 Strings.getHtml("_images"),
                 Strings.getHtml("_media")
-        ));
-        appendPageLinks(sb, rdata, ContentCache.getContentRoot());
-        sb.append("""   
+        );
+        appendPageLinks(rdata, ContentCache.getContentRoot());
+        append("""   
                         </ul>
                     </section>
                 </div>
@@ -58,9 +58,9 @@ public class BrowseLinksPage extends ModalPage {
                         <ul class="tree filetree">
                     """);
         if (rdata.hasAnyContentRight()) {
-            appendDocumentLinks(sb, rdata, ContentCache.getContentRoot());
+            appendDocumentLinks(rdata, ContentCache.getContentRoot());
         }
-        sb.append(""" 
+        append(""" 
                         </ul>
                     </section>
                 </div>
@@ -69,9 +69,9 @@ public class BrowseLinksPage extends ModalPage {
                         <ul class="tree filetree">
                     """);
         if (rdata.hasAnyContentRight()) {
-            appendImageLinks(sb, rdata, ContentCache.getContentRoot());
+            appendImageLinks(rdata, ContentCache.getContentRoot());
         }
-        sb.append("""
+        append("""
                         </ul>
                     </section>
                 </div>
@@ -80,16 +80,16 @@ public class BrowseLinksPage extends ModalPage {
                         <ul class="tree filetree">
                     """);
         if (rdata.hasAnyContentRight()) {
-            appendMediaLinks(sb, rdata, ContentCache.getContentRoot());
+            appendMediaLinks(rdata, ContentCache.getContentRoot());
         }
-        sb.append(""" 
+        append(""" 
                         </ul>
                     </section>
                 </div>
                 """);
-        appendModalFooter(sb, Strings.getHtml("_cancel"));
-        appendModalEnd(sb);
-        sb.append(Strings.format("""
+        appendModalFooter(Strings.getHtml("_cancel"));
+        appendModalEnd();
+        append("""
                                     <script type="text/javascript">
                                             $('.tree').treed('fa fa-minus-square-o', 'fa fa-plus-square-o');
                                                      function ckLinkCallback(url) {
@@ -100,11 +100,11 @@ public class BrowseLinksPage extends ModalPage {
                                         </script>
                         """,
                 Integer.toString(callbackNum)
-        ));
+        );
     }
 
-    void appendPageLinks(StringBuilder sb, RequestData rdata, ContentData contentData) {
-        sb.append(Strings.format("""
+    void appendPageLinks(RequestData rdata, ContentData contentData) {
+        append("""
                         <li class="open">
                             <a id="{1}" href="" onclick="return ckLinkCallback('/ctrl/content/show/{2}');">{3}
                             </a>
@@ -113,21 +113,21 @@ public class BrowseLinksPage extends ModalPage {
                 Integer.toString(contentData.getId()),
                 Integer.toString(contentData.getId()),
                 Strings.toHtml(contentData.getName())
-        ));
+        );
         if (!contentData.getChildren().isEmpty()) {
             List<ContentData> children = contentData.getChildren(ContentData.class);
             for (ContentData subPage : children) {
-                appendPageLinks(sb, rdata, subPage);
+                appendPageLinks(rdata, subPage);
             }
         }
-        sb.append("""
+        append("""
                     </ul>
                 </li>
                 """);
     }
 
-    void appendDocumentLinks(StringBuilder sb, RequestData rdata, ContentData contentData) {
-        sb.append(Strings.format("""
+    void appendDocumentLinks(RequestData rdata, ContentData contentData) {
+        append("""
                         <li class="open">
                             <a id="{1}">{2}
                             </a>
@@ -135,11 +135,11 @@ public class BrowseLinksPage extends ModalPage {
                         """,
                 Integer.toString(contentData.getId()),
                 Strings.toHtml(contentData.getName())
-        ));
+        );
         if (contentData.hasUserReadRight(rdata)) {
             List<DocumentData> documentList = contentData.getFiles(DocumentData.class);
             for (DocumentData document : documentList) {
-                sb.append(Strings.format("""
+                append("""
                                             <li>
                                                 <div class="treeline">
                                                     <a id="{1}" href="" onclick="return ckLinkCallback('{2}');">
@@ -154,23 +154,23 @@ public class BrowseLinksPage extends ModalPage {
                         Strings.toHtml(document.getDisplayName()),
                         Strings.getHtml("_download"),
                         document.getURL()
-                ));
+                );
             }
             if (!contentData.getChildren().isEmpty()) {
                 List<ContentData> children = contentData.getChildren(ContentData.class);
                 for (ContentData subPage : children) {
-                    appendDocumentLinks(sb, rdata, subPage);
+                    appendDocumentLinks(rdata, subPage);
                 }
             }
-            sb.append("""
+            append("""
                         </ul>
                     </li>
                     """);
         }
     }
 
-    void appendImageLinks(StringBuilder sb, RequestData rdata, ContentData contentData) {
-        sb.append(Strings.format("""
+    void appendImageLinks(RequestData rdata, ContentData contentData) {
+        append("""
                         <li class="open">
                             <a id="{1}">{2}
                             </a>
@@ -178,11 +178,11 @@ public class BrowseLinksPage extends ModalPage {
                         """,
                 Integer.toString(contentData.getId()),
                 Strings.toHtml(contentData.getName())
-        ));
+        );
         if (contentData.hasUserReadRight(rdata)) {
             List<ImageData> imageList = contentData.getFiles(ImageData.class);
             for (ImageData image : imageList) {
-                sb.append(Strings.format("""
+                append("""
                                             <li>
                                                 <div class="treeline">
                                                     <a id="{1}" href="" onclick="return ckLinkCallback('{2}');">
@@ -200,23 +200,23 @@ public class BrowseLinksPage extends ModalPage {
                         Strings.toHtml(image.getDisplayName()),
                         Strings.getHtml("_view"),
                         image.getURL()
-                ));
+                );
             }
             if (!contentData.getChildren().isEmpty()) {
                 List<ContentData> children = contentData.getChildren(ContentData.class);
                 for (ContentData subPage : children) {
-                    appendImageLinks(sb, rdata, subPage);
+                    appendImageLinks(rdata, subPage);
                 }
             }
-            sb.append("""
+            append("""
                         </ul>
                     </li>
                     """);
         }
     }
 
-    void appendMediaLinks(StringBuilder sb, RequestData rdata, ContentData contentData) {
-        sb.append(Strings.format("""
+    void appendMediaLinks(RequestData rdata, ContentData contentData) {
+        append("""
                         <li class="open">
                             <a id="{1}">{2}
                             </a>
@@ -224,11 +224,11 @@ public class BrowseLinksPage extends ModalPage {
                         """,
                 Integer.toString(contentData.getId()),
                 Strings.toHtml(contentData.getName())
-        ));
+        );
         if (contentData.hasUserReadRight(rdata)) {
             List<MediaData> mediaList = contentData.getFiles(MediaData.class);
             for (MediaData media : mediaList) {
-                sb.append(Strings.format("""
+                append("""
                                             <li>
                                                 <div class="treeline">
                                                     <a id="{1}" href="" onclick="return ckLinkCallback('{2}');">
@@ -243,15 +243,15 @@ public class BrowseLinksPage extends ModalPage {
                         Strings.toHtml(media.getDisplayName()),
                         Strings.getHtml("_download"),
                         media.getURL()
-                ));
+                );
             }
             if (!contentData.getChildren().isEmpty()) {
                 List<ContentData> children = contentData.getChildren(ContentData.class);
                 for (ContentData subPage : children) {
-                    appendMediaLinks(sb, rdata, subPage);
+                    appendMediaLinks(rdata, subPage);
                 }
             }
-            sb.append("""
+            append("""
                         </ul>
                     </li>
                     """);

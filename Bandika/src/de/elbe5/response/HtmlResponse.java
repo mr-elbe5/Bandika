@@ -9,6 +9,7 @@
 package de.elbe5.response;
 
 import de.elbe5.application.Configuration;
+import de.elbe5.base.Strings;
 import de.elbe5.request.RequestData;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -20,13 +21,21 @@ import java.io.IOException;
 
 public class HtmlResponse implements IResponse {
 
-    protected String html = "";
+    protected StringBuilder sb = new StringBuilder();
 
     public HtmlResponse() {
     }
 
     public HtmlResponse(String html) {
-        this.html = html;
+        sb.append(html);
+    }
+
+    public void append(String s){
+        sb.append(s);
+    }
+
+    public void append(String s, String... params){
+        sb.append(Strings.format(s, params));
     }
 
     @Override
@@ -35,8 +44,8 @@ public class HtmlResponse implements IResponse {
     }
 
     public void sendHtml(HttpServletResponse response){
-        Document doc = Jsoup.parse(html);
-        html = doc.toString();
+        Document doc = Jsoup.parse(sb.toString());
+        String html = doc.toString();
         try {
             ServletOutputStream out = response.getOutputStream();
             response.setHeader("Access-Control-Allow-Origin", "*");

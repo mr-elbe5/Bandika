@@ -13,7 +13,7 @@ import de.elbe5.user.UserData;
 public class EditMediaPage extends ModalPage {
 
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
+    public void appendHtml(RequestData rdata) {
         MediaData mediaData = rdata.getSessionObject(ContentRequestKeys.KEY_MEDIA,MediaData.class);
         String url = "/ctrl/media/saveMedia/" + mediaData.getId();
         UserData creator = UserCache.getUser(mediaData.getCreatorId());
@@ -21,9 +21,9 @@ public class EditMediaPage extends ModalPage {
         UserData changer = UserCache.getUser(mediaData.getChangerId());
         String changerName = changer == null ? "" : changer.getName();
         boolean fileRequired= mediaData.isNew();
-        appendModalStart(sb, Strings.getHtml("_editMediaSettings"));
+        appendModalStart(Strings.getHtml("_editMediaSettings"));
         FormHtml.appendFormStart(sb, url , "mediaform", true);
-        appendModalBodyStart(sb);
+        appendModalBodyStart();
         FormHtml.appendTextLine(sb, Strings.getHtml("_idAndUrl"), mediaData.getId() + " - " + Strings.toHtml(mediaData.getFileName()));
         FormHtml.appendTextLine(sb, Strings.getHtml("_creation"), DateHelper.toHtmlDateTime(mediaData.getCreationDate()) + " - " + Strings.toHtml(creatorName));
         FormHtml.appendTextLine(sb, Strings.getHtml("_lastChange"), DateHelper.toHtmlDateTime(mediaData.getChangeDate()) + " - " + Strings.toHtml(changerName));
@@ -31,8 +31,8 @@ public class EditMediaPage extends ModalPage {
         FormHtml.appendLineEnd(sb);
         FormHtml.appendTextInputLine(sb, rdata.hasFormErrorField("displayName"),"displayName","_displayName", true, Strings.toHtml(mediaData.getDisplayName()));
         FormHtml.appendTextareaLine(sb, "description", Strings.getHtml("_description"), Strings.toHtml(mediaData.getDescription()), "3rem");
-        appendModalFooter(sb,Strings.getHtml("_close"),Strings.getHtml("_save"));
+        appendModalFooter(Strings.getHtml("_close"),Strings.getHtml("_save"));
         FormHtml.appendFormEnd(sb, url, "mediaform", true, true, "");
-        appendModalEnd(sb);
+        appendModalEnd();
     }
 }

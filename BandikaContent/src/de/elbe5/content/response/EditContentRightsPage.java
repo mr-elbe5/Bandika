@@ -15,14 +15,14 @@ import java.util.List;
 public class EditContentRightsPage extends ModalPage {
 
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
+    public void appendHtml(RequestData rdata) {
         ContentData contentData = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         List<GroupData> groups = GroupBean.getInstance().getAllGroups();
         String label, name;
         String url = "/ctrl/content/saveRights/" + contentData.getId();
-        appendModalStart(sb, Strings.getHtml("_editGroupRights"));
+        appendModalStart(Strings.getHtml("_editGroupRights"));
         FormHtml.appendFormStart(sb, url, "rightsform", true);
-        appendModalBodyStart(sb);
+        appendModalBodyStart();
         for (GroupData group : groups) {
             if (group.getId() <= GroupData.ID_MAX_FINAL)
                 continue;
@@ -35,8 +35,8 @@ public class EditContentRightsPage extends ModalPage {
             FormHtml.appendRadio(sb, name, Strings.getHtml("_rightapprove"), Right.APPROVE.name(), contentData.isGroupRight(group.getId(), Right.APPROVE));
             FormHtml.appendLineEnd(sb);
         }
-        appendModalFooter(sb, Strings.getHtml("_cancel"), Strings.getHtml("_save"));
+        appendModalFooter(Strings.getHtml("_cancel"), Strings.getHtml("_save"));
         FormHtml.appendFormEnd(sb, url, "rightsform", false, true, "");
-        appendModalEnd(sb);
+        appendModalEnd();
     }
 }
