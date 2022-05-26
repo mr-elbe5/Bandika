@@ -40,7 +40,7 @@ public class ContentAdminController extends AdminController {
     }
 
     @Override
-    public AdminMaster openAdminPage(IAdminPage include, String title){
+    public AdminMaster openAdminPage(AdminPage include, String title){
         return new ContentAdminMaster(include, title);
     }
 

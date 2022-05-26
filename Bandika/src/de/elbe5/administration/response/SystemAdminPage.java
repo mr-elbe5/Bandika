@@ -9,28 +9,28 @@ import de.elbe5.timer.TimerTaskData;
 
 import java.util.Map;
 
-public class SystemAdminPage implements IAdminPage {
+public class SystemAdminPage extends AdminPage {
 
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
-        appendHtmlStart(sb, rdata);
+    public void appendHtml(RequestData rdata) {
+        appendHtmlStart(rdata);
         if (rdata.hasSystemRight(SystemZone.APPLICATION)) {
-            appendRestart(sb, rdata);
-            appendCachesStart(sb, rdata);
-            appendUserCache(sb, rdata);
-            appendTemplateCache(sb,rdata);
-            appendCachesEnd(sb);
-            appendTimerList(sb, rdata);
+            appendRestart(rdata);
+            appendCachesStart(rdata);
+            appendUserCache(rdata);
+            appendTemplateCache(rdata);
+            appendCachesEnd();
+            appendTimerList(rdata);
         }
-        appendHtmlEnd(sb);
+        appendHtmlEnd();
     }
 
-    public void appendHtmlStart(StringBuilder sb, RequestData rdata) {
-        sb.append("""
+    public void appendHtmlStart(RequestData rdata) {
+        append("""
                 <div id="pageContent">
                 """);
         MessageHtml.appendMessageHtml(sb, rdata);
-        sb.append(Strings.format("""
+        append("""
                         <section class="treeSection">
                             <ul class="tree">
                                 <li class="open">
@@ -39,34 +39,34 @@ public class SystemAdminPage implements IAdminPage {
                                     <ul>
                                     """,
                 Strings.getHtml("_system")
-        ));
+        );
     }
 
-    public void appendRestart(StringBuilder sb, RequestData rdata) {
-        sb.append(Strings.format("""
+    public void appendRestart(RequestData rdata) {
+        append("""
                         <li>
                             <a href="" onclick="if (confirmExecute()) return openModalDialog('/ctrl/admin/restart');">{1}
                             </a>
                         </li>
                         """,
                 Strings.getHtml("_restart")
-        ));
+        );
     }
 
-    public void appendCachesStart(StringBuilder sb, RequestData rdata) {
+    public void appendCachesStart(RequestData rdata) {
 
-        sb.append(Strings.format("""
+        append("""
                     <li class="open">
                         <a>{1}
                         </a>
                         <ul>
                 """,
                 Strings.getHtml("_caches")
-                ));
+                );
     }
 
-    void appendUserCache(StringBuilder sb, RequestData rdata) {
-        sb.append(Strings.format("""
+    void appendUserCache(RequestData rdata) {
+        append("""
                         <li>
                             <span>{1}</span>
                             <div class="icons">
@@ -76,11 +76,11 @@ public class SystemAdminPage implements IAdminPage {
                 """,
                 Strings.getHtml("_userCache"),
                 Strings.getHtml("_reload")
-        ));
+        );
     }
 
-    void appendTemplateCache(StringBuilder sb, RequestData rdata) {
-        sb.append(Strings.format("""
+    void appendTemplateCache(RequestData rdata) {
+        append("""
                         <li>
                             <span>{1}</span>
                             <div class="icons">
@@ -90,34 +90,34 @@ public class SystemAdminPage implements IAdminPage {
                 """,
                 Strings.getHtml("_templateCache"),
                 Strings.getHtml("_reload")
-        ));
+        );
     }
 
-    public void appendCachesEnd(StringBuilder sb) {
-        sb.append("""
+    public void appendCachesEnd() {
+        append("""
                     </ul>
                 </li>
                 """
         );
     }
 
-    void appendTimerList(StringBuilder sb, RequestData rdata) {
+    void appendTimerList(RequestData rdata) {
         Map<String, TimerTaskData> tasks = null;
         try {
             Timer timerCache = Timer.getInstance();
             tasks = timerCache.getTasks();
         } catch (Exception ignore) {
         }
-        sb.append(Strings.format("""
+        append("""
                         <li class="open">
                             {1}
                             <ul>
                             """,
                 Strings.getHtml("_timers")
-        ));
+        );
         if (tasks != null) {
             for (TimerTaskData task : tasks.values()) {
-                sb.append(Strings.format("""
+                append("""
                                 <li>
                                     <span>{1}</span>
                                     <div class="icons">
@@ -128,17 +128,17 @@ public class SystemAdminPage implements IAdminPage {
                         Strings.toHtml(task.getDisplayName()),
                         Strings.toHtml(task.getName()),
                         Strings.getHtml("_edit")
-                ));
+                );
             }
         }
-        sb.append("""
+        append("""
                     </ul>
                 </li>
                 """);
     }
 
-    public void appendHtmlEnd(StringBuilder sb) {
-        sb.append("""
+    public void appendHtmlEnd() {
+        append("""
                                 </ul>
                             </li>
                         </ul>

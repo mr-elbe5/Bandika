@@ -11,11 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 
 public class AdminMaster extends HtmlResponse {
 
-    IAdminPage include;
+    AdminPage include;
     String title;
 
-    public AdminMaster(IAdminPage include, String title) {
+    public AdminMaster(AdminPage include, String title) {
         this.include = include;
+        this.include.setSb(sb);
         this.title = title;
     }
 
@@ -28,7 +29,7 @@ public class AdminMaster extends HtmlResponse {
         appendNavEnd();
         appendHeaderEnd();
         if (include != null) {
-            include.appendHtml(sb, rdata);
+            include.appendHtml(rdata);
         }
         appendHtmlEnd();
         sendHtml(response);

@@ -9,7 +9,7 @@
 package de.elbe5.administration;
 
 import de.elbe5.administration.response.AdminMaster;
-import de.elbe5.administration.response.IAdminPage;
+import de.elbe5.administration.response.AdminPage;
 import de.elbe5.administration.response.SystemAdminPage;
 import de.elbe5.application.ApplicationPath;
 import de.elbe5.base.Strings;
@@ -54,7 +54,7 @@ public class AdminController extends Controller {
         return KEY;
     }
 
-    public AdminMaster openAdminPage(IAdminPage include, String title){
+    public AdminMaster openAdminPage(AdminPage include, String title){
         return new AdminMaster(include, title);
     }
 

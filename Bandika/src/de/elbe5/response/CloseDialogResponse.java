@@ -41,18 +41,20 @@ public class CloseDialogResponse extends HtmlResponse {
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
         if (targetId.isEmpty()) {
-            append(Strings.format("""
+            append("""
             <div id="pageContent">
                 <form action="{1}" method="POST" id="forwardform" accept-charset="UTF-8">
                 """,
-                    url));
+                    url
+            );
             if (!msg.isEmpty()) {
-                append(Strings.format("""
+                append("""
                     <input type="hidden" name="message" value="{msg}"/>
                     <input type="hidden" name="messageType" value="{msgType}"/>
                     """,
                         Strings.toHtml(msg),
-                        msgType));
+                        msgType
+                );
             }
             append("""
                 </form>

@@ -1,6 +1,6 @@
 package de.elbe5.user.response;
 
-import de.elbe5.administration.response.IAdminPage;
+import de.elbe5.administration.response.AdminPage;
 import de.elbe5.base.Strings;
 import de.elbe5.company.CompanyBean;
 import de.elbe5.company.CompanyData;
@@ -14,15 +14,15 @@ import de.elbe5.user.UserData;
 
 import java.util.List;
 
-public class UserAdminPage implements IAdminPage {
+public class UserAdminPage extends AdminPage {
 
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
-        sb.append("""
+    public void appendHtml(RequestData rdata) {
+        append("""
                 <div id="pageContent">
                 """);
         MessageHtml.appendMessageHtml(sb, rdata);
-        sb.append(Strings.format("""
+        append("""
                         <section class="treeSection">
                             <ul class="tree">
                                 <li class="open">
@@ -31,13 +31,13 @@ public class UserAdminPage implements IAdminPage {
                                     <ul>
                                     """,
                 Strings.getHtml("_persons")
-        ));
+        );
         if (rdata.hasSystemRight(SystemZone.USER)) {
-            appendCompanyList(sb, rdata);
-            appendGroupList(sb, rdata);
-            appendUserList(sb, rdata);
+            appendCompanyList(rdata);
+            appendGroupList(rdata);
+            appendUserList(rdata);
         }
-        sb.append("""        
+        append("""        
                                 </ul>
                             </li>
                         </ul>
@@ -47,14 +47,14 @@ public class UserAdminPage implements IAdminPage {
         );
     }
 
-    public void appendCompanyList(StringBuilder sb, RequestData rdata) {
+    public void appendCompanyList(RequestData rdata) {
         List<CompanyData> companies = null;
         try {
             companies = CompanyBean.getInstance().getAllCompanies();
         } catch (Exception ignore) {
         }
         int companyId = rdata.getAttributes().getInt("companyId");
-        sb.append(Strings.format("""
+        append("""
                         <li class="open">
                             <span>{1}</span>
                             <div class="icons">
@@ -63,10 +63,11 @@ public class UserAdminPage implements IAdminPage {
                             <ul>
                         """,
                 Strings.getHtml("_companies"),
-                Strings.getHtml("_new")));
+                Strings.getHtml("_new")
+        );
         if (companies != null) {
             for (CompanyData company : companies) {
-                sb.append(Strings.format("""
+                append("""
                                         <li class="{1}">
                                             <span>{2}</span>
                                             <div class="icons">
@@ -80,23 +81,24 @@ public class UserAdminPage implements IAdminPage {
                         Integer.toString(company.getId()),
                         Strings.getHtml("_edit"),
                         Integer.toString(company.getId()),
-                        Strings.getHtml("_delete")));
+                        Strings.getHtml("_delete")
+                );
             }
         }
-        sb.append("""
+        append("""
                     </ul>
                 </li>
                 """);
     }
 
-    public void appendGroupList(StringBuilder sb, RequestData rdata) {
+    public void appendGroupList(RequestData rdata) {
         List<GroupData> groups = null;
         try {
             groups = GroupBean.getInstance().getAllGroups();
         } catch (Exception ignore) {
         }
         int groupId = rdata.getAttributes().getInt("groupId");
-        sb.append(Strings.format("""
+        append("""
                         <li class="open">
                             <span>{1}</span>
                             <div class="icons">
@@ -105,10 +107,11 @@ public class UserAdminPage implements IAdminPage {
                             <ul>
                         """,
                 Strings.getHtml("_groups"),
-                Strings.getHtml("_new")));
+                Strings.getHtml("_new")
+        );
         if (groups != null) {
             for (GroupData group : groups) {
-                sb.append(Strings.format("""
+                append("""
                                         <li class="{1}">
                                             <span>{2}</span>
                                             <div class="icons">
@@ -122,16 +125,17 @@ public class UserAdminPage implements IAdminPage {
                         Integer.toString(group.getId()),
                         Strings.getHtml("_edit"),
                         Integer.toString(group.getId()),
-                        Strings.getHtml("_delete")));
+                        Strings.getHtml("_delete")
+                );
             }
         }
-        sb.append("""
+        append("""
                     </ul>
                 </li>
                 """);
     }
 
-    public static void appendUserList(StringBuilder sb, RequestData rdata) {
+    public void appendUserList(RequestData rdata) {
         List<UserData> users = null;
         try {
             UserBean ts = UserBean.getInstance();
@@ -139,7 +143,7 @@ public class UserAdminPage implements IAdminPage {
         } catch (Exception ignore) {
         }
         int userId = rdata.getAttributes().getInt("userId");
-        sb.append(Strings.format("""
+        append("""
                         <li class="open">
                             <span>{1}</span>
                             <div class="icons">
@@ -148,10 +152,11 @@ public class UserAdminPage implements IAdminPage {
                             <ul>
                             """,
                 Strings.getHtml("_users"),
-                Strings.getHtml("_new")));
+                Strings.getHtml("_new")
+        );
         if (users != null) {
             for (UserData user : users) {
-                sb.append(Strings.format("""
+                append("""
                                 <li class="{1}">
                                 <span>{2}&nbsp;({3})</span>
                                 <div class="icons">
@@ -161,21 +166,23 @@ public class UserAdminPage implements IAdminPage {
                         Strings.toHtml(user.getName()),
                         Integer.toString(user.getId()),
                         Integer.toString(user.getId()),
-                        Strings.getHtml("_edit")));
+                        Strings.getHtml("_edit")
+                );
                 if (user.getId() != UserData.ID_ROOT) {
-                    sb.append(Strings.format("""
+                    append("""
                                     <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/user/deleteUser/{1}');" title="{2}"> </a>
                                     """,
                             Integer.toString(user.getId()),
-                            Strings.getHtml("_delete")));
+                            Strings.getHtml("_delete")
+                    );
                 }
-                sb.append("""
+                append("""
                         </div>
                         </li>
                         """);
             }
         }
-        sb.append(""" 
+        append(""" 
                     </ul>
                 </li>
                 """);

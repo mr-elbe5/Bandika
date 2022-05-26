@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class ContentAdminMaster extends AdminMaster {
 
-    public ContentAdminMaster(IAdminPage include, String title){
+    public ContentAdminMaster(AdminPage include, String title){
         super(include, title);
     }
 
@@ -24,7 +24,7 @@ public class ContentAdminMaster extends AdminMaster {
         appendNavEnd();
         appendHeaderEnd();
         if (include != null) {
-            include.appendHtml(sb, rdata);
+            include.appendHtml(rdata);
         }
         appendHtmlEnd();
         sendHtml(response);

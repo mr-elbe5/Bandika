@@ -2,33 +2,28 @@ package de.elbe5.administration.response;
 
 import de.elbe5.base.Strings;
 import de.elbe5.request.RequestData;
-import de.elbe5.response.MessageHtml;
 import de.elbe5.rights.SystemZone;
-import de.elbe5.timer.Timer;
-import de.elbe5.timer.TimerTaskData;
-
-import java.util.Map;
 
 public class ContentSystemAdminPage extends SystemAdminPage {
 
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
-        appendHtmlStart(sb, rdata);
+    public void appendHtml(RequestData rdata) {
+        appendHtmlStart(rdata);
         if (rdata.hasSystemRight(SystemZone.APPLICATION)) {
-            appendRestart(sb, rdata);
-            appendCachesStart(sb, rdata);
-            appendUserCache(sb, rdata);
-            appendTemplateCache(sb,rdata);
-            appendContentCache(sb, rdata);
+            appendRestart(rdata);
+            appendCachesStart(rdata);
+            appendUserCache(rdata);
+            appendTemplateCache(rdata);
+            appendContentCache(rdata);
             appendPreviewCache(sb, rdata);
-            appendCachesEnd(sb);
-            appendTimerList(sb, rdata);
+            appendCachesEnd();
+            appendTimerList(rdata);
         }
-        appendHtmlEnd(sb);
+        appendHtmlEnd();
     }
 
-    void appendContentCache(StringBuilder sb, RequestData rdata) {
-        sb.append(Strings.format("""
+    void appendContentCache(RequestData rdata) {
+        append("""
                         <li>
                             <span>{1}</span>
                             <div class="icons">
@@ -38,12 +33,12 @@ public class ContentSystemAdminPage extends SystemAdminPage {
                 """,
                 Strings.getHtml("_contentCache"),
                 Strings.getHtml("_reload")
-        ));
+        );
     }
 
 
     void appendPreviewCache(StringBuilder sb, RequestData rdata) {
-        sb.append(Strings.format("""
+        append("""
                         <li>
                             <span>{1}</span>
                             <div class="icons">
@@ -53,7 +48,7 @@ public class ContentSystemAdminPage extends SystemAdminPage {
                 """,
                 Strings.getHtml("_previewCache"),
                 Strings.getHtml("_reload")
-        ));
+        );
     }
 
 }

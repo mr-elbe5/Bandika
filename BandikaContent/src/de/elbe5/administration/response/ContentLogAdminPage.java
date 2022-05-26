@@ -10,12 +10,12 @@ import de.elbe5.request.RequestData;
 
 import java.util.List;
 
-public class ContentLogAdminPage implements IAdminPage {
+public class ContentLogAdminPage extends AdminPage {
 
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
+    public void appendHtml(RequestData rdata) {
         List<ContentDayLog> dayLogs = ContentBean.getInstance().getAllViewCounts();
-        sb.append(Strings.format("""
+        append("""
                         <div id="pageContent">
                             <form:message/>
                             <section class="logSection">
@@ -24,13 +24,13 @@ public class ContentLogAdminPage implements IAdminPage {
                                 """,
                 Strings.getHtml("_clicksPerDay"),
                 Strings.getHtml("_reset")
-        ));
+        );
         if (rdata.hasAnyContentRight()) {
-            sb.append("""
+            append("""
                     <table>
                     """);
             for (ContentDayLog dayLog : dayLogs) {
-                sb.append(Strings.format("""
+                append("""
                                 <tr>
                                     <th colspan="2">
                                         {1}
@@ -38,9 +38,9 @@ public class ContentLogAdminPage implements IAdminPage {
                                 </tr>
                                 """,
                         DateHelper.toHtmlDate(dayLog.getDay())
-                ));
+                );
                 for (ContentLog log : dayLog.getLogs()) {
-                    sb.append(Strings.format("""
+                    append("""
                                     <tr>
                                         <td>
                                             {1}
@@ -52,14 +52,14 @@ public class ContentLogAdminPage implements IAdminPage {
                                     """,
                             Strings.toHtml(ContentCache.getContent(log.getId()).getDisplayName()),
                             Integer.toString(log.getCount())
-                    ));
+                    );
                 }
             }
-            sb.append("""
+            append("""
                     </table>
                     """);
         }
-        sb.append("""
+        append("""
                     </section>
                 </div>
                 """);

@@ -29,7 +29,7 @@ public class EditImagePage extends ModalPage {
         FormHtml.appendTextLine(sb, Strings.getHtml("_lastChange"), DateHelper.toHtmlDateTime(imageData.getChangeDate()) + " - " + Strings.toHtml(changerName));
         FormHtml.appendFileLineStart(sb, rdata.hasFormErrorField("file"), "file", Strings.getHtml("_file"), fileRequired, false);
         FormHtml.appendLineEnd(sb);
-        FormHtml.appendTextInputLine(sb, rdata.hasFormErrorField("displayName"),"displayName","_displayName", true, Strings.toHtml(imageData.getDisplayName()));
+        FormHtml.appendTextInputLine(sb, rdata.hasFormErrorField("displayName"),"displayName",Strings.getHtml("_displayName"), true, Strings.toHtml(imageData.getDisplayName()));
         FormHtml.appendTextareaLine(sb, "description", Strings.getHtml("_description"), Strings.toHtml(imageData.getDescription()), "3rem");
         appendModalFooter(Strings.getHtml("_close"),Strings.getHtml("_save"));
         FormHtml.appendFormEnd(sb, url, "imageform", true, true, "");
