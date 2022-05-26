@@ -18,6 +18,7 @@ public class ContentSystemAdminPage extends SystemAdminPage {
             appendRestart(sb, rdata);
             appendCachesStart(sb, rdata);
             appendUserCache(sb, rdata);
+            appendTemplateCache(sb,rdata);
             appendContentCache(sb, rdata);
             appendPreviewCache(sb, rdata);
             appendCachesEnd(sb);

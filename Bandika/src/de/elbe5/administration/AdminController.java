@@ -18,6 +18,7 @@ import de.elbe5.base.FileHelper;
 import de.elbe5.request.RequestKeys;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.ResponseException;
+import de.elbe5.template.TemplateCache;
 import de.elbe5.user.response.UserAdminPage;
 import de.elbe5.user.UserCache;
 import de.elbe5.request.RequestData;
@@ -92,6 +93,13 @@ public class AdminController extends Controller {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         UserCache.setDirty();
         UserCache.checkDirty();
+        rdata.setMessage(Strings.getString("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return openSystemAdministration(rdata);
+    }
+
+    public IResponse reloadTemplateCache(RequestData rdata) {
+        checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
+        TemplateCache.load();
         rdata.setMessage(Strings.getString("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }

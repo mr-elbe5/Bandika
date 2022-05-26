@@ -18,6 +18,7 @@ public class SystemAdminPage implements IAdminPage {
             appendRestart(sb, rdata);
             appendCachesStart(sb, rdata);
             appendUserCache(sb, rdata);
+            appendTemplateCache(sb,rdata);
             appendCachesEnd(sb);
             appendTimerList(sb, rdata);
         }
@@ -74,6 +75,20 @@ public class SystemAdminPage implements IAdminPage {
                         </li>
                 """,
                 Strings.getHtml("_userCache"),
+                Strings.getHtml("_reload")
+        ));
+    }
+
+    void appendTemplateCache(StringBuilder sb, RequestData rdata) {
+        sb.append(Strings.format("""
+                        <li>
+                            <span>{1}</span>
+                            <div class="icons">
+                                <a class="icon fa fa-recycle" href="/ctrl/admin/reloadTemplateCache" title="{2}"></a>
+                            </div>
+                        </li>
+                """,
+                Strings.getHtml("_templateCache"),
                 Strings.getHtml("_reload")
         ));
     }

@@ -37,6 +37,7 @@ public class TemplateCache {
 
     public static void load(){
         for (String type : templates.keySet()){
+            templates.get(type).clear();
             File dir = new File(templateBasePath + type);
             if (dir.exists() && dir.isDirectory()){
                 File[] files = dir.listFiles();
