@@ -1,13 +1,251 @@
-﻿/*
- Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
+﻿/**
+ * @license Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+ */
 
- For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+( function() {
+	function noBlockLeft( bqBlock ) {
+		for ( var i = 0, length = bqBlock.getChildCount(), child; i < length && ( child = bqBlock.getChild( i ) ); i++ ) {
+			if ( child.type == CKEDITOR.NODE_ELEMENT && child.isBlockBoundary() )
+				return false;
+		}
+		return true;
+	}
 
-*/
-(function(){var m={exec:function(g){var a=g.getCommand("blockquote").state,k=g.getSelection(),c=k&&k.getRanges()[0];if(c){var h=k.createBookmarks();if(CKEDITOR.env.ie){var e=h[0].startNode,b=h[0].endNode,d;if(e&&"blockquote"==e.getParent().getName())for(d=e;d=d.getNext();)if(d.type==CKEDITOR.NODE_ELEMENT&&d.isBlockBoundary()){e.move(d,!0);break}if(b&&"blockquote"==b.getParent().getName())for(d=b;d=d.getPrevious();)if(d.type==CKEDITOR.NODE_ELEMENT&&d.isBlockBoundary()){b.move(d);break}}var f=c.createIterator();
-f.enlargeBr=g.config.enterMode!=CKEDITOR.ENTER_BR;if(a==CKEDITOR.TRISTATE_OFF){for(e=[];a=f.getNextParagraph();)e.push(a);1>e.length&&(a=g.document.createElement(g.config.enterMode==CKEDITOR.ENTER_P?"p":"div"),b=h.shift(),c.insertNode(a),a.append(new CKEDITOR.dom.text("﻿",g.document)),c.moveToBookmark(b),c.selectNodeContents(a),c.collapse(!0),b=c.createBookmark(),e.push(a),h.unshift(b));d=e[0].getParent();c=[];for(b=0;b<e.length;b++)a=e[b],d=d.getCommonAncestor(a.getParent());for(a={table:1,tbody:1,
-tr:1,ol:1,ul:1};a[d.getName()];)d=d.getParent();for(b=null;0<e.length;){for(a=e.shift();!a.getParent().equals(d);)a=a.getParent();a.equals(b)||c.push(a);b=a}for(;0<c.length;)if(a=c.shift(),"blockquote"==a.getName()){for(b=new CKEDITOR.dom.documentFragment(g.document);a.getFirst();)b.append(a.getFirst().remove()),e.push(b.getLast());b.replace(a)}else e.push(a);c=g.document.createElement("blockquote");for(c.insertBefore(e[0]);0<e.length;)a=e.shift(),c.append(a)}else if(a==CKEDITOR.TRISTATE_ON){b=[];
-for(d={};a=f.getNextParagraph();){for(e=c=null;a.getParent();){if("blockquote"==a.getParent().getName()){c=a.getParent();e=a;break}a=a.getParent()}c&&e&&!e.getCustomData("blockquote_moveout")&&(b.push(e),CKEDITOR.dom.element.setMarker(d,e,"blockquote_moveout",!0))}CKEDITOR.dom.element.clearAllMarkers(d);a=[];e=[];for(d={};0<b.length;)f=b.shift(),c=f.getParent(),f.getPrevious()?f.getNext()?(f.breakParent(f.getParent()),e.push(f.getNext())):f.remove().insertAfter(c):f.remove().insertBefore(c),c.getCustomData("blockquote_processed")||
-(e.push(c),CKEDITOR.dom.element.setMarker(d,c,"blockquote_processed",!0)),a.push(f);CKEDITOR.dom.element.clearAllMarkers(d);for(b=e.length-1;0<=b;b--){c=e[b];a:{d=c;for(var f=0,m=d.getChildCount(),l=void 0;f<m&&(l=d.getChild(f));f++)if(l.type==CKEDITOR.NODE_ELEMENT&&l.isBlockBoundary()){d=!1;break a}d=!0}d&&c.remove()}if(g.config.enterMode==CKEDITOR.ENTER_BR)for(c=!0;a.length;)if(f=a.shift(),"div"==f.getName()){b=new CKEDITOR.dom.documentFragment(g.document);!c||!f.getPrevious()||f.getPrevious().type==
-CKEDITOR.NODE_ELEMENT&&f.getPrevious().isBlockBoundary()||b.append(g.document.createElement("br"));for(c=f.getNext()&&!(f.getNext().type==CKEDITOR.NODE_ELEMENT&&f.getNext().isBlockBoundary());f.getFirst();)f.getFirst().remove().appendTo(b);c&&b.append(g.document.createElement("br"));b.replace(f);c=!1}}k.selectBookmarks(h);g.focus()}},refresh:function(g,a){this.setState(g.elementPath(a.block||a.blockLimit).contains("blockquote",1)?CKEDITOR.TRISTATE_ON:CKEDITOR.TRISTATE_OFF)},context:"blockquote",allowedContent:"blockquote",
-requiredContent:"blockquote"};CKEDITOR.plugins.add("blockquote",{lang:"de,en",icons:"blockquote",hidpi:!0,init:function(g){g.blockless||(g.addCommand("blockquote",m),g.ui.addButton&&g.ui.addButton("Blockquote",{label:g.lang.blockquote.toolbar,command:"blockquote",toolbar:"blocks,10"}))}})})();
+	var commandObject = {
+		exec: function( editor ) {
+			var state = editor.getCommand( 'blockquote' ).state,
+				selection = editor.getSelection(),
+				range = selection && selection.getRanges()[ 0 ];
+
+			if ( !range )
+				return;
+
+			var bookmarks = selection.createBookmarks();
+
+			// Kludge for https://dev.ckeditor.com/ticket/1592: if the bookmark nodes are in the beginning of
+			// blockquote, then move them to the nearest block element in the
+			// blockquote.
+			if ( CKEDITOR.env.ie ) {
+				var bookmarkStart = bookmarks[ 0 ].startNode,
+					bookmarkEnd = bookmarks[ 0 ].endNode,
+					cursor;
+
+				if ( bookmarkStart && bookmarkStart.getParent().getName() == 'blockquote' ) {
+					cursor = bookmarkStart;
+					while ( ( cursor = cursor.getNext() ) ) {
+						if ( cursor.type == CKEDITOR.NODE_ELEMENT && cursor.isBlockBoundary() ) {
+							bookmarkStart.move( cursor, true );
+							break;
+						}
+					}
+				}
+
+				if ( bookmarkEnd && bookmarkEnd.getParent().getName() == 'blockquote' ) {
+					cursor = bookmarkEnd;
+					while ( ( cursor = cursor.getPrevious() ) ) {
+						if ( cursor.type == CKEDITOR.NODE_ELEMENT && cursor.isBlockBoundary() ) {
+							bookmarkEnd.move( cursor );
+							break;
+						}
+					}
+				}
+			}
+
+			var iterator = range.createIterator(),
+				block;
+			iterator.enlargeBr = editor.config.enterMode != CKEDITOR.ENTER_BR;
+
+			if ( state == CKEDITOR.TRISTATE_OFF ) {
+				var paragraphs = [];
+				while ( ( block = iterator.getNextParagraph() ) )
+					paragraphs.push( block );
+
+				// If no paragraphs, create one from the current selection position.
+				if ( paragraphs.length < 1 ) {
+					var para = editor.document.createElement( editor.config.enterMode == CKEDITOR.ENTER_P ? 'p' : 'div' ),
+						firstBookmark = bookmarks.shift();
+					range.insertNode( para );
+					para.append( new CKEDITOR.dom.text( '\ufeff', editor.document ) );
+					range.moveToBookmark( firstBookmark );
+					range.selectNodeContents( para );
+					range.collapse( true );
+					firstBookmark = range.createBookmark();
+					paragraphs.push( para );
+					bookmarks.unshift( firstBookmark );
+				}
+
+				// Make sure all paragraphs have the same parent.
+				var commonParent = paragraphs[ 0 ].getParent(),
+					tmp = [];
+				for ( var i = 0; i < paragraphs.length; i++ ) {
+					block = paragraphs[ i ];
+					commonParent = commonParent.getCommonAncestor( block.getParent() );
+				}
+
+				// The common parent must not be the following tags: table, tbody, tr, ol, ul.
+				var denyTags = { table: 1, tbody: 1, tr: 1, ol: 1, ul: 1 };
+				while ( denyTags[ commonParent.getName() ] )
+					commonParent = commonParent.getParent();
+
+				// Reconstruct the block list to be processed such that all resulting blocks
+				// satisfy parentNode.equals( commonParent ).
+				var lastBlock = null;
+				while ( paragraphs.length > 0 ) {
+					block = paragraphs.shift();
+					while ( !block.getParent().equals( commonParent ) )
+						block = block.getParent();
+					if ( !block.equals( lastBlock ) )
+						tmp.push( block );
+					lastBlock = block;
+				}
+
+				// If any of the selected blocks is a blockquote, remove it to prevent
+				// nested blockquotes.
+				while ( tmp.length > 0 ) {
+					block = tmp.shift();
+					if ( block.getName() == 'blockquote' ) {
+						var docFrag = new CKEDITOR.dom.documentFragment( editor.document );
+						while ( block.getFirst() ) {
+							docFrag.append( block.getFirst().remove() );
+							paragraphs.push( docFrag.getLast() );
+						}
+
+						docFrag.replace( block );
+					} else {
+						paragraphs.push( block );
+					}
+				}
+
+				// Now we have all the blocks to be included in a new blockquote node.
+				var bqBlock = editor.document.createElement( 'blockquote' );
+				bqBlock.insertBefore( paragraphs[ 0 ] );
+				while ( paragraphs.length > 0 ) {
+					block = paragraphs.shift();
+					bqBlock.append( block );
+				}
+			} else if ( state == CKEDITOR.TRISTATE_ON ) {
+				var moveOutNodes = [],
+					database = {};
+
+				while ( ( block = iterator.getNextParagraph() ) ) {
+					var bqParent = null,
+						bqChild = null;
+					while ( block.getParent() ) {
+						if ( block.getParent().getName() == 'blockquote' ) {
+							bqParent = block.getParent();
+							bqChild = block;
+							break;
+						}
+						block = block.getParent();
+					}
+
+					// Remember the blocks that were recorded down in the moveOutNodes array
+					// to prevent duplicates.
+					if ( bqParent && bqChild && !bqChild.getCustomData( 'blockquote_moveout' ) ) {
+						moveOutNodes.push( bqChild );
+						CKEDITOR.dom.element.setMarker( database, bqChild, 'blockquote_moveout', true );
+					}
+				}
+
+				CKEDITOR.dom.element.clearAllMarkers( database );
+
+				var movedNodes = [],
+					processedBlockquoteBlocks = [];
+
+				database = {};
+				while ( moveOutNodes.length > 0 ) {
+					var node = moveOutNodes.shift();
+					bqBlock = node.getParent();
+
+					// If the node is located at the beginning or the end, just take it out
+					// without splitting. Otherwise, split the blockquote node and move the
+					// paragraph in between the two blockquote nodes.
+					if ( !node.getPrevious() )
+						node.remove().insertBefore( bqBlock );
+					else if ( !node.getNext() )
+						node.remove().insertAfter( bqBlock );
+					else {
+						node.breakParent( node.getParent() );
+						processedBlockquoteBlocks.push( node.getNext() );
+					}
+
+					// Remember the blockquote node so we can clear it later (if it becomes empty).
+					if ( !bqBlock.getCustomData( 'blockquote_processed' ) ) {
+						processedBlockquoteBlocks.push( bqBlock );
+						CKEDITOR.dom.element.setMarker( database, bqBlock, 'blockquote_processed', true );
+					}
+
+					movedNodes.push( node );
+				}
+
+				CKEDITOR.dom.element.clearAllMarkers( database );
+
+				// Clear blockquote nodes that have become empty.
+				for ( i = processedBlockquoteBlocks.length - 1; i >= 0; i-- ) {
+					bqBlock = processedBlockquoteBlocks[ i ];
+					if ( noBlockLeft( bqBlock ) )
+						bqBlock.remove();
+				}
+
+				if ( editor.config.enterMode == CKEDITOR.ENTER_BR ) {
+					var firstTime = true;
+					while ( movedNodes.length ) {
+						node = movedNodes.shift();
+
+						if ( node.getName() == 'div' ) {
+							docFrag = new CKEDITOR.dom.documentFragment( editor.document );
+							var needBeginBr = firstTime && node.getPrevious() && !( node.getPrevious().type == CKEDITOR.NODE_ELEMENT && node.getPrevious().isBlockBoundary() );
+							if ( needBeginBr )
+								docFrag.append( editor.document.createElement( 'br' ) );
+
+							var needEndBr = node.getNext() && !( node.getNext().type == CKEDITOR.NODE_ELEMENT && node.getNext().isBlockBoundary() );
+							while ( node.getFirst() )
+								node.getFirst().remove().appendTo( docFrag );
+
+							if ( needEndBr )
+								docFrag.append( editor.document.createElement( 'br' ) );
+
+							docFrag.replace( node );
+							firstTime = false;
+						}
+					}
+				}
+			}
+
+			selection.selectBookmarks( bookmarks );
+			editor.focus();
+		},
+
+		refresh: function( editor, path ) {
+			// Check if inside of blockquote.
+			var firstBlock = path.block || path.blockLimit;
+			this.setState( editor.elementPath( firstBlock ).contains( 'blockquote', 1 ) ? CKEDITOR.TRISTATE_ON : CKEDITOR.TRISTATE_OFF );
+		},
+
+		context: 'blockquote',
+
+		allowedContent: 'blockquote',
+		requiredContent: 'blockquote'
+	};
+
+	CKEDITOR.plugins.add( 'blockquote', {
+		// jscs:disable maximumLineLength
+		lang: 'af,ar,az,bg,bn,bs,ca,cs,cy,da,de,de-ch,el,en,en-au,en-ca,en-gb,eo,es,es-mx,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,oc,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,tt,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
+		// jscs:enable maximumLineLength
+		icons: 'blockquote', // %REMOVE_LINE_CORE%
+		hidpi: true, // %REMOVE_LINE_CORE%
+		init: function( editor ) {
+			if ( editor.blockless )
+				return;
+
+			editor.addCommand( 'blockquote', commandObject );
+
+			editor.ui.addButton && editor.ui.addButton( 'Blockquote', {
+				label: editor.lang.blockquote.toolbar,
+				command: 'blockquote',
+				toolbar: 'blocks,10'
+			} );
+		}
+	} );
+} )();
