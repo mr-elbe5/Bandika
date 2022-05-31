@@ -49,8 +49,8 @@ public class CloseDialogResponse extends HtmlResponse {
             );
             if (!msg.isEmpty()) {
                 append("""
-                    <input type="hidden" name="message" value="{msg}"/>
-                    <input type="hidden" name="messageType" value="{msgType}"/>
+                    <input type="hidden" name="message" value="{1}"/>
+                    <input type="hidden" name="messageType" value="{2}"/>
                     """,
                         Strings.toHtml(msg),
                         msgType

@@ -61,7 +61,7 @@ public class SearchPage extends HtmlIncludePage {
             }
         } else {
             sb.append(Strings.format("""
-                            <span><%=$SH("_noResults")%></span>
+                            <span>{1}</span>
                             """,
                     Strings.getHtml("_noResults")
             ));

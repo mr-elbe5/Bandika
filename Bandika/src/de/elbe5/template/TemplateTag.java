@@ -90,26 +90,4 @@ public abstract class TemplateTag implements ITemplateNode {
         }
     }
 
-    @Override
-    public void appendCode(StringBuilder sb){
-        sb.append("<").append(TAG_PREFIX).append(":").append(type);
-        for (String key : parameters.keySet()){
-            sb.append(" ").append(key).append("=\"").append(parameters.get(key)).append("\"");
-        }
-        if (childNodes.isEmpty()){
-            sb. append(" />");
-        }
-        else {
-            sb.append(">");
-            appendChildCode(sb);
-            sb.append("</").append(TAG_PREFIX).append(":").append(type).append(">");
-        }
-    }
-
-    public void appendChildCode(StringBuilder sb){
-        for (ITemplateNode node : childNodes) {
-            node.appendCode(sb);
-        }
-    }
-
 }

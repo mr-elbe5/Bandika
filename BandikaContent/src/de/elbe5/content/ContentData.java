@@ -10,7 +10,7 @@ package de.elbe5.content;
 
 import de.elbe5.application.Configuration;
 import de.elbe5.base.*;
-import de.elbe5.content.response.EditContentDataPage;
+import de.elbe5.content.html.EditContentDataPage;
 import de.elbe5.file.FileData;
 import de.elbe5.file.FileFactory;
 import de.elbe5.group.GroupBean;

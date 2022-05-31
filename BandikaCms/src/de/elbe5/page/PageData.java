@@ -12,8 +12,8 @@ import de.elbe5.content.ContentData;
 import de.elbe5.response.ModalPage;
 import de.elbe5.template.Template;
 import de.elbe5.template.TemplateCache;
-import de.elbe5.page.response.DraftPageWrapper;
-import de.elbe5.page.response.EditPageDataPage;
+import de.elbe5.page.html.DraftPageWrapper;
+import de.elbe5.page.html.EditPageDataPage;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 

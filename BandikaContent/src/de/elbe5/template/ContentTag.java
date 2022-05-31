@@ -1,6 +1,5 @@
 package de.elbe5.template;
 
-import de.elbe5.template.TemplateTag;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
 import de.elbe5.response.IMasterInclude;

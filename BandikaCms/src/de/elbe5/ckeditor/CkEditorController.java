@@ -8,9 +8,9 @@
  */
 package de.elbe5.ckeditor;
 
-import de.elbe5.ckeditor.response.AddImagePage;
-import de.elbe5.ckeditor.response.BrowseImagesPage;
-import de.elbe5.ckeditor.response.BrowseLinksPage;
+import de.elbe5.ckeditor.html.AddImagePage;
+import de.elbe5.ckeditor.html.BrowseImagesPage;
+import de.elbe5.ckeditor.html.BrowseLinksPage;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentController;
 import de.elbe5.content.ContentData;

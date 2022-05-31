@@ -6,7 +6,21 @@
     <property name="project" value="BandikaSample" />
     <property name="projectlower" value="bandikasample" />
     <property name="deploy.dir" location="${deploy.root}/bandika" />
+    <property name="templates.dir" location="${deploy.root}/bandika_ext/templates" />
 
     <import file="commonTasks.xml"/>
+
+    <target name ="deployTemplates">
+        <mkdir dir="${templates.dir}" />
+        <copy todir="${templates.dir}/master" overwrite="true">
+            <fileset dir="${project}/templates/master" />
+        </copy>
+        <copy todir="${templates.dir}/page" overwrite="true">
+            <fileset dir="${project}/templates/page" />
+        </copy>
+        <copy todir="${templates.dir}/part" overwrite="true">
+            <fileset dir="${project}/templates/part" />
+        </copy>
+    </target>
 
 </project>

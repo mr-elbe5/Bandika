@@ -8,9 +8,7 @@
  */
 package de.elbe5.administration;
 
-import de.elbe5.administration.response.AdminMaster;
-import de.elbe5.administration.response.AdminPage;
-import de.elbe5.administration.response.SystemAdminPage;
+import de.elbe5.administration.html.SystemAdminPage;
 import de.elbe5.application.ApplicationPath;
 import de.elbe5.base.Strings;
 import de.elbe5.base.Log;
@@ -19,7 +17,7 @@ import de.elbe5.request.RequestKeys;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.ResponseException;
 import de.elbe5.template.TemplateCache;
-import de.elbe5.user.response.UserAdminPage;
+import de.elbe5.user.html.UserAdminPage;
 import de.elbe5.user.UserCache;
 import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
@@ -54,10 +52,6 @@ public class AdminController extends Controller {
         return KEY;
     }
 
-    public AdminMaster openAdminPage(AdminPage include, String title){
-        return new AdminMaster(include, title);
-    }
-
     public IResponse openAdministration(RequestData rdata){
         if (rdata.hasSystemRight(SystemZone.USER))
             return openUserAdministration(rdata);
@@ -68,12 +62,12 @@ public class AdminController extends Controller {
 
     public IResponse openSystemAdministration(RequestData rdata) {
         checkRights(rdata.hasAnySystemRight());
-        return openAdminPage(new SystemAdminPage(), Strings.getString("_systemAdministration"));
+        return new SystemAdminPage();
     }
 
     public IResponse openUserAdministration(RequestData rdata) {
         checkRights(rdata.hasAnySystemRight());
-        return openAdminPage(new UserAdminPage(), Strings.getString("_userAdministration"));
+        return new UserAdminPage();
     }
 
     public IResponse restart(RequestData rdata) {

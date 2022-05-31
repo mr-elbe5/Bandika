@@ -12,9 +12,9 @@ import de.elbe5.administration.AdminController;
 import de.elbe5.base.Log;
 import de.elbe5.base.Strings;
 import de.elbe5.base.BaseData;
-import de.elbe5.administration.response.ContentAdminPage;
-import de.elbe5.content.response.EditContentRightsPage;
-import de.elbe5.content.response.SortChildContentPage;
+import de.elbe5.administration.html.ContentAdminPage;
+import de.elbe5.content.html.EditContentRightsPage;
+import de.elbe5.content.html.SortChildContentPage;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
@@ -345,7 +345,7 @@ public class ContentController extends Controller {
     }
 
     protected IResponse showContentAdministration(RequestData rdata) {
-        return AdminController.getInstance().openAdminPage(new ContentAdminPage(), Strings.getString("_contentAdministration"));
+        return new ContentAdminPage();
     }
 
     protected IResponse showContentAdministration(RequestData rdata, int contentId) {

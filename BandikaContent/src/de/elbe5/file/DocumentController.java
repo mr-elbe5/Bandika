@@ -11,7 +11,7 @@ package de.elbe5.file;
 import de.elbe5.base.Strings;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
-import de.elbe5.file.response.EditDocumentPage;
+import de.elbe5.file.html.EditDocumentPage;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;

@@ -19,7 +19,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class HtmlResponse implements IResponse {
+public class HtmlResponse implements IResponse, IHtmlBuilder {
 
     protected StringBuilder sb = new StringBuilder();
 

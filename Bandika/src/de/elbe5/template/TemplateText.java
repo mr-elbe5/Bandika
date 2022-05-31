@@ -24,8 +24,4 @@ public class TemplateText implements ITemplateNode {
         sb.append(result);
     }
 
-    @Override
-    public void appendCode(StringBuilder sb){
-        sb.append(code);
-    }
 }

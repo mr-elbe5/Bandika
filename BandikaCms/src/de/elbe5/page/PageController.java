@@ -12,7 +12,7 @@ import de.elbe5.application.Configuration;
 import de.elbe5.application.MailHelper;
 import de.elbe5.base.Strings;
 import de.elbe5.content.ContentController;
-import de.elbe5.page.response.AddPagePart;
+import de.elbe5.page.html.AddPagePart;
 import de.elbe5.request.*;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.IResponse;

@@ -8,7 +8,7 @@
  */
 package de.elbe5.administration;
 
-import de.elbe5.administration.response.*;
+import de.elbe5.administration.html.*;
 import de.elbe5.base.Strings;
 import de.elbe5.content.ContentBean;
 import de.elbe5.content.ContentCache;
@@ -37,11 +37,7 @@ public class ContentAdminController extends AdminController {
     public static void register(ContentAdminController controller){
         setInstance(controller);
         ControllerCache.addController(controller.getKey(),getInstance());
-    }
-
-    @Override
-    public AdminMaster openAdminPage(AdminPage include, String title){
-        return new ContentAdminMaster(include, title);
+        AdminPage.setMenu(new ContentAdminMenu());
     }
 
     @Override
@@ -57,17 +53,17 @@ public class ContentAdminController extends AdminController {
 
     public IResponse openSystemAdministration(RequestData rdata) {
         checkRights(rdata.hasAnySystemRight());
-        return openAdminPage(new ContentSystemAdminPage(), Strings.getString("_systemAdministration"));
+        return new ContentSystemAdminPage();
     }
 
     public IResponse openContentAdministration(RequestData rdata) {
         checkRights(rdata.hasAnyContentRight());
-        return openAdminPage(new ContentAdminPage(), Strings.getString("_contentAdministration"));
+        return new ContentAdminPage();
     }
 
     public IResponse openContentLog(RequestData rdata) {
         checkRights(rdata.hasAnyContentRight());
-        return openAdminPage(new ContentLogAdminPage(), Strings.getString("_contentLog"));
+        return new ContentLogAdminPage();
     }
 
     public IResponse clearPreviewCache(RequestData rdata) {
@@ -88,7 +84,7 @@ public class ContentAdminController extends AdminController {
     public IResponse resetContentLog(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.CONTENTEDIT));
         ContentBean.getInstance().resetContentLog();
-        return openAdminPage(new ContentLogAdminPage(), Strings.getString("_contentLog"));
+        return new ContentLogAdminPage();
     }
 
 }

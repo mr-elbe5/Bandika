@@ -17,7 +17,7 @@ import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.response.IResponse;
-import de.elbe5.timer.response.EditTimerPage;
+import de.elbe5.timer.html.EditTimerPage;
 
 import javax.servlet.http.HttpServletResponse;
 

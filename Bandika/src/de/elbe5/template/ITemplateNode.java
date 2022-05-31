@@ -4,11 +4,11 @@ import de.elbe5.base.Log;
 import de.elbe5.base.StringMap;
 import de.elbe5.base.Strings;
 import de.elbe5.request.RequestData;
+import de.elbe5.response.IHtmlBuilder;
 
-public interface ITemplateNode {
+public interface ITemplateNode extends IHtmlBuilder {
 
     void appendHtml(StringBuilder sb, RequestData rdata);
-    void appendCode(StringBuilder sb);
 
     default String replaceParams(String src, StringMap params)  {
         String s = "";

@@ -17,10 +17,9 @@ import de.elbe5.content.ContentData;
 import de.elbe5.file.FileBean;
 import de.elbe5.file.FileData;
 import de.elbe5.file.RangeInfo;
-import de.elbe5.file.response.FileResponse;
+import de.elbe5.file.FileResponse;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestType;
-import de.elbe5.servlet.WebServlet;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

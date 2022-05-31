@@ -43,22 +43,10 @@ public class Template implements ITemplateNode {
         return sb.toString();
     }
 
-    public String getCode(){
-        StringBuilder sb = new StringBuilder();
-        appendCode(sb);
-        return sb.toString();
-    }
-
     public void appendHtml(StringBuilder sb, RequestData rdata) {
         for (ITemplateNode node : childNodes) {
             node.appendHtml(sb, rdata);
         }
     }
 
-    @Override
-    public void appendCode(StringBuilder sb) {
-        for (ITemplateNode node : childNodes) {
-            node.appendCode(sb);
-        }
-    }
 }
