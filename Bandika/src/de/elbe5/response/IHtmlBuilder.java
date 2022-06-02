@@ -12,6 +12,9 @@ import de.elbe5.application.Configuration;
 import de.elbe5.base.Strings;
 import de.elbe5.request.RequestData;
 
+import java.util.Collections;
+import java.util.Map;
+
 public interface IHtmlBuilder {
 
     default void append(StringBuilder sb, String s){
@@ -20,6 +23,25 @@ public interface IHtmlBuilder {
 
     default void append(StringBuilder sb, String s, String... params){
         sb.append(Strings.format(s, params));
+    }
+
+    default void append(StringBuilder sb, String s, Map<String, String> params){
+        sb.append(Strings.format(s, params));
+    }
+
+    default Map<String, String> parameters(Map.Entry<String,String>... params){
+        return Map.ofEntries(params);
+    }
+
+    default Map.Entry<String, String> param(String key, String value){
+        if (value.startsWith("_")){
+            return Map.entry(key, Strings.getHtml(value));
+        }
+        return Map.entry(key, Strings.toHtml(value));
+    }
+
+    default Map.Entry<String, String> param(String key, int value){
+        return Map.entry(key, Integer.toString(value));
     }
 
     default void appendFormError(StringBuilder sb, RequestData rdata){

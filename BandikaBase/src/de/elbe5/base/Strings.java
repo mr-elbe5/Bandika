@@ -156,6 +156,19 @@ public class Strings {
         return sb.toString();
     }
 
+    public static String format(String s, Map<String, String> params){
+        String result = s;
+        for (String key : params.keySet()){
+            result = result.replace("$" + key, params.get(key));
+        }
+        return result;
+    }
+
+    @SafeVarargs
+    public static Map<String, String> parameters(Map.Entry<String,String>... params){
+        return Map.ofEntries(params);
+    }
+
     public static void write(Writer writer, String src, String... params) throws IOException {
         int p1 = 0;
         int p2;
