@@ -1,6 +1,5 @@
 package de.elbe5.ckeditor.html;
 
-import de.elbe5.base.Strings;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.file.ImageData;
@@ -9,6 +8,7 @@ import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 
 import java.util.List;
+import java.util.Map;
 
 public class BrowseImagesPage extends ModalPage {
 
@@ -19,31 +19,33 @@ public class BrowseImagesPage extends ModalPage {
         parentIds.add(data.getId());
         rdata.setRequestObject("parentIds", parentIds);
         int callbackNum = rdata.getAttributes().getInt("CKEditorFuncNum", -1);
-        appendModalStart(Strings.getHtml("_editUser"));
+        appendModalStart(getHtml("_editUser"));
         appendModalBodyStart();
-        append("""
+        append(sb, """
                 <section class="treeSection">
                                 <ul class="tree filetree">
                 """);
         appendFolder(sb, rdata, ContentCache.getContentRoot(), parentIds);
-        append("""
+        append(sb, """
                                         </ul>
                           </section>
                           <section class="addImage">
-                              <div><input type="file" name="file" id="addedFile"/>&nbsp;<button class="btn btn-sm btn-outline-primary" onclick="return addImage()">{1}</button></div>
+                              <div><input type="file" name="file" id="addedFile"/>&nbsp;<button class="btn btn-sm btn-outline-primary" onclick="return addImage()">$add$</button></div>
                           </section>
                         """,
-                Strings.getHtml("_add")
+                Map.ofEntries(
+                        param("add", "_add")
+                )
         );
-        appendModalFooter(Strings.getHtml("_cancel"));
+        appendModalFooter(getHtml("_cancel"));
         appendModalEnd();
-        append("""
+        append(sb, """
                                     <script type="text/javascript">
                                             $('.tree').treed('fa fa-minus-square-o', 'fa fa-plus-square-o');
                                         
                                             function ckImgCallback(url) {
                                                 if (CKEDITOR)
-                                                    CKEDITOR.tools.callFunction({1}, url);
+                                                    CKEDITOR.tools.callFunction($callbackNum$, url);
                                                 return closeModalDialog();
                                             }
                                         
@@ -55,7 +57,7 @@ public class BrowseImagesPage extends ModalPage {
                                                 let formData = new FormData();
                                                 formData.append('file', file);
                                                 $.ajax({
-                                                    url: '/ctrl/ckeditor/addImage/{2}',
+                                                    url: '/ctrl/ckeditor/addImage/$id$',
                                                     type: 'POST',
                                                     data: formData,
                                                     cache: false,
@@ -64,59 +66,60 @@ public class BrowseImagesPage extends ModalPage {
                                                     contentType: false,
                                                     processData: false
                                                 }).success(function (html) {
-                                                    $('#page_ul_{3}').append(html);
+                                                    $('#page_ul_$id$').append(html);
                                                 });
                                                 return false;
                                             }
                                         </script>
                         """,
-                Integer.toString(callbackNum),
-                Integer.toString(data.getId()),
-                Integer.toString(data.getId())
+                Map.ofEntries(
+                        param("callbackNum", callbackNum),
+                        param("id", data.getId())
+                )
         );
     }
 
     public void appendFolder(StringBuilder sb, RequestData rdata, ContentData contentData, List<Integer> parentIds) {
         boolean isParent = parentIds.contains(contentData.getId());
-        append("""
-                        <li class="{1}">
-                            <a id="page_{2}">{3}
+        append(sb, """
+                        <li class="$open$">
+                            <a id="page_$id$">$name$
                             </a>
-                            <ul id="page_ul_{4}">
+                            <ul id="page_ul_$id$">
                             """,
-                isParent ? "open" : "",
-                Integer.toString(contentData.getId()),
-                Strings.toHtml(contentData.getName()),
-                Integer.toString(contentData.getId())
+                Map.ofEntries(
+                        param("open", isParent ? "open" : ""),
+                        param("id", contentData.getId()),
+                        param("name", contentData.getName())
+                )
         );
         if (contentData.hasUserReadRight(rdata)) {
             List<ImageData> images = contentData.getFiles(ImageData.class);
             for (ImageData image : images) {
-                append("""
+                append(sb, """
                                 <li>
                                     <div class="treeline">
-                                        <a id="{1}" href="" onclick="return ckImgCallback('{2}');">
-                                            <img src="/ctrl/image/showPreview/{3}" alt="{4}"/>
-                                            {5}
+                                        <a id="$id$" href="" onclick="return ckImgCallback('$url$');">
+                                            <img src="/ctrl/image/showPreview/$id$" alt="$name$"/>
+                                            $name$
                                         </a>
-                                        <a class="fa fa-eye" title="{6}" href="{7}" target="_blank"> </a>
+                                        <a class="fa fa-eye" title="$view$" href="$url$" target="_blank"> </a>
                                     </div>
                                 </li>
                                 """,
-                        Integer.toString(image.getId()),
-                        image.getURL(),
-                        Integer.toString(image.getId()),
-                        Strings.toHtml(image.getDisplayName()),
-                        Strings.toHtml(image.getDisplayName()),
-                        Strings.getHtml("_view"),
-                        image.getURL()
+                        Map.ofEntries(
+                                param("id", image.getId()),
+                                param("url", image.getURL()),
+                                param("name", image.getDisplayName()),
+                                param("view", "_view")
+                        )
                 );
             }
         }
         for (ContentData subPage : contentData.getChildren()) {
             appendFolder(sb, rdata, subPage, parentIds);
         }
-        sb.append("""
+        append(sb, """
                     </ul>
                 </li>
                 """);

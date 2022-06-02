@@ -1,15 +1,15 @@
 package de.elbe5.file.html;
 
 import de.elbe5.base.DateHelper;
-import de.elbe5.base.Strings;
 import de.elbe5.file.MediaData;
+import de.elbe5.response.IFormBuilder;
 import de.elbe5.response.ModalPage;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.user.UserCache;
 import de.elbe5.user.UserData;
 
-public class EditMediaPage extends ModalPage {
+public class EditMediaPage extends ModalPage implements IFormBuilder {
 
     @Override
     public void appendHtml(RequestData rdata) {
@@ -20,17 +20,17 @@ public class EditMediaPage extends ModalPage {
         UserData changer = UserCache.getUser(mediaData.getChangerId());
         String changerName = changer == null ? "" : changer.getName();
         boolean fileRequired= mediaData.isNew();
-        appendModalStart(Strings.getHtml("_editMediaSettings"));
+        appendModalStart(getHtml("_editMediaSettings"));
         appendFormStart(sb, url , "mediaform", true);
         appendModalBodyStart();
-        appendTextLine(sb, Strings.getHtml("_idAndUrl"), mediaData.getId() + " - " + Strings.toHtml(mediaData.getFileName()));
-        appendTextLine(sb, Strings.getHtml("_creation"), DateHelper.toHtmlDateTime(mediaData.getCreationDate()) + " - " + Strings.toHtml(creatorName));
-        appendTextLine(sb, Strings.getHtml("_lastChange"), DateHelper.toHtmlDateTime(mediaData.getChangeDate()) + " - " + Strings.toHtml(changerName));
-        appendFileLineStart(sb, rdata.hasFormErrorField("file"), "file", Strings.getHtml("_file"), fileRequired, false);
+        appendTextLine(sb, getHtml("_idAndUrl"), mediaData.getId() + " - " + toHtml(mediaData.getFileName()));
+        appendTextLine(sb, getHtml("_creation"), DateHelper.toHtmlDateTime(mediaData.getCreationDate()) + " - " + toHtml(creatorName));
+        appendTextLine(sb, getHtml("_lastChange"), DateHelper.toHtmlDateTime(mediaData.getChangeDate()) + " - " + toHtml(changerName));
+        appendFileLineStart(sb, rdata.hasFormErrorField("file"), "file", getHtml("_file"), fileRequired, false);
         appendLineEnd(sb);
-        appendTextInputLine(sb, rdata.hasFormErrorField("displayName"),"displayName",Strings.getHtml("_displayName"), true, Strings.toHtml(mediaData.getDisplayName()));
-        appendTextareaLine(sb, "description", Strings.getHtml("_description"), Strings.toHtml(mediaData.getDescription()), "3rem");
-        appendModalFooter(Strings.getHtml("_close"),Strings.getHtml("_save"));
+        appendTextInputLine(sb, rdata.hasFormErrorField("displayName"),"displayName",getHtml("_displayName"), true, toHtml(mediaData.getDisplayName()));
+        appendTextareaLine(sb, "description", getHtml("_description"), toHtml(mediaData.getDescription()), "3rem");
+        appendModalFooter(getHtml("_close"),getHtml("_save"));
         appendFormEnd(sb, url, "mediaform", true, true, "");
         appendModalEnd();
     }

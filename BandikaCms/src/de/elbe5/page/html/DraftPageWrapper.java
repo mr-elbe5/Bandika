@@ -2,35 +2,39 @@ package de.elbe5.page.html;
 
 import de.elbe5.base.Strings;
 import de.elbe5.page.PageData;
+import de.elbe5.response.IHtmlBuilder;
 
-public class DraftPageWrapper {
+import java.util.Map;
 
-    public static void appendStartHtml(StringBuilder sb, PageData contentData){
-        sb.append(Strings.format("""
-                <form action="/ctrl/page/saveContentFrontend/{1}" method="post" id="pageform" name="pageform" accept-charset="UTF-8">
+public interface DraftPageWrapper extends IHtmlBuilder {
+
+    default void appendStartHtml(StringBuilder sb, PageData contentData){
+        append(sb,"""
+                <form action="/ctrl/page/saveContentFrontend/$id$" method="post" id="pageform" name="pageform" accept-charset="UTF-8">
                         <div class="btn-group btn-group-sm pageEditButtons">
-                            <button type="submit" class="btn btn-sm btn-success" onclick="updateEditors();">{2}</button>
-                            <button class="btn btn-sm btn-secondary" onclick="return linkTo('/ctrl/page/cancelEditContentFrontend/{3}');">{4}</button>
+                            <button type="submit" class="btn btn-sm btn-success" onclick="updateEditors();">$save$</button>
+                            <button class="btn btn-sm btn-secondary" onclick="return linkTo('/ctrl/page/cancelEditContentFrontend/$id$');">$cancel$</button>
                         </div>
                 """,
-                Integer.toString(contentData.getId()),
-                Strings.getHtml("_savePage"),
-                Integer.toString(contentData.getId()),
-                Strings.getHtml("_cancel")
-                ));
+                Map.ofEntries(
+                        param("id",contentData.getId()),
+                        param("save","_savePage"),
+                        param("cancel","_cancel")
+                )
+        );
     }
 
-    public static void appendEndHtml(StringBuilder sb){
-        sb.append("""
+    default void appendEndHtml(StringBuilder sb){
+        append(sb, """
                     </form>
                 """);
     }
 
-    public static void appendScript(StringBuilder sb, PageData pageData){
-        sb.append(Strings.format("""
+    default void appendScript(StringBuilder sb, PageData pageData){
+        append(sb,"""
                     <script type="text/javascript">
                         function confirmDelete() {
-                            return confirm('{1}');
+                            return confirm('$confirm$');
                         }
                         function movePart(id,direction){
                             let $partWrapper=$('#part_'+id);
@@ -67,7 +71,7 @@ public class DraftPageWrapper {
                                 layout: layout
                             };
                             $.ajax({
-                                url: '/ctrl/page/addPart/'+{2},
+                                url: '/ctrl/page/addPart/'+$id$,
                                 type: 'POST',
                                 data: data,
                                 dataType: 'html'
@@ -117,8 +121,10 @@ public class DraftPageWrapper {
                         updatePartPositions();
                     </script>
                 """,
-                Strings.toJs("_confirmDelete"),
-                Integer.toString(pageData.getId())
-                ));
+                Map.ofEntries(
+                        param("confirm",Strings.getJs("_confirmDelete")),
+                        param("id",pageData.getId())
+                )
+        );
     }
 }

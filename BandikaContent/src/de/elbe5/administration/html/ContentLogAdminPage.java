@@ -9,6 +9,7 @@ import de.elbe5.content.ContentLog;
 import de.elbe5.request.RequestData;
 
 import java.util.List;
+import java.util.Map;
 
 public class ContentLogAdminPage extends AdminPage {
 
@@ -19,51 +20,51 @@ public class ContentLogAdminPage extends AdminPage {
     @Override
     public void appendPageHtml(RequestData rdata) {
         List<ContentDayLog> dayLogs = ContentBean.getInstance().getAllViewCounts();
-        append("""
+        append(sb, """
                         <div id="pageContent">
                             <form:message/>
                             <section class="logSection">
-                                <h3>{1}</h3>
-                                <a class="icon fa fa-trash-o" href="/ctrl/admin/resetContentLog" title="{2}"></a>
+                                <h3>$clicks$</h3>
+                                <a class="icon fa fa-trash-o" href="/ctrl/admin/resetContentLog" title="$reset$"></a>
                                 """,
-                Strings.getHtml("_clicksPerDay"),
-                Strings.getHtml("_reset")
+                Map.ofEntries(
+                        param("clicks","_clicksPerDay"),
+                        param("reset","_reset")
+                )
         );
         if (rdata.hasAnyContentRight()) {
-            append("""
+            append(sb, """
                     <table>
                     """);
             for (ContentDayLog dayLog : dayLogs) {
-                append("""
+                append(sb, """
                                 <tr>
-                                    <th colspan="2">
-                                        {1}
-                                    </th>
+                                    <th colspan="2">$date$</th>
                                 </tr>
                                 """,
-                        DateHelper.toHtmlDate(dayLog.getDay())
+                        Map.ofEntries(
+                                param("date",DateHelper.toHtmlDate(dayLog.getDay()))
+                        )
                 );
                 for (ContentLog log : dayLog.getLogs()) {
-                    append("""
+                    append(sb, """
                                     <tr>
-                                        <td>
-                                            {1}
-                                        </td>
-                                        <td>
-                                            {2}
-                                        </td>
+                                        <td>$name$</td>
+                                        <td>$count$</td>
                                     </tr>
                                     """,
-                            Strings.toHtml(ContentCache.getContent(log.getId()).getDisplayName()),
-                            Integer.toString(log.getCount())
+                            Map.ofEntries(
+                                    param("name",ContentCache.getContent(log.getId()).getDisplayName()),
+                                    param("count",log.getCount())
+                            )
                     );
                 }
             }
-            append("""
+            append(sb, """
                     </table>
                     """);
         }
-        append("""
+        append(sb, """
                     </section>
                 </div>
                 """);

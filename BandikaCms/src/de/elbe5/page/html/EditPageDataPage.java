@@ -18,11 +18,11 @@ public class EditPageDataPage extends EditContentDataPage {
         String url = "/ctrl/page/saveContentData/" + contentData.getId();
         List<Template> pageTemplates = TemplateCache.getTemplates("page");
         appendStartHtml(rdata, contentData, url);
-        appendSelectStart(sb, rdata.hasFormErrorField("template"), "template", Strings.getHtml("_pageTemplate"), true, "");
-        appendOption(sb, "", Strings.getHtml("_pleaseSelect"), contentData.getTemplateName().isEmpty());
+        appendSelectStart(sb, rdata.hasFormErrorField("template"), "template", getHtml("_pageTemplate"), true, "");
+        appendOption(sb, "", getHtml("_pleaseSelect"), contentData.getTemplateName().isEmpty());
         for (Template template : pageTemplates) {
             String templateName = template.getName();
-            appendOption(sb, Strings.toHtml(templateName), Strings.getHtml(template.getKey()), templateName.equals(contentData.getTemplateName()));
+            appendOption(sb, toHtml(templateName), getHtml(template.getKey()), templateName.equals(contentData.getTemplateName()));
         }
         appendSelectEnd(sb);
         appendEndHtml(url);

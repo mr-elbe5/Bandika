@@ -1,45 +1,51 @@
 package de.elbe5.search.html;
 
-import de.elbe5.base.Strings;
 import de.elbe5.response.HtmlIncludePage;
 import de.elbe5.request.RequestData;
+import de.elbe5.response.IHtmlBuilder;
 import de.elbe5.search.UserSearchData;
 import de.elbe5.search.UserSearchResultData;
 
-public class UserSearchPage extends HtmlIncludePage {
+import java.util.Map;
+
+public class UserSearchPage extends HtmlIncludePage implements IHtmlBuilder {
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
         UserSearchResultData userResult = rdata.getAttributes().get("searchResultData", UserSearchResultData.class);
-        sb.append(Strings.format("""
+        append(sb,"""
                         <section class="mainSection searchResults">
-                            <h1>{1}
+                            <h1>$results$
                             </h1>
                             <table class="padded searchResultsTable">
                                 <tr>
-                                    <th class="col2">{2}
+                                    <th class="col2">$name$
                                     </th>
-                                    <th class="col3">{3}
+                                    <th class="col3">$email$
                                     </th>
                                 </tr>
                                 """,
-                Strings.getHtml("_searchResults"),
-                Strings.getHtml("_name"),
-                Strings.getHtml("_email")
-        ));
+                Map.ofEntries(
+                        param("results","_searchResults"),
+                        param("name","_name"),
+                        param("email","_email")
+                )
+        );
         if (userResult != null && !userResult.getResults().isEmpty()) {
             for (UserSearchData data : userResult.getResults()) {
-                sb.append(Strings.format("""
+                append(sb,"""
                                 <tr>
-                                    <td>{1}
+                                    <td>$name$
                                     </td>
-                                    <td>{2}
+                                    <td>$email$
                                     </td>
                                 </tr>
                                 """,
-                        data.getNameContext(),
-                        data.getEmailContext()
-                ));
+                        Map.ofEntries(
+                                param("name",data.getNameContext()),
+                                param("email",data.getEmailContext())
+                        )
+                );
             }
         }
         sb.append("""

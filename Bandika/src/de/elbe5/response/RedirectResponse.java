@@ -11,8 +11,9 @@ package de.elbe5.response;
 import de.elbe5.request.RequestData;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
-public class RedirectResponse extends HtmlResponse {
+public class RedirectResponse extends HtmlResponse implements IHtmlBuilder{
 
     private final String url;
 
@@ -22,7 +23,7 @@ public class RedirectResponse extends HtmlResponse {
 
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response) {
-        append("""
+        append(sb, """
             <html>
             <head><title></title></head>
             <body>
@@ -31,12 +32,15 @@ public class RedirectResponse extends HtmlResponse {
             </html>
             <script type="text/javascript">
                 try {
-                    window.location.href = '{1}';
+                    window.location.href = '$url$';
                 } catch (e) {
                 }
             </script>
             """,
-                url);
+                Map.ofEntries(
+                        param("url",url)
+                )
+        );
         super.processResponse(context, rdata, response);
     }
 }

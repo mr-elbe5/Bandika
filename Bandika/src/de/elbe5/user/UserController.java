@@ -217,7 +217,7 @@ public class UserController extends Controller {
     }
 
     protected IResponse showLogin(RequestData rdata) {
-        return new HtmlResponse(LoginPage.getHtml());
+        return new MasterResponse(new LoginPage());
     }
 
     protected IResponse showEditUser(RequestData rdata) {

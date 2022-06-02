@@ -2,7 +2,9 @@ package de.elbe5.response;
 
 import de.elbe5.request.RequestData;
 
-public class ModalPage extends HtmlResponse {
+import java.util.Map;
+
+public class ModalPage extends HtmlResponse implements IHtmlBuilder{
 
     public ModalPage createHtml(RequestData rdata) {
         appendHtml(rdata);
@@ -14,68 +16,78 @@ public class ModalPage extends HtmlResponse {
     }
 
     public void appendModalStart(String title) {
-        append("""
+        append(sb, """
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                  <h5 class="modal-title">{1}
+                                  <h5 class="modal-title">$title$
                                   </h5>
                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                       <span aria-hidden="true">&times;</span>
                                   </button>
                                 </div>
                         """,
-                title);
+                Map.ofEntries(
+                        param("title",title)
+                )
+        );
     }
 
     public void appendModalBodyStart(String title) {
-        append("""
+        append(sb, """
                                 <div class="modal-body">
-                                        <h3>{1}
-                                        </h3>
+                                        <h3>$title$</h3>
                         """,
-                title
+                Map.ofEntries(
+                        param("title",title)
+                )
         );
     }
 
     public void appendModalBodyStart() {
-        append("""
+        append(sb, """
                                 <div class="modal-body">
                         """
                 );
     }
 
     public void appendModalFooter(String secondary, String primary) {
-        append("""                
+        append(sb, """                
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{1}
+                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">$secondary$
                                     </button>
-                                    <button type="submit" class="btn btn-primary">{2}
+                                    <button type="submit" class="btn btn-primary">$primary$
                                     </button>
                                 </div>
                             </div>
                         </div>
                         """,
-                secondary,
-                primary);
+                Map.ofEntries(
+                        param("secondary",secondary),
+                        param("primary",primary)
+                )
+        );
     }
 
     public void appendModalFooter(String secondary) {
-        append("""                
+        append(sb, """                
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{1}
+                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">$secondary$
                                     </button>
                                 </div>
                             </div>
                         </div>
                         """,
-                secondary);
+                Map.ofEntries(
+                        param("secondary",secondary)
+                )
+        );
     }
 
     public void appendModalEnd() {
-        append("""                
+        append(sb, """                
                     </div>
                 </div>
                 """);

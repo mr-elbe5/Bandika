@@ -1,9 +1,10 @@
 package de.elbe5.administration.html;
 
-import de.elbe5.base.Strings;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IHtmlBuilder;
 import de.elbe5.rights.SystemZone;
+
+import java.util.Map;
 
 public class AdminMenu implements IHtmlBuilder {
 
@@ -12,7 +13,6 @@ public class AdminMenu implements IHtmlBuilder {
         appendSystemNav(sb, rdata);
         appendUserNav(sb, rdata);
         appendNavEnd(sb);
-
     }
 
     public void appendNavStart(StringBuilder sb, RequestData rdata) {
@@ -20,14 +20,16 @@ public class AdminMenu implements IHtmlBuilder {
                         <div class="menu row">
                             <section class="col-12 menu">
                                 <nav class="navbar navbar-expand-lg">
-                                    <span class="navbar-brand" admin-logo"><img class="admin-logo" src="/static-content/img/admin-logo.png" > - {1}</span>
+                                    <span class="navbar-brand" admin-logo"><img class="admin-logo" src="/static-content/img/admin-logo.png" > - $administration$</span>
                                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                                         <span class="navbar-toggler-icon"></span>
                                     </button>
                                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                                         <ul class="navbar-nav mr-auto">
                                         """,
-                Strings.getHtml("_administration")
+                Map.ofEntries(
+                        param("administration","_administration")
+                )
         );
 
     }
@@ -37,11 +39,13 @@ public class AdminMenu implements IHtmlBuilder {
             append(sb, """
                                 <li class="nav-item">
                                     <a class="nav-link"
-                                       href="/ctrl/admin/openSystemAdministration">{1}
+                                       href="/ctrl/admin/openSystemAdministration">$systemAdministration$
                                     </a>
                                 </li>
                             """,
-                    Strings.getHtml("_systemAdministration")
+                    Map.ofEntries(
+                            param("systemAdministration","_systemAdministration")
+                    )
             );
         }
     }
@@ -51,11 +55,13 @@ public class AdminMenu implements IHtmlBuilder {
             append(sb, """
                             <li class="nav-item">
                                 <a class="nav-link"
-                                   href="/ctrl/admin/openUserAdministration">{1}
+                                   href="/ctrl/admin/openUserAdministration">$userAdministration$
                                 </a>
                             </li>
                             """,
-                    Strings.getHtml("_userAdministration")
+                    Map.ofEntries(
+                            param("userAdministration","_userAdministration")
+                    )
             );
         }
     }

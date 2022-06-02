@@ -1,13 +1,14 @@
 package de.elbe5.template;
 
-import de.elbe5.base.Strings;
 import de.elbe5.page.PageData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
+import de.elbe5.response.IFormBuilder;
 
 import java.util.Date;
+import java.util.Map;
 
-public class ContactTag extends TemplateTag {
+public class ContactTag extends TemplateTag implements IFormBuilder {
 
     public static final String TYPE = "contact";
 
@@ -26,37 +27,49 @@ public class ContactTag extends TemplateTag {
     }
 
     public void appendContactHtml(StringBuilder sb, RequestData rdata, int contentId, String contactName, String contactEmail, String contactMessage, String cssClass){
-        sb.append(Strings.format("""
-                <div class="{1}">
+        append(sb,"""
+                <div class="$cssClass$">
                 """,
-                Strings.toHtml(cssClass)));
+                Map.ofEntries(
+                        param("cssClass",cssClass)
+                )
+        );
         appendFormStart(sb, "/ctrl/ctrl/sendContact/" + contentId, "contactform");
         appendFormError(sb, rdata);
-        appendTextInputLine(sb, rdata.hasFormErrorField("contactName"), Strings.toHtml("contactName"), Strings.getHtml("_name"), true, Strings.toHtml(contactName),0);
-        appendTextInputLine(sb, rdata.hasFormErrorField("contactEmail"), Strings.toHtml("contactEmail"), Strings.getHtml("_email"), true, Strings.toHtml(contactEmail));
-        appendTextareaLine(sb, rdata.hasFormErrorField("contactMessage"), Strings.toHtml("contactMessage"), Strings.getHtml("_message"), true, Strings.toHtml(contactMessage),"10rem");
+        appendTextInputLine(sb, rdata.hasFormErrorField("contactName"), toHtml("contactName"), getHtml("_name"), true, toHtml(contactName),0);
+        appendTextInputLine(sb, rdata.hasFormErrorField("contactEmail"), toHtml("contactEmail"), getHtml("_email"), true, toHtml(contactEmail));
+        appendTextareaLine(sb, rdata.hasFormErrorField("contactMessage"), toHtml("contactMessage"), getHtml("_message"), true, toHtml(contactMessage),"10rem");
         appendLineStart(sb, "", "");
-        sb.append(Strings.format("""
-                <img src="/ctrl/user/showCaptcha?v={1}" alt="" />
+        append(sb,"""
+                <img src="/ctrl/user/showCaptcha?v=$date$" alt="" />
         """,
-                Long.toString(new Date().getTime())));
+                Map.ofEntries(
+                        param("date",Long.toString(new Date().getTime()))
+                )
+        );
         appendLineEnd(sb);
-        appendTextInputLine(sb, rdata.hasFormErrorField("captcha"), Strings.toHtml("captcha"), Strings.getHtml("_captcha"), true, "");
+        appendTextInputLine(sb, rdata.hasFormErrorField("captcha"), toHtml("captcha"), getHtml("_captcha"), true, "");
         appendLineStart(sb, "", "");
-        sb.append(Strings.format("""
-                <div>{1}</div>
+        append(sb,"""
+                <div>$hint$</div>
         """,
-                Strings.getHtml("_captchaHint")));
+                Map.ofEntries(
+                        param("hint","_captchaHint")
+                )
+        );
         appendLineEnd(sb);
-        sb.append(Strings.format("""
+        append(sb,"""
                             <div class="form-group row">
                                 <div class = "col-md-12">
-                                    <button type="submit" class="btn btn-outline-primary pull-right">{1}
+                                    <button type="submit" class="btn btn-outline-primary pull-right">$send$
                                     </button>
                                 </div>
                             </div>
                 """,
-                Strings.getHtml("_send")));
+                Map.ofEntries(
+                        param("send","_send")
+                )
+        );
         appendFormEnd(sb);
         sb.append("</div>");
     }

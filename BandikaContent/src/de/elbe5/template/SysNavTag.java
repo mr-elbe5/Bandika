@@ -1,10 +1,10 @@
 package de.elbe5.template;
 
-import de.elbe5.base.Strings;
 import de.elbe5.content.ContentData;
-import de.elbe5.template.TemplateTag;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
+
+import java.util.Map;
 
 public class SysNavTag extends TemplateTag {
 
@@ -26,44 +26,58 @@ public class SysNavTag extends TemplateTag {
                                 <ul class="nav justify-content-end">
             """);
         if (rdata.hasAnyElevatedSystemRight()) {
-            sb.append(Strings.format("""
-                                    <li class="nav-item"><a class="nav-link fa fa-cog" href="/ctrl/admin/openAdministration" title="{1}"></a></li>
+            append(sb,"""
+                                    <li class="nav-item"><a class="nav-link fa fa-cog" href="/ctrl/admin/openAdministration" title="$administration$"></a></li>
             """,
-                    Strings.toHtml("_administration")));
+                    Map.ofEntries(
+                            param("administration","_administration")
+                    )
+            );
         }
     }
 
     public void appendContentHtml(StringBuilder sb, RequestData rdata) {
         ContentData currentContent = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         if (currentContent!=null && !currentContent.isEditing() && currentContent.hasUserEditRight(rdata)) {
-            sb.append(Strings.format("""
-                                    <li class="nav-item"><a class="nav-link fa fa-edit" href="/ctrl/content/openEditContentFrontend/{1}" title="{2}"></a></li>
+            append(sb,"""
+                                    <li class="nav-item"><a class="nav-link fa fa-edit" href="/ctrl/content/openEditContentFrontend/$id$" title="$edit$"></a></li>
             """,
-                    Integer.toString(currentContent.getId()),
-                    Strings.getHtml("_editPage")
-            ));
+                    Map.ofEntries(
+                            param("id",currentContent.getId()),
+                            param("edit","_editPage")
+                    )
+            );
             if (currentContent.hasUnpublishedDraft()) {
                 if (currentContent.isPublished()) {
                     if (currentContent.getViewType().equals(ContentData.VIEW_TYPE_SHOWPUBLISHED)) {
-                        sb.append(Strings.format("""
-                                    <li class="nav-item"><a class="nav-link fa fa-eye-slash" href="/ctrl/content/showDraft/{1}" title="{2}" ></a></li>
+                        append(sb,"""
+                                    <li class="nav-item"><a class="nav-link fa fa-eye-slash" href="/ctrl/content/showDraft/$id$" title="$showDraft$" ></a></li>
             """,
-                                Integer.toString(currentContent.getId()),
-                                Strings.getHtml("_showDraft")));
+                                Map.ofEntries(
+                                        param("id",currentContent.getId()),
+                                        param("showDraft","_showDraft")
+                                )
+                        );
                     } else {
-                        sb.append(Strings.format("""
-                                    <li class="nav-item"><a class="nav-link fa fa-eye" href="/ctrl/content/showPublished/{1}" title="{2}"></a></li>
+                        append(sb,"""
+                                    <li class="nav-item"><a class="nav-link fa fa-eye" href="/ctrl/content/showPublished/$id$" title="$v$"></a></li>
             """,
-                                Integer.toString(currentContent.getId()),
-                                Strings.getHtml("_showPublished")));
+                                Map.ofEntries(
+                                        param("id",currentContent.getId()),
+                                        param("showPublished","_showPublished")
+                                )
+                        );
                     }
                 }
                 if (currentContent.hasUserApproveRight(rdata)) {
-                    sb.append(Strings.format("""
-                                    <li class="nav-item"><a class="nav-link fa fa-thumbs-up" href="/ctrl/content/publishContent/{1}" title="{2}"></a></li>
+                    append(sb,"""
+                                    <li class="nav-item"><a class="nav-link fa fa-thumbs-up" href="/ctrl/content/publishContent/$id$" title="$publish$"></a></li>
             """,
-                            Integer.toString(currentContent.getId()),
-                            Strings.getHtml("_publish")));
+                            Map.ofEntries(
+                                    param("id",currentContent.getId()),
+                                    param("publish","_publish")
+                            )
+                    );
                 }
             }
         }
@@ -71,25 +85,34 @@ public class SysNavTag extends TemplateTag {
 
     public void appendUserHtml(StringBuilder sb, RequestData rdata) {
         String userClass = rdata.isLoggedIn() ? "fa-user" : "fa-user-o";
-        sb.append(Strings.format("""
+        append(sb,"""
                                     <li class="nav-item">
-                                        <a class="nav-link fa {1}" data-toggle="dropdown" title="{2}"></a>
+                                        <a class="nav-link fa $userClass$" data-toggle="dropdown" title="$user$"></a>
                                         <div class="dropdown-menu">
             """,
-                userClass,
-                Strings.getHtml("_user")));
+                Map.ofEntries(
+                        param("userClass",userClass),
+                        param("user","_user")
+                )
+        );
         if (rdata.isLoggedIn()) {
-            sb.append(Strings.format("""
-                                            <a class="dropdown-item" href="/ctrl/user/openProfile">{1}</a>
-                                            <a class="dropdown-item" href="/ctrl/user/logout">{2}</a>
+            append(sb,"""
+                                            <a class="dropdown-item" href="/ctrl/user/openProfile">$profile$</a>
+                                            <a class="dropdown-item" href="/ctrl/user/logout">$logout$</a>
             """,
-                    Strings.getHtml("_profile"),
-                    Strings.getHtml("_logout")));
+                    Map.ofEntries(
+                            param("profile","_profile"),
+                            param("logout","_logout")
+                    )
+            );
         } else {
-            sb.append(Strings.format("""
-                                            <a class="dropdown-item" href="/ctrl/user/openLogin">{1}</a>
+            append(sb,"""
+                                            <a class="dropdown-item" href="/ctrl/user/openLogin">$login$</a>
             """,
-                    Strings.getHtml("_login")));
+                    Map.ofEntries(
+                            param("login","_login")
+                    )
+            );
         }
         sb.append("""
                                         </div>

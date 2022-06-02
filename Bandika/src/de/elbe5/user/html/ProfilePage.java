@@ -1,79 +1,85 @@
 package de.elbe5.user.html;
 
-import de.elbe5.base.Strings;
 import de.elbe5.response.HtmlIncludePage;
+import de.elbe5.response.IFormBuilder;
 import de.elbe5.response.MessageHtml;
 import de.elbe5.request.RequestData;
 import de.elbe5.user.UserBean;
 import de.elbe5.user.UserData;
 
-public class ProfilePage extends HtmlIncludePage {
+import java.util.Map;
+
+public class ProfilePage extends HtmlIncludePage implements IFormBuilder, MessageHtml {
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
         UserData user = UserBean.getInstance().getUser(rdata.getLoginUser().getId());
-        MessageHtml.appendMessageHtml(sb, rdata);
-        sb.append(Strings.format("""
+        appendMessageHtml(sb, rdata);
+        append(sb, """
                         <div id="pageContent" class="viewArea">
                         <section class="contentTop">
-                            <h1>
-                                {1}
-                            </h1>
+                            <h1>$profile$</h1>
                         </section>
                         <div class="row">
                             <section class="col-md-8 contentSection">
                                 <div class="paragraph form">
                                 """,
-                Strings.getHtml("_profile")
-        ));
-        appendTextLine(sb, Strings.getHtml("_id"), Integer.toString(user.getId()));
-        appendTextLine(sb, Strings.getHtml("_login"),Strings.toHtml(user.getLogin()));
-        appendTextLine(sb, Strings.getHtml("_title"), Strings.toHtml(user.getTitle()));
-        appendTextLine(sb, Strings.getHtml("_firstName"), Strings.toHtml(user.getFirstName()));
-        appendTextLine(sb, Strings.getHtml("_lastName"), Strings.toHtml(user.getLastName()));
-        appendTextLine(sb, Strings.getHtml("_notes"), Strings.toHtml(user.getNotes()));
-        appendLineStart(sb, "", Strings.getHtml("_portrait"));
+                Map.ofEntries(
+                        param("profile","_profile")
+                )
+        );
+        appendTextLine(sb, getHtml("_id"), Integer.toString(user.getId()));
+        appendTextLine(sb, getHtml("_login"),toHtml(user.getLogin()));
+        appendTextLine(sb, getHtml("_title"), toHtml(user.getTitle()));
+        appendTextLine(sb, getHtml("_firstName"), toHtml(user.getFirstName()));
+        appendTextLine(sb, getHtml("_lastName"), toHtml(user.getLastName()));
+        appendTextLine(sb, getHtml("_notes"), toHtml(user.getNotes()));
+        appendLineStart(sb, "", getHtml("_portrait"));
         if (user.hasPortrait()) {
-            sb.append(Strings.format("""
-                            <img src="/ctrl/user/showPortrait/{1}" alt="{2}"/>
+            append(sb, """
+                            <img src="/ctrl/user/showPortrait/$id$" alt="$name$"/>
                             """,
-                    Integer.toString(user.getId()),
-                    Strings.toHtml(user.getName())
-            ));
+                    Map.ofEntries(
+                            param("id",user.getId()),
+                            param("name",user.getName())
+                    )
+            );
         }
         appendLineEnd(sb);
-        sb.append(Strings.format("""
-                <h3>{1}
-                </h3>
+        append(sb,"""
+                <h3>$address$</h3>
                 """,
-                Strings.getHtml("_address")
-        ));
-        appendTextLine(sb, Strings.getHtml("_street"),Strings.toHtml(user.getStreet()));
-        appendTextLine(sb, Strings.getHtml("_zipCode"), Strings.toHtml(user.getZipCode()));
-        appendTextLine(sb, Strings.getHtml("_city"), Strings.toHtml(user.getCity()));
-        appendTextLine(sb, Strings.getHtml("_country"), Strings.toHtml(user.getCountry()));
-        sb.append(Strings.format("""
-                <h3>{1}
-                </h3>
+                Map.ofEntries(
+                        param("address","_address")
+                )
+        );
+        appendTextLine(sb, getHtml("_street"),toHtml(user.getStreet()));
+        appendTextLine(sb, getHtml("_zipCode"), toHtml(user.getZipCode()));
+        appendTextLine(sb, getHtml("_city"), toHtml(user.getCity()));
+        appendTextLine(sb, getHtml("_country"), toHtml(user.getCountry()));
+        append(sb,"""
+                <h3>$contact$</h3>
                 """,
-                Strings.getHtml("_contact")
-        ));
-        appendTextLine(sb, Strings.getHtml("_email"), Strings.toHtml(user.getEmail()));
-        appendTextLine(sb, Strings.getHtml("_phone"), Strings.toHtml(user.getPhone()));
-        appendTextLine(sb, Strings.getHtml("_fax"), Strings.toHtml(user.getFax()));
-        appendTextLine(sb, Strings.getHtml("_mobile"), Strings.toHtml(user.getMobile()));
-        sb.append(Strings.format("""
+                Map.ofEntries(
+                        param("contact","_contact")
+                )
+        );
+        appendTextLine(sb, getHtml("_email"), toHtml(user.getEmail()));
+        appendTextLine(sb, getHtml("_phone"), toHtml(user.getPhone()));
+        appendTextLine(sb, getHtml("_fax"), toHtml(user.getFax()));
+        appendTextLine(sb, getHtml("_mobile"), toHtml(user.getMobile()));
+        append(sb,"""
                                 </div>
                             </section>
                             <aside class="col-md-4 asideSection">
                                 <div class="section">
                                     <div class="paragraph form">
                                         <div>
-                                            <a class="link" href="#" onclick="return openModalDialog('/ctrl/user/openChangePassword');">{1}
+                                            <a class="link" href="#" onclick="return openModalDialog('/ctrl/user/openChangePassword');">$changePassword$
                                             </a>
                                         </div>
                                         <div>
-                                            <a class="link" href="#" onclick="return openModalDialog('/ctrl/user/openChangeProfile');">{2}
+                                            <a class="link" href="#" onclick="return openModalDialog('/ctrl/user/openChangeProfile');">$changeProfile$
                                             </a>
                                         </div>
                                     </div>
@@ -82,7 +88,10 @@ public class ProfilePage extends HtmlIncludePage {
                         </div>
                         </div>
                         """,
-                Strings.getHtml("_changePassword"),
-                Strings.getHtml("_changeProfile")));
+                Map.ofEntries(
+                        param("changePassword","_changePassword"),
+                        param("changeProfile","_changeProfile")
+                )
+        );
     }
 }

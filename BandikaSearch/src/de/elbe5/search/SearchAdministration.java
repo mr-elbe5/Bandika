@@ -1,23 +1,27 @@
 package de.elbe5.search;
 
-import de.elbe5.base.Strings;
 import de.elbe5.request.RequestData;
+import de.elbe5.response.IHtmlBuilder;
 
-public class SearchAdministration {
+import java.util.Map;
 
-    static void appendSearchAdministration(StringBuilder sb, RequestData rdata) {
-        sb.append(Strings.format("""
+public interface SearchAdministration extends IHtmlBuilder {
+
+    default void appendSearchAdministration(StringBuilder sb, RequestData rdata) {
+        append(sb,"""
                         <li class="open">
-                            <span>{1}</span>
+                            <span>$search</span>
                             <div class="icons">
-                                <a class="icon fa fa-globe" href="/page/search/indexAllContent" title="{2}"></a>
-                                <a class="icon fa fa-users" href="/page/search/indexAllUsers" title="{3}"></a>
+                                <a class="icon fa fa-globe" href="/page/search/indexAllContent" title="$content"></a>
+                                <a class="icon fa fa-users" href="/page/search/indexAllUsers" title="$users"></a>
                             </div>
                         </li>
                         """,
-                Strings.getHtml("_search"),
-                Strings.getHtml("_indexAllContent"),
-                Strings.getHtml("_indexAllUsers")
-        ));
+                Map.ofEntries(
+                        param("search","_search"),
+                        param("content","_indexAllContent"),
+                        param("users","_indexAllUsers")
+                )
+        );
     }
 }

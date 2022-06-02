@@ -1,7 +1,8 @@
 package de.elbe5.administration.html;
 
-import de.elbe5.base.Strings;
 import de.elbe5.request.RequestData;
+
+import java.util.Map;
 
 public class ContentAdminMenu extends AdminMenu {
 
@@ -19,10 +20,12 @@ public class ContentAdminMenu extends AdminMenu {
         if (rdata.hasAnyContentRight()) {
             append(sb,"""
                     <li class="nav-item">
-                        <a class="nav-link" href="/ctrl/admin/openContentAdministration">{1}
+                        <a class="nav-link" href="/ctrl/admin/openContentAdministration">$contentAdministration$
                         </a>
                     </li>""",
-                    Strings.getHtml("_contentAdministration")
+                    Map.ofEntries(
+                            param("contentAdministration","_contentAdministration")
+                    )
             );
         }
     }
@@ -31,10 +34,12 @@ public class ContentAdminMenu extends AdminMenu {
         if (rdata.hasAnyContentRight()) {
             append(sb,"""
                     <li class="nav-item">
-                        <a class="nav-link" href="/ctrl/admin/openContentLog">{1}
+                        <a class="nav-link" href="/ctrl/admin/openContentLog">$contentLog$
                         </a>
                     </li>""",
-                    Strings.getHtml("_contentLog")
+                    Map.ofEntries(
+                            param("contentLog","_contentLog")
+                    )
             );
         }
     }

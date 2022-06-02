@@ -1,8 +1,9 @@
 package de.elbe5.administration.html;
 
-import de.elbe5.base.Strings;
 import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
+
+import java.util.Map;
 
 public class ContentSystemAdminPage extends SystemAdminPage {
 
@@ -23,31 +24,35 @@ public class ContentSystemAdminPage extends SystemAdminPage {
     }
 
     void appendContentCache(RequestData rdata) {
-        append("""
+        append(sb, """
                         <li>
-                            <span>{1}</span>
+                            <span>$contentCache$</span>
                             <div class="icons">
-                                <a class="icon fa fa-recycle" href="/ctrl/admin/reloadContentCache" title="{2}>"></a>
+                                <a class="icon fa fa-recycle" href="/ctrl/admin/reloadContentCache" title="$reload$>"></a>
                             </div>
                         </li>
                 """,
-                Strings.getHtml("_contentCache"),
-                Strings.getHtml("_reload")
+                Map.ofEntries(
+                        param("contentCache","_contentCache"),
+                        param("reload","_reload")
+                )
         );
     }
 
 
     void appendPreviewCache(StringBuilder sb, RequestData rdata) {
-        append("""
+        append(sb, """
                         <li>
-                            <span>{1}</span>
+                            <span>$previewCache$</span>
                             <div class="icons">
-                                <a class="icon fa fa-recycle" href="/ctrl/admin/clearPreviewCache" title="{2}"></a>
+                                <a class="icon fa fa-recycle" href="/ctrl/admin/clearPreviewCache" title="$reload$"></a>
                             </div>
                         </li>
                 """,
-                Strings.getHtml("_previewCache"),
-                Strings.getHtml("_reload")
+                Map.ofEntries(
+                        param("previewCache","_previewCache"),
+                        param("reload","_reload")
+                )
         );
     }
 

@@ -1,14 +1,16 @@
 package de.elbe5.administration.html;
 
 import de.elbe5.application.Configuration;
-import de.elbe5.base.Strings;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.HtmlResponse;
+import de.elbe5.response.IHtmlBuilder;
+import de.elbe5.response.MessageHtml;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
-public class AdminPage extends HtmlResponse {
+public class AdminPage extends HtmlResponse implements IHtmlBuilder, MessageHtml {
 
     static AdminMenu menu = new AdminMenu();
 
@@ -38,11 +40,11 @@ public class AdminPage extends HtmlResponse {
     public void appendHtmlStart() {
         append(sb,"""
                         <!DOCTYPE html>
-                        <html lang="$lang">
+                        <html lang="$lang$">
                         <head>
                             <meta charset="utf-8"/>
                             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-                            <title>$tiitle</title>
+                            <title>$title$</title>
                             <link rel="shortcut icon" href="/favicon.ico"/>
                             <link rel="stylesheet" href="/static-content/css/bootstrap.css"/>
                             <link rel="stylesheet" href="/static-content/css/bandika.css"/>
@@ -52,10 +54,10 @@ public class AdminPage extends HtmlResponse {
                             <script type="text/javascript" src="/static-content/js/bootstrap.tree.js"></script>
                             <script type="text/javascript" src="/static-content/ckeditor/ckeditor.js"></script>
                             <script>
-                                CKEDITOR.config.language = '$lang';
+                                CKEDITOR.config.language = '$lang$';
                             </script>
                             <script type="text/javascript" src="/static-content/ckeditor/adapters/jquery.js"></script>
-                            <script type="text/javascript" src="/static-content/js/bandika-webbase.js"></script>
+                            <script type="text/javascript" src="/static-content/js/bandika.js"></script>
                         </head>
                         <body class="admin">
                             <div class="container">
@@ -64,15 +66,15 @@ public class AdminPage extends HtmlResponse {
                                     <section class="sysnav">
                                         <ul class="nav justify-content-end">
                                             <li class="nav-item">
-                                                <a class="nav-link fa fa-home" href="/" title="$home>"></a></li>
+                                                <a class="nav-link fa fa-home" href="/" title="$home$>"></a></li>
                                             <li class="nav-item">
-                                                <a class="nav-link fa fa-sign-out" href="/ctrl/user/logout" title="$logout"></a>
+                                                <a class="nav-link fa fa-sign-out" href="/ctrl/user/logout" title="$logout$"></a>
                                             </li>
                                         </ul>
                                     </section>
                                 </div>
                         """,
-                parameters(
+                Map.ofEntries(
                         param("lang", Configuration.getLocale().getLanguage()),
                         param("title", title),
                         param("home", "_home"),
@@ -82,7 +84,7 @@ public class AdminPage extends HtmlResponse {
     }
 
     public void appendHeaderEnd() {
-        append("""
+        append(sb,"""
                      </header>
                         <main id="main" role="main">
                             <div id="pageContainer" class="container admin">
@@ -90,26 +92,28 @@ public class AdminPage extends HtmlResponse {
     }
 
     public void appendHtmlEnd() {
-        append("""
+        append(sb,"""
                                     </div>
                                 </main>
                             </div>
                             <div class="modal" id="modalDialog" tabindex="-1" role="dialog"></div>
                         <script type="text/javascript">
                             function confirmDelete() {
-                                return confirm('{1}');
+                                return confirm('$delete$');
                             }
                                         
                             function confirmExecute() {
-                                return confirm('{2}');
+                                return confirm('$execute$');
                             }
                         </script>
                                         
                         </body>
                         </html>
                         """,
-                Strings.getHtml("_confirmDelete"),
-                Strings.getHtml("_confirmExecute")
+                Map.ofEntries(
+                        param("delete","_confirmDelete"),
+                        param("execute","_confirmExecute")
+                )
         );
     }
 

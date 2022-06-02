@@ -10,20 +10,22 @@ package de.elbe5.servlet;
 
 import de.elbe5.base.Strings;
 import de.elbe5.response.HtmlResponse;
+import de.elbe5.response.IHtmlBuilder;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
-public abstract class WebServlet extends HttpServlet {
+public abstract class WebServlet extends HttpServlet implements IHtmlBuilder {
 
     public final static String GET = "GET";
     public final static String POST = "POST";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        processRequest(GET,request, response);
+        processRequest(GET, request, response);
     }
 
     @Override
@@ -78,19 +80,23 @@ public abstract class WebServlet extends HttpServlet {
             </style>
             <body>
             <main>
-                <h1>{1}</h1>
-                <div class="errorText">{2}</div>
-                <div class="link"><a href="/" title="Home">{3}</a></div>
+                <h1>$error$</h1>
+                <div class="errorText">$errorText$</div>
+                <div class="link"><a href="/" title="Home">$home$</a></div>
             </main>
             </body>
             </html>          
             """;
-    protected void handleException(HttpServletRequest request, HttpServletResponse response, int code){
+
+    protected void handleException(HttpServletRequest request, HttpServletResponse response, int code) {
         String errorKey = (String) request.getAttribute("errorKey");
-         String html = Strings.format(exceptionHtml,
-                Strings.getHtml("_error"+code),
-                errorKey != null ? Strings.getHtml(errorKey) : "",
-                Strings.getHtml("_home"));
+        String html = Strings.format(exceptionHtml,
+                Map.ofEntries(
+                        htmlParam("error", Strings.getString("_error" + code)),
+                        htmlParam("errorText", errorKey != null ? Strings.getHtml(errorKey) : ""),
+                        param("home", "_home")
+                )
+        );
         HtmlResponse resp = new HtmlResponse(html);
         resp.sendHtml(response);
     }

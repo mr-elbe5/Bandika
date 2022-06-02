@@ -29,7 +29,7 @@ public interface ITemplateNode extends IHtmlBuilder {
                         break;
                     }
                     if (key.startsWith("_")) {
-                       s += Strings.getHtml(key);
+                       s += getHtml(key);
                     }
                     else{
                         s += params.getString(key);

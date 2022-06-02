@@ -1,16 +1,11 @@
 package de.elbe5.template;
 
-import de.elbe5.base.Strings;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
-import de.elbe5.template.TemplateTag;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class MainNavTag extends TemplateTag {
 
@@ -48,40 +43,42 @@ public class MainNavTag extends TemplateTag {
     }
 
     public void appendSingleMenuHtml(StringBuilder sb, ContentData contentData, Set<Integer> activeIds) {
-        sb.append(Strings.format("""
-                                        <li class="nav-item main-nav {1}">
-                                            <a class="nav-link {2}" href="{3}">{4}</a>
+        append(sb,"""
+                                        <li class="nav-item main-nav $active$">
+                                            <a class="nav-link $active$" href="$url$">$name$</a>
                                         </li>
             """,
-                activeIds.contains(contentData.getId()) ? "active" : "",
-                activeIds.contains(contentData.getId()) ? "active" : "",
-                contentData.getUrl(),
-                contentData.getNavDisplay()
-        ));
+                Map.ofEntries(
+                        param("active",activeIds.contains(contentData.getId()) ? "active" : ""),
+                        param("url",contentData.getUrl()),
+                        htmlParam("name",contentData.getNavDisplay())
+                )
+        );
     }
 
     public void appendDropdownMenuHtml(StringBuilder sb, ContentData contentData, List<ContentData> children, Set<Integer> activeIds) {
-        sb.append(Strings.format("""
+        append(sb,"""
                                         <li class="nav-item main-nav dropdown">
-                                            <a class="nav-link {1} dropdown-toggle" data-toggle="dropdown" href="{2}" role="button" aria-haspopup="true" aria-expanded="false">{3}</a>
+                                            <a class="nav-link $active$ dropdown-toggle" data-toggle="dropdown" href="$url$" role="button" aria-haspopup="true" aria-expanded="false">$name$</a>
                                             <div class="dropdown-menu">
-                                                <a class="dropdown-item {4}" href="{5}">{6}</a>
+                                                <a class="dropdown-item $active$" href="$url$">$name$</a>
             """,
-                activeIds.contains(contentData.getId()) ? "active" : "",
-                contentData.getUrl(),
-                contentData.getNavDisplay(),
-                activeIds.contains(contentData.getId()) ? "active" : "",
-                contentData.getUrl(),
-                contentData.getNavDisplay()
-        ));
+                Map.ofEntries(
+                        param("active",activeIds.contains(contentData.getId()) ? "active" : ""),
+                        param("url",contentData.getUrl()),
+                        htmlParam("name",contentData.getNavDisplay())
+                )
+        );
         for (ContentData child : children) {
-            sb.append(Strings.format("""
-                                                <a class="dropdown-item {1}" href="{2}">{3}</a>
+            append(sb,"""
+                                                <a class="dropdown-item $active$" href="$url$">$name$</a>
             """,
-                    activeIds.contains(child.getId()) ? "active" : "",
-                    child.getUrl(),
-                    child.getNavDisplay()
-            ));
+                    Map.ofEntries(
+                            param("active",activeIds.contains(child.getId()) ? "active" : ""),
+                            param("url",child.getUrl()),
+                            htmlParam("name",child.getNavDisplay())
+                    )
+            );
         }
         sb.append("""
                                             </div>

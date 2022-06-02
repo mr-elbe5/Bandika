@@ -18,7 +18,7 @@
             CKEDITOR.config.language = '{{language}}';
         </script>
         <script type="text/javascript" src="/static-content/ckeditor/adapters/jquery.js"></script>
-        <script type="text/javascript" src="/static-content/js/bandika-webbase.js"></script>
+        <script type="text/javascript" src="/static-content/js/bandika.js"></script>
     </head>
     <body>
         <div class="container">

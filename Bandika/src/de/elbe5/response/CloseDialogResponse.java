@@ -8,14 +8,14 @@
  */
 package de.elbe5.response;
 
-import de.elbe5.base.Strings;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
-public class CloseDialogResponse extends HtmlResponse {
+public class CloseDialogResponse extends HtmlResponse implements IFormBuilder{
 
     String url;
     String msg = "";
@@ -41,22 +41,19 @@ public class CloseDialogResponse extends HtmlResponse {
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
         if (targetId.isEmpty()) {
-            append("""
+            append(sb, """
             <div id="pageContent">
-                <form action="{1}" method="POST" id="forwardform" accept-charset="UTF-8">
+                <form action="$url$" method="POST" id="forwardform" accept-charset="UTF-8">
                 """,
-                    url
+                    Map.ofEntries(
+                            param("url",url)
+                    )
             );
             if (!msg.isEmpty()) {
-                append("""
-                    <input type="hidden" name="message" value="{1}"/>
-                    <input type="hidden" name="messageType" value="{2}"/>
-                    """,
-                        Strings.toHtml(msg),
-                        msgType
-                );
+                appendHiddenField(sb, RequestKeys.KEY_MESSAGE, msg);
+                appendHiddenField(sb, RequestKeys.KEY_MESSAGETYPE, msgType);
             }
-            append("""
+            append(sb, """
                 </form>
             </div>
             <script type="text/javascript">
@@ -67,20 +64,23 @@ public class CloseDialogResponse extends HtmlResponse {
         else{
             StringBuilder ssb = new StringBuilder("{");
             if (!msg.isEmpty()) {
-                ssb.append(RequestKeys.KEY_MESSAGE).append(" : '").append(Strings.toJs(msg)).append("',");
-                ssb.append(RequestKeys.KEY_MESSAGETYPE).append(" : '").append(Strings.toJs(msgType)).append("'");
+                ssb.append(RequestKeys.KEY_MESSAGE).append(" : '").append(toJs(msg)).append("',");
+                ssb.append(RequestKeys.KEY_MESSAGETYPE).append(" : '").append(toJs(msgType)).append("'");
             }
             ssb.append("}");
-            append("""
+            append(sb,"""
                 <div id="pageContent"></div>
                 <script type="text/javascript">
                         closeModalDialog();
-                        postByAjax('{1}', {2}, '{3}');
+                        postByAjax('$url$', $msg$, '$target$');
                 </script>
             """,
-                    url,
-                    ssb.toString(),
-                    Strings.toJs(targetId));
+                    Map.ofEntries(
+                            param("url",url),
+                            param("msg",ssb.toString()),
+                            param("target",toJs(targetId))
+                    )
+            );
         }
         super.sendHtml(response);
     }

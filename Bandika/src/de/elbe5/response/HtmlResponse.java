@@ -19,7 +19,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class HtmlResponse implements IResponse, IHtmlBuilder {
+public class HtmlResponse implements IResponse {
 
     protected StringBuilder sb = new StringBuilder();
 
@@ -28,14 +28,6 @@ public class HtmlResponse implements IResponse, IHtmlBuilder {
 
     public HtmlResponse(String html) {
         sb.append(html);
-    }
-
-    public void append(String s){
-        sb.append(s);
-    }
-
-    public void append(String s, String... params){
-        sb.append(Strings.format(s, params));
     }
 
     @Override

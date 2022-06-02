@@ -12,7 +12,7 @@ import de.elbe5.application.Configuration;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IMasterInclude;
 
-public class HtmlIncludePage implements IMasterInclude, IHtmlBuilder {
+public class HtmlIncludePage implements IMasterInclude {
 
     public HtmlIncludePage() {}
 

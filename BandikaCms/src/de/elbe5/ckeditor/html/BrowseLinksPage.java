@@ -1,6 +1,5 @@
 package de.elbe5.ckeditor.html;
 
-import de.elbe5.base.Strings;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.file.DocumentData;
@@ -10,30 +9,31 @@ import de.elbe5.response.ModalPage;
 import de.elbe5.request.RequestData;
 
 import java.util.List;
+import java.util.Map;
 
 public class BrowseLinksPage extends ModalPage {
 
     @Override
     public void appendHtml(RequestData rdata) {
         int callbackNum = rdata.getAttributes().getInt("CKEditorFuncNum", -1);
-        appendModalStart(Strings.getHtml("_selectLink"));
+        appendModalStart(getHtml("_selectLink"));
         appendModalBodyStart();
-        append("""
+        append(sb,"""
                         <ul class="nav nav-tabs" id="selectTab" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link active" id="pages-tab" data-toggle="tab" href="#pages" role="tab" aria-controls="pages" aria-selected="true">{1}
+                                            <a class="nav-link active" id="pages-tab" data-toggle="tab" href="#pages" role="tab" aria-controls="pages" aria-selected="true">$pages$
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="documents-tab" data-toggle="tab" href="#documents" role="tab" aria-controls="documents" aria-selected="false">{2}
+                                            <a class="nav-link" id="documents-tab" data-toggle="tab" href="#documents" role="tab" aria-controls="documents" aria-selected="false">$documents$
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="images-tab" data-toggle="tab" href="#images" role="tab" aria-controls="images" aria-selected="false">{3}
+                                            <a class="nav-link" id="images-tab" data-toggle="tab" href="#images" role="tab" aria-controls="images" aria-selected="false">$images$
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="media-tab" data-toggle="tab" href="#media" role="tab" aria-controls="media" aria-selected="false">{4}
+                                            <a class="nav-link" id="media-tab" data-toggle="tab" href="#media" role="tab" aria-controls="media" aria-selected="false">$media$
                                             </a>
                                         </li>
                                     </ul>
@@ -43,13 +43,15 @@ public class BrowseLinksPage extends ModalPage {
                                             <section class="treeSection">
                                                 <ul class="tree filetree">
                                                 """,
-                Strings.getHtml("_pages"),
-                Strings.getHtml("_documents"),
-                Strings.getHtml("_images"),
-                Strings.getHtml("_media")
+                Map.ofEntries(
+                        param("pages", "_pages"),
+                        param("documents", "_documents"),
+                        param("images", "_images"),
+                        param("media", "_media")
+                )
         );
         appendPageLinks(rdata, ContentCache.getContentRoot());
-        append("""   
+        append(sb, """   
                         </ul>
                     </section>
                 </div>
@@ -60,7 +62,7 @@ public class BrowseLinksPage extends ModalPage {
         if (rdata.hasAnyContentRight()) {
             appendDocumentLinks(rdata, ContentCache.getContentRoot());
         }
-        append(""" 
+        append(sb, """ 
                         </ul>
                     </section>
                 </div>
@@ -71,7 +73,7 @@ public class BrowseLinksPage extends ModalPage {
         if (rdata.hasAnyContentRight()) {
             appendImageLinks(rdata, ContentCache.getContentRoot());
         }
-        append("""
+        append(sb, """
                         </ul>
                     </section>
                 </div>
@@ -82,37 +84,40 @@ public class BrowseLinksPage extends ModalPage {
         if (rdata.hasAnyContentRight()) {
             appendMediaLinks(rdata, ContentCache.getContentRoot());
         }
-        append(""" 
+        append(sb, """ 
                         </ul>
                     </section>
                 </div>
                 """);
-        appendModalFooter(Strings.getHtml("_cancel"));
+        appendModalFooter(getHtml("_cancel"));
         appendModalEnd();
-        append("""
+        append(sb, """
                                     <script type="text/javascript">
                                             $('.tree').treed('fa fa-minus-square-o', 'fa fa-plus-square-o');
                                                      function ckLinkCallback(url) {
                                                          if (CKEDITOR)
-                                                             CKEDITOR.tools.callFunction({1}, url);
+                                                             CKEDITOR.tools.callFunction($callbackNum$, url);
                                                          return closeModalDialog();
                                                      }
                                         </script>
                         """,
-                Integer.toString(callbackNum)
+                Map.ofEntries(
+                        param("callbackNum", callbackNum)
+                )
         );
     }
 
     void appendPageLinks(RequestData rdata, ContentData contentData) {
-        append("""
+        append(sb, """
                         <li class="open">
-                            <a id="{1}" href="" onclick="return ckLinkCallback('/ctrl/content/show/{2}');">{3}
+                            <a id="$id$" href="" onclick="return ckLinkCallback('/ctrl/content/show/$id$');">$name$
                             </a>
                             <ul>
                         """,
-                Integer.toString(contentData.getId()),
-                Integer.toString(contentData.getId()),
-                Strings.toHtml(contentData.getName())
+                Map.ofEntries(
+                        param("id", contentData.getId()),
+                        param("name", contentData.getName())
+                )
         );
         if (!contentData.getChildren().isEmpty()) {
             List<ContentData> children = contentData.getChildren(ContentData.class);
@@ -120,40 +125,43 @@ public class BrowseLinksPage extends ModalPage {
                 appendPageLinks(rdata, subPage);
             }
         }
-        append("""
+        append(sb, """
                     </ul>
                 </li>
                 """);
     }
 
     void appendDocumentLinks(RequestData rdata, ContentData contentData) {
-        append("""
+        append(sb, """
                         <li class="open">
-                            <a id="{1}">{2}
+                            <a id="$id$">$name$
                             </a>
                             <ul>
                         """,
-                Integer.toString(contentData.getId()),
-                Strings.toHtml(contentData.getName())
+                Map.ofEntries(
+                        param("id", contentData.getId()),
+                        param("name", contentData.getName())
+                )
         );
         if (contentData.hasUserReadRight(rdata)) {
             List<DocumentData> documentList = contentData.getFiles(DocumentData.class);
             for (DocumentData document : documentList) {
-                append("""
+                append(sb, """
                                             <li>
                                                 <div class="treeline">
-                                                    <a id="{1}" href="" onclick="return ckLinkCallback('{2}');">
-                                                        {3}
+                                                    <a id="$id$" href="" onclick="return ckLinkCallback('$url$');">
+                                                        $name$
                                                     </a>
-                                                    <a class="fa fa-eye" title="{4}" href="{5}?download=true"> </a>
+                                                    <a class="fa fa-eye" title="$download$" href="$url$?download=true"> </a>
                                                 </div>
                                             </li>
                                 """,
-                        Integer.toString(document.getId()),
-                        document.getURL(),
-                        Strings.toHtml(document.getDisplayName()),
-                        Strings.getHtml("_download"),
-                        document.getURL()
+                        Map.ofEntries(
+                                param("id", document.getId()),
+                                param("url", document.getURL()),
+                                param("name", document.getDisplayName()),
+                                param("download", "_download")
+                        )
                 );
             }
             if (!contentData.getChildren().isEmpty()) {
@@ -162,7 +170,7 @@ public class BrowseLinksPage extends ModalPage {
                     appendDocumentLinks(rdata, subPage);
                 }
             }
-            append("""
+            append(sb, """
                         </ul>
                     </li>
                     """);
@@ -170,36 +178,38 @@ public class BrowseLinksPage extends ModalPage {
     }
 
     void appendImageLinks(RequestData rdata, ContentData contentData) {
-        append("""
+        append(sb, """
                         <li class="open">
-                            <a id="{1}">{2}
+                            <a id="$id$">$name$
                             </a>
                             <ul>
                         """,
-                Integer.toString(contentData.getId()),
-                Strings.toHtml(contentData.getName())
+                Map.ofEntries(
+                        param("id", contentData.getId()),
+                        param("name", contentData.getName())
+                )
         );
         if (contentData.hasUserReadRight(rdata)) {
             List<ImageData> imageList = contentData.getFiles(ImageData.class);
             for (ImageData image : imageList) {
-                append("""
+                append(sb, """
                                             <li>
                                                 <div class="treeline">
-                                                    <a id="{1}" href="" onclick="return ckLinkCallback('{2}');">
-                                                        <img src="{3}" alt="{4}"/>
-                                                        {5}
+                                                    <a id="$id$" href="" onclick="return ckLinkCallback('$url$');">
+                                                        <img src="$previewUrl$" alt="$name$"/>
+                                                        $name$
                                                     </a>
-                                                    <a class="fa fa-eye" title="{6}" href="{7}" target="_blank"> </a>
+                                                    <a class="fa fa-eye" title="$view$" href="$url$" target="_blank"> </a>
                                                 </div>
                                             </li>
                                 """,
-                        Integer.toString(image.getId()),
-                        image.getURL(),
-                        image.getPreviewURL(),
-                        Strings.toHtml(image.getDisplayName()),
-                        Strings.toHtml(image.getDisplayName()),
-                        Strings.getHtml("_view"),
-                        image.getURL()
+                        Map.ofEntries(
+                                param("id", image.getId()),
+                                param("url", image.getURL()),
+                                param("previewUrl", image.getPreviewURL()),
+                                param("name", image.getDisplayName()),
+                                param("view", "_view")
+                        )
                 );
             }
             if (!contentData.getChildren().isEmpty()) {
@@ -208,7 +218,7 @@ public class BrowseLinksPage extends ModalPage {
                     appendImageLinks(rdata, subPage);
                 }
             }
-            append("""
+            append(sb, """
                         </ul>
                     </li>
                     """);
@@ -216,33 +226,36 @@ public class BrowseLinksPage extends ModalPage {
     }
 
     void appendMediaLinks(RequestData rdata, ContentData contentData) {
-        append("""
+        append(sb, """
                         <li class="open">
-                            <a id="{1}">{2}
+                            <a id="$id$">$name$
                             </a>
                             <ul>
                         """,
-                Integer.toString(contentData.getId()),
-                Strings.toHtml(contentData.getName())
+                Map.ofEntries(
+                        param("id", contentData.getId()),
+                        param("name", contentData.getName())
+                )
         );
         if (contentData.hasUserReadRight(rdata)) {
             List<MediaData> mediaList = contentData.getFiles(MediaData.class);
             for (MediaData media : mediaList) {
-                append("""
+                append(sb, """
                                             <li>
                                                 <div class="treeline">
-                                                    <a id="{1}" href="" onclick="return ckLinkCallback('{2}');">
-                                                        {3}
+                                                    <a id="$id$" href="" onclick="return ckLinkCallback('$url$');">
+                                                        $name$
                                                     </a>
-                                                    <a class="fa fa-eye" title="{4}" href="{5}?download=true"> </a>
+                                                    <a class="fa fa-eye" title="$download$" href="$url$?download=true"> </a>
                                                 </div>
                                             </li>
                                 """,
-                        Integer.toString(media.getId()),
-                        media.getURL(),
-                        Strings.toHtml(media.getDisplayName()),
-                        Strings.getHtml("_download"),
-                        media.getURL()
+                        Map.ofEntries(
+                                param("id", media.getId()),
+                                param("url", media.getURL()),
+                                param("name", media.getDisplayName()),
+                                param("download", "_download")
+                        )
                 );
             }
             if (!contentData.getChildren().isEmpty()) {
@@ -251,7 +264,7 @@ public class BrowseLinksPage extends ModalPage {
                     appendMediaLinks(rdata, subPage);
                 }
             }
-            append("""
+            append(sb, """
                         </ul>
                     </li>
                     """);

@@ -46,10 +46,10 @@ public class Strings {
     }
 
     public static String getHtmlMultiline(String key) {
-        return StringEscapeUtils.escapeHtml4(getString(key)).replaceAll("\\\\n", "<br/>");
+        return toHtmlMultiline(getString(key));
     }
 
-    public static String getJavascript(String key) {
+    public static String getJs(String key) {
         return StringEscapeUtils.escapeEcmaScript(getString(key));
     }
 
@@ -67,7 +67,7 @@ public class Strings {
     public static String toHtmlMultiline(String src) {
         if (src == null)
             return "";
-        return StringEscapeUtils.escapeHtml4(src).replaceAll("\n", "\n<br>\n");
+        return StringEscapeUtils.escapeHtml4(src).replace("\n", "\n<br>\n");
     }
 
     public static String toXml(String src) {
@@ -159,29 +159,9 @@ public class Strings {
     public static String format(String s, Map<String, String> params){
         String result = s;
         for (String key : params.keySet()){
-            result = result.replace("$" + key, params.get(key));
+            result = result.replace("$" + key + "$", params.get(key));
         }
         return result;
     }
 
-    @SafeVarargs
-    public static Map<String, String> parameters(Map.Entry<String,String>... params){
-        return Map.ofEntries(params);
-    }
-
-    public static void write(Writer writer, String src, String... params) throws IOException {
-        int p1 = 0;
-        int p2;
-        String placeholder;
-        for (int i = 0; i < params.length; i++) {
-            placeholder = "{" + (i + 1) + "}";
-            p2 = src.indexOf(placeholder, p1);
-            if (p2 == -1)
-                break;
-            writer.write(src.substring(p1, p2));
-            writer.write(params[i]);
-            p1 = p2 + placeholder.length();
-        }
-        writer.write(src.substring(p1));
-    }
 }

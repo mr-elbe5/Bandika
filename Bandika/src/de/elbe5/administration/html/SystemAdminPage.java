@@ -1,7 +1,6 @@
 package de.elbe5.administration.html;
 
 import de.elbe5.base.Strings;
-import de.elbe5.response.MessageHtml;
 import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.timer.Timer;
@@ -9,7 +8,7 @@ import de.elbe5.timer.TimerTaskData;
 
 import java.util.Map;
 
-public class SystemAdminPage extends AdminPage {
+public class SystemAdminPage extends AdminPage{
 
     public SystemAdminPage() {
         super(Strings.getString("_systemAdministration"));
@@ -30,75 +29,84 @@ public class SystemAdminPage extends AdminPage {
     }
 
     public void appendPageHtmlStart(RequestData rdata) {
-        append("""
+        append(sb, """
                 <div id="pageContent">
                 """);
-        MessageHtml.appendMessageHtml(sb, rdata);
-        append("""
+        appendMessageHtml(sb, rdata);
+        append(sb, """
                         <section class="treeSection">
                             <ul class="tree">
                                 <li class="open">
-                                    <a class="treeRoot">{1}
+                                    <a class="treeRoot">$system$
                                     </a>
                                     <ul>
                                     """,
-                Strings.getHtml("_system")
+                Map.ofEntries(
+                        param("system","_system")
+                )
         );
     }
 
     public void appendRestart(RequestData rdata) {
-        append("""
+        append(sb, """
                         <li>
-                            <a href="" onclick="if (confirmExecute()) return openModalDialog('/ctrl/admin/restart');">{1}
+                            <a href="" onclick="if (confirmExecute()) return openModalDialog('/ctrl/admin/restart');">$restart$
                             </a>
                         </li>
                         """,
-                Strings.getHtml("_restart")
+                Map.ofEntries(
+                        param("restart","_restart")
+                )
         );
     }
 
     public void appendCachesStart(RequestData rdata) {
 
-        append("""
+        append(sb, """
                     <li class="open">
-                        <a>{1}
-                        </a>
+                        <a>$caches$</a>
                         <ul>
                 """,
-                Strings.getHtml("_caches")
-                );
+                Map.ofEntries(
+                        param("caches","_caches")
+                )
+        );
     }
 
     void appendUserCache(RequestData rdata) {
-        append("""
+        append(sb, """
                         <li>
-                            <span>{1}</span>
+                            <span>$userCache$</span>
                             <div class="icons">
-                                <a class="icon fa fa-recycle" href="/ctrl/admin/reloadUserCache" title="{2}"></a>
+                                <a class="icon fa fa-recycle" href="/ctrl/admin/reloadUserCache" title="$reload$"></a>
                             </div>
                         </li>
                 """,
-                Strings.getHtml("_userCache"),
-                Strings.getHtml("_reload")
+                Map.ofEntries(
+                        param("userCache","_userCache"),
+                        param("reload","_reload")
+                )
         );
     }
 
     void appendTemplateCache(RequestData rdata) {
-        append("""
+        append(sb, """
                         <li>
-                            <span>{1}</span>
+                            <span>$templateCache$</span>
                             <div class="icons">
-                                <a class="icon fa fa-recycle" href="/ctrl/admin/reloadTemplateCache" title="{2}"></a>
+                                <a class="icon fa fa-recycle" href="/ctrl/admin/reloadTemplateCache" title="$reload$"></a>
                             </div>
                         </li>
                 """,
-                Strings.getHtml("_templateCache"),
-                Strings.getHtml("_reload")
+                Map.ofEntries(
+                        param("templateCache","_templateCache"),
+                        param("reload","_reload")
+                )
         );
     }
 
     public void appendCachesEnd() {
-        append("""
+        append(sb, """
                     </ul>
                 </li>
                 """
@@ -112,37 +120,41 @@ public class SystemAdminPage extends AdminPage {
             tasks = timerCache.getTasks();
         } catch (Exception ignore) {
         }
-        append("""
+        append(sb, """
                         <li class="open">
-                            {1}
+                            $timers$
                             <ul>
                             """,
-                Strings.getHtml("_timers")
+                Map.ofEntries(
+                        param("timers","_timers")
+                )
         );
         if (tasks != null) {
             for (TimerTaskData task : tasks.values()) {
-                append("""
+                append(sb,"""
                                 <li>
-                                    <span>{1}</span>
+                                    <span>$displayName$</span>
                                     <div class="icons">
-                                        <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/timer/openEditTimerTask?timerName={2}');" title="{3}"></a>
+                                        <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/timer/openEditTimerTask?timerName=$name$');" title="$edit$"></a>
                                     </div>
                                 </li>
                                 """,
-                        Strings.toHtml(task.getDisplayName()),
-                        Strings.toHtml(task.getName()),
-                        Strings.getHtml("_edit")
+                        Map.ofEntries(
+                                param("displayName",task.getDisplayName()),
+                                param("name",task.getName()),
+                                param("edit","_edit")
+                        )
                 );
             }
         }
-        append("""
+        append(sb,"""
                     </ul>
                 </li>
                 """);
     }
 
     public void appendPageHtmlEnd() {
-        append("""
+        append(sb, """
                                 </ul>
                             </li>
                         </ul>
@@ -151,7 +163,6 @@ public class SystemAdminPage extends AdminPage {
                 <script type="text/javascript">
                     $('.tree').treed('fa fa-minus-square-o', 'fa fa-plus-square-o');
                 </script>
-                                
                 """);
     }
 

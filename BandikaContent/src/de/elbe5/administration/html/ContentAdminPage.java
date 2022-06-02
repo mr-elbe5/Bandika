@@ -6,11 +6,11 @@ import de.elbe5.content.ContentData;
 import de.elbe5.file.DocumentData;
 import de.elbe5.file.ImageData;
 import de.elbe5.file.MediaData;
-import de.elbe5.response.MessageHtml;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 
 import java.util.List;
+import java.util.Map;
 
 public class ContentAdminPage extends AdminPage {
 
@@ -24,25 +24,27 @@ public class ContentAdminPage extends AdminPage {
         sb.append("""
                     <div id="pageContent">
                 """);
-        MessageHtml.appendMessageHtml(sb, rdata);
+        appendMessageHtml(sb, rdata);
         sb.append("""
                         <section class="treeSection">
                 """);
         if (rdata.hasAnyContentRight()) {
-            append("""
+            append(sb, """
                                 <div class = "">
-                                        <a class = "btn btn-sm btn-outline-light" href="/ctrl/content/clearClipboard">{1}</a>
+                                        <a class = "btn btn-sm btn-outline-light" href="/ctrl/content/clearClipboard">$clearClipboard$</a>
                                     </div>
                                     <ul class="tree pagetree">
                             """,
-                    Strings.getHtml("_clearClipboard")
+                    Map.ofEntries(
+                            param("clearClipboard","_clearClipboard")
+                    )
             );
             appendChildHtml(rootContent, rdata);
             sb.append("""
                                     </ul>
                     """);
         }
-        append("""
+        append(sb, """
                         </section>
                     </div>
                     <script type="text/javascript">
@@ -59,103 +61,121 @@ public class ContentAdminPage extends AdminPage {
     protected void appendChildHtml(ContentData contentData, RequestData rdata) {
         if (contentData.hasUserReadRight(rdata)) {
             List<String> childTypes = contentData.getChildClasses();
-            append("""
+            append(sb, """
                                 <li class="open">
-                                    <span class="{1}">
-                                        {2}
+                                    <span class="$published$">
+                                        $name$
                                     </span>
                             """,
-                    contentData.hasUnpublishedDraft() ? "unpublished" : "published",
-                    Strings.toHtml(contentData.getDisplayName())
+                    Map.ofEntries(
+                            param("published",contentData.hasUnpublishedDraft() ? "unpublished" : "published"),
+                            param("name",contentData.getDisplayName())
+                    )
             );
             if ((contentData.hasUserEditRight(rdata))) {
-                append("""
+                append(sb, """
                                     <div class="icons">
-                                        <a class="icon fa fa-eye" href="" onclick="return linkTo('/ctrl/content/show/{1}');" title="{2}"> </a>
-                                        <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/content/openEditContentData/{3}');" title="{4}"> </a>
-                                        <a class="icon fa fa-key" href="" onclick="return openModalDialog('/ctrl/content/openEditRights/{5}');" title="{6}"> </a>
+                                        <a class="icon fa fa-eye" href="" onclick="return linkTo('/ctrl/content/show/$id$');" title="$view$"> </a>
+                                        <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/content/openEditContentData/$id$');" title="$edit$"> </a>
+                                        <a class="icon fa fa-key" href="" onclick="return openModalDialog('/ctrl/content/openEditRights/$id$');" title="$rights$"> </a>
                                 """,
-                        Integer.toString(contentData.getId()),
-                        Strings.getHtml("_view"),
-                        Integer.toString(contentData.getId()),
-                        Strings.getHtml("_edit"),
-                        Integer.toString(contentData.getId()),
-                        Strings.getHtml("_rights")
+                        Map.ofEntries(
+                                param("id",contentData.getId()),
+                                param("view","_view"),
+                                param("edit","_edit"),
+                                param("rights","_rights")
+                        )
                 );
                 if (contentData.getId() != ContentData.ID_ROOT) {
-                    append("""
-                                        <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/content/cutContent/{1}');" title="{2}"> </a>
+                    append(sb, """
+                                        <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/content/cutContent/$id$');" title="$cut$"> </a>
                                     """,
-                            Integer.toString(contentData.getId()),
-                            Strings.getHtml("_cut")
+                            Map.ofEntries(
+                                    param("id",contentData.getId()),
+                                    param("cut","_cut")
+                            )
                     );
                 }
-                append("""
-                                    <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/content/copyContent/{1}');" title="{2}"> </a>
+                append(sb, """
+                                    <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/content/copyContent/$id$');" title="$copy$"> </a>
                                 """,
-                        Integer.toString(contentData.getId()),
-                        Strings.getHtml("_copy")
+                        Map.ofEntries(
+                                param("id",contentData.getId()),
+                                param("copy","_copy")
+                        )
                 );
                 if (contentData.hasChildren()) {
-                    append("""
-                                        <a class="icon fa fa-sort" href="" onclick="return openModalDialog('/ctrl/content/openSortChildPages/{1}');" title="{2}"> </a>
+                    append(sb, """
+                                        <a class="icon fa fa-sort" href="" onclick="return openModalDialog('/ctrl/content/openSortChildPages/$id$');" title="$sortChildPages$"> </a>
                                     """,
-                            Integer.toString(contentData.getId()),
-                            Strings.getHtml("_sortChildPages")
+                            Map.ofEntries(
+                                    param("id",contentData.getId()),
+                                    param("sortChildPages","_sortChildPages")
+                            )
                     );
                 }
                 if (contentData.getId() != ContentData.ID_ROOT) {
-                    append("""
-                                        <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/content/deleteContent/{1}');" title="{2}>"> </a>
+                    append(sb, """
+                                        <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/content/deleteContent/$id$');" title="$delete$>"> </a>
                                     """,
-                            Integer.toString(contentData.getId()),
-                            Strings.getHtml("_delete")
+                            Map.ofEntries(
+                                    param("id",contentData.getId()),
+                                    param("delete","_delete")
+                            )
                     );
                 }
                 if (rdata.hasClipboardData(ContentRequestKeys.KEY_CONTENT)) {
-                    append("""
-                                            <a class="icon fa fa-paste" href="/ctrl/content/pasteContent?parentId={1}" title="{2}"> </a>
+                    append(sb, """
+                                            <a class="icon fa fa-paste" href="/ctrl/content/pasteContent?parentId=$id$" title="$paste$"> </a>
                                     """,
-                            Integer.toString(contentData.getId()),
-                            Strings.getHtml("_pasteContent")
+                            Map.ofEntries(
+                                    param("id",contentData.getId()),
+                                    param("paste","_pasteContent")
+                            )
                     );
                 }
                 if (!childTypes.isEmpty()) {
                     if (childTypes.size() == 1) {
-                        append("""
-                                            <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/content/openCreateContentData?parentId={1}&type={2}');" title="{3}"></a>
+                        append(sb, """
+                                            <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/content/openCreateContentData?parentId=$id$&type=$type$');" title="$new$"></a>
                                         """,
-                                Integer.toString(contentData.getId()),
-                                childTypes.get(0),
-                                Strings.getHtml("_newContent")
+                                Map.ofEntries(
+                                        param("id",contentData.getId()),
+                                        param("type",childTypes.get(0)),
+                                        param("new","_newContent")
+                                )
                         );
                     } else {
-                        append("""
-                                            <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="{1}"></a>
+                        append(sb, """
+                                            <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="$new$"></a>
                                             <div class="dropdown-menu">
                                         """,
-                                Strings.getHtml("_newContent")
+                                Map.ofEntries(
+                                        param("new","_newContent")
+                                )
                         );
                         for (String pageType : childTypes) {
-                            String name = Strings.getHtml("class." + pageType);
-                            append("""
-                                                <a class="dropdown-item" onclick="return openModalDialog('/ctrl/content/openCreateContentData?parentId={1}&type={2}');">{3}</a>
+                            String name = getHtml("class." + pageType);
+                            append(sb, """
+                                                <a class="dropdown-item" onclick="return openModalDialog('/ctrl/content/openCreateContentData?parentId=$id$&type=$pageType$');">$name$</a>
                                             """,
-                                    Integer.toString(contentData.getId()),
-                                    pageType,
-                                    name
+                                    Map.ofEntries(
+                                            param("id",contentData.getId()),
+                                            param("pageType",pageType),
+                                            param("name",name)
+                                    )
                             );
                         }
-                        append("""
+                        append(sb, """
                                     </div>
                                 """);
                     }
                 }
-                append("""
+                append(sb, """
                              </div>
                         """);
             }
-            append("""
+            append(sb, """
                          <ul>
                     """);
             appendContentDocumentsHtml(contentData, rdata);
@@ -166,7 +186,7 @@ public class ContentAdminPage extends AdminPage {
                     appendChildHtml(childData, rdata);
                 }
             }
-            append("""
+            append(sb, """
                                     </ul>
                                 </li>
                     """);
@@ -176,96 +196,103 @@ public class ContentAdminPage extends AdminPage {
     protected void appendContentDocumentsHtml(ContentData contentData, RequestData rdata) {
         List<String> documentTypes = contentData.getDocumentClasses();
         int fileId = rdata.getAttributes().getInt("fileId");
-        append("""
+        append(sb, """
                                                     <li class="documents open">
-                                                        <span>[{1}]</span>
+                                                        <span>[$documents$]</span>
                         """,
-                Strings.getHtml("_documents")
+                Map.ofEntries(
+                        param("documents","_documents")
+                )
         );
         if (contentData.hasUserEditRight(rdata)) {
-            append("""
+            append(sb, """
                                                     <div class="icons">
                     """);
             if (rdata.hasClipboardData(ContentRequestKeys.KEY_DOCUMENT)) {
-                append("""
-                                                        <a class="icon fa fa-paste" href="/ctrl/document/pasteDocument?parentId={1}" title="{2}"> </a>
+                append(sb, """
+                                                        <a class="icon fa fa-paste" href="/ctrl/document/pasteDocument?parentId=$id$" title="$paste$"> </a>
                                 """,
-                        Integer.toString(contentData.getId()),
-                        Strings.getHtml("_pasteDocument")
+                        Map.ofEntries(
+                                param("id",contentData.getId()),
+                                param("paste","_pasteDocument")
+                        )
                 );
             }
             if (!documentTypes.isEmpty()) {
                 if (documentTypes.size() == 1) {
-                    append("""
-                                                        <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/document/openCreateDocument?parentId={1}&type={2}');" title="{3}"></a>
+                    append(sb, """
+                                                        <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/document/openCreateDocument?parentId=$id$&type=$type$');" title="$new$"></a>
                                     """,
-                            Integer.toString(contentData.getId()),
-                            documentTypes.get(0),
-                            Strings.getHtml("_newDocument")
+                            Map.ofEntries(
+                                    param("id",contentData.getId()),
+                                    param("type",documentTypes.get(0)),
+                                    param("new","_newDocument")
+                            )
                     );
                 } else {
-                    append("""
-                                                        <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="{1}"></a>
+                    append(sb, """
+                                                        <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="$new$"></a>
                                                         <div class="dropdown-menu">
                                     """,
-                            Strings.getHtml("_newDocument")
+                            Map.ofEntries(
+                                    param("new","_newDocument")
+                            )
                     );
                     for (String documentType : documentTypes) {
-                        String name = Strings.getHtml("class." + documentType);
-                        append("""
-                                                        <a class="dropdown-item" onclick="return openModalDialog('/ctrl/document/openCreateDocument?parentId={1}&type={2}');">{3}</a>
+                        String name = getHtml("class." + documentType);
+                        append(sb, """
+                                                        <a class="dropdown-item" onclick="return openModalDialog('/ctrl/document/openCreateDocument?parentId=$id$&type=$type$');">$name$</a>
                                         """,
-                                Integer.toString(contentData.getId()),
-                                documentType,
-                                name
+                                Map.ofEntries(
+                                        param("id",contentData.getId()),
+                                        param("type",documentType),
+                                        param("name",name)
+                                )
                         );
                     }
-                    append("""
+                    append(sb, """
                                                     </div>
                             """);
                 }
             }
-            append("""
+            append(sb, """
                                                 </div>
                                                 <ul>
                     """);
             List<DocumentData> documents = contentData.getFiles(DocumentData.class);
             for (DocumentData document : documents) {
-                append("""
-                                                    <li class="">{1}
+                append(sb, """
+                                                    <li class="">$current$
                                                         <div class="treeline">
-                                                            <span id="{2}">
-                                                                {3}
+                                                            <span id="$id$">
+                                                                $name$
                                                             </span>
                                                             <div class="icons">
-                                                                <a class="icon fa fa-eye" href="{4}" target="_blank" title="{5}"> </a>
-                                                                <a class="icon fa fa-download" href="{6}?download=true" title="{7}"> </a>
-                                                                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/document/openEditDocument/{8}');" title="{9}"> </a>
-                                                                <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/document/cutDocument/{10}');" title="{11}"> </a>
-                                                                <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/document/copyDocument/{12}');" title="{13}"> </a>
-                                                                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/document/deleteDocument/{14}');" title="{15}"> </a>
+                                                                <a class="icon fa fa-eye" href="$url$" target="_blank" title="$view$"> </a>
+                                                                <a class="icon fa fa-download" href="$url$?download=true" title="$download$"> </a>
+                                                                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/document/openEditDocument/$id$');" title="$edit$"> </a>
+                                                                <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/document/cutDocument/$id$');" title="$cut$"> </a>
+                                                                <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/document/copyDocument/$id$');" title="$copy$"> </a>
+                                                                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/document/deleteDocument/$id$');" title="$delete$"> </a>
                                                             </div>
                                                         </div>
                                                     </li>
                                 """,
-                        fileId == document.getId() ? "current" : "",
-                        Integer.toString(document.getId()),
-                        Strings.toHtml(document.getDisplayName()),
-                        document.getURL(),
-                        Strings.getHtml("_view"),
-                        document.getURL(),
-                        Strings.getHtml("_download"),
-                        Integer.toString(document.getId()),
-                        Strings.getHtml("_edit"),
-                        Integer.toString(document.getId()),
-                        Strings.getHtml("_cut"),
-                        Integer.toString(document.getId()),
-                        Strings.getHtml("_copy"),
-                        Integer.toString(document.getId()),
-                        Strings.getHtml("_delete")
+                        Map.ofEntries(
+                                param("current",fileId == document.getId() ? "current" : ""),
+                                param("id",document.getId()),
+                                param("name",document.getDisplayName()),
+                                param("url",document.getURL()),
+                                param("view","_view"),
+                                param("download","_download"),
+                                param("edit","_edit"),
+                                param("cut","_cut"),
+                                param("copy","_copy"),
+                                param("delete","_delete")
+                        )
                 );
             }
-            append("""
+            append(sb, """
                                                 </ul>
                                             </li>
                     """);
@@ -275,101 +302,106 @@ public class ContentAdminPage extends AdminPage {
     protected void appendContentImagesHtml(ContentData contentData, RequestData rdata) {
         List<String> imageTypes = contentData.getImageClasses();
         int fileId = rdata.getAttributes().getInt("fileId");
-        append("""
+        append(sb, """
                             <li class="images open">
-                                <span>[{1}]</span>
+                                <span>[$images$]</span>
             """,
-                Strings.getHtml("_images")
+                Map.ofEntries(
+                        param("images","_images")
+                )
         );
         if (contentData.hasUserEditRight(rdata)) {
-            append("""
+            append(sb, """
                                 <div class="icons">
             """);
             if (rdata.hasClipboardData(ContentRequestKeys.KEY_IMAGE)) {
-                append("""
-                                    <a class="icon fa fa-paste" href="/ctrl/image/pasteImage?parentId={1}" title="{2}"> </a>
+                append(sb, """
+                                    <a class="icon fa fa-paste" href="/ctrl/image/pasteImage?parentId=$id$" title="$paste$"> </a>
             """,
-                        Integer.toString(contentData.getId()),
-                        Strings.getHtml("_pasteImage")
+                        Map.ofEntries(
+                                param("id",contentData.getId()),
+                                param("paste","_pasteImage")
+                        )
                 );
             }
             if (!imageTypes.isEmpty()) {
                 if (imageTypes.size() == 1) {
-                    append("""
-                                    <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/image/openCreateImage?parentId={1}&type={2}');" title="{3}"></a>
+                    append(sb, """
+                                    <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/image/openCreateImage?parentId=$id$&type=$type$"');" title="$new$"></a>
             """,
-                            Integer.toString(contentData.getId()),
-                            imageTypes.get(0),
-                            Strings.getHtml("_newImage")
+                            Map.ofEntries(
+                                    param("id",contentData.getId()),
+                                    param("type",imageTypes.get(0)),
+                                    param("new","_newImage")
+                            )
                     );
                 } else {
-                    append("""
-                                    <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="{1}"></a>
+                    append(sb, """
+                                    <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="$new$"></a>
                                     <div class="dropdown-menu">
             """,
-                            Strings.getHtml("_newImage")
+                            Map.ofEntries(
+                                    param("new","_newImage")
+                            )
                     );
                     for (String imageType : imageTypes) {
-                        String name = Strings.getHtml("class." + imageType);
-                        append("""
-                                        <a class="dropdown-item" onclick="return openModalDialog('/ctrl/image/openCreateImage?parentId={1}&type={2}');">{3}</a>
+                        String name = getHtml("class." + imageType);
+                        append(sb, """
+                                        <a class="dropdown-item" onclick="return openModalDialog('/ctrl/image/openCreateImage?parentId=$id$&type=$type$');">$name$</a>
             """,
-                                Integer.toString(contentData.getId()),
-                                imageType,
-                                name
+                                Map.ofEntries(
+                                        param("id",contentData.getId()),
+                                        param("type",imageType),
+                                        param("name",name)
+                                )
                         );
                     }
-                    append("""
+                    append(sb, """
                                     </div>
             """);
                 }
             }
-            append("""
+            append(sb, """
                                 </div>
                                 <ul>
             """);
             List<ImageData> images = contentData.getFiles(ImageData.class);
             for (ImageData image : images) {
-                append("""
-                                    <li class="{1}">
+                append(sb, """
+                                    <li class="$current$">
                                         <div class="treeline">
-                                            <span class="treeImage" id="{2}">
-                                                {3}
+                                            <span class="treeImage" id="$id$">
+                                                $name$
                                                 <span class="hoverImage">
-                                                    <img src="/ctrl/image/showPreview/{4}" alt="{5}"/>
+                                                    <img src="/ctrl/image/showPreview/$id$" alt="$name$"/>
                                                 </span>
                                             </span>
                                             <div class="icons">
-                                                <a class="icon fa fa-eye" href="{6}" target="_blank" title="{7}"> </a>
-                                                <a class="icon fa fa-download" href="{8}?download=true" title="{9}"> </a>
-                                                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/image/openEditImage/{10}');" title="{11}"> </a>
-                                                <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/image/cutImage/{12}');" title="{13}"> </a>
-                                                <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/image/copyImage/{14}');" title="{15}"> </a>
-                                                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/image/deleteImage/{16}');" title="{17}"> </a>
+                                                <a class="icon fa fa-eye" href="$url$" target="_blank" title="$view$"> </a>
+                                                <a class="icon fa fa-download" href="$url$?download=true" title="$download$"> </a>
+                                                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/image/openEditImage/$id$');" title="$edit$"> </a>
+                                                <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/image/cutImage/$id$');" title="$cut$"> </a>
+                                                <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/image/copyImage/$id$');" title="$copy$"> </a>
+                                                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/image/deleteImage/$id$');" title="$delete$"> </a>
                                             </div>
                                         </div>
                                     </li>
             """,
-                        fileId == image.getId() ? "current" : "",
-                        Integer.toString(image.getId()),
-                        Strings.toHtml(image.getDisplayName()),
-                        Integer.toString(image.getId()),
-                        Strings.toHtml(image.getFileName()),
-                        image.getURL(),
-                        Strings.getHtml("_view"),
-                        image.getURL(),
-                        Strings.getHtml("_download"),
-                        Integer.toString(image.getId()),
-                        Strings.getHtml("_edit"),
-                        Integer.toString(image.getId()),
-                        Strings.getHtml("_cut"),
-                        Integer.toString(image.getId()),
-                        Strings.getHtml("_copy"),
-                        Integer.toString(image.getId()),
-                        Strings.getHtml("_delete")
+                        Map.ofEntries(
+                                param("current",fileId == image.getId() ? "current" : ""),
+                                param("id",image.getId()),
+                                param("name",image.getDisplayName()),
+                                param("url",image.getURL()),
+                                param("view","_view"),
+                                param("download","_download"),
+                                param("edit","_edit"),
+                                param("cut","_cut"),
+                                param("copy","_copy"),
+                                param("delete","_delete")
+                        )
                 );
             }
-            append("""
+            append(sb, """
                                 </ul>
                             </li>
             """);
@@ -379,100 +411,105 @@ public class ContentAdminPage extends AdminPage {
     protected void appendContentMediaHtml(ContentData contentData, RequestData rdata) {
         List<String> mediaTypes = contentData.getMediaClasses();
         int fileId = rdata.getAttributes().getInt("fileId");
-        append("""
+        append(sb, """
                                         
                             <li class="media open">
-                                <span>[{1}]</span>
+                                <span>[$media$]</span>
             """,
-                Strings.getHtml("_media")
+                Map.ofEntries(
+                        param("media","_media")
+                )
         );
         if (contentData.hasUserEditRight(rdata)) {
-            append("""
+            append(sb, """
                                 <div class="icons">
             """);
             if (rdata.hasClipboardData(ContentRequestKeys.KEY_MEDIA)) {
-                append("""
-                                    <a class="icon fa fa-paste" href="/ctrl/media/pasteMedia?parentId={1}" title="{2}"> </a>
+                append(sb, """
+                                    <a class="icon fa fa-paste" href="/ctrl/media/pasteMedia?parentId=$id$" title="$paste$"> </a>
             """,
-                        Integer.toString(contentData.getId()),
-                        Strings.getHtml("_pasteMedia")
+                        Map.ofEntries(
+                                param("id",contentData.getId()),
+                                param("paste","_pasteMedia")
+                        )
                 );
             }
             if (!mediaTypes.isEmpty()) {
                 if (mediaTypes.size() == 1) {
-                    append("""
-                                    <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/media/openCreateMedia?parentId={1}&type={2}');" title="{3}"></a>
+                    append(sb, """
+                                    <a class="icon fa fa-plus" onclick="return openModalDialog('/ctrl/media/openCreateMedia?parentId=$id$&type=$type$');" title="$new$"></a>
             """,
-                            Integer.toString(contentData.getId()),
-                            mediaTypes.get(0),
-                            Strings.getHtml("_newMedia")
+                            Map.ofEntries(
+                                    param("id",contentData.getId()),
+                                    param("type",mediaTypes.get(0)),
+                                    param("new","_newMedia")
+                            )
                     );
                 } else {
-                    append("""
-                                    <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="{1}"></a>
+                    append(sb, """
+                                    <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="$new$"></a>
                                     <div class="dropdown-menu">
             """,
-                            Strings.getHtml("_newMedia")
+                            Map.ofEntries(
+                                    param("new","_newMedia")
+                            )
                     );
                     for (String mediaType : mediaTypes) {
-                        String name = Strings.getHtml("class." + mediaType);
-                        append("""
-                                        <a class="dropdown-item" onclick="return openModalDialog('/ctrl/media/openCreateMedia?parentId={1}&type={2}');">{3}</a>
+                        String name = getHtml("class." + mediaType);
+                        append(sb, """
+                                        <a class="dropdown-item" onclick="return openModalDialog('/ctrl/media/openCreateMedia?parentId=$id$&type=$mediaType$');">$name$</a>
             """,
-                                Integer.toString(contentData.getId()),
-                                mediaType,
-                                name
+                                Map.ofEntries(
+                                        param("",contentData.getId()),
+                                        param("mediaType",mediaType),
+                                        param("name",name)
+                                )
                         );
                     }
-                    append("""
+                    append(sb, """
                                     </div>
             """);
                 }
             }
-            append("""
+            append(sb, """
                                 </div>
             """);
         }
-        append("""
+        append(sb, """
                                 <ul>
             """);
         List<MediaData> mediaFiles = contentData.getFiles(MediaData.class);
         for (MediaData media : mediaFiles) {
-            append("""
-                                    <li class="{1}">
+            append(sb, """
+                                    <li class="$current$">
                                         <div class="treeline">
-                                            <span id="{2}">
-                                                {3}
-                                            </span>
+                                            <span id="$id$">$name$</span>
                                             <div class="icons">
-                                                <a class="icon fa fa-eye" href="{4}" target="_blank" title="{5}"> </a>
-                                                <a class="icon fa fa-download" href="{6}?download=true" title="{7}"> </a>
-                                                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/media/openEditMedia/{8}');" title="{9}"> </a>
-                                                <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/media/cutMedia/{10}');" title="{11}"> </a>
-                                                <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/media/copyMedia/{12}');" title="{13}"> </a>
-                                                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/media/deleteMedia/{14}');" title="{15}"> </a>
+                                                <a class="icon fa fa-eye" href="$url$" target="_blank" title="$view$"> </a>
+                                                <a class="icon fa fa-download" href="$url$?download=true" title="$download$"> </a>
+                                                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/media/openEditMedia/$id$');" title="$edit$"> </a>
+                                                <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/media/cutMedia/$id$');" title="$cut$"> </a>
+                                                <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/media/copyMedia/$id$');" title="$copy$"> </a>
+                                                <a class="icon fa fa-trash-o" href="" onclick="if (confirmDelete()) return linkTo('/ctrl/media/deleteMedia/$id$');" title="$delete$"> </a>
                                             </div>
                                         </div>
                                     </li>
             """,
-                    fileId == media.getId() ? "current" : "",
-                    Integer.toString(media.getId()),
-                    Strings.toHtml(media.getDisplayName()),
-                    media.getURL(),
-                    Strings.getHtml("_view"),
-                    media.getURL(),
-                    Strings.getHtml("_download"),
-                    Integer.toString(media.getId()),
-                    Strings.getHtml("_edit"),
-                    Integer.toString(media.getId()),
-                    Strings.getHtml("_cut"),
-                    Integer.toString(media.getId()),
-                    Strings.getHtml("_copy"),
-                    Integer.toString(media.getId()),
-                    Strings.getHtml("_delete")
+                    Map.ofEntries(
+                            param("current",fileId == media.getId() ? "current" : ""),
+                            param("id",media.getId()),
+                            param("name",media.getDisplayName()),
+                            param("url",media.getURL()),
+                            param("view","_view"),
+                            param("download","_download"),
+                            param("edit","_edit"),
+                            param("cut","_cut"),
+                            param("copy","_copy"),
+                            param("delete","_delete")
+                    )
             );
         }
-        append("""
+        append(sb, """
                                 </ul>
                             </li>
             """);

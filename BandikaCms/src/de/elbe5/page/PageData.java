@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PageData extends ContentData {
+public class PageData extends ContentData implements DraftPageWrapper{
 
     private String keywords = "";
     protected String templateName = "";
@@ -181,13 +181,13 @@ public class PageData extends ContentData {
 
     @Override
     protected void appendEditDraftContent(StringBuilder sb, RequestData rdata) {
-        DraftPageWrapper.appendStartHtml(sb, this);
+        appendStartHtml(sb, this);
         Template tpl = TemplateCache.getTemplate("page", templateName);
         if (tpl==null)
             return;
         tpl.appendHtml(sb, rdata);
-        DraftPageWrapper.appendEndHtml(sb);
-        DraftPageWrapper.appendScript(sb, this);
+        appendEndHtml(sb);
+        appendScript(sb, this);
     }
 
     @Override

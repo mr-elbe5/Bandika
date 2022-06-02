@@ -1,6 +1,5 @@
 package de.elbe5.template;
 
-import de.elbe5.base.Strings;
 import de.elbe5.page.PageData;
 import de.elbe5.page.PagePartData;
 import de.elbe5.page.PagePartFactory;
@@ -9,6 +8,7 @@ import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 
 import java.util.List;
+import java.util.Map;
 
 public class SectionTag extends TemplateTag {
 
@@ -27,50 +27,56 @@ public class SectionTag extends TemplateTag {
         if (sectionData != null) {
             sectionData.setCssClass(cssClass);
             if (pageData.isEditing()) {
-                appendEditSection(sb, rdata, pageData, sectionData);
+                appendEditSection(sb, rdata, sectionData);
             } else {
-                appendSection(sb, rdata, pageData, sectionData);
+                appendSection(sb, rdata, sectionData);
             }
         }
     }
 
-    void appendEditSection(StringBuilder sb, RequestData rdata, PageData pageData, SectionData sectionData) {
+    void appendEditSection(StringBuilder sb, RequestData rdata, SectionData sectionData) {
         List<Template> templates = TemplateCache.getTemplates("part");
-        sb.append(Strings.format("""
-                <div class="section {1}" id="{2}" title="Section {3}">
+        append(sb,"""
+                <div class="section $css$" id="$id$" title="Section $name$">
                     <div class="sectionEditButtons">
                         <div class="btn-group btn-group-sm" role="group">
                             <div class="btn-group btn-group-sm" role="group">
-                                <button type="button" class="btn btn-secondary fa fa-plus dropdown-toggle" data-toggle="dropdown" title="{4}"></button>
+                                <button type="button" class="btn btn-secondary fa fa-plus dropdown-toggle" data-toggle="dropdown" title="$newPart$"></button>
                                 <div class="dropdown-menu">
                                 """,
-                sectionData.getCssClass(),
-                sectionData.getSectionId(),
-                sectionData.getName(),
-                Strings.getHtml("_newPart")
-                ));
+                Map.ofEntries(
+                        param("css",sectionData.getCssClass()),
+                        param("id",sectionData.getSectionId()),
+                        param("name",sectionData.getName()),
+                        param("newPart","_newPart")
+                )
+        );
         for (String partType : PagePartFactory.getTypes()) {
             if (PagePartFactory.useLayouts(partType)) {
                 for (Template template : templates) {
-                    sb.append(Strings.format("""
-                            <a class="dropdown-item" href="" onclick="return addPart(-1,'{1}','{2}','{3}');">{4}
+                    append(sb,"""
+                            <a class="dropdown-item" href="" onclick="return addPart(-1,'$name$','$partType$','$templateName$');">$templateKey$
                             </a>
                             """,
-                            Strings.toHtml(sectionData.getName()),
-                            Strings.toHtml(partType),
-                            Strings.toHtml(template.getName()),
-                            Strings.getHtml(template.getKey())
-                            ));
+                            Map.ofEntries(
+                                    param("name",sectionData.getName()),
+                                    param("partType",partType),
+                                    param("templateName",template.getName()),
+                                    param("templateKey",getHtml(template.getKey()))
+                            )
+                    );
                 }
             } else {
-                sb.append(Strings.format("""
-                        <a class="dropdown-item" href="" onclick="return addPart(-1,'{1}','{2}');">{3}
+                append(sb,"""
+                        <a class="dropdown-item" href="" onclick="return addPart(-1,'$name$','$partType$');">$typeName$
                         </a>
                         """,
-                        Strings.toHtml(sectionData.getName()),
-                        Strings.toHtml(partType),
-                        Strings.getHtml("class."+partType)
-                        ));
+                        Map.ofEntries(
+                                param("name",sectionData.getName()),
+                                param("partType",partType),
+                                param("typeName",getHtml("class."+partType))
+                        )
+                );
             }
         }
         sb.append("""
@@ -87,13 +93,15 @@ public class SectionTag extends TemplateTag {
                 """);
     }
 
-    void appendSection(StringBuilder sb, RequestData rdata, PageData pageData, SectionData sectionData) {
+    void appendSection(StringBuilder sb, RequestData rdata, SectionData sectionData) {
         if (!sectionData.getParts().isEmpty()) {
-            sb.append(Strings.format("""
-                    <div class="section {1}">
+            append(sb,"""
+                    <div class="section $css$">
                     """,
-                    sectionData.getCssClass()
-            ));
+                    Map.ofEntries(
+                            param("css",sectionData.getCssClass())
+                    )
+            );
             for (PagePartData partData : sectionData.getParts()) {
                 partData.appendHtml(sb, rdata);
             }

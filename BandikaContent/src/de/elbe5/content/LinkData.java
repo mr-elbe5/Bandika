@@ -10,12 +10,15 @@ package de.elbe5.content;
 
 import de.elbe5.base.Strings;
 import de.elbe5.content.html.EditLinkDataPage;
+import de.elbe5.response.IHtmlBuilder;
 import de.elbe5.response.ModalPage;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IResponse;
 import de.elbe5.response.RedirectResponse;
 
-public class LinkData extends ContentData {
+import java.util.Map;
+
+public class LinkData extends ContentData implements IHtmlBuilder {
 
     // link data
     private String linkUrl = "";
@@ -58,11 +61,13 @@ public class LinkData extends ContentData {
     public String getNavDisplay() {
         if (!linkIcon.isEmpty()) {
             return Strings.format("""
-                                <img src="/static-content/img/{1}" class="navIcon" title="{2}" alt="{3}" />
+                                <img src="/static-content/img/$linkIcon$" class="navIcon" title="$name$" alt="$name$" />
                             """,
-                    linkIcon,
-                    Strings.toHtml(getDisplayName()),
-                    Strings.toHtml(getDisplayName()));
+                    Map.ofEntries(
+                            htmlParam("linkIcon", linkIcon),
+                            htmlParam("name", getDisplayName())
+                    )
+            );
         }
         return Strings.toHtml(getDisplayName());
     }
