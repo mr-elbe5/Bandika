@@ -8,10 +8,9 @@
  */
 package de.elbe5.base;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -19,7 +18,6 @@ import java.util.*;
 public class Strings {
 
     private final static Map<String, String> stringMap = new HashMap<>();
-    private static final String[][] MATCHES = new String[][]{{"ä", "ae"}, {"ö", "oe"}, {"ü", "ue"}, {"Ä", "Ae"}, {"Ö", "Oe"}, {"Ü", "Ue"}, {"ß", "ss"}};
 
     public static void addBundle(String name, Locale locale){
         ResourceBundle bundle = ResourceBundle.getBundle(name, locale);
@@ -100,10 +98,7 @@ public class Strings {
     }
 
     public static String toAsciiName(String src) {
-        for (String[] match : MATCHES) {
-            src = src.replace(match[0], match[1]);
-        }
-        return src;
+        return StringUtils.stripAccents(src);
     }
 
     public static String toSafeWebName(String src) {
