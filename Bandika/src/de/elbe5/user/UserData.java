@@ -8,14 +8,14 @@
  */
 package de.elbe5.user;
 
-import de.elbe5.base.BaseData;
-import de.elbe5.base.BinaryFile;
-import de.elbe5.base.IJsonData;
-import de.elbe5.base.Log;
-import de.elbe5.base.ImageHelper;
-import de.elbe5.base.Strings;
 import de.elbe5.application.Configuration;
+import de.elbe5.companion.EncryptionCompanion;
+import de.elbe5.companion.ImageCompanion;
+import de.elbe5.data.BaseData;
+import de.elbe5.data.IJsonData;
+import de.elbe5.file.BinaryFile;
 import de.elbe5.group.GroupData;
+import de.elbe5.log.Log;
 import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
 import org.json.simple.JSONObject;
@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class UserData extends BaseData implements IJsonData {
+public class UserData extends BaseData implements IJsonData, ImageCompanion, EncryptionCompanion {
 
     public static final int ID_ROOT = 1;
 
@@ -128,7 +128,7 @@ public class UserData extends BaseData implements IJsonData {
         if (password.isEmpty()) {
             setPasswordHash("");
         } else {
-            setPasswordHash(UserSecurity.encryptPassword(password, Configuration.getSalt()));
+            setPasswordHash(encryptPassword(password, Configuration.getSalt()));
         }
     }
 
@@ -317,15 +317,15 @@ public class UserData extends BaseData implements IJsonData {
         setMobile(rdata.getAttributes().getString("mobile"));
         setNotes(rdata.getAttributes().getString("notes"));
         BinaryFile file = rdata.getAttributes().getFile("portrait");
-        if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !Strings.isNullOrEmpty(file.getContentType())) {
+        if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !isNullOrEmpty(file.getContentType())) {
             try {
-                BufferedImage source = ImageHelper.createImage(file.getBytes(), file.getContentType());
+                BufferedImage source = createImage(file.getBytes(), file.getContentType());
                 if (source != null) {
-                    float factor = ImageHelper.getResizeFactor(source, MAX_PORTRAIT_WIDTH, MAX_PORTRAIT_HEIGHT, true);
-                    BufferedImage image = ImageHelper.copyImage(source, factor);
+                    float factor = getResizeFactor(source, MAX_PORTRAIT_WIDTH, MAX_PORTRAIT_HEIGHT, true);
+                    BufferedImage image = copyImage(source, factor);
                     Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
                     ImageWriter writer = writers.next();
-                    setPortrait(ImageHelper.writeImage(writer, image));
+                    setPortrait(writeImage(writer, image));
                 }
             } catch (IOException e) {
                 Log.error("could not create portrait", e);
@@ -368,14 +368,14 @@ public class UserData extends BaseData implements IJsonData {
             rdata.addIncompleteField("login");
         if (login.length() < UserData.MIN_LOGIN_LENGTH) {
             rdata.addFormField("login");
-            rdata.addFormError(Strings.getString("_loginLengthError"));
+            rdata.addFormError(getString("_loginLengthError"));
         }
         if (password1.length() < UserData.MIN_PASSWORD_LENGTH) {
             rdata.addFormField("password1");
-            rdata.addFormError(Strings.getString("_passwordLengthError"));
+            rdata.addFormError(getString("_passwordLengthError"));
         } else if (!password1.equals(password2)) {
             rdata.addFormField("password2");
-            rdata.addFormError(Strings.getString("_passwordsDontMatch"));
+            rdata.addFormError(getString("_passwordsDontMatch"));
         } else
             setPassword(password1);
     }

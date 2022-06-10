@@ -1,6 +1,5 @@
 package de.elbe5.page.html;
 
-import de.elbe5.base.Strings;
 import de.elbe5.page.PageData;
 import de.elbe5.response.IHtmlBuilder;
 
@@ -122,7 +121,7 @@ public interface DraftPageWrapper extends IHtmlBuilder {
                     </script>
                 """,
                 Map.ofEntries(
-                        param("confirm",Strings.getJs("_confirmDelete")),
+                        param("confirm",getJs("_confirmDelete")),
                         param("id",pageData.getId())
                 )
         );

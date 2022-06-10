@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Bandika/Bandika.iml" filepath="$PROJECT_DIR$/Bandika/Bandika.iml" />
-      <module fileurl="file://$PROJECT_DIR$/BandikaBase/BandikaBase.iml" filepath="$PROJECT_DIR$/BandikaBase/BandikaBase.iml" />
       <module fileurl="file://$PROJECT_DIR$/BandikaCms/BandikaCms.iml" filepath="$PROJECT_DIR$/BandikaCms/BandikaCms.iml" />
       <module fileurl="file://$PROJECT_DIR$/BandikaContent/BandikaContent.iml" filepath="$PROJECT_DIR$/BandikaContent/BandikaContent.iml" />
       <module fileurl="file://$PROJECT_DIR$/BandikaDocuments/BandikaDocuments.iml" filepath="$PROJECT_DIR$/BandikaDocuments/BandikaDocuments.iml" />

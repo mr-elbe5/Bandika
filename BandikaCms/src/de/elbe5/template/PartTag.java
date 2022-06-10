@@ -55,7 +55,7 @@ public class PartTag extends TemplateTag implements IFormBuilder {
         );
         for (String partType : PagePartFactory.getTypes()) {
             if (PagePartFactory.useLayouts(partType)) {
-                List<Template> templates = TemplateCache.getTemplates("part");
+                List<Template> templates = TemplateCache.getInstance().getTemplates("part");
                 for (Template template : templates) {
                     append(sb,"""
                                                     <a class="dropdown-item" href="" onclick="return addPart($partId$,'$sectionName$','$partType$','$templateName$');">"$templateKey$"

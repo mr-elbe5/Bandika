@@ -26,7 +26,7 @@ public class TemplateInclude implements IMasterInclude {
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
         sb.append("<div id=\"pageContent\" class=\"viewArea\">");
-        Template template = TemplateCache.getTemplate(type, name);
+        Template template = TemplateCache.getInstance().getTemplate(type, name);
         if (template!=null) {
             sb.append(template.getHtml(rdata));
         }

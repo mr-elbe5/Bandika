@@ -8,7 +8,7 @@
  */
 package de.elbe5.search;
 
-import de.elbe5.base.BaseThread;
+import de.elbe5.application.BaseThread;
 import de.elbe5.application.AppContextListener;
 
 import java.util.ArrayList;

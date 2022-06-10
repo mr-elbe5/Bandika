@@ -10,8 +10,8 @@ package de.elbe5.servlet;
 
 import de.elbe5.application.ApplicationPath;
 import de.elbe5.application.Configuration;
-import de.elbe5.base.Log;
-import de.elbe5.base.FileHelper;
+import de.elbe5.companion.FileCompanion;
+import de.elbe5.log.Log;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.file.FileBean;
@@ -29,7 +29,7 @@ import java.io.*;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
-public class FileServlet extends WebServlet {
+public class FileServlet extends WebServlet implements FileCompanion {
 
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
@@ -47,7 +47,7 @@ public class FileServlet extends WebServlet {
                 return;
             }
             fileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8).substring(1);
-            String name = FileHelper.getFileNameWithoutExtension(fileName);
+            String name = getFileNameWithoutExtension(fileName);
             int id = Integer.parseInt(name);
             FileData data = ContentCache.getFile(id);
             ContentData parent=ContentCache.getContent(data.getParentId());

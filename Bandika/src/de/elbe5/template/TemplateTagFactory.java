@@ -1,6 +1,6 @@
 package de.elbe5.template;
 
-import de.elbe5.base.Log;
+import de.elbe5.log.Log;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;

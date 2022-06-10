@@ -9,7 +9,6 @@
 package de.elbe5.administration;
 
 import de.elbe5.administration.html.*;
-import de.elbe5.base.Strings;
 import de.elbe5.content.ContentBean;
 import de.elbe5.content.ContentCache;
 import de.elbe5.file.PreviewCache;
@@ -69,7 +68,7 @@ public class ContentAdminController extends AdminController {
     public IResponse clearPreviewCache(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         PreviewCache.clear();
-        rdata.setMessage(Strings.getString("_cacheCleared"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(getString("_cacheCleared"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
@@ -77,7 +76,7 @@ public class ContentAdminController extends AdminController {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         ContentCache.setDirty();
         ContentCache.checkDirty();
-        rdata.setMessage(Strings.getString("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(getString("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 

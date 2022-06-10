@@ -8,11 +8,10 @@
  */
 package de.elbe5.application;
 
-import de.elbe5.administration.AdminController;
 import de.elbe5.administration.ContentAdminController;
-import de.elbe5.base.Strings;
-import de.elbe5.base.JsonWebToken;
-import de.elbe5.base.Log;
+import de.elbe5.data.LocalizedStrings;
+import de.elbe5.data.JsonWebToken;
+import de.elbe5.log.Log;
 import de.elbe5.ckeditor.CkEditorController;
 import de.elbe5.company.CompanyCache;
 import de.elbe5.company.CompanyController;
@@ -47,11 +46,11 @@ public class BandikaInitServlet extends InitServlet {
             return;
         }
         Configuration.setConfigs(context);
-        Strings.addBundle("bandika", Configuration.getLocale());
-        Strings.addBundle("content", Configuration.getLocale());
-        Strings.addBundle("cms", Configuration.getLocale());
-        Strings.addBundle("application", Configuration.getLocale());
-        Strings.addBundle("layout", Configuration.getLocale());
+        LocalizedStrings.addResourceBundle("bandika", Configuration.getLocale());
+        LocalizedStrings.addResourceBundle("content", Configuration.getLocale());
+        LocalizedStrings.addResourceBundle("cms", Configuration.getLocale());
+        LocalizedStrings.addResourceBundle("application", Configuration.getLocale());
+        LocalizedStrings.addResourceBundle("layout", Configuration.getLocale());
         Log.initLog(ApplicationPath.getAppName());
         if (!DbConnector.getInstance().initialize("jdbc/bandika"))
             return;
@@ -98,15 +97,15 @@ public class BandikaInitServlet extends InitServlet {
         TemplateTagFactory.addTagType(HtmlFieldTag.TYPE, HtmlFieldTag.class);
         TemplateTagFactory.addTagType(ContactTag.TYPE, ContactTag.class);
 
-        TemplateCache.addType("master");
-        TemplateCache.addType("page");
-        TemplateCache.addType("part");
+        TemplateCache.getInstance().addType("master");
+        TemplateCache.getInstance().addType("page");
+        TemplateCache.getInstance().addType("part");
 
         ContentCache.load();
         ContentCentral.setInstance(new AppContentCentral());
         CompanyCache.load();
         UserCache.load();
-        TemplateCache.load();
+        TemplateCache.getInstance().load();
         Timer.getInstance().registerTimerTask(new HeartbeatTaskData());
         Timer.getInstance().registerTimerTask(new CleanupTaskData());
         Log.log("load tasks");

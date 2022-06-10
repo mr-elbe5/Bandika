@@ -9,7 +9,12 @@
 package de.elbe5.request;
 
 import de.elbe5.application.Configuration;
-import de.elbe5.base.*;
+import de.elbe5.data.BaseData;
+import de.elbe5.data.KeyValueMap;
+import de.elbe5.data.LocalizedStrings;
+import de.elbe5.data.StringMap;
+import de.elbe5.file.BinaryFile;
+import de.elbe5.log.Log;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.user.UserData;
 
@@ -167,7 +172,7 @@ public class RequestData {
         if (formError == null)
             return true;
         if (formError.isFormIncomplete())
-            formError.addFormError(Strings.getString("_notComplete"));
+            formError.addFormError(LocalizedStrings.getString("_notComplete"));
         return formError.isEmpty();
     }
 

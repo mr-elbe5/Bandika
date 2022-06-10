@@ -9,12 +9,14 @@
 package de.elbe5.content;
 
 import de.elbe5.application.Configuration;
-import de.elbe5.base.*;
 import de.elbe5.content.html.EditContentDataPage;
+import de.elbe5.data.BaseData;
+import de.elbe5.data.IJsonData;
 import de.elbe5.file.FileData;
 import de.elbe5.file.FileFactory;
 import de.elbe5.group.GroupBean;
 import de.elbe5.group.GroupData;
+import de.elbe5.log.Log;
 import de.elbe5.response.ModalPage;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IMasterInclude;
@@ -109,7 +111,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     public void generatePath() {
         if (getParent() == null)
             return;
-        setPath(getParent().getPath() + "/" + Strings.toUrl(getName().toLowerCase()));
+        setPath(getParent().getPath() + "/" + toUrl(getName().toLowerCase()));
     }
 
     public String getUrl() {
@@ -127,7 +129,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     }
 
     public String getNavDisplay(){
-        return Strings.toHtml(getDisplayName());
+        return toHtml(getDisplayName());
     }
 
     public String getDescription() {
@@ -478,7 +480,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
 
     public void readRequestData(RequestData rdata) {
         setDisplayName(rdata.getAttributes().getString("displayName").trim());
-        setName(Strings.toSafeWebName(getDisplayName()));
+        setName(toSafeWebName(getDisplayName()));
         setDescription(rdata.getAttributes().getString("description"));
         setAccessType(rdata.getAttributes().getString("accessType"));
         setNavType(rdata.getAttributes().getString("navType"));
@@ -525,7 +527,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     public JSONObject getJson() {
         JSONObject json = new JSONObject();
         json.put("id",getId());
-        json.put("creationDate", DateHelper.asMillis(getCreationDate()));
+        json.put("creationDate", asMillis(getCreationDate()));
         json.put("creatorId", getCreatorId());
         json.put("creatorName", getCreatorName());
         json.put("name",getName());
@@ -590,9 +592,9 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     @Override
     public void prepareMaster(RequestData rdata){
         rdata.getTemplateAttributes().put("language", Configuration.getLocale().getLanguage());
-        rdata.getTemplateAttributes().put("title", Strings.toHtml(Configuration.getAppTitle() + " | " + getDisplayName()));
-        rdata.getTemplateAttributes().put("description", Strings.toHtml(getDescription()));
-        rdata.getTemplateAttributes().put("keywords", Strings.toHtml(getKeywords()));
+        rdata.getTemplateAttributes().put("title", toHtml(Configuration.getAppTitle() + " | " + getDisplayName()));
+        rdata.getTemplateAttributes().put("description", toHtml(getDescription()));
+        rdata.getTemplateAttributes().put("keywords", toHtml(getKeywords()));
     }
 
     public void publish(RequestData rdata){

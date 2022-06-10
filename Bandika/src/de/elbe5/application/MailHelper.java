@@ -8,8 +8,8 @@
  */
 package de.elbe5.application;
 
-import de.elbe5.base.Log;
-import de.elbe5.base.Mailer;
+import de.elbe5.log.Log;
+import de.elbe5.mail.Mailer;
 
 public class MailHelper {
 

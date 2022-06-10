@@ -9,15 +9,16 @@
 package de.elbe5.database;
 
 import de.elbe5.application.ApplicationPath;
-import de.elbe5.base.BaseData;
-import de.elbe5.base.Log;
-import de.elbe5.base.FileHelper;
+import de.elbe5.data.BaseData;
+import de.elbe5.companion.FileCompanion;
+import de.elbe5.companion.StringCompanion;
+import de.elbe5.log.Log;
 
 import java.io.File;
 import java.sql.*;
 import java.time.LocalDateTime;
 
-public abstract class DbBean {
+public abstract class DbBean implements StringCompanion, FileCompanion {
 
     public DbBean() {
     }
@@ -169,7 +170,7 @@ public abstract class DbBean {
         String path = ApplicationPath.getAppROOTPath() + "/static-content/img/"+fileName;
         File file=new File(path);
         if (file.exists()) {
-            data= FileHelper.readBinaryFile(file);
+            data= readBinaryFile(file);
         }
         return data;
     }

@@ -1,6 +1,6 @@
 package de.elbe5.administration.html;
 
-import de.elbe5.base.Strings;
+import de.elbe5.data.LocalizedStrings;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.file.DocumentData;
@@ -15,7 +15,7 @@ import java.util.Map;
 public class ContentAdminPage extends AdminPage {
 
     public ContentAdminPage() {
-        super(Strings.getString("_contentAdministration"));
+        super(LocalizedStrings.getString("_contentAdministration"));
     }
 
     @Override

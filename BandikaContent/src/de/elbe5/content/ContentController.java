@@ -8,10 +8,8 @@
  */
 package de.elbe5.content;
 
-import de.elbe5.administration.AdminController;
-import de.elbe5.base.Log;
-import de.elbe5.base.Strings;
-import de.elbe5.base.BaseData;
+import de.elbe5.log.Log;
+import de.elbe5.data.BaseData;
 import de.elbe5.administration.html.ContentAdminPage;
 import de.elbe5.content.html.EditContentRightsPage;
 import de.elbe5.content.html.SortChildContentPage;
@@ -119,7 +117,7 @@ public class ContentController extends Controller {
         data.setNew(false);
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
         ContentCache.setDirty();
-        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId(), Strings.getString("_contentSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId(), getString("_contentSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     //backend
@@ -148,7 +146,7 @@ public class ContentController extends Controller {
         }
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
         ContentCache.setDirty();
-        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId(), Strings.getString("_rightsSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId(), getString("_rightsSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     //backend
@@ -177,19 +175,19 @@ public class ContentController extends Controller {
         int parentId = rdata.getAttributes().getInt("parentId");
         ContentData data=rdata.getClipboardData(ContentRequestKeys.KEY_CONTENT,ContentData.class);
         if (data==null){
-            rdata.setMessage(Strings.getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata);
         }
         ContentData parent = ContentCache.getContent(parentId);
         if (parent == null){
-            rdata.setMessage(Strings.getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata);
         }
         checkRights(parent.hasUserEditRight(rdata));
         Set<Integer> parentIds=new HashSet<>();
         parent.collectParentIds(parentIds);
         if (parentIds.contains(data.getId())){
-            rdata.setMessage(Strings.getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata);
         }
         data.setParentId(parentId);
@@ -199,7 +197,7 @@ public class ContentController extends Controller {
         ContentBean.getInstance().saveContent(data);
         rdata.clearClipboardData(ContentRequestKeys.KEY_CONTENT);
         ContentCache.setDirty();
-        rdata.setMessage(Strings.getString("_contentPasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(getString("_contentPasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,data.getId());
     }
 
@@ -216,7 +214,7 @@ public class ContentController extends Controller {
         ContentData data=ContentCache.getContent(contentId);
         checkRights(data.hasUserEditRight(rdata)) ;
         if (contentId < BaseData.ID_MIN) {
-            rdata.setMessage(Strings.getString("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(getString("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata);
         }
         int parentId = ContentCache.getParentContentId(contentId);
@@ -224,7 +222,7 @@ public class ContentController extends Controller {
         ContentCache.setDirty();
         rdata.getAttributes().put("contentId", Integer.toString(parentId));
         ContentCache.setDirty();
-        rdata.setMessage(Strings.getString("_contentDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(getString("_contentDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,parentId);
     }
 
@@ -253,7 +251,7 @@ public class ContentController extends Controller {
         ContentBean.getInstance().updateChildRankings(data);
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
         ContentCache.setDirty();
-        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + contentId, Strings.getString("_newRankingSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + contentId, getString("_newRankingSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse openCreateContentFrontend(RequestData rdata) {

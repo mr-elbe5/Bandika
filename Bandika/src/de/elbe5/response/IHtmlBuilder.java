@@ -8,53 +8,26 @@
  */
 package de.elbe5.response;
 
-import de.elbe5.base.Strings;
+import de.elbe5.companion.DateCompanion;
+import de.elbe5.companion.StringCompanion;
 
 import java.util.Map;
 
-public interface IHtmlBuilder {
+public interface IHtmlBuilder extends StringCompanion, DateCompanion {
 
     default void append(StringBuilder sb, String s){
         sb.append(s);
     }
 
-    default void append(StringBuilder sb, String s, String... params){
-        sb.append(Strings.format(s, params));
-    }
-
     default void append(StringBuilder sb, String s, Map<String, String> params){
-        sb.append(Strings.format(s, params));
-    }
-
-    default String getHtml(String key){
-        return Strings.getHtml(key);
-    }
-
-    default String getString(String key){
-        return Strings.getString(key);
-    }
-
-    default String toHtml(String src) {
-        return Strings.toHtml(src);
-    }
-
-    default String toHtmlMultiline(String src) {
-        return Strings.toHtmlMultiline(src);
-    }
-
-    default String getJs(String src) {
-        return Strings.getJs(src);
-    }
-
-    default String toJs(String src) {
-        return Strings.toJs(src);
+        sb.append(format(s, params));
     }
 
     default Map.Entry<String, String> param(String key, String value){
         if (value.startsWith("_")){
-            return Map.entry(key, Strings.getHtml(value));
+            return Map.entry(key, getHtml(value));
         }
-        return Map.entry(key, Strings.toHtml(value));
+        return Map.entry(key, toHtml(value));
     }
 
     default Map.Entry<String, String> htmlParam(String key, String value){

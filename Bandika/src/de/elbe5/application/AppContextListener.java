@@ -8,9 +8,7 @@
  */
 package de.elbe5.application;
 
-import de.elbe5.base.Log;
-import de.elbe5.base.BaseThread;
-import de.elbe5.base.IStoppable;
+import de.elbe5.log.Log;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

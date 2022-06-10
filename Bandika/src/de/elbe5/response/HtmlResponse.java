@@ -9,7 +9,6 @@
 package de.elbe5.response;
 
 import de.elbe5.application.Configuration;
-import de.elbe5.base.Strings;
 import de.elbe5.request.RequestData;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

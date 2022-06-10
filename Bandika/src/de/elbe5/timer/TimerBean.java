@@ -8,7 +8,7 @@
  */
 package de.elbe5.timer;
 
-import de.elbe5.base.Log;
+import de.elbe5.log.Log;
 import de.elbe5.database.DbBean;
 
 import java.sql.*;

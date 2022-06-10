@@ -8,11 +8,12 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.base.*;
+import de.elbe5.companion.FileCompanion;
 import de.elbe5.content.ContentData;
+import de.elbe5.data.BaseData;
 import de.elbe5.request.RequestData;
 
-public abstract class FileData extends BaseData {
+public abstract class FileData extends BaseData implements FileCompanion {
 
     private String fileName = "";
     private String extension = "";
@@ -41,7 +42,7 @@ public abstract class FileData extends BaseData {
         int pos= getFileName().lastIndexOf('.');
         if (pos==-1)
             return;
-        setFileName(Strings.toSafeWebName(getDisplayName())+ getFileName().substring(pos));
+        setFileName(toSafeWebName(getDisplayName())+ getFileName().substring(pos));
     }
 
     public String getFileName() {
@@ -52,7 +53,7 @@ public abstract class FileData extends BaseData {
         if (!this.fileName.isEmpty() && !this.fileName.equals(fileName))
             oldFileName=this.fileName;
         this.fileName = fileName;
-        extension = FileHelper.getExtension(fileName);
+        extension = getExtension(fileName);
         tempFileName = getId() + extension;
     }
 
@@ -78,7 +79,7 @@ public abstract class FileData extends BaseData {
 
     public String getDisplayName() {
         if (displayName.isEmpty() )
-            return FileHelper.getFileNameWithoutExtension(getFileName());
+            return getFileNameWithoutExtension(getFileName());
         return displayName;
     }
 
@@ -156,7 +157,7 @@ public abstract class FileData extends BaseData {
     // helper
 
     public void createFromBinaryFile(BinaryFile file) {
-        if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !Strings.isNullOrEmpty(file.getContentType())) {
+        if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !isNullOrEmpty(file.getContentType())) {
             setFileName(file.getFileName());
             setBytes(file.getBytes());
             setFileSize(file.getBytes().length);

@@ -1,7 +1,7 @@
 package de.elbe5.user.html;
 
 import de.elbe5.administration.html.AdminPage;
-import de.elbe5.base.Strings;
+import de.elbe5.data.LocalizedStrings;
 import de.elbe5.company.CompanyBean;
 import de.elbe5.company.CompanyData;
 import de.elbe5.group.GroupBean;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class UserAdminPage extends AdminPage {
 
     public UserAdminPage() {
-        super(Strings.getString("_userAdministration"));
+        super(LocalizedStrings.getString("_userAdministration"));
     }
 
     @Override

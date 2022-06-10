@@ -10,7 +10,6 @@ package de.elbe5.page;
 
 import de.elbe5.application.Configuration;
 import de.elbe5.application.MailHelper;
-import de.elbe5.base.Strings;
 import de.elbe5.content.ContentController;
 import de.elbe5.page.html.AddPagePart;
 import de.elbe5.request.*;
@@ -59,7 +58,7 @@ public class PageController extends ContentController {
         String sessionCaptcha = rdata.getSessionObject(RequestKeys.KEY_CAPTCHA, String.class);
         if (!captcha.equals(sessionCaptcha)){
             rdata.addFormField("captcha");
-            rdata.addFormError(Strings.getString("_captchaError"));
+            rdata.addFormError(getString("_captchaError"));
             return show(rdata);
         }
         String name = rdata.getAttributes().getString("contactName");
@@ -77,12 +76,12 @@ public class PageController extends ContentController {
         if (!rdata.checkFormErrors()){
             return show(rdata);
         }
-        message = String.format(Strings.getHtml("_contactRequestText"),name,email) + message;
-        if (!MailHelper.sendPlainMail(Configuration.getMailReceiver(), Strings.getString("_contactRequest"), message)) {
-            rdata.setMessage(Strings.getString("_contactRequestError"), RequestKeys.MESSAGE_TYPE_ERROR);
+        message = String.format(getHtml("_contactRequestText"),name,email) + message;
+        if (!MailHelper.sendPlainMail(Configuration.getMailReceiver(), getString("_contactRequest"), message)) {
+            rdata.setMessage(getString("_contactRequestError"), RequestKeys.MESSAGE_TYPE_ERROR);
             return show(rdata);
         }
-        rdata.setMessage(Strings.getString("_contactRequestSent"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(getString("_contactRequestSent"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         rdata.removeSessionObject(RequestKeys.KEY_CAPTCHA);
         return show(rdata);
     }

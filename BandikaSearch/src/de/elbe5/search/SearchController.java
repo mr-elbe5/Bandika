@@ -8,7 +8,6 @@
  */
 package de.elbe5.search;
 
-import de.elbe5.base.Strings;
 import de.elbe5.request.RequestKeys;
 import de.elbe5.response.*;
 import de.elbe5.rights.SystemZone;
@@ -77,14 +76,14 @@ public class SearchController extends Controller {
     public IResponse indexAllContent(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         SearchQueue.getInstance().addAction(SearchQueue.ACTION_INDEX_PAGES);
-        rdata.setMessage(Strings.getString("_indexingContentQueued"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(getString("_indexingContentQueued"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openSystemAdministration");
     }
 
     public IResponse indexAllUsers(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         SearchQueue.getInstance().addAction(SearchQueue.ACTION_INDEX_USERS);
-        rdata.setMessage(Strings.getString("_indexingUsersQueued"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(getString("_indexingUsersQueued"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openSystemAdministration");
     }
 

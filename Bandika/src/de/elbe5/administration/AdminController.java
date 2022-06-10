@@ -10,9 +10,8 @@ package de.elbe5.administration;
 
 import de.elbe5.administration.html.SystemAdminPage;
 import de.elbe5.application.ApplicationPath;
-import de.elbe5.base.Strings;
-import de.elbe5.base.Log;
-import de.elbe5.base.FileHelper;
+import de.elbe5.companion.FileCompanion;
+import de.elbe5.log.Log;
 import de.elbe5.request.RequestKeys;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.ResponseException;
@@ -28,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 
-public class AdminController extends Controller {
+public class AdminController extends Controller implements FileCompanion {
 
     public static final String KEY = "admin";
 
@@ -75,11 +74,11 @@ public class AdminController extends Controller {
         String path = ApplicationPath.getAppROOTPath() + "/WEB-INF/web.xml";
         File f = new File(path);
         try {
-            FileHelper.touch(f);
+            touch(f);
         } catch (IOException e) {
             Log.error("could not touch file " + path, e);
         }
-        rdata.setMessage(Strings.getString("_restartHint"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(getString("_restartHint"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
@@ -87,14 +86,14 @@ public class AdminController extends Controller {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         UserCache.setDirty();
         UserCache.checkDirty();
-        rdata.setMessage(Strings.getString("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(getString("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
     public IResponse reloadTemplateCache(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
-        TemplateCache.load();
-        rdata.setMessage(Strings.getString("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        TemplateCache.getInstance().load();
+        rdata.setMessage(getString("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 

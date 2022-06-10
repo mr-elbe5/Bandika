@@ -35,7 +35,7 @@ public class SectionTag extends TemplateTag {
     }
 
     void appendEditSection(StringBuilder sb, RequestData rdata, SectionData sectionData) {
-        List<Template> templates = TemplateCache.getTemplates("part");
+        List<Template> templates = TemplateCache.getInstance().getTemplates("part");
         append(sb,"""
                 <div class="section $css$" id="$id$" title="Section $name$">
                     <div class="sectionEditButtons">

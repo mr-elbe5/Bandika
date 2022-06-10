@@ -27,7 +27,7 @@ public class TemplateResponse extends HtmlResponse {
 
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
-        Template template = TemplateCache.getTemplate(type, name);
+        Template template = TemplateCache.getInstance().getTemplate(type, name);
         if (template != null) {
             sb.append(template.getHtml(rdata));
             super.processResponse(context, rdata, response);

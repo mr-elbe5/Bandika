@@ -1,8 +1,7 @@
 package de.elbe5.template;
 
-import de.elbe5.base.Log;
-import de.elbe5.base.StringMap;
-import de.elbe5.base.Strings;
+import de.elbe5.log.Log;
+import de.elbe5.data.StringMap;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IHtmlBuilder;
 

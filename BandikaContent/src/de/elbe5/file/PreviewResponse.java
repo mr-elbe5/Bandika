@@ -8,8 +8,6 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.base.BinaryFile;
-import de.elbe5.file.PreviewCache;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IResponse;
 

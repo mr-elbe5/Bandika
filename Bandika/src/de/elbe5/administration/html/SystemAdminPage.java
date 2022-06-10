@@ -1,6 +1,6 @@
 package de.elbe5.administration.html;
 
-import de.elbe5.base.Strings;
+import de.elbe5.data.LocalizedStrings;
 import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.timer.Timer;
@@ -11,7 +11,7 @@ import java.util.Map;
 public class SystemAdminPage extends AdminPage{
 
     public SystemAdminPage() {
-        super(Strings.getString("_systemAdministration"));
+        super(LocalizedStrings.getString("_systemAdministration"));
     }
 
     @Override

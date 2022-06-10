@@ -1,6 +1,5 @@
 package de.elbe5.file.html;
 
-import de.elbe5.base.DateHelper;
 import de.elbe5.file.DocumentData;
 import de.elbe5.response.IFormBuilder;
 import de.elbe5.response.ModalPage;
@@ -24,8 +23,8 @@ public class EditDocumentPage extends ModalPage implements IFormBuilder {
         appendFormStart(sb, url , "documentform", true);
         appendModalBodyStart();
         appendTextLine(sb, getHtml("_idAndUrl"), documentData.getId() + " - " + toHtml(documentData.getFileName()));
-        appendTextLine(sb, getHtml("_creation"), DateHelper.toHtmlDateTime(documentData.getCreationDate()) + " - " + toHtml(creatorName));
-        appendTextLine(sb, getHtml("_lastChange"), DateHelper.toHtmlDateTime(documentData.getChangeDate()) + " - " + toHtml(changerName));
+        appendTextLine(sb, getHtml("_creation"), toHtmlDateTime(documentData.getCreationDate()) + " - " + toHtml(creatorName));
+        appendTextLine(sb, getHtml("_lastChange"), toHtmlDateTime(documentData.getChangeDate()) + " - " + toHtml(changerName));
         appendFileLineStart(sb, rdata.hasFormErrorField("file"), "file", getHtml("_file"), fileRequired, false);
         appendLineEnd(sb);
         appendTextInputLine(sb, rdata.hasFormErrorField("displayName"),"displayName",getHtml("_displayName"), true, toHtml(documentData.getDisplayName()));

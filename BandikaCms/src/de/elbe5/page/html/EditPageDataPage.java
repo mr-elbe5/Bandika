@@ -1,6 +1,5 @@
 package de.elbe5.page.html;
 
-import de.elbe5.base.Strings;
 import de.elbe5.content.html.EditContentDataPage;
 import de.elbe5.template.Template;
 import de.elbe5.template.TemplateCache;
@@ -16,7 +15,7 @@ public class EditPageDataPage extends EditContentDataPage {
     public void appendHtml(RequestData rdata) {
         PageData contentData = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, PageData.class);
         String url = "/ctrl/page/saveContentData/" + contentData.getId();
-        List<Template> pageTemplates = TemplateCache.getTemplates("page");
+        List<Template> pageTemplates = TemplateCache.getInstance().getTemplates("page");
         appendStartHtml(rdata, contentData, url);
         appendSelectStart(sb, rdata.hasFormErrorField("template"), "template", getHtml("_pageTemplate"), true, "");
         appendOption(sb, "", getHtml("_pleaseSelect"), contentData.getTemplateName().isEmpty());

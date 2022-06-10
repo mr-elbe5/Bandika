@@ -8,7 +8,6 @@
  */
 package de.elbe5.content;
 
-import de.elbe5.base.Strings;
 import de.elbe5.content.html.EditLinkDataPage;
 import de.elbe5.response.IHtmlBuilder;
 import de.elbe5.response.ModalPage;
@@ -60,7 +59,7 @@ public class LinkData extends ContentData implements IHtmlBuilder {
     @Override
     public String getNavDisplay() {
         if (!linkIcon.isEmpty()) {
-            return Strings.format("""
+            return format("""
                                 <img src="/static-content/img/$linkIcon$" class="navIcon" title="$name$" alt="$name$" />
                             """,
                     Map.ofEntries(
@@ -69,7 +68,7 @@ public class LinkData extends ContentData implements IHtmlBuilder {
                     )
             );
         }
-        return Strings.toHtml(getDisplayName());
+        return toHtml(getDisplayName());
     }
 
     @Override

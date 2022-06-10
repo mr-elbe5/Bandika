@@ -8,7 +8,6 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.base.Strings;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.file.html.EditMediaPage;
@@ -79,7 +78,7 @@ public class MediaController extends FileController {
         }
         data.setNew(false);
         ContentCache.setDirty();
-        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId(), Strings.getString("_fileSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId(), getString("_fileSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse cutMedia(RequestData rdata) {
@@ -108,13 +107,13 @@ public class MediaController extends FileController {
         int parentId = rdata.getAttributes().getInt("parentId");
         ContentData parent=ContentCache.getContent(parentId);
         if (parent == null){
-            rdata.setMessage(Strings.getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata);
         }
         checkRights(parent.hasUserEditRight(rdata));
         MediaData data=rdata.getClipboardData(ContentRequestKeys.KEY_MEDIA,MediaData.class);
         if (data==null){
-            rdata.setMessage(Strings.getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata);
         }
         data.setParentId(parentId);
@@ -123,7 +122,7 @@ public class MediaController extends FileController {
         FileBean.getInstance().saveFile(data,true);
         rdata.clearClipboardData(ContentRequestKeys.KEY_MEDIA);
         ContentCache.setDirty();
-        rdata.setMessage(Strings.getString("_mediaPasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(getString("_mediaPasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,data.getId());
     }
 

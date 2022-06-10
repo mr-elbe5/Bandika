@@ -8,8 +8,8 @@
  */
 package de.elbe5.timer;
 
-import de.elbe5.base.Log;
-import de.elbe5.base.BaseThread;
+import de.elbe5.log.Log;
+import de.elbe5.application.BaseThread;
 
 import java.time.LocalDateTime;
 

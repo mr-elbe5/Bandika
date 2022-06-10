@@ -1,7 +1,6 @@
 package de.elbe5.administration.html;
 
-import de.elbe5.base.DateHelper;
-import de.elbe5.base.Strings;
+import de.elbe5.data.LocalizedStrings;
 import de.elbe5.content.ContentBean;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentDayLog;
@@ -14,7 +13,7 @@ import java.util.Map;
 public class ContentLogAdminPage extends AdminPage {
 
     public ContentLogAdminPage() {
-        super(Strings.getString("_contentLog"));
+        super(LocalizedStrings.getString("_contentLog"));
     }
 
     @Override
@@ -43,7 +42,7 @@ public class ContentLogAdminPage extends AdminPage {
                                 </tr>
                                 """,
                         Map.ofEntries(
-                                param("date",DateHelper.toHtmlDate(dayLog.getDay()))
+                                param("date",toHtmlDate(dayLog.getDay()))
                         )
                 );
                 for (ContentLog log : dayLog.getLogs()) {

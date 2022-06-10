@@ -8,7 +8,6 @@
  */
 package de.elbe5.servlet;
 
-import de.elbe5.base.Strings;
 import de.elbe5.response.HtmlResponse;
 import de.elbe5.response.IHtmlBuilder;
 
@@ -90,10 +89,10 @@ public abstract class WebServlet extends HttpServlet implements IHtmlBuilder {
 
     protected void handleException(HttpServletRequest request, HttpServletResponse response, int code) {
         String errorKey = (String) request.getAttribute("errorKey");
-        String html = Strings.format(exceptionHtml,
+        String html = format(exceptionHtml,
                 Map.ofEntries(
-                        htmlParam("error", Strings.getString("_error" + code)),
-                        htmlParam("errorText", errorKey != null ? Strings.getHtml(errorKey) : ""),
+                        htmlParam("error", getString("_error" + code)),
+                        htmlParam("errorText", errorKey != null ? getHtml(errorKey) : ""),
                         param("home", "_home")
                 )
         );

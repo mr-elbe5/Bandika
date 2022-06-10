@@ -9,9 +9,8 @@
 package de.elbe5.file;
 
 import de.elbe5.application.ApplicationPath;
-import de.elbe5.base.BinaryFile;
-import de.elbe5.base.Log;
-import de.elbe5.base.FileHelper;
+import de.elbe5.log.Log;
+import de.elbe5.companion.FileCompanion;
 import de.elbe5.content.ContentCentral;
 import de.elbe5.database.DbBean;
 
@@ -23,7 +22,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileBean extends DbBean {
+public class FileBean extends DbBean implements FileCompanion {
 
     private static final int DEFAULT_BUFFER_SIZE = 0x4000;
 
@@ -266,7 +265,7 @@ public class FileBean extends DbBean {
     public boolean createTempFile(File file){
         Log.log("creating file " + file.getName());
         String fileName = file.getName();
-        String name = FileHelper.getFileNameWithoutExtension(fileName);
+        String name = getFileNameWithoutExtension(fileName);
         int id = Integer.parseInt(name);
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -311,9 +310,9 @@ public class FileBean extends DbBean {
 
     public boolean writeFile(FileData data, boolean replace){
         String path = ApplicationPath.getAppFilePath()+"/"+data.getTempFileName();
-        if (!replace && FileHelper.fileExists(path))
+        if (!replace && fileExists(path))
             return true;
-        return FileHelper.writeBinaryFile(path, data.getBytes());
+        return writeBinaryFile(path, data.getBytes());
     }
 
     private static final String DELETE_SQL = "DELETE FROM t_file WHERE id=?";

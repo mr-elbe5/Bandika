@@ -8,10 +8,10 @@
  */
 package de.elbe5.user;
 
-import de.elbe5.base.BaseData;
-import de.elbe5.base.BinaryFile;
-import de.elbe5.base.Strings;
-import de.elbe5.base.Log;
+import de.elbe5.data.BaseData;
+import de.elbe5.file.BinaryFile;
+import de.elbe5.companion.EncryptionCompanion;
+import de.elbe5.log.Log;
 import de.elbe5.request.*;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
@@ -20,8 +20,10 @@ import de.elbe5.response.*;
 import de.elbe5.user.html.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.Instant;
+import java.util.Random;
 
-public class UserController extends Controller {
+public class UserController extends Controller implements EncryptionCompanion {
 
     public static final String KEY = "user";
 
@@ -54,13 +56,13 @@ public class UserController extends Controller {
         String login = rdata.getAttributes().getString("login");
         String pwd = rdata.getAttributes().getString("password");
         if (login.length() == 0 || pwd.length() == 0) {
-            rdata.setMessage(Strings.getString("_notComplete"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(getString("_notComplete"), RequestKeys.MESSAGE_TYPE_ERROR);
             return openLogin(rdata);
         }
         UserData data = UserBean.getInstance().loginUser(login, pwd);
         if (data == null) {
             Log.info("bad login of "+login);
-            rdata.setMessage(Strings.getString("_badLogin"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(getString("_badLogin"), RequestKeys.MESSAGE_TYPE_ERROR);
             return openLogin(rdata);
         }
         rdata.setSessionUser(data);
@@ -71,19 +73,27 @@ public class UserController extends Controller {
     }
 
     public IResponse showCaptcha(RequestData rdata) {
-        String captcha = UserSecurity.generateCaptchaString();
+        String captcha = generateCaptchaString();
         rdata.setSessionObject(RequestKeys.KEY_CAPTCHA, captcha);
-        BinaryFile data = UserSecurity.getCaptcha(captcha);
-        if (data==null){
-            return new StatusResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
+        Captcha data = new Captcha();
+        data.initialize(captcha);
         return new MemoryFileResponse(data);
+    }
+
+    private String generateCaptchaString() {
+        Random random = new Random();
+        random.setSeed(Instant.now().toEpochMilli());
+        char[] chars = new char[5];
+        for ( int i=0; i<5; i++){
+            chars[i] = getRandomChar(ASCII_CHARS, random);
+        }
+        return new String(chars);
     }
 
     public IResponse logout(RequestData rdata) {
         rdata.setSessionUser(null);
         rdata.resetSession();
-        rdata.setMessage(Strings.getString("_loggedOut"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(getString("_loggedOut"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         String next = rdata.getAttributes().getString("next");
         if (!next.isEmpty())
             return new ForwardResponse(next);
@@ -119,19 +129,19 @@ public class UserController extends Controller {
         if (rdata.getUserId() == data.getId()) {
             rdata.setSessionUser(data);
         }
-        return new CloseDialogResponse("/ctrl/admin/openUserAdministration?userId=" + data.getId(), Strings.getString("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/admin/openUserAdministration?userId=" + data.getId(), getString("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse deleteUser(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
-            rdata.setMessage(Strings.getString("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(getString("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
             return new ForwardResponse("/ctrl/admin/openUserAdministration");
         }
         UserBean.getInstance().deleteUser(id);
         UserCache.setDirty();
-        rdata.setMessage(Strings.getString("_userDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(getString("_userDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openUserAdministration");
     }
 
@@ -165,24 +175,24 @@ public class UserController extends Controller {
         String newPassword2 = rdata.getAttributes().getString("newPassword2");
         if (newPassword.length() < UserData.MIN_PASSWORD_LENGTH) {
             rdata.addFormField("newPassword1");
-            rdata.addFormError(Strings.getString("_passwordLengthError"));
+            rdata.addFormError(getString("_passwordLengthError"));
             return showChangePassword(rdata);
         }
         if (!newPassword.equals(newPassword2)) {
             rdata.addFormField("newPassword1");
             rdata.addFormField("newPassword2");
-            rdata.addFormError(Strings.getString("_passwordsDontMatch"));
+            rdata.addFormError(getString("_passwordsDontMatch"));
             return showChangePassword(rdata);
         }
         UserData data = UserBean.getInstance().loginUser(user.getLogin(), oldPassword);
         if (data == null) {
             rdata.addFormField("newPassword1");
-            rdata.addFormError(Strings.getString("_badLogin"));
+            rdata.addFormError(getString("_badLogin"));
             return showChangePassword(rdata);
         }
         data.setPassword(newPassword);
         UserBean.getInstance().saveUserPassword(data);
-        return new CloseDialogResponse("/ctrl/user/openProfile", Strings.getString("_passwordChanged"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/user/openProfile", getString("_passwordChanged"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse openChangeProfile(RequestData rdata) {
@@ -201,7 +211,7 @@ public class UserController extends Controller {
         UserBean.getInstance().saveUserProfile(data);
         rdata.setSessionUser(data);
         UserCache.setDirty();
-        return new CloseDialogResponse("/ctrl/user/openProfile", Strings.getString("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/user/openProfile", getString("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
     
     protected IResponse showProfile() {

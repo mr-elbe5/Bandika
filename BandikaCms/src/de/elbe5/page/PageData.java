@@ -182,7 +182,7 @@ public class PageData extends ContentData implements DraftPageWrapper{
     @Override
     protected void appendEditDraftContent(StringBuilder sb, RequestData rdata) {
         appendStartHtml(sb, this);
-        Template tpl = TemplateCache.getTemplate("page", templateName);
+        Template tpl = TemplateCache.getInstance().getTemplate("page", templateName);
         if (tpl==null)
             return;
         tpl.appendHtml(sb, rdata);
@@ -192,7 +192,7 @@ public class PageData extends ContentData implements DraftPageWrapper{
 
     @Override
     protected void appendDraftContent(StringBuilder sb, RequestData rdata) {
-        Template tpl = TemplateCache.getTemplate("page", templateName);
+        Template tpl = TemplateCache.getInstance().getTemplate("page", templateName);
         if (tpl==null)
             return;
         tpl.appendHtml(sb, rdata);

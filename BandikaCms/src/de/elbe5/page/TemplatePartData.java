@@ -53,7 +53,7 @@ public class TemplatePartData extends PagePartData {
 
     public void appendHtml(StringBuilder sb, RequestData rdata){
         rdata.getAttributes().put(PagePartData.KEY_PART, this);
-        Template tpl = TemplateCache.getTemplate("part", templateName);
+        Template tpl = TemplateCache.getInstance().getTemplate("part", templateName);
         if (tpl==null)
             return;
         tpl.appendHtml(sb, rdata);

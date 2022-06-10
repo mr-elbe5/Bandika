@@ -8,8 +8,7 @@
  */
 package de.elbe5.company;
 
-import de.elbe5.base.Strings;
-import de.elbe5.base.BaseData;
+import de.elbe5.data.BaseData;
 import de.elbe5.company.html.EditCompanyPage;
 import de.elbe5.request.*;
 import de.elbe5.response.*;
@@ -72,19 +71,19 @@ public class CompanyController extends Controller {
         }
         CompanyBean.getInstance().saveCompany(data);
         CompanyCache.setDirty();
-        return new CloseDialogResponse("/ctrl/admin/openUserAdministration?companyId=" + data.getId(), Strings.getString("_companySaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/admin/openUserAdministration?companyId=" + data.getId(), getString("_companySaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse deleteCompany(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
-            rdata.setMessage(Strings.getString("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(getString("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
             return new ForwardResponse("/ctrl/admin/openUserAdministration");
         }
         CompanyBean.getInstance().deleteCompany(id);
         CompanyCache.setDirty();
-        rdata.setMessage(Strings.getString("_companyDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(getString("_companyDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openUserAdministration");
     }
 

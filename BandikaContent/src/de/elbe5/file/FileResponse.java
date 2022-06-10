@@ -10,8 +10,6 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.base.Strings;
-import de.elbe5.file.RangeInfo;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IResponse;
 
@@ -43,7 +41,7 @@ public class FileResponse implements IResponse {
         response.reset();
         response.setBufferSize(DEFAULT_BUFFER_SIZE);
         boolean forceDownload = rdata.getAttributes().getBoolean("download");
-        String disposition = (forceDownload ? "attachment" : "inline") + ";filename=\"" + Strings.toSafeWebName(fileName) + "\"";
+        String disposition = (forceDownload ? "attachment" : "inline") + ";filename=\"" + toSafeWebName(fileName) + "\"";
         response.setHeader("Content-Disposition", disposition);
         response.setHeader("Accept-Ranges", "bytes");
         String contentType = context.getMimeType(file.getName());

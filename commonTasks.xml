@@ -36,20 +36,6 @@
         <mkdir dir="${buildScss.dir}" />
     </target>
 
-    <target name="collectBandikaBaseFiles" depends="makeDirs">
-        <copy todir="${buildSrc.dir}" overwrite="true">
-            <fileset dir="BandikaBase/src" />
-        </copy>
-        <copy todir="${buildLibs.dir}">
-            <fileset dir="libs" >
-                <include name="commons*.jar"/>
-                <include name="mail.jar"/>
-                <include name="json*.jar"/>
-                <include name="jsoup*.jar"/>
-            </fileset>
-        </copy>
-    </target>
-
     <target name="collectBandikaSassFiles">
         <copy todir="${buildScss.dir}" overwrite="true">
             <fileset dir="Bandika/scss" />
@@ -89,7 +75,16 @@
         </apply>
     </target>
 
-    <target name="collectBandikaFiles" depends="collectBandikaBaseFiles, createCss">
+    <target name="collectBandikaFiles" depends="createCss">
+        <copy todir="${buildLibs.dir}">
+            <fileset dir="libs" >
+                <include name="annotations*.jar"/>
+                <include name="commons*.jar"/>
+                <include name="mail.jar"/>
+                <include name="json*.jar"/>
+                <include name="jsoup*.jar"/>
+            </fileset>
+        </copy>
         <copy todir="${buildSrc.dir}" overwrite="true">
             <fileset dir="Bandika/src" />
         </copy>

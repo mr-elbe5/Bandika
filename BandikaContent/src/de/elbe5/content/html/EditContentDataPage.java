@@ -1,6 +1,5 @@
 package de.elbe5.content.html;
 
-import de.elbe5.base.DateHelper;
 import de.elbe5.content.ContentData;
 import de.elbe5.response.IFormBuilder;
 import de.elbe5.response.ModalPage;
@@ -30,8 +29,8 @@ public class EditContentDataPage extends ModalPage implements IFormBuilder {
         appendFormStart(sb, url, "contentform", true);
         appendModalBodyStart(getHtml("_settings"));
         appendTextLine(sb, getHtml("_idAndUrl"), Integer.toString(contentData.getId()) + " - " + toHtml(contentData.getUrl()));
-        appendTextLine(sb, getHtml("_creation"), DateHelper.toHtmlDateTime(contentData.getCreationDate()) + " - " + toHtml(creatorName));
-        appendTextLine(sb, getHtml("_lastChange"), DateHelper.toHtmlDateTime(contentData.getChangeDate()) + " - " + toHtml(changerName));
+        appendTextLine(sb, getHtml("_creation"), toHtmlDateTime(contentData.getCreationDate()) + " - " + toHtml(creatorName));
+        appendTextLine(sb, getHtml("_lastChange"), toHtmlDateTime(contentData.getChangeDate()) + " - " + toHtml(changerName));
         appendTextInputLine(sb, rdata.hasFormErrorField("displayName"), "displayName", getHtml("_name"), true, toHtml(contentData.getDisplayName()));
         appendTextareaLine(sb, "description", getHtml("_description"), toHtml(contentData.getDescription()), "5rem");
         appendSelectStart(sb, "accessType", getHtml("_accessType"));

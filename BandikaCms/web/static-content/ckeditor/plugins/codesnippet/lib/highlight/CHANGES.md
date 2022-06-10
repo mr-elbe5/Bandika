@@ -522,7 +522,7 @@ welcome to [pick up its maintenance][p] if needed.
 
 ## Version 5.7.
 
-Fixed escaping of quotes in VBScript strings.
+Fixed escaping of quotes in VBScript 
 
 
 ## Version 5.5

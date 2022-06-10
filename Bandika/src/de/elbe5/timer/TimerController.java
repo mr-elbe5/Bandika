@@ -8,7 +8,6 @@
  */
 package de.elbe5.timer;
 
-import de.elbe5.base.Strings;
 import de.elbe5.request.RequestKeys;
 import de.elbe5.response.StatusResponse;
 import de.elbe5.servlet.ControllerCache;
@@ -66,7 +65,7 @@ public class TimerController extends Controller {
         TimerBean ts = TimerBean.getInstance();
         ts.updateTaskData(data);
         Timer.getInstance().loadTask(data.getName());
-        return new CloseDialogResponse("/ctrl/admin/openSystemAdministration", Strings.getString("_taskSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/admin/openSystemAdministration", getString("_taskSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     private IResponse showEditTimerTask(RequestData rdata) {

@@ -8,7 +8,7 @@
  */
 package de.elbe5.search;
 
-import de.elbe5.base.Log;
+import de.elbe5.log.Log;
 import de.elbe5.application.ApplicationPath;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;

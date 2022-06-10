@@ -8,9 +8,11 @@
  */
 package de.elbe5.user;
 
-import de.elbe5.base.*;
 import de.elbe5.application.Configuration;
+import de.elbe5.companion.EncryptionCompanion;
 import de.elbe5.database.DbBean;
+import de.elbe5.file.BinaryFile;
+import de.elbe5.log.Log;
 import de.elbe5.rights.SystemZone;
 
 import java.sql.*;
@@ -19,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class UserBean extends DbBean {
+public class UserBean extends DbBean implements EncryptionCompanion {
 
     private static UserBean instance = null;
 
@@ -136,7 +138,7 @@ public class UserBean extends DbBean {
                 if (rs.next()) {
                     int i = 1;
                     String encrypted = rs.getString(i++);
-                    if (UserSecurity.encryptPassword(pwd, Configuration.getSalt()).equals(encrypted)){
+                    if (encryptPassword(pwd, Configuration.getSalt()).equals(encrypted)){
                         data = new UserData();
                         data.setId(rs.getInt(i++));
                         data.setLogin(login);
@@ -176,7 +178,7 @@ public class UserBean extends DbBean {
                 if (rs.next()) {
                     int i = 1;
                     String encrypted = rs.getString(i++);
-                    if (UserSecurity.encryptPassword(pwd, Configuration.getSalt()).equals(encrypted)) {
+                    if (encryptPassword(pwd, Configuration.getSalt()).equals(encrypted)) {
                         data = new UserData();
                         data.setId(rs.getInt(i++));
                         data.setLogin(login);
@@ -266,7 +268,7 @@ public class UserBean extends DbBean {
         return data;
     }
 
-    private static final String GET_LOGIN_SQL = "SELECT id,change_date,pwd,first_name,last_name,email FROM t_user WHERE login=? AND approval_code=?";
+    private static final String GET_LOGIN_SQL = "SELECT id,change_date,pwd,first_name,last_name,email FROM t_user WHERE login=?";
 
     public UserData getLogin(String login, String approvalCode, String pwd) {
         Connection con = getConnection();
@@ -276,7 +278,6 @@ public class UserBean extends DbBean {
         try {
             pst = con.prepareStatement(GET_LOGIN_SQL);
             pst.setString(1, login);
-            pst.setString(2, approvalCode);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
@@ -285,7 +286,7 @@ public class UserBean extends DbBean {
                     data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     data.setLogin(login);
                     String encypted = rs.getString(i++);
-                    passed = (UserSecurity.encryptPassword(pwd, Configuration.getSalt()).equals(encypted));
+                    passed = (encryptPassword(pwd, Configuration.getSalt()).equals(encypted));
                     data.setPassword("");
                     data.setFirstName(rs.getString(i++));
                     data.setLastName(rs.getString(i++));
@@ -313,7 +314,7 @@ public class UserBean extends DbBean {
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     String pwd = rs.getString(1);
-                    empty = Strings.isNullOrEmpty(pwd);
+                    empty = isNullOrEmpty(pwd);
                 }
             }
         } catch (SQLException se) {
@@ -578,7 +579,7 @@ public class UserBean extends DbBean {
         try {
             pst = con.prepareStatement(CHANGE_PASSWORD_SQL);
             int i = 1;
-            pst.setString(i++, UserSecurity.encryptPassword(pwd, Configuration.getSalt()));
+            pst.setString(i++, encryptPassword(pwd, Configuration.getSalt()));
             pst.setInt(i, id);
             pst.executeUpdate();
             pst.close();
@@ -667,7 +668,7 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static final String GET_SYSTEM_RIGHTS_SQL = "select name from t_system_right where group_id in({1})";
+    private static final String GET_SYSTEM_RIGHTS_SQL = "select name from t_system_right where group_id in(%s)";
 
     public void readUserRights(Connection con, UserData data) {
         data.clearSystemRights();
@@ -683,7 +684,7 @@ public class UserBean extends DbBean {
                 }
                 buffer.append(id);
             }
-            pst = con.prepareStatement(Strings.format(GET_SYSTEM_RIGHTS_SQL, buffer.toString()));
+            pst = con.prepareStatement(String.format(GET_SYSTEM_RIGHTS_SQL, buffer));
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 data.addSystemRight(SystemZone.valueOf(rs.getString(1)));
