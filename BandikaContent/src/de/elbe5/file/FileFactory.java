@@ -25,36 +25,6 @@ public class FileFactory {
         return list;
     }
 
-    public static List<String> getDocumentTypes() {
-        List<String> list = new ArrayList<>();
-        for (FileClassInfo info : infos.values()){
-            if (info instanceof DocumentClassInfo)
-                list.add(info.getType());
-        }
-        Collections.sort(list);
-        return list;
-    }
-
-    public static List<String> getImageTypes() {
-        List<String> list = new ArrayList<>();
-        for (FileClassInfo info : infos.values()){
-            if (info instanceof ImageClassInfo)
-                list.add(info.getType());
-        }
-        Collections.sort(list);
-        return list;
-    }
-
-    public static List<String> getMediaTypes() {
-        List<String> list = new ArrayList<>();
-        for (FileClassInfo info : infos.values()){
-            if (info instanceof MediaClassInfo)
-                list.add(info.getType());
-        }
-        Collections.sort(list);
-        return list;
-    }
-
     public static void addDocumentClassInfo(Class<? extends DocumentData> fileClass, FileBean bean) {
         DocumentClassInfo fileClassInfo = new DocumentClassInfo(fileClass,bean);
         String type=fileClass.getSimpleName();

@@ -19,17 +19,17 @@ public class EditImagePage extends ModalPage implements IFormBuilder {
         UserData changer = UserCache.getUser(imageData.getChangerId());
         String changerName = changer == null ? "" : changer.getName();
         boolean fileRequired= imageData.isNew();
-        appendModalStart(getHtml("_editImageSettings"));
+        appendModalStart(getString("_editImageSettings"));
         appendFormStart(sb, url , "imageform", true);
         appendModalBodyStart();
-        appendTextLine(sb, getHtml("_idAndUrl"), imageData.getId() + " - " + toHtml(imageData.getFileName()));
-        appendTextLine(sb, getHtml("_creation"), toHtmlDateTime(imageData.getCreationDate()) + " - " + toHtml(creatorName));
-        appendTextLine(sb, getHtml("_lastChange"), toHtmlDateTime(imageData.getChangeDate()) + " - " + toHtml(changerName));
-        appendFileLineStart(sb, rdata.hasFormErrorField("file"), "file", getHtml("_file"), fileRequired, false);
+        appendTextLine(sb, getString("_idAndUrl"), imageData.getId() + " - " + imageData.getFileName());
+        appendTextLine(sb, getString("_creation"), toHtmlDateTime(imageData.getCreationDate()) + " - " + creatorName);
+        appendTextLine(sb, getString("_lastChange"), toHtmlDateTime(imageData.getChangeDate()) + " - " +changerName);
+        appendFileLineStart(sb, rdata.hasFormErrorField("file"), "file", getString("_file"), fileRequired, false);
         appendLineEnd(sb);
-        appendTextInputLine(sb, rdata.hasFormErrorField("displayName"),"displayName",getHtml("_displayName"), true, toHtml(imageData.getDisplayName()));
-        appendTextareaLine(sb, "description", getHtml("_description"), toHtml(imageData.getDescription()), "3rem");
-        appendModalFooter(getHtml("_close"),getHtml("_save"));
+        appendTextInputLine(sb, rdata.hasFormErrorField("displayName"),"displayName",getString("_displayName"), true, imageData.getDisplayName());
+        appendTextareaLine(sb, "description", getString("_description"), imageData.getDescription(), "3rem");
+        appendModalFooter(getString("_close"),getString("_save"));
         appendFormEnd(sb, url, "imageform", true, true, "");
         appendModalEnd();
     }

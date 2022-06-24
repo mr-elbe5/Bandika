@@ -26,11 +26,6 @@ public class LinkData extends ContentData implements IHtmlBuilder {
     public LinkData() {
     }
 
-    public void copyData(LinkData data, RequestData rdata) {
-        super.copyData(data, rdata);
-        linkUrl = data.linkUrl;
-    }
-
     public String getLinkUrl() {
         return linkUrl;
     }
@@ -56,17 +51,17 @@ public class LinkData extends ContentData implements IHtmlBuilder {
 
     // html
 
+    static final String navHtml = """
+            <img src="/static-content/img/{{linkIcon}}" class="navIcon" title="{{name}}" alt="{{name}}" />
+            """;
+
     @Override
-    public String getNavDisplay() {
+    public String getNavDisplayHtml() {
         if (!linkIcon.isEmpty()) {
-            return format("""
-                                <img src="/static-content/img/$linkIcon$" class="navIcon" title="$name$" alt="$name$" />
-                            """,
+            return format(navHtml,
                     Map.ofEntries(
-                            htmlParam("linkIcon", linkIcon),
-                            htmlParam("name", getDisplayName())
-                    )
-            );
+                            Map.entry("linkIcon", linkIcon),
+                            Map.entry("name", toHtml(getDisplayName()))));
         }
         return toHtml(getDisplayName());
     }

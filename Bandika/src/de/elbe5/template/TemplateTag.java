@@ -9,7 +9,7 @@ public abstract class TemplateTag implements ITemplateNode {
     public static final String TAG_PREFIX = "tpl";
 
     protected String type = "";
-    protected Map<String,String> parameters = new HashMap<>();
+    protected Map<String,String> attributes = new HashMap<>();
 
     protected List<ITemplateNode> childNodes = new ArrayList<>();
 
@@ -24,8 +24,8 @@ public abstract class TemplateTag implements ITemplateNode {
         childNodes.add(node);
     }
 
-    public void setParameters(Map<String,String> parameters) {
-        this.parameters = parameters;
+    public void setAttributes(Map<String,String> attributes) {
+        this.attributes = attributes;
     }
 
     public void appendTagStart(StringBuilder sb, RequestData rdata){
@@ -42,25 +42,19 @@ public abstract class TemplateTag implements ITemplateNode {
         appendTagEnd(sb, rdata);
     }
 
-    public String getStringParam(String key, RequestData rdata, String def){
-        String result = parameters.get(key);
+    public String getStringAttribute(String key, String def){
+        String result = attributes.get(key);
         if (result==null){
             return def;
-        }
-        if (result.contains("{{")){
-            result = replaceParams(result, rdata.getTemplateAttributes());
         }
         return result;
     }
 
-    public int getIntParam(String key, RequestData rdata, int def){
+    public int getIntAttribute(String key, int def){
         try{
-            String result = parameters.get(key);
+            String result = attributes.get(key);
             if (result==null){
                 return def;
-            }
-            if (result.contains("{{")){
-                result = replaceParams(result, rdata.getTemplateAttributes());
             }
             return Integer.parseInt(result);
         }
@@ -68,14 +62,11 @@ public abstract class TemplateTag implements ITemplateNode {
             return def;
         }
     }
-    public boolean getBooleanParam(String key, RequestData rdata, boolean def){
+    public boolean getBooleanAttribute(String key, boolean def){
         try{
-            String result = parameters.get(key);
+            String result = attributes.get(key);
             if (result==null){
                 return def;
-            }
-            if (result.contains("{{")){
-                result = replaceParams(result, rdata.getTemplateAttributes());
             }
             return Boolean.parseBoolean(result);
         }

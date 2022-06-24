@@ -102,15 +102,6 @@ public class PageData extends ContentData implements DraftPageWrapper{
         }
     }
 
-    public PagePartData getPart(int pid) {
-        for (SectionData section : getSections().values()) {
-            PagePartData part = section.getPart(pid);
-            if (part!=null)
-                return part;
-        }
-        return null;
-    }
-
     public void addPart(PagePartData part, int fromPartId, boolean setRanking) {
         SectionData section = getSection(part.getSectionName());
         if (section == null) {
@@ -120,21 +111,6 @@ public class PageData extends ContentData implements DraftPageWrapper{
             sections.put(part.getSectionName(), section);
         }
         section.addPart(part, fromPartId, setRanking);
-    }
-
-    public void movePart(String sectionName, int id, int dir) {
-        SectionData section = getSection(sectionName);
-        section.movePart(id, dir);
-    }
-
-    public void deletePart(int pid) {
-        for (SectionData section : getSections().values()) {
-            PagePartData part = section.getPart(pid);
-            if (part!=null) {
-                section.deletePart(pid);
-                break;
-            }
-        }
     }
 
     // multiple data

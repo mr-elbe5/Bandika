@@ -16,10 +16,6 @@ public class ResponseException extends RuntimeException{
         this.responseCode = responseCode;
     }
 
-    public ResponseException(int responseCode, String message){
-        this.responseCode = responseCode;
-    }
-
     public int getResponseCode() {
         return responseCode;
     }

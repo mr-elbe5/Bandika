@@ -10,47 +10,43 @@ import java.util.Map;
 
 public class UserSearchPage extends HtmlIncludePage implements IHtmlBuilder {
 
+    static final String startHtml = """
+            <section class="mainSection searchResults">
+                <h1>{{_searchResults}}
+                </h1>
+                <table class="padded searchResultsTable">
+                    <tr>
+                        <th class="col2">{{_name}}
+                        </th>
+                        <th class="col3">{{_email}}
+                        </th>
+                    </tr>
+            """;
+    static final String lineHtml = """
+                    <tr>
+                        <td>{{name}}
+                        </td>
+                        <td>{{email}}
+                        </td>
+                    </tr>
+            """;
+    static final String endHtml = """
+                </table>
+            </section>
+            """;
+
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
         UserSearchResultData userResult = rdata.getAttributes().get("searchResultData", UserSearchResultData.class);
-        append(sb,"""
-                        <section class="mainSection searchResults">
-                            <h1>$results$
-                            </h1>
-                            <table class="padded searchResultsTable">
-                                <tr>
-                                    <th class="col2">$name$
-                                    </th>
-                                    <th class="col3">$email$
-                                    </th>
-                                </tr>
-                                """,
-                Map.ofEntries(
-                        param("results","_searchResults"),
-                        param("name","_name"),
-                        param("email","_email")
-                )
-        );
+        append(sb, startHtml, null);
         if (userResult != null && !userResult.getResults().isEmpty()) {
             for (UserSearchData data : userResult.getResults()) {
-                append(sb,"""
-                                <tr>
-                                    <td>$name$
-                                    </td>
-                                    <td>$email$
-                                    </td>
-                                </tr>
-                                """,
+                append(sb, lineHtml,
                         Map.ofEntries(
-                                param("name",data.getNameContext()),
-                                param("email",data.getEmailContext())
-                        )
-                );
+                                Map.entry("name", data.getNameContext()),
+                                Map.entry("email", data.getEmailContext())));
             }
         }
-        sb.append("""
-                    </table>
-                </section>
-                """);
+        sb.append(endHtml);
     }
 }

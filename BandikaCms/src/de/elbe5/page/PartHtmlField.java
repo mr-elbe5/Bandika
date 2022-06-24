@@ -19,13 +19,6 @@ public class PartHtmlField extends PartField {
         return FIELDTYPE;
     }
 
-    /******************* HTML part *********************************/
-
-    @Override
-    public void readRequestData(RequestData rdata) {
-        setContent(rdata.getAttributes().getString(getIdentifier()));
-    }
-
     @Override
     public void readFrontendRequestData(RequestData rdata){
         setContent(rdata.getAttributes().getString(getIdentifier()));

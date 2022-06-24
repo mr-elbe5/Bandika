@@ -8,162 +8,141 @@ import de.elbe5.timer.TimerTaskData;
 
 import java.util.Map;
 
-public class SystemAdminPage extends AdminPage{
+public class SystemAdminPage extends AdminPage {
 
     public SystemAdminPage() {
         super(LocalizedStrings.getString("_systemAdministration"));
     }
 
     @Override
-    public void appendPageHtml(RequestData rdata) {
-        appendPageHtmlStart(rdata);
+    public void appendHtml(StringBuilder sb, RequestData rdata) {
+        appendPageHtmlStart(sb, rdata);
         if (rdata.hasSystemRight(SystemZone.APPLICATION)) {
-            appendRestart(rdata);
-            appendCachesStart(rdata);
-            appendUserCache(rdata);
-            appendTemplateCache(rdata);
-            appendCachesEnd();
-            appendTimerList(rdata);
+            appendRestart(sb);
+            appendCachesStart(sb);
+            appendUserCache(sb);
+            appendTemplateCache(sb);
+            appendCachesEnd(sb);
+            appendTimerList(sb);
         }
-        appendPageHtmlEnd();
+        appendPageHtmlEnd(sb);
     }
 
-    public void appendPageHtmlStart(RequestData rdata) {
-        append(sb, """
-                <div id="pageContent">
-                """);
-        appendMessageHtml(sb, rdata);
-        append(sb, """
-                        <section class="treeSection">
-                            <ul class="tree">
+    static final String htmlStart = """
+            <div id="pageContent">
+            """;
+    static final String htmlSectionStart = """
+                <section class="treeSection">
+                    <ul class="tree">
+                        <li class="open">
+                            <a class="treeRoot">{{_system}}</a>
+                            <ul>
+            """;
+    static final String restartHtml = """
+                                <li>
+                                    <a href="" onclick="if (confirmExecute()) return openModalDialog('/ctrl/admin/restart');">{{_restart}}</a>
+                                </li>
+            """;
+    static final String cachesStart = """
                                 <li class="open">
-                                    <a class="treeRoot">$system$
-                                    </a>
+                                    <a>{{_caches}}</a>
                                     <ul>
-                                    """,
-                Map.ofEntries(
-                        param("system","_system")
-                )
-        );
-    }
-
-    public void appendRestart(RequestData rdata) {
-        append(sb, """
-                        <li>
-                            <a href="" onclick="if (confirmExecute()) return openModalDialog('/ctrl/admin/restart');">$restart$
-                            </a>
+            """;
+    static final String userCacheHtml = """
+                                        <li>
+                                            <span>{{_userCache}}</span>
+                                            <div class="icons">
+                                                <a class="icon fa fa-recycle" href="/ctrl/admin/reloadUserCache" title="{{_reload}}"></a>
+                                            </div>
+                                        </li>
+            """;
+    static final String templateCacheHtml = """
+                                        <li>
+                                            <span>{{_templateCache}}</span>
+                                            <div class="icons">
+                                                <a class="icon fa fa-recycle" href="/ctrl/admin/reloadTemplateCache" title="{{_reload}}"></a>
+                                            </div>
+                                        </li>
+            """;
+    static final String cachesEnd = """
+                                    </ul>
+                                </li>
+            """;
+    static final String timerStart = """
+                                <li class="open">
+                                    {{_timers}}
+                                    <ul>
+            """;
+    static final String timerHtml = """
+                                        <li>
+                                            <span>{{displayName}}</span>
+                                            <div class="icons">
+                                                <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/timer/openEditTimerTask?timerName={{name}}');" title="{{_edit}}"></a>
+                                            </div>
+                                        </li>
+            """;
+    static final String timerEnd = """
+                                    </ul>
+                                </li>
+            """;
+    static final String htmlEnd = """
+                            </ul>
                         </li>
-                        """,
-                Map.ofEntries(
-                        param("restart","_restart")
-                )
-        );
-    }
-
-    public void appendCachesStart(RequestData rdata) {
-
-        append(sb, """
-                    <li class="open">
-                        <a>$caches$</a>
-                        <ul>
-                """,
-                Map.ofEntries(
-                        param("caches","_caches")
-                )
-        );
-    }
-
-    void appendUserCache(RequestData rdata) {
-        append(sb, """
-                        <li>
-                            <span>$userCache$</span>
-                            <div class="icons">
-                                <a class="icon fa fa-recycle" href="/ctrl/admin/reloadUserCache" title="$reload$"></a>
-                            </div>
-                        </li>
-                """,
-                Map.ofEntries(
-                        param("userCache","_userCache"),
-                        param("reload","_reload")
-                )
-        );
-    }
-
-    void appendTemplateCache(RequestData rdata) {
-        append(sb, """
-                        <li>
-                            <span>$templateCache$</span>
-                            <div class="icons">
-                                <a class="icon fa fa-recycle" href="/ctrl/admin/reloadTemplateCache" title="$reload$"></a>
-                            </div>
-                        </li>
-                """,
-                Map.ofEntries(
-                        param("templateCache","_templateCache"),
-                        param("reload","_reload")
-                )
-        );
-    }
-
-    public void appendCachesEnd() {
-        append(sb, """
                     </ul>
-                </li>
-                """
-        );
+                </section>
+            </div>
+            <script type="text/javascript">
+                $('.tree').treed('fa fa-minus-square-o', 'fa fa-plus-square-o');
+            </script>
+            """;
+
+    public void appendPageHtmlStart(StringBuilder sb, RequestData rdata) {
+        append(sb, htmlStart);
+        appendMessageHtml(sb, rdata);
+        append(sb, htmlSectionStart, null);
     }
 
-    void appendTimerList(RequestData rdata) {
+    public void appendRestart(StringBuilder sb) {
+        append(sb, restartHtml, null);
+    }
+
+    public void appendCachesStart(StringBuilder sb) {
+        append(sb, cachesStart, null);
+    }
+
+    void appendUserCache(StringBuilder sb) {
+        append(sb, userCacheHtml, null);
+    }
+
+    void appendTemplateCache(StringBuilder sb) {
+        append(sb, templateCacheHtml, null);
+    }
+
+    public void appendCachesEnd(StringBuilder sb) {
+        append(sb, cachesEnd);
+    }
+
+    void appendTimerList(StringBuilder sb) {
         Map<String, TimerTaskData> tasks = null;
         try {
             Timer timerCache = Timer.getInstance();
             tasks = timerCache.getTasks();
         } catch (Exception ignore) {
         }
-        append(sb, """
-                        <li class="open">
-                            $timers$
-                            <ul>
-                            """,
-                Map.ofEntries(
-                        param("timers","_timers")
-                )
-        );
+        append(sb, timerStart, null);
         if (tasks != null) {
             for (TimerTaskData task : tasks.values()) {
-                append(sb,"""
-                                <li>
-                                    <span>$displayName$</span>
-                                    <div class="icons">
-                                        <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/timer/openEditTimerTask?timerName=$name$');" title="$edit$"></a>
-                                    </div>
-                                </li>
-                                """,
+                append(sb, timerHtml,
                         Map.ofEntries(
-                                param("displayName",task.getDisplayName()),
-                                param("name",task.getName()),
-                                param("edit","_edit")
-                        )
-                );
+                                Map.entry("displayName", toHtml(task.getDisplayName())),
+                                Map.entry("name", toHtml(task.getName()))));
             }
         }
-        append(sb,"""
-                    </ul>
-                </li>
-                """);
+        append(sb, timerEnd);
     }
 
-    public void appendPageHtmlEnd() {
-        append(sb, """
-                                </ul>
-                            </li>
-                        </ul>
-                    </section>
-                </div>
-                <script type="text/javascript">
-                    $('.tree').treed('fa fa-minus-square-o', 'fa fa-plus-square-o');
-                </script>
-                """);
+    public void appendPageHtmlEnd(StringBuilder sb) {
+        append(sb, htmlEnd);
     }
 
 }

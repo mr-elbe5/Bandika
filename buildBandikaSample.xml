@@ -12,6 +12,9 @@
 
     <target name ="deployTemplates">
         <mkdir dir="${templates.dir}" />
+        <copy todir="${templates.dir}/admin" overwrite="true">
+            <fileset dir="${project}/templates/admin" />
+        </copy>
         <copy todir="${templates.dir}/master" overwrite="true">
             <fileset dir="${project}/templates/master" />
         </copy>

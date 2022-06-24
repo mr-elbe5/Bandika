@@ -16,6 +16,7 @@ import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
+import de.elbe5.response.AdminResponse;
 import de.elbe5.response.StatusResponse;
 import de.elbe5.servlet.Controller;
 import de.elbe5.response.IResponse;
@@ -69,15 +70,17 @@ public abstract class FileController extends Controller {
         int parentId = ContentCache.getFileParentId(contentId);
         ContentData parent=ContentCache.getContent(parentId);
         checkRights(parent.hasUserReadRight(rdata));
-        FileBean.getInstance().deleteFile(contentId);
+        if (!FileBean.getInstance().deleteFile(contentId)){
+            Log.warn("could not delete file");
+        }
         ContentCache.setDirty();
         rdata.getAttributes().put("contentId", Integer.toString(parentId));
         rdata.setMessage(getString("_fileDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return showContentAdministration(rdata);
+        return showContentAdministration();
     }
 
-    protected IResponse showContentAdministration(RequestData rdata){
-        return new ContentAdminPage();
+    protected IResponse showContentAdministration(){
+        return new AdminResponse(new ContentAdminPage());
     }
 
     protected IResponse showContentAdministration(RequestData rdata, int contentId){

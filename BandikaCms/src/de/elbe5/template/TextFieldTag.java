@@ -14,15 +14,22 @@ public class TextFieldTag extends TemplateTag {
 
     public static final String TYPE = "textfield";
 
-    public TextFieldTag(){
+    public TextFieldTag() {
         this.type = TYPE;
     }
 
+    static final String textareaHtml = """
+            <textarea class="editField" name="{{id}}" rows="{{rows}}">{{content}}</textarea>
+            """;
+    static final String inputHtml = """
+            <input type="text" class="editField" name="{{id}}" placeholder="{{id}}" value="{{content}}" />
+            """;
+
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata){
-        String name = getStringParam("name", rdata, "");
-        String placeholder = getStringParam("placeholder", rdata, "");
-        int rows = getIntParam("rows", rdata, 1);
+    public void appendHtml(StringBuilder sb, RequestData rdata) {
+        String name = getStringAttribute("name", "");
+        String placeholder = getStringAttribute("placeholder", "");
+        int rows = getIntAttribute("rows", 1);
         PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
         TemplatePartData partData = rdata.getAttributes().get(PagePartData.KEY_PART, TemplatePartData.class);
         PartTextField field = partData.ensureTextField(name);
@@ -30,25 +37,17 @@ public class TextFieldTag extends TemplateTag {
         boolean editMode = contentData.getViewType().equals(ContentData.VIEW_TYPE_EDIT);
         String content = field.getContent();
         if (editMode) {
-            if (rows > 1){
-                append(sb,"""
-                        <textarea class="editField" name="$id$" rows="$rows$">$content$</textarea>
-                        """,
+            if (rows > 1) {
+                append(sb, textareaHtml,
                         Map.ofEntries(
-                                param("id",field.getIdentifier()),
-                                param("rows",rows),
-                                param("content",content.isEmpty() ? placeholder : content))
-                        );
-            }
-            else
-                append(sb,"""
-                        <input type="text" class="editField" name="$id$" placeholder="$id$" value="$content$" />
-                        """,
+                                Map.entry("id", field.getIdentifier()),
+                                Map.entry("rows", Integer.toString(rows)),
+                                Map.entry("content", toHtml(content.isEmpty() ? placeholder : content))));
+            } else
+                append(sb, inputHtml,
                         Map.ofEntries(
-                                param("id",field.getIdentifier()),
-                                param("content",content)
-                        )
-                );
+                                Map.entry("id", field.getIdentifier()),
+                                Map.entry("content", toHtml(content))));
         } else {
             if (content.length() == 0) {
                 sb.append("&nbsp;");

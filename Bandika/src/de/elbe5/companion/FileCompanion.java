@@ -9,23 +9,22 @@
 package de.elbe5.companion;
 
 import de.elbe5.log.Log;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 
 public interface FileCompanion {
 
-    default boolean fileExists(@NotNull String path){
+    default boolean fileExists(String path){
         File f = new File(path);
         return f.exists();
     }
 
-    default String readTextFile(@NotNull String path) {
+    default String readTextFile(String path) {
         File f = new File(path);
         return readTextFile(f);
     }
 
-    default @NotNull String readTextFile(@NotNull File f) {
+    default String readTextFile(File f) {
         StringBuilder sb = new StringBuilder();
         try {
             if (!f.exists()) {
@@ -47,7 +46,7 @@ public interface FileCompanion {
         return sb.toString();
     }
 
-    default byte[] readBinaryFile(@NotNull File f) {
+    default byte[] readBinaryFile(File f) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
             if (!f.exists()) {
@@ -70,7 +69,7 @@ public interface FileCompanion {
         return out.toByteArray();
     }
 
-    public static boolean ensureFolder(@NotNull String path) {
+    public static boolean ensureFolder(String path) {
         File f = new File(path);
         if (f.exists()) {
             return f.isDirectory();
@@ -78,19 +77,19 @@ public interface FileCompanion {
         return f.mkdirs();
     }
 
-    default void touch(@NotNull File file) throws IOException {
+    default void touch(File file) throws IOException {
         long timestamp = System.currentTimeMillis();
         touch(file, timestamp);
     }
 
-    default boolean touch(@NotNull File file, long timestamp) throws IOException {
+    default boolean touch(File file, long timestamp) throws IOException {
         if (!file.exists()) {
             new FileOutputStream(file).close();
         }
         return file.setLastModified(timestamp);
     }
 
-    default @NotNull String getFileNameFromPath(@NotNull String path) {
+    default String getFileNameFromPath(String path) {
         String uri = path.replace('\\', '/');
         int pos = uri.lastIndexOf('/');
         if (pos == -1) {
@@ -100,7 +99,7 @@ public interface FileCompanion {
     }
 
     //includes leading point
-    default @NotNull String getExtension(@NotNull String fileName) {
+    default String getExtension(String fileName) {
         int pos = fileName.lastIndexOf('.');
         if (pos == -1) {
             return "";
@@ -108,7 +107,7 @@ public interface FileCompanion {
         return fileName.substring(pos).toLowerCase();
     }
 
-    default @NotNull String getFileNameWithoutExtension(@NotNull String fileName) {
+    default String getFileNameWithoutExtension(String fileName) {
         int pos = fileName.lastIndexOf('.');
         if (pos == -1) {
             return fileName;
@@ -116,7 +115,7 @@ public interface FileCompanion {
         return fileName.substring(0, pos);
     }
 
-    default void writeTextFile(@NotNull String path, @NotNull String text) {
+    default void writeTextFile(String path, String text) {
         try {
             File f = new File(path);
             if (f.exists() && !f.delete()) {
@@ -133,7 +132,7 @@ public interface FileCompanion {
         }
     }
 
-    default boolean writeBinaryFile(@NotNull String path, byte[] bytes) {
+    default boolean writeBinaryFile(String path, byte[] bytes) {
         try {
             File f = new File(path);
             if (f.exists() && !f.delete()) {
@@ -153,7 +152,7 @@ public interface FileCompanion {
         return true;
     }
 
-    default File ensureEmptyDirectory(@NotNull String path) {
+    default File ensureEmptyDirectory(String path) {
         File dir = new File(path);
         if (!dir.exists()) {
             if (!dir.mkdir()) {
@@ -165,12 +164,12 @@ public interface FileCompanion {
         return dir;
     }
 
-    default void clearDirectory(@NotNull String path) {
+    default void clearDirectory(String path) {
         File dir = new File(path);
         clearDirectory(dir);
     }
 
-    default void clearDirectory(@NotNull File dir) {
+    default void clearDirectory(File dir) {
         if (!dir.exists() && !dir.isDirectory()) {
             Log.error("no valid directory " + dir.getPath());
         }

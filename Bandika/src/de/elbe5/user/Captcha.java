@@ -48,7 +48,7 @@ public class Captcha extends BinaryFile {
             g2d.drawLine(i, q, width, height);
             g2d.drawLine(q, i, i, height);
         }
-        int x = 0;
+        int x;
         int y;
         int capCount = captcha.length();
         int capWidth = width / (capCount +1);

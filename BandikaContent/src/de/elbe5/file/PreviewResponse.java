@@ -26,10 +26,10 @@ public class PreviewResponse implements IResponse {
 
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response) {
-        process(context,rdata,response);
+        process(response);
     }
 
-    protected void process(ServletContext context, RequestData rdata, HttpServletResponse response) {
+    protected void process(HttpServletResponse response) {
         BinaryFile file= PreviewCache.get(id);
         if (file==null){
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);

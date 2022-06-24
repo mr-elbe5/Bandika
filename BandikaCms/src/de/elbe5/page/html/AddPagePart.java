@@ -11,19 +11,19 @@ import java.util.Map;
 
 public class AddPagePart extends HtmlResponse implements IHtmlBuilder {
 
+    static final String html = """
+            <script type="text/javascript">
+                    updatePartEditors($('#{{id}}'));
+                </script>
+            """;
+
     @Override
-    public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
+    public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response) {
         PagePartData partData = rdata.getAttributes().get(PagePartData.KEY_PART, PagePartData.class);
         partData.appendHtml(sb, rdata);
-        append(sb,"""
-                <script type="text/javascript">
-                    updatePartEditors($('#$id$'));
-                </script>
-                """,
+        append(sb, html,
                 Map.ofEntries(
-                        param("id",partData.getPartWrapperId())
-                )
-        );
+                        Map.entry("id", partData.getPartWrapperId())));
         sendHtml(response);
     }
 

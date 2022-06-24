@@ -16,6 +16,7 @@ import de.elbe5.content.html.SortChildContentPage;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
+import de.elbe5.response.AdminResponse;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
@@ -56,7 +57,9 @@ public class ContentController extends Controller {
         int contentId = rdata.getId();
         ContentData data = ContentCache.getContent(contentId);
         checkRights(data.hasUserReadRight(rdata));
-        ContentBean.getInstance().increaseViewCount(data.getId());
+        if (!ContentBean.getInstance().increaseViewCount(data.getId())){
+            Log.warn("could not increase view count");
+        }
         return showContent(data);
     }
 
@@ -127,22 +130,21 @@ public class ContentController extends Controller {
         checkRights(data.hasUserEditRight(rdata));
         data.setEditValues(ContentCache.getContent(data.getId()), rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
-        return showEditRights(rdata, data);
+        return showEditRights(rdata);
     }
 
     //backend
     public IResponse saveRights(RequestData rdata) {
-        int contentId = rdata.getId();
         ContentData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         checkRights(data.hasUserEditRight(rdata));
         data.readRightsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
-            return showEditRights(rdata, data);
+            return showEditRights(rdata);
         }
         data.setChangerId(rdata.getUserId());
         if (!ContentBean.getInstance().saveRights(data)) {
             setSaveError(rdata);
-            return showEditRights(rdata, data);
+            return showEditRights(rdata);
         }
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
         ContentCache.setDirty();
@@ -176,19 +178,19 @@ public class ContentController extends Controller {
         ContentData data=rdata.getClipboardData(ContentRequestKeys.KEY_CONTENT,ContentData.class);
         if (data==null){
             rdata.setMessage(getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
-            return showContentAdministration(rdata);
+            return showContentAdministration();
         }
         ContentData parent = ContentCache.getContent(parentId);
         if (parent == null){
             rdata.setMessage(getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
-            return showContentAdministration(rdata);
+            return showContentAdministration();
         }
         checkRights(parent.hasUserEditRight(rdata));
         Set<Integer> parentIds=new HashSet<>();
         parent.collectParentIds(parentIds);
         if (parentIds.contains(data.getId())){
             rdata.setMessage(getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
-            return showContentAdministration(rdata);
+            return showContentAdministration();
         }
         data.setParentId(parentId);
         data.setParent(parent);
@@ -205,7 +207,7 @@ public class ContentController extends Controller {
     public IResponse clearClipboard(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.CONTENTEDIT));
         rdata.clearAllClipboardData();
-        return showContentAdministration(rdata);
+        return showContentAdministration();
     }
 
     //backend
@@ -215,10 +217,12 @@ public class ContentController extends Controller {
         checkRights(data.hasUserEditRight(rdata)) ;
         if (contentId < BaseData.ID_MIN) {
             rdata.setMessage(getString("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
-            return showContentAdministration(rdata);
+            return showContentAdministration();
         }
         int parentId = ContentCache.getParentContentId(contentId);
-        ContentBean.getInstance().deleteContent(contentId);
+        if (!ContentBean.getInstance().deleteContent(contentId)){
+            Log.warn("could not delete content");
+        }
         ContentCache.setDirty();
         rdata.getAttributes().put("contentId", Integer.toString(parentId));
         ContentCache.setDirty();
@@ -276,7 +280,6 @@ public class ContentController extends Controller {
     }
 
     public IResponse saveContentFrontend(RequestData rdata) {
-        int contentId = rdata.getId();
         ContentData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         checkRights(data.hasUserEditRight(rdata));
         data.readFrontendRequestData(rdata);
@@ -293,7 +296,6 @@ public class ContentController extends Controller {
     }
 
     public IResponse cancelEditContentFrontend(RequestData rdata) {
-        int contentId = rdata.getId();
         ContentData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         checkRights(data.hasUserEditRight(rdata));
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
@@ -334,7 +336,7 @@ public class ContentController extends Controller {
         return contentData.getContentDataPage().createHtml(rdata);
     }
 
-    protected IResponse showEditRights(RequestData rdata, ContentData contentData) {
+    protected IResponse showEditRights(RequestData rdata) {
         return new EditContentRightsPage().createHtml(rdata);
     }
 
@@ -342,13 +344,13 @@ public class ContentController extends Controller {
         return new SortChildContentPage().createHtml(rdata);
     }
 
-    protected IResponse showContentAdministration(RequestData rdata) {
-        return new ContentAdminPage();
+    protected IResponse showContentAdministration() {
+        return new AdminResponse(new ContentAdminPage());
     }
 
     protected IResponse showContentAdministration(RequestData rdata, int contentId) {
         rdata.getAttributes().put("contentId", contentId);
-        return showContentAdministration(rdata);
+        return showContentAdministration();
     }
 
 }

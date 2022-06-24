@@ -64,10 +64,6 @@ public class TemplatePartData extends PagePartData {
         return fields;
     }
 
-    public PartField getField(String name) {
-        return fields.get(name);
-    }
-
     public PartTextField ensureTextField(String name) {
         PartField field = fields.get(name);
         if (field instanceof PartTextField)
@@ -105,13 +101,11 @@ public class TemplatePartData extends PagePartData {
     }
 
     public PartField getNewField(String type) {
-        switch (type) {
-            case PartTextField.FIELDTYPE:
-                return new PartTextField();
-            case PartHtmlField.FIELDTYPE:
-                return new PartHtmlField();
-        }
-        return null;
+        return switch (type) {
+            case PartTextField.FIELDTYPE -> new PartTextField();
+            case PartHtmlField.FIELDTYPE -> new PartHtmlField();
+            default -> null;
+        };
     }
 
 }

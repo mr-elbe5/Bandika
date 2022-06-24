@@ -32,7 +32,7 @@ public class LogFormatter extends Formatter {
         } else if (record.getLevel() == Level.SEVERE) {
             sb.append(" ERROR   ");
         }
-        sb.append(LocalDateTime.ofInstant(Instant.ofEpochMilli(record.getMillis()), timeZone).toString());
+        sb.append(LocalDateTime.ofInstant(Instant.ofEpochMilli(record.getMillis()), timeZone));
         if (srcClass.length() > 0) {
             sb.append('\n');
             sb.append(srcClass);

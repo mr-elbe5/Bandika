@@ -14,15 +14,6 @@ import java.util.Map;
 
 public class CompanyCache {
 
-    private static CompanyCache instance = null;
-
-    public static CompanyCache getInstance() {
-        if (instance == null) {
-            instance = new CompanyCache();
-        }
-        return instance;
-    }
-
     private static int version = 1;
     private static boolean dirty = true;
     private static final Integer lockObj = 1;

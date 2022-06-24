@@ -12,114 +12,102 @@ public class PartTag extends TemplateTag implements IFormBuilder {
 
     public static final String TYPE = "part";
 
-    public PartTag(){
+    public PartTag() {
         this.type = TYPE;
     }
 
+    static final String editStartHtml = """
+            <div id="{{wrapperId}}" class="partWrapper {{cssClass}}" title="{{editTitle}}">
+            """;
+    static final String editButtonsStartHtml = """
+                <div class="partEditButtons">
+                    <div class="btn-group btn-group-sm" role="group">
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn btn-secondary fa fa-plus dropdown-toggle" data-toggle="dropdown" title="{{_newPart}}"></button>
+                            <div class="dropdown-menu">
+            """;
+    static final String addTemplateHtml = """
+                                <a class="dropdown-item" href="" onclick="return addPart({{partId}},'{{sectionName}}','{{partType}}','{{templateName}}');">"{{templateKey}}"
+                                </a>
+            """;
+    static final String addHtml = """
+                                <a class="dropdown-item" href="" onclick="return addPart({{partId}},'{{sectionName}}','{{partType}}');">{{typeName}}
+                                </a>
+            """;
+    static final String editButtonsEndHtml = """
+                            </div>
+                        </div>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn  btn-secondary dropdown-toggle fa fa-ellipsis-h" data-toggle="dropdown" title="{{_more}}"></button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="" onclick="return movePart({{partId}},-1);">{{_up}}
+                                </a>
+                                <a class="dropdown-item" href="" onclick="return movePart({{partId}},1);">{{_down}}
+                                </a>
+                                <a class="dropdown-item" href="" onclick="if (confirmDelete()) return deletePart({{partId}});">{{_delete}}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            """;
+    static final String partStartHtml = """
+            <div id="{{wrapperId}}" class="partWrapper {{css}}">
+            """;
+
     @Override
-    public void appendTagStart(StringBuilder sb, RequestData rdata){
+    public void appendTagStart(StringBuilder sb, RequestData rdata) {
         PageData pageData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
         TemplatePartData part = rdata.getAttributes().get(PagePartData.KEY_PART, TemplatePartData.class);
         if (pageData == null || part == null)
             return;
-        String cssClass = getStringParam("cssClass", rdata, "");
-        if (pageData.isEditing()){
+        String cssClass = getStringAttribute("cssClass", "");
+        if (pageData.isEditing()) {
             appendPartEditStart(sb, part, cssClass);
-        }
-        else{
+        } else {
             appendPartStart(sb, part, cssClass);
         }
     }
 
     void appendPartEditStart(StringBuilder sb, PagePartData partData, String cssClass) {
-        append(sb,"""
-                        <div id="$wrapperId$" class="partWrapper $cssClass$" title="$editTitle$">
-                        """,
+        append(sb, editStartHtml,
                 Map.ofEntries(
-                        param("wrapperId",partData.getPartWrapperId()),
-                        param("cssClass",cssClass),
-                        param("editTitle",partData.getEditTitle())
-                )
-        );
+                        Map.entry("wrapperId", partData.getPartWrapperId()),
+                        Map.entry("cssClass", cssClass),
+                        Map.entry("editTitle", toHtml(partData.getEditTitle()))));
         appendHiddenField(sb, partData.getPartPositionName(), Integer.toString(partData.getPosition()));
-        append(sb,"""
-                        <div class="partEditButtons">
-                            <div class="btn-group btn-group-sm" role="group">
-                                <div class="btn-group btn-group-sm" role="group">
-                                    <button type="button" class="btn btn-secondary fa fa-plus dropdown-toggle" data-toggle="dropdown" title="$title$"></button>
-                                    <div class="dropdown-menu">
-                                    """,
-                Map.ofEntries(
-                        param("title","_newPart")
-                )
-        );
+        append(sb, editButtonsStartHtml, null);
         for (String partType : PagePartFactory.getTypes()) {
             if (PagePartFactory.useLayouts(partType)) {
                 List<Template> templates = TemplateCache.getInstance().getTemplates("part");
                 for (Template template : templates) {
-                    append(sb,"""
-                                                    <a class="dropdown-item" href="" onclick="return addPart($partId$,'$sectionName$','$partType$','$templateName$');">"$templateKey$"
-                                                    </a>
-                                    """,
+                    append(sb, addTemplateHtml,
                             Map.ofEntries(
-                                    param("partId",partData.getId()),
-                                    param("sectionName",partData.getSectionName()),
-                                    param("partType",partType),
-                                    param("templateName",template.getName()),
-                                    param("templateKey",template.getKey())
-                            )
-                    );
+                                    Map.entry("partId", Integer.toString(partData.getId())),
+                                    Map.entry("sectionName", toHtml(partData.getSectionName())),
+                                    Map.entry("partType", partType),
+                                    Map.entry("templateName", toHtml(template.getName())),
+                                    Map.entry("templateKey", template.getKey())));
                 }
             } else {
-                append(sb,"""
-                                                    <a class="dropdown-item" href="" onclick="return addPart($partId$,'$sectionName$','$partType$');">$typeName$
-                                                    </a>
-                                """,
+                append(sb, addHtml,
                         Map.ofEntries(
-                                param("partId",partData.getId()),
-                                param("sectionName",partData.getSectionName()),
-                                param("partType",partType),
-                                param("typeName",getHtml("class." + partType))
-                        )
-                );
+                                Map.entry("partId", Integer.toString(partData.getId())),
+                                Map.entry("sectionName", toHtml(partData.getSectionName())),
+                                Map.entry("partType", partType),
+                                Map.entry("typeName", getHtml("class." + partType))));
             }
         }
-        append(sb,"""
-                                                </div>
-                                            </div>
-                                            <div class="btn-group btn-group-sm" role="group">
-                                                <button type="button" class="btn  btn-secondary dropdown-toggle fa fa-ellipsis-h" data-toggle="dropdown" title="$more$"></button>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="" onclick="return movePart($partId$,-1);">$up$
-                                                    </a>
-                                                    <a class="dropdown-item" href="" onclick="return movePart($partId$,1);">$down$
-                                                    </a>
-                                                    <a class="dropdown-item" href="" onclick="if (confirmDelete()) return deletePart($partId$);">$delete$
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                        """,
+        append(sb, editButtonsEndHtml,
                 Map.ofEntries(
-                        param("more","_more"),
-                        param("partId",partData.getId()),
-                        param("up","_up"),
-                        param("down","_down"),
-                        param("delete","_delete")
-                )
-        );
+                        Map.entry("partId", Integer.toString(partData.getId()))));
     }
 
     void appendPartStart(StringBuilder sb, PagePartData partData, String cssClass) {
-        append(sb,"""
-                        <div id="$wrapperId$" class="partWrapper $css$">
-                        """,
+        append(sb, partStartHtml,
                 Map.ofEntries(
-                        param("wrapperId",partData.getPartWrapperId()),
-                        param("css",cssClass)
-                )
-        );
+                        Map.entry("wrapperId", partData.getPartWrapperId()),
+                        Map.entry("css", cssClass)));
     }
 
     @Override

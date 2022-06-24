@@ -76,10 +76,6 @@ public abstract class TimerTaskData extends BaseData implements Cloneable, DateC
         this.minute = minute;
     }
 
-    public LocalDateTime getLastExecution() {
-        return lastExecution;
-    }
-
     public void setLastExecution(LocalDateTime lastExecution) {
         if (lastExecution == null) {
             this.lastExecution = TimerBean.getInstance().getServerTime();
@@ -93,13 +89,13 @@ public abstract class TimerTaskData extends BaseData implements Cloneable, DateC
         if (lastExecution == null)
             lastExecution = LocalDateTime.now();
         switch (interval) {
-            case CONTINOUS: {
+            case CONTINOUS -> {
                 next = lastExecution.plusDays(getDay());
                 next = next.plusHours(getHour());
                 next = next.plusMinutes(getMinute());
                 return next;
             }
-            case MONTH: {
+            case MONTH -> {
                 next = now.withDayOfMonth(getDay());
                 next = next.withHour(getHour());
                 next = next.withMinute(getMinute());
@@ -112,7 +108,7 @@ public abstract class TimerTaskData extends BaseData implements Cloneable, DateC
                 }
                 return next;
             }
-            case DAY: {
+            case DAY -> {
                 next = now.withHour(getHour());
                 next = next.withMinute(getMinute());
                 next = next.withSecond(0);
@@ -124,7 +120,7 @@ public abstract class TimerTaskData extends BaseData implements Cloneable, DateC
                 }
                 return next;
             }
-            case HOUR: {
+            case HOUR -> {
                 next = now.withMinute(getMinute());
                 next = next.withSecond(0);
                 if (next.isAfter(now)) {

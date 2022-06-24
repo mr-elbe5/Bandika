@@ -23,23 +23,4 @@ public interface IHtmlBuilder extends StringCompanion, DateCompanion {
         sb.append(format(s, params));
     }
 
-    default Map.Entry<String, String> param(String key, String value){
-        if (value.startsWith("_")){
-            return Map.entry(key, getHtml(value));
-        }
-        return Map.entry(key, toHtml(value));
-    }
-
-    default Map.Entry<String, String> htmlParam(String key, String value){
-        return Map.entry(key, value);
-    }
-
-    default Map.Entry<String, String> param(String key, int value){
-        return Map.entry(key, Integer.toString(value));
-    }
-
-    default Map.Entry<String, String> param(String key, boolean value){
-        return Map.entry(key, Boolean.toString(value));
-    }
-
 }

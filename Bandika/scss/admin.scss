@@ -1,202 +1,25 @@
 @import "extras";
 
-$font-size-sm:               ($font-size-base * .9);
-$light:         #f8f9fa; //gray-100
-$dark:          #343a40; //gray-800
-$main-background: transparent;
-$background-body: $dark url(img-path('carbon.png'));
-
 body.admin {
-  background: $background-body;
-  color: $dark;
   height: 100%;
 
-  header{
-
-    background: transparent;
-    color: $light;
-    padding: 0 1rem;
-
-    section.sysnav{
-      background: transparent;
-
-      a {
-        text-decoration: none;
-        color: $light;
-      }
-
-      a.nav-link {
-        padding: 0;
-        margin: 0.25rem 0 0.25rem 0.5rem;
-        font-size: $font-size-xsm;
-        color: $light;
-      }
-
-    }
-
-    img.admin-logo{
+  header {
+    img.admin-logo {
       height: 30px;
       margin-bottom: 10px;
     }
-
-    div.menu{
-      border-bottom: 1px solid $light;
-
-      section.menu {
-
-        nav.navbar {
-          padding:0;
-
-          .navbar-toggler span{
-            color: $light;
-          }
-
-          a.navbar-brand {
-            color: $light;
-            img {
-              height: 4rem;
-            }
-          }
-
-          .nav-item {
-            a {
-              color: $light;
-            }
-
-          }
-
-          .nav-item.main-nav{
-
-          }
-
-          .nav-link {
-            padding: 0.25rem 1rem;
-          }
-
-        }
-
-      }
-
-    }
-
-    div.bc {
-
-      .breadcrumb {
-        background: transparent;
-        color: $light;
-        margin: 0;
-        font-size: $font-size-xsm;
-        padding: 0.25rem 0;
-
-        .breadcrumb-item.active {
-          color: $light;
-        }
-
-        a {
-          color: $light;
-          text-decoration: none;
-        }
-      }
-
-    }
-
   }
 
-  main {
-    top: 6.5rem;
-    padding-bottom: 2rem;
-
-    div#pageContent {
-
-      h1, h2, h3 {
-        margin: 0;
-      }
-
-      h1.title {
-        margin-bottom: 1rem;
-        text-align: center;
-        color: $light;
-      }
-
-      .contentTop {
-        color: $light;
-      }
-
-      .headerBox {
-        padding: 0.5rem 1rem;
-      }
-
-      .headerBox h1 {
-        text-align: center;
-      }
-
-      .htmlBox {
-        background: white;
-        padding: 1rem;
-      }
-
-      .imageBox {
-        background: white;
-        padding: 0;
-
-        img {
-          width: 100%;
+  div.menu{
+    section.menu {
+      nav.navbar {
+        .navbar-collapse{
+          margin-top: 0;
         }
       }
-
-      .paragraph {
-        background-color: rgba(255, 255, 255, 0.95);
-        border: solid 1px $dark;
-        border-radius: 15px;
-        padding: 1rem;
-        height: 100%;
-        overflow: hidden;
-
-        h2 {
-          border-bottom: 1px solid;
-          padding-bottom: 0.5rem;
-          margin-bottom: 0.5rem;
-        }
-
-        h3 {
-          border-width: 1px 0;
-          border-style: solid;
-          padding: 0.5rem 0;
-          margin: 0.5rem 0;
-        }
-
-        img{
-          max-width : 100%;
-        }
-
-        img[style*="float: left;"], img[style*="float:left;"]{
-          margin-right: 0.5em;
-          margin-bottom: 0.5em;
-        }
-
-        img[style*="float: right;"], img[style*="float:right;"]{
-          margin-left: 0.5em;
-          margin-bottom: 0.5em;
-        }
-      }
-
     }
   }
 
-  div#pageContainer {
-    margin-top: 1rem;
-    background: white;
-    min-height: 500px;
-  }
-}
-
-a, a:active, a:hover, a:visited{
-  color: $dark;
-}
-
-button:focus, a:focus, .btn:focus {
-  outline: 0 !important;
-  box-shadow: none;
 }
 
 

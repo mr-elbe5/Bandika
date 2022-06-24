@@ -72,16 +72,8 @@ public class ImageData extends FileData implements IJsonData, ImageCompanion {
         this.previewBytes = previewBytes;
     }
 
-    public boolean hasPreview() {
-        return hasPreview;
-    }
-
     public void setHasPreview(boolean hasPreview) {
         this.hasPreview = hasPreview;
-    }
-
-    public String getPreviewName(){
-        return "preview_" + getId() + ".jpg";
     }
 
     public int getMaxWidth() {
@@ -96,24 +88,12 @@ public class ImageData extends FileData implements IJsonData, ImageCompanion {
         return maxHeight;
     }
 
-    public void setMaxHeight(int maxHeight) {
-        this.maxHeight = maxHeight;
-    }
-
     public int getMaxPreviewWidth() {
         return maxPreviewWidth;
     }
 
-    public void setMaxPreviewWidth(int maxPreviewWidth) {
-        this.maxPreviewWidth = maxPreviewWidth;
-    }
-
     public int getMaxPreviewHeight() {
         return maxPreviewHeight;
-    }
-
-    public void setMaxPreviewHeight(int maxPreviewHeight) {
-        this.maxPreviewHeight = maxPreviewHeight;
     }
 
     // multiple data
@@ -125,7 +105,9 @@ public class ImageData extends FileData implements IJsonData, ImageCompanion {
         if (maxWidth != 0 || maxHeight != 0)
             createFromBinaryFile(file, maxWidth, maxHeight, getMaxPreviewWidth(), getMaxPreviewHeight(), true);
         else
-            createFromBinaryFile(file, getMaxPreviewWidth(), getMaxPreviewHeight());
+            if (!createFromBinaryFile(file, getMaxPreviewWidth(), getMaxPreviewHeight())){
+                Log.error("could not create binary file");
+            }
     }
 
     // helper
@@ -165,24 +147,6 @@ public class ImageData extends FileData implements IJsonData, ImageCompanion {
         return success;
     }
 
-    public boolean createJpegFromBinaryFile(BinaryFile file, int maxWidth, int maxHeight, int maxTumbnailWidth, int maxThumbnailHeight, boolean expand) {
-        boolean success=false;
-        if (file != null && file.isImage() && file.getBytes() != null && file.getFileName().length() > 0 && !isNullOrEmpty(file.getContentType())) {
-            setFileName(file.getFileName());
-            setBytes(file.getBytes());
-            setFileSize(file.getBytes().length);
-            setContentType(file.getContentType());
-            try {
-                createResizedJpeg(maxWidth, maxHeight, expand);
-                createPreview(maxTumbnailWidth, maxThumbnailHeight);
-                success = true;
-            } catch (IOException e) {
-                Log.warn("could not create buffered image");
-            }
-        }
-        return success;
-    }
-
     public void createResizedImage(int width, int height, boolean expand) throws IOException {
         BufferedImage bi = createResizedImage(getBytes(), getContentType(), width, height, expand);
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType(getContentType());
@@ -198,30 +162,6 @@ public class ImageData extends FileData implements IJsonData, ImageCompanion {
                 setContentType("image/jpeg");
             }
         }
-        ImageWriter writer = writers.next();
-        setBytes(writeImage(writer, bi));
-        setFileSize(getBytes().length);
-        setWidth(bi.getWidth());
-        setHeight(bi.getHeight());
-    }
-
-    public void createResizedJpeg(int width, int height, boolean expand) throws IOException {
-        BufferedImage bi = createResizedImage(getBytes(), getContentType(), width, height, expand);
-        setFileName(getFileNameWithoutExtension(getFileName()) + ".jpg");
-        Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
-        setContentType("image/jpeg");
-        ImageWriter writer = writers.next();
-        setBytes(writeImage(writer, bi));
-        setFileSize(getBytes().length);
-        setWidth(bi.getWidth());
-        setHeight(bi.getHeight());
-    }
-
-    public void createScaledJpeg(int scalePercent) throws IOException {
-        BufferedImage bi = createScaledImage(getBytes(), getContentType(), scalePercent);
-        setFileName(getFileNameWithoutExtension(getFileName()) + ".jpg");
-        Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
-        setContentType("image/jpeg");
         ImageWriter writer = writers.next();
         setBytes(writeImage(writer, bi));
         setFileSize(getBytes().length);

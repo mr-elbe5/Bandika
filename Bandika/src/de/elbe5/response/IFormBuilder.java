@@ -8,104 +8,98 @@
  */
 package de.elbe5.response;
 
-import de.elbe5.application.Configuration;
 import de.elbe5.request.RequestData;
 
 import java.util.Map;
 
-public interface IFormBuilder extends IHtmlBuilder{
+public interface IFormBuilder extends IHtmlBuilder {
 
-    default void appendFormError(StringBuilder sb, RequestData rdata){
+    String errorHtml = """
+            <div class="formError">{{error}}</div>
+            """;
+
+    default void appendFormError(StringBuilder sb, RequestData rdata) {
         if (rdata.hasFormError()) {
-            append(sb, """
-                          <div class="formError">$error$</div>
-                    """,
+            append(sb, errorHtml,
                     Map.ofEntries(
-                            htmlParam("error", toHtmlMultiline(rdata.getFormError(false).getFormErrorString()))
-                    )
-            );
+                            Map.entry("error", toHtmlMultiline(rdata.getFormError(false).getFormErrorString()))));
         }
     }
 
+    String formStartHtml = """
+            <form action="{{url}}" method="post" id="{{name}}" name="{{name}}" accept-charset="UTF-8" {{multipart}}>
+            """;
+
     default void appendFormStart(StringBuilder sb, String url, String name, boolean multi) {
-        append(sb,"""
-                        <form action="$url$" method="post" id="$name$" name="$name$" accept-charset="UTF-8" $multipart$>
-                """,
+        append(sb, formStartHtml,
                 Map.ofEntries(
-                        param("url",url),
-                        param("name",name),
-                        param("multipart",multi ? "enctype=\"multipart/form-data\"" : "")
-                )
-        );
+                        Map.entry("url", url),
+                        Map.entry("name", name),
+                        Map.entry("multipart", multi ? "enctype=\"multipart/form-data\"" : "")));
     }
 
     default void appendFormStart(StringBuilder sb, String url, String name) {
         appendFormStart(sb, url, name, false);
     }
 
+    String formEndHtml = """
+            </form>
+            """;
+    String ajaxHtml = """
+            <script type="text/javascript">
+                $('#{{name}}').submit(function (event) {
+                var $this = $(this);
+                    event.preventDefault();
+                    var params = $this.{{serialize}}();
+                    {{call}}('{{url}}', params,'{{target}}');
+                  });
+            </script>
+            """;
+
     default void appendFormEnd(StringBuilder sb, String url, String name, boolean multi, boolean ajax, String target) {
-        append(sb, """
-                    </form>
-                """);
+        append(sb, formEndHtml);
         if (ajax) {
-            append(sb,"""
-                                <script type="text/javascript">
-                                    $('#$name$').submit(function (event) {
-                                    var $this = $(this);
-                                        event.preventDefault();
-                                        var params = $this.$serialize$();
-                                        $call$('$url$', params,'$target$');
-                                      });
-                                </script>
-                            """,
+            append(sb, ajaxHtml,
                     Map.ofEntries(
-                            param("name",name),
-                            param("serialize",multi ? "serializeFiles" : "serialize"),
-                            param("call",multi ? "postMultiByAjax" : "postByAjax"),
-                            param("url",url),
-                            param("target",target.isEmpty() ? IResponse.MODAL_DIALOG_JQID : target)
-                    )
-            );
+                            Map.entry("name", name),
+                            Map.entry("serialize", multi ? "serializeFiles" : "serialize"),
+                            Map.entry("call", multi ? "postMultiByAjax" : "postByAjax"),
+                            Map.entry("url", url),
+                            Map.entry("target", target.isEmpty() ? IResponse.MODAL_DIALOG_JQID : target)));
         }
     }
 
     default void appendFormEnd(StringBuilder sb) {
-        append(sb, """
-                    </form>
-                """);
+        append(sb, formEndHtml);
     }
 
+    String hiddenInputHtml = """
+                <input type="hidden" name="{{name}}" id="{{name}}" value="{{value}}"/>
+            """;
+
     default void appendHiddenField(StringBuilder sb, String name, String value) {
-        append(sb, """
-                        <input type="hidden" name="$name$" id="$name" value="$value$"/>
-                        """,
+        append(sb, hiddenInputHtml,
                 Map.ofEntries(
-                        param("name",name),
-                        param("value", value)
-                )
-        );
+                        Map.entry("name", name),
+                        Map.entry("value", toHtml(value))));
     }
 
     // form line
 
-    default void appendLineStart(StringBuilder sb, boolean hasError, String name, String label, boolean required, boolean padded) {
-        append(sb,"""
-                        <div class="form-group row $error$">
-                                <label class="col-md-3 col-form-label" for="$name$" >$label$$required$</label>
-                                <div class="col-md-9" $padded$>
-                """,
-                Map.ofEntries(
-                        param("error",hasError ? "error" : ""),
-                        param("name",name),
-                        param("label",label),
-                        htmlParam("required",required ? " <sup>*</sup>" : ""),
-                        param("padded",padded ? " padded" : "")
-                )
-        );
-    }
+    String formLineStartHtml = """
+                <div class="form-group row {{error}}">
+                    <label class="col-md-3 col-form-label" for="{{name}}" >{{label}}{{required}}</label>
+                    <div class="col-md-9" {{padded}}>
+            """;
 
-    default void appendLineStart(StringBuilder sb, boolean hasError, String name, String label, boolean required) {
-        appendLineStart(sb, hasError, name, label, required, false);
+    default void appendLineStart(StringBuilder sb, boolean hasError, String name, String label, boolean required, boolean padded) {
+        append(sb, formLineStartHtml,
+                Map.ofEntries(
+                        Map.entry("error", hasError ? "error" : ""),
+                        Map.entry("name", name),
+                        Map.entry("label", toHtml(label)),
+                        Map.entry("required", required ? " <sup>*</sup>" : ""),
+                        Map.entry("padded", padded ? " padded" : "")));
     }
 
     default void appendLineStart(StringBuilder sb, String name, String label) {
@@ -116,21 +110,13 @@ public interface IFormBuilder extends IHtmlBuilder{
         appendLineStart(sb, false, name, label, false, padded);
     }
 
-    default void appendLineStart(StringBuilder sb, boolean hasError, String name, boolean required, boolean padded) {
-        append(sb,"""
-                        <div class="form-group row $error$">
-                            <div class="col-md-3"></div>
-                            <div class="col-md-9" $padded$>
-                        """,
-                Map.ofEntries(
-                        param("error",hasError ? " error" : ""),
-                        param("padded",padded ? " padded" : "")
-                )
-        );
-    }
+    String lineEndHtml = """
+                    </div>
+                </div>
+            """;
 
     default void appendLineEnd(StringBuilder sb) {
-        append(sb, "</div></div>");
+        append(sb, lineEndHtml);
     }
 
     // text
@@ -141,17 +127,17 @@ public interface IFormBuilder extends IHtmlBuilder{
         appendLineEnd(sb);
     }
 
+    String textInputHtml = """
+                    <input type="text" id="{{name}}" name="{{name}}" class="form-control" value="{{value}}" {{maxLength}}/>
+            """;
+
     default void appendTextInputLine(StringBuilder sb, boolean hasError, String name, String label, boolean required, String value, int maxLength) {
         appendLineStart(sb, hasError, name, label, required, false);
-        append(sb,"""
-                        <input type="text" id="$name$" name="$name$" class="form-control" value="$value$" $maxLength$/>
-                        """,
+        append(sb, textInputHtml,
                 Map.ofEntries(
-                        param("name",name),
-                        param("value",value),
-                        param("maxLength",maxLength > 0 ? "maxlength=\"" + maxLength + "\"" : "")
-                )
-        );
+                        Map.entry("name", name),
+                        Map.entry("value", toHtml(value)),
+                        Map.entry("maxLength", maxLength > 0 ? "maxlength=\"" + maxLength + "\"" : "")));
         appendLineEnd(sb);
     }
 
@@ -167,38 +153,30 @@ public interface IFormBuilder extends IHtmlBuilder{
         appendTextInputLine(sb, name, label, value, 0);
     }
 
+    String passwordInputHtml = """
+                    <input type="password" id="{{name}}" name="{{name}}" class="form-control" {{maxLength}}/>
+            """;
+
     default void appendPasswordLine(StringBuilder sb, boolean hasError, String name, String label, boolean required, int maxLength) {
         appendLineStart(sb, hasError, name, label, required, false);
-        append(sb,"""
-                        <input type="password" id="$name$" name="$name$" class="form-control" $maxLength$/>
-                        """,
+        append(sb, passwordInputHtml,
                 Map.ofEntries(
-                        param("name",name),
-                        param("maxLength",maxLength > 0 ? "maxlength=\"" + maxLength + "\"" : "")
-                )
-        );
+                        Map.entry("name", name),
+                        Map.entry("maxLength", maxLength > 0 ? "maxlength=\"" + maxLength + "\"" : "")));
         appendLineEnd(sb);
     }
 
-    default void appendPasswordLine(StringBuilder sb, String name, String label, int maxLength) {
-        appendPasswordLine(sb, false, name, label, false, maxLength);
-    }
-
-    default void appendPasswordLine(StringBuilder sb, String name, String label) {
-        appendPasswordLine(sb, name, label, 0);
-    }
+    String textareaHtml = """
+                    <textarea id="{{name}}" name="{{name}}" class="form-control" {{height}}>{{value}}</textarea>
+            """;
 
     default void appendTextareaLine(StringBuilder sb, boolean hasError, String name, String label, boolean required, String value, String height) {
         appendLineStart(sb, hasError, name, label, required, false);
-        append(sb,"""
-            <textarea id="$name" name="$name$" class="form-control" $height$>$value$</textarea>
-            """,
+        append(sb, textareaHtml,
                 Map.ofEntries(
-                        param("name",name),
-                        param("height",height.isEmpty() ? "" : "style=\"height:" + height + "\""),
-                        param("value",value)
-                )
-        );
+                        Map.entry("name", name),
+                        Map.entry("height", height.isEmpty() ? "" : "style=\"height:" + height + "\""),
+                        Map.entry("value", toHtml(value))));
         appendLineEnd(sb);
     }
 
@@ -206,41 +184,18 @@ public interface IFormBuilder extends IHtmlBuilder{
         appendTextareaLine(sb, false, name, label, false, value, height);
     }
 
-    // date
-
-    default void appendDateLine(StringBuilder sb, boolean hasError, String name, String label, String value, boolean required) {
-        appendLineStart(sb, hasError, name, label, required, false);
-        append(sb,"""
-                        <div class="input-group date">
-                          <input type="text" id="$name$" name="$name$" class="form-control datepicker" value="$value$" />
-                        </div>
-                        <script type="text/javascript">$('#$name$').datepicker({language: '$lang$'});</script>
-                        """,
-                Map.ofEntries(
-                        param("name",name),
-                        param("value",value),
-                        param("lang",Configuration.getLocale().getLanguage())
-                )
-        );
-        appendLineEnd(sb);
-    }
-
-    default void appendDateLine(StringBuilder sb, String name, String label, String value) {
-        appendDateLine(sb, false, name, label, value, false);
-    }
-
     // file
+
+    String fileInputHtml = """
+                    <input type="file" class="form-control-file" id="{{name}}" name="{{name}}" {{multiple}}>
+            """;
 
     default void appendFileLineStart(StringBuilder sb, boolean hasError, String name, String label, boolean required, boolean multiple) {
         appendLineStart(sb, hasError, name, label, required, true);
-        append(sb,"""
-                <input type="file" class="form-control-file" id="$name$" name="$name$" $multiple$>
-                """,
+        append(sb, fileInputHtml,
                 Map.ofEntries(
-                        param("name",name),
-                        param("multiple",multiple ? "multiple" : "")
-                )
-        );
+                        Map.entry("name", name),
+                        Map.entry("multiple", multiple ? "multiple" : "")));
     }
 
     default void appendFileLineStart(StringBuilder sb, String name, String label, boolean multiple) {
@@ -249,75 +204,77 @@ public interface IFormBuilder extends IHtmlBuilder{
 
     // select
 
+    String selectStartHtml = """
+                    <select id="{{name}}" name="{{name}}" class="form-control" {{onchange}}>
+            """;
 
     default void appendSelectStart(StringBuilder sb, boolean hasError, String name, String label, boolean required, String onchange) {
         appendLineStart(sb, hasError, name, label, required, true);
-        append(sb,"""
-                    <select id="$name$" name="$name$" class="form-control" $onchange$>
-                """,
+        append(sb, selectStartHtml,
                 Map.ofEntries(
-                        param("name",name),
-                        param("onchange",onchange.isEmpty() ? "" : "onchange=\"" + onchange + "\"")
-                )
-        );
-    }
-
-    default void appendSelectStart(StringBuilder sb, String name, String label, String onchange) {
-        appendSelectStart(sb, false, name, label, false, onchange);
+                        Map.entry("name", name),
+                        Map.entry("onchange", onchange.isEmpty() ? "" : "onchange=\"" + onchange + "\"")));
     }
 
     default void appendSelectStart(StringBuilder sb, String name, String label) {
         appendSelectStart(sb, false, name, label, false, "");
     }
 
+    String optionHtml = """
+                        <option value="{{value}}" {{selected}}>{{label}}</option>
+            """;
+
     default void appendOption(StringBuilder sb, String value, String label, boolean selected) {
-        append(sb,"""
-                        <option value="$value$" $selected$>$label$</option>
-                        """,
+        append(sb, optionHtml,
                 Map.ofEntries(
-                        param("value",value),
-                        param("selected",selected ? "selected" : ""),
-                        param("label",label)
+                        Map.entry("value", toHtml(value)),
+                        Map.entry("selected", selected ? "selected" : ""),
+                        Map.entry("label", toHtml(label))
                 )
         );
     }
 
+    String selectEndHtml = """
+                    </select>
+            """;
+
     default void appendSelectEnd(StringBuilder sb) {
-        append(sb, """
-            </select>""");
+        append(sb, selectEndHtml);
         appendLineEnd(sb);
     }
 
     // check
 
-    default void appendCheckbox(StringBuilder sb, String name, String label, String value, boolean checked){
-        append(sb,"""
-                       <span>
-                            <input type="checkbox" name="$name$" value="$value$" $checked$/>
-                                <label class="form-check-label">$label$</label><br/>
-                       </span>
-                        """,
+    String checkboxHtml = """
+                        <span>
+                             <input type="checkbox" name="{{name}}" value="{{value}}" {{checked}}/>
+                             <label class="form-check-label">{{label}}</label><br/>
+                        </span>
+            """;
+
+    default void appendCheckbox(StringBuilder sb, String name, String label, String value, boolean checked) {
+        append(sb, checkboxHtml,
                 Map.ofEntries(
-                        param("name",name),
-                        param("value",value),
-                        param("checked",checked ? "checked" : ""),
-                        param("label",label)
-                )
-        );
+                        Map.entry("name", name),
+                        Map.entry("value", toHtml(value)),
+                        Map.entry("checked", checked ? "checked" : ""),
+                        Map.entry("label", toHtml(label))));
     }
 
-    default void appendRadio(StringBuilder sb, String name, String label, String value, boolean checked){
-        append(sb,"""
-                       <span>
-                            <input type="radio" name="$name$" value="$value$" $checked$/>
-                            <label class="form-check-label">$label$</label></br>
-                       </span>
-                        """,
+    String radioHtml = """
+                        <span>
+                             <input type="radio" name="{{name}}" value="{{value}}" {{checked}}/>
+                             <label class="form-check-label">{{label}}</label></br>
+                        </span>
+            """;
+
+    default void appendRadio(StringBuilder sb, String name, String label, String value, boolean checked) {
+        append(sb, radioHtml,
                 Map.ofEntries(
-                        param("name",name),
-                        param("value",value),
-                        param("checked",checked ? "checked" : ""),
-                        param("label",label)
+                        Map.entry("name", name),
+                        Map.entry("value", toHtml(value)),
+                        Map.entry("checked", checked ? "checked" : ""),
+                        Map.entry("label", toHtml(label))
                 )
         );
     }

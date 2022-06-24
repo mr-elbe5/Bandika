@@ -8,56 +8,40 @@ import de.elbe5.user.UserBean;
 import de.elbe5.user.UserData;
 
 import java.util.List;
-import java.util.Map;
 
 public class EditCompanyPage extends ModalPage implements IFormBuilder {
 
     @Override
     public void appendHtml(RequestData rdata) {
-        CompanyData company = rdata.getSessionObject("companyData",CompanyData.class);
+        CompanyData company = rdata.getSessionObject("companyData", CompanyData.class);
         List<UserData> users = UserBean.getInstance().getCompanyUsers(company.getId());
         String url = "/ctrl/company/saveCompany/" + company.getId();
-        appendModalStart(getHtml("_editUser"));
+        appendModalStart(getString("_editUser"));
         appendFormStart(sb, url, "companyform", true);
-        appendModalBodyStart(getHtml("_settings"));
+        appendModalBodyStart(getString("_settings"));
         appendHiddenField(sb, "companyId", Integer.toString(company.getId()));
-        appendTextLine(sb, getHtml("_id"), Integer.toString(company.getId()));
-        appendTextInputLine(sb, rdata.hasFormErrorField("name"), "name", getHtml("_name"), true, toHtml(company.getName()));
+        appendTextLine(sb, getString("_id"), Integer.toString(company.getId()));
+        appendTextInputLine(sb, rdata.hasFormErrorField("name"), "name", getString("_name"), true, company.getName());
         append(sb, """
-                <h3>$address$
-                </h3>
-                """,
-                Map.ofEntries(
-                        param("address","_address")
-                )
-        );
-        appendTextInputLine(sb, "street", getHtml("_street"), toHtml(company.getStreet()));
-        appendTextInputLine(sb, "zipCode", getHtml("_zipCode"), toHtml(company.getZipCode()));
-        appendTextInputLine(sb, "city", getHtml("_city"), toHtml(company.getCity()));
-        appendTextInputLine(sb, "country", getHtml("_country"), toHtml(company.getCountry()));
+                <h3>{{_address}}</h3>
+                """, null);
+        appendTextInputLine(sb, "street", getString("_street"), company.getStreet());
+        appendTextInputLine(sb, "zipCode", getString("_zipCode"), company.getZipCode());
+        appendTextInputLine(sb, "city", getString("_city"), company.getCity());
+        appendTextInputLine(sb, "country", getString("_country"), company.getCountry());
         append(sb, """
-                <h3>$contact$
-                </h3>
-                """,
-                Map.ofEntries(
-                        param("contact","_contact")
-                )
-        );
-        appendTextInputLine(sb, "email", getHtml("_email"), toHtml(company.getEmail()));
-        appendTextInputLine(sb, "phone", getHtml("_phone"), toHtml(company.getPhone()));
-        appendTextInputLine(sb, "fax", getHtml("_fax"), toHtml(company.getFax()));
+                <h3>{{_contact}}</h3>
+                """, null);
+        appendTextInputLine(sb, "email", getString("_email"), company.getEmail());
+        appendTextInputLine(sb, "phone", getString("_phone"), company.getPhone());
+        appendTextInputLine(sb, "fax", getString("_fax"), company.getFax());
         append(sb, """
-                <h3>$employees$
-                </h3>
-                """,
-                Map.ofEntries(
-                        param("employees","_employees")
-                )
-        );
+                <h3>{{_employees}}</h3>
+                """, null);
         for (UserData user : users) {
-            appendTextLine(sb, "", toHtml(user.getName()));
+            appendTextLine(sb, "", user.getName());
         }
-        appendModalFooter(getHtml("_cancel"), getHtml("_save"));
+        appendModalFooter(getString("_cancel"), getString("_save"));
         appendFormEnd(sb, url, "companyform", true, true, "");
         appendModalEnd();
     }

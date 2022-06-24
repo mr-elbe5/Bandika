@@ -152,14 +152,11 @@ public class Mailer {
             return false;
         }
         Properties props = System.getProperties();
-        switch (smtpConnectionType) {
-            case tls:
-                return sendTLSMail(props);
-            case ssl:
-                return sendSSLMail(props);
-            default:
-                return sendPlainMail(props);
-        }
+        return switch (smtpConnectionType) {
+            case tls -> sendTLSMail(props);
+            case ssl -> sendSSLMail(props);
+            default -> sendPlainMail(props);
+        };
 
     }
 

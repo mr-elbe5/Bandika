@@ -12,17 +12,8 @@ import java.util.*;
 
 public class UserCache {
 
-    private static UserCache instance = null;
-
-    public static UserCache getInstance() {
-        if (instance == null) {
-            instance = new UserCache();
-        }
-        return instance;
-    }
-
     private static int version = 1;
-    private static boolean dirty = true;
+    private static volatile boolean dirty = true;
     private static final Integer lockObj = 1;
 
     private static Map<Integer, UserData> userMap = new HashMap<>();

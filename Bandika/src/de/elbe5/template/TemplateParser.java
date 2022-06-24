@@ -65,7 +65,6 @@ public class TemplateParser {
         int start = 0;
         // create tag and text objects
         for (TagData ip : indices){
-            //log("processing "+ (ip.isStartIndex ? "tag start " : "tag end ") + ip.name + " at " + ip.start);
             if (ip.start > start){
                 addChildNode(new TemplateText(code.substring(start, ip.start)));
             }
@@ -90,21 +89,19 @@ public class TemplateParser {
 
     // add tag and put on stack top
     private void pushTag(String type, Map<String,String> params){
-        //log("push tag " + type);
         TemplateTag tag;
         tag = TemplateTagFactory.createTag(type);
         if (tag == null){
             error("tag type not found: " + type + " in " + page.getName());
             return;
         }
-        tag.setParameters(params);
+        tag.setAttributes(params);
         addChildNode(tag);
         tagStack.add(tag);
     }
 
     // remove from stack top
     private boolean popTag(String type){
-        //log("pop tag " + type);
         if (tagStack.size()==0){
             error("bad closing tag: " + type + " in " + page.getName());
             return false;
@@ -174,7 +171,6 @@ public class TemplateParser {
                 name = content.trim();
                 this.content = "";
             }
-            //log((isStartIndex ? "adding tag start " : "adding tag end ") + name + " at " + this.start);
         }
 
         public Map<String,String> getParameters(){
@@ -215,10 +211,6 @@ public class TemplateParser {
         }
     }
 
-    static void log(String log){
-        //System.out.println(log);
-        Log.log(log);
-    }
     static void error(String err){
         //System.out.println(err);
         Log.error(err);

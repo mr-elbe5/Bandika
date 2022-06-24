@@ -1,7 +1,5 @@
 package de.elbe5.user.html;
 
-import de.elbe5.company.CompanyBean;
-import de.elbe5.company.CompanyData;
 import de.elbe5.group.GroupBean;
 import de.elbe5.group.GroupData;
 import de.elbe5.response.IFormBuilder;
@@ -17,75 +15,60 @@ public class EditUserPage extends ModalPage implements IFormBuilder {
     @Override
     public void appendHtml(RequestData rdata) {
         UserData user = rdata.getSessionObject("userData", UserData.class);
-        List<CompanyData> companies = CompanyBean.getInstance().getAllCompanies();
         List<GroupData> groups = GroupBean.getInstance().getAllGroups();
         String url = "/ctrl/user/saveUser/" + user.getId();
-        appendModalStart(getHtml("_editUser"));
+        appendModalStart(getString("_editUser"));
         appendFormStart(sb, url, "userform", true);
-        appendModalBodyStart(getHtml("_settings"));
+        appendModalBodyStart(getString("_settings"));
         appendHiddenField(sb, "userId", Integer.toString(user.getId()));
-        appendTextLine(sb, getHtml("_id"), Integer.toString(user.getId()));
-        appendTextInputLine(sb, rdata.hasFormErrorField("login"), "login", getHtml("_login"), true, toHtml(user.getLogin()));
-        appendPasswordLine(sb, rdata.hasFormErrorField("password"), "password", getHtml("_password"), false, 30);
-        appendTextInputLine(sb, "title", getHtml("_title"), toHtml(user.getTitle()));
-        appendTextInputLine(sb, rdata.hasFormErrorField("firstName"), "firstName", getHtml("_firstName"), true, toHtml(user.getFirstName()));
-        appendTextInputLine(sb, rdata.hasFormErrorField("lastName"), "lastName", getHtml("_lastName"), true, toHtml(user.getLastName()));
-        appendTextareaLine(sb, "_notes", getHtml("_notes"), toHtml(user.getNotes()), "5rem");
-        appendFileLineStart(sb, "portrait", getHtml("_portrait"), false);
+        appendTextLine(sb, getString("_id"), Integer.toString(user.getId()));
+        appendTextInputLine(sb, rdata.hasFormErrorField("login"), "login", getString("_login"), true, user.getLogin());
+        appendPasswordLine(sb, rdata.hasFormErrorField("password"), "password", getString("_password"), false, 30);
+        appendTextInputLine(sb, "title", getString("_title"), user.getTitle());
+        appendTextInputLine(sb, rdata.hasFormErrorField("firstName"), "firstName", getString("_firstName"), true, user.getFirstName());
+        appendTextInputLine(sb, rdata.hasFormErrorField("lastName"), "lastName", getString("_lastName"), true, user.getLastName());
+        appendTextareaLine(sb, "_notes", getString("_notes"), user.getNotes(), "5rem");
+        appendFileLineStart(sb, "portrait", getString("_portrait"), false);
         if (user.hasPortrait()) {
             append(sb, """
-                            <img src="/ctrl/user/showPortrait/$id$" alt="$name$"/>
+                            <img src="/ctrl/user/showPortrait/{{id}}" alt="{{name}}"/>
                             """,
                     Map.ofEntries(
-                            param("id",user.getId()),
-                            param("name",user.getName())
+                            Map.entry("id", Integer.toString(user.getId())),
+                            Map.entry("name", toHtml(user.getName()))
                     )
             );
         }
         appendLineEnd(sb);
-        appendLineStart(sb, "", getHtml("_locked"), true);
+        appendLineStart(sb, "", getString("_locked"), true);
         appendCheckbox(sb, "locked", "", "true", user.isLocked());
         appendLineEnd(sb);
         append(sb, """
-                <h3>$address$
-                </h3>
-                """,
-                Map.ofEntries(
-                        param("address","_address")
-                )
-        );
-        appendTextInputLine(sb, "street", getHtml("_street"), toHtml(user.getStreet()));
-        appendTextInputLine(sb, "zipCode", getHtml("_zipCode"), toHtml(user.getZipCode()));
-        appendTextInputLine(sb, "city", getHtml("_city"), toHtml(user.getCity()));
-        appendTextInputLine(sb, "country", getHtml("_country"), toHtml(user.getCountry()));
+                <h3>{{_address}}</h3>
+                """, null);
+        appendTextInputLine(sb, "street", getString("_street"), user.getStreet());
+        appendTextInputLine(sb, "zipCode", getString("_zipCode"), user.getZipCode());
+        appendTextInputLine(sb, "city", getString("_city"), user.getCity());
+        appendTextInputLine(sb, "country", getString("_country"), user.getCountry());
         append(sb, """
-                <h3>$contact$
+                <h3>{{_contact}}
                 </h3>
-                """,
-                Map.ofEntries(
-                        param("contact","_contact")
-                )
-        );
-        appendTextInputLine(sb, "email", getHtml("_email"), toHtml(user.getEmail()));
-        appendTextInputLine(sb, "phone", getHtml("_phone"), toHtml(user.getPhone()));
-        appendTextInputLine(sb, "fax", getHtml("_fax"), toHtml(user.getFax()));
-        appendTextInputLine(sb, "mobile", getHtml("_mobile"), toHtml(user.getMobile()));
+                """, null);
+        appendTextInputLine(sb, "email", getString("_email"), user.getEmail());
+        appendTextInputLine(sb, "phone", getString("_phone"), user.getPhone());
+        appendTextInputLine(sb, "fax", getString("_fax"), user.getFax());
+        appendTextInputLine(sb, "mobile", getString("_mobile"), user.getMobile());
         append(sb, """
-                <h3>$groups$
-                </h3>
-                """,
-                Map.ofEntries(
-                        param("groups","_groups")
-                )
-        );
-        appendTextLine(sb, getHtml("_group"), getHtml("_inGroup"));
+                <h3>{{_groups}}</h3>
+                """, null);
+        appendTextLine(sb, getString("_group"), getHtml("_inGroup"));
         for (GroupData groupData : groups) {
-            String label = toHtml(groupData.getName());
+            String label = groupData.getName();
             appendLineStart(sb, "", label, true);
             appendCheckbox(sb, "groupIds", "", Integer.toString(groupData.getId()), user.getGroupIds().contains(groupData.getId()));
             appendLineEnd(sb);
         }
-        appendModalFooter(getHtml("_cancel"), getHtml("_save"));
+        appendModalFooter(getString("_cancel"), getHtml("_save"));
         appendFormEnd(sb, url, "userform", true, true, "");
         appendModalEnd();
     }

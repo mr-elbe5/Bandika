@@ -8,8 +8,6 @@
  */
 package de.elbe5.companion;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.ImageWriter;
@@ -25,7 +23,7 @@ import java.util.Iterator;
 
 public interface ImageCompanion {
 
-    default BufferedImage createImage(byte[] bytes, @NotNull String contentType) throws IOException {
+    default BufferedImage createImage(byte[] bytes, String contentType) throws IOException {
         Iterator<ImageReader> readers = ImageIO.getImageReadersByMIMEType(contentType);
         if (readers.hasNext() && bytes != null) {
             ImageReader reader = readers.next();
@@ -39,7 +37,7 @@ public interface ImageCompanion {
         return null;
     }
 
-    default BufferedImage createResizedImage(byte[] bytes, @NotNull String contentType, int maxWidth, int maxHeight, boolean expand) throws IOException {
+    default BufferedImage createResizedImage(byte[] bytes, String contentType, int maxWidth, int maxHeight, boolean expand) throws IOException {
         BufferedImage source = createImage(bytes, contentType);
         if (source == null) {
             return null;
@@ -51,7 +49,7 @@ public interface ImageCompanion {
         return copyImage(source, factor);
     }
 
-    default BufferedImage createScaledImage(byte[] bytes, @NotNull String contentType, int scalePercent) throws IOException {
+    default BufferedImage createScaledImage(byte[] bytes, String contentType, int scalePercent) throws IOException {
         BufferedImage source = createImage(bytes, contentType);
         if (source == null) {
             return null;
@@ -63,7 +61,7 @@ public interface ImageCompanion {
         return copyImage(source, factor);
     }
 
-    default float getResizeFactor(@NotNull BufferedImage source, int maxWidth, int maxHeight, boolean expand) {
+    default float getResizeFactor(BufferedImage source, int maxWidth, int maxHeight, boolean expand) {
         float wfactor = maxWidth == 0 ? 0 : ((float) maxWidth) / source.getWidth();
         float hfactor = maxHeight == 0 ? 0 : ((float) maxHeight) / source.getHeight();
         float factor = 1;
@@ -76,7 +74,7 @@ public interface ImageCompanion {
         return factor;
     }
 
-    default @NotNull BufferedImage copyImage(@NotNull BufferedImage source, float factor) {
+    default BufferedImage copyImage(BufferedImage source, float factor) {
         BufferedImage bi = new BufferedImage((int) (source.getWidth() * factor), (int) (source.getHeight() * factor), BufferedImage.TYPE_INT_RGB);
         Graphics2D g = bi.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
@@ -88,7 +86,7 @@ public interface ImageCompanion {
         return bi;
     }
 
-    default byte[] writeImage(@NotNull ImageWriter writer, @NotNull BufferedImage image) throws IOException {
+    default byte[] writeImage(ImageWriter writer, BufferedImage image) throws IOException {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         ImageOutputStream ios = ImageIO.createImageOutputStream(bout);
         writer.setOutput(ios);

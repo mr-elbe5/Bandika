@@ -28,12 +28,6 @@ public class PreviewCache {
         }
     }
 
-    public static void remove(Integer id) {
-        synchronized (lockObj) {
-            map.remove(id);
-        }
-    }
-
     public static void clear(){
         map.clear();
     }

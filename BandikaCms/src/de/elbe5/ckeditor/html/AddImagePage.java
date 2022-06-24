@@ -11,30 +11,29 @@ import java.util.Map;
 
 public class AddImagePage extends ModalPage {
 
+    static final String html = """
+            <li>
+                <div class="treeline">
+                    <a id="{{id}}" href="" onclick="return ckImgCallback('{{url}}');">
+                        <img src="/ctrl/image/showPreview/{{id}}" alt="{{name}}"/>
+                        {{name}}
+                    </a>
+                    <a class="fa fa-eye" title="{{_view}}" href="{{url}}" target="_blank"> </a>
+                </div>
+            </li>
+            """;
+
     @Override
     public void appendHtml(RequestData rdata) {
         ContentData contentData = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         int imageId = rdata.getAttributes().getInt("imageId");
         ImageData image = ContentCache.getFile(imageId, ImageData.class);
         if (image != null && contentData.hasUserReadRight(rdata)) {
-            append(sb, """
-                            <li>
-                                <div class="treeline">
-                                    <a id="$id$" href="" onclick="return ckImgCallback('$url$');">
-                                        <img src="/ctrl/image/showPreview/$id$" alt="$name$"/>
-                                        $name$
-                                    </a>
-                                    <a class="fa fa-eye" title="$view$" href="$url$" target="_blank"> </a>
-                                </div>
-                            </li>
-                            """,
+            append(sb, html,
                     Map.ofEntries(
-                            param("id", imageId),
-                            param("name", image.getDisplayName()),
-                            param("view", "_view"),
-                            param("url", image.getURL())
-                    )
-            );
+                            Map.entry("id", Integer.toString(imageId)),
+                            Map.entry("name", toHtml(image.getDisplayName())),
+                            Map.entry("url", image.getURL())));
         }
     }
 }

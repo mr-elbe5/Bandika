@@ -47,8 +47,6 @@ public abstract class PartField implements Cloneable {
 
     public abstract String getFieldType();
 
-    public abstract void readRequestData(RequestData rdata);
-
     public abstract void readFrontendRequestData(RequestData rdata);
 
 }

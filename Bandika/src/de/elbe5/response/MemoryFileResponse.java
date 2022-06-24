@@ -19,15 +19,10 @@ import java.io.OutputStream;
 public class MemoryFileResponse implements IResponse {
 
     private final BinaryFile file;
-    private boolean forceDownload=false;
-    private boolean noCache=true;
+    private boolean forceDownload = false;
 
     public MemoryFileResponse(BinaryFile file) {
         this.file = file;
-    }
-
-    public void setNoCache(boolean noCache) {
-        this.noCache = noCache;
     }
 
     public void setForceDownload(boolean forceDownload) {
@@ -35,12 +30,12 @@ public class MemoryFileResponse implements IResponse {
     }
 
     @Override
-    public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
-        process(context, rdata,response);
+    public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response) {
+        process(response);
     }
 
-    public void process(ServletContext context, RequestData rdata, HttpServletResponse response)  {
-        if (file==null){
+    public void process(HttpServletResponse response) {
+        if (file == null) {
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);
             return;
         }
@@ -54,11 +49,9 @@ public class MemoryFileResponse implements IResponse {
             if (file.getBytes() == null) {
                 response.setHeader("Content-Length", "0");
             } else {
-                if (noCache) {
-                    response.setHeader("Expires", "Tues, 01 Jan 1980 00:00:00 GMT");
-                    response.setHeader("Cache-Control", "no-cache");
-                    response.setHeader("Pragma", "no-cache");
-                }
+                response.setHeader("Expires", "Tues, 01 Jan 1980 00:00:00 GMT");
+                response.setHeader("Cache-Control", "no-cache");
+                response.setHeader("Pragma", "no-cache");
                 StringBuilder sb = new StringBuilder();
                 if (forceDownload) {
                     sb.append("attachment;");

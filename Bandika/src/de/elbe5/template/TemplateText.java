@@ -20,7 +20,7 @@ public class TemplateText implements ITemplateNode {
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata){
-        String result = replaceParams(code, rdata.getTemplateAttributes());
+        String result = format(code, rdata.getTemplateAttributes());
         sb.append(result);
     }
 

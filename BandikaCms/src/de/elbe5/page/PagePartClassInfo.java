@@ -14,10 +14,10 @@ import java.lang.reflect.Constructor;
 
 class PagePartClassInfo {
 
-    private String type;
+    private final String type;
     private Constructor<? extends PagePartData> ctor;
-    private PagePartBean bean;
-    private boolean useLayouts=false;
+    private final PagePartBean bean;
+    private final boolean useLayouts;
 
     public PagePartClassInfo(Class<? extends PagePartData> contentClass, PagePartBean bean, boolean useLayouts){
         type = contentClass.getSimpleName();

@@ -86,7 +86,13 @@ public class BandikaInitServlet extends InitServlet {
 
         TemplateTagFactory.addTagType(IfTag.TYPE, IfTag.class);
         TemplateTagFactory.addTagType(MessageTag.TYPE, MessageTag.class);
-        TemplateTagFactory.addTagType(SysNavTag.TYPE, SysNavTag.class);
+        TemplateTagFactory.addTagType(AdminSystemNavTag.TYPE, AdminSystemNavTag.class);
+        TemplateTagFactory.addTagType(AdminUserNavTag.TYPE, AdminUserNavTag.class);
+        TemplateTagFactory.addTagType(AdminContentNavTag.TYPE, AdminContentNavTag.class);
+        TemplateTagFactory.addTagType(AdminContentLogNavTag.TYPE, AdminContentLogNavTag.class);
+        TemplateTagFactory.addTagType(TopAdminNavTag.TYPE, TopAdminNavTag.class);
+        TemplateTagFactory.addTagType(TopContentNavTag.TYPE, TopContentNavTag.class);
+        TemplateTagFactory.addTagType(TopUserNavTag.TYPE, TopUserNavTag.class);
         TemplateTagFactory.addTagType(MainNavTag.TYPE, MainNavTag.class);
         TemplateTagFactory.addTagType(BreadcrumbTag.TYPE, BreadcrumbTag.class);
         TemplateTagFactory.addTagType(ContentTag.TYPE, ContentTag.class);
@@ -97,6 +103,7 @@ public class BandikaInitServlet extends InitServlet {
         TemplateTagFactory.addTagType(HtmlFieldTag.TYPE, HtmlFieldTag.class);
         TemplateTagFactory.addTagType(ContactTag.TYPE, ContactTag.class);
 
+        TemplateCache.getInstance().addType("admin");
         TemplateCache.getInstance().addType("master");
         TemplateCache.getInstance().addType("page");
         TemplateCache.getInstance().addType("part");

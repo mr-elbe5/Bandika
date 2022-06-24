@@ -78,7 +78,6 @@
     <target name="collectBandikaFiles" depends="createCss">
         <copy todir="${buildLibs.dir}">
             <fileset dir="libs" >
-                <include name="annotations*.jar"/>
                 <include name="commons*.jar"/>
                 <include name="mail.jar"/>
                 <include name="json*.jar"/>

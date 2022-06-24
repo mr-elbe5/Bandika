@@ -165,7 +165,9 @@ public class FileBean extends DbBean implements FileCompanion {
             if (!commitTransaction(con))
                 return false;
             if (complete) {
-                writeFile(data, true);
+                if (!writeFile(data, true)){
+                    Log.warn("could not write file");
+                }
             }
             return true;
         } catch (Exception se) {
@@ -250,14 +252,6 @@ public class FileBean extends DbBean implements FileCompanion {
             closeConnection(con);
         }
         return data;
-    }
-
-    public boolean assertTempFile(FileData data){
-        File f = new File(ApplicationPath.getAppFilePath()+"/"+data.getTempFileName());
-        if (f.exists()){
-            return true;
-        }
-        return createTempFile(f);
     }
 
     private static final String GET_FILE_STREAM_SQL = "SELECT file_size, bytes FROM t_file WHERE id=?";

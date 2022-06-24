@@ -1,7 +1,6 @@
 package de.elbe5.template;
 
 import de.elbe5.request.RequestData;
-import de.elbe5.template.TemplateTag;
 
 public class IfTag extends TemplateTag {
 
@@ -13,7 +12,7 @@ public class IfTag extends TemplateTag {
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
-        boolean condition = getBooleanParam("condition", rdata, false);
+        boolean condition = getBooleanAttribute("condition", false);
         if (condition) {
             appendInner(sb, rdata);
         }

@@ -1,7 +1,6 @@
 package de.elbe5.companion;
 
 import de.elbe5.data.LocalizedStrings;
-import org.jetbrains.annotations.NotNull;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -9,83 +8,103 @@ import java.util.Date;
 
 public interface DateCompanion {
 
-    default @NotNull Date asDate(@NotNull LocalDate localDate) {
+    default Date asDate(LocalDate localDate) {
+        if (localDate==null)
+            return null;
         return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    default @NotNull Date asDate(@NotNull LocalDateTime localDateTime) {
+    default Date asDate(LocalDateTime localDateTime) {
+        if (localDateTime==null)
+            return null;
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    default @NotNull LocalDate asLocalDate(@NotNull Date date) {
+    default LocalDate asLocalDate(Date date) {
+        if (date==null)
+            return null;
         return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
-    default @NotNull LocalDateTime asLocalDateTime(@NotNull Date date) {
+    default LocalDateTime asLocalDateTime(Date date) {
+        if (date==null)
+            return null;
         return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
-    default long asMillis(@NotNull LocalDate localDate) {
+    default long asMillis(LocalDate localDate) {
+        if (localDate==null)
+            return 0;
         return asDate(localDate).getTime();
     }
 
-    default long asMillis(@NotNull LocalDateTime localDateTime) {
+    default long asMillis(LocalDateTime localDateTime) {
+        if (localDateTime==null)
+            return 0;
         return asDate(localDateTime).getTime();
     }
 
-    default @NotNull LocalDate asLocalDate(long millis) {
+    default LocalDate asLocalDate(long millis) {
         if (millis==0)
             return LocalDate.MIN;
         return Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
-    default @NotNull LocalDateTime asLocalDateTime(long millis) {
+    default LocalDateTime asLocalDateTime(long millis) {
         if (millis==0)
             return LocalDateTime.MIN;
         return Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
-    default @NotNull String getDatePattern(){
+    default String getDatePattern(){
         return LocalizedStrings.getString("system.datePattern");
     }
 
-    default @NotNull String getDateTimePattern(){
+    default String getDateTimePattern(){
         return LocalizedStrings.getString("system.dateTimePattern");
     }
 
-    default @NotNull String getTimePattern(){
+    default String getTimePattern(){
         return LocalizedStrings.getString("system.timePattern");
     }
 
-    default @NotNull String toHtmlDate(@NotNull LocalDate date) {
+    default String toHtmlDate(LocalDate date) {
+        if (date==null)
+            return "";
         return date.format(DateTimeFormatter.ofPattern(getDatePattern()));
     }
 
-    default @NotNull String toHtmlDate(@NotNull LocalDateTime date) {
+    default String toHtmlDate(LocalDateTime date) {
+        if (date==null)
+            return "";
         return date.format(DateTimeFormatter.ofPattern(getDatePattern()));
     }
 
-    default LocalDate fromDate(@NotNull String s) {
+    default LocalDate fromDate(String s) {
         if (s.isEmpty())
             return LocalDate.MIN;
         return LocalDate.parse(s, DateTimeFormatter.ofPattern(getDatePattern()));
     }
 
-    default @NotNull String toHtmlTime(@NotNull LocalTime date) {
+    default String toHtmlTime(LocalTime date) {
+        if (date==null)
+            return "";
         return date.format(DateTimeFormatter.ofPattern(getTimePattern()));
     }
 
-    default @NotNull LocalTime fromTime(@NotNull String s) {
+    default LocalTime fromTime(String s) {
         if (s.isEmpty())
             return LocalTime.MIN;
         return LocalTime.parse(s, DateTimeFormatter.ofPattern(getTimePattern()));
     }
 
-    default @NotNull String toHtmlDateTime(@NotNull LocalDateTime date) {
+    default String toHtmlDateTime(LocalDateTime date) {
+        if (date==null)
+            return "";
         return date.format(DateTimeFormatter.ofPattern(getDateTimePattern()));
     }
 
-    default @NotNull LocalDateTime fromDateTime(@NotNull String s) {
+    default LocalDateTime fromDateTime(String s) {
         if (s.isEmpty())
             return LocalDateTime.MIN;
         return LocalDateTime.parse(s, DateTimeFormatter.ofPattern(getDateTimePattern()));

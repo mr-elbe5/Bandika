@@ -124,7 +124,9 @@ public class UserController extends Controller implements EncryptionCompanion {
         if (!rdata.checkFormErrors()) {
             return showEditUser(rdata);
         }
-        UserBean.getInstance().saveUser(data);
+        if (!UserBean.getInstance().saveUser(data)){
+            Log.warn("could not save user");
+        }
         UserCache.setDirty();
         if (rdata.getUserId() == data.getId()) {
             rdata.setSessionUser(data);
@@ -191,7 +193,9 @@ public class UserController extends Controller implements EncryptionCompanion {
             return showChangePassword(rdata);
         }
         data.setPassword(newPassword);
-        UserBean.getInstance().saveUserPassword(data);
+        if (!UserBean.getInstance().saveUserPassword(data)){
+            Log.warn("could not save password");
+        }
         return new CloseDialogResponse("/ctrl/user/openProfile", getString("_passwordChanged"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
@@ -208,7 +212,9 @@ public class UserController extends Controller implements EncryptionCompanion {
         if (!rdata.checkFormErrors()) {
             return showChangeProfile(rdata);
         }
-        UserBean.getInstance().saveUserProfile(data);
+        if (!UserBean.getInstance().saveUserProfile(data)){
+            Log.warn("could not save profile");
+        }
         rdata.setSessionUser(data);
         UserCache.setDirty();
         return new CloseDialogResponse("/ctrl/user/openProfile", getString("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);

@@ -16,8 +16,6 @@ import java.util.List;
 
 public class SectionData {
 
-    public static final String KEY_SECTION = "sectionData";
-
     protected String name = "";
     protected int contentId = 0;
     protected String cssClass = "";
@@ -87,16 +85,6 @@ public class SectionData {
         return null;
     }
 
-    public<T extends PagePartData> T getPart(int pid, Class<T> cls) {
-        try{
-            return cls.cast(getPart(pid));
-        }
-        catch (NullPointerException | ClassCastException e){
-            //ignore
-        }
-        return null;
-    }
-
     public void addPart(PagePartData part, int fromPartId, boolean setRanking) {
         boolean found = false;
         if (fromPartId != -1) {
@@ -127,11 +115,7 @@ public class SectionData {
                 int idx = i + dir;
                 if (idx > parts.size() - 1) {
                     parts.add(ppd);
-                } else if (idx < 0) {
-                    parts.add(0, ppd);
-                } else {
-                    parts.add(idx, ppd);
-                }
+                } else parts.add(Math.max(idx, 0), ppd);
                 break;
             }
         }
@@ -147,12 +131,6 @@ public class SectionData {
                 parts.remove(i);
                 return;
             }
-        }
-    }
-
-    public void prepareCopy() {
-        for (PagePartData part : parts) {
-            part.prepareCopy();
         }
     }
 

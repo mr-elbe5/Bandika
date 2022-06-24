@@ -11,7 +11,6 @@ package de.elbe5.companion;
 
 import de.elbe5.data.IJsonData;
 import de.elbe5.log.Log;
-import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -33,7 +32,7 @@ import java.util.*;
 public interface JsonCompanion {
 
     String ISO_8601_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-    default @NotNull Object deserialize(@NotNull InputStream in) throws IOException {
+    default Object deserialize(InputStream in) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         byte[] buffer = new byte[0x4000];
         int len;
@@ -47,7 +46,7 @@ public interface JsonCompanion {
         return deserialize(outputStream.toByteArray());
     }
 
-    default @NotNull Object deserialize(byte[] bytes) throws IOException {
+    default Object deserialize(byte[] bytes) throws IOException {
         if (bytes == null) {
             throw new IOException("JSON byte array cannot be null");
         }
@@ -63,7 +62,9 @@ public interface JsonCompanion {
         }
     }
 
-    default @NotNull String serializeObject(@NotNull Object obj) {
+    default String serializeObject(Object obj) {
+        if (obj==null)
+            return "";
         try {
             Object o = toJSONInstance(obj);
             if (o instanceof JSONObject){
@@ -80,7 +81,7 @@ public interface JsonCompanion {
         }
     }
 
-    default @NotNull Object toJSONInstance(@NotNull Object object) {
+    default Object toJSONInstance(Object object) {
         if (object instanceof JSONObject || object instanceof JSONArray
                 || object instanceof Byte || object instanceof Character
                 || object instanceof Short || object instanceof Integer
@@ -129,7 +130,7 @@ public interface JsonCompanion {
     }
 
     @SuppressWarnings("unchecked")
-    default @NotNull JSONObject toJSONObject(@NotNull Map<?, ?> m) {
+    default JSONObject toJSONObject(Map<?, ?> m) {
         JSONObject obj = new JSONObject();
         for (Map.Entry<?, ?> entry : m.entrySet()) {
             Object k = entry.getKey();
@@ -147,7 +148,7 @@ public interface JsonCompanion {
         return obj;
     }
 
-    default @NotNull Object[] toObjectArray(@NotNull Object source) {
+    default Object[] toObjectArray(Object source) {
         if (source instanceof Object[]) {
             return (Object[]) source;
         }
@@ -167,7 +168,7 @@ public interface JsonCompanion {
     }
 
     @SuppressWarnings(value = "unchecked")
-    default @NotNull JSONArray toJSONArray(@NotNull Collection<?> c) {
+    default JSONArray toJSONArray(Collection<?> c) {
         JSONArray array = new JSONArray();
         for (Object o : c) {
             try {

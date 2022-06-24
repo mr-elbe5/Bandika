@@ -85,13 +85,6 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         return "";
     }
 
-    public String getChangerName(){
-        UserData user= UserCache.getUser(getChangerId());
-        if (user!=null)
-            return user.getName();
-        return "";
-    }
-
     public String getName() {
         return name;
     }
@@ -128,7 +121,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         this.displayName = displayName;
     }
 
-    public String getNavDisplay(){
+    public String getNavDisplayHtml(){
         return toHtml(getDisplayName());
     }
 
@@ -295,30 +288,6 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         return list;
     }
 
-    public void getAllChildren(List<ContentData> list) {
-        if (!hasChildren())
-            return;
-        for (ContentData data : getChildren()) {
-            list.add(data);
-            data.getAllChildren(list);
-        }
-    }
-
-    public<T extends ContentData> void getAllChildren(List<T> list,Class<T> cls) {
-        if (!hasChildren())
-            return;
-        for (ContentData data : getChildren()) {
-            try {
-                if (cls.isInstance(data))
-                    list.add(cls.cast(data));
-            }
-            catch(NullPointerException | ClassCastException e){
-                // ignore
-            }
-            data.getAllChildren(list, cls);
-        }
-    }
-
     public List<String> getChildClasses(){
         return ContentFactory.getDefaultTypes();
     }
@@ -340,10 +309,6 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
 
     public List<FileData> getFiles() {
         return files;
-    }
-
-    public boolean hasFiles(){
-        return getFiles().size()>0;
     }
 
     public<T extends FileData> List<T> getFiles(Class<T> cls) {

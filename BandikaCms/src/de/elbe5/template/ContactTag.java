@@ -12,64 +12,52 @@ public class ContactTag extends TemplateTag implements IFormBuilder {
 
     public static final String TYPE = "contact";
 
-    public ContactTag(){
+    public ContactTag() {
         this.type = TYPE;
     }
 
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata){
+    public void appendHtml(StringBuilder sb, RequestData rdata) {
         PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
         String contactName = rdata.getAttributes().getString("contactName");
         String contactEmail = rdata.getAttributes().getString("contactEmail");
         String contactMessage = rdata.getAttributes().getString("contactMessage");
-        String cssClass = getStringParam("cssClass", rdata, "");
+        String cssClass = getStringAttribute("cssClass", "");
         appendContactHtml(sb, rdata, contentData.getId(), contactName, contactEmail, contactMessage, cssClass);
     }
 
-    public void appendContactHtml(StringBuilder sb, RequestData rdata, int contentId, String contactName, String contactEmail, String contactMessage, String cssClass){
-        append(sb,"""
-                <div class="$cssClass$">
-                """,
+    public void appendContactHtml(StringBuilder sb, RequestData rdata, int contentId, String contactName, String contactEmail, String contactMessage, String cssClass) {
+        append(sb, """
+                        <div class="{{cssClass}}">
+                        """,
                 Map.ofEntries(
-                        param("cssClass",cssClass)
-                )
-        );
+                        Map.entry("cssClass", cssClass)));
         appendFormStart(sb, "/ctrl/ctrl/sendContact/" + contentId, "contactform");
         appendFormError(sb, rdata);
-        appendTextInputLine(sb, rdata.hasFormErrorField("contactName"), toHtml("contactName"), getHtml("_name"), true, toHtml(contactName),0);
-        appendTextInputLine(sb, rdata.hasFormErrorField("contactEmail"), toHtml("contactEmail"), getHtml("_email"), true, toHtml(contactEmail));
-        appendTextareaLine(sb, rdata.hasFormErrorField("contactMessage"), toHtml("contactMessage"), getHtml("_message"), true, toHtml(contactMessage),"10rem");
+        appendTextInputLine(sb, rdata.hasFormErrorField("contactName"), "contactName", getString("_name"), true, contactName, 0);
+        appendTextInputLine(sb, rdata.hasFormErrorField("contactEmail"), "contactEmail", getString("_email"), true, contactEmail);
+        appendTextareaLine(sb, rdata.hasFormErrorField("contactMessage"), "contactMessage", getString("_message"), true, contactMessage, "10rem");
         appendLineStart(sb, "", "");
-        append(sb,"""
-                <img src="/ctrl/user/showCaptcha?v=$date$" alt="" />
-        """,
+        append(sb, """
+                                <img src="/ctrl/user/showCaptcha?v={{date}}" alt="" />
+                        """,
                 Map.ofEntries(
-                        param("date",Long.toString(new Date().getTime()))
-                )
-        );
+                        Map.entry("date", Long.toString(new Date().getTime()))));
         appendLineEnd(sb);
-        appendTextInputLine(sb, rdata.hasFormErrorField("captcha"), toHtml("captcha"), getHtml("_captcha"), true, "");
+        appendTextInputLine(sb, rdata.hasFormErrorField("captcha"), "captcha", getString("_captcha"), true, "");
         appendLineStart(sb, "", "");
-        append(sb,"""
-                <div>$hint$</div>
-        """,
-                Map.ofEntries(
-                        param("hint","_captchaHint")
-                )
-        );
+        append(sb, """
+                        <div>{{_captchaHint}}</div>
+                """, null);
         appendLineEnd(sb);
-        append(sb,"""
+        append(sb, """
                             <div class="form-group row">
                                 <div class = "col-md-12">
-                                    <button type="submit" class="btn btn-outline-primary pull-right">$send$
+                                    <button type="submit" class="btn btn-outline-primary pull-right">{{_send}}
                                     </button>
                                 </div>
                             </div>
-                """,
-                Map.ofEntries(
-                        param("send","_send")
-                )
-        );
+                """, null);
         appendFormEnd(sb);
         sb.append("</div>");
     }

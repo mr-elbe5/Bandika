@@ -11,87 +11,72 @@ import java.util.Map;
 
 public class ProfilePage extends HtmlIncludePage implements IFormBuilder, MessageHtml {
 
+    final static String startHtml = """
+            <div id="pageContent" class="viewArea">
+                <section class="contentTop">
+                    <h1>{{_profile}}</h1>
+                </section>
+                <div class="row">
+                    <section class="col-md-8 contentSection">
+                        <div class="paragraph form">
+            """;
+    final static String portraitHtml = """
+                            <img src="/ctrl/user/showPortrait/{{id}}" alt="{{name}}"/>
+            """;
+    final static String endHtml = """
+                        </div>
+                    </section>
+                    <aside class="col-md-4 asideSection">
+                        <div class="section">
+                            <div class="paragraph form">
+                                <div>
+                                    <a class="link" href="#" onclick="return openModalDialog('/ctrl/user/openChangePassword');">{{_changePassword}}
+                                    </a>
+                                </div>
+                                <div>
+                                    <a class="link" href="#" onclick="return openModalDialog('/ctrl/user/openChangeProfile');">{{_changeProfile}}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+            """;
+
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
         UserData user = UserBean.getInstance().getUser(rdata.getLoginUser().getId());
         appendMessageHtml(sb, rdata);
-        append(sb, """
-                        <div id="pageContent" class="viewArea">
-                        <section class="contentTop">
-                            <h1>$profile$</h1>
-                        </section>
-                        <div class="row">
-                            <section class="col-md-8 contentSection">
-                                <div class="paragraph form">
-                                """,
-                Map.ofEntries(
-                        param("profile","_profile")
-                )
-        );
-        appendTextLine(sb, getHtml("_id"), Integer.toString(user.getId()));
-        appendTextLine(sb, getHtml("_login"),toHtml(user.getLogin()));
-        appendTextLine(sb, getHtml("_title"), toHtml(user.getTitle()));
-        appendTextLine(sb, getHtml("_firstName"), toHtml(user.getFirstName()));
-        appendTextLine(sb, getHtml("_lastName"), toHtml(user.getLastName()));
-        appendTextLine(sb, getHtml("_notes"), toHtml(user.getNotes()));
-        appendLineStart(sb, "", getHtml("_portrait"));
+        append(sb, startHtml, null);
+        appendTextLine(sb, getString("_id"), Integer.toString(user.getId()));
+        appendTextLine(sb, getString("_login"), user.getLogin());
+        appendTextLine(sb, getString("_title"), user.getTitle());
+        appendTextLine(sb, getString("_firstName"), user.getFirstName());
+        appendTextLine(sb, getString("_lastName"), user.getLastName());
+        appendTextLine(sb, getString("_notes"), user.getNotes());
+        appendLineStart(sb, "", getString("_portrait"));
         if (user.hasPortrait()) {
-            append(sb, """
-                            <img src="/ctrl/user/showPortrait/$id$" alt="$name$"/>
-                            """,
+            append(sb, portraitHtml,
                     Map.ofEntries(
-                            param("id",user.getId()),
-                            param("name",user.getName())
-                    )
-            );
+                            Map.entry("id", Integer.toString(user.getId())),
+                            Map.entry("name", toHtml(user.getName()))));
         }
         appendLineEnd(sb);
-        append(sb,"""
-                <h3>$address$</h3>
-                """,
-                Map.ofEntries(
-                        param("address","_address")
-                )
-        );
-        appendTextLine(sb, getHtml("_street"),toHtml(user.getStreet()));
-        appendTextLine(sb, getHtml("_zipCode"), toHtml(user.getZipCode()));
-        appendTextLine(sb, getHtml("_city"), toHtml(user.getCity()));
-        appendTextLine(sb, getHtml("_country"), toHtml(user.getCountry()));
-        append(sb,"""
-                <h3>$contact$</h3>
-                """,
-                Map.ofEntries(
-                        param("contact","_contact")
-                )
-        );
-        appendTextLine(sb, getHtml("_email"), toHtml(user.getEmail()));
-        appendTextLine(sb, getHtml("_phone"), toHtml(user.getPhone()));
-        appendTextLine(sb, getHtml("_fax"), toHtml(user.getFax()));
-        appendTextLine(sb, getHtml("_mobile"), toHtml(user.getMobile()));
-        append(sb,"""
-                                </div>
-                            </section>
-                            <aside class="col-md-4 asideSection">
-                                <div class="section">
-                                    <div class="paragraph form">
-                                        <div>
-                                            <a class="link" href="#" onclick="return openModalDialog('/ctrl/user/openChangePassword');">$changePassword$
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <a class="link" href="#" onclick="return openModalDialog('/ctrl/user/openChangeProfile');">$changeProfile$
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </aside>
-                        </div>
-                        </div>
-                        """,
-                Map.ofEntries(
-                        param("changePassword","_changePassword"),
-                        param("changeProfile","_changeProfile")
-                )
-        );
+        append(sb, """
+                <h3>{{_address}}</h3>
+                """, null);
+        appendTextLine(sb, getString("_street"), user.getStreet());
+        appendTextLine(sb, getString("_zipCode"), user.getZipCode());
+        appendTextLine(sb, getString("_city"), user.getCity());
+        appendTextLine(sb, getString("_country"), user.getCountry());
+        append(sb, """
+                <h3>{{_contact}}</h3>
+                """, null);
+        appendTextLine(sb, getString("_email"), user.getEmail());
+        appendTextLine(sb, getString("_phone"), user.getPhone());
+        appendTextLine(sb, getString("_fax"), user.getFax());
+        appendTextLine(sb, getString("_mobile"), user.getMobile());
+        append(sb, endHtml, null);
     }
 }

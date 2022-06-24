@@ -55,24 +55,12 @@ public class Log {
         StackTraceElement[] stack = Thread.currentThread().getStackTrace();
         //0: getStackTrace,  1: this method, 2: log, 3: caller
         StackTraceElement caller = level > LOG && stack.length > 2 ? stack[3] : null;
-        Level lev;
-        switch (level) {
-            case LOG:
-                lev = Level.INFO;
-                break;
-            case INFO:
-                lev = Level.INFO;
-                break;
-            case WARN:
-                lev = Level.WARNING;
-                break;
-            case ERROR:
-                lev = Level.SEVERE;
-                break;
-            default:
-                lev = Level.OFF;
-                break;
-        }
+        Level lev = switch (level) {
+            case LOG, INFO -> Level.INFO;
+            case WARN -> Level.WARNING;
+            case ERROR -> Level.SEVERE;
+            default -> Level.OFF;
+        };
         LogRecord rec = new LogRecord(lev, message);
         rec.setLoggerName(julog.getName());
         rec.setSourceClassName(caller != null ? caller.getClassName() : "");
@@ -83,10 +71,6 @@ public class Log {
 
     public static void log(String message) {
         log(LOG, message, null);
-    }
-
-    public static void trace(String message) {
-        log(INFO, message, null);
     }
 
     public static void info(String message) {

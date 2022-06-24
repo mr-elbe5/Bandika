@@ -57,10 +57,6 @@ public abstract class FileData extends BaseData implements FileCompanion {
         tempFileName = getId() + extension;
     }
 
-    public String getExtension() {
-        return extension;
-    }
-
     public String getTempFileName() {
         return tempFileName;
     }

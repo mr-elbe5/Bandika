@@ -18,10 +18,36 @@ public class SectionTag extends TemplateTag {
         this.type = TYPE;
     }
 
+    static final String sectionEditStartHtml = """
+            <div class="section {{css}}" id="{{id}}" title="Section {{name}}">
+                <div class="sectionEditButtons">
+                    <div class="btn-group btn-group-sm" role="group">
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn btn-secondary fa fa-plus dropdown-toggle" data-toggle="dropdown" title="{{_newPart}}"></button>
+                            <div class="dropdown-menu">
+            """;
+    static final String templateLinkHtml = """
+                                <a class="dropdown-item" href="" onclick="return addPart(-1,'{{name}}','{{partType}}','{{templateName}}');">{{templateKey}}
+                                </a>
+            """;
+    static final String linkHtml = """
+                                <a class="dropdown-item" href="" onclick="return addPart(-1,'{{name}}','{{partType}}');">{{typeName}}
+                                </a>
+            """;
+    static final String endButtonsHtml = """
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            """;
+    static final String sectionEditEndHtml = """
+            </div>
+            """;
+
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
-        String name = getStringParam("name", rdata, "");
-        String cssClass = getStringParam("cssClass", rdata, "");
+        String name = getStringAttribute("name", "");
+        String cssClass = getStringAttribute("cssClass", "");
         PageData pageData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
         SectionData sectionData = pageData.ensureSection(name);
         if (sectionData != null) {
@@ -36,79 +62,52 @@ public class SectionTag extends TemplateTag {
 
     void appendEditSection(StringBuilder sb, RequestData rdata, SectionData sectionData) {
         List<Template> templates = TemplateCache.getInstance().getTemplates("part");
-        append(sb,"""
-                <div class="section $css$" id="$id$" title="Section $name$">
-                    <div class="sectionEditButtons">
-                        <div class="btn-group btn-group-sm" role="group">
-                            <div class="btn-group btn-group-sm" role="group">
-                                <button type="button" class="btn btn-secondary fa fa-plus dropdown-toggle" data-toggle="dropdown" title="$newPart$"></button>
-                                <div class="dropdown-menu">
-                                """,
+        append(sb, sectionEditStartHtml,
                 Map.ofEntries(
-                        param("css",sectionData.getCssClass()),
-                        param("id",sectionData.getSectionId()),
-                        param("name",sectionData.getName()),
-                        param("newPart","_newPart")
-                )
-        );
+                        Map.entry("css", sectionData.getCssClass()),
+                        Map.entry("id", sectionData.getSectionId()),
+                        Map.entry("name", toHtml(sectionData.getName()))));
         for (String partType : PagePartFactory.getTypes()) {
             if (PagePartFactory.useLayouts(partType)) {
                 for (Template template : templates) {
-                    append(sb,"""
-                            <a class="dropdown-item" href="" onclick="return addPart(-1,'$name$','$partType$','$templateName$');">$templateKey$
-                            </a>
-                            """,
+                    append(sb, templateLinkHtml,
                             Map.ofEntries(
-                                    param("name",sectionData.getName()),
-                                    param("partType",partType),
-                                    param("templateName",template.getName()),
-                                    param("templateKey",getHtml(template.getKey()))
-                            )
-                    );
+                                    Map.entry("name", toHtml(sectionData.getName())),
+                                    Map.entry("partType", partType),
+                                    Map.entry("templateName", toHtml(template.getName())),
+                                    Map.entry("templateKey", getHtml(template.getKey()))));
                 }
             } else {
-                append(sb,"""
-                        <a class="dropdown-item" href="" onclick="return addPart(-1,'$name$','$partType$');">$typeName$
-                        </a>
-                        """,
+                append(sb, linkHtml,
                         Map.ofEntries(
-                                param("name",sectionData.getName()),
-                                param("partType",partType),
-                                param("typeName",getHtml("class."+partType))
-                        )
-                );
+                                Map.entry("name", toHtml(sectionData.getName())),
+                                Map.entry("partType", partType),
+                                Map.entry("typeName", getHtml("class." + partType))));
             }
         }
-        sb.append("""
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                """);
+        sb.append(endButtonsHtml);
         for (PagePartData partData : sectionData.getParts()) {
             partData.appendHtml(sb, rdata);
         }
-        sb.append("""  
-                </div>
-                """);
+        sb.append(sectionEditEndHtml);
     }
+
+    static final String sectionStartHtml = """
+            <div class="section {{css}}">
+            """;
+    static final String sectionEndHtml = """
+            </div>
+            """;
 
     void appendSection(StringBuilder sb, RequestData rdata, SectionData sectionData) {
         if (!sectionData.getParts().isEmpty()) {
-            append(sb,"""
-                    <div class="section $css$">
-                    """,
+            append(sb, sectionStartHtml,
                     Map.ofEntries(
-                            param("css",sectionData.getCssClass())
-                    )
-            );
+                            Map.entry("css", sectionData.getCssClass())));
             for (PagePartData partData : sectionData.getParts()) {
                 partData.appendHtml(sb, rdata);
             }
-            sb.append("""  
-                    </div>
-                    """
-            );
+            sb.append(sectionEndHtml);
         }
     }
 

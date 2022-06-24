@@ -73,11 +73,6 @@ public class PagePartData extends BaseData implements Comparable<PagePartData> {
         return "Part, ID=" + getId();
     }
 
-    public void prepareCopy() {
-        setNew(true);
-        setId(PagePartBean.getInstance().getNextPartId());
-    }
-
     public void setCreateValues(RequestData rdata) {
         String sectionName = rdata.getAttributes().getString("sectionName");
         setSectionName(sectionName);

@@ -62,7 +62,6 @@ public class DocumentController extends FileController {
     }
 
     public IResponse saveDocument(RequestData rdata) {
-        int contentId = rdata.getId();
         DocumentData data = rdata.getSessionObject(ContentRequestKeys.KEY_DOCUMENT,DocumentData.class);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
@@ -108,13 +107,13 @@ public class DocumentController extends FileController {
         ContentData parent=ContentCache.getContent(parentId);
         if (parent == null){
             rdata.setMessage(getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
-            return showContentAdministration(rdata);
+            return showContentAdministration();
         }
         checkRights(parent.hasUserEditRight(rdata));
         DocumentData data=rdata.getClipboardData(ContentRequestKeys.KEY_DOCUMENT,DocumentData.class);
         if (data==null){
             rdata.setMessage(getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
-            return showContentAdministration(rdata);
+            return showContentAdministration();
         }
         data.setParentId(parentId);
         data.setParent(parent);

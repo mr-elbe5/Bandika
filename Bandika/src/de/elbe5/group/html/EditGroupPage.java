@@ -17,29 +17,29 @@ public class EditGroupPage extends ModalPage implements IFormBuilder {
         GroupData group = rdata.getSessionObject("groupData", GroupData.class);
         String url = "/ctrl/group/saveGroup/" + group.getId();
         List<UserData> users = UserBean.getInstance().getAllUsers();
-        appendModalStart(getHtml("_editGroup"));
+        appendModalStart(getString("_editGroup"));
         appendFormStart(sb, url , "groupform");
-        appendModalBodyStart(getHtml("_settings"));
-        appendLineStart(sb, "", getHtml("_id"), true);
+        appendModalBodyStart(getString("_settings"));
+        appendLineStart(sb, "", getString("_id"), true);
         sb.append(group.getId());
         appendLineEnd(sb);
-        appendTextInputLine(sb, rdata.hasFormErrorField("name"),"name",getHtml("_name"), true, group.getName());
-        appendTextareaLine(sb, "notes", getHtml("_notes"), toHtml(group.getNotes()), "5rem");
-        appendLineStart(sb, "", getHtml("_globalRights"), true);
+        appendTextInputLine(sb, rdata.hasFormErrorField("name"),"name",getString("_name"), true, group.getName());
+        appendTextareaLine(sb, "notes", getString("_notes"), group.getNotes(), "5rem");
+        appendLineStart(sb, "", getString("_globalRights"), true);
         for (SystemZone zone : SystemZone.values()) {
             String name="zoneright_"+zone.name();
             appendCheckbox(sb, name, zone.name(), "true", group.hasSystemRight(zone));
         }
         appendLineEnd(sb);
-        appendLineStart(sb, "", getHtml("_users"), true);
+        appendLineStart(sb, "", getString("_users"), true);
         appendLineEnd(sb);
         for (UserData udata : users) {
-            String label = toHtml(udata.getName());
+            String label = udata.getName();
             appendLineStart(sb, "", label, true);
             appendCheckbox(sb, "userIds", "", Integer.toString(udata.getId()), group.getUserIds().contains(udata.getId()));
             appendLineEnd(sb);
         }
-        appendModalFooter(getHtml("_close"),getHtml("_save"));
+        appendModalFooter(getString("_close"),getHtml("_save"));
         appendFormEnd(sb, url, "groupform", false, true, "");
         appendModalEnd();
     }

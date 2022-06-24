@@ -9,7 +9,6 @@
 package de.elbe5.data;
 
 import de.elbe5.log.Log;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -17,14 +16,14 @@ public class LocalizedStrings {
 
     private final static Map<String, String> stringMap = new HashMap<>();
 
-    public static void addResourceBundle(@NotNull String name, @NotNull Locale locale){
+    public static void addResourceBundle(String name, Locale locale){
         ResourceBundle bundle = ResourceBundle.getBundle(name, locale);
         for (String key : bundle.keySet()){
             stringMap.put(key, bundle.getString(key));
         }
     }
 
-    public static @NotNull String getString(@NotNull String key) {
+    public static String getString(String key) {
         try {
             String s = stringMap.get(key);
             if (s!=null)

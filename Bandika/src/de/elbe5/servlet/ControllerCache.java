@@ -16,10 +16,6 @@ public class ControllerCache {
     private static final Map<String, Controller> controllers = new HashMap<>();
     private static Controller defaultController = null;
 
-    public static void setDefaultController(Controller defaultController) {
-        ControllerCache.defaultController = defaultController;
-    }
-
     public static void addController(String key, Controller controller) {
         controllers.put(key, controller);
     }

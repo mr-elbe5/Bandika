@@ -15,6 +15,25 @@ public class MainNavTag extends TemplateTag {
         this.type = TYPE;
     }
 
+    static final String singleNav = """
+            <li class="nav-item main-nav {{active}}">
+                <a class="nav-link {{active}}" href="{{url}}">{{name}}</a>
+            </li>
+            """;
+    static final String dropdownNavStart = """
+            <li class="nav-item main-nav dropdown">
+                <a class="nav-link {{active}} dropdown-toggle" data-toggle="dropdown" href="{{url}}" role="button" aria-haspopup="true" aria-expanded="false">{{name}}</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item {{active}}" href="{{url}}">{{name}}</a>
+            """;
+    static final String dropdownNavLink = """
+                    <a class="dropdown-item {{active}}" href="{{url}}">{{name}}</a>
+            """;
+    static final String dropdownNavEnd = """
+                </div>
+            </li>
+            """;
+
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
         ContentData home = ContentCache.getContentRoot();
@@ -33,57 +52,26 @@ public class MainNavTag extends TemplateTag {
                             children.add(child);
                     }
                     if (!children.isEmpty()) {
-                        appendDropdownMenuHtml(sb, contentData, children, activeIds);
+                        append(sb, dropdownNavStart, Map.ofEntries(
+                                Map.entry("active", activeIds.contains(contentData.getId()) ? "active" : ""),
+                                Map.entry("url", contentData.getUrl()),
+                                Map.entry("name", contentData.getNavDisplayHtml())));
+                        for (ContentData child : children) {
+                            append(sb, dropdownNavLink, Map.ofEntries(
+                                    Map.entry("active", activeIds.contains(child.getId()) ? "active" : ""),
+                                    Map.entry("url", child.getUrl()),
+                                    Map.entry("name", child.getNavDisplayHtml())));
+                        }
+                        sb.append(dropdownNavEnd);
                     } else {
-                        appendSingleMenuHtml(sb, contentData, activeIds);
+                        append(sb, singleNav, Map.ofEntries(
+                                Map.entry("active", activeIds.contains(contentData.getId()) ? "active" : ""),
+                                Map.entry("url", contentData.getUrl()),
+                                Map.entry("name", contentData.getNavDisplayHtml())));
                     }
                 }
             }
         }
-    }
-
-    public void appendSingleMenuHtml(StringBuilder sb, ContentData contentData, Set<Integer> activeIds) {
-        append(sb,"""
-                                        <li class="nav-item main-nav $active$">
-                                            <a class="nav-link $active$" href="$url$">$name$</a>
-                                        </li>
-            """,
-                Map.ofEntries(
-                        param("active",activeIds.contains(contentData.getId()) ? "active" : ""),
-                        param("url",contentData.getUrl()),
-                        htmlParam("name",contentData.getNavDisplay())
-                )
-        );
-    }
-
-    public void appendDropdownMenuHtml(StringBuilder sb, ContentData contentData, List<ContentData> children, Set<Integer> activeIds) {
-        append(sb,"""
-                                        <li class="nav-item main-nav dropdown">
-                                            <a class="nav-link $active$ dropdown-toggle" data-toggle="dropdown" href="$url$" role="button" aria-haspopup="true" aria-expanded="false">$name$</a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item $active$" href="$url$">$name$</a>
-            """,
-                Map.ofEntries(
-                        param("active",activeIds.contains(contentData.getId()) ? "active" : ""),
-                        param("url",contentData.getUrl()),
-                        htmlParam("name",contentData.getNavDisplay())
-                )
-        );
-        for (ContentData child : children) {
-            append(sb,"""
-                                                <a class="dropdown-item $active$" href="$url$">$name$</a>
-            """,
-                    Map.ofEntries(
-                            param("active",activeIds.contains(child.getId()) ? "active" : ""),
-                            param("url",child.getUrl()),
-                            htmlParam("name",child.getNavDisplay())
-                    )
-            );
-        }
-        sb.append("""
-                                            </div>
-                                        </li>
-            """);
     }
 
 }

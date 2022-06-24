@@ -61,7 +61,6 @@ public class ImageController extends FileController {
     }
 
     public IResponse saveImage(RequestData rdata) {
-        int contentId = rdata.getId();
         ImageData data = rdata.getSessionObject(ContentRequestKeys.KEY_IMAGE,ImageData.class);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
@@ -107,7 +106,7 @@ public class ImageController extends FileController {
         ContentData parent=ContentCache.getContent(parentId);
         if (parent == null){
             rdata.setMessage(getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
-            return showContentAdministration(rdata);
+            return showContentAdministration();
         }
         checkRights(parent.hasUserEditRight(rdata));
         data.setParentId(parentId);

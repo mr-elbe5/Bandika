@@ -18,7 +18,7 @@ public class ContentCache {
 
     private static ContentData contentRoot = null;
     private static int version = 1;
-    private static boolean dirty = true;
+    private static volatile boolean dirty = true;
     private static final Integer lockObj = 1;
 
     private static Map<Integer, ContentData> contentMap = new HashMap<>();

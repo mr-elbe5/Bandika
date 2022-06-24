@@ -19,17 +19,17 @@ public class EditMediaPage extends ModalPage implements IFormBuilder {
         UserData changer = UserCache.getUser(mediaData.getChangerId());
         String changerName = changer == null ? "" : changer.getName();
         boolean fileRequired= mediaData.isNew();
-        appendModalStart(getHtml("_editMediaSettings"));
+        appendModalStart(getString("_editMediaSettings"));
         appendFormStart(sb, url , "mediaform", true);
         appendModalBodyStart();
-        appendTextLine(sb, getHtml("_idAndUrl"), mediaData.getId() + " - " + toHtml(mediaData.getFileName()));
-        appendTextLine(sb, getHtml("_creation"), toHtmlDateTime(mediaData.getCreationDate()) + " - " + toHtml(creatorName));
-        appendTextLine(sb, getHtml("_lastChange"), toHtmlDateTime(mediaData.getChangeDate()) + " - " + toHtml(changerName));
-        appendFileLineStart(sb, rdata.hasFormErrorField("file"), "file", getHtml("_file"), fileRequired, false);
+        appendTextLine(sb, getString("_idAndUrl"), mediaData.getId() + " - " + mediaData.getFileName());
+        appendTextLine(sb, getString("_creation"), toHtmlDateTime(mediaData.getCreationDate()) + " - " + creatorName);
+        appendTextLine(sb, getString("_lastChange"), toHtmlDateTime(mediaData.getChangeDate()) + " - " + changerName);
+        appendFileLineStart(sb, rdata.hasFormErrorField("file"), "file", getString("_file"), fileRequired, false);
         appendLineEnd(sb);
-        appendTextInputLine(sb, rdata.hasFormErrorField("displayName"),"displayName",getHtml("_displayName"), true, toHtml(mediaData.getDisplayName()));
-        appendTextareaLine(sb, "description", getHtml("_description"), toHtml(mediaData.getDescription()), "3rem");
-        appendModalFooter(getHtml("_close"),getHtml("_save"));
+        appendTextInputLine(sb, rdata.hasFormErrorField("displayName"),"displayName",getString("_displayName"), true, mediaData.getDisplayName());
+        appendTextareaLine(sb, "description", getString("_description"), mediaData.getDescription(), "3rem");
+        appendModalFooter(getString("_close"),getString("_save"));
         appendFormEnd(sb, url, "mediaform", true, true, "");
         appendModalEnd();
     }

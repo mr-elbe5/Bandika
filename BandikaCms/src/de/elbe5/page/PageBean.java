@@ -105,35 +105,7 @@ public class PageBean extends ContentBean {
         pst.setInt(i, data.getId());
     }
 
-    public boolean publishPage(PageData data) {
-        Connection con = startTransaction();
-        try {
-            if (!data.isNew() && ContentBean.getInstance().changedContent(con, data)) {
-                return rollbackTransaction(con);
-            }
-            publishPage(con, data);
-            return commitTransaction(con);
-        } catch (Exception se) {
-            return rollbackTransaction(con, se);
-        }
-    }
-
     private static final String PUBLISH_CONTENT_SQL = "update t_page set publish_date=?,published_content=? where id=?";
-
-    public void publishPage(Connection con, PageData data) throws SQLException {
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement(PUBLISH_CONTENT_SQL);
-            int i = 1;
-            pst.setTimestamp(i++, Timestamp.valueOf(data.getPublishDate()));
-            pst.setString(i++,data.getPublishedContent());
-            pst.setInt(i, data.getId());
-            pst.executeUpdate();
-            pst.close();
-        } finally {
-            closeStatement(pst);
-        }
-    }
 
     private static final String REPLACE_IN_PAGE_SQL = "UPDATE t_page set published_content = REPLACE(published_content,?,?)";
 
@@ -230,20 +202,4 @@ public class PageBean extends ContentBean {
         }
     }
 
-    public boolean deletePart(int id) {
-        Connection con = getConnection();
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement(DELETE_PART_SQL);
-            pst.setInt(1, id);
-            pst.executeUpdate();
-            return true;
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-            return false;
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-    }
 }

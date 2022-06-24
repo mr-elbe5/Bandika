@@ -13,6 +13,7 @@ import de.elbe5.application.ApplicationPath;
 import de.elbe5.companion.FileCompanion;
 import de.elbe5.log.Log;
 import de.elbe5.request.RequestKeys;
+import de.elbe5.response.AdminResponse;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.ResponseException;
 import de.elbe5.template.TemplateCache;
@@ -61,12 +62,12 @@ public class AdminController extends Controller implements FileCompanion {
 
     public IResponse openSystemAdministration(RequestData rdata) {
         checkRights(rdata.hasAnySystemRight());
-        return new SystemAdminPage();
+        return new AdminResponse(new SystemAdminPage());
     }
 
     public IResponse openUserAdministration(RequestData rdata) {
         checkRights(rdata.hasAnySystemRight());
-        return new UserAdminPage();
+        return new AdminResponse(new UserAdminPage());
     }
 
     public IResponse restart(RequestData rdata) {

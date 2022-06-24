@@ -16,57 +16,55 @@ public class ContentLogAdminPage extends AdminPage {
         super(LocalizedStrings.getString("_contentLog"));
     }
 
-    @Override
-    public void appendPageHtml(RequestData rdata) {
-        List<ContentDayLog> dayLogs = ContentBean.getInstance().getAllViewCounts();
-        append(sb, """
-                        <div id="pageContent">
-                            <form:message/>
-                            <section class="logSection">
-                                <h3>$clicks$</h3>
-                                <a class="icon fa fa-trash-o" href="/ctrl/admin/resetContentLog" title="$reset$"></a>
-                                """,
-                Map.ofEntries(
-                        param("clicks","_clicksPerDay"),
-                        param("reset","_reset")
-                )
-        );
-        if (rdata.hasAnyContentRight()) {
-            append(sb, """
+    static final String htmlStart = """
+            <div id="pageContent">
+                <form:message/>
+                <section class="logSection">
+                    <h3>{{_clicksPerDay}}</h3>
+                    <a class="icon fa fa-trash-o" href="/ctrl/admin/resetContentLog" title="{{_reset}}"></a>
+            """;
+    static final String tableStart = """
                     <table>
-                    """);
+            """;
+    static final String headerHtml = """
+                        <tr>
+                            <th colspan="2">{{date}}</th>
+                        </tr>
+            """;
+    static final String entryHtml = """
+                        <tr>
+                            <td>{{name}}</td>
+                            <td>{{count}}</td>
+                        </tr>
+            """;
+    static final String tableEnd = """
+                    </table>
+            """;
+    static final String htmlEnd = """
+                </section>
+            </div>
+            """;
+
+    @Override
+    public void appendHtml(StringBuilder sb, RequestData rdata) {
+        List<ContentDayLog> dayLogs = ContentBean.getInstance().getAllViewCounts();
+        append(sb, htmlStart, null);
+        if (rdata.hasAnyContentRight()) {
+            append(sb, tableStart);
             for (ContentDayLog dayLog : dayLogs) {
-                append(sb, """
-                                <tr>
-                                    <th colspan="2">$date$</th>
-                                </tr>
-                                """,
+                append(sb, headerHtml,
                         Map.ofEntries(
-                                param("date",toHtmlDate(dayLog.getDay()))
-                        )
-                );
+                                Map.entry("date", toHtmlDate(dayLog.getDay()))));
                 for (ContentLog log : dayLog.getLogs()) {
-                    append(sb, """
-                                    <tr>
-                                        <td>$name$</td>
-                                        <td>$count$</td>
-                                    </tr>
-                                    """,
+                    append(sb, entryHtml,
                             Map.ofEntries(
-                                    param("name",ContentCache.getContent(log.getId()).getDisplayName()),
-                                    param("count",log.getCount())
-                            )
-                    );
+                                    Map.entry("name", toHtml(ContentCache.getContent(log.getId()).getDisplayName())),
+                                    Map.entry("count", Integer.toString(log.getCount()))));
                 }
             }
-            append(sb, """
-                    </table>
-                    """);
+            append(sb, tableEnd);
         }
-        append(sb, """
-                    </section>
-                </div>
-                """);
+        append(sb, htmlEnd);
     }
 
 

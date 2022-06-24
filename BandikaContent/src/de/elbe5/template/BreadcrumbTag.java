@@ -16,34 +16,32 @@ public class BreadcrumbTag extends TemplateTag {
         this.type = TYPE;
     }
 
+    static final String startHtml = """
+            <ol class="breadcrumb">
+            """;
+    static final String linkHtml = """
+                <li class="breadcrumb-item">
+                    <a href="{{url}}">{{name}}</a>
+                </li>
+            """;
+    static final String endHtml = """
+            </ol>
+            """;
+
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
         ContentData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         List<Integer> parentIds = ContentCache.getParentContentIds(contentData);
-        sb.append("""
-                  
-                                    <section class="col-12">
-                                        <ol class="breadcrumb">
-                """);
+        sb.append(startHtml);
         for (int i = parentIds.size() - 1; i >= 0; i--) {
             ContentData content = ContentCache.getContent(parentIds.get(i));
             if (content != null) {
-                append(sb, """
-                                                            <li class="breadcrumb-item">
-                                                                <a href="$url$">$name$</a>
-                                                            </li>
-                                """,
-                        Map.ofEntries(
-                                param("url", content.getUrl()),
-                                param("name", content.getDisplayName())
-                        )
-                );
+                append(sb, linkHtml, Map.ofEntries(
+                        Map.entry("url", content.getUrl()),
+                        Map.entry("name", toHtml(content.getDisplayName()))));
             }
         }
-        sb.append("""
-                                        </ol>
-                                    </section>
-                """);
+        sb.append(endHtml);
     }
 
 }

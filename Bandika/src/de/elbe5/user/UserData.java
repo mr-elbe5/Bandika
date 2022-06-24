@@ -34,7 +34,6 @@ public class UserData extends BaseData implements IJsonData, ImageCompanion, Enc
     public static int MAX_PORTRAIT_WIDTH = 200;
     public static int MAX_PORTRAIT_HEIGHT = 200;
 
-    public static int MIN_LOGIN_LENGTH = 4;
     public static int MIN_PASSWORD_LENGTH = 8;
 
     protected String title = "";
@@ -132,16 +131,8 @@ public class UserData extends BaseData implements IJsonData, ImageCompanion, Enc
         }
     }
 
-    public String getToken() {
-        return token;
-    }
-
     public void setToken(String token) {
         this.token = token;
-    }
-
-    public LocalDateTime getTokenExpiration() {
-        return tokenExpiration;
     }
 
     public void setTokenExpiration(LocalDateTime tokenExpiration) {
@@ -266,7 +257,7 @@ public class UserData extends BaseData implements IJsonData, ImageCompanion, Enc
         return !systemRights.isEmpty() || isRoot();
     }
 
-    public boolean hasAnyElevatedSystemRight() {
+    public boolean hasAnyAdministrationRight() {
         //more than global read right;
         return hasAnySystemRight() && !(systemRights.size() == 1 && hasSystemRight(SystemZone.CONTENTREAD));
     }
@@ -275,13 +266,8 @@ public class UserData extends BaseData implements IJsonData, ImageCompanion, Enc
         return systemRights.contains(zone) || isRoot();
     }
 
-    public boolean hasTemplateRight(){
-        return hasSystemRight(SystemZone.TEMPLATE);
-    }
-
     public boolean hasAnyContentRight() {
-        return hasSystemRight(SystemZone.CONTENTEDIT) || hasSystemRight(SystemZone.CONTENTAPPROVE) ||
-                hasSystemRight(SystemZone.SPECIFICCONTENTEDIT) || hasSystemRight(SystemZone.SPECIFICCONTENTAPPROVE);
+        return hasSystemRight(SystemZone.CONTENTEDIT) || hasSystemRight(SystemZone.CONTENTAPPROVE);
     }
 
     public boolean isRoot(){
@@ -356,28 +342,6 @@ public class UserData extends BaseData implements IJsonData, ImageCompanion, Enc
     public void readProfileRequestData(RequestData rdata) {
         readBasicData(rdata);
         checkBasics(rdata);
-    }
-
-    public void readRegistrationRequestData(RequestData rdata) {
-        readBasicData(rdata);
-        setLogin(rdata.getAttributes().getString("login"));
-        String password1 = rdata.getAttributes().getString("password1");
-        String password2 = rdata.getAttributes().getString("password2");
-        checkBasics(rdata);
-        if (login.isEmpty())
-            rdata.addIncompleteField("login");
-        if (login.length() < UserData.MIN_LOGIN_LENGTH) {
-            rdata.addFormField("login");
-            rdata.addFormError(getString("_loginLengthError"));
-        }
-        if (password1.length() < UserData.MIN_PASSWORD_LENGTH) {
-            rdata.addFormField("password1");
-            rdata.addFormError(getString("_passwordLengthError"));
-        } else if (!password1.equals(password2)) {
-            rdata.addFormField("password2");
-            rdata.addFormError(getString("_passwordsDontMatch"));
-        } else
-            setPassword(password1);
     }
 
     @Override

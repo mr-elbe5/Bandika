@@ -10,74 +10,66 @@ import java.util.Map;
 
 public class SearchPage extends HtmlIncludePage implements IHtmlBuilder {
 
+    static final String startHtml = """
+            <form:message/>
+            <section class="contentTop">
+                <h1>{{_search}}
+                </h1>
+                <form action="/page/search/search" method="post" id="searchboxform" name="searchboxform" accept-charset="UTF-8">
+                    <div class="input-group">
+                        <label for="searchPattern"></label><input class="form-control mr-sm-2" id="searchPattern" name="searchPattern" maxlength="60" value="{{pattern}}"/>
+                        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">{{search}}
+                        </button>
+                    </div>
+                </form>
+            </section>
+            <section class="searchSection">
+                <div class="searchResults">
+            """;
+    static final String headerHtml = """
+                    <h2>{{_searchResults}}</h2>
+            """;
+    static final String resultHtml = """
+                    <div class="searchResult">
+                        <div class="searchTitle">
+                            <a href="{{url}}" title="{{_show}}">{{name}}
+                            </a>
+                        </div>
+                        <div class="searchDescription">{{description}}
+                        </div>
+                        <div class="searchContent">{{content}}
+                        </div>
+                    </div>
+            """;
+    static final String noresultHtml = """
+                    <span>{{_noResults}}</span>
+            """;
+    static final String endHtml = """
+                </div>
+            </section>
+            """;
+
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
         ContentSearchResultData pageResult = rdata.getAttributes().get("searchResultData", ContentSearchResultData.class);
-        append(sb,"""
-                        <form:message/>
-                        <section class="contentTop">
-                            <h1>$search$
-                            </h1>
-                            <form action="/page/search/search" method="post" id="searchboxform" name="searchboxform" accept-charset="UTF-8">
-                                <div class="input-group">
-                                    <label for="searchPattern"></label><input class="form-control mr-sm-2" id="searchPattern" name="searchPattern" maxlength="60" value="$pattern$"/>
-                                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">$search$
-                                    </button>
-                                </div>
-                            </form>
-                        </section>
-                        <section class="searchSection">
-                            <div class="searchResults">
-                            """,
+        append(sb, startHtml,
                 Map.ofEntries(
-                        param("search","_search"),
-                        param("pattern",pageResult.getPattern())
-                )
-        );
+                        Map.entry("pattern", toHtml(pageResult.getPattern()))));
         if (!pageResult.getResults().isEmpty()) {
-            append(sb,"""
-                            <h2>$results$</h2>
-                            """,
-                    Map.ofEntries(
-                            param("results","_searchResults")
-                    )
-            );
+            append(sb, headerHtml, null);
             for (ContentSearchData data : pageResult.getResults()) {
                 String description = data.getDescriptionContext();
                 String content = data.getContentContext();
-                append(sb,"""
-                                <div class="searchResult">
-                                    <div class="searchTitle">
-                                        <a href="$url$" title="$show$">$name$
-                                        </a>
-                                    </div>
-                                    <div class="searchDescription">$description$
-                                    </div>
-                                    <div class="searchContent">$content$
-                                    </div>
-                                </div>
-                                """,
+                append(sb, resultHtml,
                         Map.ofEntries(
-                                param("url",data.getUrl()),
-                                param("show","_show"),
-                                param("name",data.getNameContext()),
-                                param("description",description.isEmpty() ? "" : data.getDescriptionContext()),
-                                param("content",content.isEmpty() ? "" : data.getContentContext())
-                        )
-                );
+                                Map.entry("url", data.getUrl()),
+                                Map.entry("name", data.getNameContext()),
+                                Map.entry("description", description.isEmpty() ? "" : data.getDescriptionContext()),
+                                Map.entry("content", content.isEmpty() ? "" : data.getContentContext())));
             }
         } else {
-            append(sb,"""
-                            <span>$noResults$</span>
-                            """,
-                    Map.ofEntries(
-                            param("noResults","_noResults")
-                    )
-            );
+            append(sb, noresultHtml, null);
         }
-        sb.append("""
-                    </div>
-                </section>
-                """);
+        sb.append(endHtml);
     }
 }

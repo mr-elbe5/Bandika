@@ -15,72 +15,72 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
-public class CloseDialogResponse extends HtmlResponse implements IFormBuilder{
+public class CloseDialogResponse extends HtmlResponse implements IFormBuilder {
 
     String url;
     String msg = "";
     String msgType = "";
     private String targetId = "";
 
-    public CloseDialogResponse(String url){
+    public CloseDialogResponse(String url) {
         this.url = url;
     }
 
-    public CloseDialogResponse(String url, String msg, String msgType){
+    public CloseDialogResponse(String url, String msg, String msgType) {
         this.url = url;
         this.msg = msg;
         this.msgType = msgType;
     }
-    public CloseDialogResponse(String url, String msg, String msgType, String targetId){
+
+    public CloseDialogResponse(String url, String msg, String msgType, String targetId) {
         this.url = url;
         this.msg = msg;
         this.msgType = msgType;
         this.targetId = targetId;
     }
 
-    @Override
-    public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
-        if (targetId.isEmpty()) {
-            append(sb, """
+    static final String startHtml = """
             <div id="pageContent">
-                <form action="$url$" method="POST" id="forwardform" accept-charset="UTF-8">
-                """,
-                    Map.ofEntries(
-                            param("url",url)
-                    )
-            );
-            if (!msg.isEmpty()) {
-                appendHiddenField(sb, RequestKeys.KEY_MESSAGE, msg);
-                appendHiddenField(sb, RequestKeys.KEY_MESSAGETYPE, msgType);
-            }
-            append(sb, """
+                <form action="{{url}}" method="POST" id="forwardform" accept-charset="UTF-8">
+            """;
+    static final String endHtml = """
                 </form>
             </div>
             <script type="text/javascript">
                 $('#forwardform').submit();
             </script>
-            """);
-        }
-        else{
+            """;
+    static final String emptyHtml = """
+            <div id="pageContent"></div>
+            <script type="text/javascript">
+                    closeModalDialog();
+                    postByAjax('{{url}}', {{msg}}, '{{target}}');
+            </script>
+            """;
+
+    @Override
+    public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response) {
+        if (targetId.isEmpty()) {
+            append(sb, startHtml, Map.ofEntries(
+                    Map.entry("url", url)));
+            if (!msg.isEmpty()) {
+                appendHiddenField(sb, RequestKeys.KEY_MESSAGE, msg);
+                appendHiddenField(sb, RequestKeys.KEY_MESSAGETYPE, msgType);
+            }
+            append(sb, endHtml);
+        } else {
             StringBuilder ssb = new StringBuilder("{");
             if (!msg.isEmpty()) {
                 ssb.append(RequestKeys.KEY_MESSAGE).append(" : '").append(toJs(msg)).append("',");
                 ssb.append(RequestKeys.KEY_MESSAGETYPE).append(" : '").append(toJs(msgType)).append("'");
             }
             ssb.append("}");
-            append(sb,"""
-                <div id="pageContent"></div>
-                <script type="text/javascript">
-                        closeModalDialog();
-                        postByAjax('$url$', $msg$, '$target$');
-                </script>
-            """,
+            append(sb, emptyHtml,
                     Map.ofEntries(
-                            param("url",url),
-                            param("msg",ssb.toString()),
-                            param("target",toJs(targetId))
-                    )
-            );
+                            Map.entry("url", url),
+                            Map.entry("msg", toHtml(ssb.toString())),
+                            Map.entry("target", toJs(targetId))
+                    ));
         }
         super.sendHtml(response);
     }

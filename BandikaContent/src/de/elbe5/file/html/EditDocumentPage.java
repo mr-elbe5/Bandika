@@ -19,17 +19,17 @@ public class EditDocumentPage extends ModalPage implements IFormBuilder {
         UserData changer = UserCache.getUser(documentData.getChangerId());
         String changerName = changer == null ? "" : changer.getName();
         boolean fileRequired= documentData.isNew();
-        appendModalStart(getHtml("_editDocumentSettings"));
+        appendModalStart(getString("_editDocumentSettings"));
         appendFormStart(sb, url , "documentform", true);
         appendModalBodyStart();
-        appendTextLine(sb, getHtml("_idAndUrl"), documentData.getId() + " - " + toHtml(documentData.getFileName()));
-        appendTextLine(sb, getHtml("_creation"), toHtmlDateTime(documentData.getCreationDate()) + " - " + toHtml(creatorName));
-        appendTextLine(sb, getHtml("_lastChange"), toHtmlDateTime(documentData.getChangeDate()) + " - " + toHtml(changerName));
-        appendFileLineStart(sb, rdata.hasFormErrorField("file"), "file", getHtml("_file"), fileRequired, false);
+        appendTextLine(sb, getString("_idAndUrl"), documentData.getId() + " - " + documentData.getFileName());
+        appendTextLine(sb, getString("_creation"), toHtmlDateTime(documentData.getCreationDate()) + " - " + creatorName);
+        appendTextLine(sb, getString("_lastChange"), toHtmlDateTime(documentData.getChangeDate()) + " - " + changerName);
+        appendFileLineStart(sb, rdata.hasFormErrorField("file"), "file", getString("_file"), fileRequired, false);
         appendLineEnd(sb);
-        appendTextInputLine(sb, rdata.hasFormErrorField("displayName"),"displayName",getHtml("_displayName"), true, toHtml(documentData.getDisplayName()));
-        appendTextareaLine(sb, "description", getHtml("_description"), toHtml(documentData.getDescription()), "3rem");
-        appendModalFooter(getHtml("_close"),getHtml("_save"));
+        appendTextInputLine(sb, rdata.hasFormErrorField("displayName"),"displayName",getString("_displayName"), true, documentData.getDisplayName());
+        appendTextareaLine(sb, "description", getString("_description"), documentData.getDescription(), "3rem");
+        appendModalFooter(getString("_close"),getString("_save"));
         appendFormEnd(sb, url, "documentform", true, true, "");
         appendModalEnd();
     }

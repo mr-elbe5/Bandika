@@ -173,7 +173,6 @@ public class UserBean extends DbBean implements EncryptionCompanion {
         try {
             pst = con.prepareStatement(API_LOGIN_SQL);
             pst.setString(1, login);
-            boolean passed;
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
@@ -211,7 +210,7 @@ public class UserBean extends DbBean implements EncryptionCompanion {
 
     public boolean setToken(UserData data){
         Connection con = startTransaction();
-        PreparedStatement pst = null;
+        PreparedStatement pst;
         try {
             if (changedUser(con, data)) {
                 return rollbackTransaction(con);
@@ -242,7 +241,6 @@ public class UserBean extends DbBean implements EncryptionCompanion {
         try {
             pst = con.prepareStatement(LOGIN_BY_TOKEN_SQL);
             pst.setString(1, token);
-            boolean passed;
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
@@ -266,110 +264,6 @@ public class UserBean extends DbBean implements EncryptionCompanion {
             closeConnection(con);
         }
         return data;
-    }
-
-    private static final String GET_LOGIN_SQL = "SELECT id,change_date,pwd,first_name,last_name,email FROM t_user WHERE login=?";
-
-    public UserData getLogin(String login, String approvalCode, String pwd) {
-        Connection con = getConnection();
-        PreparedStatement pst = null;
-        UserData data = null;
-        boolean passed = false;
-        try {
-            pst = con.prepareStatement(GET_LOGIN_SQL);
-            pst.setString(1, login);
-            try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    int i = 1;
-                    data = new UserData();
-                    data.setId(rs.getInt(i++));
-                    data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
-                    data.setLogin(login);
-                    String encypted = rs.getString(i++);
-                    passed = (encryptPassword(pwd, Configuration.getSalt()).equals(encypted));
-                    data.setPassword("");
-                    data.setFirstName(rs.getString(i++));
-                    data.setLastName(rs.getString(i++));
-                    data.setEmail(rs.getString(i));
-                }
-            }
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-        return passed ? data : null;
-    }
-
-    private static final String GET_PASSWORD_SQL = "SELECT pwd FROM t_user WHERE id=?";
-
-    public boolean isSystemPasswordEmpty() {
-        Connection con = getConnection();
-        PreparedStatement pst = null;
-        boolean empty = true;
-        try {
-            pst = con.prepareStatement(GET_PASSWORD_SQL);
-            pst.setInt(1, UserData.ID_ROOT);
-            try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    String pwd = rs.getString(1);
-                    empty = isNullOrEmpty(pwd);
-                }
-            }
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-        return empty;
-    }
-
-    private static final String GET_X_LOGIN_SQL = "SELECT 'x' FROM t_user WHERE login=?";
-
-    public boolean doesLoginExist(String login) {
-        Connection con = getConnection();
-        PreparedStatement pst = null;
-        boolean exists = false;
-        try {
-            pst = con.prepareStatement(GET_X_LOGIN_SQL);
-            pst.setString(1, login);
-            try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    exists = true;
-                }
-            }
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-        return exists;
-    }
-
-    private static final String GET_X_EMAIL_SQL = "SELECT 'x' FROM t_user WHERE email=?";
-
-    public boolean doesEmailExist(String login) {
-        Connection con = getConnection();
-        PreparedStatement pst = null;
-        boolean exists = false;
-        try {
-            pst = con.prepareStatement(GET_X_EMAIL_SQL);
-            pst.setString(1, login);
-            try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    exists = true;
-                }
-            }
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-        return exists;
     }
 
     private static final String GET_USER_SQL = "SELECT id,change_date,company_id,title,first_name,last_name,street,zipCode,city,country,email,phone,mobile,notes,portrait,login,locked,deleted FROM t_user WHERE id=?";
@@ -568,27 +462,6 @@ public class UserBean extends DbBean implements EncryptionCompanion {
             pst.close();
         } finally {
             closeStatement(pst);
-        }
-    }
-
-    private static final String CHANGE_PASSWORD_SQL = "UPDATE t_user SET pwd=? WHERE id=?";
-
-    public boolean changePassword(int id, String pwd) {
-        Connection con = startTransaction();
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement(CHANGE_PASSWORD_SQL);
-            int i = 1;
-            pst.setString(i++, encryptPassword(pwd, Configuration.getSalt()));
-            pst.setInt(i, id);
-            pst.executeUpdate();
-            pst.close();
-            return commitTransaction(con);
-        } catch (Exception se) {
-            return rollbackTransaction(con, se);
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
         }
     }
 

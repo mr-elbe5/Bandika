@@ -62,7 +62,6 @@ public class MediaController extends FileController {
     }
 
     public IResponse saveMedia(RequestData rdata) {
-        int contentId = rdata.getId();
         MediaData data = rdata.getSessionObject(ContentRequestKeys.KEY_MEDIA,MediaData.class);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
@@ -108,13 +107,13 @@ public class MediaController extends FileController {
         ContentData parent=ContentCache.getContent(parentId);
         if (parent == null){
             rdata.setMessage(getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
-            return showContentAdministration(rdata);
+            return showContentAdministration();
         }
         checkRights(parent.hasUserEditRight(rdata));
         MediaData data=rdata.getClipboardData(ContentRequestKeys.KEY_MEDIA,MediaData.class);
         if (data==null){
             rdata.setMessage(getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
-            return showContentAdministration(rdata);
+            return showContentAdministration();
         }
         data.setParentId(parentId);
         data.setParent(parent);

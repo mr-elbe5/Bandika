@@ -11,8 +11,8 @@ public class EditLinkDataPage extends EditContentDataPage {
         LinkData contentData = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, LinkData.class);
         String url = "/ctrl/content/saveContentData/" + contentData.getId();
         appendStartHtml(rdata, contentData, url);
-        appendTextInputLine(sb, rdata.hasFormErrorField("linkIcon"), "linkIcon", getHtml("_linkIcon"), true, toHtml(contentData.getLinkIcon()));
-        appendTextInputLine(sb, rdata.hasFormErrorField("linkUrl"), "linkUrl", getHtml("_linkUrl"), true, toHtml(contentData.getLinkUrl()));
+        appendTextInputLine(sb, rdata.hasFormErrorField("linkIcon"), "linkIcon", getString("_linkIcon"), true, contentData.getLinkIcon());
+        appendTextInputLine(sb, rdata.hasFormErrorField("linkUrl"), "linkUrl", getString("_linkUrl"), true, contentData.getLinkUrl());
         appendEndHtml(url);
     }
 }

@@ -10,6 +10,7 @@ package de.elbe5.company;
 
 import de.elbe5.data.BaseData;
 import de.elbe5.company.html.EditCompanyPage;
+import de.elbe5.log.Log;
 import de.elbe5.request.*;
 import de.elbe5.response.*;
 import de.elbe5.rights.SystemZone;
@@ -69,7 +70,9 @@ public class CompanyController extends Controller {
         if (!rdata.checkFormErrors()) {
             return showEditCompany(rdata);
         }
-        CompanyBean.getInstance().saveCompany(data);
+        if (!CompanyBean.getInstance().saveCompany(data)){
+            Log.warn("could not save company");
+        }
         CompanyCache.setDirty();
         return new CloseDialogResponse("/ctrl/admin/openUserAdministration?companyId=" + data.getId(), getString("_companySaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }

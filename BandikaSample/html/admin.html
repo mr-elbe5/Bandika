@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:tpl="http://elbe5.de" lang="$lang$">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>$title$</title>
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link rel="stylesheet" href="/static-content/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/static-content/css/bandika.css"/>
+    <link rel="stylesheet" href="/static-content/css/admin.css"/>
+    <script type="text/javascript" src="/static-content/js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="/static-content/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/static-content/js/bootstrap.tree.js"></script>
+    <script type="text/javascript" src="/static-content/ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.config.language = '$lang$';
+    </script>
+    <script type="text/javascript" src="/static-content/ckeditor/adapters/jquery.js"></script>
+    <script type="text/javascript" src="/static-content/js/bandika.js"></script>
+</head>
+<body class="admin">
+<div class="container">
+    <header>
+        <div class="top">
+            <section class="sysnav">
+                <ul class="nav justify-content-end">
+                    <li class="nav-item">
+                        <a class="nav-link fa fa-home" href="/" title="$home$>"></a></li>
+                    <li class="nav-item">
+                        <a class="nav-link fa fa-sign-out" href="/ctrl/user/logout" title="$logout$"></a>
+                    </li>
+                </ul>
+            </section>
+        </div>
+        <tpl:adminMenu>
+            <div class="menu row">
+                <section class="col-12 menu">
+                    <nav class="navbar navbar-expand-lg">
+                        <span class="navbar-brand"><img class="admin-logo" src="/static-content/img/admin-logo.png"
+                                                        alt=""> - $administration$</span>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav mr-auto">
+                                <tpl:sysmenu>
+                                    <tpl:snippet name="menuEntrySystem">
+                                        <li class="nav-item">
+                                            <a class="nav-link"
+                                               href="/ctrl/admin/openSystemAdministration">$systemAdministration$
+                                            </a>
+                                        </li>
+                                    </tpl:snippet>
+                                    <tpl:snippet name="menuEntryUsers">
+                                        <li class="nav-item">
+                                            <a class="nav-link"
+                                               href="/ctrl/admin/openUserAdministration">$userAdministration$
+                                            </a>
+                                        </li>
+                                    </tpl:snippet>
+                                    <tpl:snippet name="menuEntryContent">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/ctrl/admin/openContentAdministration">$contentAdministration$
+                                            </a>
+                                        </li>
+                                    </tpl:snippet>
+                                    <tpl:snippet name="menuEntryContentLog">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/ctrl/admin/openContentLog">$contentLog$
+                                            </a>
+                                        </li>
+                                    </tpl:snippet>
+                                </tpl:sysmenu>
+                            </ul>
+                        </div>
+                    </nav>
+                </section>
+            </div>
+        </tpl:adminMenu>
+    </header>
+    <main id="main" role="main">
+        <div id="pageContainer" class="container admin">
+            <tpl:content/>
+        </div>
+    </main>
+</div>
+<div class="modal" id="modalDialog" tabindex="-1" role="dialog"></div>
+<script type="text/javascript">
+    function confirmDelete() {
+        return confirm('$delete$');
+    }
+
+    function confirmExecute() {
+        return confirm('$execute$');
+    }
+</script>
+
+</body>
+</html>

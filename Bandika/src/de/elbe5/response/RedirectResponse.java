@@ -21,26 +21,26 @@ public class RedirectResponse extends HtmlResponse implements IHtmlBuilder{
         this.url=url;
     }
 
-    @Override
-    public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response) {
-        append(sb, """
+    static final String html = """
             <html>
-            <head><title></title></head>
-            <body>
-            &nbsp;
-            </body>
+                <head><title></title></head>
+                <body>
+                    &nbsp;
+                </body>
             </html>
             <script type="text/javascript">
                 try {
-                    window.location.href = '$url$';
+                    window.location.href = '{{url}}';
                 } catch (e) {
                 }
             </script>
-            """,
+            """;
+
+    @Override
+    public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response) {
+        append(sb, html,
                 Map.ofEntries(
-                        param("url",url)
-                )
-        );
+                        Map.entry("url",url)));
         super.processResponse(context, rdata, response);
     }
 }

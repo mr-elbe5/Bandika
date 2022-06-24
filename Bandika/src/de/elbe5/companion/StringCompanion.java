@@ -9,9 +9,9 @@
 package de.elbe5.companion;
 
 import de.elbe5.data.LocalizedStrings;
+import de.elbe5.log.Log;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -19,47 +19,67 @@ import java.util.*;
 
 public interface StringCompanion {
 
-    default @NotNull String getString(@NotNull String key) {
+    default String getString(String key) {
+        if (key==null)
+            return "";
         return LocalizedStrings.getString(key);
     }
 
-    default @NotNull String getHtml(@NotNull String key) {
+    default String getHtml(String key) {
+        if (key==null)
+            return "";
         return StringEscapeUtils.escapeHtml4(LocalizedStrings.getString(key));
     }
 
-    default @NotNull String getHtmlMultiline(@NotNull String key) {
+    default String getHtmlMultiline(String key) {
+        if (key==null)
+            return "";
         return toHtmlMultiline(LocalizedStrings.getString(key));
     }
 
-    default @NotNull String getJs(@NotNull String key) {
+    default String getJs(String key) {
+        if (key==null)
+            return "";
         return StringEscapeUtils.escapeEcmaScript(LocalizedStrings.getString(key));
     }
 
-    default @NotNull String getXml(@NotNull String key) {
+    default String getXml(String key) {
+        if (key==null)
+            return "";
         return StringEscapeUtils.escapeXml11(LocalizedStrings.getString(key));
     }
 
-    default @NotNull  String toHtml(@NotNull String src) {
+    default  String toHtml(String src) {
+        if (src==null)
+            return "";
         return StringEscapeUtils.escapeHtml4(src);
     }
 
-    default @NotNull String toHtmlMultiline(@NotNull String src) {
+    default String toHtmlMultiline(String src) {
+        if (src==null)
+            return "";
         return StringEscapeUtils.escapeHtml4(src).replace("\n", "\n<br>\n");
     }
 
-    default @NotNull String toXml(@NotNull String src) {
+    default String toXml(String src) {
+        if (src==null)
+            return "";
         return StringEscapeUtils.escapeXml11(src);
     }
 
-    default @NotNull String toJs(@NotNull String src) {
+    default String toJs(String src) {
+        if (src==null)
+            return "";
         return StringEscapeUtils.escapeEcmaScript(src);
     }
 
-    default @NotNull String toUrl(@NotNull String src) {
+    default String toUrl(String src) {
+        if (src==null)
+            return "";
         return encodeUTF8(src);
     }
 
-    default @NotNull String encodeUTF8(@NotNull String src) {
+    default String encodeUTF8(String src) {
         try {
             return URLEncoder.encode(src, StandardCharsets.UTF_8);
         } catch (Exception e) {
@@ -67,16 +87,20 @@ public interface StringCompanion {
         }
     }
 
-    default @NotNull String toAsciiName(@NotNull String src) {
+    default String toAsciiName(String src) {
+        if (src==null)
+            return "";
         return StringUtils.stripAccents(src);
     }
 
-    default @NotNull String toSafeWebName(String src) {
+    default String toSafeWebName(String src) {
+        if (src==null)
+            return "";
         src = toAsciiName(src);
         return src.replaceAll("[\\s&]+", "-").replaceAll("['\"><]+", "");
     }
 
-    default @NotNull String getIntString(List<Integer> ints) {
+    default String getIntString(List<Integer> ints) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < ints.size(); i++) {
             if (i > 0) {
@@ -91,11 +115,11 @@ public interface StringCompanion {
         return s == null || s.length() == 0;
     }
 
-    default int toInt(@NotNull String s) {
+    default int toInt(String s) {
         return toInt(s, 0);
     }
 
-    default int toInt(@NotNull String s, int def) {
+    default int toInt(String s, int def) {
         try {
             return Integer.parseInt(s);
         } catch (Exception ignore) {
@@ -103,12 +127,46 @@ public interface StringCompanion {
         }
     }
 
-    default @NotNull String format(@NotNull String s, Map<String, String> params){
-        String result = s;
-        for (String key : params.keySet()){
-            result = result.replace("$" + key + "$", params.get(key));
+    default String format(String src, Map<String, String> params)  {
+        if (src==null)
+            return "";
+        String s = "";
+        int p1 = 0;
+        int p2 = 0;
+        while (true) {
+            int varStart = src.indexOf("{{", p1);
+            if (varStart != -1){
+                p2 = varStart;
+                s += src.substring(p1,p2);
+                varStart += 2;
+                int varEnd = src.indexOf("}}", varStart);
+                if (varEnd != -1){
+                    String key = src.substring(varStart,varEnd);
+                    if (key.contains("{{")){
+                        p1 = p2;
+                        Log.warn("parse error: no matching '}}'");
+                        break;
+                    }
+                    if (key.startsWith("_")) {
+                        s += getHtml(key);
+                    }
+                    else if (params != null){
+                        s += params.get(key);
+                    }
+                    p1 = varEnd +2;
+                }
+                else{
+                    p1 = p2;
+                    Log.warn("parse error");
+                    break;
+                }
+            }
+            else{
+                break;
+            }
         }
-        return result;
+        s += src.substring(p1);
+        return s;
     }
 
 }

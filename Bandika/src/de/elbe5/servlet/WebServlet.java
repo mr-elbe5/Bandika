@@ -79,21 +79,20 @@ public abstract class WebServlet extends HttpServlet implements IHtmlBuilder {
             </style>
             <body>
             <main>
-                <h1>$error$</h1>
-                <div class="errorText">$errorText$</div>
-                <div class="link"><a href="/" title="Home">$home$</a></div>
+                <h1>{{error}}</h1>
+                <div class="errorText">{{errorText}}</div>
+                <div class="link"><a href="/" title="Home">{{_home}}</a></div>
             </main>
             </body>
-            </html>          
+            </html>
             """;
 
     protected void handleException(HttpServletRequest request, HttpServletResponse response, int code) {
         String errorKey = (String) request.getAttribute("errorKey");
         String html = format(exceptionHtml,
                 Map.ofEntries(
-                        htmlParam("error", getString("_error" + code)),
-                        htmlParam("errorText", errorKey != null ? getHtml(errorKey) : ""),
-                        param("home", "_home")
+                        Map.entry("error", getHtml("_error" + code)),
+                        Map.entry("errorText", errorKey != null ? getHtml(errorKey) : "")
                 )
         );
         HtmlResponse resp = new HtmlResponse(html);

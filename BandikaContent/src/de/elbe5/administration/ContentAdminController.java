@@ -12,8 +12,10 @@ import de.elbe5.administration.html.*;
 import de.elbe5.content.ContentBean;
 import de.elbe5.content.ContentCache;
 import de.elbe5.file.PreviewCache;
+import de.elbe5.log.Log;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
+import de.elbe5.response.AdminResponse;
 import de.elbe5.response.IResponse;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.ControllerCache;
@@ -36,7 +38,6 @@ public class ContentAdminController extends AdminController {
     public static void register(ContentAdminController controller){
         setInstance(controller);
         ControllerCache.addController(controller.getKey(),getInstance());
-        AdminPage.setMenu(new ContentAdminMenu());
     }
 
     @Override
@@ -52,17 +53,17 @@ public class ContentAdminController extends AdminController {
 
     public IResponse openSystemAdministration(RequestData rdata) {
         checkRights(rdata.hasAnySystemRight());
-        return new ContentSystemAdminPage();
+        return new AdminResponse(new ContentSystemAdminPage());
     }
 
     public IResponse openContentAdministration(RequestData rdata) {
         checkRights(rdata.hasAnyContentRight());
-        return new ContentAdminPage();
+        return new AdminResponse(new ContentAdminPage());
     }
 
     public IResponse openContentLog(RequestData rdata) {
         checkRights(rdata.hasAnyContentRight());
-        return new ContentLogAdminPage();
+        return new AdminResponse(new ContentLogAdminPage());
     }
 
     public IResponse clearPreviewCache(RequestData rdata) {
@@ -82,8 +83,10 @@ public class ContentAdminController extends AdminController {
 
     public IResponse resetContentLog(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.CONTENTEDIT));
-        ContentBean.getInstance().resetContentLog();
-        return new ContentLogAdminPage();
+        if (!ContentBean.getInstance().resetContentLog()){
+            Log.warn("could not reset content log");
+        }
+        return new AdminResponse(new ContentLogAdminPage());
     }
 
 }

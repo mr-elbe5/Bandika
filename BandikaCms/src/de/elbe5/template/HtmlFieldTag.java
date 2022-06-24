@@ -14,32 +14,30 @@ public class HtmlFieldTag extends TemplateTag {
 
     public static final String TYPE = "htmlfield";
 
-    public HtmlFieldTag(){
+    public HtmlFieldTag() {
         this.type = TYPE;
     }
 
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata){
-        String name = getStringParam("name", rdata, "");
-        String placeholder = getStringParam("placeholder", rdata, "");
+    public void appendHtml(StringBuilder sb, RequestData rdata) {
+        String name = getStringAttribute("name", "");
+        String placeholder = getStringAttribute("placeholder", "");
         PageData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, PageData.class);
         TemplatePartData partData = (TemplatePartData) rdata.getAttributes().get(PagePartData.KEY_PART);
         PartHtmlField field = partData.ensureHtmlField(name);
         boolean editMode = contentData.getViewType().equals(ContentData.VIEW_TYPE_EDIT);
         if (editMode) {
-            append(sb,"""
-                    <div class="ckeditField" id="$identifier$" contenteditable="true">$placeholder$</div>
-                    <input type="hidden" name="$identifier$" value="$content$" />
-                    <script type="text/javascript">
-                        $('#$identifier$').ckeditor({toolbar : 'Full',filebrowserBrowseUrl : '/ctrl/ckeditor/openLinkBrowser?contentId=$id$',filebrowserImageBrowseUrl : '/ctrl/ckeditor/openImageBrowser?contentId=$id$'});
-                    </script>""",
+            append(sb, """
+                            <div class="ckeditField" id="{{identifier}}" contenteditable="true">{{placeholder}}</div>
+                            <input type="hidden" name="{{identifier}}" value="{{content}}" />
+                            <script type="text/javascript">
+                                $('#{{identifier}}').ckeditor({toolbar : 'Full',filebrowserBrowseUrl : '/ctrl/ckeditor/openLinkBrowser?contentId={{id}}',filebrowserImageBrowseUrl : '/ctrl/ckeditor/openImageBrowser?contentId={{id}}'});
+                            </script>""",
                     Map.ofEntries(
-                            param("identifier",field.getIdentifier()),
-                            htmlParam("placeholder",field.getContent().isEmpty() ? toHtml(placeholder) : field.getContent()),
-                            param("content",field.getContent()),
-                            param("id",contentData.getId())
-                    )
-            );
+                            Map.entry("identifier", field.getIdentifier()),
+                            Map.entry("placeholder", field.getContent().isEmpty() ? toHtml(placeholder) : field.getContent()),
+                            Map.entry("content", toHtml(field.getContent())),
+                            Map.entry("id", Integer.toString(contentData.getId()))));
         } else {
             try {
                 if (!field.getContent().isEmpty()) {

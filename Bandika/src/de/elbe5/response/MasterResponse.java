@@ -10,8 +10,6 @@ package de.elbe5.response;
 
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;

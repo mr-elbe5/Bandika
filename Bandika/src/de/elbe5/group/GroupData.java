@@ -15,21 +15,11 @@ import de.elbe5.user.UserData;
 
 import java.util.*;
 
-/**
- * Class GroupData is the data class for user groups. <br>
- * Usage:
- */
 public class GroupData extends BaseData {
-
-    public static final int ID_ALL = 0;
-    public static final int ID_GLOBAL_ADMINISTRATORS = 1;
-    public static final int ID_GLOBAL_APPROVERS = 2;
-    public static final int ID_GLOBAL_EDITORS = 3;
-    public static final int ID_GLOBAL_READERS = 4;
 
     public static final int ID_MAX_FINAL = 4;
 
-    protected String name = null;
+    protected String name = "";
     protected String notes = "";
     protected Collection<Integer> userIds = new HashSet<>();
     protected List<UserData> users = new ArrayList<>();

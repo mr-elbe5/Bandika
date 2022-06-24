@@ -41,7 +41,6 @@ public class PageController extends ContentController {
     }
 
     public IResponse addPart(RequestData rdata) {
-        int contentId = rdata.getId();
         PageData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, PageData.class);
         checkRights(data.hasUserEditRight(rdata));
         int fromPartId = rdata.getAttributes().getInt("fromPartId", -1);

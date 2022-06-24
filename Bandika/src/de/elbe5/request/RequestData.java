@@ -12,7 +12,6 @@ import de.elbe5.application.Configuration;
 import de.elbe5.data.BaseData;
 import de.elbe5.data.KeyValueMap;
 import de.elbe5.data.LocalizedStrings;
-import de.elbe5.data.StringMap;
 import de.elbe5.file.BinaryFile;
 import de.elbe5.log.Log;
 import de.elbe5.rights.SystemZone;
@@ -32,9 +31,7 @@ public class RequestData {
 
     private final KeyValueMap attributes = new KeyValueMap();
 
-    private final StringMap templateAttributes = new StringMap();
-
-    private final Map<String, Cookie> cookies = new HashMap<>();
+    private final Map<String,String> templateAttributes = new HashMap<>();
 
     private final HttpServletRequest request;
 
@@ -62,7 +59,7 @@ public class RequestData {
         return attributes;
     }
 
-    public StringMap getTemplateAttributes() {
+    public Map<String, String> getTemplateAttributes() {
         return templateAttributes;
     }
 
@@ -122,9 +119,9 @@ public class RequestData {
         return data != null && (data.hasAnySystemRight());
     }
 
-    public boolean hasAnyElevatedSystemRight() {
+    public boolean hasAnyAdministrationRight() {
         UserData data = getLoginUser();
-        return data != null && (data.hasAnyElevatedSystemRight());
+        return data != null && (data.hasAnyAdministrationRight());
     }
 
     public boolean hasAnyContentRight() {
@@ -345,10 +342,6 @@ public class RequestData {
         }
     }
 
-    public void removeRequestObject(String key){
-        request.removeAttribute(key);
-    }
-
     /************** session attributes ***************/
 
     public void initSession() {
@@ -472,42 +465,9 @@ public class RequestData {
         setSessionObject(RequestKeys.KEY_HOST, host);
     }
 
-    public String getSessionHost() {
-        return getSessionObject(RequestKeys.KEY_HOST,String.class);
-    }
-
     public void resetSession() {
         removeAllSessionObjects();
         request.getSession(true);
-    }
-
-    /*************** cookie methods ***************/
-
-    public void addLoginCookie(String name, String value, int expirationDays){
-        Cookie cookie=new Cookie("elbe5cms_"+name,value);
-        cookie.setPath("/ctrl/user/login");
-        cookie.setMaxAge(expirationDays*24*60*60);
-        cookies.put(cookie.getName(),cookie);
-    }
-
-    public boolean hasCookies(){
-        return !(cookies.isEmpty());
-    }
-
-    public void setCookies(HttpServletResponse response){
-        for (Cookie cookie : cookies.values()){
-            response.addCookie(cookie);
-        }
-    }
-
-    public Map<String,String> readLoginCookies(){
-        Map<String, String> map=new HashMap<>();
-        for (Cookie cookie : request.getCookies()) {
-            if (cookie.getName().startsWith("elbe5cms_")) {
-                map.put(cookie.getName().substring(9), cookie.getValue());
-            }
-        }
-        return map;
     }
 
 }

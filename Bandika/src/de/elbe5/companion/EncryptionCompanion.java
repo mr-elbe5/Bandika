@@ -9,7 +9,6 @@
 package de.elbe5.companion;
 
 import de.elbe5.log.Log;
-import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -34,23 +33,23 @@ public interface EncryptionCompanion {
         return salt;
     }
 
-    default @NotNull String generateSaltBase64() throws NoSuchAlgorithmException {
+    default String generateSaltBase64() throws NoSuchAlgorithmException {
         return Base64.getEncoder().encodeToString(generateSalt());
     }
 
-    default byte[] getEncryptedPassword(@NotNull String password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    default byte[] getEncryptedPassword(String password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
         int derivedKeyLength = 160;
         KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, HASH_ITERATIONS, derivedKeyLength);
         SecretKeyFactory f = SecretKeyFactory.getInstance(HASH_ALGORITHM);
         return f.generateSecret(spec).getEncoded();
     }
 
-    default @NotNull String getEncryptedPasswordBase64(@NotNull String password, String saltBase64) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    default String getEncryptedPasswordBase64(String password, String saltBase64) throws NoSuchAlgorithmException, InvalidKeySpecException {
         byte[] salt = Base64.getDecoder().decode(saltBase64);
         return Base64.getEncoder().encodeToString(getEncryptedPassword(password, salt));
     }
 
-    default @NotNull String encryptPassword(@NotNull String pwd, @NotNull String key) {
+    default String encryptPassword(String pwd, String key) {
         try {
             return getEncryptedPasswordBase64(pwd, key);
         } catch (Exception e) {
@@ -60,11 +59,11 @@ public interface EncryptionCompanion {
     }
 
 
-    default char getRandomChar(@NotNull String chars, @NotNull Random random) {
+    default char getRandomChar(String chars, Random random) {
         return chars.charAt(random.nextInt(chars.length()));
     }
 
-    default @NotNull String generateKey() {
+    default String generateKey() {
         try {
             return generateSaltBase64();
         } catch (Exception e) {
