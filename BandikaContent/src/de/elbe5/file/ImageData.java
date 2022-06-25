@@ -12,7 +12,7 @@ import de.elbe5.companion.ImageCompanion;
 import de.elbe5.data.IJsonData;
 import de.elbe5.log.Log;
 import de.elbe5.request.RequestData;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
@@ -103,7 +103,9 @@ public class ImageData extends FileData implements IJsonData, ImageCompanion {
         super.readSettingsRequestData(rdata);
         BinaryFile file = rdata.getAttributes().getFile("file");
         if (maxWidth != 0 || maxHeight != 0)
-            createFromBinaryFile(file, maxWidth, maxHeight, getMaxPreviewWidth(), getMaxPreviewHeight(), true);
+            if (!createFromBinaryFile(file, maxWidth, maxHeight, getMaxPreviewWidth(), getMaxPreviewHeight(), true)){
+                Log.error("could not create binary file");
+            }
         else
             if (!createFromBinaryFile(file, getMaxPreviewWidth(), getMaxPreviewHeight())){
                 Log.error("could not create binary file");
@@ -188,17 +190,4 @@ public class ImageData extends FileData implements IJsonData, ImageCompanion {
         setPreviewBytes(writeImage(writer, image));
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public JSONObject getJson(){
-        JSONObject json = new JSONObject();
-        json.put("id",getId());
-        json.put("fileName",getFileName());
-        json.put("name",getDisplayName());
-        json.put("displayName",getDisplayName());
-        json.put("contentType",getContentType());
-        json.put("width", getWidth());
-        json.put("height", getHeight());
-        return json;
-    }
 }

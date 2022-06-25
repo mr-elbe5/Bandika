@@ -25,7 +25,7 @@ import de.elbe5.rights.SystemZone;
 import de.elbe5.user.UserCache;
 import de.elbe5.user.UserData;
 import de.elbe5.response.IResponse;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -485,20 +485,6 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         if (i!=0)
             return i;
         return getDisplayName().compareTo(data.getDisplayName());
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public JSONObject getJson() {
-        JSONObject json = new JSONObject();
-        json.put("id",getId());
-        json.put("creationDate", asMillis(getCreationDate()));
-        json.put("creatorId", getCreatorId());
-        json.put("creatorName", getCreatorName());
-        json.put("name",getName());
-        json.put("displayName",getDisplayName());
-        json.put("description",getDescription());
-        return json;
     }
 
     // html

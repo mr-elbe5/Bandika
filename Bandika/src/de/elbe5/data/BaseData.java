@@ -10,18 +10,26 @@ package de.elbe5.data;
 
 import de.elbe5.companion.DateCompanion;
 import de.elbe5.companion.StringCompanion;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.time.LocalDateTime;
 
-public class BaseData implements StringCompanion, DateCompanion {
+@JsonClass
+public class BaseData implements StringCompanion, DateCompanion, IJsonData {
 
     public static final int ID_MIN = 100;
 
+    @JsonField
     private int id = 0;
     private boolean isNew = false;
+    @JsonField
     private LocalDateTime creationDate = null;
+    @JsonField
     private LocalDateTime changeDate = null;
+    @JsonField
     private int creatorId = 0;
+    @JsonField
     private int changerId = 0;
 
     public BaseData(){
@@ -87,4 +95,14 @@ public class BaseData implements StringCompanion, DateCompanion {
     public void setChangerId(int changerId) {
         this.changerId = changerId;
     }
+
+    private enum keys{
+        id,
+        version,
+        creationDate,
+        changeDate,
+        creatorId,
+        changerId
+    }
+
 }

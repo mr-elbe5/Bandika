@@ -13,12 +13,14 @@ import de.elbe5.companion.EncryptionCompanion;
 import de.elbe5.companion.ImageCompanion;
 import de.elbe5.data.BaseData;
 import de.elbe5.data.IJsonData;
+import de.elbe5.data.JsonClass;
+import de.elbe5.data.JsonField;
 import de.elbe5.file.BinaryFile;
 import de.elbe5.group.GroupData;
 import de.elbe5.log.Log;
 import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
@@ -27,6 +29,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
+@JsonClass
 public class UserData extends BaseData implements IJsonData, ImageCompanion, EncryptionCompanion {
 
     public static final int ID_ROOT = 1;
@@ -36,30 +39,48 @@ public class UserData extends BaseData implements IJsonData, ImageCompanion, Enc
 
     public static int MIN_PASSWORD_LENGTH = 8;
 
+    @JsonField
     protected String title = "";
+    @JsonField
     protected String firstName = "";
+    @JsonField
     protected String lastName = "";
+    @JsonField
     protected String email = "";
+    @JsonField
     protected String login = "";
+    @JsonField
     protected String passwordHash = "";
     protected String token = "";
     protected LocalDateTime tokenExpiration = null;
     protected boolean locked = false;
     protected boolean deleted = false;
+    @JsonField
     protected String street = "";
+    @JsonField
     protected String zipCode = "";
+    @JsonField
     protected String city = "";
+    @JsonField
     protected String country = "";
+    @JsonField
     protected String phone = "";
+    @JsonField
     protected String fax = "";
+    @JsonField
     protected String mobile = "";
+    @JsonField
     protected String notes = "";
+    @JsonField
     protected boolean hasPortrait=false;
     protected byte[] portrait = null;
+    @JsonField
     protected int companyId = 0;
 
+    @JsonField
     protected Set<Integer> groupIds = new HashSet<>();
 
+    @JsonField
     protected Set<SystemZone> systemRights = new HashSet<>();
 
     // base data
@@ -344,12 +365,4 @@ public class UserData extends BaseData implements IJsonData, ImageCompanion, Enc
         checkBasics(rdata);
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public JSONObject getJson() {
-        JSONObject json = new JSONObject();
-        json.put("id",getId());
-        json.put("name",getName());
-        return json;
-    }
 }

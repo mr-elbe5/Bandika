@@ -80,7 +80,7 @@
             <fileset dir="libs" >
                 <include name="commons*.jar"/>
                 <include name="mail.jar"/>
-                <include name="json*.jar"/>
+                <include name="JSON*.jar"/>
                 <include name="jsoup*.jar"/>
             </fileset>
         </copy>
