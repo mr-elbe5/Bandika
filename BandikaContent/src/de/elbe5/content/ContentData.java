@@ -12,6 +12,8 @@ import de.elbe5.application.Configuration;
 import de.elbe5.content.html.EditContentDataPage;
 import de.elbe5.data.BaseData;
 import de.elbe5.data.IJsonData;
+import de.elbe5.data.JsonClass;
+import de.elbe5.data.JsonField;
 import de.elbe5.file.FileData;
 import de.elbe5.file.FileFactory;
 import de.elbe5.group.GroupBean;
@@ -31,6 +33,7 @@ import org.jsoup.nodes.Document;
 
 import java.util.*;
 
+@JsonClass
 public class ContentData extends BaseData implements IMasterInclude, Comparable<ContentData>, IJsonData {
 
     public static final String ACCESS_TYPE_OPEN = "OPEN";
@@ -48,20 +51,33 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     public static final int ID_ROOT = 1;
 
     // base data
+    @JsonField
     private String name = "";
+    @JsonField
     private String path = "";
+    @JsonField
     private String displayName = "";
+    @JsonField
     private String description = "";
+    @JsonField
     private String accessType = ACCESS_TYPE_OPEN;
+    @JsonField
     private String navType = NAV_TYPE_NONE;
+    @JsonField
     private boolean active = true;
+    @JsonField
     private Map<Integer, Right> groupRights = new HashMap<>();
 
     // tree data
+    @JsonField
     protected int parentId = 0;
+    @JsonField
     protected ContentData parent = null;
+    @JsonField
     protected int ranking = 0;
+    @JsonField
     private final List<ContentData> children = new ArrayList<>();
+    @JsonField
     private final List<FileData> files = new ArrayList<>();
 
     //runtime

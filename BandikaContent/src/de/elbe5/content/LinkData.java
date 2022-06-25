@@ -9,6 +9,8 @@
 package de.elbe5.content;
 
 import de.elbe5.content.html.EditLinkDataPage;
+import de.elbe5.data.JsonClass;
+import de.elbe5.data.JsonField;
 import de.elbe5.response.IHtmlBuilder;
 import de.elbe5.response.ModalPage;
 import de.elbe5.request.RequestData;
@@ -17,10 +19,12 @@ import de.elbe5.response.RedirectResponse;
 
 import java.util.Map;
 
+@JsonClass
 public class LinkData extends ContentData implements IHtmlBuilder {
 
-    // link data
+    @JsonField
     private String linkUrl = "";
+    @JsonField
     private String linkIcon = "";
 
     public LinkData() {
