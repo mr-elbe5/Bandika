@@ -11,20 +11,32 @@ package de.elbe5.file;
 import de.elbe5.companion.FileCompanion;
 import de.elbe5.content.ContentData;
 import de.elbe5.data.BaseData;
+import de.elbe5.data.JsonClass;
+import de.elbe5.data.JsonField;
 import de.elbe5.request.RequestData;
 
+@JsonClass
 public abstract class FileData extends BaseData implements FileCompanion {
 
+    @JsonField
     private String fileName = "";
+    @JsonField
     private String extension = "";
+    @JsonField
     private String tempFileName = "";
+    @JsonField
     private String displayName = "";
+    @JsonField
     private String description = "";
+    @JsonField
     protected String contentType = null;
+    @JsonField
     protected int fileSize = 0;
+    @JsonField
     protected byte[] bytes = null;
-
+    @JsonField
     protected int parentId = 0;
+
     protected ContentData parent = null;
 
     protected String oldFileName = "";

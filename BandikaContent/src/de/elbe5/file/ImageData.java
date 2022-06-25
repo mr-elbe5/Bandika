@@ -10,6 +10,8 @@ package de.elbe5.file;
 
 import de.elbe5.companion.ImageCompanion;
 import de.elbe5.data.IJsonData;
+import de.elbe5.data.JsonClass;
+import de.elbe5.data.JsonField;
 import de.elbe5.log.Log;
 import de.elbe5.request.RequestData;
 import org.json.JSONObject;
@@ -20,19 +22,28 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Iterator;
 
+@JsonClass
 public class ImageData extends FileData implements IJsonData, ImageCompanion {
 
     public static int MAX_PREVIEW_WIDTH = 200;
     public static int MAX_PREVIEW_HEIGHT = 200;
 
+    @JsonField
     protected int width = 0;
+    @JsonField
     protected int height = 0;
+    @JsonField
     protected byte[] previewBytes = null;
+    @JsonField
     protected boolean hasPreview = false;
 
+    @JsonField
     public int maxWidth=0;
+    @JsonField
     public int maxHeight=0;
+    @JsonField
     public int maxPreviewWidth= MAX_PREVIEW_WIDTH;
+    @JsonField
     public int maxPreviewHeight= MAX_PREVIEW_HEIGHT;
 
     public ImageData() {

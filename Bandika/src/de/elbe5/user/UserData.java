@@ -51,9 +51,13 @@ public class UserData extends BaseData implements IJsonData, ImageCompanion, Enc
     protected String login = "";
     @JsonField
     protected String passwordHash = "";
+    @JsonField
     protected String token = "";
+    @JsonField
     protected LocalDateTime tokenExpiration = null;
+    @JsonField
     protected boolean locked = false;
+    @JsonField
     protected boolean deleted = false;
     @JsonField
     protected String street = "";

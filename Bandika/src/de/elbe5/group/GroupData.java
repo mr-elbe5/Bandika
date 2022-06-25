@@ -9,21 +9,28 @@
 package de.elbe5.group;
 
 import de.elbe5.data.BaseData;
+import de.elbe5.data.JsonClass;
+import de.elbe5.data.JsonField;
 import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.user.UserData;
 
 import java.util.*;
 
+@JsonClass
 public class GroupData extends BaseData {
 
     public static final int ID_MAX_FINAL = 4;
 
+    @JsonField
     protected String name = "";
+    @JsonField
     protected String notes = "";
+    @JsonField
     protected Collection<Integer> userIds = new HashSet<>();
+    @JsonField
     protected List<UserData> users = new ArrayList<>();
-
+    @JsonField
     protected Set<SystemZone> systemRights = new HashSet<>();
 
     // base data

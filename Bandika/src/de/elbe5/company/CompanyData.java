@@ -9,18 +9,29 @@
 package de.elbe5.company;
 
 import de.elbe5.data.BaseData;
+import de.elbe5.data.JsonClass;
+import de.elbe5.data.JsonField;
 import de.elbe5.request.RequestData;
 
+@JsonClass
 public class CompanyData extends BaseData {
 
+    @JsonField
     protected String name="";
+    @JsonField
     protected String street="";
     protected String zipCode="";
+    @JsonField
     protected String city="";
+    @JsonField
     protected String country="";
+    @JsonField
     protected String email="";
+    @JsonField
     protected String phone="";
+    @JsonField
     protected String fax="";
+    @JsonField
     protected String description="";
 
     // base data

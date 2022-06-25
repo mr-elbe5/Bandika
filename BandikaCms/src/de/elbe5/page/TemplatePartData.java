@@ -8,6 +8,8 @@
  */
 package de.elbe5.page;
 
+import de.elbe5.data.JsonClass;
+import de.elbe5.data.JsonField;
 import de.elbe5.template.Template;
 import de.elbe5.template.TemplateCache;
 import de.elbe5.request.RequestData;
@@ -15,10 +17,13 @@ import de.elbe5.request.RequestData;
 import java.util.HashMap;
 import java.util.Map;
 
+@JsonClass
 public class TemplatePartData extends PagePartData {
 
+    @JsonField
     protected String templateName = "";
 
+    @JsonField
     protected Map<String, PartField> fields = new HashMap<>();
 
     public TemplatePartData() {

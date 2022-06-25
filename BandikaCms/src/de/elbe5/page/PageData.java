@@ -9,6 +9,8 @@
 package de.elbe5.page;
 
 import de.elbe5.content.ContentData;
+import de.elbe5.data.JsonClass;
+import de.elbe5.data.JsonField;
 import de.elbe5.response.ModalPage;
 import de.elbe5.template.Template;
 import de.elbe5.template.TemplateCache;
@@ -21,13 +23,19 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+@JsonClass
 public class PageData extends ContentData implements DraftPageWrapper{
 
+    @JsonField
     private String keywords = "";
+    @JsonField
     protected String templateName = "";
+    @JsonField
     protected LocalDateTime publishDate = null;
+    @JsonField
     protected String publishedContent="";
 
+    @JsonField
     protected Map<String, SectionData> sections = new HashMap<>();
 
     // base data
