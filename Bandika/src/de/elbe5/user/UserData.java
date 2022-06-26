@@ -11,16 +11,12 @@ package de.elbe5.user;
 import de.elbe5.application.Configuration;
 import de.elbe5.companion.EncryptionCompanion;
 import de.elbe5.companion.ImageCompanion;
-import de.elbe5.data.BaseData;
-import de.elbe5.data.IJsonData;
-import de.elbe5.data.JsonClass;
-import de.elbe5.data.JsonField;
+import de.elbe5.data.*;
 import de.elbe5.file.BinaryFile;
 import de.elbe5.group.GroupData;
 import de.elbe5.log.Log;
 import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
-import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
@@ -82,9 +78,11 @@ public class UserData extends BaseData implements IJsonData, ImageCompanion, Enc
     protected int companyId = 0;
 
     @JsonField
+    @JsonSet(valueClass = Integer.class)
     protected Set<Integer> groupIds = new HashSet<>();
 
     @JsonField
+    @JsonSet(valueClass = SystemZone.class)
     protected Set<SystemZone> systemRights = new HashSet<>();
 
     // base data

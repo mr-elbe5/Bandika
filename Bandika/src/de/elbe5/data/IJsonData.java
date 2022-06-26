@@ -11,27 +11,24 @@ package de.elbe5.data;
 
 import de.elbe5.log.Log;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public interface IJsonData {
 
-    String ISO_8601_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     String classKey = "$className";
+    String dataKey = "$data";
 
-    static IJsonData createFromJSONObject(JSONObject jo){
+    static IJsonData createIJsonData(JSONObject jo){
         IJsonData data = null;
         try {
             String clsName = jo.get(IJsonData.classKey).toString();
             Class<?> cls = Class.forName(clsName);
-            System.out.println(cls);
+            //System.out.println(cls);
             Object obj = cls.getDeclaredConstructor().newInstance();
             if (obj instanceof IJsonData) {
                 data = (IJsonData) obj;
@@ -57,7 +54,7 @@ public interface IJsonData {
             for (Field field : cls.getDeclaredFields()) {
                 field.setAccessible(true);
                 if (field.isAnnotationPresent(JsonField.class)) {
-                    addToJSONObject(jo, field);
+                    jo.put(field.getName(), getJSONObject(field));
                 }
             }
             cls=cls.getSuperclass();
@@ -65,17 +62,67 @@ public interface IJsonData {
         return jo;
     }
 
-    default void addToJSONObject(JSONObject jo, Field field){
+    default Object getJSONObject(Field field){
         try {
             Object fieldObject = field.get(this);
             if (fieldObject instanceof IJsonData) {
-                jo.put(field.getName(), ((IJsonData) fieldObject).toJSONObject());
-            } else {
-                jo.put(field.getName(), fieldObject);
+                return ((IJsonData) fieldObject).toJSONObject();
             }
+            if (fieldObject instanceof List<?> && field.isAnnotationPresent(JsonDataList.class)) {
+                JSONArray array = new JSONArray();
+                List<?> list = (List<?>)fieldObject;
+                for (Object elem : list ){
+                    if (elem instanceof IJsonData) {
+                        array.put(((IJsonData)elem).toJSONObject());
+                    }
+                }
+                return array;
+            }
+            if (fieldObject instanceof Set<?> && field.isAnnotationPresent(JsonSet.class)) {
+                JSONArray array = new JSONArray();
+                Set<?> set = (Set<?>)fieldObject;
+                for (Object elem : set ){
+                    if (elem instanceof IJsonData) {
+                        array.put(((IJsonData)elem).toJSONObject());
+                    }
+                    else{
+                        array.put(elem);
+                    }
+                }
+                return array;
+            }
+            if (fieldObject instanceof Map<?,?> && field.isAnnotationPresent(JsonDataMap.class)) {
+                JsonDataMap annotation = field.getAnnotation(JsonDataMap.class);
+                JSONObject mapObject = new JSONObject();
+                Map<?, ?> map = (Map<?, ?>) fieldObject;
+                if (annotation.type().equals(JsonDataMap.TYPE_STRING)) {
+                    for (Object key : map.keySet()) {
+                        if (!(key instanceof String))
+                            continue;
+                        Object value = map.get(key);
+                        if (value instanceof IJsonData) {
+                            mapObject.put((String) key, ((IJsonData) value).toJSONObject());
+                        }
+                    }
+                }
+                else if (annotation.type().equals(JsonDataMap.TYPE_INT)) {
+                    for (Object key : map.keySet()) {
+                        if (!(key instanceof Integer))
+                            continue;
+                        Object value = map.get(key);
+                        if (value instanceof IJsonData) {
+                            mapObject.put(key.toString(), ((IJsonData) value).toJSONObject());
+                        }
+                    }
+
+                }
+                return mapObject;
+            }
+            return fieldObject;
         } catch (IllegalAccessException e) {
-            System.out.println("unable to serialize field" + e.getMessage());
+            System.out.println("unable to serialize field - " + e.getMessage());
         }
+        return null;
     }
 
     default void fromJSONObject(JSONObject jo){
@@ -92,98 +139,86 @@ public interface IJsonData {
     }
 
     default void readFromJsonObject(JSONObject jo, Field field){
-        System.out.println("field name = " + field.getName());
+        //System.out.println("field name = " + field.getName());
         Object fieldObject = jo.opt(field.getName());
         if (fieldObject != null) {
             try {
-                System.out.println("field type = " + field.getType());
-                System.out.println("field object type = " + fieldObject.getClass());
-                if (fieldObject instanceof JSONObject) {
-                    IJsonData no = createFromJSONObject((JSONObject) fieldObject);
-                    field.set(this, no);
-                } else if (field.getType() == LocalDateTime.class) {
+                Class<?> fieldType = field.getType();
+                if (fieldType.equals(LocalDateTime.class)) {
                     field.set(this, LocalDateTime.parse(fieldObject.toString()));
-                } else if (field.getType() == LocalDate.class) {
+                } else if (fieldType.equals(LocalDate.class)) {
                     field.set(this, LocalDate.parse(fieldObject.toString()));
+                } else if (fieldType.equals(List.class) && field.isAnnotationPresent(JsonDataList.class) && fieldObject instanceof JSONArray) {
+                    JSONArray array = (JSONArray) fieldObject;
+                    JsonDataList annotation = field.getAnnotation(JsonDataList.class);
+                    Class<? extends IJsonData> valueClass = annotation.valueClass();
+                    field.set(this, getDataList(array, valueClass));
+                } else if (fieldType.equals(Set.class) && field.isAnnotationPresent(JsonSet.class) && fieldObject instanceof JSONArray) {
+                    JSONArray array = (JSONArray) fieldObject;
+                    JsonSet annotation = field.getAnnotation(JsonSet.class);
+                    Class<?> valueClass = annotation.valueClass();
+                    field.set(this, getSet(array, valueClass));
+                } else if (fieldType.equals(Map.class) && field.isAnnotationPresent(JsonDataMap.class) && fieldObject instanceof JSONObject) {
+                    JSONObject mapObj = (JSONObject) fieldObject;
+                    JsonDataMap annotation = field.getAnnotation(JsonDataMap.class);
+                    Class<? extends IJsonData> valueClass = annotation.valueClass();
+                    if (annotation.type().equals(JsonDataMap.TYPE_STRING)){
+                        field.set(this, getStringDataMap(mapObj, valueClass));
+                    }
+                    else if (annotation.type().equals(JsonDataMap.TYPE_INT)){
+                        field.set(this, getIntDataMap(mapObj, valueClass));
+                    }
+                } else if (fieldObject instanceof JSONObject) {
+                    IJsonData no = createIJsonData((JSONObject) fieldObject);
+                    field.set(this, no);
                 } else {
                     field.set(this, fieldObject);
                 }
-            } catch (IllegalAccessException e) {
-                System.out.println("unable to deserialize field" + e.getMessage());
+            } catch (Exception e) {
+                System.out.println("unable to deserialize field - " + e.getMessage());
             }
         }
     }
 
-    // JsonData
-
-    default boolean fromParentObject(JSONObject parentObject, String name){
-        try {
-            JSONObject obj = parentObject.optJSONObject(name);
-            if (obj ==null){
-                return false;
-            }
-            fromJSONObject(obj);
-            return true;
-        } catch (JSONException | NullPointerException e){
-            Log.error("could not get json from parent object: "+name, e);
-            return false;
-        }
-    }
-
-    // Lists
-
-    default <T extends IJsonData> JSONArray createJSONArray(List<T> list){
-        JSONArray arr = new JSONArray();
-        for (T data : list){
-            arr.put(data.toJSONObject());
-        }
-        return arr;
-    }
-
-    default <T extends IJsonData> List<T> getList(JSONObject obj, String key, Class<T> listClass){
+    default <T extends IJsonData> List<T> getDataList(JSONArray array, Class<T> valueClass){
         List<T> list = new ArrayList<>();
-        try{
-            if (obj.has(key)) {
-                JSONArray arr = obj.optJSONArray(key);
-                if (arr == null){
-                    return list;
-                }
-                for (int i = 0; i < arr.length(); i++) {
-                    JSONObject itemObj = obj.optJSONObject(key);
-                    String typeKey = itemObj.optString(IJsonData.classKey);
-                    //todo
-                    /* (data!=null) {
-                        data.fromJSONObject(itemObj);
-                        list.add(data);
-                    }*/
-                }
-            }
-        }catch (JSONException e) {
-            Log.error("could not read json array", e);
+        for (Object jo : array){
+            list.add(valueClass.cast(createIJsonData((JSONObject) jo)));
         }
         return list;
     }
 
-    // Maps
-
-    default <T extends IJsonData> JSONObject createJSONObjectFromIntMap(Map<Integer,T> map){
-        JSONObject obj = new JSONObject();
-        for (Integer i : map.keySet()){
-            obj.put(i.toString(),map.get(i).toJSONObject());
+    default <T> Set<T> getSet(JSONArray array, Class<T> cls){
+        Set<T> set = new HashSet<>();
+        for (Object jo : array){
+            set.add(cls.cast(jo));
         }
-        return obj;
+        return set;
     }
 
-    default <T extends IJsonData> JSONObject createJSONObjectFromStringMap(Map<String,T> map){
-        JSONObject obj = new JSONObject();
-        for (String key : map.keySet()){
-            obj.put(key,map.get(key).toJSONObject());
+    default <T extends IJsonData> Map<String,T> getStringDataMap(JSONObject mapObj, Class<T> valueClass){
+        Map<String,T> map = new HashMap<>();
+        JSONObject data = (JSONObject) mapObj.get(dataKey);
+        for (String key : data.keySet()){
+            JSONObject njo = (JSONObject) data.get(key);
+            map.put(key,valueClass.cast(createIJsonData(njo)));
         }
-        return obj;
+        return map;
+    }
+
+    default <T extends IJsonData> Map<Integer,T> getIntDataMap(JSONObject mapObj, Class<T> valueClass){
+        Map<Integer,T> map = new HashMap<>();
+        JSONObject data = (JSONObject) mapObj.get(dataKey);
+        for (String key : data.keySet()){
+            JSONObject njo = (JSONObject) data.get(key);
+            map.put(Integer.parseInt(key),valueClass.cast(createIJsonData(njo)));
+        }
+        return map;
     }
 
     default void dump(){
         JSONObject obj = toJSONObject();
         Log.log(obj.toString(2));
     }
+    
 }

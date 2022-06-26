@@ -32,7 +32,7 @@ public abstract class FileData extends BaseData implements FileCompanion {
     protected String contentType = null;
     @JsonField
     protected int fileSize = 0;
-    @JsonField
+
     protected byte[] bytes = null;
     @JsonField
     protected int parentId = 0;

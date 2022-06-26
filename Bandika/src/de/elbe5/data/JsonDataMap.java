@@ -16,5 +16,10 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface JsonField {
+public @interface JsonDataMap {
+    public static String TYPE_STRING = "typeString";
+    public static String TYPE_INT = "typeInt";
+
+    public String type() default TYPE_STRING;
+    public Class<? extends IJsonData> valueClass();
 }

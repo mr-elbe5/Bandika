@@ -27,8 +27,7 @@ public class GroupData extends BaseData {
     @JsonField
     protected String notes = "";
     @JsonField
-    protected Collection<Integer> userIds = new HashSet<>();
-    @JsonField
+    protected Set<Integer> userIds = new HashSet<>();
     protected List<UserData> users = new ArrayList<>();
     @JsonField
     protected Set<SystemZone> systemRights = new HashSet<>();
@@ -51,11 +50,11 @@ public class GroupData extends BaseData {
         this.notes = notes;
     }
 
-    public Collection<Integer> getUserIds() {
+    public Set<Integer> getUserIds() {
         return userIds;
     }
 
-    public void setUserIds(Collection<Integer> userIds) {
+    public void setUserIds(Set<Integer> userIds) {
         this.userIds = userIds;
     }
 
