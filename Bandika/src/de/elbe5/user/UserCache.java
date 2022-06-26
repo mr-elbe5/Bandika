@@ -8,6 +8,8 @@
  */
 package de.elbe5.user;
 
+import org.json.JSONArray;
+
 import java.util.*;
 
 public class UserCache {
@@ -55,5 +57,13 @@ public class UserCache {
     public static UserData getUser(int id) {
         checkDirty();
         return userMap.get(id);
+    }
+
+    public static JSONArray toJson(){
+        JSONArray array = new JSONArray();
+        for (UserData user : userMap.values()){
+            array.put(user.toJSONObject());
+        }
+        return array;
     }
 }

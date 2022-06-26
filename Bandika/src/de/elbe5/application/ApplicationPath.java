@@ -21,6 +21,7 @@ public class ApplicationPath {
     private static File appFileDir = null;
     private static String appTemplatePath = "";
     private static File appTemplateDir = null;
+    private static String appJsonFilePath = null;
 
     public static String getAppName() {
         return appName;
@@ -54,6 +55,10 @@ public class ApplicationPath {
         return appTemplateDir;
     }
 
+    public static String getAppJsonFilePath() {
+        return appJsonFilePath;
+    }
+
     public static boolean initializePath(ServletContext context) {
         File appROOTDir = new File(context.getRealPath("/"));
         File appDir = appROOTDir.getParentFile();
@@ -72,6 +77,7 @@ public class ApplicationPath {
             return false;
         appTemplatePath = externalFilePath + "/templates";
         appTemplateDir = new File(appTemplatePath);
+        appJsonFilePath=appFilePath + "/data.json";
         return assertDirectory(appTemplateDir);
     }
 

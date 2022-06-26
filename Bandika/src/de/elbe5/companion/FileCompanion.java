@@ -11,6 +11,7 @@ package de.elbe5.companion;
 import de.elbe5.log.Log;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public interface FileCompanion {
 
@@ -123,7 +124,7 @@ public interface FileCompanion {
             }
             if (!f.createNewFile())
                 throw new IOException("file create error");
-            FileWriter fw = new FileWriter(f);
+            FileWriter fw = new FileWriter(f, StandardCharsets.UTF_8);
             fw.write(text);
             fw.flush();
             fw.close();

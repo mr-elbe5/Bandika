@@ -119,6 +119,7 @@ public class BandikaInitServlet extends InitServlet {
         Timer.getInstance().loadTasks();
         Timer.getInstance().startThread();
         Log.log("Bandika initialized");
+        BandikaJsonData.getInstance().dump();
     }
 
 }
