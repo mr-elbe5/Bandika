@@ -47,33 +47,32 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     public static final int ID_ROOT = 1;
 
     // base data
-    @JsonField
+    @JsonField(baseClass = String.class)
     private String name = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     private String path = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     private String displayName = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     private String description = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     private String accessType = ACCESS_TYPE_OPEN;
-    @JsonField
+    @JsonField(baseClass = String.class)
     private String navType = NAV_TYPE_NONE;
-    @JsonField
+    @JsonField(baseClass = Boolean.class)
     private boolean active = true;
+    @JsonField(baseClass = HashMap.class, keyClass = Integer.class, valueClass = Right.class)
     private Map<Integer, Right> groupRights = new HashMap<>();
 
     // tree data
-    @JsonField
+    @JsonField(baseClass = Integer.class)
     protected int parentId = 0;
     protected ContentData parent = null;
-    @JsonField
+    @JsonField(baseClass = Integer.class)
     protected int ranking = 0;
-    @JsonField
-    @JsonDataList(valueClass = ContentData.class)
+    @JsonField(baseClass = ArrayList.class, valueClass = ContentData.class)
     private final List<ContentData> children = new ArrayList<>();
-    @JsonField
-    @JsonDataList(valueClass = FileData.class)
+    @JsonField(baseClass = ArrayList.class, valueClass = FileData.class)
     private final List<FileData> files = new ArrayList<>();
 
     //runtime

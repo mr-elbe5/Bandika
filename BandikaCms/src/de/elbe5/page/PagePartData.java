@@ -19,11 +19,11 @@ public class PagePartData extends BaseData implements Comparable<PagePartData> {
 
     public static final String KEY_PART = "partData";
 
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String sectionName = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected int position = 0;
-    @JsonField
+    @JsonField(baseClass = Boolean.class)
     protected boolean editable = true;
 
     public PagePartData() {

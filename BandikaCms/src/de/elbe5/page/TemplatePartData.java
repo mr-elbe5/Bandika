@@ -20,10 +20,10 @@ import java.util.Map;
 @JsonClass
 public class TemplatePartData extends PagePartData {
 
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String templateName = "";
 
-    @JsonField
+    @JsonField(baseClass = HashMap.class, keyClass = String.class, valueClass = PartField.class)
     protected Map<String, PartField> fields = new HashMap<>();
 
     public TemplatePartData() {

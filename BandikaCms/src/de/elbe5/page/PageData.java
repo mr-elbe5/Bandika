@@ -26,16 +26,16 @@ import java.util.Map;
 @JsonClass
 public class PageData extends ContentData implements DraftPageWrapper{
 
-    @JsonField
+    @JsonField(baseClass = String.class)
     private String keywords = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String templateName = "";
-    @JsonField
+    @JsonField(baseClass = LocalDateTime.class)
     protected LocalDateTime publishDate = null;
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String publishedContent="";
 
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected Map<String, SectionData> sections = new HashMap<>();
 
     // base data

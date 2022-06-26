@@ -7,7 +7,7 @@ import de.elbe5.data.JsonField;
 @JsonClass
 public class IssueWorkflowStep extends BaseData {
 
-    @JsonField
+    @JsonField(baseClass = IssueState.class)
     protected IssueState state = IssueState.open;
 
     public IssueState getState() {

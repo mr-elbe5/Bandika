@@ -18,23 +18,23 @@ import de.elbe5.request.RequestData;
 @JsonClass
 public abstract class FileData extends BaseData implements FileCompanion {
 
-    @JsonField
+    @JsonField(baseClass = String.class)
     private String fileName = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     private String extension = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     private String tempFileName = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     private String displayName = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     private String description = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String contentType = null;
-    @JsonField
+    @JsonField(baseClass = Integer.class)
     protected int fileSize = 0;
 
     protected byte[] bytes = null;
-    @JsonField
+    @JsonField(baseClass = Integer.class)
     protected int parentId = 0;
 
     protected ContentData parent = null;

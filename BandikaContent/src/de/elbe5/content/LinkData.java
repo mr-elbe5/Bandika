@@ -22,9 +22,9 @@ import java.util.Map;
 @JsonClass
 public class LinkData extends ContentData implements IHtmlBuilder {
 
-    @JsonField
+    @JsonField(baseClass = String.class)
     private String linkUrl = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     private String linkIcon = "";
 
     public LinkData() {

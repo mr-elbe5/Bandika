@@ -22,14 +22,14 @@ public class GroupData extends BaseData {
 
     public static final int ID_MAX_FINAL = 4;
 
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String name = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String notes = "";
-    @JsonField
+    @JsonField(baseClass = HashSet.class, valueClass = Integer.class)
     protected Set<Integer> userIds = new HashSet<>();
     protected List<UserData> users = new ArrayList<>();
-    @JsonField
+    @JsonField(baseClass = HashSet.class, valueClass = SystemZone.class)
     protected Set<SystemZone> systemRights = new HashSet<>();
 
     // base data

@@ -20,16 +20,16 @@ public class BaseData implements StringCompanion, DateCompanion, IJsonData {
 
     public static final int ID_MIN = 100;
 
-    @JsonField
+    @JsonField(baseClass = Integer.class)
     private int id = 0;
     private boolean isNew = false;
-    @JsonField
+    @JsonField(baseClass = LocalDateTime.class)
     private LocalDateTime creationDate = null;
-    @JsonField
+    @JsonField(baseClass = LocalDateTime.class)
     private LocalDateTime changeDate = null;
-    @JsonField
+    @JsonField(baseClass = Integer.class)
     private int creatorId = 0;
-    @JsonField
+    @JsonField(baseClass = Integer.class)
     private int changerId = 0;
 
     public BaseData(){

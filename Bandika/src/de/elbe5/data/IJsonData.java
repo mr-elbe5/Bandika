@@ -21,7 +21,6 @@ import java.util.*;
 public interface IJsonData {
 
     String classKey = "$className";
-    String dataKey = "$data";
 
     static IJsonData createIJsonData(JSONObject jo){
         IJsonData data = null;
@@ -68,7 +67,7 @@ public interface IJsonData {
             if (fieldObject instanceof IJsonData) {
                 return ((IJsonData) fieldObject).toJSONObject();
             }
-            if (fieldObject instanceof List<?> && field.isAnnotationPresent(JsonDataList.class)) {
+            if (fieldObject instanceof List<?> && field.isAnnotationPresent(JsonField.class)) {
                 JSONArray array = new JSONArray();
                 List<?> list = (List<?>)fieldObject;
                 for (Object elem : list ){
@@ -91,11 +90,11 @@ public interface IJsonData {
                 }
                 return array;
             }
-            if (fieldObject instanceof Map<?,?> && field.isAnnotationPresent(JsonDataMap.class)) {
-                JsonDataMap annotation = field.getAnnotation(JsonDataMap.class);
+            if (fieldObject instanceof Map<?,?> && field.isAnnotationPresent(JsonField.class)) {
+                JsonField annotation = field.getAnnotation(JsonField.class);
                 JSONObject mapObject = new JSONObject();
                 Map<?, ?> map = (Map<?, ?>) fieldObject;
-                if (annotation.type().equals(JsonDataMap.TYPE_STRING)) {
+                if (annotation.keyClass().equals(String.class)) {
                     for (Object key : map.keySet()) {
                         if (!(key instanceof String))
                             continue;
@@ -105,7 +104,7 @@ public interface IJsonData {
                         }
                     }
                 }
-                else if (annotation.type().equals(JsonDataMap.TYPE_INT)) {
+                else if (annotation.keyClass().equals(Integer.class)) {
                     for (Object key : map.keySet()) {
                         if (!(key instanceof Integer))
                             continue;
@@ -148,24 +147,24 @@ public interface IJsonData {
                     field.set(this, LocalDateTime.parse(fieldObject.toString()));
                 } else if (fieldType.equals(LocalDate.class)) {
                     field.set(this, LocalDate.parse(fieldObject.toString()));
-                } else if (fieldType.equals(List.class) && field.isAnnotationPresent(JsonDataList.class) && fieldObject instanceof JSONArray) {
+                } else if (fieldType.equals(List.class) && field.isAnnotationPresent(JsonField.class) && fieldObject instanceof JSONArray) {
                     JSONArray array = (JSONArray) fieldObject;
-                    JsonDataList annotation = field.getAnnotation(JsonDataList.class);
-                    Class<? extends IJsonData> valueClass = annotation.valueClass();
+                    JsonField annotation = field.getAnnotation(JsonField.class);
+                    Class valueClass = annotation.valueClass();
                     field.set(this, getDataList(array, valueClass));
                 } else if (fieldType.equals(Set.class) && field.isAnnotationPresent(JsonSet.class) && fieldObject instanceof JSONArray) {
                     JSONArray array = (JSONArray) fieldObject;
                     JsonSet annotation = field.getAnnotation(JsonSet.class);
-                    Class<?> valueClass = annotation.valueClass();
+                    Class valueClass = annotation.valueClass();
                     field.set(this, getSet(array, valueClass));
-                } else if (fieldType.equals(Map.class) && field.isAnnotationPresent(JsonDataMap.class) && fieldObject instanceof JSONObject) {
+                } else if (fieldType.equals(Map.class) && field.isAnnotationPresent(JsonField.class) && fieldObject instanceof JSONObject) {
                     JSONObject mapObj = (JSONObject) fieldObject;
-                    JsonDataMap annotation = field.getAnnotation(JsonDataMap.class);
-                    Class<? extends IJsonData> valueClass = annotation.valueClass();
-                    if (annotation.type().equals(JsonDataMap.TYPE_STRING)){
+                    JsonField annotation = field.getAnnotation(JsonField.class);
+                    Class valueClass = annotation.valueClass();
+                    if (annotation.keyClass().equals(String.class)){
                         field.set(this, getStringDataMap(mapObj, valueClass));
                     }
-                    else if (annotation.type().equals(JsonDataMap.TYPE_INT)){
+                    else if (annotation.keyClass().equals(Integer.class)){
                         field.set(this, getIntDataMap(mapObj, valueClass));
                     }
                 } else if (fieldObject instanceof JSONObject) {
@@ -198,9 +197,8 @@ public interface IJsonData {
 
     default <T extends IJsonData> Map<String,T> getStringDataMap(JSONObject mapObj, Class<T> valueClass){
         Map<String,T> map = new HashMap<>();
-        JSONObject data = (JSONObject) mapObj.get(dataKey);
-        for (String key : data.keySet()){
-            JSONObject njo = (JSONObject) data.get(key);
+        for (String key : mapObj.keySet()){
+            JSONObject njo = (JSONObject) mapObj.get(key);
             map.put(key,valueClass.cast(createIJsonData(njo)));
         }
         return map;
@@ -208,9 +206,8 @@ public interface IJsonData {
 
     default <T extends IJsonData> Map<Integer,T> getIntDataMap(JSONObject mapObj, Class<T> valueClass){
         Map<Integer,T> map = new HashMap<>();
-        JSONObject data = (JSONObject) mapObj.get(dataKey);
-        for (String key : data.keySet()){
-            JSONObject njo = (JSONObject) data.get(key);
+        for (String key : mapObj.keySet()){
+            JSONObject njo = (JSONObject) mapObj.get(key);
             map.put(Integer.parseInt(key),valueClass.cast(createIJsonData(njo)));
         }
         return map;

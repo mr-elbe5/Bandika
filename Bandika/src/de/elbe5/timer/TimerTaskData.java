@@ -20,21 +20,21 @@ import java.time.LocalDateTime;
 public abstract class TimerTaskData extends BaseData implements Cloneable, DateCompanion {
 
 
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String displayName = "";
-    @JsonField
+    @JsonField(baseClass = TimerInterval.class)
     protected TimerInterval interval = TimerInterval.CONTINOUS;
-    @JsonField
+    @JsonField(baseClass = Integer.class)
     protected int day = 0;
-    @JsonField
+    @JsonField(baseClass = Integer.class)
     protected int hour = 0;
-    @JsonField
+    @JsonField(baseClass = Integer.class)
     protected int minute = 0;
-    @JsonField
+    @JsonField(baseClass = LocalDateTime.class)
     protected LocalDateTime lastExecution = null;
-    @JsonField
+    @JsonField(baseClass = LocalDateTime.class)
     protected LocalDateTime nextExecution = null;
-    @JsonField
+    @JsonField(baseClass = Boolean.class)
     protected boolean active = false;
 
     public TimerTaskData(){

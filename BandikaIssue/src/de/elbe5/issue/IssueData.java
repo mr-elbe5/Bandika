@@ -10,7 +10,7 @@ import java.util.List;
 @JsonClass
 public class IssueData extends BaseData {
 
-    @JsonField
+    @JsonField(baseClass = ArrayList.class, valueClass = IssueWorkflowStep.class)
     protected List<IssueWorkflowStep> steps = new ArrayList<>();
 
     public List<IssueWorkflowStep> getSteps() {

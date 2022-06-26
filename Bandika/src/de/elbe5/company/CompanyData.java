@@ -16,22 +16,22 @@ import de.elbe5.request.RequestData;
 @JsonClass
 public class CompanyData extends BaseData {
 
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String name="";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String street="";
     protected String zipCode="";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String city="";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String country="";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String email="";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String phone="";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String fax="";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String description="";
 
     // base data

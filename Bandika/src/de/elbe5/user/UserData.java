@@ -35,54 +35,52 @@ public class UserData extends BaseData implements IJsonData, ImageCompanion, Enc
 
     public static int MIN_PASSWORD_LENGTH = 8;
 
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String title = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String firstName = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String lastName = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String email = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String login = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String passwordHash = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String token = "";
-    @JsonField
+    @JsonField(baseClass = LocalDateTime.class)
     protected LocalDateTime tokenExpiration = null;
-    @JsonField
+    @JsonField(baseClass = Boolean.class)
     protected boolean locked = false;
-    @JsonField
+    @JsonField(baseClass = Boolean.class)
     protected boolean deleted = false;
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String street = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String zipCode = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String city = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String country = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String phone = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String fax = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String mobile = "";
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String notes = "";
-    @JsonField
+    @JsonField(baseClass = Boolean.class)
     protected boolean hasPortrait=false;
     protected byte[] portrait = null;
-    @JsonField
+    @JsonField(baseClass = Integer.class)
     protected int companyId = 0;
 
-    @JsonField
-    @JsonSet(valueClass = Integer.class)
+    @JsonField(baseClass = HashSet.class, valueClass = Integer.class)
     protected Set<Integer> groupIds = new HashSet<>();
 
-    @JsonField
-    @JsonSet(valueClass = SystemZone.class)
+    @JsonField(baseClass = HashSet.class, valueClass = SystemZone.class)
     protected Set<SystemZone> systemRights = new HashSet<>();
 
     // base data

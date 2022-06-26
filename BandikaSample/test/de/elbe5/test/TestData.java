@@ -15,11 +15,10 @@ public class TestData extends BaseData {
         this.title = title;
     }
 
-    @JsonField
+    @JsonField(baseClass = String.class)
     protected String title = "";
 
-    @JsonField
+    @JsonField(baseClass = TestData.class)
     public TestData subData = null;
-
 
 }
