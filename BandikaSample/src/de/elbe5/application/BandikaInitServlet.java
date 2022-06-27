@@ -120,7 +120,8 @@ public class BandikaInitServlet extends InitServlet {
         Log.log("Bandika initialized");
         JsonDataCenter.getInstance().addPackage("contentData", ContentCache.getJsonObject());
         JsonDataCenter.getInstance().addPackage("userData", UserCache.getJsonObject());
-        BandikaJsonData.getInstance().dump();
+        JsonDataCenter.getInstance().addPackage("timerData", Timer.getInstance().getJsonObject());
+        JsonDataCenter.getInstance().dump();
     }
 
 }

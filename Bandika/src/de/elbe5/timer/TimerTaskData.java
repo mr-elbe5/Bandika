@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 @JsonClass
 public abstract class TimerTaskData extends BaseData implements Cloneable, DateCompanion {
 
-
     @JsonField(baseClass = String.class)
     protected String displayName = "";
     @JsonField(baseClass = TimerInterval.class)

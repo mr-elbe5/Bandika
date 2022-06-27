@@ -8,10 +8,12 @@
  */
 package de.elbe5.timer;
 
+import de.elbe5.data.JsonClass;
 import de.elbe5.log.Log;
 
 import java.time.LocalDateTime;
 
+@JsonClass
 public class CleanupTaskData extends TimerTaskData {
 
     public CleanupTaskData(){

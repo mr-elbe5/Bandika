@@ -1,6 +1,7 @@
 import de.elbe5.content.ContentData;
 import de.elbe5.data.IJsonData;
 import de.elbe5.file.ImageData;
+import de.elbe5.timer.CleanupTaskData;
 import de.elbe5.user.GroupData;
 import de.elbe5.log.Log;
 import de.elbe5.page.PageData;
@@ -12,14 +13,14 @@ import java.time.LocalDateTime;
 public class Test {
 
     public static void main(String[] args) {
-        new Test().test5();
+        new Test().test1();
     }
 
     void test1() {
-        ContentData data = new ContentData();
+        CleanupTaskData data = new CleanupTaskData();
         data.setId(500);
-        data.addChild(new ContentData());
-        data.addFile(new ImageData());
+        //data.addChild(new ContentData());
+        //data.addFile(new ImageData());
         data.setCreationDate(LocalDateTime.now());
         data.setChangeDate(LocalDateTime.now().plusDays(1));
         try {

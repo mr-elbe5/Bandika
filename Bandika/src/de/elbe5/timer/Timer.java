@@ -11,6 +11,11 @@ package de.elbe5.timer;
 import de.elbe5.log.Log;
 import de.elbe5.application.AppContextListener;
 import de.elbe5.application.Configuration;
+import de.elbe5.user.CompanyData;
+import de.elbe5.user.GroupData;
+import de.elbe5.user.UserData;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -32,6 +37,16 @@ public class Timer {
 
     public void registerTimerTask(TimerTaskData task) {
         tasks.put(task.getName(), task);
+    }
+
+    public JSONObject getJsonObject(){
+        JSONObject jsonObject = new JSONObject();
+        JSONArray array = new JSONArray();
+        for (TimerTaskData task : tasks.values()){
+            array.put(task.toJSONObject());
+        }
+        jsonObject.put("tasks", array);
+        return jsonObject;
     }
 
     public void startThread() {
