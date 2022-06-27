@@ -6,35 +6,34 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.group;
+package de.elbe5.user;
 
 import de.elbe5.data.BaseData;
-import de.elbe5.group.html.EditGroupPage;
+import de.elbe5.user.html.EditCompanyPage;
 import de.elbe5.log.Log;
 import de.elbe5.request.*;
 import de.elbe5.response.*;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
-import de.elbe5.user.UserCache;
 
 import javax.servlet.http.HttpServletResponse;
 
-public class GroupController extends Controller {
+public class CompanyController extends Controller {
 
-    public static final String KEY = "group";
+    public static final String KEY = "company";
 
-    private static GroupController instance = null;
+    private static CompanyController instance = null;
 
-    public static void setInstance(GroupController instance) {
-        GroupController.instance = instance;
+    public static void setInstance(CompanyController instance) {
+        CompanyController.instance = instance;
     }
 
-    public static GroupController getInstance() {
+    public static CompanyController getInstance() {
         return instance;
     }
 
-    public static void register(GroupController controller){
+    public static void register(CompanyController controller){
         setInstance(controller);
         ControllerCache.addController(controller.getKey(),getInstance());
     }
@@ -44,56 +43,54 @@ public class GroupController extends Controller {
         return KEY;
     }
 
-    public IResponse openEditGroup(RequestData rdata) {
+    public IResponse openEditCompany(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
-        int groupId = rdata.getId();
-        GroupData data = GroupBean.getInstance().getGroup(groupId);
-        rdata.setSessionObject("groupData", data);
-        return showEditGroup(rdata);
+        int companyId = rdata.getId();
+        CompanyData data = CompanyBean.getInstance().getCompany(companyId);
+        rdata.setSessionObject("companyData", data);
+        return showEditCompany(rdata);
     }
 
-    public IResponse openCreateGroup(RequestData rdata) {
+    public IResponse openCreateCompany(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
-        GroupData data = new GroupData();
+        CompanyData data = new CompanyData();
         data.setNew(true);
-        data.setId(GroupBean.getInstance().getNextId());
-        rdata.setSessionObject("groupData", data);
-        return showEditGroup(rdata);
+        data.setId(CompanyBean.getInstance().getNextId());
+        rdata.setSessionObject("companyData", data);
+        return showEditCompany(rdata);
     }
 
-    public IResponse saveGroup(RequestData rdata) {
+    public IResponse saveCompany(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
-        GroupData data = (GroupData) rdata.getSessionObject("groupData");
+        CompanyData data = (CompanyData) rdata.getSessionObject("companyData");
         if (data==null){
             return new StatusResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
         data.readSettingsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
-            return showEditGroup(rdata);
+            return showEditCompany(rdata);
         }
-        if (!GroupBean.getInstance().saveGroup(data)){
-            Log.warn("could not save group");
+        if (!CompanyBean.getInstance().saveCompany(data)){
+            Log.warn("could not save company");
         }
         UserCache.setDirty();
-        return new CloseDialogResponse("/ctrl/admin/openUserAdministration?groupId=" + data.getId(), getString("_groupSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/admin/openUserAdministration?companyId=" + data.getId(), getString("_companySaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
-    public IResponse deleteGroup(RequestData rdata) {
+    public IResponse deleteCompany(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
             rdata.setMessage(getString("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
             return new ForwardResponse("/ctrl/admin/openUserAdministration");
         }
-        if (!GroupBean.getInstance().deleteGroup(id)){
-            Log.warn("could not delete group");
-        }
+        CompanyBean.getInstance().deleteCompany(id);
         UserCache.setDirty();
-        rdata.setMessage(getString("_groupDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(getString("_companyDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openUserAdministration");
     }
 
-    protected IResponse showEditGroup(RequestData rdata) {
-        return new EditGroupPage().createHtml(rdata);
+    protected IResponse showEditCompany(RequestData rdata) {
+        return new EditCompanyPage().createHtml(rdata);
     }
 }

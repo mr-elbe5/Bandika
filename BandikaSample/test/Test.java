@@ -1,7 +1,7 @@
 import de.elbe5.content.ContentData;
 import de.elbe5.data.IJsonData;
 import de.elbe5.file.ImageData;
-import de.elbe5.group.GroupData;
+import de.elbe5.user.GroupData;
 import de.elbe5.log.Log;
 import de.elbe5.page.PageData;
 import de.elbe5.rights.SystemZone;

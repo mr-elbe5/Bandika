@@ -19,7 +19,7 @@ public class BandikaJsonData implements FileCompanion {
     public void dump(){
         JSONObject data = new JSONObject();
         data.put("content", ContentCache.getContentRoot().toJSONObject());
-        data.put("users", UserCache.toJson());
+        data.put("users", UserCache.getJsonObject());
         writeTextFile(ApplicationPath.getAppJsonFilePath(), data.toString(2));
     }
 

@@ -2,10 +2,10 @@ package de.elbe5.user.html;
 
 import de.elbe5.administration.html.AdminPage;
 import de.elbe5.data.LocalizedStrings;
-import de.elbe5.company.CompanyBean;
-import de.elbe5.company.CompanyData;
-import de.elbe5.group.GroupBean;
-import de.elbe5.group.GroupData;
+import de.elbe5.user.CompanyBean;
+import de.elbe5.user.CompanyData;
+import de.elbe5.user.GroupBean;
+import de.elbe5.user.GroupData;
 import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.user.UserBean;

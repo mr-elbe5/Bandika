@@ -14,14 +14,13 @@ import de.elbe5.data.LocalizedStrings;
 import de.elbe5.data.JsonWebToken;
 import de.elbe5.log.Log;
 import de.elbe5.ckeditor.CkEditorController;
-import de.elbe5.company.CompanyCache;
-import de.elbe5.company.CompanyController;
+import de.elbe5.user.CompanyController;
 import de.elbe5.content.*;
 import de.elbe5.database.DbConnector;
 import de.elbe5.template.*;
 import de.elbe5.page.TemplatePartBean;
 import de.elbe5.file.*;
-import de.elbe5.group.GroupController;
+import de.elbe5.user.GroupController;
 import de.elbe5.page.*;
 import de.elbe5.servlet.InitServlet;
 import de.elbe5.timer.CleanupTaskData;
@@ -111,7 +110,6 @@ public class BandikaInitServlet extends InitServlet {
 
         ContentCache.load();
         ContentCentral.setInstance(new AppContentCentral());
-        CompanyCache.load();
         UserCache.load();
         TemplateCache.getInstance().load();
         Timer.getInstance().registerTimerTask(new HeartbeatTaskData());
@@ -120,8 +118,8 @@ public class BandikaInitServlet extends InitServlet {
         Timer.getInstance().loadTasks();
         Timer.getInstance().startThread();
         Log.log("Bandika initialized");
-        JsonDataCenter.getInstance().addPackage("content", ContentCache.getContentRoot().toJSONObject());
-        JsonDataCenter.getInstance().addPackage("users", UserCache.toJson());
+        JsonDataCenter.getInstance().addPackage("contentData", ContentCache.getJsonObject());
+        JsonDataCenter.getInstance().addPackage("userData", UserCache.getJsonObject());
         BandikaJsonData.getInstance().dump();
     }
 

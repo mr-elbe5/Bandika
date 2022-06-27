@@ -13,7 +13,6 @@ import de.elbe5.companion.EncryptionCompanion;
 import de.elbe5.companion.ImageCompanion;
 import de.elbe5.data.*;
 import de.elbe5.file.BinaryFile;
-import de.elbe5.group.GroupData;
 import de.elbe5.log.Log;
 import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;

@@ -1,6 +1,6 @@
-package de.elbe5.company.html;
+package de.elbe5.user.html;
 
-import de.elbe5.company.CompanyData;
+import de.elbe5.user.CompanyData;
 import de.elbe5.response.IFormBuilder;
 import de.elbe5.response.ModalPage;
 import de.elbe5.request.RequestData;

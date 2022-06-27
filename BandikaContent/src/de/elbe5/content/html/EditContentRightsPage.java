@@ -1,8 +1,8 @@
 package de.elbe5.content.html;
 
 import de.elbe5.content.ContentData;
-import de.elbe5.group.GroupBean;
-import de.elbe5.group.GroupData;
+import de.elbe5.user.GroupBean;
+import de.elbe5.user.GroupData;
 import de.elbe5.response.IFormBuilder;
 import de.elbe5.response.ModalPage;
 import de.elbe5.request.ContentRequestKeys;

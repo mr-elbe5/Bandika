@@ -11,6 +11,7 @@ package de.elbe5.content;
 import de.elbe5.log.Log;
 import de.elbe5.file.FileBean;
 import de.elbe5.file.FileData;
+import org.json.JSONObject;
 
 import java.util.*;
 
@@ -67,6 +68,10 @@ public class ContentCache {
         footerList=footer;
         contentMap = contents;
         Log.log("content cache reloaded");
+    }
+
+    public static JSONObject getJsonObject() {
+        return getContentRoot().toJSONObject();
     }
 
     public static void checkDirty() {
