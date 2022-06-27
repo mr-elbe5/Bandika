@@ -2,7 +2,6 @@ package de.elbe5.application;
 
 import de.elbe5.companion.FileCompanion;
 import de.elbe5.content.ContentCache;
-import de.elbe5.user.UserBean;
 import de.elbe5.user.UserCache;
 import org.json.JSONObject;
 

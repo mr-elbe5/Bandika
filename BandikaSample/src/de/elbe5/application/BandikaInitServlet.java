@@ -9,6 +9,7 @@
 package de.elbe5.application;
 
 import de.elbe5.administration.ContentAdminController;
+import de.elbe5.data.JsonDataCenter;
 import de.elbe5.data.LocalizedStrings;
 import de.elbe5.data.JsonWebToken;
 import de.elbe5.log.Log;
@@ -119,6 +120,8 @@ public class BandikaInitServlet extends InitServlet {
         Timer.getInstance().loadTasks();
         Timer.getInstance().startThread();
         Log.log("Bandika initialized");
+        JsonDataCenter.getInstance().addPackage("content", ContentCache.getContentRoot().toJSONObject());
+        JsonDataCenter.getInstance().addPackage("users", UserCache.toJson());
         BandikaJsonData.getInstance().dump();
     }
 

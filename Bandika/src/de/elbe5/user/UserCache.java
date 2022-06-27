@@ -8,7 +8,10 @@
  */
 package de.elbe5.user;
 
+import de.elbe5.group.GroupBean;
+import de.elbe5.group.GroupData;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.*;
 
@@ -59,11 +62,19 @@ public class UserCache {
         return userMap.get(id);
     }
 
-    public static JSONArray toJson(){
+    public static JSONObject toJson(){
+        JSONObject jsonObject = new JSONObject();
         JSONArray array = new JSONArray();
         for (UserData user : userMap.values()){
             array.put(user.toJSONObject());
         }
-        return array;
+        jsonObject.put("users", array);
+        List<GroupData> groups = GroupBean.getInstance().getAllGroups();
+        array = new JSONArray();
+        for (GroupData group : groups){
+            array.put(group.toJSONObject());
+        }
+        jsonObject.put("groups", array);
+        return jsonObject;
     }
 }
