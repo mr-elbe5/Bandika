@@ -9,10 +9,14 @@
 
 package de.elbe5.companion;
 
+import de.elbe5.data.JsonClass;
+import de.elbe5.data.JsonField;
 import de.elbe5.log.Log;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -21,182 +25,260 @@ import java.util.*;
 
 public interface JsonCompanion {
 
-    default Object toJson(Object obj){
-        if (obj instanceof String)
-            return obj;
-        if (obj instanceof Integer || obj instanceof Long || obj instanceof Float
-                || obj instanceof Double || obj instanceof Boolean || obj instanceof LocalDate
-                || obj instanceof LocalTime || obj instanceof LocalDateTime)
-            return obj.toString();
-        if (obj.getClass().isEnum()){
-            return ((Enum<?>)obj).name();
+    String classKey = "$className";
+
+    default JSONObject toJSONObject() {
+        Class<?> cls = getClass();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(JsonCompanion.classKey, cls.getName());
+        while (cls!=null && cls.isAnnotationPresent(JsonClass.class)){
+            for (Field field : cls.getDeclaredFields()) {
+                if (field.isAnnotationPresent(JsonField.class)){
+                    field.setAccessible(true);
+                    Class<?> fieldClass = field.getType();
+                    try{
+                        if (fieldClass.isPrimitive() || fieldClass.equals(String.class)){
+                            jsonObject.put(field.getName(), field.get(this));
+                        }
+                        else {
+                            Object fieldValue = field.get(this);
+                            if (fieldValue != null) {
+                                Object value = toJson(fieldValue);
+                                jsonObject.put(field.getName(), value);
+                            }
+                        }
+                    }
+                    catch (Exception e){
+                        Log.error("could not add field value to json object", e);
+                    }
+                }
+            }
+            cls=cls.getSuperclass();
         }
-        if (obj instanceof List<?>){
-            JSONArray array = new JSONArray();
-            for (Object elem : (List<?>)obj){
+        return jsonObject;
+    }
+
+    default void fromJSONObject(JSONObject jobj){
+        Class<?> cls = getClass();
+        while (cls!=null && cls.isAnnotationPresent(JsonClass.class)){
+            for (Field field : cls.getDeclaredFields()) {
+                if (field.isAnnotationPresent(JsonField.class)) {
+                    Object jsonValue = jobj.opt(field.getName());
+                    if (jsonValue != null) {
+                        Object obj;
+                        JsonField annotation = field.getAnnotation(JsonField.class);
+                        field.setAccessible(true);
+                        if (!annotation.valueClass().equals(Object.class)){
+                            if (!annotation.keyClass().equals(Object.class)){
+                                obj = fromJson(jsonValue, annotation.baseClass(), annotation.keyClass(), annotation.valueClass());
+                            }
+                            else{
+                                obj = fromJson(jsonValue, annotation.baseClass(), annotation.valueClass());
+                            }
+                        }
+                        else{
+                            obj = fromJson(jsonValue, annotation.baseClass());
+                        }
+                        if (obj != null) {
+                            try {
+                                field.set(this, obj);
+                            } catch (Exception e) {
+                                Log.error("could not get object from json", e);
+                            }
+                        }
+                    }
+                }
+            }
+            cls=cls.getSuperclass();
+        }
+    }
+
+    default Object toJson(Object value){
+        if (value instanceof String)
+            return value;
+        if (value instanceof Integer || value instanceof Long || value instanceof Float
+                || value instanceof Double || value instanceof Boolean)
+            return value;
+        if (value instanceof LocalDate || value instanceof LocalTime || value instanceof LocalDateTime)
+            return value.toString();
+        if (value.getClass().isEnum()){
+            return ((Enum<?>)value).name();
+        }
+        if (value instanceof List<?>){
+            JSONArray jsonArray = new JSONArray();
+            for (Object elem : (List<?>)value){
                 Object jelem = toJson(elem);
                 if (jelem != null) {
-                    array.put(jelem);
+                    jsonArray.put(jelem);
                 }
             }
-            return array;
+            return jsonArray;
         }
-        if (obj instanceof Set<?>){
-            JSONArray array = new JSONArray();
-            for (Object elem : (Set<?>)obj){
+        if (value instanceof Set<?>){
+            JSONArray jsonArray = new JSONArray();
+            for (Object elem : (Set<?>)value){
                 Object jelem = toJson(elem);
                 if (jelem != null) {
-                    array.put(jelem);
+                    jsonArray.put(jelem);
                 }
             }
-            return array;
+            return jsonArray;
         }
-        if (obj instanceof Map<?,?>){
-            JSONObject jobj = new JSONObject();
-            Map<?,?> map = (Map<?,?>)obj;
-            for (Object key : map.keySet()){
-                Object value = map.get(key);
-                String jkey = key.toString();
-                Object jvalue = toJson(value);
-                if (jkey != null && jvalue != null) {
-                    jobj.put(jkey, jvalue);
+        if (value instanceof Map<?,?>){
+            JSONObject jsonObject = new JSONObject();
+            Map<?,?> map = (Map<?,?>)value;
+            for (Object mapKey : map.keySet()){
+                Object mapValue = map.get(mapKey);
+                String jsonKey = mapKey.toString();
+                Object jasonValue = toJson(mapValue);
+                if (jsonKey != null && jasonValue != null) {
+                    jsonObject.put(jsonKey, jasonValue);
                 }
             }
-            return jobj;
+            return jsonObject;
         }
         return null;
     }
 
-    default Object fromJson(Object obj, Class<?> baseClass){
-        if (obj instanceof Integer){
+    default Object fromJson(Object jasonValue, Class<?> baseClass){
+        if (jasonValue instanceof Integer){
             if (baseClass.equals(Long.class)){
-                return baseClass.cast(obj);
+                return baseClass.cast(jasonValue);
             }
-            return obj;
+            return jasonValue;
         }
-        if (obj instanceof Double){
+        if (jasonValue instanceof Double){
             if (baseClass.equals(Float.class)){
-                return baseClass.cast(obj);
+                return baseClass.cast(jasonValue);
             }
-            return obj;
+            return jasonValue;
         }
-        if (obj instanceof Boolean){
-            return obj;
+        if (jasonValue instanceof Boolean){
+            return jasonValue;
         }
-        if (obj instanceof String){
-            return fromJsonString((String)obj, baseClass);
+        if (jasonValue instanceof String){
+            return fromJsonString((String)jasonValue, baseClass);
         }
-        if (obj instanceof JSONObject){
-            return fromJsonObject((JSONObject) obj, baseClass);
-        }
-        return null;
-    }
-
-    default Object fromJson(Object obj, Class<?> baseClass, Class<?> valueClass){
-        if (obj instanceof JSONObject){
-            return fromJsonObject((JSONObject) obj, baseClass, valueClass);
-        }
-        if (obj instanceof JSONArray){
-            return fromJsonArray((JSONArray) obj, baseClass, valueClass);
+        if (jasonValue instanceof JSONObject){
+            return fromJsonObject((JSONObject) jasonValue, baseClass);
         }
         return null;
     }
 
-    default Object fromJson(Object obj, Class<?> baseClass, Class<?> keyClass, Class<?> valueClass){
-        if (obj instanceof JSONObject){
-            return fromJsonObject((JSONObject) obj, baseClass, keyClass, valueClass);
+    default Object fromJson(Object jasonValue, Class<?> baseClass, Class<?> valueClass){
+        if (jasonValue instanceof JSONObject){
+            return fromJsonObject((JSONObject) jasonValue, baseClass, valueClass);
+        }
+        if (jasonValue instanceof JSONArray){
+            return fromJsonArray((JSONArray) jasonValue, baseClass, valueClass);
         }
         return null;
     }
 
-    default Object fromJsonString(String str, Class<?> cls){
-        if (cls.equals(String.class)){
-            return str;
+    default Object fromJson(Object jasonValue, Class<?> baseClass, Class<?> keyClass, Class<?> valueClass){
+        if (jasonValue instanceof JSONObject){
+            return fromJsonObject((JSONObject) jasonValue, baseClass, keyClass, valueClass);
         }
-        if (cls.equals(Integer.class)){
+        return null;
+    }
+
+    default Object fromJsonString(String jasonValue, Class<?> baseClass){
+        if (baseClass.equals(String.class)){
+            return jasonValue;
+        }
+        if (baseClass.equals(Integer.class)){
             try{
-                return Integer.parseInt(str);
+                return Integer.parseInt(jasonValue);
             }
             catch (NumberFormatException e){
                 Log.error("bad number format", e);
                 return 0;
             }
         }
-        if (cls.equals(Long.class)){
+        if (baseClass.equals(Long.class)){
             try{
-                return Long.parseLong(str);
+                return Long.parseLong(jasonValue);
             }
             catch (NumberFormatException e){
                 Log.error("bad number format", e);
                 return 0;
             }
         }
-        if (cls.equals(Boolean.class)){
-            return Boolean.parseBoolean(str);
+        if (baseClass.equals(Boolean.class)){
+            return Boolean.parseBoolean(jasonValue);
         }
-        if (cls.equals(LocalDate.class)){
+        if (baseClass.equals(LocalDate.class)){
             try{
-                return LocalDate.parse(str);
+                return LocalDate.parse(jasonValue);
             }
             catch (DateTimeParseException e){
                 Log.error("bad date format", e);
                 return null;
             }
         }
-        if (cls.equals(LocalTime.class)){
+        if (baseClass.equals(LocalTime.class)){
             try{
-                return LocalTime.parse(str);
+                return LocalTime.parse(jasonValue);
             }
             catch (DateTimeParseException e){
                 Log.error("bad date format", e);
                 return null;
             }
         }
-        if (cls.equals(LocalDateTime.class)){
+        if (baseClass.equals(LocalDateTime.class)){
             try{
-                return LocalDateTime.parse(str);
+                return LocalDateTime.parse(jasonValue);
             }
             catch (DateTimeParseException e){
                 Log.error("bad date format", e);
                 return null;
             }
         }
-        return null;
-    }
-
-    default Object fromJsonObject(JSONObject jobj, Class<?> cls) {
-        return null;
-    }
-
-    default Object fromJsonObject(JSONObject jobj, Class<?> baseClass, Class<?> valueClass) {
-        if (baseClass.equals(Map.class)) {
-            return getMap(jobj, String.class, valueClass);
-        }
-        return null;
-    }
-
-    default Object fromJsonObject(JSONObject jobj, Class<?> baseClass, Class<?> keyClass, Class<?> valueClass) {
-        if (baseClass.equals(Map.class)) {
-            return getMap(jobj, keyClass, valueClass);
-        }
-        return null;
-    }
-
-    default Object fromJsonArray(JSONArray jarr, Class<?> baseClass, Class<?> valueClass) {
-        if (baseClass.equals(List.class)) {
-            return getList(jarr, valueClass);
-        }
-        if (baseClass.equals(Set.class)) {
-            return getSet(jarr, valueClass);
-        }
-        return null;
-    }
-
-    default <T> List<T> getList(JSONArray array, Class<T> valueClass){
-        List<T> list = new ArrayList<>();
-        for (Object jo : array){
+        if (baseClass.isEnum()){
             try {
-                list.add(valueClass.cast(jo));
+                Method method = baseClass.getDeclaredMethod("valueOf", String.class);
+                return method.invoke(null, jasonValue);
+            }
+            catch (Exception e){
+                Log.error("could not get enum ", e);
+            }
+        }
+        return null;
+    }
+
+    default Object fromJsonObject(JSONObject jsonObject, Class<?> baseClass) {
+        return null;
+    }
+
+    default Object fromJsonObject(JSONObject jsonObject, Class<?> baseClass, Class<?> valueClass) {
+        if (baseClass.equals(Map.class)) {
+            return getMap(jsonObject, String.class, valueClass);
+        }
+        return null;
+    }
+
+    default Object fromJsonObject(JSONObject jsonObject, Class<?> baseClass, Class<?> keyClass, Class<?> valueClass) {
+        if (baseClass.equals(Map.class)) {
+            return getMap(jsonObject, keyClass, valueClass);
+        }
+        return null;
+    }
+
+    default Object fromJsonArray(JSONArray jsonArray, Class<?> baseClass, Class<?> valueClass) {
+        if (List.class.isAssignableFrom(baseClass)) {
+            return getList(jsonArray, valueClass);
+        }
+        if (Set.class.isAssignableFrom(baseClass)) {
+            return getSet(jsonArray, valueClass);
+        }
+        return null;
+    }
+
+    default <T> List<T> getList(JSONArray jsonArray, Class<T> valueClass){
+        List<T> list = new ArrayList<>();
+        for (Object jsonValue : jsonArray){
+            try {
+                list.add(valueClass.cast(fromJson(jsonValue, valueClass)));
             }
             catch (ClassCastException e){
                 Log.error("could not cast object", e);
@@ -205,11 +287,11 @@ public interface JsonCompanion {
         return list;
     }
 
-    default <T> Set<T> getSet(JSONArray array, Class<T> cls){
+    default <T> Set<T> getSet(JSONArray jsonArray, Class<T> valueClass){
         Set<T> set = new HashSet<>();
-        for (Object jo : array){
+        for (Object jsonValue : jsonArray){
             try{
-                set.add(cls.cast(jo));
+                set.add(valueClass.cast(fromJson(jsonValue, valueClass)));
             }
             catch (ClassCastException e){
                 Log.error("could not cast object", e);
@@ -218,13 +300,13 @@ public interface JsonCompanion {
         return set;
     }
 
-    default <K,T> Map<K,T> getMap(JSONObject jobj, Class<K> keyClass, Class<T> valueClass){
+    default <K,T> Map<K,T> getMap(JSONObject jsonObject, Class<K> keyClass, Class<T> valueClass){
         Map<K,T> map = new HashMap<>();
-        for (String jkey : jobj.keySet()){
-            Object jvalue = jobj.get(jkey);
+        for (String jsonKey : jsonObject.keySet()){
+            Object jsonValue = jsonObject.get(jsonKey);
             try{
-                K key = keyClass.cast(fromJson(jkey, keyClass));
-                T value = valueClass.cast(fromJson(jvalue, valueClass));
+                K key = keyClass.cast(fromJson(jsonKey, keyClass));
+                T value = valueClass.cast(fromJson(jsonValue, valueClass));
                 map.put(key, value);
             }
             catch (ClassCastException e){

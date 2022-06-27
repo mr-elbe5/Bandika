@@ -13,7 +13,8 @@ public enum SystemZone {
     USER,
     CONTENTREAD,
     CONTENTEDIT,
-    CONTENTAPPROVE
+    CONTENTAPPROVE;
+
 }
 
 

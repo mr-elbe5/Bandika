@@ -61,12 +61,20 @@ public class Log {
             case ERROR -> Level.SEVERE;
             default -> Level.OFF;
         };
-        LogRecord rec = new LogRecord(lev, message);
-        rec.setLoggerName(julog.getName());
-        rec.setSourceClassName(caller != null ? caller.getClassName() : "");
-        rec.setSourceMethodName(caller != null ? caller.getMethodName() : "");
-        rec.setThrown(t);
-        julog.log(rec);
+        if (julog != null) {
+            LogRecord rec = new LogRecord(lev, message);
+            rec.setLoggerName(julog.getName());
+            rec.setSourceClassName(caller != null ? caller.getClassName() : "");
+            rec.setSourceMethodName(caller != null ? caller.getMethodName() : "");
+            rec.setThrown(t);
+            julog.log(rec);
+        }
+        else{
+            System.out.println(message);
+            if (t!= null) {
+                System.out.println(t.getMessage());
+            }
+        }
     }
 
     public static void log(String message) {
