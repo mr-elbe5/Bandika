@@ -108,9 +108,9 @@ public class BandikaInitServlet extends InitServlet {
         TemplateCache.getInstance().addType("page");
         TemplateCache.getInstance().addType("part");
 
-        ContentCache.load();
+        ContentCache.getInstance().load();
         ContentCentral.setInstance(new AppContentCentral());
-        UserCache.load();
+        UserCache.getInstance().load();
         TemplateCache.getInstance().load();
         Timer.getInstance().registerTimerTask(new HeartbeatTaskData());
         Timer.getInstance().registerTimerTask(new CleanupTaskData());
@@ -118,10 +118,10 @@ public class BandikaInitServlet extends InitServlet {
         Timer.getInstance().loadTasks();
         Timer.getInstance().startThread();
         Log.log("Bandika initialized");
-        JsonDataCenter.getInstance().addPackage("contentData", ContentCache.getJsonObject());
-        JsonDataCenter.getInstance().addPackage("userData", UserCache.getJsonObject());
-        JsonDataCenter.getInstance().addPackage("timerData", Timer.getInstance().getJsonObject());
-        JsonDataCenter.getInstance().addPackage("configurationData", Configuration.getInstance().getJsonObject());
+        JsonDataCenter.getInstance().addPackage("contentData", ContentCache.getInstance());
+        JsonDataCenter.getInstance().addPackage("userData", UserCache.getInstance());
+        JsonDataCenter.getInstance().addPackage("timerData", Timer.getInstance());
+        JsonDataCenter.getInstance().addPackage("configurationData", Configuration.getInstance());
         JsonDataCenter.getInstance().dump();
     }
 

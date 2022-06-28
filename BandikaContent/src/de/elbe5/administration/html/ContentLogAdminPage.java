@@ -58,7 +58,7 @@ public class ContentLogAdminPage extends AdminPage {
                 for (ContentLog log : dayLog.getLogs()) {
                     append(sb, entryHtml,
                             Map.ofEntries(
-                                    Map.entry("name", toHtml(ContentCache.getContent(log.getId()).getDisplayName())),
+                                    Map.entry("name", toHtml(ContentCache.getInstance().getContent(log.getId()).getDisplayName())),
                                     Map.entry("count", Integer.toString(log.getCount()))));
                 }
             }

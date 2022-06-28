@@ -85,18 +85,18 @@ public class BrowseLinksPage extends ModalPage {
         appendModalStart(getString("_selectLink"));
         appendModalBodyStart();
         append(sb, startHtml, null);
-        appendPageLinks(ContentCache.getContentRoot());
+        appendPageLinks(ContentCache.getInstance().getContentRoot());
         append(sb, docStartHtml);
         if (rdata.hasAnyContentRight()) {
-            appendDocumentLinks(rdata, ContentCache.getContentRoot());
+            appendDocumentLinks(rdata, ContentCache.getInstance().getContentRoot());
         }
         append(sb, imgStartHtml);
         if (rdata.hasAnyContentRight()) {
-            appendImageLinks(rdata, ContentCache.getContentRoot());
+            appendImageLinks(rdata, ContentCache.getInstance().getContentRoot());
         }
         append(sb, mediaStartHtml);
         if (rdata.hasAnyContentRight()) {
-            appendMediaLinks(rdata, ContentCache.getContentRoot());
+            appendMediaLinks(rdata, ContentCache.getInstance().getContentRoot());
         }
         append(sb, endHtml);
         appendModalFooter(getString("_cancel"));

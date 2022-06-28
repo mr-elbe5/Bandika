@@ -15,6 +15,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface JsonClass {
+@Target(ElementType.FIELD)
+public @interface AJsonField {
+    public Class<?> baseClass();
+    public Class<?> keyClass() default Object.class;
+    public Class<?> valueClass() default Object.class;
 }

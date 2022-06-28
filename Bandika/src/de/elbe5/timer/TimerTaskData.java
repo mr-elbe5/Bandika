@@ -10,30 +10,30 @@ package de.elbe5.timer;
 
 import de.elbe5.data.BaseData;
 import de.elbe5.companion.DateCompanion;
-import de.elbe5.data.JsonClass;
-import de.elbe5.data.JsonField;
+import de.elbe5.data.AJsonClass;
+import de.elbe5.data.AJsonField;
 import de.elbe5.request.RequestData;
 
 import java.time.LocalDateTime;
 
-@JsonClass
+@AJsonClass
 public abstract class TimerTaskData extends BaseData implements Cloneable, DateCompanion {
 
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String displayName = "";
-    @JsonField(baseClass = TimerInterval.class)
+    @AJsonField(baseClass = TimerInterval.class)
     protected TimerInterval interval = TimerInterval.CONTINOUS;
-    @JsonField(baseClass = Integer.class)
+    @AJsonField(baseClass = Integer.class)
     protected int day = 0;
-    @JsonField(baseClass = Integer.class)
+    @AJsonField(baseClass = Integer.class)
     protected int hour = 0;
-    @JsonField(baseClass = Integer.class)
+    @AJsonField(baseClass = Integer.class)
     protected int minute = 0;
-    @JsonField(baseClass = LocalDateTime.class)
+    @AJsonField(baseClass = LocalDateTime.class)
     protected LocalDateTime lastExecution = null;
-    @JsonField(baseClass = LocalDateTime.class)
+    @AJsonField(baseClass = LocalDateTime.class)
     protected LocalDateTime nextExecution = null;
-    @JsonField(baseClass = Boolean.class)
+    @AJsonField(baseClass = Boolean.class)
     protected boolean active = false;
 
     public TimerTaskData(){

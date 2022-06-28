@@ -75,8 +75,8 @@ public class ContentAdminController extends AdminController {
 
     public IResponse reloadContentCache(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
-        ContentCache.setDirty();
-        ContentCache.checkDirty();
+        ContentCache.getInstance().setDirty();
+        ContentCache.getInstance().checkDirty();
         rdata.setMessage(getString("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }

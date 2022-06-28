@@ -9,29 +9,29 @@
 package de.elbe5.user;
 
 import de.elbe5.data.BaseData;
-import de.elbe5.data.JsonClass;
-import de.elbe5.data.JsonField;
+import de.elbe5.data.AJsonClass;
+import de.elbe5.data.AJsonField;
 import de.elbe5.request.RequestData;
 
-@JsonClass
+@AJsonClass
 public class CompanyData extends BaseData {
 
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String name="";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String street="";
     protected String zipCode="";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String city="";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String country="";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String email="";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String phone="";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String fax="";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String description="";
 
     // base data

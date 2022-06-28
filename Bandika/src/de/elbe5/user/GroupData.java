@@ -9,27 +9,26 @@
 package de.elbe5.user;
 
 import de.elbe5.data.BaseData;
-import de.elbe5.data.JsonClass;
-import de.elbe5.data.JsonField;
+import de.elbe5.data.AJsonClass;
+import de.elbe5.data.AJsonField;
 import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
-import de.elbe5.user.UserData;
 
 import java.util.*;
 
-@JsonClass
+@AJsonClass
 public class GroupData extends BaseData {
 
     public static final int ID_MAX_FINAL = 4;
 
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String name = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String notes = "";
-    @JsonField(baseClass = HashSet.class, valueClass = Integer.class)
+    @AJsonField(baseClass = HashSet.class, valueClass = Integer.class)
     protected Set<Integer> userIds = new HashSet<>();
     protected List<UserData> users = new ArrayList<>();
-    @JsonField(baseClass = HashSet.class, valueClass = SystemZone.class)
+    @AJsonField(baseClass = HashSet.class, valueClass = SystemZone.class)
     protected Set<SystemZone> systemRights = new HashSet<>();
 
     // base data

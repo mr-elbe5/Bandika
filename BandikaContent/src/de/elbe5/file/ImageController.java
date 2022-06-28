@@ -43,7 +43,7 @@ public class ImageController extends FileController {
 
     public IResponse openCreateImage(RequestData rdata) {
         int parentId = rdata.getAttributes().getInt("parentId");
-        ContentData parentData = ContentCache.getContent(parentId);
+        ContentData parentData = ContentCache.getInstance().getContent(parentId);
         checkRights(parentData.hasUserEditRight(rdata));
         String type=rdata.getAttributes().getString("type");
         ImageData data = FileFactory.getNewData(type,ImageData.class);
@@ -54,7 +54,7 @@ public class ImageController extends FileController {
 
     public IResponse openEditImage(RequestData rdata) {
         FileData data = FileBean.getInstance().getFile(rdata.getId(),true);
-        ContentData parent=ContentCache.getContent(data.getParentId());
+        ContentData parent=ContentCache.getInstance().getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         rdata.setSessionObject(ContentRequestKeys.KEY_IMAGE,data);
         return showEditImage(rdata);
@@ -62,7 +62,7 @@ public class ImageController extends FileController {
 
     public IResponse saveImage(RequestData rdata) {
         ImageData data = rdata.getSessionObject(ContentRequestKeys.KEY_IMAGE,ImageData.class);
-        ContentData parent=ContentCache.getContent(data.getParentId());
+        ContentData parent=ContentCache.getInstance().getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         data.readSettingsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
@@ -74,14 +74,14 @@ public class ImageController extends FileController {
             return showEditImage(rdata);
         }
         data.setNew(false);
-        ContentCache.setDirty();
+        ContentCache.getInstance().setDirty();
         return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId(), getString("_fileSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse cutImage(RequestData rdata) {
         int contentId = rdata.getId();
         ImageData data = FileBean.getInstance().getFile(contentId,true, ImageData.class);
-        ContentData parent=ContentCache.getContent(data.getParentId());
+        ContentData parent=ContentCache.getInstance().getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         rdata.setClipboardData(ContentRequestKeys.KEY_IMAGE, data);
         return showContentAdministration(rdata,data.getParentId());
@@ -90,7 +90,7 @@ public class ImageController extends FileController {
     public IResponse copyImage(RequestData rdata) {
         int contentId = rdata.getId();
         ImageData data = FileBean.getInstance().getFile(contentId,true, ImageData.class);
-        ContentData parent=ContentCache.getContent(data.getParentId());
+        ContentData parent=ContentCache.getInstance().getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         data.setNew(true);
         data.setId(FileBean.getInstance().getNextId());
@@ -103,7 +103,7 @@ public class ImageController extends FileController {
     public IResponse pasteImage(RequestData rdata) {
         int parentId = rdata.getAttributes().getInt("parentId");
         ImageData data=rdata.getClipboardData(ContentRequestKeys.KEY_IMAGE,ImageData.class);
-        ContentData parent=ContentCache.getContent(parentId);
+        ContentData parent=ContentCache.getInstance().getContent(parentId);
         if (parent == null){
             rdata.setMessage(getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration();
@@ -114,7 +114,7 @@ public class ImageController extends FileController {
         data.setChangerId(rdata.getUserId());
         FileBean.getInstance().saveFile(data, true);
         rdata.clearClipboardData(ContentRequestKeys.KEY_IMAGE);
-        ContentCache.setDirty();
+        ContentCache.getInstance().setDirty();
         rdata.setMessage(getString("_imagePasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,data.getId());
     }

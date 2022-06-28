@@ -29,7 +29,7 @@ import org.jsoup.nodes.Document;
 
 import java.util.*;
 
-@JsonClass
+@AJsonClass
 public class ContentData extends BaseData implements IMasterInclude, Comparable<ContentData>, IJsonData {
 
     public static final String ACCESS_TYPE_OPEN = "OPEN";
@@ -47,32 +47,32 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     public static final int ID_ROOT = 1;
 
     // base data
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     private String name = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     private String path = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     private String displayName = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     private String description = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     private String accessType = ACCESS_TYPE_OPEN;
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     private String navType = NAV_TYPE_NONE;
-    @JsonField(baseClass = Boolean.class)
+    @AJsonField(baseClass = Boolean.class)
     private boolean active = true;
-    @JsonField(baseClass = HashMap.class, keyClass = Integer.class, valueClass = Right.class)
+    @AJsonField(baseClass = HashMap.class, keyClass = Integer.class, valueClass = Right.class)
     private Map<Integer, Right> groupRights = new HashMap<>();
 
     // tree data
-    @JsonField(baseClass = Integer.class)
+    @AJsonField(baseClass = Integer.class)
     protected int parentId = 0;
     protected ContentData parent = null;
-    @JsonField(baseClass = Integer.class)
+    @AJsonField(baseClass = Integer.class)
     protected int ranking = 0;
-    @JsonField(baseClass = ArrayList.class, valueClass = ContentData.class)
+    @AJsonField(baseClass = ArrayList.class, valueClass = ContentData.class)
     private final List<ContentData> children = new ArrayList<>();
-    @JsonField(baseClass = ArrayList.class, valueClass = FileData.class)
+    @AJsonField(baseClass = ArrayList.class, valueClass = FileData.class)
     private final List<FileData> files = new ArrayList<>();
 
     //runtime
@@ -90,7 +90,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     //base data
 
     public String getCreatorName(){
-        UserData user= UserCache.getUser(getCreatorId());
+        UserData user= UserCache.getInstance().getUser(getCreatorId());
         if (user!=null)
             return user.getName();
         return "";

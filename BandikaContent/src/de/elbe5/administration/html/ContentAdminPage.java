@@ -48,7 +48,7 @@ public class ContentAdminPage extends AdminPage {
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
-        ContentData rootContent = ContentCache.getContentRoot();
+        ContentData rootContent = ContentCache.getInstance().getContentRoot();
         sb.append(startHtml);
         appendMessageHtml(sb, rdata);
         sb.append(sectionStart);

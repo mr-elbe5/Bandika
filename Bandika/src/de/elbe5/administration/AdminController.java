@@ -85,8 +85,8 @@ public class AdminController extends Controller implements FileCompanion {
 
     public IResponse reloadUserCache(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
-        UserCache.setDirty();
-        UserCache.checkDirty();
+        UserCache.getInstance().setDirty();
+        UserCache.getInstance().checkDirty();
         rdata.setMessage(getString("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }

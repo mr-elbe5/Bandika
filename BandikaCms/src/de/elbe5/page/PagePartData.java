@@ -10,20 +10,20 @@ package de.elbe5.page;
 
 import de.elbe5.data.BaseData;
 import de.elbe5.content.ContentBean;
-import de.elbe5.data.JsonClass;
-import de.elbe5.data.JsonField;
+import de.elbe5.data.AJsonClass;
+import de.elbe5.data.AJsonField;
 import de.elbe5.request.RequestData;
 
-@JsonClass
+@AJsonClass
 public class PagePartData extends BaseData implements Comparable<PagePartData> {
 
     public static final String KEY_PART = "partData";
 
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String sectionName = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected int position = 0;
-    @JsonField(baseClass = Boolean.class)
+    @AJsonField(baseClass = Boolean.class)
     protected boolean editable = true;
 
     public PagePartData() {

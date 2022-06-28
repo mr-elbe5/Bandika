@@ -21,9 +21,9 @@ public class EditContentDataPage extends ModalPage implements IFormBuilder {
     }
 
     public void appendStartHtml(RequestData rdata, ContentData contentData, String url) {
-        UserData creator = UserCache.getUser(contentData.getCreatorId());
+        UserData creator = UserCache.getInstance().getUser(contentData.getCreatorId());
         String creatorName = creator == null ? "" : creator.getName();
-        UserData changer = UserCache.getUser(contentData.getChangerId());
+        UserData changer = UserCache.getInstance().getUser(contentData.getChangerId());
         String changerName = changer == null ? "" : changer.getName();
         appendModalStart(getString("_editContentData"));
         appendFormStart(sb, url, "contentform", true);

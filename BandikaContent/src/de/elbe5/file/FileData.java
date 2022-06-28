@@ -11,30 +11,30 @@ package de.elbe5.file;
 import de.elbe5.companion.FileCompanion;
 import de.elbe5.content.ContentData;
 import de.elbe5.data.BaseData;
-import de.elbe5.data.JsonClass;
-import de.elbe5.data.JsonField;
+import de.elbe5.data.AJsonClass;
+import de.elbe5.data.AJsonField;
 import de.elbe5.request.RequestData;
 
-@JsonClass
+@AJsonClass
 public abstract class FileData extends BaseData implements FileCompanion {
 
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     private String fileName = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     private String extension = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     private String tempFileName = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     private String displayName = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     private String description = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String contentType = null;
-    @JsonField(baseClass = Integer.class)
+    @AJsonField(baseClass = Integer.class)
     protected int fileSize = 0;
 
     protected byte[] bytes = null;
-    @JsonField(baseClass = Integer.class)
+    @AJsonField(baseClass = Integer.class)
     protected int parentId = 0;
 
     protected ContentData parent = null;

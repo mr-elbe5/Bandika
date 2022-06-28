@@ -14,9 +14,9 @@ public class EditImagePage extends ModalPage implements IFormBuilder {
     public void appendHtml(RequestData rdata) {
         ImageData imageData = rdata.getSessionObject(ContentRequestKeys.KEY_IMAGE,ImageData.class);
         String url = "/ctrl/image/saveImage/" + imageData.getId();
-        UserData creator = UserCache.getUser(imageData.getCreatorId());
+        UserData creator = UserCache.getInstance().getUser(imageData.getCreatorId());
         String creatorName = creator == null ? "" : creator.getName();
-        UserData changer = UserCache.getUser(imageData.getChangerId());
+        UserData changer = UserCache.getInstance().getUser(imageData.getChangerId());
         String changerName = changer == null ? "" : changer.getName();
         boolean fileRequired= imageData.isNew();
         appendModalStart(getString("_editImageSettings"));

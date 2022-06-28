@@ -14,9 +14,9 @@ public class EditDocumentPage extends ModalPage implements IFormBuilder {
     public void appendHtml(RequestData rdata) {
         DocumentData documentData = rdata.getSessionObject(ContentRequestKeys.KEY_DOCUMENT,DocumentData.class);
         String url = "/ctrl/document/saveDocument/" + documentData.getId();
-        UserData creator = UserCache.getUser(documentData.getCreatorId());
+        UserData creator = UserCache.getInstance().getUser(documentData.getCreatorId());
         String creatorName = creator == null ? "" : creator.getName();
-        UserData changer = UserCache.getUser(documentData.getChangerId());
+        UserData changer = UserCache.getInstance().getUser(documentData.getChangerId());
         String changerName = changer == null ? "" : changer.getName();
         boolean fileRequired= documentData.isNew();
         appendModalStart(getString("_editDocumentSettings"));

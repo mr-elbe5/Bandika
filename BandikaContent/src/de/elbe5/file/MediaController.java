@@ -44,7 +44,7 @@ public class MediaController extends FileController {
 
     public IResponse openCreateMedia(RequestData rdata) {
         int parentId = rdata.getAttributes().getInt("parentId");
-        ContentData parentData = ContentCache.getContent(parentId);
+        ContentData parentData = ContentCache.getInstance().getContent(parentId);
         checkRights(parentData.hasUserEditRight(rdata));
         String type=rdata.getAttributes().getString("type");
         MediaData data = FileFactory.getNewData(type,MediaData.class);
@@ -55,7 +55,7 @@ public class MediaController extends FileController {
 
     public IResponse openEditMedia(RequestData rdata) {
         FileData data = FileBean.getInstance().getFile(rdata.getId(),true);
-        ContentData parent=ContentCache.getContent(data.getParentId());
+        ContentData parent=ContentCache.getInstance().getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         rdata.setSessionObject(ContentRequestKeys.KEY_MEDIA,data);
         return showEditMedia(rdata);
@@ -63,7 +63,7 @@ public class MediaController extends FileController {
 
     public IResponse saveMedia(RequestData rdata) {
         MediaData data = rdata.getSessionObject(ContentRequestKeys.KEY_MEDIA,MediaData.class);
-        ContentData parent=ContentCache.getContent(data.getParentId());
+        ContentData parent=ContentCache.getInstance().getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         data.readSettingsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
@@ -76,14 +76,14 @@ public class MediaController extends FileController {
             return showEditMedia(rdata);
         }
         data.setNew(false);
-        ContentCache.setDirty();
+        ContentCache.getInstance().setDirty();
         return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId(), getString("_fileSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse cutMedia(RequestData rdata) {
         int contentId = rdata.getId();
         MediaData data = FileBean.getInstance().getFile(contentId,true,MediaData.class);
-        ContentData parent=ContentCache.getContent(data.getParentId());
+        ContentData parent=ContentCache.getInstance().getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         rdata.setClipboardData(ContentRequestKeys.KEY_MEDIA, data);
         return showContentAdministration(rdata,data.getParentId());
@@ -92,7 +92,7 @@ public class MediaController extends FileController {
     public IResponse copyMedia(RequestData rdata) {
         int contentId = rdata.getId();
         MediaData data = FileBean.getInstance().getFile(contentId,true,MediaData.class);
-        ContentData parent=ContentCache.getContent(data.getParentId());
+        ContentData parent=ContentCache.getInstance().getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         data.setNew(true);
         data.setId(FileBean.getInstance().getNextId());
@@ -104,7 +104,7 @@ public class MediaController extends FileController {
 
     public IResponse pasteMedia(RequestData rdata) {
         int parentId = rdata.getAttributes().getInt("parentId");
-        ContentData parent=ContentCache.getContent(parentId);
+        ContentData parent=ContentCache.getInstance().getContent(parentId);
         if (parent == null){
             rdata.setMessage(getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration();
@@ -120,7 +120,7 @@ public class MediaController extends FileController {
         data.setChangerId(rdata.getUserId());
         FileBean.getInstance().saveFile(data,true);
         rdata.clearClipboardData(ContentRequestKeys.KEY_MEDIA);
-        ContentCache.setDirty();
+        ContentCache.getInstance().setDirty();
         rdata.setMessage(getString("_mediaPasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,data.getId());
     }

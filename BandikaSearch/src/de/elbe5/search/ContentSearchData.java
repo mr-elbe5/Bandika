@@ -123,7 +123,7 @@ public class ContentSearchData extends SearchData {
     }
 
     public boolean hasReadRight(RequestData rdata){
-        ContentData data = ContentCache.getContent(getId());
+        ContentData data = ContentCache.getInstance().getContent(getId());
         if (data == null)
             return false;
         return data.hasUserReadRight(rdata);

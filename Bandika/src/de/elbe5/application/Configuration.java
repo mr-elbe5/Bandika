@@ -9,16 +9,17 @@
 package de.elbe5.application;
 
 import de.elbe5.data.IJsonData;
-import de.elbe5.data.JsonClass;
-import de.elbe5.data.JsonField;
+import de.elbe5.data.AJsonClass;
+import de.elbe5.data.AJsonField;
+import de.elbe5.data.IJsonDataPackage;
 import de.elbe5.mail.Mailer;
 import org.json.JSONObject;
 
 import javax.servlet.ServletContext;
 import java.util.*;
 
-@JsonClass
-public class Configuration implements IJsonData {
+@AJsonClass
+public class Configuration implements IJsonData, IJsonDataPackage {
 
     private static final Configuration instance = new Configuration();
 
@@ -28,38 +29,35 @@ public class Configuration implements IJsonData {
 
     public static String ENCODING = "UTF-8";
 
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     private String appTitle = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     private String appName = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     private String salt = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     private String smtpHost = null;
-    @JsonField(baseClass = Integer.class)
+    @AJsonField(baseClass = Integer.class)
     private int smtpPort = 25;
-    @JsonField(baseClass = Mailer.SmtpConnectionType.class)
+    @AJsonField(baseClass = Mailer.SmtpConnectionType.class)
     private Mailer.SmtpConnectionType smtpConnectionType = Mailer.SmtpConnectionType.plain;
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     private String smtpUser = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     private String smtpPassword = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     private String mailSender = null;
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     private String mailReceiver = null;
-    @JsonField(baseClass = Integer.class)
+    @AJsonField(baseClass = Integer.class)
     private int timerInterval = 30;
+    @AJsonField(baseClass = Locale.class)
     private Locale locale = Locale.GERMAN;
     private final Map<String,Locale> locales = new HashMap<>();
 
     public Configuration(){
         locales.put("de",Locale.GERMAN);
         locales.put("en",Locale.ENGLISH);
-    }
-
-    public JSONObject getJsonObject(){
-        return this.toJSONObject();
     }
 
     // base data
@@ -187,4 +185,18 @@ public class Configuration implements IJsonData {
         System.out.println("language is "+ getLocale().getDisplayName());
     }
 
+    @Override
+    public String getName() {
+        return "configurationData";
+    }
+
+    @Override
+    public JSONObject saveAsJson() {
+        return this.toJSONObject();
+    }
+
+    @Override
+    public void loadFromJson(JSONObject jsonObject) {
+        //todo
+    }
 }

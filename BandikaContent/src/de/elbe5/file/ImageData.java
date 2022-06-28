@@ -10,8 +10,8 @@ package de.elbe5.file;
 
 import de.elbe5.companion.ImageCompanion;
 import de.elbe5.data.IJsonData;
-import de.elbe5.data.JsonClass;
-import de.elbe5.data.JsonField;
+import de.elbe5.data.AJsonClass;
+import de.elbe5.data.AJsonField;
 import de.elbe5.log.Log;
 import de.elbe5.request.RequestData;
 
@@ -19,31 +19,29 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Iterator;
 
-@JsonClass
+@AJsonClass
 public class ImageData extends FileData implements IJsonData, ImageCompanion {
 
     public static int MAX_PREVIEW_WIDTH = 200;
     public static int MAX_PREVIEW_HEIGHT = 200;
 
-    @JsonField(baseClass = Integer.class)
+    @AJsonField(baseClass = Integer.class)
     protected int width = 0;
-    @JsonField(baseClass = Integer.class)
+    @AJsonField(baseClass = Integer.class)
     protected int height = 0;
     protected byte[] previewBytes = null;
-    @JsonField(baseClass = Boolean.class)
+    @AJsonField(baseClass = Boolean.class)
     protected boolean hasPreview = false;
 
-    @JsonField(baseClass = Integer.class)
+    @AJsonField(baseClass = Integer.class)
     public int maxWidth=0;
-    @JsonField(baseClass = Integer.class)
+    @AJsonField(baseClass = Integer.class)
     public int maxHeight=0;
-    @JsonField(baseClass = Integer.class)
+    @AJsonField(baseClass = Integer.class)
     public int maxPreviewWidth= MAX_PREVIEW_WIDTH;
-    @JsonField(baseClass = Integer.class)
+    @AJsonField(baseClass = Integer.class)
     public int maxPreviewHeight= MAX_PREVIEW_HEIGHT;
 
     public ImageData() {

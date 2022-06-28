@@ -31,10 +31,10 @@ public class BreadcrumbTag extends TemplateTag {
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
         ContentData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-        List<Integer> parentIds = ContentCache.getParentContentIds(contentData);
+        List<Integer> parentIds = ContentCache.getInstance().getParentContentIds(contentData);
         sb.append(startHtml);
         for (int i = parentIds.size() - 1; i >= 0; i--) {
-            ContentData content = ContentCache.getContent(parentIds.get(i));
+            ContentData content = ContentCache.getInstance().getContent(parentIds.get(i));
             if (content != null) {
                 append(sb, linkHtml, Map.ofEntries(
                         Map.entry("url", content.getUrl()),

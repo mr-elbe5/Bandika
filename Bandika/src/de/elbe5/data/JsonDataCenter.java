@@ -15,13 +15,13 @@ public class JsonDataCenter implements FileCompanion {
         return instance;
     }
 
-    final Map<String, JSONObject> packages = new HashMap<>();
+    final Map<String, IJsonDataPackage> packages = new HashMap<>();
 
-    public void addPackage(String name, JSONObject data){
-        packages.put(name, data);
+    public void addPackage(String name, IJsonDataPackage pack){
+        packages.put(pack.getName(), pack);
     }
 
-    public JSONObject getPackage(String name){
+    public IJsonDataPackage getPackage(String name){
         return packages.get(name);
     }
 
@@ -29,10 +29,10 @@ public class JsonDataCenter implements FileCompanion {
         packages.clear();
         String json = readTextFile(ApplicationPath.getAppJsonFilePath());
         JSONObject jsonObject = new JSONObject(json);
-        for (String key : jsonObject.keySet()){
+        for (String key : packages.keySet()){
             JSONObject data = jsonObject.optJSONObject(key);
             if (data != null){
-                packages.put(key, data);
+                packages.get(key).loadFromJson(data);
             }
         }
     }
@@ -40,8 +40,8 @@ public class JsonDataCenter implements FileCompanion {
     public void dump(){
         JSONObject data = new JSONObject();
         for (String key : packages.keySet()){
-            JSONObject pack = packages.get(key);
-            data.put(key, packages.get(key));
+            IJsonDataPackage pack = packages.get(key);
+            data.put(key, packages.get(key).saveAsJson());
         }
         writeTextFile(ApplicationPath.getAppJsonFilePath(), data.toString(2));
     }

@@ -30,7 +30,7 @@ public abstract class FileController extends Controller {
     public IResponse show(RequestData rdata) {
         int id = rdata.getId();
         Log.warn("deprecated call of file show for id " + id);
-        FileData data = ContentCache.getFile(id);
+        FileData data = ContentCache.getInstance().getFile(id);
         return show(data, rdata);
     }
 
@@ -42,13 +42,13 @@ public abstract class FileController extends Controller {
     @Deprecated
     private IResponse downloadFile(RequestData rdata) {
         int id = rdata.getId();
-        FileData data = ContentCache.getFile(id);
+        FileData data = ContentCache.getInstance().getFile(id);
         rdata.getAttributes().put("download", "true");
         return show(data, rdata);
     }
 
     private IResponse show(FileData data, RequestData rdata){
-        ContentData parent=ContentCache.getContent(data.getParentId());
+        ContentData parent=ContentCache.getInstance().getContent(data.getParentId());
         if (!parent.hasUserReadRight(rdata)) {
             return new StatusResponse(HttpServletResponse.SC_UNAUTHORIZED);
         }
@@ -67,13 +67,13 @@ public abstract class FileController extends Controller {
 
     public IResponse deleteFile(RequestData rdata) {
         int contentId = rdata.getId();
-        int parentId = ContentCache.getFileParentId(contentId);
-        ContentData parent=ContentCache.getContent(parentId);
+        int parentId = ContentCache.getInstance().getFileParentId(contentId);
+        ContentData parent=ContentCache.getInstance().getContent(parentId);
         checkRights(parent.hasUserReadRight(rdata));
         if (!FileBean.getInstance().deleteFile(contentId)){
             Log.warn("could not delete file");
         }
-        ContentCache.setDirty();
+        ContentCache.getInstance().setDirty();
         rdata.getAttributes().put("contentId", Integer.toString(parentId));
         rdata.setMessage(getString("_fileDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration();

@@ -10,26 +10,24 @@ package de.elbe5.data;
 
 import de.elbe5.companion.DateCompanion;
 import de.elbe5.companion.StringCompanion;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.time.LocalDateTime;
 
-@JsonClass
+@AJsonClass
 public class BaseData implements StringCompanion, DateCompanion, IJsonData {
 
     public static final int ID_MIN = 100;
 
-    @JsonField(baseClass = Integer.class)
+    @AJsonField(baseClass = Integer.class)
     private int id = 0;
     private boolean isNew = false;
-    @JsonField(baseClass = LocalDateTime.class)
+    @AJsonField(baseClass = LocalDateTime.class)
     private LocalDateTime creationDate = null;
-    @JsonField(baseClass = LocalDateTime.class)
+    @AJsonField(baseClass = LocalDateTime.class)
     private LocalDateTime changeDate = null;
-    @JsonField(baseClass = Integer.class)
+    @AJsonField(baseClass = Integer.class)
     private int creatorId = 0;
-    @JsonField(baseClass = Integer.class)
+    @AJsonField(baseClass = Integer.class)
     private int changerId = 0;
 
     public BaseData(){

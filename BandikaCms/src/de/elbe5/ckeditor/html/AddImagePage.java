@@ -27,7 +27,7 @@ public class AddImagePage extends ModalPage {
     public void appendHtml(RequestData rdata) {
         ContentData contentData = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         int imageId = rdata.getAttributes().getInt("imageId");
-        ImageData image = ContentCache.getFile(imageId, ImageData.class);
+        ImageData image = ContentCache.getInstance().getFile(imageId, ImageData.class);
         if (image != null && contentData.hasUserReadRight(rdata)) {
             append(sb, html,
                     Map.ofEntries(

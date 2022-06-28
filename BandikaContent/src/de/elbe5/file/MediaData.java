@@ -8,10 +8,10 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.data.JsonClass;
+import de.elbe5.data.AJsonClass;
 import de.elbe5.request.RequestData;
 
-@JsonClass
+@AJsonClass
 public class MediaData extends FileData {
 
     public MediaData() {

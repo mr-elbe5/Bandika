@@ -34,7 +34,7 @@ public class FooterTag extends TemplateTag {
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
         append(sb, startHtml, null);
-        for (ContentData data : ContentCache.getFooterList()) {
+        for (ContentData data : ContentCache.getInstance().getFooterList()) {
             if (data.hasUserReadRight(rdata)) {
                 append(sb, linkHtml, Map.ofEntries(
                         Map.entry("url", data.getUrl()),

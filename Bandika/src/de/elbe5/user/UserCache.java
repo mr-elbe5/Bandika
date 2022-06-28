@@ -8,23 +8,30 @@
  */
 package de.elbe5.user;
 
+import de.elbe5.data.IJsonDataPackage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.*;
 
-public class UserCache {
+public class UserCache implements IJsonDataPackage {
 
-    private static int version = 1;
-    private static volatile boolean dirty = true;
+    private static final UserCache instance = new UserCache();
+
+    public static UserCache getInstance() {
+        return instance;
+    }
+
+    private int version = 1;
+    private boolean dirty = true;
     private static final Integer lockObj = 1;
 
-    private static Map<Integer, UserData> userMap = new HashMap<>();
-    private static Map<Integer, GroupData> groupMap = new HashMap<>();
+    private Map<Integer, UserData> userMap = new HashMap<>();
+    private Map<Integer, GroupData> groupMap = new HashMap<>();
 
-    private static Map<Integer, CompanyData> companyMap = new HashMap<>();
+    private Map<Integer, CompanyData> companyMap = new HashMap<>();
 
-    public static synchronized void load() {
+    public synchronized void load() {
         UserBean userBean = UserBean.getInstance();
         List<UserData> userList = userBean.getAllUsers();
         Map<Integer, UserData> users = new HashMap<>();
@@ -48,7 +55,52 @@ public class UserCache {
         companyMap = companies;
     }
 
-    public static JSONObject getJsonObject(){
+    public void setDirty() {
+        increaseVersion();
+        dirty = true;
+    }
+
+    public void checkDirty() {
+        if (dirty) {
+            synchronized (lockObj) {
+                if (dirty) {
+                    load();
+                    dirty = false;
+                }
+            }
+        }
+    }
+
+    public void increaseVersion() {
+        version++;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public UserData getUser(int id) {
+        checkDirty();
+        return userMap.get(id);
+    }
+
+    public GroupData getGroup(int id) {
+        checkDirty();
+        return groupMap.get(id);
+    }
+
+    public CompanyData getCompany(int id) {
+        checkDirty();
+        return companyMap.get(id);
+    }
+
+    @Override
+    public String getName() {
+        return "userData";
+    }
+
+    @Override
+    public JSONObject saveAsJson() {
         JSONObject jsonObject = new JSONObject();
         JSONArray array = new JSONArray();
         for (UserData user : userMap.values()){
@@ -68,43 +120,8 @@ public class UserCache {
         return jsonObject;
     }
 
-    public static void setDirty() {
-        increaseVersion();
-        dirty = true;
+    @Override
+    public void loadFromJson(JSONObject jsonObject) {
+        //todo
     }
-
-    public static void checkDirty() {
-        if (dirty) {
-            synchronized (lockObj) {
-                if (dirty) {
-                    load();
-                    dirty = false;
-                }
-            }
-        }
-    }
-
-    public static void increaseVersion() {
-        version++;
-    }
-
-    public static int getVersion() {
-        return version;
-    }
-
-    public static UserData getUser(int id) {
-        checkDirty();
-        return userMap.get(id);
-    }
-
-    public static GroupData getGroup(int id) {
-        checkDirty();
-        return groupMap.get(id);
-    }
-
-    public static CompanyData getCompany(int id) {
-        checkDirty();
-        return companyMap.get(id);
-    }
-
 }

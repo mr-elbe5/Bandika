@@ -81,14 +81,14 @@ public class BrowseImagesPage extends ModalPage {
     @Override
     public void appendHtml(RequestData rdata) {
         ContentData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-        List<Integer> parentIds = ContentCache.getParentContentIds(data.getId());
+        List<Integer> parentIds = ContentCache.getInstance().getParentContentIds(data.getId());
         parentIds.add(data.getId());
         rdata.setRequestObject("parentIds", parentIds);
         int callbackNum = rdata.getAttributes().getInt("CKEditorFuncNum", -1);
         appendModalStart(getString("_editUser"));
         appendModalBodyStart();
         append(sb, startHtml);
-        appendFolder(sb, rdata, ContentCache.getContentRoot(), parentIds);
+        appendFolder(sb, rdata, ContentCache.getInstance().getContentRoot(), parentIds);
         append(sb, addImageHtml, null);
         appendModalFooter(getString("_cancel"));
         appendModalEnd();

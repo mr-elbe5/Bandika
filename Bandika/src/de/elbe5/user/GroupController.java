@@ -73,7 +73,7 @@ public class GroupController extends Controller {
         if (!GroupBean.getInstance().saveGroup(data)){
             Log.warn("could not save group");
         }
-        UserCache.setDirty();
+        UserCache.getInstance().setDirty();
         return new CloseDialogResponse("/ctrl/admin/openUserAdministration?groupId=" + data.getId(), getString("_groupSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
@@ -87,7 +87,7 @@ public class GroupController extends Controller {
         if (!GroupBean.getInstance().deleteGroup(id)){
             Log.warn("could not delete group");
         }
-        UserCache.setDirty();
+        UserCache.getInstance().setDirty();
         rdata.setMessage(getString("_groupDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openUserAdministration");
     }

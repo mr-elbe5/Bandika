@@ -36,7 +36,7 @@ public class MainNavTag extends TemplateTag {
 
     @Override
     public void appendHtml(StringBuilder sb, RequestData rdata) {
-        ContentData home = ContentCache.getContentRoot();
+        ContentData home = ContentCache.getInstance().getContentRoot();
         ContentData currentContent = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         if (currentContent == null)
             currentContent = home;

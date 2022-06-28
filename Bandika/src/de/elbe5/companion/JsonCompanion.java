@@ -9,8 +9,8 @@
 
 package de.elbe5.companion;
 
-import de.elbe5.data.JsonClass;
-import de.elbe5.data.JsonField;
+import de.elbe5.data.AJsonClass;
+import de.elbe5.data.AJsonField;
 import de.elbe5.log.Log;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,9 +31,9 @@ public interface JsonCompanion {
         Class<?> cls = getClass();
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(JsonCompanion.classKey, cls.getName());
-        while (cls!=null && cls.isAnnotationPresent(JsonClass.class)){
+        while (cls!=null && cls.isAnnotationPresent(AJsonClass.class)){
             for (Field field : cls.getDeclaredFields()) {
-                if (field.isAnnotationPresent(JsonField.class)){
+                if (field.isAnnotationPresent(AJsonField.class)){
                     field.setAccessible(true);
                     Class<?> fieldClass = field.getType();
                     try{
@@ -60,13 +60,13 @@ public interface JsonCompanion {
 
     default void fromJSONObject(JSONObject jobj){
         Class<?> cls = getClass();
-        while (cls!=null && cls.isAnnotationPresent(JsonClass.class)){
+        while (cls!=null && cls.isAnnotationPresent(AJsonClass.class)){
             for (Field field : cls.getDeclaredFields()) {
-                if (field.isAnnotationPresent(JsonField.class)) {
+                if (field.isAnnotationPresent(AJsonField.class)) {
                     Object jsonValue = jobj.opt(field.getName());
                     if (jsonValue != null) {
                         Object obj;
-                        JsonField annotation = field.getAnnotation(JsonField.class);
+                        AJsonField annotation = field.getAnnotation(AJsonField.class);
                         field.setAccessible(true);
                         if (!annotation.valueClass().equals(Object.class)){
                             if (!annotation.keyClass().equals(Object.class)){
@@ -103,6 +103,9 @@ public interface JsonCompanion {
             return value.toString();
         if (value.getClass().isEnum()){
             return ((Enum<?>)value).name();
+        }
+        if (value instanceof Locale){
+            return ((Locale)value).getLanguage();
         }
         if (value instanceof List<?>){
             JSONArray jsonArray = new JSONArray();
@@ -242,6 +245,9 @@ public interface JsonCompanion {
             catch (Exception e){
                 Log.error("could not get enum ", e);
             }
+        }
+        if (baseClass.equals(Locale.class)){
+            return new Locale(jasonValue);
         }
         return null;
     }

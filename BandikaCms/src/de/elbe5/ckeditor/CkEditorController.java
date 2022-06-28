@@ -64,7 +64,7 @@ public class CkEditorController extends ContentController {
         image.setCreateValues(data,rdata);
         image.readSettingsRequestData(rdata);
         ImageBean.getInstance().saveFile(image,true);
-        ContentCache.setDirty();
+        ContentCache.getInstance().setDirty();
         rdata.getAttributes().put("imageId", Integer.toString(image.getId()));
         return new AddImagePage().createHtml(rdata);
     }

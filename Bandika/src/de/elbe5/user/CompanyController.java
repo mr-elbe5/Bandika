@@ -73,7 +73,7 @@ public class CompanyController extends Controller {
         if (!CompanyBean.getInstance().saveCompany(data)){
             Log.warn("could not save company");
         }
-        UserCache.setDirty();
+        UserCache.getInstance().setDirty();
         return new CloseDialogResponse("/ctrl/admin/openUserAdministration?companyId=" + data.getId(), getString("_companySaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
@@ -85,7 +85,7 @@ public class CompanyController extends Controller {
             return new ForwardResponse("/ctrl/admin/openUserAdministration");
         }
         CompanyBean.getInstance().deleteCompany(id);
-        UserCache.setDirty();
+        UserCache.getInstance().setDirty();
         rdata.setMessage(getString("_companyDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openUserAdministration");
     }

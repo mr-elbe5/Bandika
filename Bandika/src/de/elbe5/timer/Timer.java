@@ -8,6 +8,7 @@
  */
 package de.elbe5.timer;
 
+import de.elbe5.data.IJsonDataPackage;
 import de.elbe5.log.Log;
 import de.elbe5.application.AppContextListener;
 import de.elbe5.application.Configuration;
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Timer {
+public class Timer implements IJsonDataPackage {
 
     private static Timer instance = null;
 
@@ -34,16 +35,6 @@ public class Timer {
 
     public void registerTimerTask(TimerTaskData task) {
         tasks.put(task.getName(), task);
-    }
-
-    public JSONObject getJsonObject(){
-        JSONObject jsonObject = new JSONObject();
-        JSONArray array = new JSONArray();
-        for (TimerTaskData task : tasks.values()){
-            array.put(task.toJSONObject());
-        }
-        jsonObject.put("tasks", array);
-        return jsonObject;
     }
 
     public void startThread() {
@@ -98,6 +89,27 @@ public class Timer {
         } catch (CloneNotSupportedException e) {
             return null;
         }
+    }
+
+    @Override
+    public String getName() {
+        return "timerData";
+    }
+
+    @Override
+    public JSONObject saveAsJson() {
+        JSONObject jsonObject = new JSONObject();
+        JSONArray array = new JSONArray();
+        for (TimerTaskData task : tasks.values()) {
+            array.put(task.toJSONObject());
+        }
+        jsonObject.put("tasks", array);
+        return jsonObject;
+    }
+
+    @Override
+    public void loadFromJson(JSONObject jsonObject) {
+        //todo
     }
 
 }

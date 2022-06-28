@@ -44,7 +44,7 @@ public class DocumentController extends FileController {
 
     public IResponse openCreateDocument(RequestData rdata) {
         int parentId = rdata.getAttributes().getInt("parentId");
-        ContentData parentData = ContentCache.getContent(parentId);
+        ContentData parentData = ContentCache.getInstance().getContent(parentId);
         checkRights(parentData.hasUserEditRight(rdata));
         String type=rdata.getAttributes().getString("type");
         DocumentData data = FileFactory.getNewData(type,DocumentData.class);
@@ -55,7 +55,7 @@ public class DocumentController extends FileController {
 
     public IResponse openEditDocument(RequestData rdata) {
         FileData data = FileBean.getInstance().getFile(rdata.getId(),true);
-        ContentData parent=ContentCache.getContent(data.getParentId());
+        ContentData parent=ContentCache.getInstance().getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         rdata.setSessionObject(ContentRequestKeys.KEY_DOCUMENT,data);
         return showEditDocument(rdata);
@@ -63,7 +63,7 @@ public class DocumentController extends FileController {
 
     public IResponse saveDocument(RequestData rdata) {
         DocumentData data = rdata.getSessionObject(ContentRequestKeys.KEY_DOCUMENT,DocumentData.class);
-        ContentData parent=ContentCache.getContent(data.getParentId());
+        ContentData parent=ContentCache.getInstance().getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         data.readSettingsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
@@ -76,14 +76,14 @@ public class DocumentController extends FileController {
             return showEditDocument(rdata);
         }
         data.setNew(false);
-        ContentCache.setDirty();
+        ContentCache.getInstance().setDirty();
         return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId(), getString("_fileSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
     public IResponse cutDocument(RequestData rdata) {
         int contentId = rdata.getId();
         DocumentData data = FileBean.getInstance().getFile(contentId,true,DocumentData.class);
-        ContentData parent=ContentCache.getContent(data.getParentId());
+        ContentData parent=ContentCache.getInstance().getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         rdata.setClipboardData(ContentRequestKeys.KEY_DOCUMENT, data);
         return showContentAdministration(rdata,data.getParentId());
@@ -92,7 +92,7 @@ public class DocumentController extends FileController {
     public IResponse copyDocument(RequestData rdata) {
         int contentId = rdata.getId();
         DocumentData data = FileBean.getInstance().getFile(contentId,true,DocumentData.class);
-        ContentData parent=ContentCache.getContent(data.getParentId());
+        ContentData parent=ContentCache.getInstance().getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         data.setNew(true);
         data.setId(FileBean.getInstance().getNextId());
@@ -104,7 +104,7 @@ public class DocumentController extends FileController {
 
     public IResponse pasteDocument(RequestData rdata) {
         int parentId = rdata.getAttributes().getInt("parentId");
-        ContentData parent=ContentCache.getContent(parentId);
+        ContentData parent=ContentCache.getInstance().getContent(parentId);
         if (parent == null){
             rdata.setMessage(getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration();
@@ -120,7 +120,7 @@ public class DocumentController extends FileController {
         data.setChangerId(rdata.getUserId());
         FileBean.getInstance().saveFile(data,true);
         rdata.clearClipboardData(ContentRequestKeys.KEY_DOCUMENT);
-        ContentCache.setDirty();
+        ContentCache.getInstance().setDirty();
         rdata.setMessage(getString("_documentPasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,data.getId());
     }

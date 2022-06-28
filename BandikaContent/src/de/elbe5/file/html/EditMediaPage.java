@@ -14,9 +14,9 @@ public class EditMediaPage extends ModalPage implements IFormBuilder {
     public void appendHtml(RequestData rdata) {
         MediaData mediaData = rdata.getSessionObject(ContentRequestKeys.KEY_MEDIA,MediaData.class);
         String url = "/ctrl/media/saveMedia/" + mediaData.getId();
-        UserData creator = UserCache.getUser(mediaData.getCreatorId());
+        UserData creator = UserCache.getInstance().getUser(mediaData.getCreatorId());
         String creatorName = creator == null ? "" : creator.getName();
-        UserData changer = UserCache.getUser(mediaData.getChangerId());
+        UserData changer = UserCache.getInstance().getUser(mediaData.getChangerId());
         String changerName = changer == null ? "" : changer.getName();
         boolean fileRequired= mediaData.isNew();
         appendModalStart(getString("_editMediaSettings"));

@@ -127,7 +127,7 @@ public class UserController extends Controller implements EncryptionCompanion {
         if (!UserBean.getInstance().saveUser(data)){
             Log.warn("could not save user");
         }
-        UserCache.setDirty();
+        UserCache.getInstance().setDirty();
         if (rdata.getUserId() == data.getId()) {
             rdata.setSessionUser(data);
         }
@@ -142,7 +142,7 @@ public class UserController extends Controller implements EncryptionCompanion {
             return new ForwardResponse("/ctrl/admin/openUserAdministration");
         }
         UserBean.getInstance().deleteUser(id);
-        UserCache.setDirty();
+        UserCache.getInstance().setDirty();
         rdata.setMessage(getString("_userDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openUserAdministration");
     }
@@ -216,7 +216,7 @@ public class UserController extends Controller implements EncryptionCompanion {
             Log.warn("could not save profile");
         }
         rdata.setSessionUser(data);
-        UserCache.setDirty();
+        UserCache.getInstance().setDirty();
         return new CloseDialogResponse("/ctrl/user/openProfile", getString("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
     

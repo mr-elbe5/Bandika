@@ -55,7 +55,7 @@ public class ContentController extends Controller {
     public IResponse show(RequestData rdata) {
         //Log.log("show");
         int contentId = rdata.getId();
-        ContentData data = ContentCache.getContent(contentId);
+        ContentData data = ContentCache.getInstance().getContent(contentId);
         checkRights(data.hasUserReadRight(rdata));
         if (!ContentBean.getInstance().increaseViewCount(data.getId())){
             Log.warn("could not increase view count");
@@ -67,11 +67,11 @@ public class ContentController extends Controller {
     public IResponse show(String url, RequestData rdata) {
         //Log.log("show: "+url);
         if (url.equals("/")){
-            url=ContentCache.getContentRoot().getUrl();
+            url=ContentCache.getInstance().getContentRoot().getUrl();
             //Log.log("redirect to " + url);
         }
         ContentData data;
-        data = ContentCache.getContent(url);
+        data = ContentCache.getInstance().getContent(url);
         checkRights(data.hasUserReadRight(rdata));
         //Log.log("show: "+data.getClass().getSimpleName());
         ContentBean.getInstance().increaseViewCount(data.getId());
@@ -81,7 +81,7 @@ public class ContentController extends Controller {
     //backend
     public IResponse openCreateContentData(RequestData rdata) {
         int parentId = rdata.getAttributes().getInt("parentId");
-        ContentData parentData = ContentCache.getContent(parentId);
+        ContentData parentData = ContentCache.getInstance().getContent(parentId);
         checkRights(parentData.hasUserEditRight(rdata));
         String type = rdata.getAttributes().getString("type");
         ContentData data = ContentFactory.getNewData(type);
@@ -96,7 +96,7 @@ public class ContentController extends Controller {
         int contentId = rdata.getId();
         ContentData data = ContentBean.getInstance().getContent(contentId);
         checkRights(data.hasUserEditRight(rdata));
-        data.setEditValues(ContentCache.getContent(data.getId()), rdata);
+        data.setEditValues(ContentCache.getInstance().getContent(data.getId()), rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
         return showEditContentData(rdata, data);
     }
@@ -119,7 +119,7 @@ public class ContentController extends Controller {
         }
         data.setNew(false);
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
-        ContentCache.setDirty();
+        ContentCache.getInstance().setDirty();
         return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId(), getString("_contentSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
@@ -128,7 +128,7 @@ public class ContentController extends Controller {
         int contentId = rdata.getId();
         ContentData data = ContentBean.getInstance().getContent(contentId);
         checkRights(data.hasUserEditRight(rdata));
-        data.setEditValues(ContentCache.getContent(data.getId()), rdata);
+        data.setEditValues(ContentCache.getInstance().getContent(data.getId()), rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
         return showEditRights(rdata);
     }
@@ -147,7 +147,7 @@ public class ContentController extends Controller {
             return showEditRights(rdata);
         }
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
-        ContentCache.setDirty();
+        ContentCache.getInstance().setDirty();
         return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId(), getString("_rightsSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
@@ -180,7 +180,7 @@ public class ContentController extends Controller {
             rdata.setMessage(getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration();
         }
-        ContentData parent = ContentCache.getContent(parentId);
+        ContentData parent = ContentCache.getInstance().getContent(parentId);
         if (parent == null){
             rdata.setMessage(getString("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration();
@@ -198,7 +198,7 @@ public class ContentController extends Controller {
         data.setChangerId(rdata.getUserId());
         ContentBean.getInstance().saveContent(data);
         rdata.clearClipboardData(ContentRequestKeys.KEY_CONTENT);
-        ContentCache.setDirty();
+        ContentCache.getInstance().setDirty();
         rdata.setMessage(getString("_contentPasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,data.getId());
     }
@@ -213,19 +213,19 @@ public class ContentController extends Controller {
     //backend
     public IResponse deleteContent(RequestData rdata) {
         int contentId = rdata.getId();
-        ContentData data=ContentCache.getContent(contentId);
+        ContentData data=ContentCache.getInstance().getContent(contentId);
         checkRights(data.hasUserEditRight(rdata)) ;
         if (contentId < BaseData.ID_MIN) {
             rdata.setMessage(getString("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration();
         }
-        int parentId = ContentCache.getParentContentId(contentId);
+        int parentId = ContentCache.getInstance().getParentContentId(contentId);
         if (!ContentBean.getInstance().deleteContent(contentId)){
             Log.warn("could not delete content");
         }
-        ContentCache.setDirty();
+        ContentCache.getInstance().setDirty();
         rdata.getAttributes().put("contentId", Integer.toString(parentId));
-        ContentCache.setDirty();
+        ContentCache.getInstance().setDirty();
         rdata.setMessage(getString("_contentDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,parentId);
     }
@@ -233,7 +233,7 @@ public class ContentController extends Controller {
     //backend
     public IResponse openSortChildPages(RequestData rdata) {
         int contentId = rdata.getId();
-        ContentData data = ContentCache.getContent(contentId);
+        ContentData data = ContentCache.getInstance().getContent(contentId);
         checkRights(data.hasUserEditRight(rdata));
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
         return showSortChildContents(rdata);
@@ -254,7 +254,7 @@ public class ContentController extends Controller {
         Collections.sort(data.getChildren());
         ContentBean.getInstance().updateChildRankings(data);
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
-        ContentCache.setDirty();
+        ContentCache.getInstance().setDirty();
         return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + contentId, getString("_newRankingSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
     }
 
@@ -291,7 +291,7 @@ public class ContentController extends Controller {
         data.setViewType(ContentData.VIEW_TYPE_SHOW);
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
         data.stopEditing();
-        ContentCache.setDirty();
+        ContentCache.getInstance().setDirty();
         return show(rdata);
     }
 
@@ -305,7 +305,7 @@ public class ContentController extends Controller {
 
     public IResponse showDraft(RequestData rdata){
         int contentId = rdata.getId();
-        ContentData data = ContentCache.getContent(contentId);
+        ContentData data = ContentCache.getInstance().getContent(contentId);
         checkRights(data.hasUserReadRight(rdata));
         data.setViewType(ContentData.VIEW_TYPE_SHOW);
         return data.getResponse();
@@ -313,7 +313,7 @@ public class ContentController extends Controller {
 
     public IResponse showPublished(RequestData rdata){
         int contentId = rdata.getId();
-        ContentData data = ContentCache.getContent(contentId);
+        ContentData data = ContentCache.getInstance().getContent(contentId);
         checkRights(data.hasUserReadRight(rdata));
         data.setViewType(ContentData.VIEW_TYPE_SHOWPUBLISHED);
         return data.getResponse();
@@ -322,7 +322,7 @@ public class ContentController extends Controller {
     public IResponse publishContent(RequestData rdata){
         int contentId = rdata.getId();
         Log.log("Publishing content id " + contentId);
-        ContentData data = ContentCache.getContent(contentId);
+        ContentData data = ContentCache.getInstance().getContent(contentId);
         checkRights(data.hasUserApproveRight(rdata));
         data.publish(rdata);
         return data.getResponse();

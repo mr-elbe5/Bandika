@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@JsonClass
+@AJsonClass
 public class UserData extends BaseData implements IJsonData, ImageCompanion, EncryptionCompanion {
 
     public static final int ID_ROOT = 1;
@@ -34,52 +34,52 @@ public class UserData extends BaseData implements IJsonData, ImageCompanion, Enc
 
     public static int MIN_PASSWORD_LENGTH = 8;
 
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String title = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String firstName = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String lastName = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String email = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String login = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String passwordHash = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String token = "";
-    @JsonField(baseClass = LocalDateTime.class)
+    @AJsonField(baseClass = LocalDateTime.class)
     protected LocalDateTime tokenExpiration = null;
-    @JsonField(baseClass = Boolean.class)
+    @AJsonField(baseClass = Boolean.class)
     protected boolean locked = false;
-    @JsonField(baseClass = Boolean.class)
+    @AJsonField(baseClass = Boolean.class)
     protected boolean deleted = false;
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String street = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String zipCode = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String city = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String country = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String phone = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String fax = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String mobile = "";
-    @JsonField(baseClass = String.class)
+    @AJsonField(baseClass = String.class)
     protected String notes = "";
-    @JsonField(baseClass = Boolean.class)
+    @AJsonField(baseClass = Boolean.class)
     protected boolean hasPortrait=false;
     protected byte[] portrait = null;
-    @JsonField(baseClass = Integer.class)
+    @AJsonField(baseClass = Integer.class)
     protected int companyId = 0;
 
-    @JsonField(baseClass = HashSet.class, valueClass = Integer.class)
+    @AJsonField(baseClass = HashSet.class, valueClass = Integer.class)
     protected Set<Integer> groupIds = new HashSet<>();
 
-    @JsonField(baseClass = HashSet.class, valueClass = SystemZone.class)
+    @AJsonField(baseClass = HashSet.class, valueClass = SystemZone.class)
     protected Set<SystemZone> systemRights = new HashSet<>();
 
     // base data

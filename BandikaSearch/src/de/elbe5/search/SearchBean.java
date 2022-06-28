@@ -94,13 +94,13 @@ public class SearchBean extends DbBean {
 
     protected void indexContent(IndexWriter writer) throws Exception {
         int count = 0;
-        for (ContentData content : ContentCache.getContents(ContentData.class)) {
+        for (ContentData content : ContentCache.getInstance().getContents(ContentData.class)) {
             ContentSearchData data = new ContentSearchData();
             data.setId(content.getId());
             data.setUrl(content.getUrl());
             data.setName(content.getDisplayName());
             data.setDescription(content.getDescription());
-            data.setAuthorName(UserCache.getUser(content.getChangerId()).getName());
+            data.setAuthorName(UserCache.getInstance().getUser(content.getChangerId()).getName());
             data.setContent(content.getPublishedText());
             data.setAnonymous(content.isOpenAccess());
             data.setDoc();

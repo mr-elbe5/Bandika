@@ -49,8 +49,8 @@ public class FileServlet extends WebServlet implements FileCompanion {
             fileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8).substring(1);
             String name = getFileNameWithoutExtension(fileName);
             int id = Integer.parseInt(name);
-            FileData data = ContentCache.getFile(id);
-            ContentData parent=ContentCache.getContent(data.getParentId());
+            FileData data = ContentCache.getInstance().getFile(id);
+            ContentData parent=ContentCache.getInstance().getContent(data.getParentId());
             if (!parent.hasUserReadRight(rdata)) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
                 return;
