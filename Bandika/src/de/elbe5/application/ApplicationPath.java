@@ -77,7 +77,7 @@ public class ApplicationPath {
             return false;
         appTemplatePath = externalFilePath + "/templates";
         appTemplateDir = new File(appTemplatePath);
-        appJsonFilePath=appFilePath + "/data.json";
+        appJsonFilePath=externalFilePath + "/data.json";
         return assertDirectory(appTemplateDir);
     }
 
