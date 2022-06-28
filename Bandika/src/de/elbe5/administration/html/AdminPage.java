@@ -14,8 +14,8 @@ public class AdminPage extends HtmlIncludePage implements MessageHtml {
 
     @Override
     public void prepareMaster(RequestData rdata) {
-        rdata.getTemplateAttributes().put("language", Configuration.getLocale().getLanguage());
-        rdata.getTemplateAttributes().put("title", toHtml(Configuration.getAppTitle() + " | " + title));
+        rdata.getTemplateAttributes().put("language", Configuration.getInstance().getLocale().getLanguage());
+        rdata.getTemplateAttributes().put("title", toHtml(Configuration.getInstance().getAppTitle() + " | " + title));
         rdata.getTemplateAttributes().put("reallyDelete", toJs(getString("_reallyDelete")));
         rdata.getTemplateAttributes().put("reallyExecute", toJs(getString("_reallyExecute")));
     }

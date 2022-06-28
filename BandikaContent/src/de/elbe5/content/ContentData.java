@@ -466,14 +466,6 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         }
     }
 
-    public void readFrontendCreateRequestData(RequestData rdata) {
-        readFrontendRequestData(rdata);
-    }
-
-    public void readFrontendUpdateRequestData(RequestData rdata) {
-        readFrontendRequestData(rdata);
-    }
-
     public void readFrontendRequestData(RequestData rdata) {
         readRequestData(rdata);
     }
@@ -553,8 +545,8 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
 
     @Override
     public void prepareMaster(RequestData rdata){
-        rdata.getTemplateAttributes().put("language", Configuration.getLocale().getLanguage());
-        rdata.getTemplateAttributes().put("title", toHtml(Configuration.getAppTitle() + " | " + getDisplayName()));
+        rdata.getTemplateAttributes().put("language", Configuration.getInstance().getLocale().getLanguage());
+        rdata.getTemplateAttributes().put("title", toHtml(Configuration.getInstance().getAppTitle() + " | " + getDisplayName()));
         rdata.getTemplateAttributes().put("description", toHtml(getDescription()));
         rdata.getTemplateAttributes().put("keywords", toHtml(getKeywords()));
     }

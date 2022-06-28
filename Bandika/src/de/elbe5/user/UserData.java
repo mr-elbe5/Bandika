@@ -147,7 +147,7 @@ public class UserData extends BaseData implements IJsonData, ImageCompanion, Enc
         if (password.isEmpty()) {
             setPasswordHash("");
         } else {
-            setPasswordHash(encryptPassword(password, Configuration.getSalt()));
+            setPasswordHash(encryptPassword(password, Configuration.getInstance().getSalt()));
         }
     }
 

@@ -8,143 +8,168 @@
  */
 package de.elbe5.application;
 
+import de.elbe5.data.IJsonData;
+import de.elbe5.data.JsonClass;
+import de.elbe5.data.JsonField;
 import de.elbe5.mail.Mailer;
+import org.json.JSONObject;
 
 import javax.servlet.ServletContext;
 import java.util.*;
 
-public class Configuration {
+@JsonClass
+public class Configuration implements IJsonData {
+
+    private static final Configuration instance = new Configuration();
+
+    public static Configuration getInstance() {
+        return instance;
+    }
 
     public static String ENCODING = "UTF-8";
 
-    private static String appTitle = "";
+    @JsonField(baseClass = String.class)
+    private String appTitle = "";
+    @JsonField(baseClass = String.class)
+    private String appName = "";
+    @JsonField(baseClass = String.class)
+    private String salt = "";
+    @JsonField(baseClass = String.class)
+    private String smtpHost = null;
+    @JsonField(baseClass = Integer.class)
+    private int smtpPort = 25;
+    @JsonField(baseClass = Mailer.SmtpConnectionType.class)
+    private Mailer.SmtpConnectionType smtpConnectionType = Mailer.SmtpConnectionType.plain;
+    @JsonField(baseClass = String.class)
+    private String smtpUser = "";
+    @JsonField(baseClass = String.class)
+    private String smtpPassword = "";
+    @JsonField(baseClass = String.class)
+    private String mailSender = null;
+    @JsonField(baseClass = String.class)
+    private String mailReceiver = null;
+    @JsonField(baseClass = Integer.class)
+    private int timerInterval = 30;
+    private Locale locale = Locale.GERMAN;
+    private final Map<String,Locale> locales = new HashMap<>();
 
-    private static String appName = "";
-    private static String salt = "";
-    private static String smtpHost = null;
-    private static int smtpPort = 25;
-    private static Mailer.SmtpConnectionType smtpConnectionType = Mailer.SmtpConnectionType.plain;
-    private static String smtpUser = "";
-    private static String smtpPassword = "";
-    private static String mailSender = null;
-    private static String mailReceiver = null;
-    private static int timerInterval = 30;
-    private static Locale locale = Locale.GERMAN;
-    private static final Map<String,Locale> locales = new HashMap<>();
-
-    static{
+    public Configuration(){
         locales.put("de",Locale.GERMAN);
         locales.put("en",Locale.ENGLISH);
     }
 
+    public JSONObject getJsonObject(){
+        return this.toJSONObject();
+    }
+
     // base data
 
-    public static String getAppTitle() {
+    public String getAppTitle() {
         return appTitle;
     }
 
-    public static void setAppName(String appName) {
-        Configuration.appName = appName;
+    public void setAppName(String appName) {
+        this.appName = appName;
     }
 
-    public static String getAppName() {
+    public String getAppName() {
         return appName;
     }
 
-    public static void setAppTitle(String appTitle) {
-        Configuration.appTitle = appTitle;
+    public void setAppTitle(String appTitle) {
+        this.appTitle = appTitle;
     }
 
-    public static String getSalt() {
+    public String getSalt() {
         return salt;
     }
 
-    public static void setSalt(String salt) {
-        Configuration.salt = salt;
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
-    public static String getSmtpHost() {
+    public String getSmtpHost() {
         return smtpHost;
     }
 
-    public static void setSmtpHost(String smtpHost) {
-        Configuration.smtpHost = smtpHost;
+    public void setSmtpHost(String smtpHost) {
+        this.smtpHost = smtpHost;
     }
 
-    public static int getSmtpPort() {
+    public int getSmtpPort() {
         return smtpPort;
     }
 
-    public static void setSmtpPort(int smtpPort) {
-        Configuration.smtpPort = smtpPort;
+    public void setSmtpPort(int smtpPort) {
+        this.smtpPort = smtpPort;
     }
 
-    public static Mailer.SmtpConnectionType getSmtpConnectionType() {
+    public Mailer.SmtpConnectionType getSmtpConnectionType() {
         return smtpConnectionType;
     }
 
-    public static void setSmtpConnectionType(Mailer.SmtpConnectionType smtpConnectionType) {
-        Configuration.smtpConnectionType = smtpConnectionType;
+    public void setSmtpConnectionType(Mailer.SmtpConnectionType smtpConnectionType) {
+        this.smtpConnectionType = smtpConnectionType;
     }
 
-    public static String getSmtpUser() {
+    public String getSmtpUser() {
         return smtpUser;
     }
 
-    public static void setSmtpUser(String smtpUser) {
-        Configuration.smtpUser = smtpUser;
+    public void setSmtpUser(String smtpUser) {
+        this.smtpUser = smtpUser;
     }
 
-    public static String getSmtpPassword() {
+    public String getSmtpPassword() {
         return smtpPassword;
     }
 
-    public static void setSmtpPassword(String smtpPassword) {
-        Configuration.smtpPassword = smtpPassword;
+    public void setSmtpPassword(String smtpPassword) {
+        this.smtpPassword = smtpPassword;
     }
 
-    public static String getMailSender() {
+    public String getMailSender() {
         return mailSender;
     }
 
-    public static void setMailSender(String mailSender) {
-        Configuration.mailSender = mailSender;
+    public void setMailSender(String mailSender) {
+        this.mailSender = mailSender;
     }
 
-    public static String getMailReceiver() {
+    public String getMailReceiver() {
         return mailReceiver;
     }
 
-    public static void setMailReceiver(String mailReceiver) {
-        Configuration.mailReceiver = mailReceiver;
+    public void setMailReceiver(String mailReceiver) {
+        this.mailReceiver = mailReceiver;
     }
 
-    public static Locale getLocale() {
+    public Locale getLocale() {
         return locale;
     }
 
-    public static void setLocale(Locale locale) {
+    public void setLocale(Locale locale) {
         if (locale == null || !locales.containsValue(locale))
             return;
-        Configuration.locale = locale;
+        this.locale = locale;
     }
 
-    public static int getTimerInterval() {
+    public int getTimerInterval() {
         return timerInterval;
     }
 
-    public static void setTimerInterval(int timerInterval) {
-        Configuration.timerInterval = timerInterval;
+    public void setTimerInterval(int timerInterval) {
+        this.timerInterval = timerInterval;
     }
 
     // read from config file
 
-    private static String getSafeInitParameter(ServletContext servletContext, String key){
+    private String getSafeInitParameter(ServletContext servletContext, String key){
         String s=servletContext.getInitParameter(key);
         return s==null ? "" : s;
     }
 
-    public static void setConfigs(ServletContext servletContext) {
+    public void setConfigs(ServletContext servletContext) {
         setSalt(getSafeInitParameter(servletContext,"salt"));
         setSmtpHost(getSafeInitParameter(servletContext,"mailHost"));
         setSmtpPort(Integer.parseInt(getSafeInitParameter(servletContext,"mailPort")));

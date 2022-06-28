@@ -45,18 +45,18 @@ public class BandikaInitServlet extends InitServlet {
             System.out.println("could not create directories, please check access rights");
             return;
         }
-        Configuration.setConfigs(context);
-        LocalizedStrings.addResourceBundle("bandika", Configuration.getLocale());
-        LocalizedStrings.addResourceBundle("content", Configuration.getLocale());
-        LocalizedStrings.addResourceBundle("cms", Configuration.getLocale());
-        LocalizedStrings.addResourceBundle("application", Configuration.getLocale());
-        LocalizedStrings.addResourceBundle("layout", Configuration.getLocale());
+        Configuration.getInstance().setConfigs(context);
+        LocalizedStrings.addResourceBundle("bandika", Configuration.getInstance().getLocale());
+        LocalizedStrings.addResourceBundle("content", Configuration.getInstance().getLocale());
+        LocalizedStrings.addResourceBundle("cms", Configuration.getInstance().getLocale());
+        LocalizedStrings.addResourceBundle("application", Configuration.getInstance().getLocale());
+        LocalizedStrings.addResourceBundle("layout", Configuration.getInstance().getLocale());
         Log.initLog(ApplicationPath.getAppName());
         if (!DbConnector.getInstance().initialize("jdbc/bandika"))
             return;
-        Configuration.setAppTitle("Bandika");
-        Configuration.setAppName("bandikasample");
-        JsonWebToken.createSecretKey(Configuration.getSalt());
+        Configuration.getInstance().setAppTitle("Bandika");
+        Configuration.getInstance().setAppName("bandikasample");
+        JsonWebToken.createSecretKey(Configuration.getInstance().getSalt());
         ContentAdminController.register(new ContentAdminController());
         ContentController.register(new ContentController());
         DocumentController.register(new DocumentController());
@@ -121,6 +121,7 @@ public class BandikaInitServlet extends InitServlet {
         JsonDataCenter.getInstance().addPackage("contentData", ContentCache.getJsonObject());
         JsonDataCenter.getInstance().addPackage("userData", UserCache.getJsonObject());
         JsonDataCenter.getInstance().addPackage("timerData", Timer.getInstance().getJsonObject());
+        JsonDataCenter.getInstance().addPackage("configurationData", Configuration.getInstance().getJsonObject());
         JsonDataCenter.getInstance().dump();
     }
 

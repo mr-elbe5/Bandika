@@ -138,7 +138,7 @@ public class UserBean extends DbBean implements EncryptionCompanion {
                 if (rs.next()) {
                     int i = 1;
                     String encrypted = rs.getString(i++);
-                    if (encryptPassword(pwd, Configuration.getSalt()).equals(encrypted)){
+                    if (encryptPassword(pwd, Configuration.getInstance().getSalt()).equals(encrypted)){
                         data = new UserData();
                         data.setId(rs.getInt(i++));
                         data.setLogin(login);
@@ -177,7 +177,7 @@ public class UserBean extends DbBean implements EncryptionCompanion {
                 if (rs.next()) {
                     int i = 1;
                     String encrypted = rs.getString(i++);
-                    if (encryptPassword(pwd, Configuration.getSalt()).equals(encrypted)) {
+                    if (encryptPassword(pwd, Configuration.getInstance().getSalt()).equals(encrypted)) {
                         data = new UserData();
                         data.setId(rs.getInt(i++));
                         data.setLogin(login);

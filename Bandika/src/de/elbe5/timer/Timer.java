@@ -11,9 +11,6 @@ package de.elbe5.timer;
 import de.elbe5.log.Log;
 import de.elbe5.application.AppContextListener;
 import de.elbe5.application.Configuration;
-import de.elbe5.user.CompanyData;
-import de.elbe5.user.GroupData;
-import de.elbe5.user.UserData;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -50,7 +47,7 @@ public class Timer {
     }
 
     public void startThread() {
-        int interval = Configuration.getTimerInterval();
+        int interval = Configuration.getInstance().getTimerInterval();
         Log.log("setting timer interval to " + interval + " sec");
         timerThread = new TimerThread(interval);
         Log.log("timer thread state = " + (timerThread.isAlive() ? "alive" : "down"));
@@ -69,7 +66,7 @@ public class Timer {
             timerThread.stopRunning();
         }
         timerThread = null;
-        int interval = Configuration.getTimerInterval();
+        int interval = Configuration.getInstance().getTimerInterval();
         timerThread = new TimerThread(interval);
         timerThread.startRunning();
         AppContextListener.registerThread(timerThread);

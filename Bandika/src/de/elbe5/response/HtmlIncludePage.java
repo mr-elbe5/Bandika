@@ -27,8 +27,8 @@ public class HtmlIncludePage implements IMasterInclude {
 
     @Override
     public void prepareMaster(RequestData rdata){
-        rdata.getTemplateAttributes().put("language", Configuration.getLocale().getLanguage());
-        rdata.getTemplateAttributes().put("title", Configuration.getAppTitle());
+        rdata.getTemplateAttributes().put("language", Configuration.getInstance().getLocale().getLanguage());
+        rdata.getTemplateAttributes().put("title", Configuration.getInstance().getAppTitle());
     }
 
 }

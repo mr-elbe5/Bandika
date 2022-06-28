@@ -57,8 +57,8 @@ public class LoginPage extends HtmlIncludePage implements IHtmlBuilder {
     public void appendHtml(StringBuilder sb, RequestData rdata) {
         append(sb, html,
                 Map.ofEntries(
-                        Map.entry("title", toHtml(Configuration.getAppTitle())),
-                        Map.entry("name", toHtml(Configuration.getAppName()))));
+                        Map.entry("title", toHtml(Configuration.getInstance().getAppTitle())),
+                        Map.entry("name", toHtml(Configuration.getInstance().getAppName()))));
 
     }
 }

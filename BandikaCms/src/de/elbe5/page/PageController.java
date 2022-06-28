@@ -76,7 +76,7 @@ public class PageController extends ContentController {
             return show(rdata);
         }
         message = String.format(getHtml("_contactRequestText"),name,email) + message;
-        if (!MailHelper.sendPlainMail(Configuration.getMailReceiver(), getString("_contactRequest"), message)) {
+        if (!MailHelper.sendPlainMail(Configuration.getInstance().getMailReceiver(), getString("_contactRequest"), message)) {
             rdata.setMessage(getString("_contactRequestError"), RequestKeys.MESSAGE_TYPE_ERROR);
             return show(rdata);
         }
