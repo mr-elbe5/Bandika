@@ -16,6 +16,7 @@ public class ContentSystemAdminPage extends SystemAdminPage {
             appendContentCache(sb);
             appendPreviewCache(sb);
             appendCachesEnd(sb);
+            appendDataHtml(sb);
             appendTimerList(sb);
         }
         appendPageHtmlEnd(sb);

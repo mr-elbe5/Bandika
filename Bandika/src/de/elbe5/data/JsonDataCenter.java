@@ -2,6 +2,7 @@ package de.elbe5.data;
 
 import de.elbe5.application.ApplicationPath;
 import de.elbe5.companion.FileCompanion;
+import de.elbe5.log.Log;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -44,6 +45,11 @@ public class JsonDataCenter implements FileCompanion {
             data.put(key, packages.get(key).saveAsJson());
         }
         writeTextFile(ApplicationPath.getAppJsonFilePath(), data.toString(2));
+    }
+
+    public void load(){
+        Log.log("loading");
+        read();
     }
 
 }

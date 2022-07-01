@@ -23,6 +23,7 @@ public class SystemAdminPage extends AdminPage {
             appendUserCache(sb);
             appendTemplateCache(sb);
             appendCachesEnd(sb);
+            appendDataHtml(sb);
             appendTimerList(sb);
         }
         appendPageHtmlEnd(sb);
@@ -66,6 +67,14 @@ public class SystemAdminPage extends AdminPage {
             """;
     static final String cachesEnd = """
                                     </ul>
+                                </li>
+            """;
+    static final String datatHtml = """
+                                <li>
+                                    <a href="/ctrl/admin/saveDataToJson">{{_saveDataToJson}}</a>
+                                </li>
+                                <li>
+                                    <a href="/ctrl/admin/loadDataFromJson">{{_loadDataFromJson}}</a>
                                 </li>
             """;
     static final String timerStart = """
@@ -121,6 +130,8 @@ public class SystemAdminPage extends AdminPage {
     public void appendCachesEnd(StringBuilder sb) {
         append(sb, cachesEnd);
     }
+
+    public void appendDataHtml(StringBuilder sb){ append(sb, datatHtml, null);}
 
     void appendTimerList(StringBuilder sb) {
         Map<String, TimerTaskData> tasks = null;

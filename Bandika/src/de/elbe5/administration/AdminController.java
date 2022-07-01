@@ -11,6 +11,7 @@ package de.elbe5.administration;
 import de.elbe5.administration.html.SystemAdminPage;
 import de.elbe5.application.ApplicationPath;
 import de.elbe5.companion.FileCompanion;
+import de.elbe5.data.JsonDataCenter;
 import de.elbe5.log.Log;
 import de.elbe5.request.RequestKeys;
 import de.elbe5.response.AdminResponse;
@@ -95,6 +96,20 @@ public class AdminController extends Controller implements FileCompanion {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         TemplateCache.getInstance().load();
         rdata.setMessage(getString("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return openSystemAdministration(rdata);
+    }
+
+    public IResponse saveDataToJson(RequestData rdata) {
+        checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
+        JsonDataCenter.getInstance().dump();
+        rdata.setMessage(getString("_dataSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return openSystemAdministration(rdata);
+    }
+
+    public IResponse loadDataFromJson(RequestData rdata) {
+        checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
+        JsonDataCenter.getInstance().load();
+        rdata.setMessage(getString("_dataLoaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
