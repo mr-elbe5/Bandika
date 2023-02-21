@@ -10,12 +10,13 @@
  */
 package de.elbe5.file;
 
+import de.elbe5.base.StringHelper;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IResponse;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.*;
 
 public class FileResponse implements IResponse {
@@ -41,7 +42,7 @@ public class FileResponse implements IResponse {
         response.reset();
         response.setBufferSize(DEFAULT_BUFFER_SIZE);
         boolean forceDownload = rdata.getAttributes().getBoolean("download");
-        String disposition = (forceDownload ? "attachment" : "inline") + ";filename=\"" + toSafeWebName(fileName) + "\"";
+        String disposition = (forceDownload ? "attachment" : "inline") + ";filename=\"" + StringHelper.toSafeWebName(fileName) + "\"";
         response.setHeader("Content-Disposition", disposition);
         response.setHeader("Accept-Ranges", "bytes");
         String contentType = context.getMimeType(file.getName());

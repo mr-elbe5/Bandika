@@ -11,30 +11,41 @@ package de.elbe5.response;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
-public class MasterResponse extends TemplateResponse {
+public class MasterResponse implements IResponse {
 
     public static String DEFAULT_MASTER = "defaultMaster";
 
-    protected IMasterInclude includeObject;
+    protected String master=DEFAULT_MASTER;
+    protected IMasterInclude includeObject = null;
 
-    public MasterResponse(IMasterInclude include) {
-        this(DEFAULT_MASTER, include);
+    public MasterResponse() {
     }
 
-    public MasterResponse(String name, IMasterInclude include) {
-        super("master", name);
+    public MasterResponse(String master) {
+        this.master=master;
+    }
+
+    public MasterResponse(String master, IMasterInclude include) {
+        this.master=master;
         this.includeObject = include;
     }
 
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
+        RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/_jsp/_layout/"+master+".jsp");
         if (includeObject != null){
             rdata.setRequestObject(RequestKeys.KEY_MASTERINCLUDE, includeObject);
         }
-        super.processResponse(context, rdata, response);
+        try {
+            rd.forward(rdata.getRequest(), response);
+        } catch (ServletException | IOException e) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
-
 }

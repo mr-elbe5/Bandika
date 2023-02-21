@@ -9,19 +9,18 @@
 package de.elbe5.file;
 
 import de.elbe5.application.ApplicationPath;
-import de.elbe5.administration.ContentAdminController;
-import de.elbe5.log.Log;
-import de.elbe5.administration.html.ContentAdminPage;
+import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Log;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
-import de.elbe5.response.AdminResponse;
 import de.elbe5.response.StatusResponse;
 import de.elbe5.servlet.Controller;
 import de.elbe5.response.IResponse;
+import de.elbe5.response.ForwardResponse;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 
 public abstract class FileController extends Controller {
@@ -30,7 +29,7 @@ public abstract class FileController extends Controller {
     public IResponse show(RequestData rdata) {
         int id = rdata.getId();
         Log.warn("deprecated call of file show for id " + id);
-        FileData data = ContentCache.getInstance().getFile(id);
+        FileData data = ContentCache.getFile(id);
         return show(data, rdata);
     }
 
@@ -42,15 +41,17 @@ public abstract class FileController extends Controller {
     @Deprecated
     private IResponse downloadFile(RequestData rdata) {
         int id = rdata.getId();
-        FileData data = ContentCache.getInstance().getFile(id);
+        FileData data = ContentCache.getFile(id);
         rdata.getAttributes().put("download", "true");
         return show(data, rdata);
     }
 
     private IResponse show(FileData data, RequestData rdata){
-        ContentData parent=ContentCache.getInstance().getContent(data.getParentId());
+        ContentData parent=ContentCache.getContent(data.getParentId());
         if (!parent.hasUserReadRight(rdata)) {
-            return new StatusResponse(HttpServletResponse.SC_UNAUTHORIZED);
+            //todo
+            //String token = rdata.getAttributes().getString("token");
+            //checkRights(Token.matchToken(data.getId(), token));
         }
         File file = new File(ApplicationPath.getAppFilePath(), data.getFileName());
         // if not exists, create from database
@@ -67,25 +68,19 @@ public abstract class FileController extends Controller {
 
     public IResponse deleteFile(RequestData rdata) {
         int contentId = rdata.getId();
-        int parentId = ContentCache.getInstance().getFileParentId(contentId);
-        ContentData parent=ContentCache.getInstance().getContent(parentId);
+        int parentId = ContentCache.getFileParentId(contentId);
+        ContentData parent=ContentCache.getContent(parentId);
         checkRights(parent.hasUserReadRight(rdata));
-        if (!FileBean.getInstance().deleteFile(contentId)){
-            Log.warn("could not delete file");
-        }
-        ContentCache.getInstance().setDirty();
+        FileData data = ContentCache.getFile(contentId);
+        FileBean.getInstance().deleteFile(data);
+        ContentCache.setDirty();
         rdata.getAttributes().put("contentId", Integer.toString(parentId));
-        rdata.setMessage(getString("_fileDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return showContentAdministration();
+        rdata.setMessage(LocalizedStrings.string("_fileDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return showContentAdministration(rdata,parentId);
     }
 
-    protected IResponse showContentAdministration(){
-        return new AdminResponse(new ContentAdminPage());
-    }
-
-    protected IResponse showContentAdministration(RequestData rdata, int contentId){
-        rdata.getAttributes().put("contentId", contentId);
-        return ContentAdminController.getInstance().openContentAdministration(rdata);
+    protected IResponse showContentAdministration(RequestData rdata, int contentId) {
+        return new ForwardResponse("/ctrl/admin/openContentAdministration?contentId=" + contentId);
     }
 
 }

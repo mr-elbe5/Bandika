@@ -1,12 +1,12 @@
 package de.elbe5.response;
 
 import de.elbe5.application.Configuration;
-import de.elbe5.log.Log;
+import de.elbe5.base.Log;
 import de.elbe5.request.RequestData;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JsonResponse implements IResponse {
@@ -32,7 +32,6 @@ public class JsonResponse implements IResponse {
             response.setHeader("Expires", "Tues, 01 Jan 1980 00:00:00 GMT");
             response.setHeader("Cache-Control", "no-cache");
             response.setHeader("Pragma", "no-cache");
-            response.setHeader("Content-Type", "application/json");
             if (json == null || json.length() == 0) {
                 response.setHeader("Content-Length", "0");
             } else {

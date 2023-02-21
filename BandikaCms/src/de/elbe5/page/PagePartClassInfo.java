@@ -8,16 +8,16 @@
  */
 package de.elbe5.page;
 
-import de.elbe5.log.Log;
+import de.elbe5.base.Log;
 
 import java.lang.reflect.Constructor;
 
 class PagePartClassInfo {
 
-    private final String type;
+    private String type;
     private Constructor<? extends PagePartData> ctor;
-    private final PagePartBean bean;
-    private final boolean useLayouts;
+    private PagePartBean bean;
+    private boolean useLayouts=false;
 
     public PagePartClassInfo(Class<? extends PagePartData> contentClass, PagePartBean bean, boolean useLayouts){
         type = contentClass.getSimpleName();

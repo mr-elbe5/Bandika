@@ -8,16 +8,15 @@
  */
 package de.elbe5.servlet;
 
-import de.elbe5.log.Log;
+import de.elbe5.base.StringHelper;
 import de.elbe5.application.Configuration;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestType;
 import de.elbe5.response.IResponse;
-import de.elbe5.response.ResponseException;
 
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -31,7 +30,7 @@ public class ControllerServlet extends WebServlet {
         String uri = request.getRequestURI();
         RequestType requestType = RequestType.any;
         if (uri.startsWith("/ctrl/")){
-            requestType = RequestType.ctrl;
+            requestType = RequestType.control;
             uri = uri.substring(6);
         }
         else if (uri.startsWith("/api/")){
@@ -47,7 +46,7 @@ public class ControllerServlet extends WebServlet {
             if (stk.hasMoreTokens()) {
                 methodName = stk.nextToken();
                 if (stk.hasMoreTokens()) {
-                    rdata.setId(toInt(stk.nextToken()));
+                    rdata.setId(StringHelper.toInt(stk.nextToken()));
                 }
             }
             controller = ControllerCache.getController(controllerName);
@@ -55,12 +54,12 @@ public class ControllerServlet extends WebServlet {
         rdata.init();
         try {
             IResponse result = getResponse(controller, methodName, rdata);
+            if (rdata.hasCookies())
+                rdata.setCookies(response);
             result.processResponse(getServletContext(), rdata, response);
         } catch (ResponseException ce) {
-            Log.error(ce.getMessage());
             handleException(request, response, ce.getResponseCode());
-        } catch (Exception e) {
-            Log.error(e.getMessage());
+        } catch (Exception | AssertionError e) {
             handleException(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
@@ -75,16 +74,10 @@ public class ControllerServlet extends WebServlet {
                 return (IResponse) result;
             throw new ResponseException(HttpServletResponse.SC_BAD_REQUEST);
         } catch (NoSuchMethodException | InvocationTargetException e){
-            Log.error(e.getMessage());
             throw new ResponseException(HttpServletResponse.SC_BAD_REQUEST);
         }
         catch (IllegalAccessException e) {
-            Log.error(e.getMessage());
             throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
-        }
-        catch (Exception e){
-            Log.error(e.getMessage());
-            throw(e);
         }
     }
 }

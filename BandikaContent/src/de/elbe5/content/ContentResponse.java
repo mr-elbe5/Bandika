@@ -12,19 +12,19 @@ import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.MasterResponse;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class ContentResponse extends MasterResponse {
 
     public ContentResponse(ContentData data) {
-        super(DEFAULT_MASTER, data);
+        super("defaultMaster", data);
     }
 
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response)  {
+        //Log.log("process view");
         rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, includeObject);
-        includeObject.prepareMaster(rdata);
         super.processResponse(context, rdata, response);
     }
 }

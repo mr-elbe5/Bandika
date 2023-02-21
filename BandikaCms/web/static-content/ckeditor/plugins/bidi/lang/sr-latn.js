@@ -1,8 +1,1 @@
-/*
-Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
-*/
-CKEDITOR.plugins.setLang( 'bidi', 'sr-latn', {
-	ltr: 'Text direction from left to right', // MISSING
-	rtl: 'Text direction from right to left' // MISSING
-} );
+﻿CKEDITOR.plugins.setLang("bidi","sr-latn",{ltr:"Pravac teksta sa leva na desno",rtl:"Pravac teksta sa desna na levo"});

@@ -8,7 +8,7 @@
  */
 package de.elbe5.application;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.io.File;
 
 public class ApplicationPath {
@@ -18,10 +18,7 @@ public class ApplicationPath {
     private static String appROOTPath = "";
     private static String appWEBINFPath = "";
     private static String appFilePath = "";
-    private static File appFileDir = null;
-    private static String appTemplatePath = "";
-    private static File appTemplateDir = null;
-    private static String appJsonFilePath = null;
+    private static String appPreviewPath = "";
 
     public static String getAppName() {
         return appName;
@@ -43,53 +40,32 @@ public class ApplicationPath {
         return appFilePath;
     }
 
-    public static File getAppFileDir() {
-        return appFileDir;
-    }
-
-    public static String getAppTemplatePath() {
-        return appTemplatePath;
-    }
-
-    public static File getAppTemplateDir() {
-        return appTemplateDir;
-    }
-
-    public static String getAppJsonFilePath() {
-        return appJsonFilePath;
-    }
-
-    public static boolean initializePath(ServletContext context) {
-        File appROOTDir = new File(context.getRealPath("/"));
-        File appDir = appROOTDir.getParentFile();
+    public static void initializePath(File appDir, File appROOTDir) {
+        if (appDir == null || appROOTDir == null) {
+            return;
+        }
         appPath = appDir.getAbsolutePath().replace('\\', '/');
         appName = appPath.substring(appPath.lastIndexOf('/') + 1);
         System.out.println("application name is: " + getAppName());
         System.out.println("application path is: " + getAppPath());
         appROOTPath = appROOTDir.getAbsolutePath().replace('\\', '/');
         appWEBINFPath = appROOTPath + "/WEB-INF";
-        String externalFilePath = appPath + "_ext";
-        if (!assertDirectory(externalFilePath))
-            return false;
-        appFilePath = externalFilePath + "/files";
-        appFileDir = new File(appFilePath);
-        if (!assertDirectory(appFileDir))
-            return false;
-        appTemplatePath = externalFilePath + "/templates";
-        appTemplateDir = new File(appTemplatePath);
-        appJsonFilePath=externalFilePath + "/data.json";
-        return assertDirectory(appTemplateDir);
+        appFilePath = appROOTPath + "/files";
     }
 
-    public static boolean assertDirectory(String path){
-        File f = new File(path);
-        return assertDirectory(f);
+    public static File getCatalinaBaseDir() {
+        return new File(System.getProperty("catalina.base")).getAbsoluteFile();
     }
 
-    public static boolean assertDirectory(File dir){
-        if (dir.exists()){
-            return true;
-        }
-        return dir.mkdir();
+    public static File getCatalinaConfDir() {
+        return new File(getCatalinaBaseDir(), "conf");
+    }
+
+    public static File getCatalinaAppDir(ServletContext context) {
+        return getCatalinaAppROOTDir(context).getParentFile();
+    }
+
+    public static File getCatalinaAppROOTDir(ServletContext context) {
+        return new File(context.getRealPath("/"));
     }
 }

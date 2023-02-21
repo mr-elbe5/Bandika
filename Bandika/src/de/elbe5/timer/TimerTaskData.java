@@ -8,32 +8,22 @@
  */
 package de.elbe5.timer;
 
-import de.elbe5.data.BaseData;
-import de.elbe5.companion.DateCompanion;
-import de.elbe5.data.AJsonClass;
-import de.elbe5.data.AJsonField;
+import de.elbe5.base.BaseData;
+import de.elbe5.base.LocalizedStrings;
 import de.elbe5.request.RequestData;
 
 import java.time.LocalDateTime;
 
-@AJsonClass
-public abstract class TimerTaskData extends BaseData implements Cloneable, DateCompanion {
+public abstract class TimerTaskData extends BaseData implements Cloneable {
 
-    @AJsonField(baseClass = String.class)
+
     protected String displayName = "";
-    @AJsonField(baseClass = TimerInterval.class)
     protected TimerInterval interval = TimerInterval.CONTINOUS;
-    @AJsonField(baseClass = Integer.class)
     protected int day = 0;
-    @AJsonField(baseClass = Integer.class)
     protected int hour = 0;
-    @AJsonField(baseClass = Integer.class)
     protected int minute = 0;
-    @AJsonField(baseClass = LocalDateTime.class)
     protected LocalDateTime lastExecution = null;
-    @AJsonField(baseClass = LocalDateTime.class)
     protected LocalDateTime nextExecution = null;
-    @AJsonField(baseClass = Boolean.class)
     protected boolean active = false;
 
     public TimerTaskData(){
@@ -86,6 +76,10 @@ public abstract class TimerTaskData extends BaseData implements Cloneable, DateC
         this.minute = minute;
     }
 
+    public LocalDateTime getLastExecution() {
+        return lastExecution;
+    }
+
     public void setLastExecution(LocalDateTime lastExecution) {
         if (lastExecution == null) {
             this.lastExecution = TimerBean.getInstance().getServerTime();
@@ -99,13 +93,13 @@ public abstract class TimerTaskData extends BaseData implements Cloneable, DateC
         if (lastExecution == null)
             lastExecution = LocalDateTime.now();
         switch (interval) {
-            case CONTINOUS -> {
+            case CONTINOUS: {
                 next = lastExecution.plusDays(getDay());
                 next = next.plusHours(getHour());
                 next = next.plusMinutes(getMinute());
                 return next;
             }
-            case MONTH -> {
+            case MONTH: {
                 next = now.withDayOfMonth(getDay());
                 next = next.withHour(getHour());
                 next = next.withMinute(getMinute());
@@ -118,7 +112,7 @@ public abstract class TimerTaskData extends BaseData implements Cloneable, DateC
                 }
                 return next;
             }
-            case DAY -> {
+            case DAY: {
                 next = now.withHour(getHour());
                 next = next.withMinute(getMinute());
                 next = next.withSecond(0);
@@ -130,7 +124,7 @@ public abstract class TimerTaskData extends BaseData implements Cloneable, DateC
                 }
                 return next;
             }
-            case HOUR -> {
+            case HOUR: {
                 next = now.withMinute(getMinute());
                 next = next.withSecond(0);
                 if (next.isAfter(now)) {
@@ -176,7 +170,7 @@ public abstract class TimerTaskData extends BaseData implements Cloneable, DateC
         setMinute(rdata.getAttributes().getInt("minute"));
         setActive(rdata.getAttributes().getBoolean("active"));
         if (interval != TimerInterval.CONTINOUS && (day == 0 || (hour < 0 || hour >= 24) || (minute < 0 || minute >= 60))) {
-            rdata.addFormError(getString("_timerSettingsError"));
+            rdata.addFormError(LocalizedStrings.string("_timerSettingsError"));
             rdata.addFormField("interval");
             rdata.addFormField("day");
             rdata.addFormField("hour");

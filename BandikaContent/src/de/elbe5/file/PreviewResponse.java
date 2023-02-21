@@ -8,11 +8,12 @@
  */
 package de.elbe5.file;
 
+import de.elbe5.base.BinaryFile;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IResponse;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -26,10 +27,10 @@ public class PreviewResponse implements IResponse {
 
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response) {
-        process(response);
+        process(context,rdata,response);
     }
 
-    protected void process(HttpServletResponse response) {
+    protected void process(ServletContext context, RequestData rdata, HttpServletResponse response) {
         BinaryFile file= PreviewCache.get(id);
         if (file==null){
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);

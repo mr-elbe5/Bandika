@@ -8,23 +8,21 @@
  */
 package de.elbe5.servlet;
 
-import de.elbe5.response.HtmlResponse;
-import de.elbe5.response.IHtmlBuilder;
-
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
-public abstract class WebServlet extends HttpServlet implements IHtmlBuilder {
+public abstract class WebServlet extends HttpServlet {
 
     public final static String GET = "GET";
     public final static String POST = "POST";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        processRequest(GET, request, response);
+        processRequest(GET,request, response);
     }
 
     @Override
@@ -34,68 +32,13 @@ public abstract class WebServlet extends HttpServlet implements IHtmlBuilder {
 
     protected abstract void processRequest(String method, HttpServletRequest request, HttpServletResponse response) throws IOException;
 
-    static final String exceptionHtml = """
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="utf-8"/>
-                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-                <title>Exception</title>
-            </head>
-            <style>
-                body {
-                    position: fixed;
-                    top: 0;
-                    bottom: 0;
-                    left: 0;
-                    right: 0;
-                    background: #f8f9fa;
-                    color: #343a40;
-                    font-family: Arial, Helvetica, sans-serif;
-                    font-size: 1rem;
-                }
-                        
-                main{
-                    max-width:360px;
-                    margin: 20% auto;
-                    padding: 30px;
-                    background: #f8f9fa;
-                    border: 1px solid #343a40;
-                    border-radius: 5px;
-                }
-                h1{
-                    text-align:center;
-                    font-size: 1.5rem;
-                }
-                .errorText{
-                    text-align: center;
-                    font-size: 1.2rem;
-                }
-                .link{
-                    padding-top: 2rem;
-                    text-align: center;
-                }
-                        
-            </style>
-            <body>
-            <main>
-                <h1>{{error}}</h1>
-                <div class="errorText">{{errorText}}</div>
-                <div class="link"><a href="/" title="Home">{{_home}}</a></div>
-            </main>
-            </body>
-            </html>
-            """;
-
-    protected void handleException(HttpServletRequest request, HttpServletResponse response, int code) {
-        String errorKey = (String) request.getAttribute("errorKey");
-        String html = format(exceptionHtml,
-                Map.ofEntries(
-                        Map.entry("error", getHtml("_error" + code)),
-                        Map.entry("errorText", errorKey != null ? getHtml(errorKey) : "")
-                )
-        );
-        HtmlResponse resp = new HtmlResponse(html);
-        resp.sendHtml(response);
+    protected void handleException(HttpServletRequest request, HttpServletResponse response, int code){
+        RequestDispatcher rd = request.getServletContext().getRequestDispatcher("/WEB-INF/_jsp/exception.jsp");
+        try {
+            request.setAttribute("errorKey", "_error"+code);
+            rd.forward(request, response);
+        } catch (ServletException | IOException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
     }
 }

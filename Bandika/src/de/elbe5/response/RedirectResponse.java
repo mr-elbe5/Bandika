@@ -9,11 +9,13 @@
 package de.elbe5.response;
 
 import de.elbe5.request.RequestData;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
-public class RedirectResponse extends HtmlResponse implements IHtmlBuilder{
+public class RedirectResponse implements IResponse {
 
     private final String url;
 
@@ -21,26 +23,14 @@ public class RedirectResponse extends HtmlResponse implements IHtmlBuilder{
         this.url=url;
     }
 
-    static final String html = """
-            <html>
-                <head><title></title></head>
-                <body>
-                    &nbsp;
-                </body>
-            </html>
-            <script type="text/javascript">
-                try {
-                    window.location.href = '{{url}}';
-                } catch (e) {
-                }
-            </script>
-            """;
-
     @Override
     public void processResponse(ServletContext context, RequestData rdata, HttpServletResponse response) {
-        append(sb, html,
-                Map.ofEntries(
-                        Map.entry("url",url)));
-        super.processResponse(context, rdata, response);
+        rdata.getAttributes().put("redirectUrl", url);
+        RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/_jsp/redirect.jsp");
+        try {
+            rd.forward(rdata.getRequest(), response);
+        } catch (ServletException | IOException e) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
 }

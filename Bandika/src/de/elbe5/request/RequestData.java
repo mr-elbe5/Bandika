@@ -9,15 +9,11 @@
 package de.elbe5.request;
 
 import de.elbe5.application.Configuration;
-import de.elbe5.data.BaseData;
-import de.elbe5.data.KeyValueMap;
-import de.elbe5.data.LocalizedStrings;
-import de.elbe5.file.BinaryFile;
-import de.elbe5.log.Log;
+import de.elbe5.base.*;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.user.UserData;
 
-import javax.servlet.http.*;
+import jakarta.servlet.http.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +27,9 @@ public class RequestData {
 
     private final KeyValueMap attributes = new KeyValueMap();
 
-    private final Map<String,String> templateAttributes = new HashMap<>();
+    private final StringMap pageAttributes = new StringMap();
+
+    private final Map<String, Cookie> cookies = new HashMap<>();
 
     private final HttpServletRequest request;
 
@@ -59,8 +57,8 @@ public class RequestData {
         return attributes;
     }
 
-    public Map<String, String> getTemplateAttributes() {
-        return templateAttributes;
+    public StringMap getPageAttributes() {
+        return pageAttributes;
     }
 
     public HttpServletRequest getRequest() {
@@ -119,9 +117,9 @@ public class RequestData {
         return data != null && (data.hasAnySystemRight());
     }
 
-    public boolean hasAnyAdministrationRight() {
+    public boolean hasAnyElevatedSystemRight() {
         UserData data = getLoginUser();
-        return data != null && (data.hasAnyAdministrationRight());
+        return data != null && (data.hasAnyElevatedSystemRight());
     }
 
     public boolean hasAnyContentRight() {
@@ -169,7 +167,7 @@ public class RequestData {
         if (formError == null)
             return true;
         if (formError.isFormIncomplete())
-            formError.addFormError(LocalizedStrings.getString("_notComplete"));
+            formError.addFormError(LocalizedStrings.string("_notComplete"));
         return formError.isEmpty();
     }
 
@@ -342,6 +340,10 @@ public class RequestData {
         }
     }
 
+    public void removeRequestObject(String key){
+        request.removeAttribute(key);
+    }
+
     /************** session attributes ***************/
 
     public void initSession() {
@@ -465,9 +467,42 @@ public class RequestData {
         setSessionObject(RequestKeys.KEY_HOST, host);
     }
 
+    public String getSessionHost() {
+        return getSessionObject(RequestKeys.KEY_HOST,String.class);
+    }
+
     public void resetSession() {
         removeAllSessionObjects();
         request.getSession(true);
+    }
+
+    /*************** cookie methods ***************/
+
+    public void addLoginCookie(String name, String value, int expirationDays){
+        Cookie cookie=new Cookie("elbe5cms_"+name,value);
+        cookie.setPath("/ctrl/user/login");
+        cookie.setMaxAge(expirationDays*24*60*60);
+        cookies.put(cookie.getName(),cookie);
+    }
+
+    public boolean hasCookies(){
+        return !(cookies.isEmpty());
+    }
+
+    public void setCookies(HttpServletResponse response){
+        for (Cookie cookie : cookies.values()){
+            response.addCookie(cookie);
+        }
+    }
+
+    public Map<String,String> readLoginCookies(){
+        Map<String, String> map=new HashMap<>();
+        for (Cookie cookie : request.getCookies()) {
+            if (cookie.getName().startsWith("elbe5cms_")) {
+                map.put(cookie.getName().substring(9), cookie.getValue());
+            }
+        }
+        return map;
     }
 
 }

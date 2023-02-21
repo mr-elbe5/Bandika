@@ -2,6 +2,6 @@
 <project version="4">
   <component name="AntConfiguration">
     <buildFile url="file://$PROJECT_DIR$/commonTasks.xml" />
-    <buildFile url="file://$PROJECT_DIR$/buildBandikaSample.xml" />
+    <buildFile url="file://$PROJECT_DIR$/../BandikaProjects/buildCmsSample.xml" />
   </component>
 </project>

@@ -10,10 +10,13 @@ package de.elbe5.response;
 
 import de.elbe5.request.RequestData;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.jsp.PageContext;
+import java.io.IOException;
+
 public interface IMasterInclude {
 
-    void appendHtml(StringBuilder sb, RequestData rdata);
-
-    void prepareMaster(RequestData rdata);
+    void displayContent(PageContext context, RequestData rdata) throws IOException, ServletException;
+    void appendContent(StringBuilder sb, RequestData rdata);
 
 }

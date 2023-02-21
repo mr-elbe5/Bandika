@@ -1,9 +1,8 @@
 package de.elbe5.file;
 
-import de.elbe5.data.AJsonClass;
+import de.elbe5.base.BinaryFile;
 import de.elbe5.request.RequestData;
 
-@AJsonClass
 public class DocumentData extends FileData {
 
     public DocumentData() {
@@ -14,6 +13,9 @@ public class DocumentData extends FileData {
     @Override
     public void readSettingsRequestData(RequestData rdata) {
         super.readSettingsRequestData(rdata);
+        if (!isNew()){
+            return;
+        }
         BinaryFile file = rdata.getAttributes().getFile("file");
         createFromBinaryFile(file);
         if (getDisplayName().isEmpty()) {

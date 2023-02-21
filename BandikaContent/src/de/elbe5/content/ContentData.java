@@ -8,15 +8,16 @@
  */
 package de.elbe5.content;
 
-import de.elbe5.application.Configuration;
-import de.elbe5.content.html.EditContentDataPage;
-import de.elbe5.data.*;
+import de.elbe5.base.BaseData;
+import de.elbe5.base.IJsonData;
+import de.elbe5.base.Log;
+import de.elbe5.base.DateHelper;
+import de.elbe5.base.StringHelper;
 import de.elbe5.file.FileData;
 import de.elbe5.file.FileFactory;
-import de.elbe5.user.GroupBean;
-import de.elbe5.user.GroupData;
-import de.elbe5.log.Log;
-import de.elbe5.response.ModalPage;
+import de.elbe5.group.GroupBean;
+import de.elbe5.group.GroupData;
+import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IMasterInclude;
 import de.elbe5.rights.Right;
@@ -24,12 +25,13 @@ import de.elbe5.rights.SystemZone;
 import de.elbe5.user.UserCache;
 import de.elbe5.user.UserData;
 import de.elbe5.response.IResponse;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import org.json.simple.JSONObject;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.jsp.PageContext;
+import java.io.IOException;
 import java.util.*;
 
-@AJsonClass
 public class ContentData extends BaseData implements IMasterInclude, Comparable<ContentData>, IJsonData {
 
     public static final String ACCESS_TYPE_OPEN = "OPEN";
@@ -43,36 +45,25 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     public static final String VIEW_TYPE_SHOW = "SHOW";
     public static final String VIEW_TYPE_SHOWPUBLISHED = "PUBLISHED";
     public static final String VIEW_TYPE_EDIT = "EDIT";
+    public static final String VIEW_TYPE_PUBLISH = "PUBLISH";
 
     public static final int ID_ROOT = 1;
 
     // base data
-    @AJsonField(baseClass = String.class)
     private String name = "";
-    @AJsonField(baseClass = String.class)
     private String path = "";
-    @AJsonField(baseClass = String.class)
     private String displayName = "";
-    @AJsonField(baseClass = String.class)
     private String description = "";
-    @AJsonField(baseClass = String.class)
     private String accessType = ACCESS_TYPE_OPEN;
-    @AJsonField(baseClass = String.class)
     private String navType = NAV_TYPE_NONE;
-    @AJsonField(baseClass = Boolean.class)
     private boolean active = true;
-    @AJsonField(baseClass = HashMap.class, keyClass = Integer.class, valueClass = Right.class)
     private Map<Integer, Right> groupRights = new HashMap<>();
 
     // tree data
-    @AJsonField(baseClass = Integer.class)
     protected int parentId = 0;
     protected ContentData parent = null;
-    @AJsonField(baseClass = Integer.class)
     protected int ranking = 0;
-    @AJsonField(baseClass = ArrayList.class, valueClass = ContentData.class)
     private final List<ContentData> children = new ArrayList<>();
-    @AJsonField(baseClass = ArrayList.class, valueClass = FileData.class)
     private final List<FileData> files = new ArrayList<>();
 
     //runtime
@@ -90,7 +81,14 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     //base data
 
     public String getCreatorName(){
-        UserData user= UserCache.getInstance().getUser(getCreatorId());
+        UserData user= UserCache.getUser(getCreatorId());
+        if (user!=null)
+            return user.getName();
+        return "";
+    }
+
+    public String getChangerName(){
+        UserData user= UserCache.getUser(getChangerId());
         if (user!=null)
             return user.getName();
         return "";
@@ -115,7 +113,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     public void generatePath() {
         if (getParent() == null)
             return;
-        setPath(getParent().getPath() + "/" + toUrl(getName().toLowerCase()));
+        setPath(getParent().getPath() + "/" + StringHelper.toUrl(getName().toLowerCase()));
     }
 
     public String getUrl() {
@@ -132,8 +130,8 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         this.displayName = displayName;
     }
 
-    public String getNavDisplayHtml(){
-        return toHtml(getDisplayName());
+    public String getNavDisplay(){
+        return StringHelper.toHtml(getDisplayName());
     }
 
     public String getDescription() {
@@ -299,6 +297,30 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         return list;
     }
 
+    public void getAllChildren(List<ContentData> list) {
+        if (!hasChildren())
+            return;
+        for (ContentData data : getChildren()) {
+            list.add(data);
+            data.getAllChildren(list);
+        }
+    }
+
+    public<T extends ContentData> void getAllChildren(List<T> list,Class<T> cls) {
+        if (!hasChildren())
+            return;
+        for (ContentData data : getChildren()) {
+            try {
+                if (cls.isInstance(data))
+                    list.add(cls.cast(data));
+            }
+            catch(NullPointerException | ClassCastException e){
+                // ignore
+            }
+            data.getAllChildren(list, cls);
+        }
+    }
+
     public List<String> getChildClasses(){
         return ContentFactory.getDefaultTypes();
     }
@@ -320,6 +342,10 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
 
     public List<FileData> getFiles() {
         return files;
+    }
+
+    public boolean hasFiles(){
+        return getFiles().size()>0;
     }
 
     public<T extends FileData> List<T> getFiles(Class<T> cls) {
@@ -366,21 +392,8 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         return false;
     }
 
-    public String getPublishedContent() {
-        return "";
-    }
+    // view
 
-    public void setPublishedContent(String publishedContent) {
-    }
-
-    public String getPublishedText(){
-        String str = getPublishedContent();
-        if (str.isEmpty()){
-            return "";
-        }
-        Document doc = Jsoup.parse(str);
-        return doc.text();
-    }
 
     public String getViewType() {
         return viewType;
@@ -402,6 +415,56 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         this.viewType=VIEW_TYPE_EDIT;
     }
 
+    public boolean isPublishedView(){
+        return viewType.equals(VIEW_TYPE_SHOWPUBLISHED);
+    }
+
+    public boolean isStandardView(){
+        return viewType.equals(VIEW_TYPE_SHOW);
+    }
+
+    public IResponse getDefaultView(){
+        return new ContentResponse(this);
+    }
+
+    public String getContentDataJsp() {
+        return "/WEB-INF/_jsp/content/editContentData.ajax.jsp";
+    }
+
+    //used in jsp
+    public void displayTreeContent(PageContext context, RequestData rdata) throws IOException, ServletException {
+        if (hasUserReadRight(rdata)) {
+            //backup
+            ContentData currentContent = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
+            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, this);
+            context.include("/WEB-INF/_jsp/content/treeContent.inc.jsp", true);
+            //restore
+            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, currentContent);
+        }
+    }
+
+    //used in admin jsp
+    public void displayAdminTreeContent(PageContext context, RequestData rdata) throws IOException, ServletException {
+        if (hasUserReadRight(rdata)) {
+            //backup
+            ContentData currentContent = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
+            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, this);
+            context.include("/WEB-INF/_jsp/content/adminTreeContent.inc.jsp", true);
+            //restore
+            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, currentContent);
+        }
+    }
+
+    //used in jsp/tag
+    @Override
+    public void displayContent(PageContext context, RequestData rdata) throws IOException, ServletException {
+    }
+
+    @Override
+    public void appendContent(StringBuilder sb, RequestData rdata) {
+
+    }
+
     // multiple data
 
     public void setCreateValues(ContentData parent, RequestData rdata) {
@@ -418,10 +481,12 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         if (cachedData == null)
             return;
         if (!isNew()) {
+            setParent(cachedData.getParent());
             setPath(cachedData.getPath());
-            for (ContentData subContent : cachedData.getChildren()) {
+            //todo?
+            /*for (ContentData subContent : cachedData.getChildren()) {
                 getChildren().add(subContent);
-            }
+            }*/
         }
         setChangerId(rdata.getUserId());
     }
@@ -456,7 +521,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
 
     public void readRequestData(RequestData rdata) {
         setDisplayName(rdata.getAttributes().getString("displayName").trim());
-        setName(toSafeWebName(getDisplayName()));
+        setName(StringHelper.toSafeWebName(getDisplayName()));
         setDescription(rdata.getAttributes().getString("description"));
         setAccessType(rdata.getAttributes().getString("accessType"));
         setNavType(rdata.getAttributes().getString("navType"));
@@ -464,6 +529,14 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         if (name.isEmpty()) {
             rdata.addIncompleteField("name");
         }
+    }
+
+    public void readFrontendCreateRequestData(RequestData rdata) {
+        readFrontendRequestData(rdata);
+    }
+
+    public void readFrontendUpdateRequestData(RequestData rdata) {
+        readFrontendRequestData(rdata);
     }
 
     public void readFrontendRequestData(RequestData rdata) {
@@ -490,68 +563,17 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         return getDisplayName().compareTo(data.getDisplayName());
     }
 
-    // html
-
-    public IResponse getResponse(){
-        return new ContentResponse(this);
-    }
-
-    public ModalPage getContentDataPage() {
-        return new EditContentDataPage();
-    }
-
+    @SuppressWarnings("unchecked")
     @Override
-    public void appendHtml(StringBuilder sb, RequestData rdata) {
-        switch (getViewType()) {
-            case VIEW_TYPE_EDIT -> {
-                sb.append("""
-                    <div id="pageContent" class="editArea">
-                """);
-                appendEditDraftContent(sb, rdata);
-                sb.append("</div>");
-            }
-            case VIEW_TYPE_SHOWPUBLISHED -> {
-                sb.append("""
-                    <div id="pageContent" class="viewArea">
-                """);
-                if (isPublished())
-                    appendPublishedContent(sb, rdata);
-                sb.append("</div>");
-            }
-            default -> {
-                sb.append("""
-                    <div id="pageContent" class="viewArea">
-                """);
-                if (isPublished() && !hasUserEditRight(rdata))
-                    appendPublishedContent(sb, rdata);
-                else
-                    appendDraftContent(sb, rdata);
-                sb.append("</div>");
-            }
-        }
+    public JSONObject getJson() {
+        JSONObject json = new JSONObject();
+        json.put("id",getId());
+        json.put("creationDate", DateHelper.asMillis(getCreationDate()));
+        json.put("creatorId", getCreatorId());
+        json.put("creatorName", getCreatorName());
+        json.put("name",getName());
+        json.put("displayName",getDisplayName());
+        json.put("description",getDescription());
+        return json;
     }
-
-    protected void appendEditDraftContent(StringBuilder sb, RequestData rdata){
-
-    }
-
-    protected void appendDraftContent (StringBuilder sb, RequestData rdata){
-
-    }
-
-    protected void appendPublishedContent (StringBuilder sb, RequestData rdata){
-
-    }
-
-    @Override
-    public void prepareMaster(RequestData rdata){
-        rdata.getTemplateAttributes().put("language", Configuration.getInstance().getLocale().getLanguage());
-        rdata.getTemplateAttributes().put("title", toHtml(Configuration.getInstance().getAppTitle() + " | " + getDisplayName()));
-        rdata.getTemplateAttributes().put("description", toHtml(getDescription()));
-        rdata.getTemplateAttributes().put("keywords", toHtml(getKeywords()));
-    }
-
-    public void publish(RequestData rdata){
-    }
-
 }

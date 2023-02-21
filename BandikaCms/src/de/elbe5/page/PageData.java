@@ -8,39 +8,37 @@
  */
 package de.elbe5.page;
 
+import de.elbe5.base.Log;
+import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
-import de.elbe5.data.AJsonClass;
-import de.elbe5.data.AJsonField;
-import de.elbe5.response.ModalPage;
-import de.elbe5.template.Template;
-import de.elbe5.template.TemplateCache;
-import de.elbe5.page.html.DraftPageWrapper;
-import de.elbe5.page.html.EditPageDataPage;
-import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
+import de.elbe5.response.IResponse;
+import de.elbe5.content.ContentResponse;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.jsp.JspWriter;
+import jakarta.servlet.jsp.PageContext;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-@AJsonClass
-public class PageData extends ContentData implements DraftPageWrapper{
+public class PageData extends ContentData {
 
-    @AJsonField(baseClass = String.class)
+    public static String LAYOUT_TYPE = "Page";
+
     private String keywords = "";
-    @AJsonField(baseClass = String.class)
-    protected String templateName = "";
-    @AJsonField(baseClass = LocalDateTime.class)
+    protected String layout = "";
     protected LocalDateTime publishDate = null;
-    @AJsonField(baseClass = String.class)
     protected String publishedContent="";
 
-    @AJsonField(baseClass = String.class)
     protected Map<String, SectionData> sections = new HashMap<>();
 
     // base data
 
-    @Override
     public String getKeywords() {
         return keywords;
     }
@@ -49,12 +47,16 @@ public class PageData extends ContentData implements DraftPageWrapper{
         this.keywords = keywords;
     }
 
-    public String getTemplateName() {
-        return templateName;
+    public String getLayout() {
+        return layout;
     }
 
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
+    public String getLayoutUrl() {
+        return "/WEB-INF/_jsp/_layout/"+ layout +".jsp";
+    }
+
+    public void setLayout(String layout) {
+        this.layout = layout;
     }
 
     public LocalDateTime getPublishDate() {
@@ -73,12 +75,15 @@ public class PageData extends ContentData implements DraftPageWrapper{
         this.publishedContent = publishedContent;
     }
 
-    @Override
+    public void reformatPublishedContent() {
+        Document doc= Jsoup.parseBodyFragment(getPublishedContent());
+        setPublishedContent(doc.body().html());
+    }
+
     public boolean hasUnpublishedDraft() {
         return publishDate == null || publishDate.isBefore(getChangeDate());
     }
 
-    @Override
     public boolean isPublished() {
         return getPublishDate() != null;
     }
@@ -110,6 +115,15 @@ public class PageData extends ContentData implements DraftPageWrapper{
         }
     }
 
+    public PagePartData getPart(int pid) {
+        for (SectionData section : getSections().values()) {
+            PagePartData part = section.getPart(pid);
+            if (part!=null)
+                return part;
+        }
+        return null;
+    }
+
     public void addPart(PagePartData part, int fromPartId, boolean setRanking) {
         SectionData section = getSection(part.getSectionName());
         if (section == null) {
@@ -121,16 +135,101 @@ public class PageData extends ContentData implements DraftPageWrapper{
         section.addPart(part, fromPartId, setRanking);
     }
 
+    public void movePart(String sectionName, int id, int dir) {
+        SectionData section = getSection(sectionName);
+        section.movePart(id, dir);
+    }
+
+    public void deletePart(int pid) {
+        for (SectionData section : getSections().values()) {
+            PagePartData part = section.getPart(pid);
+            if (part!=null) {
+                section.deletePart(pid);
+                break;
+            }
+        }
+    }
+
+    //used in controller
+    @Override
+    public String getContentDataJsp() {
+        return "/WEB-INF/_jsp/page/editContentData.ajax.jsp";
+    }
+
+    //used in jsp
+    protected void displayEditContent(PageContext context, JspWriter writer, RequestData rdata) throws IOException, ServletException {
+        context.include("/WEB-INF/_jsp/page/editPageContent.inc.jsp");
+    }
+
+    //used in jsp
+    protected void displayDraftContent(PageContext context, JspWriter writer, RequestData rdata) throws IOException, ServletException {
+        context.include(getLayoutUrl());
+    }
+
+    //used in jsp
+    protected void displayPublishedContent(PageContext context, JspWriter writer, RequestData rdata) throws IOException, ServletException {
+        writer.write(publishedContent);
+    }
+
+    public IResponse getDefaultView(){
+        return new ContentResponse(this);
+    }
+
+    public void displayContent(PageContext context, RequestData rdata) throws IOException, ServletException {
+        JspWriter writer = context.getOut();
+        switch (getViewType()) {
+            case VIEW_TYPE_PUBLISH: {
+                writer.write("<div id=\"pageContent\" class=\"viewArea\">");
+                StringWriter stringWriter = new StringWriter();
+                context.pushBody(stringWriter);
+                displayDraftContent(context, context.getOut(), rdata);
+                setPublishedContent(stringWriter.toString());
+                reformatPublishedContent();
+                context.popBody();
+                //Log.log("publishing page " + getDisplayName());
+                if (!PageBean.getInstance().publishPage(this)) {
+                    Log.error("error writing published content");
+                }
+                writer.write(getPublishedContent());
+                setViewType(ContentData.VIEW_TYPE_SHOW);
+                ContentCache.setDirty();
+                writer.write("</div>");
+            }
+            break;
+            case VIEW_TYPE_EDIT: {
+                writer.write("<div id=\"pageContent\" class=\"editArea\">");
+                displayEditContent(context, context.getOut(), rdata);
+                writer.write("</div>");
+            }
+            break;
+            case VIEW_TYPE_SHOWPUBLISHED: {
+                writer.write("<div id=\"pageContent\" class=\"viewArea\">");
+                if (isPublished())
+                    displayPublishedContent(context, context.getOut(), rdata);
+                writer.write("</div>");
+            }
+            break;
+            default: {
+                writer.write("<div id=\"pageContent\" class=\"viewArea\">");
+                if (isPublished() && !hasUserEditRight(rdata))
+                    displayPublishedContent(context, context.getOut(), rdata);
+                else
+                    displayDraftContent(context, context.getOut(), rdata);
+                writer.write("</div>");
+            }
+            break;
+        }
+    }
+
     // multiple data
 
-    @Override
     public void copyData(ContentData data, RequestData rdata) {
         if (!(data instanceof PageData))
             return;
         PageData hcdata=(PageData)data;
         super.copyData(hcdata,rdata);
         setKeywords(hcdata.getKeywords());
-        setTemplateName(hcdata.getTemplateName());
+        setLayout(hcdata.getLayout());
         for (String sectionName : hcdata.sections.keySet()) {
             SectionData section = new SectionData();
             section.setPageId(getId());
@@ -143,59 +242,16 @@ public class PageData extends ContentData implements DraftPageWrapper{
     public void readRequestData(RequestData rdata) {
         super.readRequestData(rdata);
         setKeywords(rdata.getAttributes().getString("keywords"));
-        setTemplateName(rdata.getAttributes().getString("layout"));
-        if (templateName.isEmpty()) {
+        setLayout(rdata.getAttributes().getString("layout"));
+        if (layout.isEmpty()) {
             rdata.addIncompleteField("layout");
         }
     }
 
-    @Override
     public void readFrontendRequestData(RequestData rdata) {
         for (SectionData section : getSections().values()) {
             section.readFrontendRequestData(rdata);
         }
     }
-
-    // html
-
-    @Override
-    public ModalPage getContentDataPage() {
-        return new EditPageDataPage();
-    }
-
-    @Override
-    protected void appendEditDraftContent(StringBuilder sb, RequestData rdata) {
-        appendStartHtml(sb, this);
-        Template tpl = TemplateCache.getInstance().getTemplate("page", templateName);
-        if (tpl==null)
-            return;
-        tpl.appendHtml(sb, rdata);
-        appendEndHtml(sb);
-        appendScript(sb, this);
-    }
-
-    @Override
-    protected void appendDraftContent(StringBuilder sb, RequestData rdata) {
-        Template tpl = TemplateCache.getInstance().getTemplate("page", templateName);
-        if (tpl==null)
-            return;
-        tpl.appendHtml(sb, rdata);
-    }
-
-    @Override
-    protected void appendPublishedContent(StringBuilder sb, RequestData rdata) {
-        sb.append(publishedContent);
-    }
-
-    @Override
-    public void publish(RequestData rdata){
-        StringBuilder sb = new StringBuilder();
-        setViewType(VIEW_TYPE_SHOW);
-        rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, this);
-        appendDraftContent(sb, rdata);
-        setPublishedContent(sb.toString());
-        setPublishDate(PageBean.getInstance().getServerTime());
-    }
-
 
 }

@@ -8,6 +8,8 @@
  */
 package de.elbe5.file;
 
+import de.elbe5.base.BinaryFile;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +27,12 @@ public class PreviewCache {
                 }
             }
             return map.get(id);
+        }
+    }
+
+    public static void remove(Integer id) {
+        synchronized (lockObj) {
+            map.remove(id);
         }
     }
 

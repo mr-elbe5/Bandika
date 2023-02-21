@@ -8,7 +8,7 @@
  */
 package de.elbe5.content;
 
-import de.elbe5.log.Log;
+import de.elbe5.base.Log;
 import java.util.*;
 
 public class ContentFactory {
@@ -31,7 +31,7 @@ public class ContentFactory {
     public static ContentData getNewData(String type) {
         if (!infos.containsKey(type)) {
             Log.error("no content info for type "+type);
-            return new ContentData();
+            return null;
         }
         return infos.get(type).getNewData();
     }
@@ -39,7 +39,7 @@ public class ContentFactory {
     public static ContentBean getBean(String type){
         if (!infos.containsKey(type)) {
             Log.error("no content info for type "+type);
-            return ContentBean.getInstance();
+            return null;
         }
         return infos.get(type).getBean();
     }

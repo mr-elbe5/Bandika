@@ -14,10 +14,9 @@ import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
 import de.elbe5.request.RequestType;
 import de.elbe5.response.IResponse;
-import de.elbe5.response.ResponseException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class ContentServlet extends WebServlet {
@@ -31,6 +30,8 @@ public class ContentServlet extends WebServlet {
         try {
             IResponse result;
             result = ContentController.getInstance().show(request.getRequestURI(), rdata);
+            if (rdata.hasCookies())
+                rdata.setCookies(response);
             result.processResponse(getServletContext(), rdata, response);
         }
         catch (ResponseException ce){

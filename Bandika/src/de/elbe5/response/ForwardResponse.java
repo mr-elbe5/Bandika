@@ -9,10 +9,10 @@
 package de.elbe5.response;
 
 import de.elbe5.request.RequestData;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class ForwardResponse implements IResponse {

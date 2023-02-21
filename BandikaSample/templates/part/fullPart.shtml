@@ -1,5 +1,0 @@
-<tpl:part cssClass="col-lg-12">
-<div>
-    <tpl:htmlfield name="html" placeholder="Lorem ipsum" />
-</div>
-</tpl:part>

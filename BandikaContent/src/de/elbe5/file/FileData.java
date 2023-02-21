@@ -8,38 +8,25 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.companion.FileCompanion;
+import de.elbe5.base.BaseData;
+import de.elbe5.base.BinaryFile;
+import de.elbe5.base.FileHelper;
+import de.elbe5.base.StringHelper;
 import de.elbe5.content.ContentData;
-import de.elbe5.data.BaseData;
-import de.elbe5.data.AJsonClass;
-import de.elbe5.data.AJsonField;
 import de.elbe5.request.RequestData;
 
-@AJsonClass
-public abstract class FileData extends BaseData implements FileCompanion {
+public abstract class FileData extends BaseData {
 
-    @AJsonField(baseClass = String.class)
     private String fileName = "";
-    @AJsonField(baseClass = String.class)
     private String extension = "";
-    @AJsonField(baseClass = String.class)
-    private String tempFileName = "";
-    @AJsonField(baseClass = String.class)
     private String displayName = "";
-    @AJsonField(baseClass = String.class)
     private String description = "";
-    @AJsonField(baseClass = String.class)
     protected String contentType = null;
-    @AJsonField(baseClass = Integer.class)
     protected int fileSize = 0;
-
     protected byte[] bytes = null;
-    @AJsonField(baseClass = Integer.class)
+
     protected int parentId = 0;
-
     protected ContentData parent = null;
-
-    protected String oldFileName = "";
 
     public FileData() {
     }
@@ -54,7 +41,7 @@ public abstract class FileData extends BaseData implements FileCompanion {
         int pos= getFileName().lastIndexOf('.');
         if (pos==-1)
             return;
-        setFileName(toSafeWebName(getDisplayName())+ getFileName().substring(pos));
+        setFileName(StringHelper.toSafeWebName(getDisplayName())+ getFileName().substring(pos));
     }
 
     public String getFileName() {
@@ -62,32 +49,25 @@ public abstract class FileData extends BaseData implements FileCompanion {
     }
 
     public void setFileName(String fileName) {
-        if (!this.fileName.isEmpty() && !this.fileName.equals(fileName))
-            oldFileName=this.fileName;
         this.fileName = fileName;
-        extension = getExtension(fileName);
-        tempFileName = getId() + extension;
+        extension = FileHelper.getExtension(fileName);
     }
 
-    public String getTempFileName() {
-        return tempFileName;
+    public String getExtension() {
+        return extension;
     }
 
-    public String getOldFileName() {
-        return oldFileName;
+    public String getStaticFileName() {
+        return getId() + extension;
     }
 
-    public boolean fileNameChanged(){
-        return !oldFileName.isEmpty() && !oldFileName.equals(fileName);
-    }
-
-    public String getURL(){
-        return "/files/"+getId() + extension;
+    public String getStaticURL(){
+        return "/files/"+ getStaticFileName();
     }
 
     public String getDisplayName() {
         if (displayName.isEmpty() )
-            return getFileNameWithoutExtension(getFileName());
+            return FileHelper.getFileNameWithoutExtension(getFileName());
         return displayName;
     }
 
@@ -165,7 +145,7 @@ public abstract class FileData extends BaseData implements FileCompanion {
     // helper
 
     public void createFromBinaryFile(BinaryFile file) {
-        if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !isNullOrEmpty(file.getContentType())) {
+        if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringHelper.isNullOrEmpty(file.getContentType())) {
             setFileName(file.getFileName());
             setBytes(file.getBytes());
             setFileSize(file.getBytes().length);

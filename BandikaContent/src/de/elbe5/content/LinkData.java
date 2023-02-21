@@ -8,26 +8,23 @@
  */
 package de.elbe5.content;
 
-import de.elbe5.content.html.EditLinkDataPage;
-import de.elbe5.data.AJsonClass;
-import de.elbe5.data.AJsonField;
-import de.elbe5.response.IHtmlBuilder;
-import de.elbe5.response.ModalPage;
+import de.elbe5.base.StringHelper;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IResponse;
 import de.elbe5.response.RedirectResponse;
 
-import java.util.Map;
+public class LinkData extends ContentData {
 
-@AJsonClass
-public class LinkData extends ContentData implements IHtmlBuilder {
-
-    @AJsonField(baseClass = String.class)
+    // link data
     private String linkUrl = "";
-    @AJsonField(baseClass = String.class)
     private String linkIcon = "";
 
     public LinkData() {
+    }
+
+    public void copyData(LinkData data, RequestData rdata) {
+        super.copyData(data, rdata);
+        linkUrl = data.linkUrl;
     }
 
     public String getLinkUrl() {
@@ -47,37 +44,28 @@ public class LinkData extends ContentData implements IHtmlBuilder {
     }
 
     @Override
-    public void readRequestData(RequestData rdata) {
-        super.readRequestData(rdata);
-        setLinkUrl(rdata.getAttributes().getString("linkUrl"));
-        setLinkIcon(rdata.getAttributes().getString("linkIcon"));
-    }
-
-    // html
-
-    static final String navHtml = """
-            <img src="/static-content/img/{{linkIcon}}" class="navIcon" title="{{name}}" alt="{{name}}" />
-            """;
-
-    @Override
-    public String getNavDisplayHtml() {
-        if (!linkIcon.isEmpty()) {
-            return format(navHtml,
-                    Map.ofEntries(
-                            Map.entry("linkIcon", linkIcon),
-                            Map.entry("name", toHtml(getDisplayName()))));
+    public String getNavDisplay(){
+        if (!linkIcon.isEmpty()){
+            return "<img src=\"/static-content/img/" + linkIcon +"\" class=\"navIcon linkNav\" title=\"" + StringHelper.toHtml(getDisplayName()) + "\" alt=\"" + StringHelper.toHtml(getDisplayName()) + "\" />";
         }
-        return toHtml(getDisplayName());
+        return StringHelper.toHtml(getDisplayName());
     }
 
     @Override
-    public IResponse getResponse() {
+    public IResponse getDefaultView(){
         return new RedirectResponse(linkUrl);
     }
 
     @Override
-    public ModalPage getContentDataPage() {
-        return new EditLinkDataPage();
+    public String getContentDataJsp() {
+        return "/WEB-INF/_jsp/content/editLinkData.ajax.jsp";
+    }
+
+    @Override
+    public void readRequestData(RequestData rdata) {
+        super.readRequestData(rdata);
+        setLinkUrl(rdata.getAttributes().getString("linkUrl"));
+        setLinkIcon(rdata.getAttributes().getString("linkIcon"));
     }
 
 }

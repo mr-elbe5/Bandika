@@ -1,4 +1,0 @@
-<tpl:message/>
-<section class="contentSection" id="content">
-    <tpl:section name="main" cssClass="row"></tpl:section>
-</section>

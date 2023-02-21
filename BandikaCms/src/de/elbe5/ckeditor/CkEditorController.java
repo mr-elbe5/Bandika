@@ -8,9 +8,6 @@
  */
 package de.elbe5.ckeditor;
 
-import de.elbe5.ckeditor.html.AddImagePage;
-import de.elbe5.ckeditor.html.BrowseImagesPage;
-import de.elbe5.ckeditor.html.BrowseLinksPage;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentController;
 import de.elbe5.content.ContentData;
@@ -20,6 +17,7 @@ import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.IResponse;
+import de.elbe5.response.ForwardResponse;
 
 public class CkEditorController extends ContentController {
 
@@ -48,13 +46,13 @@ public class CkEditorController extends ContentController {
     public IResponse openLinkBrowser(RequestData rdata) {
         ContentData data = rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         checkRights(data.hasUserEditRight(rdata));
-        return new BrowseLinksPage().createHtml(rdata);
+        return new ForwardResponse("/WEB-INF/_jsp/ckeditor/browseLinks.jsp");
     }
 
     public IResponse openImageBrowser(RequestData rdata) {
         ContentData data=rdata.getSessionObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
         checkRights(data.hasUserEditRight(rdata));
-        return new BrowseImagesPage().createHtml(rdata);
+        return new ForwardResponse("/WEB-INF/_jsp/ckeditor/browseImages.jsp");
     }
 
     public IResponse addImage(RequestData rdata) {
@@ -64,9 +62,9 @@ public class CkEditorController extends ContentController {
         image.setCreateValues(data,rdata);
         image.readSettingsRequestData(rdata);
         ImageBean.getInstance().saveFile(image,true);
-        ContentCache.getInstance().setDirty();
+        ContentCache.setDirty();
         rdata.getAttributes().put("imageId", Integer.toString(image.getId()));
-        return new AddImagePage().createHtml(rdata);
+        return new ForwardResponse("/WEB-INF/_jsp/ckeditor/addImage.ajax.jsp");
     }
 
 

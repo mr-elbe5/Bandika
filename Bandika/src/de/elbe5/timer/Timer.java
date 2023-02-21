@@ -8,18 +8,15 @@
  */
 package de.elbe5.timer;
 
-import de.elbe5.data.IJsonDataPackage;
-import de.elbe5.log.Log;
+import de.elbe5.base.Log;
 import de.elbe5.application.AppContextListener;
 import de.elbe5.application.Configuration;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Timer implements IJsonDataPackage {
+public class Timer {
 
     private static Timer instance = null;
 
@@ -38,7 +35,7 @@ public class Timer implements IJsonDataPackage {
     }
 
     public void startThread() {
-        int interval = Configuration.getInstance().getTimerInterval();
+        int interval = Configuration.getTimerInterval();
         Log.log("setting timer interval to " + interval + " sec");
         timerThread = new TimerThread(interval);
         Log.log("timer thread state = " + (timerThread.isAlive() ? "alive" : "down"));
@@ -57,7 +54,7 @@ public class Timer implements IJsonDataPackage {
             timerThread.stopRunning();
         }
         timerThread = null;
-        int interval = Configuration.getInstance().getTimerInterval();
+        int interval = Configuration.getTimerInterval();
         timerThread = new TimerThread(interval);
         timerThread.startRunning();
         AppContextListener.registerThread(timerThread);
@@ -89,27 +86,6 @@ public class Timer implements IJsonDataPackage {
         } catch (CloneNotSupportedException e) {
             return null;
         }
-    }
-
-    @Override
-    public String getName() {
-        return "timerData";
-    }
-
-    @Override
-    public JSONObject saveAsJson() {
-        JSONObject jsonObject = new JSONObject();
-        JSONArray array = new JSONArray();
-        for (TimerTaskData task : tasks.values()) {
-            array.put(task.toJSONObject());
-        }
-        jsonObject.put("tasks", array);
-        return jsonObject;
-    }
-
-    @Override
-    public void loadFromJson(JSONObject jsonObject) {
-        //todo
     }
 
 }

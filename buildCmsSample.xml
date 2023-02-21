@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="CmsSample" default="common.deployProject" basedir=".">
+
+    <property environment="env"/>
+    <property name="project" value="CmsSample" />
+    <property name="deploy.dir" location="${env.HOME}/tomcat/develop/cmsSample" />
+
+    <import file="commonTasks.xml"/>
+
+</project>

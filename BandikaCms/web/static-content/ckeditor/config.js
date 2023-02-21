@@ -1,29 +1,27 @@
 ﻿/**
- * Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
+ * Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
 CKEDITOR.editorConfig = function( config ) {
+	// Define changes to default configuration here. For example:
+	// config.language = 'fr';
+	// config.uiColor = '#AADC6E';
 
-	config.toolbarGroups = [
-		{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
-		{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
-		{ name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
-		{ name: 'forms', groups: [ 'forms' ] },
-		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+	config.toolbar = [
+		{ name: 'mode', items: ['Source']},
+		{ name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+		{ name: 'editing', items: [ 'Find', 'Replace', '-', 'SelectAll' ] },
+		{ name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'CopyFormatting', 'RemoveFormat' ] },
 		'/',
-		{ name: 'paragraph', groups: [ 'list', 'indent', 'align', 'bidi', 'paragraph' ] },
-		{ name: 'links', groups: [ 'links' ] },
-		{ name: 'insert', groups: [ 'insert' ] },
+		{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+		{ name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+		{ name: 'insert', items: [ 'Image', 'Html5audio', 'Html5video', 'Table', 'HorizontalRule', 'SpecialChar', 'PageBreak' ] },
 		'/',
-		{ name: 'styles', groups: [ 'styles' ] },
-		{ name: 'colors', groups: [ 'colors' ] },
-		{ name: 'tools', groups: [ 'tools' ] },
-		{ name: 'others', groups: [ 'others' ] },
-		{ name: 'about', groups: [ 'about' ] }
+		{ name: 'styles', items: [ 'Styles', 'Format', 'FontSize' ] },
+		{ name: 'colors', items: [ 'TextColor', 'BGColor' ] },
+		{ name: 'tools', items: [ 'ShowBlocks' ] }
 	];
-
-	config.removeButtons = 'Font,Maximize,About,Flash,PageBreak,Iframe,Anchor,Language,BidiRtl,BidiLtr,Blockquote,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Scayt,Save,NewPage,Preview,Print';
 
 	config.image_prefillDimensions=false;
 
@@ -31,9 +29,7 @@ CKEDITOR.editorConfig = function( config ) {
 
 	config.extraAllowedContent = '*(*);*{*}';
 
-	config.extraPlugins = "html5video,html5audio,widget,widgetselection,clipboard,lineutils";
-
 	config.allowedContent = true;
-
 };
+
 

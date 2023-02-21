@@ -8,7 +8,7 @@
  */
 package de.elbe5.content;
 
-import de.elbe5.log.Log;
+import de.elbe5.base.Log;
 import de.elbe5.database.DbBean;
 import de.elbe5.rights.Right;
 
@@ -157,6 +157,30 @@ public class ContentBean extends DbBean {
         return list;
     }
 
+    public List<ContentInfoData> getContentInfos() {
+        List<ContentInfoData> list = new ArrayList<>();
+        Connection con = getConnection();
+        try {
+            PreparedStatement pst;
+            pst = con.prepareStatement("select id,name,display_name,description from t_content");
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                ContentInfoData info = new ContentInfoData();
+                int i=1;
+                info.setId(rs.getInt(i++));
+                info.setName(rs.getString(i++));
+                info.setDisplayName(rs.getString(i++));
+                info.setDescription(rs.getString(i));
+                list.add(info);
+            }
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+        } finally {
+            closeConnection(con);
+        }
+        return list;
+    }
+
     public boolean saveContent(ContentData data) {
         Connection con = startTransaction();
         try {
@@ -214,7 +238,7 @@ public class ContentBean extends DbBean {
         }
     }
 
-    private static final String UPDATE_CONTENT_SQL = "update t_content set change_date=?,ranking=?,name=?,display_name=?,description=?,changer_id=?,access_type=?,nav_type=?,active=? where id=?";
+    private static final String UPDATE_CONTENT_SQL = "update t_content set change_date=?,parent_id=?,ranking=?,name=?,display_name=?,description=?,changer_id=?,access_type=?,nav_type=?,active=? where id=?";
 
     protected void updateContent(Connection con, ContentData data) throws SQLException {
         PreparedStatement pst = null;
@@ -222,6 +246,12 @@ public class ContentBean extends DbBean {
             pst = con.prepareStatement(UPDATE_CONTENT_SQL);
             int i = 1;
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
+            if (data.getParentId() == 0){
+                pst.setNull(i++, Types.INTEGER);
+            }
+            else{
+                pst.setInt(i++, data.getParentId());
+            }
             pst.setInt(i++, data.getRanking());
             pst.setString(i++, data.getName());
             pst.setString(i++, data.getDisplayName());
@@ -266,6 +296,30 @@ public class ContentBean extends DbBean {
         }
     }
 
+    private static final String GET_GROUP_RIGHT_SQL = "SELECT content_id,value FROM t_content_right WHERE group_id=?";
+
+    public Map<Integer, Integer> getGroupRights(int groupId) {
+        Connection con = getConnection();
+        PreparedStatement pst = null;
+        Map<Integer, Integer> map = new HashMap<>();
+        try {
+            pst = con.prepareStatement(GET_GROUP_RIGHT_SQL);
+            pst.setInt(1, groupId);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                map.put(rs.getInt(1), rs.getInt(2));
+            }
+            rs.close();
+            return map;
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+        return null;
+    }
+
     private static final String DELETE_RIGHTS_SQL = "DELETE FROM t_content_right WHERE content_id=?";
     private static final String INSERT_RIGHT_SQL = "INSERT INTO t_content_right (content_id,group_id,value) VALUES(?,?,?)";
 
@@ -298,6 +352,9 @@ public class ContentBean extends DbBean {
 
     public boolean deleteContent(int id) {
         return deleteItem(DELETE_SQL, id);
+    }
+
+    public void replaceStringInContent(String oldFileName,String fileName){
     }
 
     private static final String GET_ALL_VIEW_COUNTS_SQL = "SELECT day, content_id, count FROM t_content_log ORDER BY day, content_id";

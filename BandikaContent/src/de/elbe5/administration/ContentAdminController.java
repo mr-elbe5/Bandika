@@ -8,20 +8,19 @@
  */
 package de.elbe5.administration;
 
-import de.elbe5.administration.html.*;
+import de.elbe5.application.AdminController;
+import de.elbe5.base.LocalizedStrings;
 import de.elbe5.content.ContentBean;
 import de.elbe5.content.ContentCache;
 import de.elbe5.file.PreviewCache;
-import de.elbe5.log.Log;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
-import de.elbe5.response.AdminResponse;
 import de.elbe5.response.IResponse;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.ControllerCache;
-import de.elbe5.response.ResponseException;
+import de.elbe5.servlet.ResponseException;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class ContentAdminController extends AdminController {
 
@@ -45,48 +44,41 @@ public class ContentAdminController extends AdminController {
         if (rdata.hasSystemRight(SystemZone.CONTENTEDIT))
             return openContentAdministration(rdata);
         if (rdata.hasSystemRight(SystemZone.USER))
-            return openUserAdministration(rdata);
+            return openPersonAdministration(rdata);
         if (rdata.hasSystemRight(SystemZone.APPLICATION))
             return openSystemAdministration(rdata);
         throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
-    public IResponse openSystemAdministration(RequestData rdata) {
-        checkRights(rdata.hasAnySystemRight());
-        return new AdminResponse(new ContentSystemAdminPage());
-    }
-
     public IResponse openContentAdministration(RequestData rdata) {
         checkRights(rdata.hasAnyContentRight());
-        return new AdminResponse(new ContentAdminPage());
+        return showContentAdministration(rdata);
     }
 
     public IResponse openContentLog(RequestData rdata) {
         checkRights(rdata.hasAnyContentRight());
-        return new AdminResponse(new ContentLogAdminPage());
+        return showContentLog(rdata);
     }
 
     public IResponse clearPreviewCache(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
         PreviewCache.clear();
-        rdata.setMessage(getString("_cacheCleared"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(LocalizedStrings.string("_cacheCleared"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
     public IResponse reloadContentCache(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
-        ContentCache.getInstance().setDirty();
-        ContentCache.getInstance().checkDirty();
-        rdata.setMessage(getString("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        ContentCache.setDirty();
+        ContentCache.checkDirty();
+        rdata.setMessage(LocalizedStrings.string("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
     public IResponse resetContentLog(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.CONTENTEDIT));
-        if (!ContentBean.getInstance().resetContentLog()){
-            Log.warn("could not reset content log");
-        }
-        return new AdminResponse(new ContentLogAdminPage());
+        ContentBean.getInstance().resetContentLog();
+        return showContentLog(rdata);
     }
 
 }

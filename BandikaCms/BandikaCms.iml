@@ -20,6 +20,7 @@
     <orderEntry type="library" name="catalina" level="project" />
     <orderEntry type="library" exported="" name="common" level="project" />
     <orderEntry type="library" exported="" name="json" level="project" />
+    <orderEntry type="module" module-name="BandikaBase" exported="" />
     <orderEntry type="module" module-name="Bandika" exported="" />
     <orderEntry type="module" module-name="BandikaContent" exported="" />
   </component>

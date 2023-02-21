@@ -8,6 +8,7 @@
  */
 package de.elbe5.timer;
 
+import de.elbe5.base.LocalizedStrings;
 import de.elbe5.request.RequestKeys;
 import de.elbe5.response.StatusResponse;
 import de.elbe5.servlet.ControllerCache;
@@ -16,9 +17,9 @@ import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.response.IResponse;
-import de.elbe5.timer.html.EditTimerPage;
+import de.elbe5.response.ForwardResponse;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class TimerController extends Controller {
 
@@ -49,7 +50,7 @@ public class TimerController extends Controller {
         String name = rdata.getAttributes().getString("timerName");
         TimerTaskData task = Timer.getInstance().getTaskCopy(name);
         rdata.setSessionObject("timerTaskData", task);
-        return showEditTimerTask(rdata);
+        return showEditTimerTask();
     }
 
     public IResponse saveTimerTask(RequestData rdata) {
@@ -60,16 +61,17 @@ public class TimerController extends Controller {
         }
         data.readSettingsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
-            return showEditTimerTask(rdata);
+            return showEditTimerTask();
         }
         TimerBean ts = TimerBean.getInstance();
         ts.updateTaskData(data);
         Timer.getInstance().loadTask(data.getName());
-        return new CloseDialogResponse("/ctrl/admin/openSystemAdministration", getString("_taskSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(LocalizedStrings.string("_taskSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/admin/openSystemAdministration");
     }
 
-    private IResponse showEditTimerTask(RequestData rdata) {
-        return new EditTimerPage().createHtml(rdata);
+    private IResponse showEditTimerTask() {
+        return new ForwardResponse("/WEB-INF/_jsp/timer/editTimerTask.ajax.jsp");
     }
 
 }

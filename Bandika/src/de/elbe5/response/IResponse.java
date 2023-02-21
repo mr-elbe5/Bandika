@@ -8,13 +8,12 @@
  */
 package de.elbe5.response;
 
-import de.elbe5.companion.StringCompanion;
 import de.elbe5.request.RequestData;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletResponse;
 
-public interface IResponse extends StringCompanion {
+public interface IResponse {
 
     String MODAL_DIALOG_JQID = "#modalDialog";
 

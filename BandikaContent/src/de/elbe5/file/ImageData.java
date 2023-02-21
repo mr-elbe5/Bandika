@@ -8,12 +8,14 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.companion.ImageCompanion;
-import de.elbe5.data.IJsonData;
-import de.elbe5.data.AJsonClass;
-import de.elbe5.data.AJsonField;
-import de.elbe5.log.Log;
+import de.elbe5.base.BinaryFile;
+import de.elbe5.base.IJsonData;
+import de.elbe5.base.Log;
+import de.elbe5.base.FileHelper;
+import de.elbe5.base.ImageHelper;
+import de.elbe5.base.StringHelper;
 import de.elbe5.request.RequestData;
+import org.json.simple.JSONObject;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
@@ -21,27 +23,19 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Iterator;
 
-@AJsonClass
-public class ImageData extends FileData implements IJsonData, ImageCompanion {
+public class ImageData extends FileData implements IJsonData {
 
     public static int MAX_PREVIEW_WIDTH = 200;
     public static int MAX_PREVIEW_HEIGHT = 200;
 
-    @AJsonField(baseClass = Integer.class)
     protected int width = 0;
-    @AJsonField(baseClass = Integer.class)
     protected int height = 0;
     protected byte[] previewBytes = null;
-    @AJsonField(baseClass = Boolean.class)
     protected boolean hasPreview = false;
 
-    @AJsonField(baseClass = Integer.class)
     public int maxWidth=0;
-    @AJsonField(baseClass = Integer.class)
     public int maxHeight=0;
-    @AJsonField(baseClass = Integer.class)
     public int maxPreviewWidth= MAX_PREVIEW_WIDTH;
-    @AJsonField(baseClass = Integer.class)
     public int maxPreviewHeight= MAX_PREVIEW_HEIGHT;
 
     public ImageData() {
@@ -81,8 +75,16 @@ public class ImageData extends FileData implements IJsonData, ImageCompanion {
         this.previewBytes = previewBytes;
     }
 
+    public boolean hasPreview() {
+        return hasPreview;
+    }
+
     public void setHasPreview(boolean hasPreview) {
         this.hasPreview = hasPreview;
+    }
+
+    public String getPreviewName(){
+        return "preview_" + getId() + ".jpg";
     }
 
     public int getMaxWidth() {
@@ -97,12 +99,24 @@ public class ImageData extends FileData implements IJsonData, ImageCompanion {
         return maxHeight;
     }
 
+    public void setMaxHeight(int maxHeight) {
+        this.maxHeight = maxHeight;
+    }
+
     public int getMaxPreviewWidth() {
         return maxPreviewWidth;
     }
 
+    public void setMaxPreviewWidth(int maxPreviewWidth) {
+        this.maxPreviewWidth = maxPreviewWidth;
+    }
+
     public int getMaxPreviewHeight() {
         return maxPreviewHeight;
+    }
+
+    public void setMaxPreviewHeight(int maxPreviewHeight) {
+        this.maxPreviewHeight = maxPreviewHeight;
     }
 
     // multiple data
@@ -110,22 +124,21 @@ public class ImageData extends FileData implements IJsonData, ImageCompanion {
     @Override
     public void readSettingsRequestData(RequestData rdata) {
         super.readSettingsRequestData(rdata);
+        if (!isNew()){
+            return;
+        }
         BinaryFile file = rdata.getAttributes().getFile("file");
         if (maxWidth != 0 || maxHeight != 0)
-            if (!createFromBinaryFile(file, maxWidth, maxHeight, getMaxPreviewWidth(), getMaxPreviewHeight(), true)){
-                Log.error("could not create binary file");
-            }
+            createFromBinaryFile(file, maxWidth, maxHeight, getMaxPreviewWidth(), getMaxPreviewHeight(), true);
         else
-            if (!createFromBinaryFile(file, getMaxPreviewWidth(), getMaxPreviewHeight())){
-                Log.error("could not create binary file");
-            }
+            createFromBinaryFile(file, getMaxPreviewWidth(), getMaxPreviewHeight());
     }
 
     // helper
 
     public boolean createFromBinaryFile(BinaryFile file, int maxTumbnailWidth, int maxThumbnailHeight) {
         boolean success=false;
-        if (file != null && file.isImage() && file.getBytes() != null && file.getFileName().length() > 0 && !isNullOrEmpty(file.getContentType())) {
+        if (file != null && file.isImage() && file.getBytes() != null && file.getFileName().length() > 0 && !StringHelper.isNullOrEmpty(file.getContentType())) {
             setFileName(file.getFileName());
             setBytes(file.getBytes());
             setFileSize(file.getBytes().length);
@@ -142,7 +155,7 @@ public class ImageData extends FileData implements IJsonData, ImageCompanion {
 
     public boolean createFromBinaryFile(BinaryFile file, int maxWidth, int maxHeight, int maxTumbnailWidth, int maxThumbnailHeight, boolean expand) {
         boolean success=false;
-        if (file != null && file.isImage() && file.getBytes() != null && file.getFileName().length() > 0 && !isNullOrEmpty(file.getContentType())) {
+        if (file != null && file.isImage() && file.getBytes() != null && file.getFileName().length() > 0 && !StringHelper.isNullOrEmpty(file.getContentType())) {
             setFileName(file.getFileName());
             setBytes(file.getBytes());
             setFileSize(file.getBytes().length);
@@ -158,23 +171,65 @@ public class ImageData extends FileData implements IJsonData, ImageCompanion {
         return success;
     }
 
+    public boolean createJpegFromBinaryFile(BinaryFile file, int maxWidth, int maxHeight, int maxTumbnailWidth, int maxThumbnailHeight, boolean expand) {
+        boolean success=false;
+        if (file != null && file.isImage() && file.getBytes() != null && file.getFileName().length() > 0 && !StringHelper.isNullOrEmpty(file.getContentType())) {
+            setFileName(file.getFileName());
+            setBytes(file.getBytes());
+            setFileSize(file.getBytes().length);
+            setContentType(file.getContentType());
+            try {
+                createResizedJpeg(maxWidth, maxHeight, expand);
+                createPreview(maxTumbnailWidth, maxThumbnailHeight);
+                success = true;
+            } catch (IOException e) {
+                Log.warn("could not create buffered image");
+            }
+        }
+        return success;
+    }
+
     public void createResizedImage(int width, int height, boolean expand) throws IOException {
-        BufferedImage bi = createResizedImage(getBytes(), getContentType(), width, height, expand);
+        BufferedImage bi = ImageHelper.createResizedImage(getBytes(), getContentType(), width, height, expand);
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType(getContentType());
         if (writers.hasNext()) {
             setContentType(getContentType());
         } else {
-            writers = ImageIO.getImageWritersBySuffix(getExtension(getFileName()));
+            writers = ImageIO.getImageWritersBySuffix(FileHelper.getExtension(getFileName()));
             if (writers.hasNext()) {
                 setContentType("");
             } else {
-                setFileName(getFileNameWithoutExtension(getFileName()) + ".jpg");
+                setFileName(FileHelper.getFileNameWithoutExtension(getFileName()) + ".jpg");
                 writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
                 setContentType("image/jpeg");
             }
         }
         ImageWriter writer = writers.next();
-        setBytes(writeImage(writer, bi));
+        setBytes(ImageHelper.writeImage(writer, bi));
+        setFileSize(getBytes().length);
+        setWidth(bi.getWidth());
+        setHeight(bi.getHeight());
+    }
+
+    public void createResizedJpeg(int width, int height, boolean expand) throws IOException {
+        BufferedImage bi = ImageHelper.createResizedImage(getBytes(), getContentType(), width, height, expand);
+        setFileName(FileHelper.getFileNameWithoutExtension(getFileName()) + ".jpg");
+        Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
+        setContentType("image/jpeg");
+        ImageWriter writer = writers.next();
+        setBytes(ImageHelper.writeImage(writer, bi));
+        setFileSize(getBytes().length);
+        setWidth(bi.getWidth());
+        setHeight(bi.getHeight());
+    }
+
+    public void createScaledJpeg(int scalePercent) throws IOException {
+        BufferedImage bi = ImageHelper.createScaledImage(getBytes(), getContentType(), scalePercent);
+        setFileName(FileHelper.getFileNameWithoutExtension(getFileName()) + ".jpg");
+        Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
+        setContentType("image/jpeg");
+        ImageWriter writer = writers.next();
+        setBytes(ImageHelper.writeImage(writer, bi));
         setFileSize(getBytes().length);
         setWidth(bi.getWidth());
         setHeight(bi.getHeight());
@@ -183,12 +238,12 @@ public class ImageData extends FileData implements IJsonData, ImageCompanion {
     public void createPreview(int maxTumbnailWidth, int maxThumbnailHeight) throws IOException{
         if (!isImage())
             return;
-        BufferedImage source = createImage(getBytes(), getContentType());
+        BufferedImage source = ImageHelper.createImage(getBytes(), getContentType());
         if (source != null) {
             setWidth(source.getWidth());
             setHeight(source.getHeight());
-            float factor = getResizeFactor(source, maxTumbnailWidth, maxThumbnailHeight, false);
-            BufferedImage image = copyImage(source, factor);
+            float factor = ImageHelper.getResizeFactor(source, maxTumbnailWidth, maxThumbnailHeight, false);
+            BufferedImage image = ImageHelper.copyImage(source, factor);
             createJpegPreview(image);
         }
     }
@@ -196,7 +251,20 @@ public class ImageData extends FileData implements IJsonData, ImageCompanion {
     protected void createJpegPreview(BufferedImage image) throws IOException {
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
         ImageWriter writer = writers.next();
-        setPreviewBytes(writeImage(writer, image));
+        setPreviewBytes(ImageHelper.writeImage(writer, image));
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public JSONObject getJson(){
+        JSONObject json = new JSONObject();
+        json.put("id",getId());
+        json.put("fileName",getFileName());
+        json.put("name",getDisplayName());
+        json.put("displayName",getDisplayName());
+        json.put("contentType",getContentType());
+        json.put("width", getWidth());
+        json.put("height", getHeight());
+        return json;
+    }
 }

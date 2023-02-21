@@ -8,7 +8,7 @@
  */
 package de.elbe5.page;
 
-import de.elbe5.log.Log;
+import de.elbe5.base.Log;
 
 import java.util.*;
 
@@ -22,15 +22,15 @@ public class PagePartFactory {
         return list;
     }
 
-    public static void addClassInfo(Class<? extends PagePartData> partClass, PagePartBean bean, boolean useLayouts) {
-        PagePartClassInfo contentClassInfo = new PagePartClassInfo(partClass,bean,useLayouts);
-        infos.put(partClass.getSimpleName(),contentClassInfo);
+    public static void addClassInfo(Class<? extends PagePartData> contentClass, PagePartBean bean, boolean useLayouts) {
+        PagePartClassInfo contentClassInfo = new PagePartClassInfo(contentClass,bean,useLayouts);
+        infos.put(contentClass.getSimpleName(),contentClassInfo);
     }
 
     public static PagePartData getNewData(String type) {
         if (!infos.containsKey(type)) {
             Log.error("no part info for type "+type);
-            return new PagePartData();
+            return null;
         }
         return infos.get(type).getNewData();
     }
@@ -38,7 +38,7 @@ public class PagePartFactory {
     public static PagePartBean getBean(String type){
         if (!infos.containsKey(type)) {
             Log.error("no part info for type "+type);
-            return PagePartBean.getInstance();
+            return null;
         }
         return infos.get(type).getBean();
     }

@@ -8,11 +8,12 @@
  */
 package de.elbe5.user;
 
+import de.elbe5.base.BinaryFile;
+import de.elbe5.base.Log;
+import de.elbe5.base.StringFormatter;
+import de.elbe5.base.StringHelper;
 import de.elbe5.application.Configuration;
-import de.elbe5.companion.EncryptionCompanion;
 import de.elbe5.database.DbBean;
-import de.elbe5.file.BinaryFile;
-import de.elbe5.log.Log;
 import de.elbe5.rights.SystemZone;
 
 import java.sql.*;
@@ -21,7 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class UserBean extends DbBean implements EncryptionCompanion {
+/**
+ * Class UserBean is the persistence class for users and groups. <br>
+ * Usage:
+ */
+public class UserBean extends DbBean {
 
     private static UserBean instance = null;
 
@@ -43,7 +48,7 @@ public class UserBean extends DbBean implements EncryptionCompanion {
     }
 
 
-    private static final String SELECT_USER_SQL = "SELECT id,change_date,company_id,title,first_name,last_name,street,zipCode,city,country,email,phone,mobile,notes,(portrait IS NOT NULL) as has_portrait,login,locked,deleted FROM t_user ";
+    private static final String SELECT_USER_SQL = "SELECT id,change_date,company_id,title,first_name,last_name,street,zipCode,city,country,email,phone,mobile,notes,(portrait IS NOT NULL) as has_portrait,login,approval_code,approved,email_verified,locked,deleted FROM t_user ";
 
     protected boolean changedUser(Connection con, UserData data) {
         return changedLogin(con, data);
@@ -121,11 +126,14 @@ public class UserBean extends DbBean implements EncryptionCompanion {
         data.setHasPortrait(rs.getBoolean(i++));
         data.setLogin(rs.getString(i++));
         data.setPassword("");
+        data.setApprovalCode(rs.getString(i++));
+        data.setApproved(rs.getBoolean(i++));
+        data.setEmailVerified(rs.getBoolean(i++));
         data.setLocked(rs.getBoolean(i++));
         data.setDeleted(rs.getBoolean(i));
     }
 
-    private static final String LOGIN_SQL = "SELECT pwd,id,change_date,first_name,last_name,email FROM t_user WHERE login=? AND locked=FALSE AND deleted=FALSE";
+    private static final String LOGIN_SQL = "SELECT pwd,id,change_date,first_name,last_name,email FROM t_user WHERE login=? AND approved=TRUE AND locked=FALSE AND deleted=FALSE";
 
     public UserData loginUser(String login, String pwd) {
         Connection con = getConnection();
@@ -134,11 +142,12 @@ public class UserBean extends DbBean implements EncryptionCompanion {
         try {
             pst = con.prepareStatement(LOGIN_SQL);
             pst.setString(1, login);
+            boolean passed;
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
                     String encrypted = rs.getString(i++);
-                    if (encryptPassword(pwd, Configuration.getInstance().getSalt()).equals(encrypted)){
+                    if (UserSecurity.encryptPassword(pwd, Configuration.getSalt()).equals(encrypted)){
                         data = new UserData();
                         data.setId(rs.getInt(i++));
                         data.setLogin(login);
@@ -146,6 +155,7 @@ public class UserBean extends DbBean implements EncryptionCompanion {
                         data.setFirstName(rs.getString(i++));
                         data.setLastName(rs.getString(i++));
                         data.setEmail(rs.getString(i));
+                        data.setApproved(true);
                         data.setLocked(false);
                         data.setDeleted(false);
                         readUserGroups(con, data);
@@ -162,7 +172,7 @@ public class UserBean extends DbBean implements EncryptionCompanion {
         return data;
     }
 
-    private static final String API_LOGIN_SQL = "SELECT pwd,id,change_date,first_name,last_name,email,token,token_expiration,now() FROM t_user WHERE login=? AND locked=FALSE AND deleted=FALSE";
+    private static final String API_LOGIN_SQL = "SELECT pwd,id,change_date,first_name,last_name,email,token,token_expiration,now() FROM t_user WHERE login=? AND approved=TRUE AND locked=FALSE AND deleted=FALSE";
 
     private static final String SET_TOKEN_SQL = "UPDATE t_user SET token=?,token_expiration=? WHERE id=?";
 
@@ -173,11 +183,12 @@ public class UserBean extends DbBean implements EncryptionCompanion {
         try {
             pst = con.prepareStatement(API_LOGIN_SQL);
             pst.setString(1, login);
+            boolean passed;
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
                     String encrypted = rs.getString(i++);
-                    if (encryptPassword(pwd, Configuration.getInstance().getSalt()).equals(encrypted)) {
+                    if (UserSecurity.encryptPassword(pwd, Configuration.getSalt()).equals(encrypted)) {
                         data = new UserData();
                         data.setId(rs.getInt(i++));
                         data.setLogin(login);
@@ -192,6 +203,7 @@ public class UserBean extends DbBean implements EncryptionCompanion {
                             data.setToken(token);
                             data.setTokenExpiration(expiration.toLocalDateTime());
                         }
+                        data.setApproved(true);
                         data.setLocked(false);
                         data.setDeleted(false);
                         readUserGroups(con, data);
@@ -210,7 +222,7 @@ public class UserBean extends DbBean implements EncryptionCompanion {
 
     public boolean setToken(UserData data){
         Connection con = startTransaction();
-        PreparedStatement pst;
+        PreparedStatement pst = null;
         try {
             if (changedUser(con, data)) {
                 return rollbackTransaction(con);
@@ -241,6 +253,7 @@ public class UserBean extends DbBean implements EncryptionCompanion {
         try {
             pst = con.prepareStatement(LOGIN_BY_TOKEN_SQL);
             pst.setString(1, token);
+            boolean passed;
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
@@ -251,6 +264,7 @@ public class UserBean extends DbBean implements EncryptionCompanion {
                     data.setFirstName(rs.getString(i++));
                     data.setLastName(rs.getString(i++));
                     data.setEmail(rs.getString(i));
+                    data.setApproved(true);
                     data.setLocked(false);
                     data.setDeleted(false);
                     readUserGroups(con, data);
@@ -266,7 +280,112 @@ public class UserBean extends DbBean implements EncryptionCompanion {
         return data;
     }
 
-    private static final String GET_USER_SQL = "SELECT id,change_date,company_id,title,first_name,last_name,street,zipCode,city,country,email,phone,mobile,notes,portrait,login,locked,deleted FROM t_user WHERE id=?";
+    private static final String GET_LOGIN_SQL = "SELECT id,change_date,pwd,first_name,last_name,email FROM t_user WHERE login=? AND approval_code=?";
+
+    public UserData getLogin(String login, String approvalCode, String pwd) {
+        Connection con = getConnection();
+        PreparedStatement pst = null;
+        UserData data = null;
+        boolean passed = false;
+        try {
+            pst = con.prepareStatement(GET_LOGIN_SQL);
+            pst.setString(1, login);
+            pst.setString(2, approvalCode);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    int i = 1;
+                    data = new UserData();
+                    data.setId(rs.getInt(i++));
+                    data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
+                    data.setLogin(login);
+                    String encypted = rs.getString(i++);
+                    passed = (UserSecurity.encryptPassword(pwd, Configuration.getSalt()).equals(encypted));
+                    data.setPassword("");
+                    data.setFirstName(rs.getString(i++));
+                    data.setLastName(rs.getString(i++));
+                    data.setEmail(rs.getString(i));
+                }
+            }
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+        return passed ? data : null;
+    }
+
+    private static final String GET_PASSWORD_SQL = "SELECT pwd FROM t_user WHERE id=?";
+
+    public boolean isSystemPasswordEmpty() {
+        Connection con = getConnection();
+        PreparedStatement pst = null;
+        boolean empty = true;
+        try {
+            pst = con.prepareStatement(GET_PASSWORD_SQL);
+            pst.setInt(1, UserData.ID_ROOT);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    String pwd = rs.getString(1);
+                    empty = StringHelper.isNullOrEmpty(pwd);
+                }
+            }
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+        return empty;
+    }
+
+    private static final String GET_X_LOGIN_SQL = "SELECT 'x' FROM t_user WHERE login=?";
+
+    public boolean doesLoginExist(String login) {
+        Connection con = getConnection();
+        PreparedStatement pst = null;
+        boolean exists = false;
+        try {
+            pst = con.prepareStatement(GET_X_LOGIN_SQL);
+            pst.setString(1, login);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    exists = true;
+                }
+            }
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+        return exists;
+    }
+
+    private static final String GET_X_EMAIL_SQL = "SELECT 'x' FROM t_user WHERE email=?";
+
+    public boolean doesEmailExist(String login) {
+        Connection con = getConnection();
+        PreparedStatement pst = null;
+        boolean exists = false;
+        try {
+            pst = con.prepareStatement(GET_X_EMAIL_SQL);
+            pst.setString(1, login);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    exists = true;
+                }
+            }
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+        return exists;
+    }
+
+    private static final String GET_USER_SQL = "SELECT id,change_date,company_id,title,first_name,last_name,street,zipCode,city,country,email,phone,mobile,notes,portrait,login,approval_code,approved,email_verified,locked,deleted FROM t_user WHERE id=?";
 
     public UserData getUser(int id) {
         Connection con = getConnection();
@@ -297,6 +416,9 @@ public class UserBean extends DbBean implements EncryptionCompanion {
                 data.setHasPortrait(data.getPortrait()!=null);
                 data.setLogin(rs.getString(i++));
                 data.setPassword("");
+                data.setApprovalCode(rs.getString(i++));
+                data.setApproved(rs.getBoolean(i++));
+                data.setEmailVerified(rs.getBoolean(i++));
                 data.setLocked(rs.getBoolean(i++));
                 data.setDeleted(rs.getBoolean(i));
                 readUserGroups(con, data);
@@ -370,9 +492,9 @@ public class UserBean extends DbBean implements EncryptionCompanion {
         }
     }
 
-    private static final String INSERT_USER_SQL = "insert into t_user (change_date,company_id,title,first_name,last_name,street,zipCode,city,country,email,phone,fax,mobile,notes,portrait,login,pwd,locked,deleted,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    private static final String UPDATE_USER_PWD_SQL = "update t_user set change_date=?,company_id=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait=?,login=?,pwd=?,locked=?,deleted=? where id=?";
-    private static final String UPDATE_USER_NOPWD_SQL = "update t_user set change_date=?,company_id=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait=?,login=?,locked=?,deleted=? where id=?";
+    private static final String INSERT_USER_SQL = "insert into t_user (change_date,company_id,title,first_name,last_name,street,zipCode,city,country,email,phone,fax,mobile,notes,portrait,login,pwd,approval_code,approved,email_verified,locked,deleted,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static final String UPDATE_USER_PWD_SQL = "update t_user set change_date=?,company_id=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait=?,login=?,pwd=?,approval_code=?,approved=?,email_verified=?,locked=?,deleted=? where id=?";
+    private static final String UPDATE_USER_NOPWD_SQL = "update t_user set change_date=?,company_id=?,title=?,first_name=?,last_name=?,street=?,zipCode=?,city=?,country=?,email=?,phone=?,fax=?,mobile=?,notes=?,portrait=?,login=?,approval_code=?,approved=?,email_verified=?,locked=?,deleted=? where id=?";
 
     protected void writeUser(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
@@ -404,6 +526,9 @@ public class UserBean extends DbBean implements EncryptionCompanion {
             if (data.hasPassword()) {
                 pst.setString(i++, data.getPasswordHash());
             }
+            pst.setString(i++, data.getApprovalCode());
+            pst.setBoolean(i++, data.isApproved());
+            pst.setBoolean(i++, data.isEmailVerified());
             pst.setBoolean(i++, data.isLocked());
             pst.setBoolean(i++, data.isDeleted());
             pst.setInt(i, data.getId());
@@ -457,6 +582,57 @@ public class UserBean extends DbBean implements EncryptionCompanion {
                 pst.setNull(i++, Types.BINARY);
             else
                 pst.setBytes(i++, data.getPortrait());
+            pst.setInt(i, data.getId());
+            pst.executeUpdate();
+            pst.close();
+        } finally {
+            closeStatement(pst);
+        }
+    }
+
+    private static final String CHANGE_PASSWORD_SQL = "UPDATE t_user SET pwd=? WHERE id=?";
+
+    public boolean changePassword(int id, String pwd) {
+        Connection con = startTransaction();
+        PreparedStatement pst = null;
+        try {
+            pst = con.prepareStatement(CHANGE_PASSWORD_SQL);
+            int i = 1;
+            pst.setString(i++, UserSecurity.encryptPassword(pwd, Configuration.getSalt()));
+            pst.setInt(i, id);
+            pst.executeUpdate();
+            pst.close();
+            return commitTransaction(con);
+        } catch (Exception se) {
+            return rollbackTransaction(con, se);
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+    }
+
+    public boolean saveUserVerifyEmail(UserData data) {
+        Connection con = startTransaction();
+        try {
+            if (changedLogin(con, data)) {
+                return rollbackTransaction(con);
+            }
+            data.setChangeDate(getServerTime(con));
+            writeUserVerfiyEmail(con, data);
+            return commitTransaction(con);
+        } catch (Exception se) {
+            return rollbackTransaction(con, se);
+        }
+    }
+
+    private static final String VERIFY_EMAIL_SQL = "UPDATE t_user SET change_date=?, email_verified=true WHERE id=?";
+
+    protected void writeUserVerfiyEmail(Connection con, UserData data) throws SQLException {
+        PreparedStatement pst = null;
+        try {
+            pst = con.prepareStatement(VERIFY_EMAIL_SQL);
+            int i = 1;
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setInt(i, data.getId());
             pst.executeUpdate();
             pst.close();
@@ -541,7 +717,7 @@ public class UserBean extends DbBean implements EncryptionCompanion {
         }
     }
 
-    private static final String GET_SYSTEM_RIGHTS_SQL = "select name from t_system_right where group_id in(%s)";
+    private static final String GET_SYSTEM_RIGHTS_SQL = "select name from t_system_right where group_id in({1})";
 
     public void readUserRights(Connection con, UserData data) {
         data.clearSystemRights();
@@ -557,7 +733,7 @@ public class UserBean extends DbBean implements EncryptionCompanion {
                 }
                 buffer.append(id);
             }
-            pst = con.prepareStatement(String.format(GET_SYSTEM_RIGHTS_SQL, buffer));
+            pst = con.prepareStatement(StringFormatter.format(GET_SYSTEM_RIGHTS_SQL, buffer.toString()));
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 data.addSystemRight(SystemZone.valueOf(rs.getString(1)));

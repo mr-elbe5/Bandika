@@ -8,10 +8,12 @@
  */
 package de.elbe5.application;
 
-import de.elbe5.log.Log;
+import de.elbe5.base.Log;
+import de.elbe5.base.BaseThread;
+import de.elbe5.base.IStoppable;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 import java.util.HashMap;
 import java.util.Map;
 

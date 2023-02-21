@@ -3,12 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Bandika/Bandika.iml" filepath="$PROJECT_DIR$/Bandika/Bandika.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../BandikaProjects/BandikaBase/BandikaBase.iml" filepath="$PROJECT_DIR$/../BandikaProjects/BandikaBase/BandikaBase.iml" />
       <module fileurl="file://$PROJECT_DIR$/BandikaCms/BandikaCms.iml" filepath="$PROJECT_DIR$/BandikaCms/BandikaCms.iml" />
       <module fileurl="file://$PROJECT_DIR$/BandikaContent/BandikaContent.iml" filepath="$PROJECT_DIR$/BandikaContent/BandikaContent.iml" />
       <module fileurl="file://$PROJECT_DIR$/BandikaDocuments/BandikaDocuments.iml" filepath="$PROJECT_DIR$/BandikaDocuments/BandikaDocuments.iml" />
-      <module fileurl="file://$PROJECT_DIR$/BandikaIssue/BandikaIssue.iml" filepath="$PROJECT_DIR$/BandikaIssue/BandikaIssue.iml" />
-      <module fileurl="file://$PROJECT_DIR$/BandikaSample/BandikaSample.iml" filepath="$PROJECT_DIR$/BandikaSample/BandikaSample.iml" />
-      <module fileurl="file://$PROJECT_DIR$/BandikaSearch/BandikaSearch.iml" filepath="$PROJECT_DIR$/BandikaSearch/BandikaSearch.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CmsSample/CmsSample.iml" filepath="$PROJECT_DIR$/CmsSample/CmsSample.iml" />
     </modules>
   </component>
 </project>

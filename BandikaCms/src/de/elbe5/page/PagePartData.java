@@ -8,23 +8,21 @@
  */
 package de.elbe5.page;
 
-import de.elbe5.data.BaseData;
+import de.elbe5.base.BaseData;
 import de.elbe5.content.ContentBean;
-import de.elbe5.data.AJsonClass;
-import de.elbe5.data.AJsonField;
 import de.elbe5.request.RequestData;
 
-@AJsonClass
-public class PagePartData extends BaseData implements Comparable<PagePartData> {
+public abstract class PagePartData extends BaseData implements Comparable<PagePartData> {
 
     public static final String KEY_PART = "partData";
+    public static String LAYOUT_TYPE = "Part";
 
-    @AJsonField(baseClass = String.class)
+    protected String cssClass = "";
     protected String sectionName = "";
-    @AJsonField(baseClass = String.class)
     protected int position = 0;
-    @AJsonField(baseClass = Boolean.class)
     protected boolean editable = true;
+
+    public static String jspBasePath = "/WEB-INF/_jsp/_layout";
 
     public PagePartData() {
     }
@@ -39,8 +37,20 @@ public class PagePartData extends BaseData implements Comparable<PagePartData> {
         return position - data.position;
     }
 
+    public String getJspPath() {
+        return jspBasePath;
+    }
+
     public String getType() {
         return getClass().getSimpleName();
+    }
+
+    public String getCssClass() {
+        return cssClass;
+    }
+
+    public void setCssClass(String cssClass) {
+        this.cssClass = cssClass;
     }
 
     public String getSectionName() {
@@ -57,6 +67,14 @@ public class PagePartData extends BaseData implements Comparable<PagePartData> {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public String getPartInclude() {
+        return getJspPath() + "/show.jsp";
+    }
+
+    public String getEditPartInclude() {
+        return getJspPath() + "/edit.jsp";
     }
 
     public String getPartWrapperId() {
@@ -76,7 +94,12 @@ public class PagePartData extends BaseData implements Comparable<PagePartData> {
     }
 
     public String getEditTitle() {
-        return "Part, ID=" + getId();
+        return "Section Part, ID=" + getId();
+    }
+
+    public void prepareCopy() {
+        setNew(true);
+        setId(PagePartBean.getInstance().getNextPartId());
     }
 
     public void setCreateValues(RequestData rdata) {
@@ -89,10 +112,6 @@ public class PagePartData extends BaseData implements Comparable<PagePartData> {
     public void readFrontendRequestData(RequestData rdata) {
         // -1 if deleted
         setPosition(rdata.getAttributes().getInt(getPartPositionName(),-1));
-    }
-
-    public void appendHtml(StringBuilder sb, RequestData rdata){
-
     }
 
 }

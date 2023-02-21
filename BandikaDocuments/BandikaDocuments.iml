@@ -21,7 +21,6 @@
     <orderEntry type="library" name="common" level="project" />
     <orderEntry type="library" name="json" level="project" />
     <orderEntry type="library" name="fop" level="project" />
-    <orderEntry type="library" name="poi" level="project" />
     <orderEntry type="module" module-name="Bandika" />
     <orderEntry type="module" module-name="BandikaContent" />
   </component>

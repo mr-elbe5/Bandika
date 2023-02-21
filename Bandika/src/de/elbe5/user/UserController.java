@@ -8,22 +8,21 @@
  */
 package de.elbe5.user;
 
-import de.elbe5.data.BaseData;
-import de.elbe5.file.BinaryFile;
-import de.elbe5.companion.EncryptionCompanion;
-import de.elbe5.log.Log;
+import de.elbe5.application.Configuration;
+import de.elbe5.application.MailHelper;
+import de.elbe5.base.BaseData;
+import de.elbe5.base.BinaryFile;
+import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Log;
 import de.elbe5.request.*;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.*;
-import de.elbe5.user.html.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.time.Instant;
-import java.util.Random;
+import jakarta.servlet.http.HttpServletResponse;
 
-public class UserController extends Controller implements EncryptionCompanion {
+public class UserController extends Controller {
 
     public static final String KEY = "user";
 
@@ -48,7 +47,7 @@ public class UserController extends Controller implements EncryptionCompanion {
     }
 
     public IResponse openLogin(RequestData rdata) {
-        return showLogin(rdata);
+        return showLogin();
     }
 
     public IResponse login(RequestData rdata) {
@@ -56,13 +55,13 @@ public class UserController extends Controller implements EncryptionCompanion {
         String login = rdata.getAttributes().getString("login");
         String pwd = rdata.getAttributes().getString("password");
         if (login.length() == 0 || pwd.length() == 0) {
-            rdata.setMessage(getString("_notComplete"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(LocalizedStrings.string("_notComplete"), RequestKeys.MESSAGE_TYPE_ERROR);
             return openLogin(rdata);
         }
         UserData data = UserBean.getInstance().loginUser(login, pwd);
         if (data == null) {
             Log.info("bad login of "+login);
-            rdata.setMessage(getString("_badLogin"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage(LocalizedStrings.string("_badLogin"), RequestKeys.MESSAGE_TYPE_ERROR);
             return openLogin(rdata);
         }
         rdata.setSessionUser(data);
@@ -73,27 +72,19 @@ public class UserController extends Controller implements EncryptionCompanion {
     }
 
     public IResponse showCaptcha(RequestData rdata) {
-        String captcha = generateCaptchaString();
+        String captcha = UserSecurity.generateCaptchaString();
         rdata.setSessionObject(RequestKeys.KEY_CAPTCHA, captcha);
-        Captcha data = new Captcha();
-        data.initialize(captcha);
-        return new MemoryFileResponse(data);
-    }
-
-    private String generateCaptchaString() {
-        Random random = new Random();
-        random.setSeed(Instant.now().toEpochMilli());
-        char[] chars = new char[5];
-        for ( int i=0; i<5; i++){
-            chars[i] = getRandomChar(ASCII_CHARS, random);
+        BinaryFile data = UserSecurity.getCaptcha(captcha);
+        if (data==null){
+            return new StatusResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-        return new String(chars);
+        return new MemoryFileResponse(data);
     }
 
     public IResponse logout(RequestData rdata) {
         rdata.setSessionUser(null);
         rdata.resetSession();
-        rdata.setMessage(getString("_loggedOut"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(LocalizedStrings.string("_loggedOut"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         String next = rdata.getAttributes().getString("next");
         if (!next.isEmpty())
             return new ForwardResponse(next);
@@ -105,7 +96,7 @@ public class UserController extends Controller implements EncryptionCompanion {
         int userId = rdata.getId();
         UserData data = UserBean.getInstance().getUser(userId);
         rdata.setSessionObject("userData", data);
-        return showEditUser(rdata);
+        return showEditUser();
     }
 
     public IResponse openCreateUser(RequestData rdata) {
@@ -114,7 +105,7 @@ public class UserController extends Controller implements EncryptionCompanion {
         data.setNew(true);
         data.setId(UserBean.getInstance().getNextId());
         rdata.setSessionObject("userData", data);
-        return showEditUser(rdata);
+        return showEditUser();
     }
 
     public IResponse saveUser(RequestData rdata) {
@@ -122,29 +113,28 @@ public class UserController extends Controller implements EncryptionCompanion {
         UserData data = (UserData) rdata.getSessionObject("userData");
         data.readSettingsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
-            return showEditUser(rdata);
+            return showEditUser();
         }
-        if (!UserBean.getInstance().saveUser(data)){
-            Log.warn("could not save user");
-        }
-        UserCache.getInstance().setDirty();
+        UserBean.getInstance().saveUser(data);
+        UserCache.setDirty();
         if (rdata.getUserId() == data.getId()) {
             rdata.setSessionUser(data);
         }
-        return new CloseDialogResponse("/ctrl/admin/openUserAdministration?userId=" + data.getId(), getString("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage(LocalizedStrings.string("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/admin/openPersonAdministration?userId=" + data.getId());
     }
 
     public IResponse deleteUser(RequestData rdata) {
         checkRights(rdata.hasSystemRight(SystemZone.USER));
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
-            rdata.setMessage(getString("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
-            return new ForwardResponse("/ctrl/admin/openUserAdministration");
+            rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
+            return new ForwardResponse("/ctrl/admin/openPersonAdministration");
         }
         UserBean.getInstance().deleteUser(id);
-        UserCache.getInstance().setDirty();
-        rdata.setMessage(getString("_userDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return new ForwardResponse("/ctrl/admin/openUserAdministration");
+        UserCache.setDirty();
+        rdata.setMessage(LocalizedStrings.string("_userDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new ForwardResponse("/ctrl/admin/openPersonAdministration");
     }
 
     public IResponse showPortrait(RequestData rdata) {
@@ -163,7 +153,7 @@ public class UserController extends Controller implements EncryptionCompanion {
 
     public IResponse openChangePassword(RequestData rdata) {
         checkRights(rdata.isLoggedIn());
-        return showChangePassword(rdata);
+        return showChangePassword();
     }
 
     public IResponse changePassword(RequestData rdata) {
@@ -177,31 +167,30 @@ public class UserController extends Controller implements EncryptionCompanion {
         String newPassword2 = rdata.getAttributes().getString("newPassword2");
         if (newPassword.length() < UserData.MIN_PASSWORD_LENGTH) {
             rdata.addFormField("newPassword1");
-            rdata.addFormError(getString("_passwordLengthError"));
-            return showChangePassword(rdata);
+            rdata.addFormError(LocalizedStrings.string("_passwordLengthError"));
+            return showChangePassword();
         }
         if (!newPassword.equals(newPassword2)) {
             rdata.addFormField("newPassword1");
             rdata.addFormField("newPassword2");
-            rdata.addFormError(getString("_passwordsDontMatch"));
-            return showChangePassword(rdata);
+            rdata.addFormError(LocalizedStrings.string("_passwordsDontMatch"));
+            return showChangePassword();
         }
         UserData data = UserBean.getInstance().loginUser(user.getLogin(), oldPassword);
         if (data == null) {
             rdata.addFormField("newPassword1");
-            rdata.addFormError(getString("_badLogin"));
-            return showChangePassword(rdata);
+            rdata.addFormError(LocalizedStrings.string("_badLogin"));
+            return showChangePassword();
         }
         data.setPassword(newPassword);
-        if (!UserBean.getInstance().saveUserPassword(data)){
-            Log.warn("could not save password");
-        }
-        return new CloseDialogResponse("/ctrl/user/openProfile", getString("_passwordChanged"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        UserBean.getInstance().saveUserPassword(data);
+        rdata.setMessage(LocalizedStrings.string("_passwordChanged"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/user/openProfile");
     }
 
     public IResponse openChangeProfile(RequestData rdata) {
         checkRights(rdata.isLoggedIn());
-        return showChangeProfile(rdata);
+        return showChangeProfile();
     }
 
     public IResponse changeProfile(RequestData rdata) {
@@ -210,34 +199,114 @@ public class UserController extends Controller implements EncryptionCompanion {
         UserData data = UserBean.getInstance().getUser(userId);
         data.readProfileRequestData(rdata);
         if (!rdata.checkFormErrors()) {
-            return showChangeProfile(rdata);
+            return showChangeProfile();
         }
-        if (!UserBean.getInstance().saveUserProfile(data)){
-            Log.warn("could not save profile");
-        }
+        UserBean.getInstance().saveUserProfile(data);
         rdata.setSessionUser(data);
-        UserCache.getInstance().setDirty();
-        return new CloseDialogResponse("/ctrl/user/openProfile", getString("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        UserCache.setDirty();
+        rdata.setMessage(LocalizedStrings.string("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return new CloseDialogResponse("/ctrl/user/openProfile");
     }
-    
+
+    public IResponse openRegistration(RequestData rdata) {
+        rdata.getAttributes().put("userData", new UserData());
+        rdata.setSessionObject(RequestKeys.KEY_CAPTCHA, UserSecurity.generateCaptchaString());
+        return showRegistration();
+    }
+
+    public IResponse register(RequestData rdata) {
+        UserData user = new UserData();
+        rdata.getAttributes().put("userData", user);
+        user.readRegistrationRequestData(rdata);
+        if (!rdata.checkFormErrors()) {
+            return showRegistration();
+        }
+        if (UserBean.getInstance().doesLoginExist(user.getLogin())) {
+            rdata.addFormField("login");
+            rdata.addFormError(LocalizedStrings.string("_loginExistsError"));
+        }
+        if (UserBean.getInstance().doesEmailExist(user.getEmail())) {
+            rdata.addFormField("email");
+            rdata.addFormError(LocalizedStrings.string("_emailInUseError"));
+        }
+        String captchaString = rdata.getAttributes().getString("captcha");
+        if (!captchaString.equals(rdata.getSessionObject(RequestKeys.KEY_CAPTCHA))) {
+            rdata.addFormField("captcha");
+            rdata.addFormError(LocalizedStrings.string("_captchaError"));
+        }
+        if (!rdata.hasFormError()) {
+            return showRegistration();
+        }
+        user.setApproved(false);
+        user.setApprovalCode(UserSecurity.getApprovalString());
+        user.setId(UserBean.getInstance().getNextId());
+        if (!UserBean.getInstance().saveUser(user)) {
+            setSaveError(rdata);
+            return showRegistration();
+        }
+        String mailText = LocalizedStrings.string("_registrationVerifyMail") + " " + rdata.getSessionHost() + "/ctrl/user/verifyEmail/" + user.getId() + "?approvalCode=" + user.getApprovalCode();
+        if (!MailHelper.sendPlainMail(user.getEmail(), LocalizedStrings.string("_registrationRequest"), mailText)) {
+            rdata.setMessage(LocalizedStrings.string("_emailError"), RequestKeys.MESSAGE_TYPE_ERROR);
+            return showRegistration();
+        }
+        return showRegistrationDone();
+    }
+
+    public IResponse verifyEmail(RequestData rdata) {
+        int userId = rdata.getId();
+        String approvalCode = rdata.getAttributes().getString("approvalCode");
+        UserData data = UserBean.getInstance().getUser(userId);
+        if (approvalCode.isEmpty() || !approvalCode.equals(data.getApprovalCode())) {
+            rdata.setMessage(LocalizedStrings.string("_emailVerificationFailed"), RequestKeys.MESSAGE_TYPE_ERROR);
+            return showHome();
+        }
+        UserBean.getInstance().saveUserVerifyEmail(data);
+        String mailText = LocalizedStrings.string("_registrationRequestMail") + " " + data.getName() + "(" + data.getId() + ")";
+        if (!MailHelper.sendPlainMail(Configuration.getMailReceiver(), LocalizedStrings.string("_registrationRequest"), mailText)) {
+            rdata.setMessage(LocalizedStrings.string("_emailError"), RequestKeys.MESSAGE_TYPE_ERROR);
+            return showRegistration();
+        }
+        return showEmailVerification();
+    }
+
     protected IResponse showProfile() {
-        return new MasterResponse(new ProfilePage());
+        JspInclude jsp = new JspInclude("/WEB-INF/_jsp/user/profile.jsp");
+        return new MasterResponse(MasterResponse.DEFAULT_MASTER, jsp);
     }
 
-    protected IResponse showChangePassword(RequestData rdata) {
-        return new ChangePasswordPage().createHtml(rdata);
+    protected IResponse showChangePassword() {
+        return new ForwardResponse("/WEB-INF/_jsp/user/changePassword.ajax.jsp");
     }
 
-    protected IResponse showChangeProfile(RequestData rdata) {
-        return new EditProfilePage().createHtml(rdata);
+    protected IResponse showChangeProfile() {
+        return new ForwardResponse("/WEB-INF/_jsp/user/changeProfile.ajax.jsp");
     }
 
-    protected IResponse showLogin(RequestData rdata) {
-        return new MasterResponse(new LoginPage());
+    protected IResponse showRegistration() {
+        JspInclude jsp = new JspInclude("/WEB-INF/_jsp/user/registration.jsp");
+        return new MasterResponse(MasterResponse.DEFAULT_MASTER, jsp);
     }
 
-    protected IResponse showEditUser(RequestData rdata) {
-        return new EditUserPage().createHtml(rdata);
+    protected IResponse showRegistrationDone() {
+        JspInclude jsp = new JspInclude("/WEB-INF/_jsp/user/registrationDone.jsp");
+        return new MasterResponse(MasterResponse.DEFAULT_MASTER, jsp);
+    }
+
+    protected IResponse showEmailVerification() {
+        JspInclude jsp = new JspInclude("/WEB-INF/_jsp/user/verifyRegistrationEmail.jsp");
+        return new MasterResponse(MasterResponse.DEFAULT_MASTER, jsp);
+    }
+
+    protected IResponse showLogin() {
+        return new ForwardResponse("/WEB-INF/_jsp/user/login.jsp");
+    }
+
+    protected IResponse showEditGroup() {
+        return new ForwardResponse("/WEB-INF/_jsp/user/editGroup.ajax.jsp");
+    }
+
+    protected IResponse showEditUser() {
+        return new ForwardResponse("/WEB-INF/_jsp/user/editUser.ajax.jsp");
     }
 
 }

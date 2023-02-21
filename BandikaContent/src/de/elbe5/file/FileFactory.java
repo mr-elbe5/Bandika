@@ -8,7 +8,7 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.log.Log;
+import de.elbe5.base.Log;
 
 import java.util.*;
 
@@ -21,6 +21,36 @@ public class FileFactory {
 
     public static List<String> getTypes() {
         List<String> list = new ArrayList<>(infos.keySet());
+        Collections.sort(list);
+        return list;
+    }
+
+    public static List<String> getDocumentTypes() {
+        List<String> list = new ArrayList<>();
+        for (FileClassInfo info : infos.values()){
+            if (info instanceof DocumentClassInfo)
+                list.add(info.getType());
+        }
+        Collections.sort(list);
+        return list;
+    }
+
+    public static List<String> getImageTypes() {
+        List<String> list = new ArrayList<>();
+        for (FileClassInfo info : infos.values()){
+            if (info instanceof ImageClassInfo)
+                list.add(info.getType());
+        }
+        Collections.sort(list);
+        return list;
+    }
+
+    public static List<String> getMediaTypes() {
+        List<String> list = new ArrayList<>();
+        for (FileClassInfo info : infos.values()){
+            if (info instanceof MediaClassInfo)
+                list.add(info.getType());
+        }
         Collections.sort(list);
         return list;
     }

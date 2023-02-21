@@ -8,33 +8,25 @@
  */
 package de.elbe5.content;
 
-import de.elbe5.data.IJsonDataPackage;
-import de.elbe5.log.Log;
+import de.elbe5.base.Log;
 import de.elbe5.file.FileBean;
 import de.elbe5.file.FileData;
-import org.json.JSONObject;
 
 import java.util.*;
 
-public class ContentCache implements IJsonDataPackage {
+public class ContentCache {
 
-    private static final ContentCache instance = new ContentCache();
-
-    public static ContentCache getInstance() {
-        return instance;
-    }
-
-    private ContentData contentRoot = null;
-    private int version = 1;
-    private volatile boolean dirty = true;
+    private static ContentData contentRoot = null;
+    private static int version = 1;
+    private static boolean dirty = true;
     private static final Integer lockObj = 1;
 
-    private Map<Integer, ContentData> contentMap = new HashMap<>();
-    private Map<String, ContentData> pathMap = new HashMap<>();
-    private Map<Integer, FileData> fileMap = new HashMap<>();
-    private List<ContentData> footerList = new ArrayList<>();
+    private static Map<Integer, ContentData> contentMap = new HashMap<>();
+    private static Map<String, ContentData> pathMap = new HashMap<>();
+    private static Map<Integer, FileData> fileMap = new HashMap<>();
+    private static List<ContentData> footerList = new ArrayList<>();
 
-    public synchronized void load() {
+    public static synchronized void load() {
         List<ContentData> contentList = ContentBean.getInstance().getAllContents();
         List<FileData> fileList = FileBean.getInstance().getAllFiles();
         Map<Integer, ContentData> contents = new HashMap<>();
@@ -58,6 +50,7 @@ public class ContentCache implements IJsonDataPackage {
         for (ContentData content : contentList) {
             ContentData parent = contents.get(content.getParentId());
             content.setParent(parent);
+            Log.log("id " + content.getId() + " has parent " + parent);
             if (parent != null) {
                 parent.addChild(content);
             }
@@ -77,7 +70,7 @@ public class ContentCache implements IJsonDataPackage {
         Log.log("content cache reloaded");
     }
 
-    public void checkDirty() {
+    public static void checkDirty() {
         if (dirty) {
             synchronized (lockObj) {
                 if (dirty) {
@@ -88,30 +81,30 @@ public class ContentCache implements IJsonDataPackage {
         }
     }
 
-    public void setDirty() {
+    public static void setDirty() {
         increaseVersion();
         dirty=true;
     }
 
-    public void increaseVersion() {
+    public static void increaseVersion() {
         version++;
     }
 
-    public int getVersion() {
+    public static int getVersion() {
         return version;
     }
 
-    public ContentData getContentRoot() {
+    public static ContentData getContentRoot() {
         checkDirty();
         return contentRoot;
     }
 
-    public ContentData getContent(int id) {
+    public static ContentData getContent(int id) {
         checkDirty();
         return contentMap.get(id);
     }
 
-    public <T extends ContentData> T getContent(int id,Class<T> cls) {
+    public static <T extends ContentData> T getContent(int id,Class<T> cls) {
         checkDirty();
         try {
             return cls.cast(contentMap.get(id));
@@ -121,7 +114,7 @@ public class ContentCache implements IJsonDataPackage {
         }
     }
 
-    public <T extends ContentData> List<T> getContents(Class<T> cls) {
+    public static <T extends ContentData> List<T> getContents(Class<T> cls) {
         checkDirty();
         List<T> list = new ArrayList<>();
         try {
@@ -136,12 +129,12 @@ public class ContentCache implements IJsonDataPackage {
         return list;
     }
 
-    public ContentData getContent(String url) {
+    public static ContentData getContent(String url) {
         checkDirty();
         return pathMap.get(url);
     }
 
-    public <T extends ContentData> T getContent(String url,Class<T> cls) {
+    public static <T extends ContentData> T getContent(String url,Class<T> cls) {
         checkDirty();
         try {
             return cls.cast(pathMap.get(url));
@@ -151,7 +144,7 @@ public class ContentCache implements IJsonDataPackage {
         }
     }
 
-    public int getParentContentId(int id) {
+    public static int getParentContentId(int id) {
         checkDirty();
         ContentData contentData = getContent(id);
         if (contentData == null) {
@@ -160,31 +153,33 @@ public class ContentCache implements IJsonDataPackage {
         return contentData.getParentId();
     }
 
-    public List<Integer> getParentContentIds(ContentData data) {
+    public static List<Integer> getParentContentIds(ContentData data) {
         checkDirty();
         List<Integer> list = new ArrayList<>();
         while (data!=null) {
             list.add(data.getId());
+            Log.log("list id " + data.getId() + " has parent " + data.getParent());
             data = data.getParent();
         }
+        Log.log(list.toString());
         return list;
     }
 
-    public List<Integer> getParentContentIds(int contentId) {
+    public static List<Integer> getParentContentIds(int contentId) {
         ContentData data=getContent(contentId);
         return getParentContentIds(data);
     }
 
-    public List<ContentData> getFooterList() {
+    public static List<ContentData> getFooterList() {
         return footerList;
     }
 
-    public FileData getFile(int id) {
+    public static FileData getFile(int id) {
         checkDirty();
         return fileMap.get(id);
     }
 
-    public <T extends FileData> T getFile(int id,Class<T> cls) {
+    public static <T extends FileData> T getFile(int id,Class<T> cls) {
         checkDirty();
         try {
             return cls.cast(fileMap.get(id));
@@ -194,7 +189,7 @@ public class ContentCache implements IJsonDataPackage {
         }
     }
 
-    public <T extends FileData> List<T> getFiles(Class<T> cls) {
+    public static <T extends FileData> List<T> getFiles(Class<T> cls) {
         checkDirty();
         List<T> list = new ArrayList<>();
         try {
@@ -209,7 +204,7 @@ public class ContentCache implements IJsonDataPackage {
         return list;
     }
 
-    public int getFileParentId(int id) {
+    public static int getFileParentId(int id) {
         checkDirty();
         FileData fileData = getFile(id);
         if (fileData == null) {
@@ -218,18 +213,4 @@ public class ContentCache implements IJsonDataPackage {
         return fileData.getParentId();
     }
 
-    @Override
-    public String getName() {
-        return "contentData";
-    }
-
-    @Override
-    public JSONObject saveAsJson() {
-        return getContentRoot().toJSONObject();
-    }
-
-    @Override
-    public void loadFromJson(JSONObject jsonObject) {
-        //todo
-    }
 }

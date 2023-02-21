@@ -1,6 +1,6 @@
 package de.elbe5.content;
 
-import de.elbe5.log.Log;
+import de.elbe5.base.Log;
 
 import java.lang.reflect.Constructor;
 
@@ -26,7 +26,7 @@ class ContentClassInfo {
         } catch (Exception e) {
             Log.error("could not create content data for type "+type);
         }
-        return new ContentData();
+        return null;
     }
 
     public ContentBean getBean(){

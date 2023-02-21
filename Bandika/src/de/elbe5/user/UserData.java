@@ -8,14 +8,18 @@
  */
 package de.elbe5.user;
 
+import de.elbe5.base.BaseData;
+import de.elbe5.base.BinaryFile;
+import de.elbe5.base.IJsonData;
+import de.elbe5.base.Log;
+import de.elbe5.base.ImageHelper;
+import de.elbe5.base.StringHelper;
+import de.elbe5.base.LocalizedStrings;
 import de.elbe5.application.Configuration;
-import de.elbe5.companion.EncryptionCompanion;
-import de.elbe5.companion.ImageCompanion;
-import de.elbe5.data.*;
-import de.elbe5.file.BinaryFile;
-import de.elbe5.log.Log;
+import de.elbe5.group.GroupData;
 import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;
+import org.json.simple.JSONObject;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
@@ -24,62 +28,43 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@AJsonClass
-public class UserData extends BaseData implements IJsonData, ImageCompanion, EncryptionCompanion {
+public class UserData extends BaseData implements IJsonData {
 
     public static final int ID_ROOT = 1;
 
     public static int MAX_PORTRAIT_WIDTH = 200;
     public static int MAX_PORTRAIT_HEIGHT = 200;
 
+    public static int MIN_LOGIN_LENGTH = 4;
     public static int MIN_PASSWORD_LENGTH = 8;
 
-    @AJsonField(baseClass = String.class)
     protected String title = "";
-    @AJsonField(baseClass = String.class)
     protected String firstName = "";
-    @AJsonField(baseClass = String.class)
     protected String lastName = "";
-    @AJsonField(baseClass = String.class)
     protected String email = "";
-    @AJsonField(baseClass = String.class)
     protected String login = "";
-    @AJsonField(baseClass = String.class)
     protected String passwordHash = "";
-    @AJsonField(baseClass = String.class)
     protected String token = "";
-    @AJsonField(baseClass = LocalDateTime.class)
     protected LocalDateTime tokenExpiration = null;
-    @AJsonField(baseClass = Boolean.class)
+    protected String approvalCode = "";
+    protected boolean approved = false;
+    protected boolean emailVerified = false;
     protected boolean locked = false;
-    @AJsonField(baseClass = Boolean.class)
     protected boolean deleted = false;
-    @AJsonField(baseClass = String.class)
     protected String street = "";
-    @AJsonField(baseClass = String.class)
     protected String zipCode = "";
-    @AJsonField(baseClass = String.class)
     protected String city = "";
-    @AJsonField(baseClass = String.class)
     protected String country = "";
-    @AJsonField(baseClass = String.class)
     protected String phone = "";
-    @AJsonField(baseClass = String.class)
     protected String fax = "";
-    @AJsonField(baseClass = String.class)
     protected String mobile = "";
-    @AJsonField(baseClass = String.class)
     protected String notes = "";
-    @AJsonField(baseClass = Boolean.class)
     protected boolean hasPortrait=false;
     protected byte[] portrait = null;
-    @AJsonField(baseClass = Integer.class)
     protected int companyId = 0;
 
-    @AJsonField(baseClass = HashSet.class, valueClass = Integer.class)
     protected Set<Integer> groupIds = new HashSet<>();
 
-    @AJsonField(baseClass = HashSet.class, valueClass = SystemZone.class)
     protected Set<SystemZone> systemRights = new HashSet<>();
 
     // base data
@@ -147,16 +132,48 @@ public class UserData extends BaseData implements IJsonData, ImageCompanion, Enc
         if (password.isEmpty()) {
             setPasswordHash("");
         } else {
-            setPasswordHash(encryptPassword(password, Configuration.getInstance().getSalt()));
+            setPasswordHash(UserSecurity.encryptPassword(password, Configuration.getSalt()));
         }
+    }
+
+    public String getToken() {
+        return token;
     }
 
     public void setToken(String token) {
         this.token = token;
     }
 
+    public LocalDateTime getTokenExpiration() {
+        return tokenExpiration;
+    }
+
     public void setTokenExpiration(LocalDateTime tokenExpiration) {
         this.tokenExpiration = tokenExpiration;
+    }
+
+    public String getApprovalCode() {
+        return approvalCode;
+    }
+
+    public void setApprovalCode(String approvalCode) {
+        this.approvalCode = approvalCode;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
     }
 
     public boolean isLocked() {
@@ -277,7 +294,7 @@ public class UserData extends BaseData implements IJsonData, ImageCompanion, Enc
         return !systemRights.isEmpty() || isRoot();
     }
 
-    public boolean hasAnyAdministrationRight() {
+    public boolean hasAnyElevatedSystemRight() {
         //more than global read right;
         return hasAnySystemRight() && !(systemRights.size() == 1 && hasSystemRight(SystemZone.CONTENTREAD));
     }
@@ -286,8 +303,13 @@ public class UserData extends BaseData implements IJsonData, ImageCompanion, Enc
         return systemRights.contains(zone) || isRoot();
     }
 
+    public boolean hasTemplateRight(){
+        return hasSystemRight(SystemZone.TEMPLATE);
+    }
+
     public boolean hasAnyContentRight() {
-        return hasSystemRight(SystemZone.CONTENTEDIT) || hasSystemRight(SystemZone.CONTENTAPPROVE);
+        return hasSystemRight(SystemZone.CONTENTEDIT) || hasSystemRight(SystemZone.CONTENTAPPROVE) ||
+                hasSystemRight(SystemZone.SPECIFICCONTENTEDIT) || hasSystemRight(SystemZone.SPECIFICCONTENTAPPROVE);
     }
 
     public boolean isRoot(){
@@ -323,15 +345,15 @@ public class UserData extends BaseData implements IJsonData, ImageCompanion, Enc
         setMobile(rdata.getAttributes().getString("mobile"));
         setNotes(rdata.getAttributes().getString("notes"));
         BinaryFile file = rdata.getAttributes().getFile("portrait");
-        if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !isNullOrEmpty(file.getContentType())) {
+        if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringHelper.isNullOrEmpty(file.getContentType())) {
             try {
-                BufferedImage source = createImage(file.getBytes(), file.getContentType());
+                BufferedImage source = ImageHelper.createImage(file.getBytes(), file.getContentType());
                 if (source != null) {
-                    float factor = getResizeFactor(source, MAX_PORTRAIT_WIDTH, MAX_PORTRAIT_HEIGHT, true);
-                    BufferedImage image = copyImage(source, factor);
+                    float factor = ImageHelper.getResizeFactor(source, MAX_PORTRAIT_WIDTH, MAX_PORTRAIT_HEIGHT, true);
+                    BufferedImage image = ImageHelper.copyImage(source, factor);
                     Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
                     ImageWriter writer = writers.next();
-                    setPortrait(writeImage(writer, image));
+                    setPortrait(ImageHelper.writeImage(writer, image));
                 }
             } catch (IOException e) {
                 Log.error("could not create portrait", e);
@@ -350,8 +372,9 @@ public class UserData extends BaseData implements IJsonData, ImageCompanion, Enc
         readBasicData(rdata);
         setLogin(rdata.getAttributes().getString("login"));
         setPassword(rdata.getAttributes().getString("password"));
+        setApproved(rdata.getAttributes().getBoolean("approved"));
+        setEmailVerified(rdata.getAttributes().getBoolean("emailVerified"));
         setGroupIds(rdata.getAttributes().getIntegerSet("groupIds"));
-        setLocked(rdata.getAttributes().getBoolean("locked"));
         if (login.isEmpty())
             rdata.addIncompleteField("login");
         if (isNew() && !hasPassword())
@@ -364,4 +387,34 @@ public class UserData extends BaseData implements IJsonData, ImageCompanion, Enc
         checkBasics(rdata);
     }
 
+    public void readRegistrationRequestData(RequestData rdata) {
+        readBasicData(rdata);
+        setLogin(rdata.getAttributes().getString("login"));
+        String password1 = rdata.getAttributes().getString("password1");
+        String password2 = rdata.getAttributes().getString("password2");
+        checkBasics(rdata);
+        if (login.isEmpty())
+            rdata.addIncompleteField("login");
+        if (login.length() < UserData.MIN_LOGIN_LENGTH) {
+            rdata.addFormField("login");
+            rdata.addFormError(LocalizedStrings.string("_loginLengthError"));
+        }
+        if (password1.length() < UserData.MIN_PASSWORD_LENGTH) {
+            rdata.addFormField("password1");
+            rdata.addFormError(LocalizedStrings.string("_passwordLengthError"));
+        } else if (!password1.equals(password2)) {
+            rdata.addFormField("password2");
+            rdata.addFormError(LocalizedStrings.string("_passwordsDontMatch"));
+        } else
+            setPassword(password1);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public JSONObject getJson() {
+        JSONObject json = new JSONObject();
+        json.put("id",getId());
+        json.put("name",getName());
+        return json;
+    }
 }

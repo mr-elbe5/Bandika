@@ -8,12 +8,11 @@
  */
 package de.elbe5.timer;
 
-import de.elbe5.data.AJsonClass;
-import de.elbe5.log.Log;
+import de.elbe5.base.DateHelper;
+import de.elbe5.base.Log;
 
 import java.time.LocalDateTime;
 
-@AJsonClass
 public class HeartbeatTaskData extends TimerTaskData {
 
     public HeartbeatTaskData(){
@@ -27,7 +26,7 @@ public class HeartbeatTaskData extends TimerTaskData {
 
     @Override
     public boolean execute(LocalDateTime executionTime, LocalDateTime checkTime) {
-        Log.log("Heartbeat at " + toHtmlDateTime(TimerBean.getInstance().getServerTime()));
+        Log.log("Heartbeat at " + DateHelper.toHtmlDateTime(TimerBean.getInstance().getServerTime()));
         return true;
     }
 }

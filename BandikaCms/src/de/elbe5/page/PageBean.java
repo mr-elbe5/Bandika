@@ -8,7 +8,7 @@
  */
 package de.elbe5.page;
 
-import de.elbe5.log.Log;
+import de.elbe5.base.Log;
 import de.elbe5.content.ContentBean;
 import de.elbe5.content.ContentData;
 
@@ -27,7 +27,7 @@ public class PageBean extends ContentBean {
         return instance;
     }
 
-    private static final String GET_CONTENT_EXTRAS_SQL = "SELECT keywords, template, publish_date, published_content FROM t_page WHERE id=?";
+    private static final String GET_CONTENT_EXTRAS_SQL = "SELECT keywords, layout, publish_date, published_content FROM t_page WHERE id=?";
 
     @Override
     public void readContentExtras(Connection con, ContentData contentData) throws SQLException {
@@ -42,7 +42,7 @@ public class PageBean extends ContentBean {
                 if (rs.next()) {
                     int i = 1;
                     data.setKeywords(rs.getString(i++));
-                    data.setTemplateName(rs.getString(i++));
+                    data.setLayout(rs.getString(i++));
                     Timestamp ts = rs.getTimestamp(i++);
                     data.setPublishDate(ts == null ? null : ts.toLocalDateTime());
                     data.setPublishedContent(rs.getString(i));
@@ -55,7 +55,7 @@ public class PageBean extends ContentBean {
         }
     }
 
-    private static final String INSERT_CONTENT_EXTRAS_SQL = "insert into t_page (keywords,template,publish_date,published_content,id) values(?,?,?,?,?)";
+    private static final String INSERT_CONTENT_EXTRAS_SQL = "insert into t_page (keywords,layout,publish_date,published_content,id) values(?,?,?,?,?)";
 
     @Override
     public void createContentExtras(Connection con, ContentData contentData) throws SQLException {
@@ -74,7 +74,7 @@ public class PageBean extends ContentBean {
         writeAllParts(con, data);
     }
 
-    private static final String UPDATE_CONTENT_EXTRAS_SQL = "update t_page set keywords=?,template=?,publish_date=?,published_content=? where id=?";
+    private static final String UPDATE_CONTENT_EXTRAS_SQL = "update t_page set keywords=?,layout=?,publish_date=?,published_content=? where id=?";
 
     @Override
     public void updateContentExtras(Connection con, ContentData contentData) throws SQLException {
@@ -96,7 +96,7 @@ public class PageBean extends ContentBean {
     private void setExtraValues(PreparedStatement pst, PageData data) throws SQLException{
         int i = 1;
         pst.setString(i++, data.getKeywords());
-        pst.setString(i++, data.getTemplateName());
+        pst.setString(i++, data.getLayout());
         if (data.getPublishDate()==null)
             pst.setNull(i++,Types.TIMESTAMP);
         else
@@ -105,7 +105,35 @@ public class PageBean extends ContentBean {
         pst.setInt(i, data.getId());
     }
 
+    public boolean publishPage(PageData data) {
+        Connection con = startTransaction();
+        try {
+            if (!data.isNew() && ContentBean.getInstance().changedContent(con, data)) {
+                return rollbackTransaction(con);
+            }
+            publishPage(con, data);
+            return commitTransaction(con);
+        } catch (Exception se) {
+            return rollbackTransaction(con, se);
+        }
+    }
+
     private static final String PUBLISH_CONTENT_SQL = "update t_page set publish_date=?,published_content=? where id=?";
+
+    public void publishPage(Connection con, PageData data) throws SQLException {
+        PreparedStatement pst = null;
+        try {
+            pst = con.prepareStatement(PUBLISH_CONTENT_SQL);
+            int i = 1;
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getPublishDate()));
+            pst.setString(i++,data.getPublishedContent());
+            pst.setInt(i, data.getId());
+            pst.executeUpdate();
+            pst.close();
+        } finally {
+            closeStatement(pst);
+        }
+    }
 
     private static final String REPLACE_IN_PAGE_SQL = "UPDATE t_page set published_content = REPLACE(published_content,?,?)";
 
@@ -202,4 +230,20 @@ public class PageBean extends ContentBean {
         }
     }
 
+    public boolean deletePart(int id) {
+        Connection con = getConnection();
+        PreparedStatement pst = null;
+        try {
+            pst = con.prepareStatement(DELETE_PART_SQL);
+            pst.setInt(1, id);
+            pst.executeUpdate();
+            return true;
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+            return false;
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+    }
 }

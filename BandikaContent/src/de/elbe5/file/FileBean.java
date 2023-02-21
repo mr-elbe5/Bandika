@@ -9,9 +9,9 @@
 package de.elbe5.file;
 
 import de.elbe5.application.ApplicationPath;
-import de.elbe5.log.Log;
-import de.elbe5.companion.FileCompanion;
-import de.elbe5.content.ContentCentral;
+import de.elbe5.base.BinaryFile;
+import de.elbe5.base.Log;
+import de.elbe5.base.FileHelper;
 import de.elbe5.database.DbBean;
 
 import java.io.File;
@@ -22,7 +22,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileBean extends DbBean implements FileCompanion {
+public class FileBean extends DbBean {
 
     private static final int DEFAULT_BUFFER_SIZE = 0x4000;
 
@@ -159,15 +159,10 @@ public class FileBean extends DbBean implements FileCompanion {
         try {
             if (!saveFile(con, data, complete))
                 return rollbackTransaction(con);
-            if (data.fileNameChanged()){
-                ContentCentral.getInstance().replaceStringInContent(con, data.getOldFileName(), data.getFileName());
-            }
             if (!commitTransaction(con))
                 return false;
             if (complete) {
-                if (!writeFile(data, true)){
-                    Log.warn("could not write file");
-                }
+                writeStaticFile(data, true);
             }
             return true;
         } catch (Exception se) {
@@ -175,7 +170,7 @@ public class FileBean extends DbBean implements FileCompanion {
         }
     }
 
-    public boolean saveFile(Connection con, FileData data, boolean complete) throws SQLException{
+    public boolean saveFile(Connection con, FileData data, boolean complete) throws SQLException {
         if (!data.isNew() && changedFile(con, data)) {
             return false;
         }
@@ -184,6 +179,9 @@ public class FileBean extends DbBean implements FileCompanion {
         FileBean extrasBean = FileFactory.getBean(data.getType());
         if (extrasBean != null) {
             extrasBean.writeFileExtras(con, data, complete);
+        }
+        if (!data.isNew() && complete){
+            writeStaticFile(data, true);
         }
         return true;
     }
@@ -254,12 +252,20 @@ public class FileBean extends DbBean implements FileCompanion {
         return data;
     }
 
+    public boolean assertFileDirectory(){
+        File f = new File(ApplicationPath.getAppFilePath());
+        if (f.exists()){
+            return true;
+        }
+        return f.mkdir();
+    }
+
     private static final String GET_FILE_STREAM_SQL = "SELECT file_size, bytes FROM t_file WHERE id=?";
 
     public boolean createTempFile(File file){
         Log.log("creating file " + file.getName());
         String fileName = file.getName();
-        String name = getFileNameWithoutExtension(fileName);
+        String name = FileHelper.getFileNameWithoutExtension(fileName);
         int id = Integer.parseInt(name);
         Connection con = getConnection();
         PreparedStatement pst = null;
@@ -302,17 +308,26 @@ public class FileBean extends DbBean implements FileCompanion {
         return true;
     }
 
-    public boolean writeFile(FileData data, boolean replace){
-        String path = ApplicationPath.getAppFilePath()+"/"+data.getTempFileName();
-        if (!replace && fileExists(path))
+    public boolean writeStaticFile(FileData data, boolean replace){
+        String path = ApplicationPath.getAppFilePath()+"/"+data.getStaticFileName();
+        if (!replace && FileHelper.fileExists(path))
             return true;
-        return writeBinaryFile(path, data.getBytes());
+        return FileHelper.writeBinaryFile(path, data.getBytes());
+    }
+
+    public boolean deleteStaticFile(FileData data){
+        String path = ApplicationPath.getAppFilePath()+"/"+data.getStaticFileName();
+        return FileHelper.deleteBinaryFile(path);
     }
 
     private static final String DELETE_SQL = "DELETE FROM t_file WHERE id=?";
 
-    public boolean deleteFile(int id) {
-        return deleteItem(DELETE_SQL, id);
+    public boolean deleteFile(FileData data) {
+        if (!deleteItem(DELETE_SQL, data.getId())) {
+            return false;
+        }
+        deleteStaticFile(data);
+        return true;
     }
 
 }
