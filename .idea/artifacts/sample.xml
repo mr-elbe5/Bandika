@@ -1,0 +1,23 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="sample">
+    <output-path>$PROJECT_DIR$/out</output-path>
+    <root id="archive" name="ROOT.war">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="BandikaBase" />
+          <element id="module-output" name="BandikaContent" />
+          <element id="module-output" name="BandikaCms" />
+          <element id="module-output" name="BandikaCmsSample" />
+          <element id="module-output" name="BandikaWebBase" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="baselibs" />
+          <element id="library" level="project" name="catalina" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="BandikaContent/web/Web" />
+      <element id="javaee-facet-resources" facet="BandikaCmsSample/web/Web" />
+      <element id="javaee-facet-resources" facet="BandikaWebBase/web/Web" />
+    </root>
+  </artifact>
+</component>
