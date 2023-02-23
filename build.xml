@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="CmsSample" default="deployProject" basedir=".">
+<project name="Bandika" default="deployProject" basedir=".">
 
     <!-- use a properties file 'build.properties' with an entry like 'deploy.dir=/Users/myself/tomcat/bandika' -->
 
@@ -41,7 +41,7 @@
     <target name="collectSassFiles">
         <copy todir="${buildScss.dir}" overwrite="true">
             <fileset dir="../BandikaWebBase/scss" />
-            <fileset dir="BandikaCmsSample/scss" />
+            <fileset dir="scss" />
         </copy>
     </target>
 
@@ -64,7 +64,7 @@
             <file name="${buildScss.dir}/admin.scss" />
             <mapper type="glob" from="*.scss" to="*.css"/>
         </apply>
-        <apply executable="sass" dest="BandikaCmsSample/web/static-content/css" verbose="true" force="true" failonerror="true">
+        <apply executable="sass" dest="web/static-content/css" verbose="true" force="true" failonerror="true">
             <srcfile />
             <targetfile />
             <file name="${buildScss.dir}/layout.scss" />
@@ -82,7 +82,7 @@
             <fileset dir="../BandikaWebBase/src" />
             <fileset dir="../BandikaContent/src" />
             <fileset dir="../BandikaCms/src" />
-            <fileset dir="BandikaCmsSample/src" />
+            <fileset dir="src" />
         </copy>
     </target>
 
@@ -101,12 +101,12 @@
 
     <target name="createProjectWar" depends="collectFiles, compile">
         <war destfile="${build.dir}/ROOT.war"
-             webxml="BandikaCmsSample/web/WEB-INF/web.xml">
+             webxml="web/WEB-INF/web.xml">
             <classes dir="${buildClasses.dir}"/>
             <fileset dir="../BandikaWebBase/web" />
             <fileset dir="../BandikaContent/web" />
             <fileset dir="../BandikaCms/web" />
-            <fileset dir="BandikaCmsSample/web" >
+            <fileset dir="web" >
                 <exclude name="WEB-INF/web.xml"/>
             </fileset>
             <lib dir="${buildLibs.dir}"/>

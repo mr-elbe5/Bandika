@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="war" build-on-make="true" name="sample">
+  <artifact type="war" build-on-make="true" name="bandika">
     <output-path>$PROJECT_DIR$/out</output-path>
     <root id="archive" name="ROOT.war">
       <element id="directory" name="WEB-INF">
@@ -7,8 +7,8 @@
           <element id="module-output" name="BandikaBase" />
           <element id="module-output" name="BandikaContent" />
           <element id="module-output" name="BandikaCms" />
-          <element id="module-output" name="BandikaCmsSample" />
           <element id="module-output" name="BandikaWebBase" />
+          <element id="module-output" name="Bandika" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="baselibs" />
@@ -16,8 +16,8 @@
         </element>
       </element>
       <element id="javaee-facet-resources" facet="BandikaContent/web/Web" />
-      <element id="javaee-facet-resources" facet="BandikaCmsSample/web/Web" />
       <element id="javaee-facet-resources" facet="BandikaWebBase/web/Web" />
+      <element id="javaee-facet-resources" facet="Bandika/web/Web" />
     </root>
   </artifact>
 </component>
