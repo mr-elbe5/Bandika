@@ -273,7 +273,7 @@ a.link::before {
 }
 
 a.mail::before {
-  content: "";
+  content: "\f003";
   font-family: FontAwesome;
   padding-right: 0.25em;
 }
