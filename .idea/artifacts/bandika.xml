@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="war" build-on-make="true" name="bandika">
-    <output-path>$PROJECT_DIR$/out</output-path>
+    <output-path>$USER_HOME$/tomcat/develop/bandika</output-path>
     <root id="archive" name="ROOT.war">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
@@ -15,9 +15,9 @@
           <element id="library" level="project" name="catalina" />
         </element>
       </element>
-      <element id="javaee-facet-resources" facet="BandikaContent/web/Web" />
       <element id="javaee-facet-resources" facet="BandikaWebBase/web/Web" />
       <element id="javaee-facet-resources" facet="Bandika/web/Web" />
+      <element id="javaee-facet-resources" facet="BandikaContent/web/Web" />
     </root>
   </artifact>
 </component>
