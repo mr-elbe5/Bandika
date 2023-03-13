@@ -64,18 +64,16 @@ public class BandikaInitServlet extends InitServlet {
         CkEditorController.register(new CkEditorController());
         TimerController.register(new TimerController());
         UserController.register(new UserController());
-        ContentFactory.addClassInfo(ContentData.class, ContentBean.getInstance());
-        FileFactory.addDocumentClassInfo(DocumentData.class, null);
-        FileFactory.addImageClassInfo(ImageData.class, ImageBean.getInstance());
-        FileFactory.addMediaClassInfo(MediaData.class, null);
-        ContentFactory.addClassInfo(PageData.class, PageBean.getInstance());
-        PagePartFactory.addClassInfo(LayoutPartData.class, LayoutPartBean.getInstance(),true);
-        LayoutCache.addType(PageData.LAYOUT_TYPE);
+         LayoutCache.addType(PageData.LAYOUT_TYPE);
         LayoutCache.addType(PagePartData.LAYOUT_TYPE);
-        ContentFactory.addDefaultType(PageData.class);
-        FileFactory.addDefaultDocumentType(DocumentData.class);
-        FileFactory.addDefaultImageType(ImageData.class);
-        FileFactory.addDefaultMediaType(MediaData.class);
+
+        PageData.childClasses.add(PageData.class);
+        PageData.childClasses.add(LinkData.class);
+        PageData.fileClasses.add(DocumentData.class);
+        PageData.fileClasses.add(ImageData.class);
+        PageData.fileClasses.add(MediaData.class);
+        PageData.pagePartClasses.add(LayoutPartData.class);
+
         ContentCache.load();
         CompanyCache.load();
         UserCache.load();
