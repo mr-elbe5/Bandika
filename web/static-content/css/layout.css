@@ -274,7 +274,7 @@ a.link::before {
 
 a.mail::before {
   content: "\f003";
-  font-family: FontAwesome;
+  font-family: FontAwesome, sans-serif;
   padding-right: 0.25em;
 }
 

@@ -17,7 +17,6 @@ import de.elbe5.company.CompanyCache;
 import de.elbe5.company.CompanyController;
 import de.elbe5.content.*;
 import de.elbe5.database.DbConnector;
-import de.elbe5.page.LayoutPartBean;
 import de.elbe5.page.LayoutPartData;
 import de.elbe5.file.*;
 import de.elbe5.group.GroupController;
@@ -64,7 +63,7 @@ public class BandikaInitServlet extends InitServlet {
         CkEditorController.register(new CkEditorController());
         TimerController.register(new TimerController());
         UserController.register(new UserController());
-         LayoutCache.addType(PageData.LAYOUT_TYPE);
+        LayoutCache.addType(PageData.LAYOUT_TYPE);
         LayoutCache.addType(PagePartData.LAYOUT_TYPE);
 
         PageData.childClasses.add(PageData.class);
