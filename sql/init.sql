@@ -171,8 +171,8 @@ CREATE TABLE IF NOT EXISTS t_content_log
 );
 
 -- root user
-INSERT INTO t_user (id,first_name,last_name,email,login,pwd,approval_code,approved)
-VALUES (1,'System','Administrator','root@localhost','root','','',TRUE);
+INSERT INTO t_user (id,first_name,last_name,email,login,pwd)
+VALUES (1,'System','Administrator','root@localhost','root','');
 
 -- timer
 INSERT INTO t_timer_task (name,display_name,execution_interval,minute,active)
