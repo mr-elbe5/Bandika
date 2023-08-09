@@ -17,6 +17,7 @@ import de.elbe5.company.CompanyCache;
 import de.elbe5.company.CompanyController;
 import de.elbe5.content.*;
 import de.elbe5.database.DbConnector;
+import de.elbe5.link.LinkData;
 import de.elbe5.page.LayoutPartData;
 import de.elbe5.file.*;
 import de.elbe5.group.GroupController;
