@@ -43,7 +43,6 @@ public class BandikaSampleInitServlet extends InitServlet {
         ApplicationPath.initializePath(ApplicationPath.getCatalinaAppDir(context), ApplicationPath.getCatalinaAppROOTDir(context));
         Configuration.setConfigs(context);
         LocalizedStrings.addBundle("bandika", Configuration.getLocale());
-        LocalizedStrings.addBundle("content", Configuration.getLocale());
         LocalizedStrings.addBundle("cms", Configuration.getLocale());
         LocalizedStrings.addBundle("application", Configuration.getLocale());
         Log.initLog(ApplicationPath.getAppName());

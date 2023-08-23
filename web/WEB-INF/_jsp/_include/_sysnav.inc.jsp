@@ -20,7 +20,7 @@
     String userClass=rdata.isLoggedIn() ? "fa-user" : "fa-user-o";
 %>
 <ul class="nav justify-content-end">
-    <%if (rdata.hasAnyElevatedSystemRight()) {%>
+    <%if (rdata.hasAnySystemRight()) {%>
     <li class="nav-item"><a class="nav-link fa fa-cog" href="/ctrl/admin/openAdministration" title="<%=$SH("_administration")%>"></a></li>
     <%}
     if (contentData instanceof PageData && !contentData.isEditing() && contentData.hasUserEditRight(rdata)) {%>

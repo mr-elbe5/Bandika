@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebContextManager">
+    <option name="state">
+      <map>
+        <entry key="file://$PROJECT_DIR$/../BandikaBase/web/WEB-INF/_jsp/content/contentAdministration.inc.jsp" value="file://$PROJECT_DIR$/../BandikaBase/web/WEB-INF/_jsp/content" />
+        <entry key="file://$PROJECT_DIR$/../BandikaBase/web/WEB-INF/_jsp/content/sortChildContents.ajax.jsp" value="file://$PROJECT_DIR$/../BandikaBase/web/WEB-INF/_jsp/content" />
+        <entry key="file://$PROJECT_DIR$/../BandikaBase/web/WEB-INF/_jsp/content/treeContentFiles.inc.jsp" value="file://$PROJECT_DIR$/../BandikaBase/web/WEB-INF/_jsp/content" />
+        <entry key="file://$PROJECT_DIR$/../BandikaBase/web/WEB-INF/_jsp/timer/timerAdministration.inc.jsp" value="file://$PROJECT_DIR$/../BandikaBase/web/WEB-INF/_jsp/timer" />
+      </map>
+    </option>
+  </component>
+</project>
