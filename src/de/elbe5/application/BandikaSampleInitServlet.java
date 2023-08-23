@@ -8,13 +8,11 @@
  */
 package de.elbe5.application;
 
-import de.elbe5.administration.ContentAdminController;
+import de.elbe5.administration.CmsContentAdminController;
 import de.elbe5.base.LocalizedStrings;
 import de.elbe5.base.JsonWebToken;
 import de.elbe5.base.Log;
 import de.elbe5.ckeditor.CkEditorController;
-import de.elbe5.company.CompanyCache;
-import de.elbe5.company.CompanyController;
 import de.elbe5.content.*;
 import de.elbe5.database.DbConnector;
 import de.elbe5.link.LinkData;
@@ -35,7 +33,7 @@ import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 
-public class BandikaInitServlet extends InitServlet {
+public class BandikaSampleInitServlet extends InitServlet {
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
@@ -53,12 +51,11 @@ public class BandikaInitServlet extends InitServlet {
             return;
         Configuration.setAppTitle("Bandika");
         JsonWebToken.createSecretKey(Configuration.getSalt());
-        AdminController.register(new ContentAdminController());
+        AdminController.register(new CmsContentAdminController());
         ContentController.register(new ContentController());
         DocumentController.register(new DocumentController());
         ImageController.register(new ImageController());
         MediaController.register(new MediaController());
-        CompanyController.register(new CompanyController());
         GroupController.register(new GroupController());
         PageController.register(new PageController());
         CkEditorController.register(new CkEditorController());
@@ -75,7 +72,6 @@ public class BandikaInitServlet extends InitServlet {
         PageData.pagePartClasses.add(LayoutPartData.class);
 
         ContentCache.load();
-        CompanyCache.load();
         UserCache.load();
         LayoutCache.load();
         if (!FileBean.getInstance().assertFileDirectory()){
