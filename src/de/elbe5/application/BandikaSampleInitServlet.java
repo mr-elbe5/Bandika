@@ -8,7 +8,8 @@
  */
 package de.elbe5.application;
 
-import de.elbe5.administration.CmsContentAdminController;
+import de.elbe5.administration.AdminController;
+import de.elbe5.administration.CmsAdminController;
 import de.elbe5.base.LocalizedStrings;
 import de.elbe5.base.JsonWebToken;
 import de.elbe5.base.Log;
@@ -50,7 +51,7 @@ public class BandikaSampleInitServlet extends InitServlet {
             return;
         Configuration.setAppTitle("Bandika");
         JsonWebToken.createSecretKey(Configuration.getSalt());
-        AdminController.register(new CmsContentAdminController());
+        AdminController.register(new CmsAdminController());
         ContentController.register(new ContentController());
         DocumentController.register(new DocumentController());
         ImageController.register(new ImageController());
