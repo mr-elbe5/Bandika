@@ -103,7 +103,7 @@
                     </a>
                 </li>
                 <% for (ContentData data : ContentCache.getFooterList()) {
-                    if (data.hasUserReadRight(rdata)) {%>
+                    if (data.hasUserReadRight(rdata.getLoginUser())) {%>
                 <li class="nav-item">
                     <a class="nav-link" href="<%=data.getUrl()%>"><%=$H(data.getDisplayName())%>
                     </a>

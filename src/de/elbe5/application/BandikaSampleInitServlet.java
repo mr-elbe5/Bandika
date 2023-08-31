@@ -16,6 +16,7 @@ import de.elbe5.base.Log;
 import de.elbe5.ckeditor.CkEditorController;
 import de.elbe5.content.*;
 import de.elbe5.database.DbConnector;
+import de.elbe5.group.GroupCache;
 import de.elbe5.link.LinkData;
 import de.elbe5.page.LayoutPartData;
 import de.elbe5.file.*;
@@ -73,6 +74,7 @@ public class BandikaSampleInitServlet extends InitServlet {
 
         ContentCache.load();
         UserCache.load();
+        GroupCache.load();
         LayoutCache.load();
         if (!FileBean.getInstance().assertFileDirectory()){
             Log.error("could not create file directory");

@@ -10,7 +10,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.request.RequestData" %>
-<%@ page import="de.elbe5.rights.SystemZone" %>
+<%@ page import="de.elbe5.rights.GlobalRight" %>
 <%@ page import="de.elbe5.request.RequestKeys" %>
 <%@ page import="de.elbe5.application.Configuration" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
@@ -53,21 +53,21 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
-                            <% if (rdata.hasSystemRight(SystemZone.APPLICATION)){%>
+                            <% if (GlobalRight.hasGlobalApplicationEditRight(rdata.getLoginUser())){%>
                             <li class="nav-item">
                                 <a class="nav-link"
                                         href="/ctrl/admin/openSystemAdministration"><%=$SH("_systemAdministration")%>
                                 </a>
                             </li>
                             <%}%>
-                            <% if (rdata.hasSystemRight(SystemZone.USER)){%>
+                            <% if (GlobalRight.hasGlobalUserEditRight(rdata.getLoginUser())){%>
                             <li class="nav-item">
                                 <a class="nav-link"
                                         href="/ctrl/admin/openPersonAdministration"><%=$SH("_personAdministration")%>
                                 </a>
                             </li>
                             <%}%>
-                            <% if (rdata.hasSystemRight(SystemZone.CONTENTEDIT)){%>
+                            <% if (GlobalRight.hasGlobalContentEditRight(rdata.getLoginUser())){%>
                             <li class="nav-item">
                                 <a class="nav-link" href="/ctrl/admin/openContentAdministration"><%=$SH("_contentAdministration")%>
                                 </a>

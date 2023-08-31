@@ -17,10 +17,10 @@
         currentContent.collectParentIds(activeIds);
         activeIds.add(currentContent.getId());
         for (ContentData contentData : home.getChildren()) {
-            if (contentData.isInHeaderNav() && contentData.hasUserReadRight(rdata)) {
+            if (contentData.isInHeaderNav() && contentData.hasUserReadRight(rdata.getLoginUser())) {
                 List<ContentData> children = new ArrayList<>();
                 for (ContentData child : contentData.getChildren()) {
-                    if (child.isInHeaderNav() && child.hasUserReadRight(rdata))
+                    if (child.isInHeaderNav() && child.hasUserReadRight(rdata.getLoginUser()))
                         children.add(child);
                 }
                 if (!children.isEmpty()) {%>
