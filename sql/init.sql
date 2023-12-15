@@ -1,29 +1,59 @@
 -- noinspection SqlNoDataSourceInspectionForFile
 
-
-CREATE SEQUENCE s_group_id START 1000;
-CREATE TABLE IF NOT EXISTS t_group
+CREATE TABLE IF NOT EXISTS t_configuration
 (
-    id          INTEGER      NOT NULL,
-    change_date TIMESTAMP    NOT NULL DEFAULT now(),
-    name        VARCHAR(100) NOT NULL,
-    notes       VARCHAR(500) NOT NULL DEFAULT '',
-    CONSTRAINT t_group_pk PRIMARY KEY (id)
+    title            VARCHAR(100) NOT NULL DEFAULT '',
+    salt             VARCHAR(100) NOT NULL DEFAULT '',
+    locale           VARCHAR(30) NOT NULL DEFAULT 'GERMAN',
+    show_date_time   BOOLEAN NOT NULL DEFAULT false,
+    use_read_rights  BOOLEAN NOT NULL DEFAULT false,
+    use_read_group   BOOLEAN NOT NULL DEFAULT false,
+    use_editor_group BOOLEAN NOT NULL DEFAULT false,
+    smtp_host        VARCHAR(30) NOT NULL DEFAULT '',
+    smtp_port        INTEGER NOT NULL DEFAULT 25,
+    smtp_connection_type VARCHAR(30) NOT NULL DEFAULT 'plain',
+    smtp_user        VARCHAR(100) NOT NULL DEFAULT '',
+    smtp_password    VARCHAR(100) NOT NULL DEFAULT '',
+    mail_sender      VARCHAR(100) NOT NULL DEFAULT '',
+    mail_receiver    VARCHAR(100) NOT NULL DEFAULT ''
 );
 
 CREATE SEQUENCE s_user_id START 1000;
 CREATE TABLE IF NOT EXISTS t_user
 (
     id                 INTEGER      NOT NULL,
+    creator_id    INTEGER       NOT NULL DEFAULT 1,
+    changer_id    INTEGER       NOT NULL DEFAULT 1,
+    creation_date TIMESTAMP     NOT NULL DEFAULT now(),
+    change_date   TIMESTAMP     NOT NULL DEFAULT now(),
     type               VARCHAR(60)  NOT NULL,
-    change_date        TIMESTAMP    NOT NULL DEFAULT now(),
-    name         VARCHAR(100) NOT NULL DEFAULT '',
+    name               VARCHAR(100) NOT NULL DEFAULT '',
     email              VARCHAR(100) NOT NULL DEFAULT '',
     login              VARCHAR(30)  NOT NULL,
     pwd                VARCHAR(100) NOT NULL,
     token              VARCHAR(100) NOT NULL DEFAULT '',
     active             BOOLEAN      NOT NULL DEFAULT TRUE,
-    CONSTRAINT t_user_pk PRIMARY KEY (id)
+    CONSTRAINT t_user_pk PRIMARY KEY (id),
+    CONSTRAINT t_user_fk1 FOREIGN KEY (creator_id) REFERENCES t_user (id) ON DELETE SET DEFAULT,
+    CONSTRAINT t_user_fk2 FOREIGN KEY (changer_id) REFERENCES t_user (id) ON DELETE SET DEFAULT
+);
+
+INSERT INTO t_user (id,type,name,login,pwd)
+VALUES (1,'de.elbe5.user.UserData','Root','root','');
+
+CREATE SEQUENCE s_group_id START 1000;
+CREATE TABLE IF NOT EXISTS t_group
+(
+    id          INTEGER      NOT NULL,
+    creator_id    INTEGER       NOT NULL DEFAULT 1,
+    changer_id    INTEGER       NOT NULL DEFAULT 1,
+    creation_date TIMESTAMP     NOT NULL DEFAULT now(),
+    change_date   TIMESTAMP     NOT NULL DEFAULT now(),
+    name        VARCHAR(100) NOT NULL,
+    notes       VARCHAR(500) NOT NULL DEFAULT '',
+    CONSTRAINT t_group_pk PRIMARY KEY (id),
+    CONSTRAINT t_group_fk1 FOREIGN KEY (creator_id) REFERENCES t_user (id) ON DELETE SET DEFAULT,
+    CONSTRAINT t_group_fk2 FOREIGN KEY (changer_id) REFERENCES t_user (id) ON DELETE SET DEFAULT
 );
 
 CREATE TABLE IF NOT EXISTS t_user2group
@@ -97,8 +127,8 @@ CREATE TABLE IF NOT EXISTS t_file
     creation_date TIMESTAMP     NOT NULL DEFAULT now(),
     change_date   TIMESTAMP     NOT NULL DEFAULT now(),
     parent_id     INTEGER       NULL,
-    file_name     VARCHAR(60)   NOT NULL,
-    display_name  VARCHAR(100)  NOT NULL,
+    file_name     VARCHAR(255)   NOT NULL,
+    display_name  VARCHAR(255)  NOT NULL,
     description   VARCHAR(2000) NOT NULL DEFAULT '',
     creator_id    INTEGER       NOT NULL DEFAULT 1,
     changer_id    INTEGER       NOT NULL DEFAULT 1,
@@ -137,6 +167,15 @@ CREATE TABLE IF NOT EXISTS t_extended_user
     notes              VARCHAR(500) NOT NULL DEFAULT '',
     CONSTRAINT t_extended_user_pk PRIMARY KEY (id),
     CONSTRAINT t_extended_user_fk1 FOREIGN KEY (id) REFERENCES t_user(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS t_link
+(
+    id            INTEGER       NOT NULL,
+    link_url      VARCHAR(500)  NOT NULL DEFAULT '',
+    link_icon     VARCHAR(255)  NOT NULL DEFAULT '',
+    CONSTRAINT t_link_pk PRIMARY KEY (id),
+    CONSTRAINT t_link_fk1 FOREIGN KEY (id) REFERENCES t_content (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS t_page
@@ -206,19 +245,19 @@ CREATE TABLE IF NOT EXISTS t_part_field
     CONSTRAINT t_part_field_fk1 FOREIGN KEY (part_id) REFERENCES t_page_part (id) ON DELETE CASCADE
 );
 
--- root user
-INSERT INTO t_user (id,type,name,email,login,pwd)
-VALUES (1,'de.elbe5.extendeduser.ExtendedUserData','Administrator','root@localhost','root','');
-
--- root
-SELECT ADDPAGE(1, null, 'home', 'Home', 'Home Page', 1, 'defaultPage');
-
-
 -- timer
 INSERT INTO t_timer_task (name,display_name,execution_interval,minute,active)
 VALUES ('heartbeat','Heartbeat Task','CONTINOUS',5,FALSE);
 INSERT INTO t_timer_task (name,display_name,execution_interval,minute,active)
 VALUES ('cleanup','Cleanup Task','CONTINOUS',5,FALSE);
+
+-- root
+SELECT ADDPAGE(1, null, 'home', 'Home', 'Home Page', 1, 'defaultPage');
+update t_content set open_access = true where id = 1;
+update t_page set published_content = '<div>Bandika</div>', publish_date = now() where id = 1;
+
+insert into t_configuration (title, salt)
+values ('Bandika', 'V3xfgDrxdl8=');
 
 --- set pwd 'pass' dependent on salt V3xfgDrxdl8=
 -- root user

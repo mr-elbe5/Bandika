@@ -49,6 +49,7 @@ public class BandikaSampleInitServlet extends InitServlet {
         if (!DbConnector.getInstance().initialize("jdbc/bandika"))
             return;
         ConfigurationBean.getInstance().readConfiguration();
+        ConfigurationBean.getInstance().readMailConfiguration();
         LocalizedStrings.addBundle("bandika", Configuration.getLocale());
         LocalizedStrings.addBundle("cms", Configuration.getLocale());
         LocalizedStrings.addBundle("application", Configuration.getLocale());
