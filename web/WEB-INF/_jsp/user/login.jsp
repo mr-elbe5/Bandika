@@ -15,7 +15,6 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     String title = Configuration.getAppTitle();
-    RequestData rdata = RequestData.getRequestData(request);
 %>
 <html lang="<%=Configuration.getLocale().getLanguage()%>">
 <head>
@@ -37,7 +36,7 @@
         <form:message/>
         <section class="mainSection loginSection text-center">
             <form class="form" action="/ctrl/user/login" method="post" name="loginForm" accept-charset="UTF-8">
-                <img class="mb-4" src="/static-content/img/logo-dark.png" alt="<%=Configuration.getAppTitle()%>">
+                <img class="mb-4" src="/static-content/img/logo.png" alt="<%=Configuration.getAppTitle()%>">
                 <label for="login" class="sr-only"><%=$SH("_loginName")%>
                 </label>
                 <input type="text" id="login" name="login" class="form-control"

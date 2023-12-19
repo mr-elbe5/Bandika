@@ -1,12 +1,32 @@
 @charset "UTF-8";
 body {
-  background: #27446a url("../img/pattern.svg");
+  font-family: MPlus1p, Helvetica, sans-serif;
+  background: #e5e8eb url("../img/papier.jpg");
   color: #343a40;
-  height: 100%;
 }
 
 a, a:active, a:hover, a:visited {
   color: #343a40;
+}
+
+.spacer1 {
+  height: 1rem;
+}
+
+.spacer2 {
+  height: 2rem;
+}
+
+.underlined {
+  border-bottom: 1px solid #343a40;
+}
+
+.padded {
+  padding: 10px;
+}
+
+.center {
+  text-align: center;
 }
 
 button:focus, a:focus, .btn:focus {
@@ -15,181 +35,139 @@ button:focus, a:focus, .btn:focus {
 }
 
 header {
-  background: transparent;
-  color: #f8f9fa;
-  padding: 0 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  background: #e5e8eb url("../img/papier.jpg");
 }
-header section.sysnav {
-  background: transparent;
+header .header {
+  display: table;
+  width: 100%;
+  border-bottom: solid 1px #6c757d;
+  padding-bottom: 5px;
 }
-header section.sysnav a {
-  text-decoration: none;
-  color: #f8f9fa;
+header .header .logo-area {
+  display: table-cell;
+  height: 6.5rem;
 }
-header section.sysnav a.nav-link {
-  padding: 0;
-  margin: 0.25rem 0 0.25rem 0.5rem;
+header .header .nav-area {
+  display: table-cell;
+  vertical-align: top;
+  height: 6.5rem;
+}
+header .header .nav-area .sysnav {
   font-size: 0.8rem;
-  color: #f8f9fa;
+  height: 1rem;
+  margin: 0.5rem 0.25rem 3.5rem 0;
+  text-align: right;
+  vertical-align: top;
 }
-header section.sysnav .dropdown-menu {
+header .header .nav-area .sysnav a {
+  cursor: pointer;
+}
+header .header .nav-area .sysnav .nav-link {
+  padding: 0 0 0 1rem;
+}
+header .header .nav-area .sysnav .dropdown-menu {
   padding: 0;
 }
-header section.sysnav .dropdown-menu .dropdown-item {
+header .header .nav-area .sysnav .dropdown-menu .dropdown-item {
   color: #343a40;
   font-size: 0.8rem;
 }
-header img.navIcon {
-  width: 30px;
-  margin-bottom: 0.25em;
+header .header .nav-area .menu-area {
+  text-align: right;
+  vertical-align: bottom;
 }
-header div.menu {
-  border-bottom: 1px solid #f8f9fa;
+header .header .nav-area .menu-area a {
+  cursor: pointer;
 }
-header div.menu section.menu nav.navbar {
-  padding: 0;
+header .header .nav-area .menu-area .menu-link.mainLink {
+  font-size: 1.2rem;
 }
-header div.menu section.menu nav.navbar .navbar-toggler span {
-  color: #f8f9fa;
+header .header .nav-area .menu-area .navIcon.linkNav {
+  height: 1rem;
+  padding-bottom: 0.2rem;
+  margin-right: 1rem;
 }
-header div.menu section.menu nav.navbar a.navbar-brand {
-  color: #f8f9fa;
+header .header .nav-area .menu-area .dropdown-item {
+  color: #343a40;
+  padding: 0.25rem 0.5rem;
 }
-header div.menu section.menu nav.navbar a.navbar-brand img {
-  height: 3rem;
+header .header .nav-area .menu-area .dropdown-item.level2 {
+  padding-left: 1rem;
+  font-size: 95%;
 }
-header div.menu section.menu nav.navbar .navbar-collapse {
-  margin-top: 44px;
+header .header .nav-area .menu-area .dropdown-item.level3 {
+  padding-left: 1.5rem;
+  font-size: 90%;
 }
-header div.menu section.menu nav.navbar .nav-item a {
-  color: #f8f9fa;
+header .header .nav-area .menu-area .dropdown-item.level4 {
+  padding-left: 2rem;
+  font-size: 85%;
 }
-header div.menu section.menu nav.navbar .nav-link {
-  padding: 0.25rem 1rem;
+header .header .nav-area .menu-area .dropdown-item.active, header .header .nav-area .menu-area .dropdown-item:active {
+  color: #343a40;
 }
-header div.menu section.menu nav.navbar .dropdown-toggle::after {
-  vertical-align: 0.1em;
-}
-header div.menu section.menu nav.navbar .dropdown-menu {
-  background: #27446a url("../img/pattern.svg");
-  padding: 0.25rem 0;
-  margin: 0;
-  border-color: #f8f9fa;
-  border-width: 0 1px 1px 1px;
-  border-radius: 0;
-}
-header div.menu section.menu nav.navbar .dropdown-menu .dropdown-item:focus, header div.menu section.menu nav.navbar .dropdown-menu .dropdown-item:hover, header div.menu section.menu nav.navbar .dropdown-menu .dropdown-item.active {
-  background: rgba(255, 255, 255, 0.2);
-}
-header div.menu section.menu nav.navbar .dropdown-menu .dropdown-item.subitem {
-  padding-left: 3rem;
-  font-size: 0.9rem;
-}
-header div.menu section.menu nav.navbar .dropdown-menu .nav-item a {
-  color: #f8f9fa;
-}
-header div.menu section.menu nav.navbar .nav-item.dropdown.hover:hover .dropdown-menu {
-  display: block;
-}
-header div.bc .breadcrumb {
+
+.breadcrumb {
   background: transparent;
-  color: #f8f9fa;
-  margin: 0;
   font-size: 0.8rem;
-  padding: 0.25rem 0;
+  margin: 0.25rem 0;
+  padding: 0 1rem;
 }
-header div.bc .breadcrumb .breadcrumb-item.active {
-  color: #f8f9fa;
-}
-header div.bc .breadcrumb a {
-  color: #f8f9fa;
-  text-decoration: none;
+
+.navbar {
+  padding: 0;
 }
 
 main {
-  padding-bottom: 3rem;
+  padding-bottom: 1rem;
 }
-main div#pageContent h1, main div#pageContent h2, main div#pageContent h3 {
+main div#pageContent h1, main div#pageContent h2, main div#pageContent h3, main div#pageContent h4 {
   margin: 0;
 }
 main div#pageContent h1.title {
-  margin-bottom: 1rem;
-  text-align: center;
-  color: #f8f9fa;
-}
-main div#pageContent .contentTop {
-  color: #f8f9fa;
-}
-main div#pageContent .headerBox {
-  padding: 0.5rem 1rem;
-}
-main div#pageContent .headerBox h1 {
   text-align: center;
 }
-main div#pageContent .htmlBox {
-  background: white;
+main div#pageContent .partWrapper .paragraph {
+  background: rgba(255, 255, 255, 0.33);
+  border: 1px solid #d8d8d8;
+  border-radius: 10px;
   padding: 1rem;
-}
-main div#pageContent .imageBox {
-  background: white;
-  padding: 0;
-}
-main div#pageContent .imageBox img {
-  width: 100%;
-}
-main div#pageContent h3.partHeader {
-  background: #343a40;
-  padding: 0.5rem 1rem;
-}
-main div#pageContent .paragraph {
-  background-color: rgba(255, 255, 255, 0.95);
-  border: solid 1px #343a40;
-  border-radius: 15px;
-  padding: 1rem;
-  height: calc(100% - 30px);
-  margin-top: 15px;
+  height: 100%;
   overflow: hidden;
 }
-main div#pageContent .paragraph h2 {
+main div#pageContent .partWrapper .paragraph h2 {
   border-bottom: 1px solid;
   padding-bottom: 0.5rem;
   margin-bottom: 0.5rem;
 }
-main div#pageContent .paragraph h3 {
+main div#pageContent .partWrapper .paragraph h3 {
   border-width: 1px 0;
   border-style: solid;
   padding: 0.5rem 0;
   margin: 0.5rem 0;
 }
-main div#pageContent .paragraph img {
+main div#pageContent .partWrapper .paragraph img {
   max-width: 100%;
 }
-main div#pageContent .paragraph img[style*="float: left;"], main div#pageContent .paragraph img[style*="float:left;"] {
+main div#pageContent .partWrapper .paragraph img[style*="float: left;"], main div#pageContent .partWrapper .paragraph img[style*="float:left;"] {
   margin-right: 0.5em;
   margin-bottom: 0.5em;
 }
-main div#pageContent .paragraph img[style*="float: right;"], main div#pageContent .paragraph img[style*="float:right;"] {
+main div#pageContent .partWrapper .paragraph img[style*="float: right;"], main div#pageContent .partWrapper .paragraph img[style*="float:right;"] {
   margin-left: 0.5em;
   margin-bottom: 0.5em;
 }
-main div#pageContent .asideSection .paragraph {
-  background: rgba(255, 255, 255, 0.9);
-  border-color: #343a40;
-}
-
-.container.fixed-bottom {
-  background: #27446a url("../img/pattern.svg");
-  border-top: 1px solid #f8f9fa;
-  height: 2.25rem;
-}
 
 footer {
-  color: #f8f9fa;
+  position: sticky;
+  bottom: 0;
+  z-index: 500;
+  background: #e5e8eb url("../img/papier.jpg");
+  border-top: solid 1px #6c757d;
   font-size: 0.8rem;
-  padding: 0;
-}
-footer a, footer a:active, footer a:hover, footer a:focus, footer a:visited {
-  color: #f8f9fa;
 }
 
 #searchboxform {
@@ -236,6 +214,9 @@ body.admin div#pageContainer {
   background: white;
   min-height: 500px;
 }
+body.admin .header .nav-area .sysnav {
+  margin: 0.5rem 0.25rem 2.5rem 0;
+}
 
 /* login */
 body.login {
@@ -250,12 +231,6 @@ body.login #main .loginSection .form {
   max-width: 360px;
   padding: 30px;
   margin: 20% auto;
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid #f8f9fa;
-  border-radius: 5px;
-}
-body.login #main .loginSection .form img {
-  height: 40px;
 }
 body.login #main .loginSection .form .form-control:focus {
   z-index: 2;
@@ -274,7 +249,7 @@ a.link::before {
 
 a.mail::before {
   content: "\f003";
-  font-family: FontAwesome, sans-serif;
+  font-family: FontAwesome;
   padding-right: 0.25em;
 }
 

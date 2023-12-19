@@ -1,23 +1,42 @@
-@function img-path($name) {
-  @return '../img/'+$name;
-}
+@import "extras";
 
-$mid-blue:      #27446a;
-$light:         #f8f9fa; //gray-100
-$dark:          #343a40; //gray-800
-$background-body: $mid-blue url(img-path('pattern.svg'));
-$font-size-base: 1rem;
-$font-size-sm:   ($font-size-base * .9);
-$font-size-xsm:  ($font-size-base * .8);
+$font-size-sm: ($font-size-base * .9);
+$background-color: #e5e8eb;
+$text-gray: #343a40; //gray-800;
+$line-gray: #6c757d; //gray-600;
+$light-border: #d8d8d8;
+
+$main-background: transparent;
+$background-body: $background-color url(img-path('papier.jpg'));
 
 body {
+  font-family: MPlus1p, Helvetica, sans-serif;
   background: $background-body;
-  color: $dark;
-  height: 100%;
+  color: $text-gray;
 }
 
 a, a:active, a:hover, a:visited{
-  color: $dark;
+  color: $text-gray;
+}
+
+.spacer1{
+  height:1rem;
+}
+
+.spacer2{
+  height:2rem;
+}
+
+.underlined{
+  border-bottom: 1px solid $text-gray;
+}
+
+.padded{
+  padding: 10px;
+}
+
+.center{
+  text-align: center;
 }
 
 button:focus, a:focus, .btn:focus {
@@ -25,134 +44,103 @@ button:focus, a:focus, .btn:focus {
   box-shadow: none;
 }
 
-header{
+header {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  background: $background-body;
 
-  background: transparent;
-  color: $light;
-  padding: 0 1rem;
+  .header{
+    display: table;
+    width: 100%;
+    border-bottom: solid 1px $line-gray;
+    padding-bottom: 5px;
 
-  section.sysnav{
-    background: transparent;
-
-    a {
-      text-decoration: none;
-      color: $light;
+    .logo-area {
+      display: table-cell;
+      height: 6.5rem;
     }
 
-    a.nav-link {
-      padding: 0;
-      margin: 0.25rem 0 0.25rem 0.5rem;
-      font-size: $font-size-xsm;
-      color: $light;
-    }
+    .nav-area{
+      display: table-cell;
+      vertical-align: top;
+      height: 6.5rem;
 
-    .dropdown-menu{
-      padding: 0;
-
-      .dropdown-item{
-        color: $dark;
+      .sysnav {
         font-size: $font-size-xsm;
-      }
+        height: 1rem;
+        margin: 0.5rem 0.25rem 3.5rem 0;
+        text-align: right;
+        vertical-align: top;
 
-    }
-
-  }
-
-  img.navIcon{
-    width: 30px;
-    margin-bottom: 0.25em;
-  }
-
-  div.menu{
-    border-bottom: 1px solid $light;
-
-    section.menu {
-
-      nav.navbar {
-        padding:0;
-
-        .navbar-toggler span{
-          color: $light;
+        a {
+          cursor: pointer;
         }
 
-        a.navbar-brand {
-          color: $light;
-          img {
-            height: 3rem;
-          }
+        .nav-link{
+          padding: 0 0 0 1rem;
         }
 
-        .navbar-collapse{
-          margin-top: 44px;
-        }
+        .dropdown-menu{
+          padding: 0;
 
-        .nav-item {
-          a {
-            color: $light;
+          .dropdown-item{
+            color: $text-gray;
+            font-size: $font-size-xsm;
           }
 
-        }
-
-        .nav-link {
-          padding: 0.25rem 1rem;
-        }
-
-        .dropdown-toggle::after {
-          vertical-align: 0.1em;
-        }
-
-        .dropdown-menu {
-          background: $background-body;
-          padding: 0.25rem 0;
-          margin: 0;
-          border-color: $light;
-          border-width: 0 1px 1px 1px;
-          border-radius: 0;
-
-          .dropdown-item:focus, .dropdown-item:hover, .dropdown-item.active{
-            background: rgba(255,255,255,0.2);
-          }
-
-          .dropdown-item.subitem {
-            padding-left: 3rem;
-            font-size: $font-size-sm;
-          }
-
-          .nav-item {
-            a {
-              color: $light;
-            }
-
-          }
-
-        }
-
-        .nav-item.dropdown.hover:hover .dropdown-menu{
-          display: block;
         }
 
       }
 
-    }
+      .menu-area {
+        text-align: right;
+        vertical-align: bottom;
 
-  }
+        a {
+          cursor: pointer;
+        }
 
-  div.bc {
+        .menu-link.mainLink{
+          font-size: 1.2rem;
+        }
 
-    .breadcrumb {
-      background: transparent;
-      color: $light;
-      margin: 0;
-      font-size: $font-size-xsm;
-      padding: 0.25rem 0;
+        .navIcon.linkNav{
+          height: 1rem;
+          padding-bottom: 0.2rem;
+          margin-right: 1rem;
+        }
 
-      .breadcrumb-item.active {
-        color: $light;
-      }
+        .dropdown-item{
+          color: $text-gray;
+          padding: 0.25rem 0.5rem;
 
-      a {
-        color: $light;
-        text-decoration: none;
+          &.level0{
+          }
+
+          &.level1{
+          }
+
+          &.level2{
+            padding-left: 1.0rem;
+            font-size: 95%;
+          }
+
+          &.level3{
+            padding-left: 1.5rem;
+            font-size: 90%;
+          }
+
+          &.level4{
+            padding-left: 2.0rem;
+            font-size: 85%;
+          }
+        }
+
+        .dropdown-item.active, .dropdown-item:active {
+          color: $text-gray;
+        }
+
       }
     }
 
@@ -160,114 +148,95 @@ header{
 
 }
 
-main {
-  padding-bottom: 3rem;
+.breadcrumb {
+  background: transparent;
+  font-size: $font-size-xsm;
+  margin: 0.25rem 0;
+  padding: 0 1rem;
+}
 
+.navbar{
+  padding: 0;
+}
+
+main {
+  padding-bottom: 1rem;
+
+  //id created in code
   div#pageContent {
 
-    h1, h2, h3 {
+    h1, h2, h3, h4 {
       margin: 0;
     }
 
     h1.title {
-      margin-bottom: 1rem;
-      text-align: center;
-      color: $light;
-    }
-
-    .contentTop {
-      color: $light;
-    }
-
-    .headerBox {
-      padding: 0.5rem 1rem;
-    }
-
-    .headerBox h1 {
       text-align: center;
     }
 
-    .htmlBox {
-      background: white;
-      padding: 1rem;
-    }
-
-    .imageBox {
-      background: white;
-      padding: 0;
-
-      img {
-        width: 100%;
-      }
-    }
-
-    h3.partHeader {
-      background: $dark;
-      padding: 0.5rem 1rem;
-    }
-
-    .paragraph {
-      background-color: rgba(255, 255, 255, 0.95);
-      border: solid 1px $dark;
-      border-radius: 15px;
-      padding: 1rem;
-      height: calc(100% - 30px);
-      margin-top: 15px;
-      overflow: hidden;
-
-      h2 {
-        border-bottom: 1px solid;
-        padding-bottom: 0.5rem;
-        margin-bottom: 0.5rem;
-      }
-
-      h3 {
-        border-width: 1px 0;
-        border-style: solid;
-        padding: 0.5rem 0;
-        margin: 0.5rem 0;
-      }
-
-      img{
-        max-width : 100%;
-      }
-
-      img[style*="float: left;"], img[style*="float:left;"]{
-        margin-right: 0.5em;
-        margin-bottom: 0.5em;
-      }
-
-      img[style*="float: right;"], img[style*="float:right;"]{
-        margin-left: 0.5em;
-        margin-bottom: 0.5em;
-      }
+    .contentTop{
 
     }
 
-    .asideSection {
+    .contentSection{
+
+    }
+
+    .asideSection{
+
+    }
+
+    //partwrapper is flex in row
+    .partWrapper {
+
       .paragraph {
-        background: rgba(255, 255, 255, 0.9);
-        border-color: $dark;
+        background: rgba(255,255,255,0.33);
+        border: 1px solid $light-border;
+        border-radius: 10px;
+        padding: 1rem;
+        //for equal height
+        height: 100%;
+        overflow: hidden;
+
+        h2 {
+          border-bottom: 1px solid;
+          padding-bottom: 0.5rem;
+          margin-bottom: 0.5rem;
+        }
+
+        h3 {
+          border-width: 1px 0;
+          border-style: solid;
+          padding: 0.5rem 0;
+          margin: 0.5rem 0;
+        }
+
+        img {
+          max-width: 100%;
+        }
+
+        // for ckeditor float
+        img[style*="float: left;"], img[style*="float:left;"] {
+          margin-right: 0.5em;
+          margin-bottom: 0.5em;
+        }
+
+        img[style*="float: right;"], img[style*="float:right;"] {
+          margin-left: 0.5em;
+          margin-bottom: 0.5em;
+        }
       }
     }
 
   }
 }
 
-.container.fixed-bottom{
+footer{
+  position:sticky;
+  bottom: 0;
+  z-index: 500;
   background: $background-body;
-  border-top: 1px solid $light;
-  height: 2.25rem;
-}
-
-footer {
-  color: $light;
-  font-size: 0.8rem;
-  padding: 0;
-
-  a, a:active, a:hover, a:focus, a:visited {
-    color: $light;
-  }
+  border-top: solid 1px $line-gray;
+  font-size: $font-size-xsm;
 }
 
 #searchboxform{
@@ -288,7 +257,7 @@ div.searchResults{
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
 
-    border-bottom: 1px solid $dark;
+    border-bottom: 1px solid $text-gray;
 
     div.searchTitle{
       font-size: 1.2em;
@@ -326,6 +295,14 @@ body.admin{
     background: white;
     min-height: 500px;
   }
+
+  .header {
+    .nav-area {
+      .sysnav {
+        margin: 0.5rem 0.25rem 2.5rem 0;
+      }
+    }
+  }
 }
 
 /* login */
@@ -346,12 +323,6 @@ body.login {
         max-width: 360px;
         padding: 30px;
         margin: 20% auto;
-        background: rgba(255,255,255,0.95);
-        border: 1px solid $light;
-        border-radius: 5px;
-        img {
-          height: 40px;
-        }
 
         .form-control:focus {
           z-index: 2;
@@ -370,7 +341,6 @@ body.login {
   }
 }
 
-
 // in ckeditor
 
 a.link::before{
@@ -380,6 +350,9 @@ a.link::before{
 
 a.mail::before{
   content: "\f003";
-  font-family: FontAwesome, sans-serif;
+  font-family: FontAwesome;
   padding-right: 0.25em;
 }
+
+
+

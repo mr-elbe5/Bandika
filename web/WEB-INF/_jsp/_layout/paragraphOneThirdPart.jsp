@@ -8,17 +8,10 @@
 --%>
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
-<%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%@ taglib uri="/WEB-INF/sectiontags.tld" prefix="section" %>
-        <form:message />
-        <section class="contentTop">
-            <section:section name="top" cssClass="row"></section:section>
-        </section>
-        <div class="row">
-            <section class="col-lg-8 contentSection" id="content">
-                <section:section name="main" cssClass="row"></section:section>
-            </section>
-            <aside class="col-lg-4 asideSection" id="aside">
-                <section:section name="aside" cssClass="row"></section:section>
-            </aside>
-        </div>
+<section:part cssClass="col-lg-4">
+    <div class="paragraph">
+        <section:htmlfield name="html" placeholder="Lorem ipsum"/>
+    </div>
+</section:part>
+

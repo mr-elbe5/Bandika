@@ -8,10 +8,10 @@
 --%>
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
-<%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%@ taglib uri="/WEB-INF/sectiontags.tld" prefix="section" %>
-        <form:message />
-        <section class="contentSection" id="content">
-            <section:section name="mainContent" cssClass="row"> </section:section>
-        </section>
+<section:part cssClass="col-lg-8">
+    <div class="paragraph">
+        <section:htmlfield name="html" placeholder="Lorem ipsum"/>
+    </div>
+</section:part>
 
