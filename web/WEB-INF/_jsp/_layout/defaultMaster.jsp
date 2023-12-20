@@ -17,17 +17,19 @@
 <%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ page import="de.elbe5.request.RequestKeys" %>
 <%@ page import="de.elbe5.response.IMasterInclude" %>
+<%@ page import="de.elbe5.base.LocalizedSystemStrings" %>
+<%@ page import="de.elbe5.configuration.StaticConfiguration" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
     IMasterInclude masterInclude = rdata.getRequestObject(RequestKeys.KEY_MASTERINCLUDE, IMasterInclude.class);
     ContentData contentData = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
     List<Integer> parentIds = ContentCache.getParentContentIds(contentData);
-    String title = rdata.getAttributes().getString(RequestKeys.KEY_TITLE, Configuration.getAppTitle()) + (contentData != null ? " | " + contentData.getDisplayName() : "");
+    String title = rdata.getAttributes().getString(RequestKeys.KEY_TITLE, StaticConfiguration.getAppTitle()) + (contentData != null ? " | " + contentData.getDisplayName() : "");
     String keywords = contentData != null ? contentData.getKeywords() : title;
     String description = contentData != null ? contentData.getDescription() : "";
 %>
 <!DOCTYPE html>
-<html lang="<%=Configuration.getLocale().getLanguage()%>">
+<html lang="<%=StaticConfiguration.getLocale().getLanguage()%>">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -45,7 +47,7 @@
     <script type="text/javascript" src="/static-content/js/bootstrap.tree.js?v=1"></script>
     <script type="text/javascript" src="/static-content/ckeditor/ckeditor.js?v=1"></script>
     <script>
-        CKEDITOR.config.language = '<%=Configuration.getLocale().getLanguage()%>';
+        CKEDITOR.config.language = '<%=StaticConfiguration.getLocale().getLanguage()%>';
     </script>
     <script type="text/javascript" src="/static-content/ckeditor/adapters/jquery.js?v=1"></script>
     <script type="text/javascript" src="/static-content/js/bandika-webbase.js?v=1"></script>
@@ -102,7 +104,7 @@
     <footer>
         <ul class="nav">
             <li class="nav-item">
-                <a class="nav-link">&copy; <%=$SH("_copyright")%>
+                <a class="nav-link">&copy; <%=LocalizedSystemStrings.getInstance().html("copyright")%>
                 </a>
             </li>
             <% for (ContentData data : ContentCache.getFooterList()) {

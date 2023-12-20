@@ -12,13 +12,15 @@ import de.elbe5.administration.AdminController;
 import de.elbe5.administration.CmsAdminController;
 import de.elbe5.base.LocalizedStrings;
 import de.elbe5.base.JsonWebToken;
+import de.elbe5.base.LocalizedSystemStrings;
 import de.elbe5.base.Log;
 import de.elbe5.ckeditor.CkEditorController;
-import de.elbe5.configuration.Configuration;
 import de.elbe5.configuration.ConfigurationBean;
+import de.elbe5.configuration.StaticConfiguration;
 import de.elbe5.content.*;
 import de.elbe5.database.DbConnector;
 import de.elbe5.group.GroupCache;
+import de.elbe5.layout.LocalizedLayoutNames;
 import de.elbe5.link.LinkData;
 import de.elbe5.page.LayoutPartData;
 import de.elbe5.file.*;
@@ -37,6 +39,8 @@ import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 
+import javax.naming.InitialContext;
+
 public class BandikaSampleInitServlet extends InitServlet {
 
     @Override
@@ -44,17 +48,18 @@ public class BandikaSampleInitServlet extends InitServlet {
         super.init(servletConfig);
         System.out.println("initializing Bandika Application...");
         ServletContext context=servletConfig.getServletContext();
+        StaticConfiguration.initialize(context);
         ApplicationPath.initializePath(ApplicationPath.getCatalinaAppDir(context), ApplicationPath.getCatalinaAppROOTDir(context));
         Log.initLog(ApplicationPath.getAppName());
-        if (!DbConnector.getInstance().initialize("jdbc/bandika"))
+        if (!DbConnector.getInstance().initialize())
             return;
         ConfigurationBean.getInstance().readConfiguration();
-        ConfigurationBean.getInstance().readMailConfiguration();
-        LocalizedStrings.addBundle("bandika", Configuration.getLocale());
-        LocalizedStrings.addBundle("cms", Configuration.getLocale());
-        LocalizedStrings.addBundle("application", Configuration.getLocale());
-        Configuration.setAppTitle("Bandika");
-        JsonWebToken.createSecretKey(Configuration.getSalt());
+        LocalizedStrings.getInstance().addBundle("bandika", StaticConfiguration.getLocale());
+        LocalizedStrings.getInstance().addBundle("cms", StaticConfiguration.getLocale());
+        LocalizedSystemStrings.getInstance().addBundle("systemStrings", StaticConfiguration.getLocale());
+        LocalizedSystemStrings.getInstance().addBundle("cmsSystemStrings", StaticConfiguration.getLocale());
+        LocalizedLayoutNames.getInstance().addBundle("layoutNames", StaticConfiguration.getLocale());
+        JsonWebToken.createSecretKey(StaticConfiguration.getSalt());
         AdminController.register(new CmsAdminController());
         ContentController.register(new ContentController());
         DocumentController.register(new DocumentController());
