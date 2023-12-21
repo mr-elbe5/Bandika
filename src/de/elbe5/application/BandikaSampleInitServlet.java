@@ -16,6 +16,7 @@ import de.elbe5.base.LocalizedSystemStrings;
 import de.elbe5.base.Log;
 import de.elbe5.ckeditor.CkEditorController;
 import de.elbe5.configuration.ConfigurationBean;
+import de.elbe5.configuration.ConfigurationController;
 import de.elbe5.configuration.StaticConfiguration;
 import de.elbe5.content.*;
 import de.elbe5.database.DbConnector;
@@ -39,8 +40,6 @@ import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 
-import javax.naming.InitialContext;
-
 public class BandikaSampleInitServlet extends InitServlet {
 
     @Override
@@ -61,6 +60,7 @@ public class BandikaSampleInitServlet extends InitServlet {
         LocalizedLayoutNames.getInstance().addBundle("layoutNames", StaticConfiguration.getLocale());
         JsonWebToken.createSecretKey(StaticConfiguration.getSalt());
         AdminController.register(new CmsAdminController());
+        ConfigurationController.register(new ConfigurationController());
         ContentController.register(new ContentController());
         DocumentController.register(new DocumentController());
         ImageController.register(new ImageController());

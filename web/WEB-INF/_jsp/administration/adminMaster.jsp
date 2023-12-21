@@ -11,7 +11,6 @@
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.request.RequestKeys" %>
-<%@ page import="de.elbe5.configuration.Configuration" %>
 <%@ page import="de.elbe5.rights.GlobalRight" %>
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="de.elbe5.base.LocalizedSystemStrings" %>
