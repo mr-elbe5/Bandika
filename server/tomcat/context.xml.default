@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Context>
-    <Parameter name="salt" value="V3xfgDrxdl8="/>
-        <Parameter name="database" value="jdbc/bandika"/>
-        <Parameter name="title" value="Bandika"/>
-        <Parameter name="locale" value="de"/>
-        <Parameter name="show_date_time" value="false"/>
-        <Parameter name="use_read_rights" value="false"/>
-        <Parameter name="use_read_group" value="false"/>
-        <Parameter name="use_editor_group" value="false"/>
+    <Parameter name="salt" value="V3xfgDrxdl8=" override="false"/>
+    <Parameter name="database" value="jdbc/bandika" override="false"/>
+    <Parameter name="title" value="Bandika" override="false"/>
+    <Parameter name="locale" value="de" override="false"/>
+    <Parameter name="show_date_time" value="false" override="false"/>
+    <Parameter name="use_read_rights" value="false" override="false"/>
+    <Parameter name="use_read_group" value="false" override="false"/>
+    <Parameter name="use_editor_group" value="false" override="false"/>
     
     <Resource 
 				name="jdbc/bandika"
