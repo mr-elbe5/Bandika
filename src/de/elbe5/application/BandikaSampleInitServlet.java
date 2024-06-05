@@ -15,9 +15,6 @@ import de.elbe5.base.JsonWebToken;
 import de.elbe5.base.LocalizedSystemStrings;
 import de.elbe5.base.Log;
 import de.elbe5.ckeditor.CkEditorController;
-import de.elbe5.configuration.ConfigurationBean;
-import de.elbe5.configuration.ConfigurationController;
-import de.elbe5.configuration.StaticConfiguration;
 import de.elbe5.content.*;
 import de.elbe5.database.DbConnector;
 import de.elbe5.group.GroupCache;
@@ -47,20 +44,18 @@ public class BandikaSampleInitServlet extends InitServlet {
         super.init(servletConfig);
         System.out.println("initializing Bandika Application...");
         ServletContext context=servletConfig.getServletContext();
-        StaticConfiguration.initialize(context);
+        Configuration.initialize(context);
         ApplicationPath.initializePath(ApplicationPath.getCatalinaAppDir(context), ApplicationPath.getCatalinaAppROOTDir(context));
         Log.initLog(ApplicationPath.getAppName());
         if (!DbConnector.getInstance().initialize())
             return;
-        ConfigurationBean.getInstance().readConfiguration();
-        LocalizedStrings.getInstance().addBundle("bandika", StaticConfiguration.getLocale());
-        LocalizedStrings.getInstance().addBundle("cms", StaticConfiguration.getLocale());
-        LocalizedSystemStrings.getInstance().addBundle("systemStrings", StaticConfiguration.getLocale());
-        LocalizedSystemStrings.getInstance().addBundle("cmsSystemStrings", StaticConfiguration.getLocale());
-        LocalizedLayoutNames.getInstance().addBundle("layoutNames", StaticConfiguration.getLocale());
-        JsonWebToken.createSecretKey(StaticConfiguration.getSalt());
+        LocalizedStrings.getInstance().addBundle("bandika", Configuration.getLocale());
+        LocalizedStrings.getInstance().addBundle("cms", Configuration.getLocale());
+        LocalizedSystemStrings.getInstance().addBundle("systemStrings", Configuration.getLocale());
+        LocalizedSystemStrings.getInstance().addBundle("cmsSystemStrings", Configuration.getLocale());
+        LocalizedLayoutNames.getInstance().addBundle("layoutNames", Configuration.getLocale());
+        JsonWebToken.createSecretKey(Configuration.getSalt());
         AdminController.register(new CmsAdminController());
-        ConfigurationController.register(new ConfigurationController());
         ContentController.register(new ContentController());
         DocumentController.register(new DocumentController());
         ImageController.register(new ImageController());
@@ -93,6 +88,15 @@ public class BandikaSampleInitServlet extends InitServlet {
         Timer.getInstance().loadTasks();
         Timer.getInstance().startThread();
         Log.log("Bandika initialized");
+
+        /*try {
+            String salt = PBKDF2Encryption.generateSaltBase64();
+            Log.info(salt);
+            String pwd = PBKDF2Encryption.getEncryptedPasswordBase64("pass", salt);
+            Log.info(pwd);
+        }
+        catch (Exception ignore){
+        }*/
     }
 
 }

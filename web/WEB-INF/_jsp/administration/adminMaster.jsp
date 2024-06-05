@@ -14,7 +14,7 @@
 <%@ page import="de.elbe5.rights.GlobalRight" %>
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="de.elbe5.base.LocalizedSystemStrings" %>
-<%@ page import="de.elbe5.configuration.StaticConfiguration" %>
+<%@ page import="de.elbe5.application.Configuration" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
@@ -22,7 +22,7 @@
     String includeUrl = rdata.getAttributes().getString(RequestKeys.KEY_JSP);
 %>
 <!DOCTYPE html>
-<html lang="<%=StaticConfiguration.getLocale().getLanguage()%>">
+<html lang="<%=Configuration.getLocale().getLanguage()%>">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
