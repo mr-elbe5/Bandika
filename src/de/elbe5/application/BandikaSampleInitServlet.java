@@ -53,7 +53,7 @@ public class BandikaSampleInitServlet extends InitServlet {
         LocalizedStrings.getInstance().addBundle("cms", Configuration.getLocale());
         LocalizedSystemStrings.getInstance().addBundle("systemStrings", Configuration.getLocale());
         LocalizedSystemStrings.getInstance().addBundle("cmsSystemStrings", Configuration.getLocale());
-        LocalizedLayoutNames.getInstance().addBundle("layoutNames", Configuration.getLocale());
+        LocalizedLayoutNames.getInstance().addBundle("cmsLayoutNames", Configuration.getLocale());
         JsonWebToken.createSecretKey(Configuration.getSalt());
         AdminController.register(new CmsAdminController());
         ContentController.register(new ContentController());
